@@ -1,0 +1,39 @@
+{
+  "name": "secure-json-parse",
+  "version": "2.4.0",
+  "description": "JSON parse with prototype poisoning protection",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "benchmark": "cd benchmarks && npm install && npm run all",
+    "test-legacy": "nyc tape test.js",
+    "test": "standard && tsd && nyc tape test.js",
+    "test-in-browsers": "airtap test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastify/secure-json-parse.git"
+  },
+  "keywords": [
+    "JSON",
+    "parse",
+    "safe",
+    "security",
+    "prototype",
+    "pollution"
+  ],
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/fastify/secure-json-parse/issues"
+  },
+  "homepage": "https://github.com/fastify/secure-json-parse#readme",
+  "devDependencies": {
+    "airtap": "^4.0.1",
+    "airtap-playwright": "^1.0.1",
+    "nyc": "^14.1.1",
+    "playwright": "^1.7.1",
+    "standard": "^16.0.0",
+    "tape": "^5.1.1",
+    "tsd": "^0.14.0"
+  }
+}

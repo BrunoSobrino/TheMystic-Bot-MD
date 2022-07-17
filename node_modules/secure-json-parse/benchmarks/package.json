@@ -1,0 +1,14 @@
+{
+  "name": "benchmarks",
+  "version": "1.0.0",
+  "scripts": {
+    "ignore": "node ignore.js",
+    "no_proto": "node no__proto__.js",
+    "remove": "node remove.js",
+    "throw": "node throw.js",
+    "all": "node --version && npm run ignore && npm run no_proto && npm run remove && npm run throw"
+  },
+  "dependencies": {
+    "benchmark": "^2.1.4"
+  }
+}
