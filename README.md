@@ -46,7 +46,6 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > pkg install imagemagick -y
 > git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD
 > cd TheMystic-Bot-MD
-> npm update
 > npm start
 ```
 
