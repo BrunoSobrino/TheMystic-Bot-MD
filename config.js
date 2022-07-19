@@ -5,14 +5,14 @@ import fs from 'fs'
 
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['34642467703', '👑 Mystic - Collaborator 1 👑', true],
-  ['50499698072', '👑 Mystic - Collaborator 2 👑', true],
-  ['595986460945', '👑 Mystic - Collaborator 3 👑', true],
-  ['51940617554', '👑 Mystic - Collaborator 4 👑', true],
-  ['5219992095479'],
-  ['5219991402134'],
-  ['5219993404349'],
+  ['5351524614', 'David Chian', true],
+  ['17743948722', 'Silence-Bot', true],
+  ['5356404863, 'Lion Eyker', true],
+  ['', '', true],
+  ['', '', true],
+  ['5351524614'],
+  ['17743948722],
+  ['5356404863'],
   ['5219996125657']
 ] // Cambia los numeros que quieras
 global.mods = [] 
