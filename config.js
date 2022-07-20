@@ -9,14 +9,13 @@ global.owner = [
   ['34642467703', '👑 Mystic - Collaborator 1 👑', true],
   ['50499698072', '👑 Mystic - Collaborator 2 👑', true],
   ['595986460945', '👑 Mystic - Collaborator 3 👑', true],
-  ['51940617554', '👑 Mystic - Collaborator 4 👑', true],
   ['5219992095479'],
   ['5219991402134'],
   ['5219993404349'],
   ['5219996125657']
 ] // Cambia los numeros que quieras
-global.mods = ['51939003071'] 
-global.prems = ['51939003071'] 
+global.mods = [] 
+global.prems = [] 
 global.APIs = { // API Prefix
   // name: 'https://website'
   amel: 'https://melcanz.com',

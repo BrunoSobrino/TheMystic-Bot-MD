@@ -18,7 +18,7 @@ import { makeWASocket, protoType, serialize } from './lib/simple.js';
 import { Low, JSONFile } from 'lowdb';
 import { mongoDB, mongoDBV2 } from './lib/mongoDB.js';
 import store from './lib/store.js'
-const { useSingleFileAuthState, DisconnectReason, msgRetryCounterMap } = await import('@adiwajshing/baileys')
+const { useSingleFileAuthState, DisconnectReason } = await import('@adiwajshing/baileys')
 const { CONNECTING } = ws
 const { chain } = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
@@ -75,11 +75,7 @@ const connectionOptions = {
 printQRInTerminal: true,
 auth: state,
 logger: P({ level: 'silent'}),
-browser: ['TheMystic-Bot','Edge','1.0.0'],
-msgRetryCounterMap,
-getMessage : async (key) => {
-let remoteJidxd = key.remoteJid.includes(":") ? key.remoteJid.split(":")[0] + "@s.whatsapp.net" : key.remoteJid
-return await store.loadMessage(remoteJidxd, key.id)}
+browser: ['TheMystic-Bot','Edge','1.0.0']
 }
 
 global.conn = makeWASocket(connectionOptions)
