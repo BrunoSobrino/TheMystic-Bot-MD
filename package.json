@@ -27,7 +27,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@adiwajshing/baileys": "github:ferhacks/baileys",
+        "@adiwajshing/baileys": "^4.3.0",
         "@bochilteam/scraper": "^2.0.0",
         "awesome-phonenumber": "^2.68.0",
         "axios": "^0.24.0",
