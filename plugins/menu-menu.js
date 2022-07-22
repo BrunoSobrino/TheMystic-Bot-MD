@@ -418,7 +418,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 
 ° ඬ⃟💵 _${usedPrefix}balance_
 ° ඬ⃟💵 _${usedPrefix}claim_
-° ඬ⃟💵 _${usedPrefix}top_
+° ඬ⃟💵 _${usedPrefix}lb_
 ° ඬ⃟💵 _${usedPrefix}levelup_
 ° ඬ⃟💵 _${usedPrefix}myns_
 ° ඬ⃟💵 _${usedPrefix}perfil_
