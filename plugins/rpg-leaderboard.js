@@ -33,7 +33,7 @@ _Diseño By FG_`.trim()
 }
 handler.help = ['top']
 handler.tags = ['xp']
-handler.command = ['leaderboard', 'lb', 'top'] 
+handler.command = ['leaderboard', 'lb'] 
 
 
 
