@@ -29,11 +29,7 @@ Tú : *${usersLevel.indexOf(m.sender) + 1}* de *${usersLevel.length}*
 ${sortedLevel.slice(0, len).map(({ jid, level }, i) => `${i + 1}. ${participants.some(p => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *Nivel ${level}*`).join`\n`}
 
 _Diseño By FG_`.trim()
-  conn.reply(m.chat, text, m, {
-    contextInfo: {
-      mentionedJid: [...usersExp.slice(0, len), ...usersLim.slice(0, len), ...usersLevel.slice(0, len)].filter(v => !participants.some(p => v === p.jid))
-    }
-  })
+  m.reply(text, null, { mentions: conn.parseMention(text) })
 }
 handler.help = ['top']
 handler.tags = ['xp']
