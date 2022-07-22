@@ -29,6 +29,7 @@
     "dependencies": {
         "@adiwajshing/baileys": "^4.3.0",
         "@bochilteam/scraper": "^2.0.0",
+        "acrcloud": "^1.4.0",
         "awesome-phonenumber": "^2.68.0",
         "axios": "^0.24.0",
         "cfonts": "^2.10.0",
