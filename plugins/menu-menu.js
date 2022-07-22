@@ -105,6 +105,7 @@ let str = `
 ° ඬ⃟🎖️ _${usedPrefix}slot *<apuesta>*_
 ° ඬ⃟🎖️ _${usedPrefix}pvp *<@tag>*_
 ° ඬ⃟🎖️ _${usedPrefix}simi *<texto>*_
+° ඬ⃟🎖️ _${usedPrefix}top *<texto>*_
 ° ඬ⃟🎖️ _${usedPrefix}topgays_
 ° ඬ⃟🎖️ _${usedPrefix}topotakus_
 ° ඬ⃟🎖️ _${usedPrefix}formarpareja_
