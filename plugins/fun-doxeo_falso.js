@@ -53,7 +53,7 @@ Sof02s32inf14.1e100.net
 *Tcp:* 192.168.629-->92.28.211.167:8615
 *EXTERNAL MAC:* 6U:77:89:ER:O4
 *MODEM JUMPS:* 64`
-conn.reply(m.chat, doxeo, m)
+m.reply(doxeo, null, { mentions: conn.parseMention(doxeo) })
 }
 handler.help = ['doxear <nombre> | <@tag>']
 handler.tags = ['fun']
