@@ -5,7 +5,6 @@
 -----------------------------------------------------------------------------------------*/
 
 import axios from "axios"
-import db from '../lib/database.js'
 let handler = async (m, {command, conn}) => {
 let fgif = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "6289643739077-1613049930@g.us" } : {})},message: {"videoMessage": { "title":`️u`, "h": `Hmm`,'seconds': '99999', 'gifPlayback': 'true', 'caption': `🧿 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝 🔮`, 'jpegThumbnail': false }}}
 let apikey = keysxxx
