@@ -305,7 +305,6 @@ let str = `
 ° ඬ⃟🔞 _${usedPrefix}yuri2_
 ° ඬ⃟🔞 _${usedPrefix}trapito_
 ° ඬ⃟🔞 _${usedPrefix}hentai_
-° ඬ⃟🔞 _${usedPrefix}pies_
 ° ඬ⃟🔞 _${usedPrefix}nsfwloli_
 ° ඬ⃟🔞 _${usedPrefix}nsfworgy_
 ° ඬ⃟🔞 _${usedPrefix}nsfwfoot_
@@ -408,6 +407,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟🛠️ _${usedPrefix}acortar *<enlace / link / url>*_
 ° ඬ⃟🛠️ _${usedPrefix}calc *<operacion math>*_
 ° ඬ⃟🛠️ _${usedPrefix}del *<respondre a mensaje del Bot>*_
+° ඬ⃟🛠️ _${usedPrefix}whatmusic *<responde a un audio>*_
 ° ඬ⃟🛠️ _${usedPrefix}qrcode *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}readmore *<texto1| texto2>*_
 ° ඬ⃟🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
