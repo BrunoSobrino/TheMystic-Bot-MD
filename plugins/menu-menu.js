@@ -206,6 +206,7 @@ let str = `
 ° ඬ⃟🖍️ _${usedPrefix}hornycard *<@tag>*_
 ° ඬ⃟🖍️ _${usedPrefix}lolice *<@tag>*_
 ° ඬ⃟🖍️ _${usedPrefix}ytcomment *<texto>*_
+° ඬ⃟🖍️ _${usedPrefix}phmaker *<opcion><responder a imagen>*_
 ° ඬ⃟🖍️ _${usedPrefix}itssostupid_
 ° ඬ⃟🖍️ _${usedPrefix}pixelar_
 ° ඬ⃟🖍️ _${usedPrefix}blur_
