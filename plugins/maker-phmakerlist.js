@@ -1,9 +1,10 @@
-let handler = async (m, { conn, usedPrefix, command }) => {
+let handler = async (m, { conn, usedPrefix }) => {
+let command = 'phmaker'
 m.reply(`*[❗𝐈𝐍𝐅𝐎❗] ¿𝙲𝙾𝙼𝙾 𝚄𝚂𝙰𝚁 𝙴𝚂𝚃𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾?*
 —◉ #phmaker (opcion) <responder / etiquetar a una imagen>
 
 *𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*
-—◉ ${usedPrefix + command} artist_in_the_dark <responder / etiquetar a una imagen>
+—◉ #phmaker artist_in_the_dark <responder / etiquetar a una imagen>
 
 *< 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙾𝙿𝙲𝙸𝙾𝙽𝙴𝚂 />*
 ° ඬ⃟💫 ${usedPrefix + command} 2colors-canvas
