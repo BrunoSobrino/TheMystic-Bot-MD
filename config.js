@@ -5,15 +5,15 @@ import fs from 'fs'
 
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['34642467703', '👑 Mystic - Collaborator 1 👑', true],
-  ['50499698072', '👑 Mystic - Collaborator 2 👑', true],
-  ['595986460945', '👑 Mystic - Collaborator 3 👑', true],
-  ['51940617554', '👑 Mystic - Collaborator 4 👑', true],
-  ['5219992095479'],
-  ['5219991402134'],
-  ['5219993404349'],
-  ['5219996125657']
+  ['642770700000', '👑 Mystic - Creador 👑', true],
+  ['642770700000', '👑 Mystic - Collaborator 1 👑', true],
+  ['642770700000', '👑 Mystic - Collaborator 2 👑', true],
+  ['642770700000', '👑 Mystic - Collaborator 3 👑', true],
+  ['642770700000', '👑 Mystic - Collaborator 4 👑', true],
+  ['642770700000'],
+  ['642770700000'],
+  ['642770700000'],
+  ['642770700000']
 ] // Cambia los numeros que quieras
 global.mods = [] 
 global.prems = [] 
