@@ -104,7 +104,8 @@ let str = `
 ° ඬ⃟🎖️ _${usedPrefix}msg *<texto>*_
 ° ඬ⃟🎖️ _${usedPrefix}pregunta *<texto>*_
 ° ඬ⃟🎖️ _${usedPrefix}slot *<apuesta>*_
-° ඬ⃟🎖️ _${usedPrefix}pvp *<@tag>*_
+° ඬ⃟🎖️ _${usedPrefix}ttt *<nombre sala>*_
+° ඬ⃟🎖️ _${usedPrefix}delttt_
 ° ඬ⃟🎖️ _${usedPrefix}simi *<texto>*_
 ° ඬ⃟🎖️ _${usedPrefix}top *<texto>*_
 ° ඬ⃟🎖️ _${usedPrefix}topgays_
