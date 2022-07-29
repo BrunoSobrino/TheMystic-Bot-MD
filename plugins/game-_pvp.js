@@ -1,4 +1,4 @@
-let handler = m => m
+/*let handler = m => m
 handler.before = async function (m) {
 this.suit = this.suit ? this.suit : {}
 if (db.data.users[m.sender].suit < 0) db.data.users[m.sender].suit = 0
@@ -93,4 +93,4 @@ return !0
 handler.exp = 0
 export default handler
 function random(arr) {
-return arr[Math.floor(Math.random() * arr.length)]}
+return arr[Math.floor(Math.random() * arr.length)]}*/
