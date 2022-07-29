@@ -5,7 +5,7 @@ if (Object.values(conn.game).find(room => room.id.startsWith('tictactoe') && [ro
 if (!text) throw `*[❗] 𝚂𝙴 𝚁𝙴𝚀𝚄𝙸𝙴𝚁𝙴 𝙿𝙾𝙽𝙴𝚁 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴 𝙰 𝙻𝙰 𝚂𝙰𝙻𝙰 𝙳𝙴 𝙹𝚄𝙴𝙶𝙾*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾*\n*◉ ${usedPrefix + command} nueva sala*`
 let room = Object.values(conn.game).find(room => room.state === 'WAITING' && (text ? room.name === text : true))
 if (room) {
-await m.reply('🕹️ Jugador encontrado!')
+await m.reply('*[🕹️] 𝙸𝙽𝙸𝙲𝙸𝙰 𝙴𝙻 𝙹𝚄𝙴𝙶𝙾, 𝚄𝙽 𝙹𝚄𝙶𝙰𝙳𝙾𝚁 𝚂𝙴 𝚄𝙽𝙸𝙾 𝙰 𝙻𝙰 𝙿𝙰𝚁𝚃𝙸𝙳𝙰*')
 room.o = m.chat
 room.game.playerO = m.sender
 room.state = 'PLAYING'
