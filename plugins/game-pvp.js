@@ -1,4 +1,4 @@
-let timeout = 60000
+/*let timeout = 60000
 let poin = 500
 let poin_lose = -100
 let poin_bot = 200
@@ -28,4 +28,4 @@ handler.tags = ['games']
 handler.help = ['suitpvp', 'suit'].map(v => v + ' @tag')
 handler.command = /^suitpvp|suit|pvp|ppt2?$/i
 handler.group = true
-export default handler
+export default handler*/
