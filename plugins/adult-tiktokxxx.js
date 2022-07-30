@@ -10,9 +10,11 @@ let fgif = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "6
 let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
 let user = global.db.data.users[who]
 let name = await conn.getName[who]
-let json = await fetch(`http://mkbot.online/api/tiktok/nsfw/nsfwtt?&apikey=8UtWbnvW`)
+let json = await fetch(`http://mkbot.online/api/tiktok/nsfw/nsfwtt?&apikey=${mkbotkey}`)
 let jsons = await json.json()
 let res = jsons.result
 conn.sendButton(m.chat, `- 𝙱𝚒𝚎𝚗𝚟𝚎𝚗𝚒𝚍𝚘 𝚊 𝚃𝚒𝚔𝚃𝚘𝚔 𝙶𝚘𝚕𝚍🥵 -`, `*◈•@${who.split("@s.whatsapp.net")[0]}*`, res, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 handler.command = /^(tiktokxxx)$/i
 export default handler
+global.mkbot = ['lwSUluWz', 'HSxJ72Rf', 'H6pvVPJc', 'uVAf54xz']
+global.mkbotkey = mkbot[Math.floor(mkbot.length * Math.random())]
