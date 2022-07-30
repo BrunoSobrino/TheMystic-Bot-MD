@@ -101,7 +101,6 @@ let str = `
 ° ඬ⃟🎖️ _${usedPrefix}rata *<nombre / @tag>*_
 ° ඬ⃟🎖️ _${usedPrefix}love *<nombre / @tag>*_
 ° ඬ⃟🎖️ _${usedPrefix}doxear *<nombre / @tag>*_
-° ඬ⃟🎖️ _${usedPrefix}msg *<texto>*_
 ° ඬ⃟🎖️ _${usedPrefix}pregunta *<texto>*_
 ° ඬ⃟🎖️ _${usedPrefix}slot *<apuesta>*_
 ° ඬ⃟🎖️ _${usedPrefix}ttt *<nombre sala>*_
@@ -474,6 +473,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 _${usedPrefix}disable *pconly*_
 ° ඬ⃟👑 _${usedPrefix}enable *gconly*_
 ° ඬ⃟👑 _${usedPrefix}disable *gconly*_
+° ඬ⃟👑 _${usedPrefix}msg *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}banchat_
 ° ඬ⃟👑 _${usedPrefix}unbanchat_
 ° ඬ⃟👑 _${usedPrefix}banuser *<@tag>*_
