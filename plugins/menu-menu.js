@@ -447,6 +447,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👽 _${usedPrefix}semoji *<tipo> <emoji>*_
 ° ඬ⃟👽 _${usedPrefix}attp *<texto>*_
 ° ඬ⃟👽 _${usedPrefix}attp2 *<texto>*_
+° ඬ⃟👽 _${usedPrefix}attp3 *<texto>*_
 ° ඬ⃟👽 _${usedPrefix}ttp *<texto>*_
 ° ඬ⃟👽 _${usedPrefix}ttp2 *<texto>*_
 ° ඬ⃟👽 _${usedPrefix}ttp3 *<texto>*_
