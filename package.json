@@ -11,10 +11,10 @@
     },
     "scripts": {
         "start": "node index.js",
-        "cli": "node . --optimize_for_size --max_old_space_size=460 index.js",
-        "db": "node . --autocleartmp --db 'mongodb+srv://BrunoSobrino:Akhmad6825@cluster0.mflne.mongodb.net/TheMystic-Bot-MD?retryWrites=true&w=majority'"
+        "test": "node test.js",
+        "test2": "nodemon index.js"
     },
-    "homepage": "https://github.com/BrunoSobrino",
+    "homepage": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
     "author": {
         "name": "BrunoSobrino"
     },
@@ -25,7 +25,7 @@
     "bugs": {
         "url": "https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues"
     },
-    "license": "MIT",
+    "license": "GPL-3.0-or-later",
     "dependencies": {
         "@adiwajshing/baileys": "^4.3.0",
         "@bochilteam/scraper": "^3.0.0",
