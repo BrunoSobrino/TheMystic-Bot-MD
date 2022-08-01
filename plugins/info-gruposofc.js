@@ -22,16 +22,6 @@ let handler = async (m, { conn, command }) => conn.sendButton(m.chat, `
 *9.-* https://chat.whatsapp.com/Ef89aIuOLeD3Fa2sYmKwp7
 
 *10.-* https://chat.whatsapp.com/C2WYb1hiiijCI13QSUZLM9
-
-*11.-* https://chat.whatsapp.com/GKdDtQKWP5LCgpbzucz6kt
-
-*12.-* https://chat.whatsapp.com/DZA9djOzBn51ZpsCBj6aAg
-
-*13.-* https://chat.whatsapp.com/EIczvnvVZtTKRgxEbWtizv
-
-*14.-* https://chat.whatsapp.com/IR0NQSDFD6UBMT5q30QIFt
-
-*15.-* https://chat.whatsapp.com/CMd00ZYfwXZHEoEIswHpv3
 `.trim(), wm, media, [['💟 𝙼𝙴𝙽𝚄 𝙿𝚁𝙸𝙽𝙲𝙸𝙿𝙰𝙻 💟', '#menu']], m)
 handler.command = /^linkgc|grupos$/i
 export default handler
