@@ -81,6 +81,9 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 <p>> Dudas UNICAMENTE SOBRE EL HOST:
 <a href="https://discord.gg/84qsr4v">https://discord.gg/84qsr4v</a> (Preguntar por Vicemi)
 </p>
+  
+### `—◉ 💥 ACTIVAR EN HEROKU 💥`
+<a href="https://billing.acidicnodes.ml/register?ref=ADII104p"><img src="https://billing.acidicnodes.ml/storage/icon.png" width="100" height="100" alt="acidicnodes"/></a>
 
 ### `—◉ 📝 NOTAS 📝`
 ```bash
