@@ -3,7 +3,8 @@ if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃�
 let teks = encodeURI(text)
 
 if (command == 'attp') {
-conn.sendFile(m.chat, global.API('xteam', '/attp', { file: '', text: teks }), 'sticker.webp', '', m, false, { asSticker: true })}
+let teksb = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
+conn.sendFile(m.chat, global.API('xteam', '/attp', { file: '', text: teksb }), 'sticker.webp', '', m, false, { asSticker: true })}
 
 if (command == 'attp2') {
 conn.sendFile(m.chat, `https://api.lolhuman.xyz/api/attp?apikey=${lolkeysapi}&text=${teks}`, 'sticker.webp', '', m, { asSticker: true })}
