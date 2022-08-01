@@ -41,137 +41,24 @@ export async function handler(chatUpdate) {
             if (typeof user !== 'object')
                 global.db.data.users[m.sender] = {}
             if (user) {
-                if (!isNumber(user.exp))
-                    user.exp = 0
-                if (!isNumber(user.limit))
-                    user.limit = 10
-                if (!isNumber(user.lastclaim))
-                    user.lastclaim = 0
-                if (!('registered' in user))
-                    user.registered = false
-                if (!user.registered) {
-                    if (!('name' in user))
-                        user.name = m.name
-                    if (!isNumber(user.age))
-                        user.age = -1
-                    if (!isNumber(user.regTime))
-                        user.regTime = -1
-                }
-                if (!isNumber(user.afk))
-                    user.afk = -1
-                if (!('afkReason' in user))
-                    user.afkReason = ''
-                if (!('banned' in user))
-                    user.banned = false
-                if (!isNumber(user.warn))
-                    user.warn = 0
-                if (!isNumber(user.level))
-                    user.level = 0
-                if (!('role' in user))
-                    user.role = 'Novato'
-                if (!('autolevelup' in user))
-                    user.autolevelup = true
-
-                if (!isNumber(user.money))
-                    user.money = 0
-                if (!isNumber(user.health))
-                    user.health = 100
-                if (!isNumber(user.limit))
-                    user.limit = 10
-                if (!isNumber(user.potion))
-                    user.potion = 0
-                if (!isNumber(user.trash))
-                    user.trash = 0
-                if (!isNumber(user.wood))
-                    user.wood = 0
-                if (!isNumber(user.rock))
-                    user.rock = 0
-                if (!isNumber(user.string))
-                    user.string = 0
-                if (!isNumber(user.petFood))
-                    user.petFood = 0
-
-                if (!isNumber(user.emerald))
-                    user.emerald = 0
-                if (!isNumber(user.diamond))
-                    user.diamond = 0
-                if (!isNumber(user.gold))
-                    user.gold = 0
-                if (!isNumber(user.iron))
-                    user.iron = 0
-
-                if (!isNumber(user.common))
-                    user.common = 0
-                if (!isNumber(user.uncommon))
-                    user.uncommon = 0
-                if (!isNumber(user.mythic))
-                    user.mythic = 0
-                if (!isNumber(user.legendary))
-                    user.legendary = 0
-                if (!isNumber(user.pet))
-                    user.pet = 0
-
-                if (!isNumber(user.horse))
-                    user.horse = 0
-                if (!isNumber(user.horseexp))
-                    user.horseexp = 0
-                if (!isNumber(user.cat))
-                    user.cat = 0
-                if (!isNumber(user.catexp))
-                    user.catexp = 0
-                if (!isNumber(user.fox))
-                    user.fox = 0
-                if (!isNumber(user.foxhexp))
-                    user.foxexp = 0
-                if (!isNumber(user.dog))
-                    user.dog = 0
-                if (!isNumber(user.dogexp))
-                    user.dogexp = 0
-
-                if (!isNumber(user.horselastfeed))
-                    user.horselastfeed = 0
-                if (!isNumber(user.catlastfeed))
-                    user.catlastfeed = 0
-                if (!isNumber(user.foxlastfeed))
-                    user.foxlastfeed = 0
-                if (!isNumber(user.doglastfeed))
-                    user.doglastfeed = 0
-
-                if (!isNumber(user.armor))
-                    user.armor = 0
-                if (!isNumber(user.armordurability))
-                    user.armordurability = 0
-                if (!isNumber(user.sword))
-                    user.sword = 0
-                if (!isNumber(user.sworddurability))
-                    user.sworddurability = 0
-                if (!isNumber(user.pickaxe))
-                    user.pickaxe = 0
-                if (!isNumber(user.pickaxedurability))
-                    user.pickaxedurability = 0
-                if (!isNumber(user.fishingrod))
-                    user.fishingrod = 0
-                if (!isNumber(user.fishingroddurability))
-                    user.fishingroddurability = 0
-
-                if (!isNumber(user.lastclaim))
-                    user.lastclaim = 0
-                if (!isNumber(user.lastadventure))
-                    user.lastadventure = 0
-                if (!isNumber(user.lastfishing))
-                    user.lastfishing = 0
-                if (!isNumber(user.lastdungeon))
-                    user.lastdungeon = 0
-                if (!isNumber(user.lastduel))
-                    user.lastduel = 0
-                if (!isNumber(user.lastmining))
-                    user.lastmining = 0
-                if (!isNumber(user.lasthunt))
-                    user.lasthunt = 0
-                if (!isNumber(user.lastweekly))
-                    user.lastweekly = 0
-                if (!isNumber(user.lastmonthly))
-                    user.lastmonthly = 0
+                if (!isNumber(user.exp)) user.exp = 0
+                if (!isNumber(user.limit)) user.limit = 10
+                if (!isNumber(user.lastclaim)) user.lastclaim = 0
+                if (!('registered' in user)) user.registered = false
+              if (!user.registered) {
+                if (!('name' in user)) user.name = m.name
+                if (!isNumber(user.age)) user.age = -1
+                if (!isNumber(user.regTime)) user.regTime = -1
+               }
+                if (!isNumber(user.afk)) user.afk = -1
+                if (!('afkReason' in user)) user.afkReason = ''
+                if (!('banned' in user)) user.banned = false
+                if (!isNumber(user.level)) user.level = 0
+                if (!('role' in user)) user.role = 'Novato'
+                if (!('autolevelup' in user)) user.autolevelup = true
+                if (!isNumber(user.money)) user.money = 0
+                if (!isNumber(user.limit)) user.limit = 10
+                if (!isNumber(user.lastclaim)) user.lastclaim = 0
             } else
                 global.db.data.users[m.sender] = {
                     exp: 0,
@@ -184,61 +71,12 @@ export async function handler(chatUpdate) {
                     afk: -1,
                     afkReason: '',
                     banned: false,
-                    warn: 0,
                     level: 0,
                     role: 'Novato',
                     autolevelup: true,
-
                     money: 0,
-                    health: 100,
                     limit: 10,
-                    potion: 10,
-                    trash: 0,
-                    wood: 0,
-                    rock: 0,
-                    string: 0,
-
-                    emerald: 0,
-                    diamond: 0,
-                    gold: 0,
-                    iron: 0,
-
-                    common: 0,
-                    uncommon: 0,
-                    mythic: 0,
-                    legendary: 0,
-                    pet: 0,
-
-                    horse: 0,
-                    horseexp: 0,
-                    cat: 0,
-                    catngexp: 0,
-                    fox: 0,
-                    foxexp: 0,
-                    dog: 0,
-                    dogexp: 0,
-
-                    horselastfeed: 0,
-                    catlastfeed: 0,
-                    foxlastfeed: 0,
-                    doglastfeed: 0,
-
-                    armor: 0,
-                    armordurability: 0,
-                    sword: 0,
-                    sworddurability: 0,
-                    pickaxe: 0,
-                    pickaxedurability: 0,
-                    fishingrod: 0,
-                    fishingroddurability: 0,
-
                     lastclaim: 0,
-                    lastadventure: 0,
-                    lastfishing: 0,
-                    lastdungeon: 0,
-                    lastduel: 0,
-                    lastmining: 0,
-                    lasthunt: 0,
                     lastweekly: 0,
                     lastmonthly: 0,
                 }
@@ -626,70 +464,38 @@ export async function handler(chatUpdate) {
  * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate 
  */
 export async function participantsUpdate({ id, participants, action }) {
-if (opts['self'])
-return
-if (this.isInit)
-return
-if (global.db.data == null)
-await loadDatabase()
-let chat = global.db.data.chats[id] || {}
-let text = ''
-switch (action) {
-case 'add':
-case 'remove':
-if (chat.welcome) {
-let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
-for (let user of participants) {
-let pp = './src/sinfoto.jpg'
-try {
-pp = await this.profilePictureUrl(user, 'image')
-} catch (e) {
-} finally {
-text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
-(chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
-let apii = await this.getFile(pp)
-const fake = { quoted: {
-key : {
-participant : '0@s.whatsapp.net' },
-message: {
-orderMessage: {
-itemCount : 999999,
-status: 1,
-surface : 1,
-message: wm, 
-orderTitle: 'WaBot',
-thumbnail: imagen2, 
-sellerJid: '0@s.whatsapp.net' }}}}      
-var doc = ['pdf','zip','vnd.openxmlformats-officedocument.presentationml.presentation','vnd.openxmlformats-officedocument.spreadsheetml.sheet','vnd.openxmlformats-officedocument.wordprocessingml.document']
-var document = doc[Math.floor(Math.random() * doc.length)]
-const buttons = [
-{buttonId: (action == 'add' ? '#welcomegc' : '#byegc'), buttonText: {displayText: (action == 'add' ? '💫 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙾 💫' : '☠ 𝙰𝙳𝙸𝙾𝚂 ☠')}, type: 1},
-{buttonId: `#menu`, buttonText: {displayText: '💟 𝙼𝙴𝙽𝚄 💟'}, type: 1}, ]
-let buttonMessage = {
-document: imagen3, 
-fileName: `ᴇʟ ᴍᴇᴊᴏʀ ʙᴏᴛ ᴅᴇ ᴡʜᴀᴛsᴀᴘᴘ⁩`, 
-mimetype: `application/${document}`,
-jpegThumbnail: imagen3,
-caption: text,
-fileLength: "99999999999999",
-mentions: [user],
-footer: groupMetadata.subject,
-buttons: buttons,
-headerType: 4,   
-contextInfo: {
-'forwardingScore': 200,
-'isForwarded': true,
-"mentionedJid": [user],
-"externalAdReply": {
-"showAdAttribution": false,
-"title": `𝚃𝚄𝚃𝙾𝚁𝙸𝙰𝙻 𝙳𝙴 𝙸𝙽𝚂𝚃𝙰𝙻𝙰𝙲𝙸𝙾𝙽`,
-"mediaType": 2, 
-"previewType": "VIDEO",
-"thumbnail": apii.data,
-"mediaUrl": 'https://youtu.be/eC9TfKICpcY',
-"sourceUrl": 'https://www.pornhub.com' }}} 
-this.sendMessage(id, buttonMessage, fake)                          
-}}}
+    if (opts['self'])
+        return
+    // if (id in conn.chats) return // First login will spam
+    if (this.isInit)
+        return
+    if (global.db.data == null)
+        await loadDatabase()
+    let chat = global.db.data.chats[id] || {}
+    let text = ''
+    switch (action) {
+        case 'add':
+        case 'remove':
+            if (chat.welcome) {
+                let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
+                for (let user of participants) {
+                    let pp = './src/avatar_contact.png'
+                    try {
+                        pp = await this.profilePictureUrl(user, 'image')
+                    } catch (e) {
+                    } finally {
+                    let apii = await this.getFile(pp)
+                        text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
+                              (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
+                        
+let ftroli = { key: { fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "6289523258649-1604595598@g.us" }, "message": { orderMessage: { itemCount: 6546464643, status: 200, thumbnail: imagen1, surface: 200, message: wm, orderTitle: wm, sellerJid: '0@s.whatsapp.net' }}, contextInfo: { "forwardingScore": 999, "isForwarded": true}, sendEphemeral: true}   
+
+this.sendButton(id, text, groupMetadata.subject, apii.data, [[(action == 'add' ? '💫 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙾 💫' : '☠ 𝙰𝙳𝙸𝙾𝚂 ☠'), (action == 'add' ? '#welcomegc' : '#byegc')], ['♦ 𝙼𝙴𝙽𝚄 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 ♦', `#menu`]], ftroli, {mentions: this.parseMention(text)})
+                
+/* this.sendFile(id, apii.data, 'pp.jpg', text, null, false, { mentions: [user] }) */
+                   }
+                }
+            }
             break
         case 'promote':
         case 'daradmin':
