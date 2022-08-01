@@ -12,9 +12,6 @@
     "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
   },
   {
-    "url": "https://github.com/BrunoSobrino/heroku-buildpack-imagemagick.git"
-  },
-  {
     "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
   }    
  ]
