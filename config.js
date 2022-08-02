@@ -9,10 +9,10 @@ global.owner = [
   ['34642467703', '👑 Mystic - Collaborator 1 👑', true],
   ['50499698072', '👑 Mystic - Collaborator 2 👑', true],
   ['51940617554', '👑 Mystic - Collaborator 3 👑', true],
-  ['5219992095479'],
-  ['5219991402134'],
-  ['5219993404349'],
-  ['5219996125657']
+  ['12366021683'],
+  ['522229245094'],
+  ['523331959978'],
+
 ] // Cambia los numeros que quieras
 global.mods = [] 
 global.prems = [] 
