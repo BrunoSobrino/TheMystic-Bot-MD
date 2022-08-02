@@ -102,6 +102,7 @@ let str = `
 ° ඬ⃟🎖️ _${usedPrefix}love *<nombre / @tag>*_
 ° ඬ⃟🎖️ _${usedPrefix}doxear *<nombre / @tag>*_
 ° ඬ⃟🎖️ _${usedPrefix}pregunta *<texto>*_
+° ඬ⃟🎖️ _${usedPrefix}suitpvp *<@tag>*_
 ° ඬ⃟🎖️ _${usedPrefix}slot *<apuesta>*_
 ° ඬ⃟🎖️ _${usedPrefix}ttt *<nombre sala>*_
 ° ඬ⃟🎖️ _${usedPrefix}delttt_
