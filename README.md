@@ -85,7 +85,7 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 ### `—◉ 💥 ACTIVAR EN ACIDICNODES 💥`
 <a href="https://billing.acidicnodes.ml/register?ref=ADII104p"><img src="https://billing.acidicnodes.ml/storage/icon.png" width="100" height="100" alt="acidicnodes"/></a>
 - TUTORIAL: [https://youtu.be/nbjvreJ0tUk](https://youtu.be/nbjvreJ0tUk)
-- PAGINA USADA: [https://billing.acidicnodes.ml/register?ref=ADII104p](https://billing.acidicnodes.ml/register?ref=ADII104p)
+- PAGINA: [https://billing.acidicnodes.ml/register?ref=ADII104p](https://billing.acidicnodes.ml/register?ref=ADII104p)
 
 ### `—◉ 📝 NOTAS 📝`
 ```bash
