@@ -70,17 +70,11 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 
 ### `—◉ 🔥 ACTIVAR EN BOXMINEHOST 🔥`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
-<p>> Pagina Oficial:
-<a href="https://boxmineworld.com">https://boxmineworld.com</a>
-<p>> Dashboard:
-<a href="https://dash.boxmineworld.com/home">https://dash.boxmineworld.com/home</a>
-<p>> Panel:
-<a href="https://panel.boxmineworld.com">https://panel.boxmineworld.com</a>
-<p>> Tutorial:
-<a href="https://youtu.be/eC9TfKICpcY">https://youtu.be/eC9TfKICpcY</a>
-<p>> Dudas UNICAMENTE SOBRE EL HOST:
-<a href="https://discord.gg/84qsr4v">https://discord.gg/84qsr4v</a> (Preguntar por Vicemi)
-</p>
+- Pagina Oficial: [https://boxmineworld.com](https://boxmineworld.com)
+- Dashboard: [https://dash.boxmineworld.com](https://dash.boxmineworld.com)
+- Panel: [https://panel.boxmineworld.com](https://panel.boxmineworld.com)
+- Tutorial: [https://youtu.be/eC9TfKICpcY](https://youtu.be/eC9TfKICpcY)
+- Dudas UNICAMENTE SOBRE EL HOST: [https://discord.gg/84qsr4v](https://discord.gg/84qsr4v) (Preguntar por Vicemi)
   
 ### `—◉ 💥 ACTIVAR EN ACIDICNODES 💥`
 <a href="https://billing.acidicnodes.ml/register?ref=ADII104p"><img src="https://billing.acidicnodes.ml/storage/icon.png" width="100" height="100" alt="acidicnodes"/></a>
