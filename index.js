@@ -55,6 +55,11 @@ break }})
 p.on('exit', (_, code) => {
 isRunning = false
 console.error('❎ㅤOcurrio un error inesperado:', code)
+  
+p.process.kill()
+isRunning = false
+start.apply(this, arguments)
+  
 if (code === 0) return
 watchFile(args[0], () => {
 unwatchFile(args[0])
