@@ -5,18 +5,18 @@ import fs from 'fs'
 
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['34642467703', '👑 Mystic - Collaborator 1 👑', true],
-  ['50499698072', '👑 Mystic - Collaborator 2 👑', true],
-  ['51940617554', '👑 Mystic - Collaborator 3 👑', true],
-  ['5219992095479'],
-  ['5219991402134'],
-  ['5219993404349'],
-  ['5219996125657']
+  ['523532470551', '👑 Mystic - Creador 👑', true],
+  ['51934299838', '👑 Mystic - Collaborator 1 👑', true],
+  ['17828237137', '👑 Mystic - Collaborator 2 👑', true],
+  ['51957397953', '👑 Mystic - Collaborator 3 👑', true],
+  [''],
+  [''],
+  [''],
+  ['52']
 ] // Cambia los numeros que quieras
-global.suittag = ['5219993404349'] 
+global.suittag = ['523532470551'] 
 global.mods = [] 
-global.prems = [] 
+global.prems = [523532470551] 
 
 global.APIs = { // API Prefix
   // name: 'https://website'
@@ -72,10 +72,10 @@ global.APIKeys = { // APIKey Here
 
 // Sticker WM
 global.packname = '(☞ﾟ∀ﾟ)☞'
-global.author = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
+global.author = '★𝚃𝚑𝚎 Deyner - 𝙱𝚘𝚝★'
 
-global.wm = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
-global.igfg = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
+global.wm = '★𝚃𝚑𝚎 Deyner - 𝙱𝚘𝚝★'
+global.igfg = '★𝚃𝚑𝚎 Deyner - 𝙱𝚘𝚝★'
 global.wait = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*'
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg')
