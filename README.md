@@ -32,9 +32,10 @@ ADVERTENCIA: HEROKU ESTA SUSPENDIENDO CUENTAS POR SOLO USAR EL BOT, POR AHORA NO
 - CLONAR EL REPOSITORIO [Aqui](https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork)
 - CAMBIAR NÚMERO DEL OWNER [Aqui](https://github.com/BrunoSobrino/TheMystic-Bot-MD/blob/master/config.js)
 
-### `—◉ 👾 ACTIVAR EN TERMUX 👾`
+### `—◉ 👾 ACTIVAR EN TERMUX 👾` 
+- [ ⚠ ] NO DISPONIBLE POR EL MOMENTO [ ⚠ ]
+- ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 ```bash
-ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > cd
 > termux-setup-storage
 > apt update 
