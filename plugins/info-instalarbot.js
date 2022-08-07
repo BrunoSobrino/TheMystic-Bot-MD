@@ -6,7 +6,7 @@ let text = `
 > Pagina Oficial: https://boxmineworld.com
 > Dashboard: https://dash.boxmineworld.com/home
 > Panel: https://panel.boxmineworld.com
-> Soporte 
+> Soporte: https://discord.gg/84qsr4v 
 
 ------------------------------------
 
