@@ -42,6 +42,7 @@
         "fluent-ffmpeg": "^2.1.2",
         "fs": "^0.0.1-security",
         "formdata-node": "^4.3.2",
+        "glob-fs": "^0.1.7",
         "human-readable": "^0.2.1",
         "hxz-api": "^1.0.1",
         "jsdom": "^19.0.0",
