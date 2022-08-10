@@ -189,6 +189,7 @@ let str = `
 ° ඬ⃟💎 _${usedPrefix}setwelcome *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}setbye *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}hidetag *<texto>*_
+° ඬ⃟💎 _${usedPrefix}fantasmas_
 
 *<ℂ𝕆ℕ𝕍𝔼ℝ𝕋𝕀𝔻𝕆ℝ𝔼𝕊/>*
 
@@ -213,10 +214,11 @@ let str = `
 ° ඬ⃟🖍️ _${usedPrefix}pixelar_
 ° ඬ⃟🖍️ _${usedPrefix}blur_
 
-*<𝔽ℝ𝔸𝕊𝔼𝕊/>*
+*<𝔽ℝ𝔸𝕊𝔼𝕊 𝕐 𝕋𝔼𝕏𝕋𝕆𝕊/>*
 
 ° ඬ⃟🥀 _${usedPrefix}consejo_
 ° ඬ⃟🥀 _${usedPrefix}fraseromantica_
+° ඬ⃟🥀 _${usedPrefix}historiaromantica_
 
 *<ℝ𝔸ℕ𝔻𝕆𝕄/>*
 
