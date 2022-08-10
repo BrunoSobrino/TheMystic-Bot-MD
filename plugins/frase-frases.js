@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------
+  🍀 • By https://github.com/ALBERTO9883
+  🍀 • ⚘Alberto Y Ashly⚘
+-----------------------------------------------------------------------------------------*/
+
 import translate from 'translate-google-api'
 import fetch from 'node-fetch'
 let handler = async (m, { conn, command }) => {
