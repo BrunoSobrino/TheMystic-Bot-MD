@@ -36,7 +36,6 @@ ADVERTENCIA: HEROKU ESTA SUSPENDIENDO CUENTAS POR SOLO USAR EL BOT, POR AHORA NO
 - CAMBIAR NÚMERO DEL OWNER [Aqui](https://github.com/BrunoSobrino/TheMystic-Bot-MD/blob/master/config.js)
 
 ### `—◉ 👾 ACTIVAR EN TERMUX 👾` 
-- [ ⚠ ] NO DISPONIBLE POR EL MOMENTO [ ⚠ ]
 - ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 ```bash
 > cd
@@ -48,27 +47,28 @@ ADVERTENCIA: HEROKU ESTA SUSPENDIENDO CUENTAS POR SOLO USAR EL BOT, POR AHORA NO
 > pkg install ffmpeg -y
 > pkg install imagemagick -y
 > pkg install yarn
-> git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD
-> cd TheMystic-Bot-MD
+> git clone https://github.com/BrunoSobrino/Mystic-termux
+> cd Mystic-termux
 > yarn install 
 > npm update
 > npm start
 ```
 
-### `—◉ ✔️ ACTIVAR EN CASO DE DETENERSE ✔️`
+### `—◉ ✔️ ACTIVAR EN CASO DE DETENERSE EN TERMUX ✔️`
 ```bash
 ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > cd 
-> cd TheMystic-Bot-MD
+> cd Mystic-termux
 > npm start
 ```
 
-### `—◉ 👽 OBTENER OTRO CODIGO QR 👽`
+### `—◉ 👽 OBTENER OTRO CODIGO QR EN TERMUX 👽`
+- DETENER EL BOT DANDO CLICK EN EL SIMBOLO CTROL EN TERMUX MAS LA LETRA Z EN SU TECLADO MOVIL HASTA QUE SALGA ALGO EN VERDE SIMILAR A Mystic-termux $  
 ```bash
 ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > cd 
-> cd TheMystic-Bot-MD
-> rm -rf session.data.json
+> cd Mystic-termux
+> rm -rf MysticSession
 > npm start
 ```
 
@@ -87,14 +87,12 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 - SOPORTE: [https://whatsapp.acidicnodes.com](https://whatsapp.acidicnodes.com)
 
 ### `—◉ 📝 NOTAS 📝`
-```bash
 - ES POSIBLE QUE EL BOT TENGA ALGUNAS FALLAS, SE IRAN SOLUCIONANDO CONFORME SE VAYAN DETECTANDO
 - SI VAS A EDITAR POR COMPLETO DEJA LOS CREDITOS DEL BOT 
 - EL BOT ES COMPARTIBLE CON WHATSAPP NORMAL O BUSINESS
 - ATENTO A LAS ACTUALIZACIONES QUE SE HAGAN EN ESTE REPOSITORIO
 - EL ADD Y EL KICK PUEDEN OCASIONAR QUE EL NUMERO SE VAYA A SOPORTE POR ELLO SE ACTIVA CON #enable restrict 
 - THE SHADOW BROKERS - TEAM NO SE HACE RESPONSABLE DEL USO, NUMEROS, PRIVACIDAD Y CONTENIDO MANDADO, USADO O GESTIONADO POR USTEDES O EL BOT
-```
 
 ## `COLABORADORES DEL BOT` 
 <a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="200" height="200" alt="unptoadrih15"/></a>
