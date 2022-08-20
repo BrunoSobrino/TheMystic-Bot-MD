@@ -404,6 +404,8 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟🔊 _Onichan_
 ° ඬ⃟🔊 _Mierda de Bot_
 ° ඬ⃟🔊 _Siuuu_
+° ඬ⃟🔊 _Epico_
+° ඬ⃟🔊 _Shitpost_
 ° ඬ⃟🔊 _Rawr_
 ° ඬ⃟🔊 _UwU_
 ° ඬ⃟🔊 _:c_
