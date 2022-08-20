@@ -49,7 +49,9 @@ ADVERTENCIA: HEROKU ESTA SUSPENDIENDO CUENTAS POR SOLO USAR EL BOT, POR AHORA NO
 > pkg install yarn
 > git clone https://github.com/BrunoSobrino/Mystic-termux
 > cd Mystic-termux
+> npm install 
 > yarn install 
+> npm install
 > npm update
 > npm start
 ```
