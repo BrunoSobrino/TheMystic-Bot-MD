@@ -18,7 +18,6 @@ let text = `
 ------------------------------------
 
 *—◉ 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 𝚃𝙴𝚁𝙼𝚄𝚇*
-*[❗] NO DISPONIBLE POR EL MOMENTO [❗]*
 > cd
 > termux-setup-storage
 > apt update 
@@ -28,8 +27,9 @@ let text = `
 > pkg install ffmpeg -y
 > pkg install imagemagick -y
 > pkg install yarn
-> git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD
-> cd TheMystic-Bot-MD
+> git clone https://github.com/BrunoSobrino/Mystic-termux
+> cd Mystic-termux
+> npm install 
 > yarn install 
 > npm install
 > npm update
