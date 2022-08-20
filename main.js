@@ -19,7 +19,7 @@ import { makeWASocket, protoType, serialize } from './lib/simple.js';
 import { Low, JSONFile } from 'lowdb';
 import { mongoDB, mongoDBV2 } from './lib/mongoDB.js';
 import store from './lib/store.js'
-const { DisconnectReason } = await import('@adiwajshing/baileys')
+const { DisconnectReason, useMultiFileAuthState } = await import('@adiwajshing/baileys')
 const { CONNECTING } = ws
 const { chain } = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
@@ -65,8 +65,8 @@ global.db.chain = chain(global.db.data)
 }
 loadDatabase()
 
-global.authFile = `${opts._[0] || 'session'}.data.json`
-const { state, saveState } = store.useSingleFileAuthState(global.authFile)
+global.authFile = `MysticSession`
+const { state, saveState, saveCreds } = await useMultiFileAuthState(global.authFile)
 
 const connectionOptions = {
 printQRInTerminal: true,
@@ -150,7 +150,7 @@ conn.participantsUpdate = handler.participantsUpdate.bind(global.conn)
 conn.groupsUpdate = handler.groupsUpdate.bind(global.conn)
 conn.onDelete = handler.deleteUpdate.bind(global.conn)
 conn.connectionUpdate = connectionUpdate.bind(global.conn)
-conn.credsUpdate = saveState.bind(global.conn, true)
+conn.credsUpdate = saveCreds.bind(global.conn, true)
 conn.ev.on('messages.upsert', conn.handler)
 conn.ev.on('group-participants.update', conn.participantsUpdate)
 conn.ev.on('groups.update', conn.groupsUpdate)
