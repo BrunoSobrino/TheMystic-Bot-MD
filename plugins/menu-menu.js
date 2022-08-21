@@ -481,6 +481,10 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 _${usedPrefix}disable *pconly*_
 ° ඬ⃟👑 _${usedPrefix}enable *gconly*_
 ° ඬ⃟👑 _${usedPrefix}disable *gconly*_
+° ඬ⃟👑 _${usedPrefix}enable *anticall*_
+° ඬ⃟👑 _${usedPrefix}disable *anticall*_
+° ඬ⃟👑 _${usedPrefix}enable *antiprivado*_
+° ඬ⃟👑 _${usedPrefix}disable *antiprivado*_
 ° ඬ⃟👑 _${usedPrefix}msg *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}banchat_
 ° ඬ⃟👑 _${usedPrefix}unbanchat_
