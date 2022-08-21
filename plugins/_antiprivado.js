@@ -11,7 +11,7 @@ export async function before(m, { isAdmin, isBotAdmin, isOwner }) {
     let bot = global.db.data.settings[this.user.jid] || {}
     
     if (bot.antiPrivate && !isOwner) {
-       await m.reply(`Hola *@${m.sender.split`@`[0]}*, está prohibido hablar al privado de la bot serás bloqueado.`, false, { mentions: [m.sender] })
+       await m.reply(`Hola *@${m.sender.split`@`[0]}*, está prohibido hablar al privado del bot serás bloqueado.`, false, { mentions: [m.sender] })
        await this.updateBlockStatus(m.chat, 'block')
     }
     return !1
