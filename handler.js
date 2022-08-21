@@ -532,7 +532,7 @@ export async function groupsUpdate(groupsUpdate) {
     }
 }
 
-export async function callUpdate(callUpdate) {
+export async function onCall(callUpdate) {
     let isAnticall = db.data.settings[this.user.jid].antiCall
     if (!isAnticall) return
     for (let nk of callUpdate) {
