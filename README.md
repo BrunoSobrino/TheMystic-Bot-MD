@@ -100,6 +100,7 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 <a href="https://github.com/ALBERTO9883"><img src="https://github.com/ALBERTO9883.png" width="200" height="200" alt="ALBERTO9883"/></a>
 <a href="https://github.com/ferhacks"><img src="https://github.com/ferhacks.png" width="200" height="200" alt="ferhacks"/></a>
 <a href="https://github.com/g4tito"><img src="https://github.com/g4tito.png" width="200" height="200" alt="g4tito"/></a>
+<a href="https://github.com/CarlosTwT"><img src="https://github.com/CarlosTwT.png" width="200" height="200" alt="CarlosTwT"/></a>
 
 <a href="https://github.com/GataNina-Li"><img src="https://github.com/GataNina-Li.png" width="200" height="200" alt="GataNina-Li"/></a>
 <a href="https://github.com/NeKosmic"><img src="https://github.com/NeKosmic.png" width="200" height="200" alt="NeKosmic"/></a>
