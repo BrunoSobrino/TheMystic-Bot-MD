@@ -101,6 +101,9 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 <a href="https://github.com/ferhacks"><img src="https://github.com/ferhacks.png" width="200" height="200" alt="ferhacks"/></a>
 <a href="https://github.com/g4tito"><img src="https://github.com/g4tito.png" width="200" height="200" alt="g4tito"/></a>
 
+<a href="https://github.com/GataNina-Li"><img src="https://github.com/GataNina-Li.png" width="200" height="200" alt="GataNina-Li"/></a>
+<a href="https://github.com/NeKosmic"><img src="https://github.com/NeKosmic.png" width="200" height="200" alt="NeKosmic"/></a>
+
 ## `EDITOR Y PORPIETARIO DEL BOT` 
 <a href="https://github.com/BrunoSobrino"><img src="https://github.com/BrunoSobrino.png" width="300" height="300" alt="BrunoSobrino"/></a>
 
