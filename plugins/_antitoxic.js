@@ -7,8 +7,8 @@ export async function before(m, { isAdmin, isBotAdmin, isOwner, isROwner }) {
     let chat = global.db.data.chats[m.chat]
     let bot = global.db.data.settings[this.user.jid] || {}
     
-    let toxic = ('Puto' || 'puto' || 'Puta' || 'puta' || 'Rata' || 'rata' || 'mrd' || 'vrga' || 'verga') // Aqui puedes agregarle mas palabras si quieres
-    if (m.text.includes(toxic) && chat.antiToxic && !isOwner, !isROwner) {
+    let toxic = ['Puto', 'puto', 'Puta', 'puta', 'Rata', 'rata', 'mrd', 'vrga'] // Aqui puedes agregarle mas palabras si quieres
+    if (toxic.includes(m.text) && chat.antiToxic && !isOwner && !isROwner) {
        user.warn += 1
        if (!(user.warn >= 5)) await m.reply(`${user.warn == 1 ? `Hola *@${m.sender.split`@`[0]}*` : `*@${m.sender.split`@`[0]}*`}, decir la palabra (${toxic}) está prohibido en este bot *${user.warn}/5* advertencia`, false, { mentions: [m.sender] })
     }
