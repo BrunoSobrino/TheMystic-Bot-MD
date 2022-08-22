@@ -1,4 +1,4 @@
-export async function before(m, { isAdmin, isBotAdmin, isOwner }) {
+export async function before(m, { isAdmin, isBotAdmin, isOwner, isROwner }) {
     if (m.isBaileys && m.fromMe)
         return !0
     if (!m.isGroup)
@@ -7,8 +7,8 @@ export async function before(m, { isAdmin, isBotAdmin, isOwner }) {
     let chat = global.db.data.chats[m.chat]
     let bot = global.db.data.settings[this.user.jid] || {}
     
-    let toxic = ('Puto' || 'puto' || 'Puta' || 'puta' || 'Rata' || 'rata' || 'mrd' || 'vrga') // Aqui puedes agregarle mas palabras si quieres
-    if (m.text.includes(toxic) && chat.antiToxic && !isOwner) {
+    let toxic = ('Puto' || 'puto' || 'Puta' || 'puta' || 'Rata' || 'rata' || 'mrd' || 'vrga' || 'verga') // Aqui puedes agregarle mas palabras si quieres
+    if (m.text.includes(toxic) && chat.antiToxic && !isOwner, !isROwner) {
        user.warn += 1
        if (!(user.warn >= 5)) await m.reply(`${user.warn == 1 ? `Hola *@${m.sender.split`@`[0]}*` : `*@${m.sender.split`@`[0]}*`}, decir la palabra (${toxic}) está prohibido en este bot *${user.warn}/5* advertencia`, false, { mentions: [m.sender] })
     }
@@ -18,7 +18,7 @@ export async function before(m, { isAdmin, isBotAdmin, isOwner }) {
        await m.reply(`Hola *@${m.sender.split`@`[0]}*, superaste las 5 advertencias serás bloqueado y eliminado de este grupo`, false, { mentions: [m.sender] })
        user.banned = true
        await this.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-       await this.updateBlockStatus(m.sender, 'block')
+       //await this.updateBlockStatus(m.sender, 'block')
     }
     return !1
 }
