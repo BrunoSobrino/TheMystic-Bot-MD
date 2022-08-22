@@ -134,6 +134,8 @@ let str = `
 ° ඬ⃟☑️ _${usedPrefix}disable *autosticker*_
 ° ඬ⃟☑️ _${usedPrefix}enable *antiviewonce*_
 ° ඬ⃟☑️ _${usedPrefix}disable *antiviewonce*_
+° ඬ⃟☑️ _${usedPrefix}enable *antitoxic*_
+° ඬ⃟☑️ _${usedPrefix}disable *antitoxic*_
 
 *<ℝ𝔼ℙ𝕆ℝ𝕋𝔼𝕊 𝔻𝔼 𝔽𝔸𝕃𝕃𝕆𝕊/>*
 
