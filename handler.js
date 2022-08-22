@@ -53,6 +53,7 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.afk)) user.afk = -1
                 if (!('afkReason' in user)) user.afkReason = ''
                 if (!('banned' in user)) user.banned = false
+                if (!isNumber(user.warn)) user.warn = 0
                 if (!isNumber(user.level)) user.level = 0
                 if (!('role' in user)) user.role = 'Novato'
                 if (!('autolevelup' in user)) user.autolevelup = true
@@ -71,6 +72,7 @@ export async function handler(chatUpdate) {
                     afk: -1,
                     afkReason: '',
                     banned: false,
+                    warn: 0,
                     level: 0,
                     role: 'Novato',
                     autolevelup: true,
