@@ -1,4 +1,4 @@
-/*export async function before(m, { isAdmin, isBotAdmin, isOwner }) {
+export async function before(m, { isAdmin, isBotAdmin, isOwner }) {
     if (m.isBaileys && m.fromMe)
         return !0
     if (!m.isGroup)
@@ -21,4 +21,4 @@
        await this.updateBlockStatus(m.sender, 'block')
     }
     return !1
-}*/
+}
