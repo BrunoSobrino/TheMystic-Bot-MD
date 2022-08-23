@@ -193,6 +193,7 @@ let str = `
 ° ඬ⃟💎 _${usedPrefix}setbye *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}hidetag *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}fantasmas_
+° ඬ⃟💎 _${usedPrefix}destraba_
 
 *<ℂ𝕆ℕ𝕍𝔼ℝ𝕋𝕀𝔻𝕆ℝ𝔼𝕊/>*
 
