@@ -99,15 +99,15 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 - THE SHADOW BROKERS - TEAM NO SE HACE RESPONSABLE DEL USO, NUMEROS, PRIVACIDAD Y CONTENIDO MANDADO, USADO O GESTIONADO POR USTEDES O EL BOT
 
 ## `COLABORADORES DEL BOT` 
-<a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="200" height="200" alt="unptoadrih15"/></a>
-<a href="https://github.com/ALBERTO9883"><img src="https://github.com/ALBERTO9883.png" width="200" height="200" alt="ALBERTO9883"/></a>
-<a href="https://github.com/ferhacks"><img src="https://github.com/ferhacks.png" width="200" height="200" alt="ferhacks"/></a>
-<a href="https://github.com/g4tito"><img src="https://github.com/g4tito.png" width="200" height="200" alt="g4tito"/></a>
-<a href="https://github.com/GataNina-Li"><img src="https://github.com/GataNina-Li.png" width="200" height="200" alt="GataNina-Li"/></a>
-<a href="https://github.com/NeKosmic"><img src="https://github.com/NeKosmic.png" width="200" height="200" alt="NeKosmic"/></a>
-<a href="https://github.com/CarlosTwT"><img src="https://github.com/CarlosTwT.png" width="200" height="200" alt="CarlosTwT"/></a>
-<a href="https://github.com/anxo2077"><img src="https://github.com/anxo2077.png" width="200" height="200" alt="anxo2077"/></a>
-<a href="https://github.com/GeneradorVIP"><img src="https://github.com/GeneradorVIP.png" width="200" height="200" alt="GeneradorVIP"/></a>
+<a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="100" height="100" alt="unptoadrih15"/></a>
+<a href="https://github.com/ALBERTO9883"><img src="https://github.com/ALBERTO9883.png" width="100" height="100" alt="ALBERTO9883"/></a>
+<a href="https://github.com/ferhacks"><img src="https://github.com/ferhacks.png" width="100" height="100" alt="ferhacks"/></a>
+<a href="https://github.com/g4tito"><img src="https://github.com/g4tito.png" width="100" height="100" alt="g4tito"/></a>
+<a href="https://github.com/GataNina-Li"><img src="https://github.com/GataNina-Li.png" width="100" height="100" alt="GataNina-Li"/></a>
+<a href="https://github.com/NeKosmic"><img src="https://github.com/NeKosmic.png" width="100" height="100" alt="NeKosmic"/></a>
+<a href="https://github.com/CarlosTwT"><img src="https://github.com/CarlosTwT.png" width="100" height="100" alt="CarlosTwT"/></a>
+<a href="https://github.com/anxo2077"><img src="https://github.com/anxo2077.png" width="100" height="100" alt="anxo2077"/></a>
+<a href="https://github.com/GeneradorVIP"><img src="https://github.com/GeneradorVIP.png" width="100" height="100" alt="GeneradorVIP"/></a>
 
 ## `EDITOR Y PORPIETARIO DEL BOT` 
 <a href="https://github.com/BrunoSobrino"><img src="https://github.com/BrunoSobrino.png" width="300" height="300" alt="BrunoSobrino"/></a>
