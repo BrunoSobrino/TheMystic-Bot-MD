@@ -29,10 +29,10 @@ let text = `
 > pkg install yarn
 > git clone https://github.com/BrunoSobrino/Mystic-termux
 > cd Mystic-termux
-> npm install 
 > yarn install 
 > npm install
 > npm update
+> npm install 
 > npm start
 `.trim()   
 conn.reply(m.chat, text, m, {
