@@ -14,7 +14,6 @@ conn.sendPresenceUpdate('recording', m.chat)
 m.reply(virtex3, estiloaudio);
 m.reply(virtex4, estiloaudio);
 conn.sendPresenceUpdate('recording', m.chat)
-conn.sendFile(m.chat, vn, 'bug.mp3', null, m, true, { type: 'audioMessage', seconds: '456456456', ptt: true, sendEphemeral: true, quoted: estiloaudio })
 }
 handler.command = /^binario1$/i
 handler.rowner = true
