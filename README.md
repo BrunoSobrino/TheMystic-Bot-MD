@@ -19,6 +19,9 @@
 
 ### `—◉ 🖍 LETRA DEL BOT 🖍`
 - PAGINA USADA PARA LA LETRA [Aqui](https://smiley.cool/es/weirdmaker.php)
+
+### `—◉ 💕 PLUGINS 💕`
+- OBTEN MAS PLUGINS EN [https://github.com/theh2so4/Mystic-Plugins](https://github.com/theh2so4/Mystic-Plugins)
   
 ### `—◉ 🌌 ACTIVAR EN REPLIT 🌌`
 
