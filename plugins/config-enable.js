@@ -19,6 +19,7 @@ rows: [
 {title: "📵 | 𝙰𝙽𝚃𝙸𝙻𝙻𝙰𝙼𝙰𝙳𝙰", description: "𝙰𝙲𝚃𝙸𝚅𝙰 𝙾 𝙳𝙴𝚂𝙰𝙲𝚃𝙸𝚅𝙰 𝙴𝙻 𝙰𝙽𝚃𝙸 𝙻𝙻𝙰𝙼𝙰𝙳𝙰", rowId: `${usedPrefix + command} anticall`},
 {title: "💬 | 𝙰𝙽𝚃𝙸𝙿𝚁𝙸𝚅𝙰𝙳𝙾", description: "𝙴𝙻 𝙱𝙾𝚃 𝙱𝙻𝙾𝚀𝚄𝙴𝙰𝚁𝙰 𝙰 𝙻𝙾𝚂 𝚄𝚂𝚄𝙰𝚁𝙸𝙾𝚂 𝚀𝚄𝙴 𝙻𝙴 𝙷𝙰𝙱𝙻𝙴𝙽 𝙰𝙻 𝙿𝚁𝙸𝚅𝙰𝙳𝙾", rowId: `${usedPrefix + command} antiprivado`},
 {title: "🤬 | 𝙰𝙽𝚃𝙸𝚃𝙾𝚇𝙸𝙲", description: "𝙰𝙲𝚃𝙸𝚅𝙰 𝙾 𝙳𝙴𝚂𝙰𝙲𝚃𝙸𝚅𝙰 𝙴𝙻 𝙰𝙽𝚃𝙸 𝙼𝙰𝙻𝙰 𝙿𝙰𝙻𝙰𝙱𝚁𝙰", rowId: `${usedPrefix + command} antitoxic`},
+{title: "🕸️ | ANTI-TRABAS", description: "ACTIVA O DESACTIVA EL ANTI TRABAS", rowId: `${usedPrefix + command} antitraba`},
 ]}, ]
 let name = await conn.getName(m.sender)
 const listMessage = {
@@ -63,6 +64,8 @@ footer: `╭══〘 ✯✯✯✯✯✯✯✯ 〙═╮
 ┣ ඬ⃟ℹ️ _${usedPrefix}disable *antiprivado*_
 ┣ ඬ⃟ℹ️ _${usedPrefix}enable *antitoxic*_
 ┣ ඬ⃟ℹ️ _${usedPrefix}disable *antitoxic*_
+┣ ඬ⃟ℹ️ _${usedPrefix}enable *antitraba*_
+┣ ඬ⃟ℹ️ _${usedPrefix}disable *antitraba*_
 ┗━━━━━━━━━━━━━┛
 ${author}`,
 title: null,
@@ -247,6 +250,15 @@ throw false
 }}
 chat.antiToxic = isEnable
 break
+case 'antitraba':
+      if (m.isGroup) {
+        if (!(isAdmin || isOwner)) {
+          global.dfail('admin', m, conn)
+          throw false
+        }
+      }
+      chat.antiTraba = isEnable
+      break
 default:
 if (!/[01]/.test(command)) return await conn.sendMessage(m.chat, listMessage)
 throw false
