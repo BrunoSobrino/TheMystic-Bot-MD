@@ -54,10 +54,10 @@ AÑADE AL APARTADO DE BUILPACK LO SIGUIENTE, SI YA APARCEN SOLO IGNORA ESTA PART
 > pkg install yarn
 > git clone https://github.com/BrunoSobrino/Mystic-termux
 > cd Mystic-termux
-> npm install 
 > yarn install 
 > npm install
 > npm update
+> npm install 
 > npm start
 ```
 
