@@ -1,16 +1,7 @@
-/* CREDITOS A https://github.com/FG98F */
-const dir = [
-  'https://tinyurl.com/ygms8wvy',
-  'https://tinyurl.com/yhdyhnap',
-  'https://tinyurl.com/yfwjbou7',
-  'https://tinyurl.com/yh3e3ogt',
-  'https://tinyurl.com/yfmhpvxs',
-  'https://tinyurl.com/ygpxka9q'
-];
+import { sticker } from '../lib/sticker.js'
+import fetch from 'node-fetch'
 let handler = async (m, { conn }) => {
-conn.sendFile(m.chat, dir[Math.floor(Math.random() * dir.length)], 'dadu.webp', '', m)
-}
-handler.help = ['dado']
-handler.tags = ['game']
-handler.command = ['dado', 'dados'] 
+let dir = 'http://x17apis.herokuapp.com/api/randomimagem/dado?apikey=O6maaxfyXEhGuALcNvrp9z4bI'
+conn.sendFile(m.chat, dir, 'error.webp', null, m, { asSticker: true })}
+handler.command = ['dado', 'dados', 'dadu'] 
 export default handler
