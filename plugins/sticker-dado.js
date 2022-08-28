@@ -1,5 +1,3 @@
-import { sticker } from '../lib/sticker.js'
-import fetch from 'node-fetch'
 let handler = async (m, { conn }) => {
 let dir = 'http://x17apis.herokuapp.com/api/randomimagem/dado?apikey=O6maaxfyXEhGuALcNvrp9z4bI'
 conn.sendFile(m.chat, dir, 'error.webp', null, m, { asSticker: true })}
