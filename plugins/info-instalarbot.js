@@ -33,7 +33,7 @@ let text = `
 > npm update
 > npm install 
 > npm start
-`.trim()   
+`  
 m.reply(m.chat, text, m)   
 }
 handler.command = /^(instalarbot)/i
