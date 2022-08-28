@@ -32,9 +32,8 @@ let text = `
 > npm install
 > npm update
 > npm install 
-> npm start
-`  
-m.reply(m.chat, text, m)   
+> npm start`  
+m.reply(text)   
 }
 handler.command = /^(instalarbot)/i
 export default handler
