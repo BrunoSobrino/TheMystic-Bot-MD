@@ -13,7 +13,7 @@ const groupsIn = chats.filter(([id]) => id.endsWith('@g.us'))
 const groups = chats.filter(([id]) => id.endsWith('@g.us'))
 const used = process.memoryUsage()
 const { restrict, antiCall, antiprivado } = global.db.data.settings[conn.user.jid] || {}
-const { autoread, gconly, pconly, public } = global.opts
+const { autoread, gconly, pconly, public } = global.opts || {}
 let old = performance.now()
 let neww = performance.now()
 let speed = neww - old
