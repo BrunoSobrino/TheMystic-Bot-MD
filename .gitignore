@@ -1,0 +1,9 @@
+#| Foldes |#
+
+node_modules
+MysticSession
+
+#| Files |#
+
+package-lock.json
+database.json
