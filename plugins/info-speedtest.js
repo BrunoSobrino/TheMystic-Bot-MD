@@ -1,5 +1,5 @@
-let cp = require('child_process')
-let { promisify } = require('util')
+import cp from 'child_process'
+import { promisify } from 'util'
 let exec = promisify(cp.exec).bind(cp)
 let handler = async (m) => {
 	await m.reply(m.chat, wait, m)
