@@ -1,3 +1,4 @@
+import { generateWAMessageFromContent } from '@adiwajshing/baileys'
 import os from 'os'
 import util from 'util'
 import sizeFormatter from 'human-readable'
