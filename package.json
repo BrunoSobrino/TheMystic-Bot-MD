@@ -38,6 +38,7 @@
         "colors": "1.4.0",
         "emoji-api": "^1.0.2",
         "express": "^4.17.3",
+        "fg-ig": "^0.0.1",
         "file-type": "^17.1.1",
         "fluent-ffmpeg": "^2.1.2",
         "fs": "^0.0.1-security",
