@@ -2,7 +2,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     db.data.sticker = db.data.sticker || {}
     if (!m.quoted) throw 'Asigna un comando para un sticker usando .setcmd + el comando '
     if (!m.quoted.fileSha256) throw 'Solo puedes asignar un comando a stickers/fotos'
-    if (!text) throw `Uso:\n${usedPrefix + coommand} <texto>\n\nEjemplo:\n${usedPrefix + command} prueba`
+    if (!text) throw `Uso:\n${usedPrefix + command} <texto>\n\nEjemplo:\n${usedPrefix + command} prueba`
     let sticker = db.data.sticker
     let hash = m.quoted.fileSha256.toString('base64')
     if (sticker[hash] && sticker[hash].locked) throw 'No tienes permiso para modificar este comando de stickers.'
