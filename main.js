@@ -86,6 +86,8 @@ if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 't
 
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT)
 
+// if (opts['landing']) (await import('./landing.js')).default(global.conn, PORT) # Future landing page with NodeJs
+
 function clearTmp() {
 const tmp = [tmpdir(), join(__dirname, './tmp')]
 const filename = []
