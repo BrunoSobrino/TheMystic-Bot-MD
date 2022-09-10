@@ -245,7 +245,6 @@ throw false
 }}
 chat.antiToxic = isEnable
 break
-case 'antitrabas':
 case 'antitraba':
 if (m.isGroup) {
 if (!(isAdmin || isOwner)) {
