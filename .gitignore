@@ -1,4 +1,4 @@
-#| Foldes |#
+#| Folders |#
 
 node_modules
 MysticSession
@@ -7,5 +7,3 @@ MysticSession
 
 package-lock.json
 database.json
-
-# For TheMystic-Bot-MD By TheH2SO4 #

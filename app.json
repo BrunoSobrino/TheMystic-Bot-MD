@@ -1,18 +1,35 @@
 {
   "name": "TheMystic-Bot-MD",
+  "website": "https://github.com/BrunoSobrino",
   "description": "Subscribete a The Shadow Borkers - Bot (≧▽≦)",
   "repository": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
   "logo": "https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/Menu2.jpg",
-  "keywords": ["java", "bot", "whatsapp-bot", "whatsapp-automation"],
+  "success_url": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
+  "keywords": [
+    "nodejs",
+    "heroku",
+    "bot",
+    "bots",
+    "bot",
+    "spanish",
+    "whatsapp",
+    "termux",
+    "shadow",
+    "multi-device",
+    "md",
+    "whatsappbot",
+    "oficial",
+    "whatsapp-md",
+    "themysticbot",
+    "themystic-bot",
+    "themystic-bot-md"],
+  "image": "heroku/nodejs",
   "buildpacks": [
-  {
-    "url": "heroku/nodejs"
-  },
-  {
-    "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
-  },
-  {
-    "url": "https://github.com/bogini/heroku-buildpack-graphicsmagick"
-  }    
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+    },
+    {
+      "url": "https://github.com/bogini/heroku-buildpack-graphicsmagick"
+    }    
  ]
 }
