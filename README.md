@@ -45,7 +45,7 @@ apt-get update -y && apt-get upgrade -y
 ```
 
 ```bash
-pkg install -y git nodejs ffmpeg imagemagick yarn
+pkg install -y git nodejs ffmpeg imagemagick && pkg install yarn
 ```
 
 ```bash
