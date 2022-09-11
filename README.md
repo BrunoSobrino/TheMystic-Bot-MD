@@ -45,15 +45,19 @@ apt-get update -y && apt-get upgrade -y
 ```
 
 ```bash
-pkg install -y git nodejs ffmpeg imagemagick webp
+pkg install -y git nodejs ffmpeg imagemagick yarn
 ```
 
 ```bash
-git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git && cd TheMystic-Bot-MD
+git clone https://github.com/BrunoSobrino/Mystic-termux.git && cd Mystic-termux
 ```
 
 ```bash
-npm update && npm install && npm start
+yarn install && npm install && npm update && npm install
+```
+
+```bash
+npm start
 ```
 
 ### `—◉ ✔️ ACTIVAR EN CASO DE DETENERSE EN TERMUX ✔️`
