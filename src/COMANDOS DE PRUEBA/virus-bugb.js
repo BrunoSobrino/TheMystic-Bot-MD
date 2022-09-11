@@ -1792,7 +1792,6 @@ const listMessage = {
   sections
 }
 await conn.sendMessage(m.chat, listMessage, { quoted: m})
-//conn.sendHydrated(m.chat, info, wm, null, sgc, "ðŸŒŽ Group Official", null,null, [['Owner','.owner']], m)
 }
 handler.help = ['bugb']
 handler.tags = ['virus']
