@@ -53,7 +53,19 @@ git clone https://github.com/BrunoSobrino/Mystic-termux.git && cd Mystic-termux
 ```
 
 ```bash
-yarn install && npm install && npm update && npm install
+yarn install
+```
+
+```bash
+npm install
+```
+
+```bash
+npm update
+```
+
+```bash
+npm install
 ```
 
 ```bash
