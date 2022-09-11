@@ -29,7 +29,6 @@
     "dependencies": {
         "@adiwajshing/baileys": "github:BrunoSobrino/baileys",
         "@bochilteam/scraper": "^3.0.0",
-        "@sarequl/client-ip-details": "^1.1.1",
         "acrcloud": "^1.4.0",
         "awesome-phonenumber": "^2.68.0",
         "axios": "^0.24.0",
