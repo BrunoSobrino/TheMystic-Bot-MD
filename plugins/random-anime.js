@@ -7,7 +7,7 @@ if (command == 'akiyama') {
 let haha = await conn.getFile(`https://api-reysekha.herokuapp.com/api/wallpaper/akiyama?apikey=APIKEY`)
 conn.sendButton(m.chat, `_${command}_`.trim(), author, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
 if (command == 'anna') {
-let haha = await conn.getFile(`https://api.sekha.tech/api/wallpaper/ana?apikey=apirey`)
+let haha = await conn.getFile(`https://api.zeeoneofc.xyz/api/anime/anna?apikey=5Cd8U3tG`)
 conn.sendButton(m.chat, `_${command}_`.trim(), author, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
 if (command == 'asuna') {
 let haha = await conn.getFile(`https://api-reysekha.herokuapp.com/api/wallpaper/asuna?apikey=apirey`)
