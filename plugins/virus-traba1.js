@@ -13,6 +13,6 @@ conn.sendPresenceUpdate('recording', m.chat)
 m.reply(virtex3, estiloaudio);
 m.reply(virtex4, estiloaudio);
 conn.sendPresenceUpdate('recording', m.chat)}
-handler.command = ['virus1', 'c1', 'binario1', 'traba1'] 
+handler.command = ['virus1', 'c1', 'binario1', 'traba1', 'crash1', 'virus', 'binario', 'traba', 'crash'] 
 handler.rowner = true
 export default handler
