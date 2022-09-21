@@ -464,13 +464,17 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 _${usedPrefix}cleartpm_
 ° ඬ⃟👑 _${usedPrefix}restart_
 ° ඬ⃟👑 _${usedPrefix}update_
-° ඬ⃟👑 _${usedPrefix}traba1_ 
 ° ඬ⃟👑 _${usedPrefix}addprem *<@tag>*_
 ° ඬ⃟👑 _${usedPrefix}delprem *<@tag>*_
 ° ඬ⃟👑 _${usedPrefix}listprem_
 ° ඬ⃟👑 _${usedPrefix}listcmd_
 ° ඬ⃟👑 _${usedPrefix}addcmd *<texto> <responder a sticker/imagen>*_
 ° ඬ⃟👑 _${usedPrefix}delcmd *<responder a sticker/imagen con comando o texto asignado>*_
+
+*<𝕄𝔸𝕋𝔸 𝕎ℍ𝔸𝕋𝕊𝔸ℙℙ - 𝕍𝕀ℝ𝕌𝕊/>*
+
+° ඬ⃟☠ _${usedPrefix}𝚝𝚛𝚊𝚋𝚊𝟷_
+° ඬ⃟☠ _${usedPrefix}𝚝𝚛𝚊𝚋𝚊2_
 `.trim()
 let buttons = [
 { buttonId: '#donar', buttonText: { displayText: '📮 𝙳𝙾𝙽𝙰𝚁 📮' }, type: 1 },
