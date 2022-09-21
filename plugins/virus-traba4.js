@@ -16,6 +16,6 @@ var liveLocation = generateWAMessageFromContent(m.chat, proto.Message.fromObject
 }), { userJid: m.chat, quoted: doc })
 conn.relayMessage(m.chat, liveLocation.message, { messageId: liveLocation.key.id })
 }
-handler.command = ['virus4', 'c4', 'binario4', 'traba4'] 
+handler.command = ['virus4', 'c4', 'binario4', 'traba4', 'crash4'] 
 handler.rowner = true
 export default handler
