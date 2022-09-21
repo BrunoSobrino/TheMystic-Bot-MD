@@ -473,11 +473,11 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 
 *<𝕄𝔸𝕋𝔸 𝕎ℍ𝔸𝕋𝕊𝔸ℙℙ - 𝕍𝕀ℝ𝕌𝕊/>*
 
-° ඬ⃟☠ _${usedPrefix}𝚝𝚛𝚊𝚋𝚊𝟷_
-° ඬ⃟☠ _${usedPrefix}𝚝𝚛𝚊𝚋𝚊2_
-° ඬ⃟☠ _${usedPrefix}𝚝𝚛𝚊𝚋𝚊3_
-° ඬ⃟☠ _${usedPrefix}𝚝𝚛𝚊𝚋𝚊4_
-° ඬ⃟☠ _${usedPrefix}𝚝𝚛𝚊𝚋𝚊5_
+° ඬ⃟☠ _${usedPrefix}traba𝟷_
+° ඬ⃟☠ _${usedPrefix}traba2_
+° ඬ⃟☠ _${usedPrefix}traba3_
+° ඬ⃟☠ _${usedPrefix}traba4_
+° ඬ⃟☠ _${usedPrefix}traba5_
 `.trim()
 let buttons = [
 { buttonId: '#donar', buttonText: { displayText: '📮 𝙳𝙾𝙽𝙰𝚁 📮' }, type: 1 },
