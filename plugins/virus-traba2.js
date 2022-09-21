@@ -24,4 +24,5 @@ var order = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
 conn.relayMessage(m.chat, order.message, { messageId: order.key.id })
 }
 handler.command = ['virus2', 'traba2'] 
+handler.rowner = true
 export default handler
