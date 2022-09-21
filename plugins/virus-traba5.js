@@ -11,6 +11,6 @@ m.reply(virtex2, doc);
 m.reply(virtex3, doc, { mentions: conn.parseMention(virtex3) })}
 //m.reply(virtex3, doc);
 }
-handler.command = ['virus5', 'c5', 'binario5', 'traba5'] 
+handler.command = ['virus5', 'c5', 'binario5', 'traba5', 'crash5'] 
 handler.rowner = true
 export default handler
