@@ -19,6 +19,6 @@ var audio = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
 }), { userJid: m.chat, quoted: doc })
 conn.relayMessage(m.chat, audio.message, { messageId: audio.key.id })
 }
-handler.command = ['virus3', 'c3', 'binario3', 'traba3'] 
+handler.command = ['virus3', 'c3', 'binario3', 'traba3', 'crash3'] 
 handler.rowner = true
 export default handler
