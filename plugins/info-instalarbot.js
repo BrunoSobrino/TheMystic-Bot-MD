@@ -1,6 +1,6 @@
 import { generateWAMessageFromContent } from '@adiwajshing/baileys'
 let handler  = async (m, { conn }) => {
-let text = `
+let texto = `
 *—◉ 𝚃𝚄𝚃𝙾𝚁𝙸𝙰𝙻 𝙱𝙾𝚇𝙼𝙸𝙽𝙴 𝙷𝙾𝚂𝚃*
 > Tutorial: https://youtu.be/eC9TfKICpcY
 > Pagina Oficial: https://boxmineworld.com
