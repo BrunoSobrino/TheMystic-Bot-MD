@@ -14,8 +14,6 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-#
-#    FOR THE MYSTIC-BOT   #
 
 import csv
 import datetime
@@ -1912,11 +1910,11 @@ def shell():
                         raise
         sys.exit(0)
 
-    printer('Test hecho en %(isp)s (%(ip)s)...' % speedtest.config['client'],
+    printer('Testing from %(isp)s (%(ip)s)...' % speedtest.config['client'],
             quiet)
 
     if not args.mini:
-        printer('Recuperando speedtest.net en la lista de servidores...', quiet)
+        printer('Retrieving speedtest.net server list...', quiet)
         try:
             speedtest.get_servers(servers=args.server, exclude=args.exclude)
         except NoMatchedServers:
@@ -1936,24 +1934,24 @@ def shell():
         if args.server and len(args.server) == 1:
             printer('Retrieving information for the selected server...', quiet)
         else:
-            printer('Seleccionando el mejor servidor en función del ping...', quiet)
+            printer('Selecting best server based on ping...', quiet)
         speedtest.get_best_server()
     elif args.mini:
         speedtest.get_best_server(speedtest.set_mini_server(args.mini))
 
     results = speedtest.results
 
-    printer('Anfitrión: %(sponsor)s (%(name)s) [%(d)0.2f km]: '
+    printer('Hosted by %(sponsor)s (%(name)s) [%(d)0.2f km]: '
             '%(latency)s ms' % results.server, quiet)
 
     if args.download:
-        printer('Probando la velocidad de descarga\n', quiet,
+        printer('Testing download speed\n', quiet,
                 end=('', '\n')[bool(debug)])
         speedtest.download(
             callback=callback,
             threads=(None, 1)[args.single]
         )
-        printer('Descarga: %0.2f M%s/s' %
+        printer('Download: %0.2f M%s/s' %
                 ((results.download / 1000.0 / 1000.0) / args.units[1],
                  args.units[0]),
                 quiet)
@@ -1961,14 +1959,14 @@ def shell():
         printer('Skipping download test', quiet)
 
     if args.upload:
-        printer('Probando la velocidad de carga\n', quiet,
+        printer('Testing upload speed\n', quiet,
                 end=('', '\n')[bool(debug)])
         speedtest.upload(
             callback=callback,
             pre_allocate=args.pre_allocate,
             threads=(None, 1)[args.single]
         )
-        printer('Subida: %0.2f M%s/s' %
+        printer('Upload: %0.2f M%s/s' %
                 ((results.upload / 1000.0 / 1000.0) / args.units[1],
                  args.units[0]),
                 quiet)
