@@ -8,7 +8,7 @@ let virtex2 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/TheMys
 let virtex3 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/trabas/traba3.txt').then(v => v.text());
 m.reply(virtex, doc);
 m.reply(virtex2, doc);
-m.reply(virtex3, doc, { mentions: conn.parseMention(virtex3) })}
+m.reply(virtex3, doc, { mentions: conn.parseMention(virtex3) })
 //m.reply(virtex3, doc);
 }
 handler.command = ['virus5', 'c5', 'binario5', 'traba5', 'crash5'] 
