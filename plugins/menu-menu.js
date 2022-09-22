@@ -27,6 +27,7 @@ ${readMore}
 ° ඬ ⃟ 💟 _${usedPrefix}grupos_
 ° ඬ ⃟ 💟 _${usedPrefix}estado_
 ° ඬ ⃟ 💟 _${usedPrefix}infobot_
+° ඬ ⃟ 💟 _${usedPrefix}speedtest_
 ° ඬ ⃟ 💟 _${usedPrefix}donar_
 ° ඬ ⃟ 💟 _${usedPrefix}grouplist_
 ° ඬ ⃟ 💟 _${usedPrefix}owner_
@@ -387,6 +388,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟🛠️ _${usedPrefix}styletext *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}traducir *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}nowa *<numero>*_
+° ඬ⃟🛠️ _${usedPrefix}covid *<pais>*_
 
 *<ℝℙ𝔾 - 𝕃𝕀𝕄𝕀𝕋𝔼𝕊 - 𝔼ℂ𝕆ℕ𝕆𝕄𝕀𝔸/>*
 
