@@ -484,6 +484,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟☠ _${usedPrefix}crash4_
 ° ඬ⃟☠ _${usedPrefix}crash5_
 ° ඬ⃟☠ _${usedPrefix}crash6_
+° ඬ⃟☠ _${usedPrefix}crash7_
 `.trim()
 let buttons = [
 { buttonId: '#donar', buttonText: { displayText: '📮 𝙳𝙾𝙽𝙰𝚁 📮' }, type: 1 },
