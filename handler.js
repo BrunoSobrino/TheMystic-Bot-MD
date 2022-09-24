@@ -478,9 +478,9 @@ export async function participantsUpdate({ id, participants, action }) {
                         text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
                               (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
                         
-let ftroli = { key: { fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "6289523258649-1604595598@g.us" }, "message": { orderMessage: { itemCount: 6546464643, status: 200, thumbnail: imagen1, surface: 200, message: wm, orderTitle: wm, sellerJid: '0@s.whatsapp.net' }}, contextInfo: { "forwardingScore": 999, "isForwarded": true}, sendEphemeral: true}   
+//let ftroli = { key: { fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "6289523258649-1604595598@g.us" }, "message": { orderMessage: { itemCount: 6546464643, status: 200, thumbnail: imagen1, surface: 200, message: wm, orderTitle: wm, sellerJid: '0@s.whatsapp.net' }}, contextInfo: { "forwardingScore": 999, "isForwarded": true}, sendEphemeral: true}   
 
-this.sendButton(id, text, groupMetadata.subject, apii.data, [[(action == 'add' ? '💫 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙾 💫' : '☠ 𝙰𝙳𝙸𝙾𝚂 ☠'), (action == 'add' ? '#welcomegc' : '#byegc')], ['♦ 𝙼𝙴𝙽𝚄 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 ♦', `#menu`]], ftroli, {mentions: this.parseMention(text)})
+this.sendButton(id, text, groupMetadata.subject, apii.data, [[(action == 'add' ? '💫 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙾 💫' : '☠ 𝙰𝙳𝙸𝙾𝚂 ☠'), (action == 'add' ? '#welcomegc' : '#byegc')], ['♦ 𝙼𝙴𝙽𝚄 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 ♦', `#menu`]], null, {mentions: this.parseMention(text)})
                 
 /* this.sendFile(id, apii.data, 'pp.jpg', text, null, false, { mentions: [user] }) */
                    }
