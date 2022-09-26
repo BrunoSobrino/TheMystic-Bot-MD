@@ -7,14 +7,14 @@ let enc = encodeURIComponent(text)
 try {
 let json = await fetch(`https://latam-api.vercel.app/api/playstore?apikey=brunosobrino&q=${enc}`)
 let gPlay = await json.json()
-let Mystic = await translate(`${gPlay.descripcion}`, { tld, to: 'es' })
+let mystic = await translate(`${gPlay.descripcion}`, { tld, to: 'es' })
 if (!gPlay.titulo) return m.reply(`[ ! ] Sin resultados`)
 conn.sendMessage(m.chat,{image:{url: gPlay.imagen},caption:`🔍 Resultado: ${gPlay.titulo}
 🧬 Identificador: ${gPlay.id}
 ⛓️ Link: ${gPlay.link}
 🖼️ Imagen: ${gPlay.imagen}
 ✍️ Desarrollador: ${gPlay.desarrollador}
-📜 Descripcion: ${Mystic}
+📜 Descripcion: ${mystic}
 💲 Moneda: ${gPlay.moneda}
 🎭 Gratis?: ${gPlay.gratis}
 💸 Precio: ${gPlay.precio}
