@@ -19,8 +19,9 @@ conn.sendMessage(m.chat,{image:{url: gPlay.imagen},caption:`🔍 Resultado: ${gP
 🎭 Gratis?: ${gPlay.gratis}
 💸 Precio: ${gPlay.precio}
 📈 Puntuacion: ${gPlay.puntuacion}`},{quoted:m})
-} catch {
+} catch (e) {
 m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*')
+console.log(e)
 }}
 handler.help = ['playstore <aplicacion>']
 handler.tags = ['internet']
