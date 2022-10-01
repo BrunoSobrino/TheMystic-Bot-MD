@@ -135,7 +135,7 @@ ${readMore}
 
 *<𝔾ℝ𝕌ℙ𝕆𝕊/>* 
 
-° ඬ⃟💎 _${usedPrefix}advertencia <@tag
+° ඬ⃟💎 _${usedPrefix}advertencia <@tag>_
 ° ඬ⃟💎 _${usedPrefix}add *<numero>*_
 ° ඬ⃟💎 _${usedPrefix}kick *<@tag>*_
 ° ඬ⃟💎 _${usedPrefix}grupo *<abrir / cerrar>*_
