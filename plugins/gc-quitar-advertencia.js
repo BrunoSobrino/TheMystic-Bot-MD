@@ -23,7 +23,7 @@ if (!who) throw `[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙴 𝙰 
 user.warn -= 1
   
 await conn.sendButton(m.chat,`${user.warn == 1 ? `*@${who.split`@`[0]}*` : `♻️ *@${who.split`@`[0]}*`} 𝚂𝙴 𝙻𝙴 𝚀𝚄𝙸𝚃𝙾 𝚄𝙽𝙰 𝙰𝙳𝚅𝙴𝚁𝚃𝙴𝙽𝙲𝙸𝙰 `, `*ADVERTENCIA : WARNING*\n⚠️ *Antes: ${user.warn + 1}/4*\n⚠️ *Ahora: ${user.warn}/4*\n\n${wm}`, pp, [
-['🌱 𝙱𝙰𝙻𝙰𝙽𝙲𝙴', '.inventario'],
+['🌱 𝙱𝙰𝙻𝙰𝙽𝙲𝙴', '.balance'],
 ['📦 𝙼𝙴𝙽𝚄', '/menu']], false, { mentions: [who] }) //[m.sender]
 	
 }
