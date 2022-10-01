@@ -14,5 +14,6 @@ await conn.sendButton(m.chat, caption, `⚠️ 𝙰𝙳𝚅𝙴𝚁𝚃𝙴𝙽�
 ['𝐌 𝐄 𝐍 𝐔 🌠', '/menu']], m, { mentions: await conn.parseMention(caption) })}
 
 handler.command = /^(listaadv|listadv|adv|advlist|advlista)$/i 
-
+handler.botAdmin = true
+handler.admin = true
 export default handler
