@@ -19,7 +19,7 @@ let pp = './Menu2.jpg'
 if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text
 else who = m.chat
 let user = global.db.data.users[who]
-if (!who) throw `[❗𝐈𝐍𝐅𝐎❗]𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙴 𝙰 𝙻𝙰 𝙿𝙴𝚁𝚂𝙾𝙽𝙰 𝚀𝚄𝙴 𝚅𝙰 𝙰 𝚁𝙴𝙲𝙸𝙱𝙸𝚁 𝙰𝙳𝚅𝙴𝚁𝚃𝙴𝙽𝙲𝙸𝙰\n\n𝙴𝙹𝙴𝙼𝙿𝙻𝙾\n*${usedPrefix + command} @tag*`
+if (!who) throw `[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙴 𝙰 𝙻𝙰 𝙿𝙴𝚁𝚂𝙾𝙽𝙰 𝚀𝚄𝙴 𝚅𝙰 𝙰 𝚁𝙴𝙲𝙸𝙱𝙸𝚁 𝙰𝙳𝚅𝙴𝚁𝚃𝙴𝙽𝙲𝙸𝙰\n\n𝙴𝙹𝙴𝙼𝙿𝙻𝙾\n*${usedPrefix + command} @tag*`
 user.warn += 1
   
 await conn.sendButton(m.chat,`${user.warn == 1 ? `*@${who.split`@`[0]}*` : `*@${who.split`@`[0]}*`} 𝚁𝙴𝙲𝙸𝙱𝙸𝙾 𝚄𝙽𝙰 𝙰𝙳𝚅𝙴𝚁𝚃𝙴𝙽𝙲𝙸𝙰 𝙴𝙽 𝙴𝚂𝚃𝙴 𝙶𝚁𝚄𝙿𝙾!`, `*ADVERTENCIAS *${user.warn}/4*\n\n${wm}`, pp, [
