@@ -135,7 +135,6 @@ ${readMore}
 
 *<𝔾ℝ𝕌ℙ𝕆𝕊/>* 
 
-° ඬ⃟💎 _${usedPrefix}advertencia <@tag>_
 ° ඬ⃟💎 _${usedPrefix}add *<numero>*_
 ° ඬ⃟💎 _${usedPrefix}kick *<@tag>*_
 ° ඬ⃟💎 _${usedPrefix}grupo *<abrir / cerrar>*_
@@ -151,6 +150,9 @@ ${readMore}
 ° ඬ⃟💎 _${usedPrefix}setwelcome *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}setbye *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}hidetag *<texto>*_
+° ඬ⃟💎 _${usedPrefix}warn <@tag>_
+° ඬ⃟💎 _${usedPrefix}unwarn <@tag>_
+° ඬ⃟💎 _${usedPrefix}listwarn_
 ° ඬ⃟💎 _${usedPrefix}fantasmas_
 ° ඬ⃟💎 _${usedPrefix}destraba_
 
