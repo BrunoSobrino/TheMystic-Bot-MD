@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text }) => {
 try {
 let vn = './media/menu.mp3'
-let pp = './Menu2.jpg'
+let pp = './Menu.png'
 let img = await(await fetch('https://www.paidmembershipspro.com/wp-content/uploads/2017/07/PayPal-Express.png')).buffer()
 let d = new Date(new Date + 3600000)
 let locale = 'es'
