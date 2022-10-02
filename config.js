@@ -87,6 +87,7 @@ global.APIKeys = { // APIKey Here
 global.imagen1 = fs.readFileSync('./Menu2.jpg')
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg') 
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png')
+global.imagen4 = fs.readFileSync('./Menu.png')
 
 global.generateWAMessageFromContent = generateWAMessageFromContent
 
