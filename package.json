@@ -14,9 +14,9 @@
         "test": "node test.js",
         "test2": "nodemon index.js"
     },
-    "homepage": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
+    "homepage": "https://github.com/MIGUELF4/TheMiguelBot-Beta/tree/patch-1",
     "author": {
-        "name": "BrunoSobrino"
+        "name": "Miguel"
     },
     "repository": {
         "type": "git",
