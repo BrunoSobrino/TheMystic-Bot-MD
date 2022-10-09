@@ -1,4 +1,4 @@
-import fecth from 'node-fetch'
+import fetch from 'node-fetch'
 let handler  = async (m, { conn }) => {
 let info = await fetch('https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/trabas/traba4.txt').then(v => v.text());
 conn.fakeReply(m.chat, info, '0@s.whatsapp.net', '🔥 *by 𝙲𝚛𝚕𝚜҉ꪶ͢sєrꫂ⁩* 🔥', 'status@broadcast')}
