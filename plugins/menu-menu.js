@@ -391,6 +391,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
 ° ඬ⃟🛠️ _${usedPrefix}styletext *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}traducir *<texto>*_
+° ඬ⃟🛠️ _${usedPrefix}zoom *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}nowa *<numero>*_
 ° ඬ⃟🛠️ _${usedPrefix}covid *<pais>*_
 ° ඬ⃟🛠️ _${usedPrefix}horario_
@@ -490,6 +491,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟☠ _${usedPrefix}crash5_
 ° ඬ⃟☠ _${usedPrefix}crash6_
 ° ඬ⃟☠ _${usedPrefix}crash7_
+° ඬ⃟☠ _${usedPrefix}crash8_
 `.trim()
 let buttons = [
 { buttonId: '#donar', buttonText: { displayText: '📮 𝙳𝙾𝙽𝙰𝚁 📮' }, type: 1 },
