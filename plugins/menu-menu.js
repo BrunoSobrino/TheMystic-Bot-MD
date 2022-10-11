@@ -449,6 +449,8 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 > *<funcion>*
 ° ඬ⃟👑 => *<funcion>*
 ° ඬ⃟👑 $ *<funcion>*
+° ඬ⃟👑 _${usedPrefix}setprefix *<texto>*
+° ඬ⃟👑 _${usedPrefix}resetprefix
 ° ඬ⃟👑 _${usedPrefix}cajafuerte_
 ° ඬ⃟👑 _${usedPrefix}blocklist_
 ° ඬ⃟👑 _${usedPrefix}block *<@tag>*_
