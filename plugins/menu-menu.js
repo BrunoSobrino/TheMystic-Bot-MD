@@ -382,7 +382,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟🔊 _a_
 
 *<ℍ𝔼ℝℝ𝔸𝕄𝕀𝔼ℕ𝕋𝔸𝕊/>*
-
+° ඬ⃟🛠️ _${usedPrefix}clima *<país>* / *<ciudad>*
 ° ඬ⃟🛠️ _${usedPrefix}encuesta *<texto1|texto2...>*_
 ° ඬ⃟🛠️ _${usedPrefix}afk *<motivo>*_
 ° ඬ⃟🛠️ _${usedPrefix}ocr *<responde a imagen>*_
