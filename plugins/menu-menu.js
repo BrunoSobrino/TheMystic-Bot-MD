@@ -101,7 +101,6 @@ ${readMore}
 
 *<𝔻𝔼𝕊ℂ𝔸ℝ𝔾𝔸𝕊/>*
 
-° ඬ⃟📥 _${usedPrefix}facebook *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}instagram *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}mediafire *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}instagram *<enlace / link / url>*_
@@ -111,6 +110,11 @@ ${readMore}
 ° ඬ⃟📥 _${usedPrefix}tiktok *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}xnxxdl *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
+° ඬ⃟📥 _${usedPrefix}fb *<enlace / link / url>*_
+° ඬ⃟📥 _${usedPrefix}fb2 *<enlace / link / url>*_
+° ඬ⃟📥 _${usedPrefix}fb3 *<enlace / link / url>*_
+° ඬ⃟📥 _${usedPrefix}fb4 *<enlace / link / url>*_
+° ඬ⃟📥 _${usedPrefix}fb5 *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}ytmp3 *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}ytmp4 *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}ytmp3doc *<enlace / link / url>*_
