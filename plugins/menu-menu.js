@@ -18,11 +18,11 @@ let taguser = '@' + m.sender.split("@s.whatsapp.net")[0]
 let str = `
 *ミ💖 𝙷𝙾𝙻𝙰 ✨${taguser}✨, 𝙰𝚀𝚄𝙸 𝙴𝚂𝚃𝙰 𝙴𝙻 𝙼𝙴𝙽𝚄 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙾 𝙳𝙴 𝚃𝙷𝙴 𝙼𝚈𝚂𝚃𝙸𝙲 - 𝙱𝙾𝚃 💖彡*
 
-${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${global.conn.user.jid.split`@`[0]}`)}
-
 *📅 𝙵𝙴𝙲𝙷𝙰: ${week}, ${date}*
 *📈 𝚃𝙸𝙴𝙼𝙿𝙾 𝙰𝙲𝚃𝙸𝚅𝙾: ${uptime}*
 *📊 𝚄𝚂𝚄𝙰𝚁𝙸𝙾𝚂: ${rtotalreg}*
+
+${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${global.conn.user.jid.split`@`[0]}`)}
 ${readMore}
 *<𝕀ℕ𝔽𝕆ℝ𝕄𝔸ℂ𝕀𝕆ℕ 𝔻𝔼𝕃 𝔹𝕆𝕋/>*
 
@@ -39,6 +39,12 @@ ${readMore}
 *<𝕌ℕ𝔼 𝕌ℕ 𝔹𝕆𝕋 𝔸 𝕋𝕌 𝔾ℝ𝕌ℙ𝕆/>*
 
 ° ඬ⃟👽 _${usedPrefix}join *<enlace / link / url>*_
+
+*<𝕊𝔼ℝ𝔹𝕆𝕋 - 𝕁𝔸𝔻𝕀𝔹𝕆𝕋/>*
+
+° ඬ⃟🤖 _${usedPrefix}serbot_
+° ඬ⃟🤖 _${usedPrefix}stop_
+° ඬ⃟🤖 _${usedPrefix}bots_
 
 *<𝕁𝕌𝔼𝔾𝕆𝕊/>*
 
@@ -452,12 +458,12 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 > *<funcion>*
 ° ඬ⃟👑 => *<funcion>*
 ° ඬ⃟👑 $ *<funcion>*
-° ඬ⃟👑 _${usedPrefix}setprefix *<texto>*
-° ඬ⃟👑 _${usedPrefix}resetprefix
+° ඬ⃟👑 _${usedPrefix}setprefix *<prefijo>*_
+° ඬ⃟👑 _${usedPrefix}resetprefix_
 ° ඬ⃟👑 _${usedPrefix}cajafuerte_
 ° ඬ⃟👑 _${usedPrefix}blocklist_
-° ඬ⃟👑 _${usedPrefix}block *<@tag>*_
-° ඬ⃟👑 _${usedPrefix}unblock *<@tag>*_
+° ඬ⃟👑 _${usedPrefix}block *<@tag / numero>*_
+° ඬ⃟👑 _${usedPrefix}unblock *<@tag / numero>*_
 ° ඬ⃟👑 _${usedPrefix}enable *restrict*_
 ° ඬ⃟👑 _${usedPrefix}disable *restrict*_
 ° ඬ⃟👑 _${usedPrefix}enable *autoread*_
@@ -483,6 +489,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 _${usedPrefix}bc *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}bcchats *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}bcgc *<texto>*_
+° ඬ⃟👑 _${usedPrefix}bcbot *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}cleartpm_
 ° ඬ⃟👑 _${usedPrefix}restart_
 ° ඬ⃟👑 _${usedPrefix}update_
