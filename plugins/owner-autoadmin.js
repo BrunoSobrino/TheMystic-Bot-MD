@@ -9,5 +9,6 @@ await conn.groupParticipantsUpdate(m.chat, [m.sender], "promote")
 await m.reply('*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙰𝚁𝙻𝙴 𝙰𝙳𝙼𝙸𝙽*')}}
 handler.command = /^autoadmin$/i
 handler.rowner = true
+handler.group = true
 handler.botAdmin = true
 export default handler
