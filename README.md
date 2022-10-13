@@ -12,15 +12,15 @@
 <a href="http://wa.me/593959425714" target="blank"><img src="https://img.shields.io/badge/DIEGO_COLAB.8-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/50246028932" target="blank"><img src="https://img.shields.io/badge/SinNombre_COLAB.9-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
-# `¤ SOPORTE ¤`
+# `—◉ 💟 GRUPO DE SOPORTE 💟`
 
 <a href="https://chat.whatsapp.com/KtFZS21LsTS9qM1RuhYBPz" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 </a>
 > LOS NUMEROS NO SON BOTS Y EN EL GRUPO NO SE PERMITEN NUMEROS-BOTS
 
-# `❤️BOTS OFICIALES`
+# `—◉ 🤖 BOTS OFICIALES 🤖`
 
-<a href="https://api.whatsapp.com/send/?phone=529993404349&text&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT-OFICIAL.1-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+<a href="https://api.whatsapp.com/send/?phone=5219993404349&text&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT-OFICIAL.1-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
  > NO SPAMEAR COMANDOS
 
