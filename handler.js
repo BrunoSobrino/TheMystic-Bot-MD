@@ -42,12 +42,12 @@ export async function handler(chatUpdate) {
                 global.db.data.users[m.sender] = {}
             if (user) {
                 if (!isNumber(user.exp)) user.exp = 0
-		        if (!('premium' in user)) user.premium = false
-		        if (!isNumber(user.joincount)) user.joincount = 2   
+                if (!('premium' in user)) user.premium = false
+                if (!isNumber(user.joincount)) user.joincount = 2   
                 if (!isNumber(user.limit)) user.limit = 20    	       
                 if (!('registered' in user)) user.registered = false
             if (!user.registered) {
-		        if (!('name' in user)) user.name = m.name
+                if (!('name' in user)) user.name = m.name
                 if (!isNumber(user.age)) user.age = -1
                 if (!isNumber(user.anggur)) user.anggur = 0
                 if (!isNumber(user.apel)) user.apel = 0
@@ -68,8 +68,8 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.stroberi)) user.stroberi = 0
                 }
                 if (!isNumber(user.afk)) user.afk = -1
-	            if (!('autolevelup' in user))  user.autolevelup = true
-	            if (!('role' in user)) user.role = 'Novato'
+	        if (!('autolevelup' in user))  user.autolevelup = true
+	        if (!('role' in user)) user.role = 'Novato'
                 if (!isNumber(user.agility)) user.agility = 0
                 if (!isNumber(user.anakanjing)) user.anakanjing = 0
                 if (!isNumber(user.anakcentaur)) user.anakcentaur = 0
@@ -157,10 +157,10 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.exp)) user.exp = 0
                 if (!isNumber(user.expg)) user.expg = 0
                 if (!isNumber(user.exphero)) user.exphero = 0
-	            if (!isNumber(user.eleksirb)) user.eleksirb = 0
-	            if (!isNumber(user.emasbatang)) user.emasbatang = 0
-	            if (!isNumber(user.emasbiasa)) user.emasbiasa = 0
-	            if (!isNumber(user.fideos)) user.fideos = 0    
+	        if (!isNumber(user.eleksirb)) user.eleksirb = 0
+	        if (!isNumber(user.emasbatang)) user.emasbatang = 0
+	        if (!isNumber(user.emasbiasa)) user.emasbiasa = 0
+	        if (!isNumber(user.fideos)) user.fideos = 0    
                 if (!isNumber(user.fishingrod)) user.fishingrod = 0
                 if (!isNumber(user.fishingroddurability)) user.fishingroddurability = 0
                 if (!isNumber(user.fortress)) user.fortress = 0
@@ -266,14 +266,14 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.lastberkebon)) user.lastberkebon = 0
                 if (!isNumber(user.lastbunga)) user.lastbunga = 0
                 if (!isNumber(user.lastbunuhi)) user.lastbunuhi = 0
-	            if (!isNumber(user.lastcoins)) user.lastcoins = 0    
+	        if (!isNumber(user.lastcoins)) user.lastcoins = 0    
                 if (!isNumber(user.lastclaim)) user.lastclaim = 0
                 if (!isNumber(user.lastcode)) user.lastcode = 0
-	            if (!isNumber(user.lastcofre)) user.lastcofre = 0
+	        if (!isNumber(user.lastcofre)) user.lastcofre = 0
                 if (!isNumber(user.lastcodereg)) user.lastcodereg = 0
                 if (!isNumber(user.lastcrusade)) user.lastcrusade = 0
                 if (!isNumber(user.lastdagang)) user.lastdagang = 0
-	            if (!isNumber(user.lastdiamantes)) user.lastdiamantes = 0    
+	        if (!isNumber(user.lastdiamantes)) user.lastdiamantes = 0    
                 if (!isNumber(user.lastduel)) user.lastduel = 0
                 if (!isNumber(user.lastdungeon)) user.lastdungeon = 0
                 if (!isNumber(user.lasteasy)) user.lasteasy = 0
@@ -303,7 +303,7 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.lastngojek)) user.lastngojek = 0
                 if (!isNumber(user.lastopen)) user.lastopen = 0
                 if (!isNumber(user.lastpekerjaan)) user.lastpekerjaan = 0
-	            if (!isNumber(user.lastpago)) user.lastpago = 0 
+	        if (!isNumber(user.lastpago)) user.lastpago = 0 
                 if (!isNumber(user.lastpotionclaim)) user.lastpotionclaim = 0
                 if (!isNumber(user.lastrampok)) user.lastrampok = 0
                 if (!isNumber(user.lastramuanclaim)) user.lastramuanclaim = 0
@@ -312,7 +312,7 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.lastsda)) user.lastsda = 0
                 if (!isNumber(user.lastseen)) user.lastseen = 0
                 if (!isNumber(user.lastSetStatus)) user.lastSetStatus = 0
-	            if (!isNumber(user.lastspam)) user.lastspam = 0
+	        if (!isNumber(user.lastspam)) user.lastspam = 0
                 if (!isNumber(user.lastsironclaim)) user.lastsironclaim = 0
                 if (!isNumber(user.lastsmancingclaim)) user.lastsmancingclaim = 0
                 if (!isNumber(user.laststringclaim)) user.laststringclaim = 0
@@ -565,10 +565,10 @@ export async function handler(chatUpdate) {
                     expg: 0,
                     exphero: 0,
                     expired: 0,
-		            eleksirb: 0,
-		            emasbatang: 0,
-		            emasbiasa: 0,
-		            fideos: 0,
+		    eleksirb: 0,
+		    emasbatang: 0,
+		    emasbiasa: 0,
+		    fideos: 0,
                     fishingrod: 0,
                     fishingroddurability: 0,
                     fortress: 0,
@@ -671,14 +671,14 @@ export async function handler(chatUpdate) {
                     lastberkebon: 0,
                     lastbunga: 0,
                     lastbunuhi: 0,
-		            lastcoins: 0,
+		    lastcoins: 0,
                     lastclaim: 0,
                     lastcode: 0,
-		            lastcofre: 0,
+		    lastcofre: 0,
                     lastcrusade: 0,
                     lastdaang: 0,
                     lastdagang: 0,
-		            lastdiamantes: 0,
+		    lastdiamantes: 0,
                     lastduel: 0,
                     lastdungeon: 0,
                     lasteasy: 0,
@@ -706,10 +706,10 @@ export async function handler(chatUpdate) {
                     lastngojek: 0,
                     lastopen: 0,
                     lastpekerjaan: 0,
-		            lastpago: 0,
+		    lastpago: 0,
                     lastpotionclaim: 0,
                     lastramuanclaim: 0,
-	                lastspam: 0,
+	            lastspam: 0,
                     lastrob: 0,
                     lastroket: 0,
                     lastseen: 0,
