@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text }) => {
 try {
 let vn = './media/menu.mp3'
-let pp = imagen4
+let pp = './Menu2.jpg'
 let img = await(await fetch('https://www.paidmembershipspro.com/wp-content/uploads/2017/07/PayPal-Express.png')).buffer()
 let d = new Date(new Date + 3600000)
 let locale = 'es'
@@ -22,8 +22,6 @@ let str = `
 *📈 𝚃𝙸𝙴𝙼𝙿𝙾 𝙰𝙲𝚃𝙸𝚅𝙾: ${uptime}*
 *📊 𝚄𝚂𝚄𝙰𝚁𝙸𝙾𝚂: ${rtotalreg}*
 ${readMore}
-${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${global.conn.user.jid.split`@`[0]}`)}
-
 *<𝕀ℕ𝔽𝕆ℝ𝕄𝔸ℂ𝕀𝕆ℕ 𝔻𝔼𝕃 𝔹𝕆𝕋/>*
 
 ° ඬ ⃟ 💟 _${usedPrefix}grupos_
@@ -39,12 +37,6 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 *<𝕌ℕ𝔼 𝕌ℕ 𝔹𝕆𝕋 𝔸 𝕋𝕌 𝔾ℝ𝕌ℙ𝕆/>*
 
 ° ඬ⃟👽 _${usedPrefix}join *<enlace / link / url>*_
-
-*<𝕊𝔼ℝ𝔹𝕆𝕋 - 𝕁𝔸𝔻𝕀𝔹𝕆𝕋/>*
-
-° ඬ⃟🤖 _${usedPrefix}serbot_
-° ඬ⃟🤖 _${usedPrefix}stop_
-° ඬ⃟🤖 _${usedPrefix}bots_
 
 *<𝕁𝕌𝔼𝔾𝕆𝕊/>*
 
@@ -109,19 +101,16 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 
 *<𝔻𝔼𝕊ℂ𝔸ℝ𝔾𝔸𝕊/>*
 
+° ඬ⃟📥 _${usedPrefix}facebook *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}instagram *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}mediafire *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}instagram *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}gitclone *<enlace / link / url>*_
+° ඬ⃟📥 _${usedPrefix}stickerpack *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}gdrive *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}tiktok *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}xnxxdl *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
-° ඬ⃟📥 _${usedPrefix}fb *<enlace / link / url>*_
-° ඬ⃟📥 _${usedPrefix}fb2 *<enlace / link / url>*_
-° ඬ⃟📥 _${usedPrefix}fb3 *<enlace / link / url>*_
-° ඬ⃟📥 _${usedPrefix}fb4 *<enlace / link / url>*_
-° ඬ⃟📥 _${usedPrefix}fb5 *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}ytmp3 *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}ytmp4 *<enlace / link / url>*_
 ° ඬ⃟📥 _${usedPrefix}ytmp3doc *<enlace / link / url>*_
@@ -133,7 +122,6 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 ° ඬ⃟📥 _${usedPrefix}playlist *<texto>*_
 ° ඬ⃟📥 _${usedPrefix}playlist2 *<texto>*_
 ° ඬ⃟📥 _${usedPrefix}spotify *<texto>*_
-° ඬ⃟📥 _${usedPrefix}stickerly *<texto>*_
 ° ඬ⃟📥 _${usedPrefix}ringtone *<texto>*_
 ° ඬ⃟📥 _${usedPrefix}soundcloud *<texto>*_
 ° ඬ⃟📥 _${usedPrefix}imagen *<texto>*_
@@ -150,13 +138,11 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 ° ඬ⃟💎 _${usedPrefix}add *<numero>*_
 ° ඬ⃟💎 _${usedPrefix}kick *<@tag>*_
 ° ඬ⃟💎 _${usedPrefix}grupo *<abrir / cerrar>*_
-° ඬ⃟💎 _${usedPrefix}grouptime *<opcion> <tiempo>*_
 ° ඬ⃟💎 _${usedPrefix}promote *<@tag>*_
 ° ඬ⃟💎 _${usedPrefix}demote *<@tag>*_
 ° ඬ⃟💎 _admins *<texto>*_ (𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)
 ° ඬ⃟💎 _${usedPrefix}demote *<@tag>*_
 ° ඬ⃟💎 _${usedPrefix}infogroup_
-° ඬ⃟💎 _${usedPrefix}resetlink_
 ° ඬ⃟💎 _${usedPrefix}link_
 ° ඬ⃟💎 _${usedPrefix}setname *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}setdesc *<texto>*_
@@ -164,9 +150,6 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 ° ඬ⃟💎 _${usedPrefix}setwelcome *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}setbye *<texto>*_
 ° ඬ⃟💎 _${usedPrefix}hidetag *<texto>*_
-° ඬ⃟💎 _${usedPrefix}warn <@tag>_
-° ඬ⃟💎 _${usedPrefix}unwarn <@tag>_
-° ඬ⃟💎 _${usedPrefix}listwarn_
 ° ඬ⃟💎 _${usedPrefix}fantasmas_
 ° ඬ⃟💎 _${usedPrefix}destraba_
 
@@ -391,7 +374,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟🔊 _a_
 
 *<ℍ𝔼ℝℝ𝔸𝕄𝕀𝔼ℕ𝕋𝔸𝕊/>*
-° ඬ⃟🛠️ _${usedPrefix}clima *<país>* / *<ciudad>*
+
 ° ඬ⃟🛠️ _${usedPrefix}encuesta *<texto1|texto2...>*_
 ° ඬ⃟🛠️ _${usedPrefix}afk *<motivo>*_
 ° ඬ⃟🛠️ _${usedPrefix}ocr *<responde a imagen>*_
@@ -399,16 +382,13 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟🛠️ _${usedPrefix}calc *<operacion math>*_
 ° ඬ⃟🛠️ _${usedPrefix}del *<respondre a mensaje del Bot>*_
 ° ඬ⃟🛠️ _${usedPrefix}whatmusic *<responde a un audio>*_
-° ඬ⃟🛠️ _${usedPrefix}readqr *<responde a imagen (QR)>*_
 ° ඬ⃟🛠️ _${usedPrefix}qrcode *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}readmore *<texto1| texto2>*_
 ° ඬ⃟🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
 ° ඬ⃟🛠️ _${usedPrefix}styletext *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}traducir *<texto>*_
-° ඬ⃟🛠️ _${usedPrefix}zoom *<texto>*_
 ° ඬ⃟🛠️ _${usedPrefix}nowa *<numero>*_
 ° ඬ⃟🛠️ _${usedPrefix}covid *<pais>*_
-° ඬ⃟🛠️ _${usedPrefix}horario_
 
 *<ℝℙ𝔾 - 𝕃𝕀𝕄𝕀𝕋𝔼𝕊 - 𝔼ℂ𝕆ℕ𝕆𝕄𝕀𝔸/>*
 
@@ -458,13 +438,8 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 > *<funcion>*
 ° ඬ⃟👑 => *<funcion>*
 ° ඬ⃟👑 $ *<funcion>*
-° ඬ⃟👑 _${usedPrefix}setprefix *<prefijo>*_
-° ඬ⃟👑 _${usedPrefix}resetprefix_
-° ඬ⃟👑 _${usedPrefix}autoadmin_
 ° ඬ⃟👑 _${usedPrefix}cajafuerte_
 ° ඬ⃟👑 _${usedPrefix}blocklist_
-° ඬ⃟👑 _${usedPrefix}block *<@tag / numero>*_
-° ඬ⃟👑 _${usedPrefix}unblock *<@tag / numero>*_
 ° ඬ⃟👑 _${usedPrefix}enable *restrict*_
 ° ඬ⃟👑 _${usedPrefix}disable *restrict*_
 ° ඬ⃟👑 _${usedPrefix}enable *autoread*_
@@ -490,7 +465,6 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 _${usedPrefix}bc *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}bcchats *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}bcgc *<texto>*_
-° ඬ⃟👑 _${usedPrefix}bcbot *<texto>*_
 ° ඬ⃟👑 _${usedPrefix}cleartpm_
 ° ඬ⃟👑 _${usedPrefix}restart_
 ° ඬ⃟👑 _${usedPrefix}update_
@@ -511,14 +485,13 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟☠ _${usedPrefix}crash5_
 ° ඬ⃟☠ _${usedPrefix}crash6_
 ° ඬ⃟☠ _${usedPrefix}crash7_
-° ඬ⃟☠ _${usedPrefix}crash8_
 `.trim()
 let buttons = [
 { buttonId: '#donar', buttonText: { displayText: '📮 𝙳𝙾𝙽𝙰𝚁 📮' }, type: 1 },
 { buttonId: '#owner', buttonText: { displayText: '🌹 𝙾𝚆𝙽𝙴𝚁 🌹' }, type: 1 }]
 //{ buttonId: '#infobot', buttonText: { displayText: '🐾 𝙸𝙽𝙵𝙾𝙱𝙾𝚃 🐾' }, type: 1 }]
 let buttonMessage = {
-image: pp,
+image: imagen1,
 caption: str.trim(),
 mentions: [m.sender],
 footer: `*${wm}*`,
@@ -536,7 +509,7 @@ thumbnail: img,
 sourceUrl: `https://www.paypal.me/TheShadowBrokers133`
 }}}
 conn.sendMessage(m.chat, buttonMessage, { quoted: m })
-//await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
+await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
 } catch {
 conn.reply(m.chat, '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙼𝙴𝙽𝚄 𝚃𝙸𝙴𝙽𝙴 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝚈 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙴𝙽𝚅𝙸𝙰𝚁𝙻𝙾, 𝚁𝙴𝙿𝙾𝚁𝚃𝙴𝙻𝙾 𝙰𝙻 𝙿𝚁𝙾𝙿𝙸𝙴𝚃𝙰𝚁𝙸𝙾 𝙳𝙴𝙻 𝙱𝙾𝚃*', m)
 }}
