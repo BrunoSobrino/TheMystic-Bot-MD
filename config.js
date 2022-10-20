@@ -5,25 +5,14 @@ import fs from 'fs'
 import { generateWAMessageFromContent } from '@adiwajshing/baileys'
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['34642467703', '👑 Mystic - Collaborator 1 👑', true],
-  ['50499698072', '👑 Mystic - Collaborator 2 👑', true],
-  ['51940617554', '👑 Mystic - Collaborator 3 👑', true],
-  ['51996089079', '👑 Mystic - Collaborator 4 👑', true],
-  ['573225236629', '👑 Mystic - Collaborator 5 👑', true],
-  ['593959425714', '👑 Mystic - Collaborator 6 👑', true],
-  ['50246028932', '👑 Mystic - Collaborator 7 👑', true],  
-  ['593968585283'],
-  ['5219992095479'],
-  ['5219991402134'],
-  ['5219993404349'],
-  ['5219996125657']
+['527712297198', '𝕶𝖎𝖑𝖑𝖚𝖆', true],
+['527713734841', '⛧𝕭𝖔𝖙✰𝕸𝖊𝖜𝖙𝖜𝖔⛧', true],
 ] 
 global.suittag = ['5219993404349'] 
 global.prems = ['51995386439'] 
 
-global.packname = '(☞ﾟ∀ﾟ)☞'
-global.author = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
+global.packname = '⛧𝕭𝖔𝖙'
+global.author = '𝕸𝖊𝖜𝖙𝖜𝖔⛧'
 global.wm = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
 global.igfg = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
 global.wait = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*'
@@ -87,7 +76,6 @@ global.APIKeys = { // APIKey Here
 global.imagen1 = fs.readFileSync('./Menu2.jpg')
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg') 
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png')
-global.imagen4 = fs.readFileSync('./Menu.png')
 
 global.generateWAMessageFromContent = generateWAMessageFromContent
 
