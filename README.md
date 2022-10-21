@@ -14,7 +14,7 @@
 
 ### `—◉ 💟 GRUPO DE SOPORTE 💟`
 
-<a href="https://chat.whatsapp.com/KtFZS21LsTS9qM1RuhYBPz" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+<a href="https://chat.whatsapp.com/DNJ4Ppm5ysn3fhjGflrr0J" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 </a>
 > LOS NUMEROS NO SON BOTS Y EN EL GRUPO NO SE PERMITEN NUMEROS-BOTS
 
