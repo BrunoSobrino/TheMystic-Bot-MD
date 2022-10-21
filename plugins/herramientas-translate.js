@@ -1,4 +1,4 @@
-import translate from 'translate-google-api'
+import translate from '@vitalets/google-translate-api'
 import fetch from 'node-fetch'
 let handler = async (m, { args, usedPrefix, command }) => {
 let msg = `*[❗𝐈𝐍𝐅𝐎❗] 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 ${usedPrefix + command} (idioma) (texto)*\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} es Hello*\n\n*𝙲𝙾𝙽𝙾𝙲𝙴 𝙻𝙾𝚂 𝙸𝙳𝙸𝙾𝙼𝙰𝚂 𝙰𝙳𝙼𝙸𝚃𝙸𝙳𝙾𝚂 𝙴𝙽:*\n*- https://cloud.google.com/translate/docs/languages*`
@@ -11,8 +11,8 @@ lang = defaultLang
 text = args.join(' ')}
 if (!text && m.quoted && m.quoted.text) text = m.quoted.text
 try {      
-let result = await translate(`${text}`, { tld, to: lang, })
-await m.reply('*Traducción:* ' + result)
+let result = await translate(`${text}`, { to: lang, autoCorrect: true })
+await m.reply('*Traducción:* ' + result.text)
 } catch {
 try {    
 let lol = await fetch(`https://api.lolhuman.xyz/api/translate/auto/${lang}?apikey=85faf717d0545d14074659ad&text=${text}`)
