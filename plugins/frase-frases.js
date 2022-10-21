@@ -3,45 +3,45 @@
   🍀 • ⚘Alberto Y Ashly⚘
 -----------------------------------------------------------------------------------------*/
 
-//import translate from 'google-translate-api-x'
+import translate from '@vitalets/google-translate-api'
 import fetch from 'node-fetch'
-let handler = async (m, { conn, command }) => { 
-
-if (command == 'consejo') {
+let handler = async (m, { conn, command }) => {
     
-let res = await fetch("https://supra-api.herokuapp.com/api/conselho?apikey=supraz")
-try {
+if (command == 'consejo') {
+//try {
+let res = await fetch("https://zenzapis.xyz/randomtext/motivasi?apikey=hdiiofficial")
+//let res = await fetch("https://supra-api.herokuapp.com/api/conselho?apikey=supraz")
 let json = await res.json()
 let { frase } = json
-//let frase1 = await translate(`${frase}`, {to: 'es'})
-m.reply(`*┏━━━━━━━━━━━━━━━━┓*\n*┠❧  ${frase}*\n*┗━━━━━━━━━━━━━━━━┚*`)
-} catch {
-m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)}}
+let frase1 = await translate(`${frase}`, { to: 'es', autoCorrect: true }).catch(_ => null)
+await m.reply(`*┏━━━━━━━━━━━━━━━━┓*\n*┠❧  ${frase1.text}*\n*┗━━━━━━━━━━━━━━━━┚*`)}
+//} catch {
+//m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)}}
     
 
 if (command == 'fraseromantica') {
-try {
+//try {
 let res = await fetch("https://supra-api.herokuapp.com/api/romanticafrase?apikey=supraz")
 let json = await res.json()
 let { frase } = json
-//let frase1 = await translate(`${frase.text}`, {to: 'es'})
-m.reply(`*╭─◆────◈⚘◈─────◆─╮*\n*❥  ${frase}*\n*╰─◆────◈⚘◈─────◆─╯*`)
-} catch {
-m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)}}
+let frase1 = await translate(frase, { to: 'es', autoCorrect: true }).catch(_ => null)
+m.reply(`*╭─◆────◈⚘◈─────◆─╮*\n*❥  ${frase1.text}*\n*╰─◆────◈⚘◈─────◆─╯*`)}
+//} catch {
+//m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)}}
 
 if (command == 'historiaromantica') {
 try {
-let res = await fetch("https://api-xcoders.xyz/api/random/cerpen/cinta?apikey=xcoders")
+let res = await fetch("https://api-xcoders.site/api/random/cerpen/cinta?apikey=xcoders")
 let json = await res.json()
 let { story, title, author_name } = json.result
-//let storytime = await translate(`${story}`, {to: 'es'})
-//let titletime = await translate(`${title}`, {to: 'es'})
-conn.reply(m.chat, `᭥🫐᭢ Título: ${title}
+let storytime = await translate(story, { to: 'es', autoCorrect: true }).catch(_ => null)
+let titletime = await translate(title, { to: 'es', autoCorrect: true }).catch(_ => null)
+conn.reply(m.chat, `᭥🫐᭢ Título: ${titletime.text}
 ᭥🍃᭢ Autor: ${author_name}
 ────────────────
-${story}`, m)
+${storytime.text}`, m)
 } catch {    
-m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)}}
+await m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)}}
 }
 handler.tags = ['frases']
 handler.command = handler.help = ['consejo', 'fraseromantica', 'historiaromantica']
