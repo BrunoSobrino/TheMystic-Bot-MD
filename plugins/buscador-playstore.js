@@ -1,13 +1,13 @@
 import fetch from 'node-fetch'
-import translate from 'translate-google-api'
 let handler = async (m, { conn, text, args }) => {
 if (!args[0]) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*`
-const tld = 'cn'
-let enc = encodeURIComponent(text)
 try {
+let enc = encodeURIComponent(text)
 let json = await fetch(`https://latam-api.vercel.app/api/playstore?apikey=brunosobrino&q=${enc}`)
 let gPlay = await json.json()
-let mystic = await translate(`${gPlay.descripcion}`, { tld, to: 'es' })
+let lol = await fetch(`https://api.lolhuman.xyz/api/translate/auto/es?apikey=85faf717d0545d14074659ad&text=${gPlay.descripcion}`)
+let loll = await lol.json()
+let mystic = loll.result.translated
 if (!gPlay.titulo) return m.reply(`[ ! ] Sin resultados`)
 conn.sendMessage(m.chat,{image:{url: gPlay.imagen},caption:`🔍 Resultado: ${gPlay.titulo}
 🧬 Identificador: ${gPlay.id}
@@ -19,9 +19,8 @@ conn.sendMessage(m.chat,{image:{url: gPlay.imagen},caption:`🔍 Resultado: ${gP
 🎭 Gratis?: ${gPlay.gratis}
 💸 Precio: ${gPlay.precio}
 📈 Puntuacion: ${gPlay.puntuacion}`},{quoted:m})
-} catch (e) {
-m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*')
-console.log(e)
+} catch {
+await m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*')    
 }}
 handler.help = ['playstore <aplicacion>']
 handler.tags = ['internet']
