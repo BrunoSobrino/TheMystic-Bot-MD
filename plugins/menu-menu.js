@@ -283,7 +283,6 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 ° ඬ⃟🔞 _${usedPrefix}panties_
 ° ඬ⃟🔞 _${usedPrefix}pene_
 ° ඬ⃟🔞 _${usedPrefix}porno_
-° ඬ⃟🔞 _${usedPrefix}porno2_
 ° ඬ⃟🔞 _${usedPrefix}randomxxx_
 ° ඬ⃟🔞 _${usedPrefix}pechos_
 ° ඬ⃟🔞 _${usedPrefix}yaoi_
