@@ -2,7 +2,6 @@ import { watchFile, unwatchFile } from 'fs'
 import chalk from 'chalk'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
-import { generateWAMessageFromContent } from '@adiwajshing/baileys'
 
 global.owner = [
   ['5219992095479', '👑 Mystic - Creador 👑', true],
@@ -88,8 +87,6 @@ global.imagen1 = fs.readFileSync('./Menu2.jpg')
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg') 
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png')
 global.imagen4 = fs.readFileSync('./Menu.png')
-
-global.generateWAMessageFromContent = generateWAMessageFromContent
 
 global.mods = [] 
 
