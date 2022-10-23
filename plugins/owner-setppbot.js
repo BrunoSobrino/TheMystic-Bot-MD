@@ -1,5 +1,5 @@
 let handler = async (m, { conn, usedPrefix, command }) => {
-let bot = this.user.jid
+let bot = conn.user.jid
 let q = m.quoted ? m.quoted : m
 let mime = (q.msg || q).mimetype || ''
 if (/image/.test(mime)) {
