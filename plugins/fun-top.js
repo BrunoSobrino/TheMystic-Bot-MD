@@ -1,6 +1,5 @@
 import util from 'util'
 import path from 'path'
-import { generateWAMessageFromContent } from '@adiwajshing/baileys'
 let user = a => '@' + a.split('@')[0]
 function handler(m, { groupMetadata, command, conn, text, usedPrefix}) {
 if (!text) throw `Ejemplo de uso:\n.top *texto*`
