@@ -461,6 +461,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 _${usedPrefix}setprefix *<prefijo>*_
 ° ඬ⃟👑 _${usedPrefix}resetprefix_
 ° ඬ⃟👑 _${usedPrefix}autoadmin_
+° ඬ⃟👑 _${usedPrefix}leavegc_
 ° ඬ⃟👑 _${usedPrefix}cajafuerte_
 ° ඬ⃟👑 _${usedPrefix}blocklist_
 ° ඬ⃟👑 _${usedPrefix}block *<@tag / numero>*_
@@ -499,6 +500,7 @@ _(𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)_
 ° ඬ⃟👑 _${usedPrefix}delprem *<@tag>*_
 ° ඬ⃟👑 _${usedPrefix}listprem_
 ° ඬ⃟👑 _${usedPrefix}listcmd_
+° ඬ⃟👑 _${usedPrefix}setppbot *<responder a imagen>*_
 ° ඬ⃟👑 _${usedPrefix}addcmd *<texto> <responder a sticker/imagen>*_
 ° ඬ⃟👑 _${usedPrefix}delcmd *<responder a sticker/imagen con comando o texto asignado>*_
 
