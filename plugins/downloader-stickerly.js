@@ -11,7 +11,7 @@ conn.sendFile(m.chat, stikers, 'sticker.webp', '', m, { asSticker: true })}
 //await delay(1500)
 } catch { 
 try {
-let res = await fetch(`https://api.xteam.xyz/sticker/stickerly?q=${args[0]}&APIKEY=5bd33b276d41d6b4`)
+let res = await fetch(`https://api.xteam.xyz/sticker/stickerly?q=${args[0]}&APIKEY=HIRO`)
 let json = await res.json()
 for (let data of (json.result.stickerlist || json)) {
 const stikers = await sticker(false, data, global.packname, global.author)
