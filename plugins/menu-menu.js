@@ -196,6 +196,7 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 
 *<𝔽ℝ𝔸𝕊𝔼𝕊 𝕐 𝕋𝔼𝕏𝕋𝕆𝕊/>*
 
+° ඬ⃟🥀 _${usedPrefix}piropo_
 ° ඬ⃟🥀 _${usedPrefix}consejo_
 ° ඬ⃟🥀 _${usedPrefix}fraseromantica_
 ° ඬ⃟🥀 _${usedPrefix}historiaromantica_
