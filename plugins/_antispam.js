@@ -1,4 +1,4 @@
-//CRÉDITOS: https://github.com/Abiguelreyes75
+/* CRÉDITOS: https://github.com/Abiguelreyes75 */
 
 let handler = m => m
 handler.all = async function (m) {
@@ -28,13 +28,13 @@ this.spam[m.sender].spam = 0
 this.spam[m.sender].lastspam = new Date * 1
 let tiempo = 60000 * 1
 let time = user.antispam + tiempo * 1
-let texto = `*@${m.sender.split("@")[0]} 🤨 NO HAGAS SPAM, NO PODRÁ USAR A ${author} POR ${tiempo / 1000 - 59} MINUTO*`
+let texto = `*[❗] @${m.sender.split("@")[0]} 🤨 𝙽𝙾 𝙷𝙰𝙶𝙰𝚂 𝚂𝙿𝙰𝙼!, 𝙽𝙾 𝙿𝙾𝙳𝚁𝙰𝚂 𝚄𝚂𝙰𝚁 𝙰 ${global.author} 𝙿𝙾𝚁 ${tiempo / 1000 - 59} 𝙼𝙸𝙽𝚄𝚃𝙾*`
 
 if (new Date - user.antispam < tiempo * 1) return
 await conn.reply(m.chat, texto,  m, { mentions: this.parseMention(texto) })
 user.banned = true
   
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
+//await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
 user.antispam = new Date * 1  
   
 } else {
@@ -42,9 +42,8 @@ this.spam[m.sender].spam = 0
 this.spam[m.sender].lastspam = new Date * 1
 }}
   
-} catch (e) {
-console.log(e)
-m.reply(`*OCURRIÓ UN ERROR INESPERADO*`)
+} catch {
+await m.reply(`*[❗𝐈𝐍𝐅𝐎❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙸𝙽𝙴𝚂𝙿𝙴𝚁𝙰𝙳𝙾*`)
 }}
 export default handler
 
@@ -58,5 +57,5 @@ hours = (hours < 10) ? "0" + hours : hours
 minutes = (minutes < 10) ? "0" + minutes : minutes
 seconds = (seconds < 10) ? "0" + seconds : seconds
 
-return minutes + " m y " + seconds + " s " 
+return minutes + " m y " + seconds + " s "
 }
