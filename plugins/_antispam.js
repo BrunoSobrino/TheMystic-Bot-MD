@@ -28,7 +28,7 @@ this.spam[m.sender].spam = 0
 this.spam[m.sender].lastspam = new Date * 1
 let tiempo = 60000 * 1
 let time = user.antispam + tiempo * 1
-let texto = `*@${m.sender.split("@")[0]} 🤨 NO HAGAS SPAM, NO PODRÁ USAR A ${packname} POR ${tiempo / 1000 - 59} MINUTO*`
+let texto = `*@${m.sender.split("@")[0]} 🤨 NO HAGAS SPAM, NO PODRÁ USAR A ${author} POR ${tiempo / 1000 - 59} MINUTO*`
 
 if (new Date - user.antispam < tiempo * 1) return
 await conn.reply(m.chat, texto,  m, { mentions: this.parseMention(texto) })
