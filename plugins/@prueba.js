@@ -2,7 +2,7 @@ let handler = async (m, { conn, command, args }) => {
   let chats
   if (/group|gc/i.test(args[0])) chats = this.chats.array.filter(v => v.jid.endsWith('g.us') && !v.pin).map(v => v.jid)
   else if (/chat|private/i.test(args[0])) chats = this.chats.array.filter(v => v.jid.endsWith('.net') && !v.pin).map(v => v.jid)
-  else if (/all/i.test(args[0])) chats = this.chats.array.filter(v => v.jid && !v.pin).map(v => v.jid)
+  else if (/all/i.test(args[0])) chats = Object.entries(conn.chats).array.filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map(v => v[0])
   else chats = [m.chat]
   let isDelete = /^(delete)/i.test(command)
   let isClear = /^(clear)/i.test(command)
