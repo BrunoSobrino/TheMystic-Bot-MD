@@ -45,7 +45,7 @@ this.spam[m.sender].lastspam = new Date * 1
   
 } catch (e) {
 console.log(e)
-m.reply(`${lenguajeGB['smsAvisoFG']()}*OCURRIÓ UN ERROR INESPERADO*`)
+m.reply(`*OCURRIÓ UN ERROR INESPERADO*`)
 }}
 export default handler
 
