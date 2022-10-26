@@ -1,4 +1,4 @@
-import { getLastMessageInChat } from '@adiwajshing/baileys'
+import getLastMessageInChat from '@adiwajshing/baileys'.default 
 let handler = async (m, { conn }) => {
  
 const lastMsgInChat = await getLastMessageInChat('5219996125657@s.whatsapp.net') // implement this on your end
