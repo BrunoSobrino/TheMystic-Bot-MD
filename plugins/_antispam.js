@@ -1,7 +1,7 @@
 /* CRÉDITOS: https://github.com/Abiguelreyes75 */
 
 let handler = m => m
-handler.all = async function (m) {
+handler.all = async function (m, {isCommand}) {
   
 let chat = global.db.data.chats[m.chat]
 let delet = m.key.participant
@@ -22,7 +22,7 @@ this.spam[spaming.jid] = spaming
 this.spam[m.sender].spam += 1
   
 if (new Date - this.spam[m.sender].lastspam > 1000) {
-if (this.spam[m.sender].spam > 3 && m.isCommand) {
+if (this.spam[m.sender].spam > 3 && isCommand) {
 this.spam[m.sender].spam = 0
   
 this.spam[m.sender].lastspam = new Date * 1
