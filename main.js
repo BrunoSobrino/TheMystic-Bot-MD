@@ -90,8 +90,8 @@ function clearTmp() {
 const tmp = [tmpdir(), join(__dirname, './tmp')]
 const filename = []
 tmp.forEach(dirname => readdirSync(dirname).forEach(file => filename.push(join(dirname, file))))
-const ignoreDir = (filePath) => filePath.includes('creds.js');
-readdirSync("./jadibts", null, null, ignoreDir).forEach(file => {
+//const ignoreDir = (filePath) => filePath.includes('creds.js');
+readdirSync("./jadibts").forEach(file => {
     rmSync("./jadibts/" + file, { recursive: true, force: true })})
 //const ignoreDir2 = (filePath) => filePath.includes('creds.js');    
 //readdirSync("./MysticSession", null, null, ignoreDir2).forEach(file => {
