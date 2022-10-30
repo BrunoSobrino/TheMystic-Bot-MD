@@ -142,6 +142,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}tiktok *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}xnxxdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}twitter *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}fb *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}fb2 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}fb3 *<enlace / link / url>*_
