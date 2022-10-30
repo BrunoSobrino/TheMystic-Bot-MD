@@ -923,12 +923,14 @@ export async function handler(chatUpdate) {
                 if (!('restrict' in settings)) settings.restrict = false
                 if (!('antiCall' in settings)) settings.antiCall = false
                 if (!('antiPrivate' in settings)) settings.antiPrivate = false
+	        if (!('modejadibot' in settings)) settings.modejadibot = false   
             } else global.db.data.settings[this.user.jid] = {
                 self: false,
                 autoread: false,
                 restrict: false,
                 antiCall: false,
-                antiPrivate: false
+                antiPrivate: false,
+	        modejadibot: false
             }
         } catch (e) {
             console.error(e)
