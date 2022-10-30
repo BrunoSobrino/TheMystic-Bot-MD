@@ -14,5 +14,5 @@ await conn.sendFile(m.chat, sfoto, 'error.jpg', res, m)
 } catch {
 await m.reply('*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*')}}
 handler.tags = ['sticker', 'search']
-handler.command = ['stickersearch2', 'searchsticker2', 'stickerssearch2', 'searchstickers2']
+handler.command = ['stickersearch', 'searchsticker', 'stickerssearch', 'searchstickers']
 export default handler
