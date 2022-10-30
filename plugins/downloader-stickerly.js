@@ -20,6 +20,6 @@ conn.sendFile(m.chat, stikers2, 'sticker.webp', '', m, { asSticker: true })}
 } catch {   
 await m.reply('*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*')  
 }}}
-handler.command = /^stickerly|stickerpack$/i
+handler.command = /^stickerly$/i
 export default handler
 //const delay = time => new Promise(res => setTimeout(res, time))
