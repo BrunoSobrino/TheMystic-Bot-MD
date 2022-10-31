@@ -893,6 +893,7 @@ export async function handler(chatUpdate) {
                 if (!('antiToxic' in chat)) chat.antiToxic = false
                 if (!('antiTraba' in chat)) chat.antiTraba = false
                 if (!('antiArab' in chat)) chat.antiArab = false
+		if (!('modoadmin' in chat)) chat.modoadmin = false
                 if (!isNumber(chat.expired)) chat.expired = 0
             } else
                 global.db.data.chats[m.chat] = {
@@ -913,6 +914,7 @@ export async function handler(chatUpdate) {
                     antiToxic: false,
                     antiTraba: false,
                     antiArab: false,
+	            modoadmin: false,
                     expired: 0,
                 }
             let settings = global.db.data.settings[this.user.jid]
@@ -930,7 +932,7 @@ export async function handler(chatUpdate) {
                 restrict: false,
                 antiCall: false,
                 antiPrivate: false,
-	        modejadibot: true
+	        modejadibot: true,
             }
         } catch (e) {
             console.error(e)
@@ -1075,6 +1077,11 @@ export async function handler(chatUpdate) {
                     if (name != 'owner-unbanuser.js' && user?.banned)
                         return
                 }
+	        let hl = _prefix 
+                let adminMode = global.db.data.chats[m.chat].adminMode
+                let mystica = `${plugin.botAdmin || plugin.admin || plugin.group || plugin || noPrefix || hl ||  m.text.slice(0, 1) == hl || plugin.command}`
+                if (adminMode && !isOwner && !isROwner && m.isGroup && !isAdmin && mystica) return   
+		    
                 if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { // Both Owner
                     fail('owner', m, this)
                     continue
