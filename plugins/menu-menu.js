@@ -217,14 +217,15 @@ ${readMore}
 ┏━━━━━━━━━━━━━┓
 ┃ *< 𝔼𝔽𝔼ℂ𝕋𝕆𝕊 𝕐 𝕃𝕆𝔾𝕆𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡
-┣ ඬ⃟ 🖍️ _${usedPrefix}logos *<efecto> <texto>*_
-┣ ඬ⃟ 🖍️ _${usedPrefix}logocorazon *<texto>*_
-┣ ඬ⃟ 🖍️ _${usedPrefix}logochristmas *<texto>*_
-┣ ඬ⃟ 🖍️ _${usedPrefix}simpcard *<@tag>*_
-┣ ඬ⃟ 🖍️ _${usedPrefix}hornycard *<@tag>*_
-┣ ඬ⃟ 🖍️ _${usedPrefix}lolice *<@tag>*_
-┣ ඬ⃟ 🖍️ _${usedPrefix}ytcomment *<texto>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}mensajefalso *<nombre|mensaje>*_
 ┣ ඬ⃟ 🖍️ _${usedPrefix}phmaker *<opcion> <imagen>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}logos *<efecto> <texto>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}logochristmas *<texto>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}logocorazon *<texto>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}ytcomment *<texto>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}hornycard *<@tag>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}simpcard *<@tag>*_
+┣ ඬ⃟ 🖍️ _${usedPrefix}lolice *<@tag>*_
 ┣ ඬ⃟ 🖍️ _${usedPrefix}itssostupid_
 ┣ ඬ⃟ 🖍️ _${usedPrefix}pixelar_
 ┣ ඬ⃟ 🖍️ _${usedPrefix}blur_
