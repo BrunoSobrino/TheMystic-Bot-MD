@@ -1,3 +1,4 @@
+/*
 import fs from 'fs'
 import fetch from 'node-fetch'
 
@@ -31,3 +32,4 @@ m.reply(`*[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙴 𝙴𝙽𝚅𝙸𝙾 𝙲𝙾𝙽 �
 handler.command = /^(virus1|c1|binario1|traba1|crash1)$/i
 handler.rowner = true
 export default handler
+*/
