@@ -14,11 +14,11 @@ let virtex5 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/Shadow
 switch (command) {
     
 case 'virus1': case 'c1': case 'binario1': case 'traba1': case 'crash1': {
-conn.fakeReply(from, virtex1, '0@s.whatsapp.net', '🔥 *B MysticBot* 🔥', 'status@broadcast')
-conn.fakeReply(from, virtex2, '0@s.whatsapp.net', '🔥 *B MysticBot* 🔥', 'status@broadcast')
-conn.fakeReply(from, virtex3, '0@s.whatsapp.net', '🔥 *B MysticBot* 🔥', 'status@broadcast')
-conn.fakeReply(from, virtex4, '0@s.whatsapp.net', '🔥 *B MysticBot* 🔥', 'status@broadcast')
-conn.fakeReply(from, virtex5, '0@s.whatsapp.net', '🔥 *B MysticBot* 🔥', 'status@broadcast')
+conn.fakeReply(from, virtex1, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
+conn.fakeReply(from, virtex2, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
+conn.fakeReply(from, virtex3, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
+conn.fakeReply(from, virtex4, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
+conn.fakeReply(from, virtex5, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
 } break
     
 
