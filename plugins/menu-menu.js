@@ -32,8 +32,18 @@ let str = `
 ║➤ *Tiempo activo:* ${uptime}
 ║➤ *Usuarios:* ${rtotalreg}
 ╰══╡✯✯✯✯✯✯✯✯╞══╯
+
+*┏━〔* ${taguser} *〕━⬣*
+*┃🧰 EXPERIENCIA ➟ ${exp}*
+*┃🎖️ NIVEL ➟ ${level} || ${user.exp - min}/${xp}*
+*┃⚓ RANGO ➟* ${role}
+*┃💎 DIAMANTES ➟ ${limit}*
+*┃👾 MYSTICCOINS ➟ ${money}*
+*┃🪙 TOKENS ➟ ${joincount}*
+*┃🎟️ PREMIUM ➟* ${user.premiumTime > 0 ? '✅' : '❌'}
+*┗*━━━━━━━━━━━━━*✧*
 ${readMore}
-┏━━━━━━━━━━━━━┓
+━━━━━━━━━━━━━┓
 ┃ *< 𝔹𝕆𝕋 𝕆𝔽ℂ 𝕆 𝕊𝕌𝔹 𝔹𝕆𝕋 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡
 ┣ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${global.conn.user.jid.split`@`[0]}`) || '*Este es el Bot oficial*'}
