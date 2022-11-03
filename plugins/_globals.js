@@ -403,7 +403,7 @@ global.fgif = {
                         'seconds': '999999999', 
                         'gifPlayback': 'true', 
                         'caption': bottime,
-                        'jpegThumbnail': fs.readFileSync('./media/menus/Menu3.jpg')
+                        'jpegThumbnail': fs.readFileSync('./Menu2.jpg')
                                }
                               }
                              }
