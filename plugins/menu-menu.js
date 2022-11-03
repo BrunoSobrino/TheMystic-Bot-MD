@@ -11,6 +11,7 @@ let week = d.toLocaleDateString(locale, { weekday: 'long' })
 let date = d.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
 let _uptime = process.uptime() * 1000
 let uptime = clockString(_uptime)
+let { money, joincount } = global.db.data.users[m.sender]
 let { exp, limit, level, role } = global.db.data.users[m.sender]
 let { min, xp, max } = xpRange(level, global.multiplier)
 let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered == true).length 
