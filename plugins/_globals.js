@@ -357,42 +357,14 @@ global.flaaa = [
 'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=amped-logo&doScale=true&scaleWidth=800&scaleHeight=500&text=',
 'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&fillTextType=1&fillTextPattern=Warning!&text=',
 'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&fillTextType=1&fillTextPattern=Warning!&fillColor1Color=%23f2aa4c&fillColor2Color=%23f2aa4c&fillColor3Color=%23f2aa4c&fillColor4Color=%23f2aa4c&fillColor5Color=%23f2aa4c&fillColor6Color=%23f2aa4c&fillColor7Color=%23f2aa4c&fillColor8Color=%23f2aa4c&fillColor9Color=%23f2aa4c&fillColor10Color=%23f2aa4c&fillOutlineColor=%23f2aa4c&fillOutline2Color=%23f2aa4c&backgroundColor=%23101820&text=']
-  
-global.vs = '1.3.4 (Halloween)'
-global.version = vs
 
-global.gt = '𝙂𝙖𝙩𝙖𝘽𝙤𝙩-𝙈𝘿'
-global.gatabot = gt
+global.gt = '𝙈𝙮𝙨𝙩𝙞𝙘-𝘽𝙤𝙩'
+global.mysticbot = gt
 
-global.yt = 'https://youtube.com/channel/UCpNU4eY7eiI0ve05CssjdbA'
-global.youtube = yt
 
-global.ig = 'https://www.instagram.com/gata_dios'
-global.gatadiosig = ig
+global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
+global.mysticbot = md
 
-global.md = 'https://github.com/GataNina-Li/GataBot-MD'
-global.gatabot = md
-
-global.nna = 'https://chat.whatsapp.com/HQxfuaDFPBQ7KvuesQoU7G'
-global.nnagrupo = nna //UPDATE GATABOT
-
-global.nn = 'https://chat.whatsapp.com/CnsAvjHUhMw1D8y0OcfkIY'
-global.nngrupo = nn //Grupo 1
-
-global.nnn = 'https://chat.whatsapp.com/CdiITbXO2kdGLWBVAdqfCS'
-global.nnngrupo = nnn //Grupo 2
-
-global.nnnt = 'https://chat.whatsapp.com/Fd1wp2c3KCG7bHybanoXbR'
-global.nnntgrupo = nnnt //Grupo 3
-
-global.nnntt = 'https://chat.whatsapp.com/G0A7GMhlyAZ2b7JVEoz1Zy'
-global.nnnttgrupo = nnntt //Grupo 4
-
-global.nnnttt = 'https://chat.whatsapp.com/JHTDXPLoW29I1rxGYnLmmH'
-global.nnntttgrupo = nnnttt //Grupo 5
-
-global.paypal = 'https://paypal.me/OficialGD'
-global.donar = paypal
 
 global.asistencia = 'Wa.me/18059196237' //Dudas? escríbeme...
 	
@@ -423,21 +395,6 @@ global.waitttt = '*⌛ _Cargando | Charging..._ ▬▬▬▬▬▬▭*'
 global.nomorown = '593993684821'
 global.pdoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/msword', 'application/pdf', 'text/rtf']
 
-global.img = 'https://i.imgur.com/IXlUwTW.jpg'
-global.img2 = 'https://i.imgur.com/EXTbyyn.jpg'
-
-global.img3 = 'https://i.imgur.com/oUAGYc2.jpg' //prem
-global.img4 = 'https://i.imgur.com/i0pccuo.jpg' //prem
-
-global.img5 = 'https://i.imgur.com/iL1snRx.jpeg'
-global.img6 = 'https://i.imgur.com/cYFgSKv.jpeg'
-global.img7 = 'https://i.imgur.com/JqL3h2V.jpeg'
-global.img8 = 'https://i.imgur.com/PCujt1s.jpeg'
-global.img9 = 'https://i.imgur.com/xfUEdDb.jpeg'
-
-global.img10 = 'https://i.imgur.com/DvHoMc3.jpg'
-global.img11 = 'https://i.imgur.com/5Q1MqGD.jpg'
-global.img12 = 'https://i.imgur.com/vWnsjh8.jpg'
 	
 global.cmenut = '❖––––––『'
 global.cmenub = '┊✦ '
@@ -468,7 +425,7 @@ global.fgif = {
                         'seconds': '999999999', 
                         'gifPlayback': 'true', 
                         'caption': bottime,
-                        'jpegThumbnail': fs.readFileSync('./Menu.png')
+                        'jpegThumbnail': fs.readFileSync('./media/menus/Menu3.jpg')
                                }
                               }
                              }
