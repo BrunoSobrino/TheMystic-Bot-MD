@@ -39,10 +39,10 @@ let str = `
 ╰══╡✯✯✯✯✯✯✯✯╞══╯
 
 *┏━━━━━━━━━━━━━━━━━━⬣*
-┣ ⚓ RANGO ➟* ${role}
-┣ 💎 DIAMANTES ➟ ${limit}*
-┣ 👾 MYSTICCOINS ➟ ${money}*
-┣ 🪙 TOKENS ➟ 
+┣ ⚓ *RANGO ➟ ${role}*
+┣ 💎 *DIAMANTES ➟ ${limit}*
+┣ 👾 *MYSTICCOINS ➟ ${money}*
+┣ 🪙 *TOKENS ➟ ${joincount}* 
 *┗━━━━━━━━━━━━━━━━━⬣*
 ${readMore}
 ┏━━━━━━━━━━━━━┓
