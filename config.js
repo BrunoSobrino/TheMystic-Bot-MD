@@ -88,6 +88,14 @@ global.imagen2 = fs.readFileSync('./src/nuevobot.jpg')
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png')
 global.imagen4 = fs.readFileSync('./Menu.png')
 
+global.htki = '*⭑•̩̩͙⊱•••• ☪*'
+global.htka = '*☪ ••••̩̩͙⊰•⭑*'
+
+global.cmenut = '❖––––––『'
+global.cmenub = '┊✦ '
+global.cmenuf = '╰━═┅═━––––––๑\n'
+global.cmenua = '\n⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❙❘❙❚❙❘ ⌕\n     '
+
 global.mods = [] 
 
 global.multiplier = 99
