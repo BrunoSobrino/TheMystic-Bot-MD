@@ -24,7 +24,7 @@ if (new Date - user.lastadventure <= cooldown) return conn.sendButton(m.chat, `$
 [`🔔 𝙍𝙀𝘾𝙇𝘼𝙈𝙊 𝘿𝙄𝘼𝙍𝙄𝙊 | 𝘿𝘼𝙄𝙇𝙔`, `${usedPrefix}daily`]], fkontak, m) 
     
 const rewards = reward(user)
-let text = `🛫 𝙀𝙎𝙏𝘼𝙎 𝘼𝙑𝙀𝙉𝙏𝙐𝙍𝘼𝙉𝘿𝙊 𝙀𝙉 *» ${kt[1][0].name}*
+let text = `🛫 𝙴𝚂𝚃𝙰𝚂 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝙽𝙳𝙾 𝙴𝙽  *» ${kt[1][0].name}*
 
 ${cmenut}
 ${cmenub} *ID:* ${kt[1][0].id}
@@ -33,7 +33,7 @@ ${cmenub} *LONGITUD:* ${kt[1][0].longitude}
 ${cmenub} *LATITUD:* ${kt[1][0].latitude}
 ${cmenuf}
 
-🏞️ 𝘼𝙑𝙀𝙉𝙏𝙐𝙍𝘼 𝙁𝙄𝙉𝘼𝙇𝙄𝙕𝘼𝘿𝘼
+🏞️ 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 𝙵𝙸𝙽𝙰𝙻𝙸𝚉𝙰𝙳𝙰
 ${cmenua}`
     
 for (const lost in rewards.lost) if (user[lost]) {
@@ -41,17 +41,17 @@ const total = rewards.lost[lost].getRandom()
 user[lost] -= total * 1
 if (total) text += `\n${global.rpg.emoticon(lost)} ${total}`
  }
-text += '\n\n✨ 𝙍𝙀𝘾𝙊𝙈𝙋𝙀𝙉𝙎𝘼𝙎 𝘿𝙀 𝙇𝘼 𝘼𝙑𝙀𝙉𝙏𝙐𝙍𝘼\n✨ 𝘼𝘿𝙑𝙀𝙉𝙏𝙐𝙍𝙀 𝙍𝙀𝙒𝘼𝙍𝘿𝙎'
+text += '\n\n✨ 𝚁𝙴𝙲𝙾𝙼𝙿𝙴𝚂𝙰𝚂 𝙳𝙴 𝙻𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰'
 for (const rewardItem in rewards.reward) if (rewardItem in user) {
 const total = rewards.reward[rewardItem].getRandom()
 user[rewardItem] += total * 1
 if (total) text += `\n» ${global.rpg.emoticon(rewardItem)} ${total}`
  }
 conn.sendButton(m.chat, 
-`${htki} 𝘼𝙑𝙀𝙉𝙏𝙐𝙍𝘼 ${htka}`, 
+`${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}`, 
 text.trim(), `https://static-maps.yandex.ru/1.x/?lang=id-ID&ll=${kt[1][0].longitude},${kt[1][0].latitude}&z=12&l=map&size=600,300`, [
-[`🎒 𝙄𝙉𝙑𝙀𝙉𝙏𝘼𝙍𝙄𝙊 | 𝙄𝙉𝙑𝙀𝙉𝙏𝙊𝙍𝙔`, `${usedPrefix}inventory`],
-[`🔔 𝙍𝙀𝘾𝙇𝘼𝙈𝙊 𝘿𝙄𝘼𝙍𝙄𝙊 | 𝘿𝘼𝙄𝙇𝙔`, `${usedPrefix}daily`]], fkontak, m)
+[`🎒 𝙸𝙽𝚅𝙴𝙽𝚃𝙰𝚁𝙸𝙾`, `${usedPrefix}inventory`],
+[`🔔 𝚁𝙴𝙲𝙻𝙰𝙼𝙾 𝙳𝙸𝙰𝚁𝙸𝙾', `${usedPrefix}daily`]], fkontak, m)
 user.lastadventure = new Date * 1
 }
 handler.help = ['adventure']
