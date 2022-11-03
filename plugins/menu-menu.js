@@ -1,5 +1,10 @@
-import fs, { promises } from 'fs'
+import fs from 'fs'
 import fetch from 'node-fetch'
+import { xpRange } from '../lib/levelling.js'
+const { levelling } = '../lib/levelling.js'
+import PhoneNumber from 'awesome-phonenumber'
+import { promises } from 'fs'
+import { join } from 'path'
 let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text }) => {
 try {
 let vn = './media/menu.mp3'
@@ -13,6 +18,7 @@ let _uptime = process.uptime() * 1000
 let uptime = clockString(_uptime)
 let { money, joincount } = global.db.data.users[m.sender]
 let { exp, limit, level, role } = global.db.data.users[m.sender]
+let { min, xp, max } = xpRange(level, global.multiplier)
 let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered == true).length 
 let more = String.fromCharCode(8206)
 let readMore = more.repeat(850)   
@@ -32,14 +38,14 @@ let str = `
 ║➤ *Usuarios:* ${rtotalreg}
 ╰══╡✯✯✯✯✯✯✯✯╞══╯
 
-*┏━〔* ${taguser} *〕━⬣*
-*┃⚓ RANGO ➟* ${role}
-*┃💎 DIAMANTES ➟ ${limit}*
-*┃👾 MYSTICCOINS ➟ ${money}*
-*┃🪙 TOKENS ➟ ${joincount}*
-*┗*━━━━━━━━━━━━━*✧*
+┏━━━━━━━━━━━━━━━━━━⬣*
+┣ ⚓ RANGO ➟* ${role}
+┣ 💎 DIAMANTES ➟ ${limit}*
+┣ 👾 MYSTICCOINS ➟ ${money}*
+┣ 🪙 TOKENS ➟ ${joincount}*
+┗━━━━━━━━━━━━━━━━━⬣*
 ${readMore}
-━━━━━━━━━━━━━┓
+┏━━━━━━━━━━━━━┓
 ┃ *< 𝔹𝕆𝕋 𝕆𝔽ℂ 𝕆 𝕊𝕌𝔹 𝔹𝕆𝕋 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡
 ┣ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${global.conn.user.jid.split`@`[0]}`) || '*Este es el Bot oficial*'}
