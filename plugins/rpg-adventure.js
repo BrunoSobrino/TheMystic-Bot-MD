@@ -12,16 +12,16 @@ let imgr = flaaa.getRandom()
 let user = global.db.data.users[m.sender]
 let timers = (cooldown - (new Date - user.lastadventure))
 
-if (user.health < 80) return conn.sendButton(m.chat,`${htki} 𝘽𝘼𝙅𝘼 𝙎𝘼𝙇𝙐𝘿 ${htka}`,
+if (user.health < 80) return conn.sendButton(m.chat,`${htki} 𝙱𝙰𝙹𝙰 𝚂𝙰𝙻𝚄𝙳 ${htka}`,
 `𝚃𝚄 𝚂𝙰𝙻𝚄𝙳 💔 𝙴𝚂𝚃𝙰 𝙿𝙾𝚁 𝙳𝙴𝙱𝙰𝙹𝙾 𝙳𝙴 *80!!*
 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙲𝚄𝚁𝙰𝚃𝙴 𝙿𝚁𝙸𝙼𝙴𝚁𝙾 𝙿𝙰𝚁𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚁 𝙳𝙴 𝙽𝚄𝙴𝚅𝙾`.trim(), imgr + 'MALA SALUD', [
 [`❤️ 𝙲𝚄𝚁𝙰𝙼𝙴`, `${usedPrefix}heal`]], fkontak, m)
     
-if (new Date - user.lastadventure <= cooldown) return conn.sendButton(m.chat, `${htki} 𝘿𝙀𝙎𝘾𝘼𝙉𝙎𝘼𝙉𝘿𝙊 ${htka}`,
-`𝙔𝘼 𝘼𝙑𝙀𝙉𝙏𝙐𝙍𝘼𝙎𝙏𝙀!! 𝙋𝙊𝙍 𝙁𝘼𝙑𝙊𝙍 𝙀𝙎𝙋𝙀𝙍𝘼 𝙃𝘼𝙎𝙏𝘼 𝙌𝙐𝙀 𝙏𝙀𝙍𝙈𝙄𝙉𝙀 𝙀𝙇 𝙏𝙄𝙀𝙈𝙋𝙊 𝘿𝙀 𝘿𝙀𝙎𝘾𝘼𝙉𝙎𝙊
+if (new Date - user.lastadventure <= cooldown) return conn.sendButton(m.chat, `${htki} 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙰𝙽𝙳𝙾 ${htka}`,
+`𝚈𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚂𝚃𝙴 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙴𝚂𝙿𝙴𝚁𝙰 𝙷𝙰𝚂𝚃𝙰 𝚀𝚄𝙴 𝚃𝙴𝚁𝙼𝙸𝙽𝙴 𝙴𝙻 𝚃𝙸𝙴𝙼𝙿𝙾 𝙳𝙴 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙾
 
 ⏱️ ${timers.toTimeString()}`.trim(), imgr + 'DESCANSANDO', [
-[`🔔 𝙍𝙀𝘾𝙇𝘼𝙈𝙊 𝘿𝙄𝘼𝙍𝙄𝙊 | 𝘿𝘼𝙄𝙇𝙔`, `${usedPrefix}daily`]], fkontak, m) 
+[`🔔 𝚁𝙴𝙲𝙻𝙰𝙼𝙾 𝙳𝙸𝙰𝚁𝙸𝙾`, `${usedPrefix}daily`]], fkontak, m) 
     
 const rewards = reward(user)
 let text = `🛫 𝙴𝚂𝚃𝙰𝚂 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝙽𝙳𝙾 𝙴𝙽  *» ${kt[1][0].name}*
