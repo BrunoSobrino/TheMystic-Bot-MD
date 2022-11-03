@@ -43,6 +43,7 @@ let str = `
 ┣ 💎 DIAMANTES ➟ ${limit}*
 ┣ 👾 MYSTICCOINS ➟ ${money}*
 ┣ 🪙 TOKENS ➟ ${joincount}*
+┣ 🎟️ PREMIUM ➟* ${user.premiumTime > 0 ? '✅' : '❌'}
 ┗━━━━━━━━━━━━━━━━━⬣*
 ${readMore}
 ┏━━━━━━━━━━━━━┓
