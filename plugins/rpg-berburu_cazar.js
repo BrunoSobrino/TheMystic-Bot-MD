@@ -91,7 +91,7 @@ conn.reply(m.chat, `${taguser} *${['Armas lista para la Caza!!','Probando Armas 
 //[null, null]], null)}, 15000)
 
 setTimeout(() => {
-conn.reply(m.chat, `${taguser} *${['Buscando implementos de caza...','Alistando todo para la caza!!','Estableciendo Lugar de la Caza...','PREPARANDO LUGAR DE CAZA!!'].getRandom()}*`, m, null, {mentions: [m.sender]})}, 0)
+conn.reply(m.chat, `${taguser} *${['Buscando implementos de caza...','Alistando todo para la caza!!','Estableciendo Lugar de la Caza...','PREPARANDO LUGAR DE CAZA!!'].getRandom()}*`, m, m.mentionedJid ? { mentions: m.mentionedJid } : {})}, 0)
 //conn.sendHydrated(m.chat, `${conn.getName(m.sender)} *${['Buscando implementos de caza...','Alistando todo para la caza!!','Estableciendo Lugar de la Caza...','PREPARANDO LUGAR DE CAZA!!'].getRandom()}*`, wm, null, null, null, null, null, [
 //[null, null]], null)}, 0)	
 user.lastberburu = new Date * 1	
