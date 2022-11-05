@@ -1,7 +1,7 @@
 import cp, { exec as _exec } from 'child_process'
 import { promisify } from 'util'
 let exec = promisify(_exec).bind(cp)
-let handler = async (m, { conn, isOwner, command, text }) => {
+let handler = async (m, { conn, isOwner, command, text, usedPrefix, args }) => {
   if (global.conn.user.jid != conn.user.jid) return
   m.reply('Executing...')
   let o
