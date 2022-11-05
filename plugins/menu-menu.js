@@ -144,6 +144,8 @@ ${readMore}
 ┣ ඬ⃟ ☑️ _${usedPrefix}disable *antitraba*_
 ┣ ඬ⃟ ☑️ _${usedPrefix}enable *antiarabes*_
 ┣ ඬ⃟ ☑️ _${usedPrefix}disable *antiarabes*_
+┣ ඬ⃟ ☑️ _${usedPrefix}enable *modoadmin*_
+┣ ඬ⃟ ☑️ _${usedPrefix}disable *modoadmin*_
 ┗━━━━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━━━━┓
@@ -565,6 +567,8 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *anticall*_
 ┣ ඬ⃟ 👑 _${usedPrefix}enable *antiprivado*_
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *antiprivado*_
+┣ ඬ⃟ 👑 _${usedPrefix}enable *modejadibot*_
+┣ ඬ⃟ 👑 _${usedPrefix}disable *modejadibot*_
 ┣ ඬ⃟ 👑 _${usedPrefix}msg *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}banchat_
 ┣ ඬ⃟ 👑 _${usedPrefix}unbanchat_
