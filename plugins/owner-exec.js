@@ -9,7 +9,7 @@ const require = createRequire(__dirname)
 
 let handler = async (m, _2, msg, isOwner, pickRandom) => {
   let mention = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
-  let { conn, usedPrefix, noPrefix, args, groupMetadata } = _2
+  let { conn, usedPrefix, noPrefix, args, groupMetadata, command } = _2
   let _return
   let name = conn.getName(m.sender)
   let _syntax = ''
