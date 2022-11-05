@@ -8,6 +8,7 @@ let handler  = async (m, { conn, args, text, command, usedPrefix, participants }
 let from 
 if (text) from = `${text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'}`;
 if (!text) from = `${m.chat}`;
+if (text && isNaN(text)) throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝙳𝙴𝙱𝙴 𝚂𝙴𝚁 𝚄𝙽 𝙽𝚄𝙼𝙴𝚁𝙾, 𝙰𝙻 𝙲𝚄𝙰𝙻 𝚂𝙴 𝙻𝙴 𝙴𝙽𝚅𝙸𝙰𝚁𝙰 𝙴𝙻 𝚅𝙸𝚁𝚄𝚂 𝙲𝚁𝙰𝚂𝙷*' 
     
 let send     
 if (text) send = `@${text.replace(/[^0-9]/g, '')}`;
@@ -29,7 +30,7 @@ let virtex10 = await fetch('https://raw.githubusercontent.com/BrunoSobrino/TheMy
     
 switch (command) {
     
-case 'virus1': case 'c1': case 'binario1': case 'traba1': case 'crash1': {
+case 'virus': case 'binario': case 'traba': case 'crash': case 'virus1': case 'c1': case 'binario1': case 'traba1': case 'crash1': {
 conn.fakeReply(from, virtex1, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
 conn.fakeReply(from, virtex2, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
 conn.fakeReply(from, virtex3, '0@s.whatsapp.net', '🔥 *By MysticBot* 🔥', 'status@broadcast')
@@ -104,7 +105,7 @@ break
     
 await conn.reply(m.chat, `*[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙴 𝙴𝙽𝚅𝙸𝙾 𝙲𝙾𝙽 𝙴𝚇𝙸𝚃𝙾 ${command.toUpperCase()} 𝙰 ${send}*`, m, { mentions: [conn.parseMention(send)]})  
 }
-handler.command = /^(virus1|c1|binario1|traba1|crash1|virus2|c2|binario2|traba2|crash2|virus3|c3|binario3|traba3|crash3|virus4|c4|binario4|traba4|crash4|virus5|c5|binario5|traba5|crash5|virus6|c6|binario6|traba6|crash6|virus7|c7|binario7|traba7|crash7|virus8|c8|binario8|traba8|crash8)$/i
+handler.command = /^(virus|binario|traba|crash|virus1|c1|binario1|traba1|crash1|virus2|c2|binario2|traba2|crash2|virus3|c3|binario3|traba3|crash3|virus4|c4|binario4|traba4|crash4|virus5|c5|binario5|traba5|crash5|virus6|c6|binario6|traba6|crash6|virus7|c7|binario7|traba7|crash7|virus8|c8|binario8|traba8|crash8)$/i
 handler.rowner = true
 export default handler
 */
