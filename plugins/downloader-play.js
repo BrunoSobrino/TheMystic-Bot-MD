@@ -22,7 +22,7 @@ let texto1 = `*◉—⌈🔊 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐏𝐋𝐀𝐘 🔊�
 ❏ 👀 *𝚅𝙸𝚂𝚃𝙰𝚂:* ${viewH}
 ❏ 📇 *𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽:* ${description}`.trim()
 let buttonMessage = {
-"document": { url: "https://wa.me/50499698072" }, 
+"document": { url: "https://wa.me/5219992095479" }, 
 "fileName": '❏ 🌿 ʀᴇᴘʀᴏᴅᴜᴄᴛᴏʀ ᴅᴇ ʏᴏᴜᴛᴜʙᴇ', 
 "mimetype": 'application/vnd.ms-excel',
 "caption": texto1,
