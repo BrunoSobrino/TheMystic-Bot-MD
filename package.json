@@ -31,7 +31,6 @@
         "@bochilteam/scraper": "^3.0.0",
         "@vitalets/google-translate-api": "^8.0.0",
         "acrcloud": "^1.4.0",
-        "api-dylux": "^1.1.1",
         "awesome-phonenumber": "^2.68.0",
         "axios": "^0.24.0",
         "cfonts": "^2.10.0",
