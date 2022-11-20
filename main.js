@@ -70,7 +70,7 @@ global.authFile = `MysticSession`
 const { state, saveState, saveCreds } = await useMultiFileAuthState(global.authFile)
 
 const msgRetryCounterMap = {}
-const { version: WAVersion, isLatest } = await fetchLatestBaileysVersion()
+const { version: WAVersion } = await fetchLatestBaileysVersion()
 const optss = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 
 const connectionOptions = {
