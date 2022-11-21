@@ -500,6 +500,7 @@ ${readMore}
 ┣ ඬ⃟ 💵 _${usedPrefix}cofre_
 ┣ ඬ⃟ 💵 _${usedPrefix}balance_
 ┣ ඬ⃟ 💵 _${usedPrefix}claim_
+┣ ඬ⃟ 💵 _${usedPrefix}heal_
 ┣ ඬ⃟ 💵 _${usedPrefix}lb_
 ┣ ඬ⃟ 💵 _${usedPrefix}levelup_
 ┣ ඬ⃟ 💵 _${usedPrefix}myns_
