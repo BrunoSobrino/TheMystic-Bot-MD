@@ -5,7 +5,7 @@ if (!m.mentionedJid[0] && !m.quoted) return m.reply(kicktext, m.chat, { mentions
 let user = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted.sender
 let owr = m.chat.split`-`[0]
 await conn.groupParticipantsUpdate(m.chat, [user], 'remove')}
-handler.command = /^(kick|echar|hechar|sacar)$/i
+handler.command = /^(kick2|echar2|hechar2|sacar2)$/i
 handler.admin = true
 handler.group = true
 handler.botAdmin = true
