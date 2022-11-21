@@ -10,7 +10,7 @@ title: result.author + result.title}))
 if (!res.ok) throw await res.text()
 let json = await res.json()
 if (!json.thumbnail.genius) throw json
-let letratexto =`𝚃𝙸𝚃𝚄𝙻𝙾: *${result.title}*\n𝙰𝚄𝚃𝙾𝚁: *${result.author}*\n\n\n𝙻𝙴𝚃𝚁𝙰: ${result.lyrics}`.trim()
+let letratexto =`𝚃𝙸𝚃𝚄𝙻𝙾: *${result.title}*\n𝙰𝚄𝚃𝙾𝚁: *${result.author}*\n\n𝙻𝙴𝚃𝚁𝙰: ${result.lyrics}`.trim()
 let linkresult = monospace + result.link + monospace
 conn.sendButton(m.chat, letratexto, `\n𝚄𝚁𝙻: ${linkresult}\n${wm}`, json.thumbnail.genius, [['🎵 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙰𝚄𝙳𝙸𝙾 🎵', `#play.1 ${text}`], ['🎥 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚅𝙸𝙳𝙴𝙾 🎥', `#play.2 ${text}`]], m)
 } catch {
