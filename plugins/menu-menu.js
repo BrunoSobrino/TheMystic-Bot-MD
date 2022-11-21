@@ -495,7 +495,9 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━━━━┓
 ┃ *< ℝℙ𝔾 - 𝕃𝕀𝕄𝕀𝕋𝔼𝕊 - 𝔼ℂ𝕆ℕ𝕆𝕄𝕀𝔸 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 💵 _${usedPrefix}transfer *<tipo> <cantidad> <@tag>*_
+┣ ඬ⃟ 💵 _${usedPrefix}adventure_
+┣ ඬ⃟ 💵 _${usedPrefix}cazar_
+┣ ඬ⃟ 💵 _${usedPrefix}cofre_
 ┣ ඬ⃟ 💵 _${usedPrefix}balance_
 ┣ ඬ⃟ 💵 _${usedPrefix}claim_
 ┣ ඬ⃟ 💵 _${usedPrefix}lb_
@@ -504,9 +506,12 @@ ${readMore}
 ┣ ඬ⃟ 💵 _${usedPrefix}perfil_
 ┣ ඬ⃟ 💵 _${usedPrefix}work_
 ┣ ඬ⃟ 💵 _${usedPrefix}minar_
+┣ ඬ⃟ 💵 _${usedPrefix}minar2_
 ┣ ඬ⃟ 💵 _${usedPrefix}buy_
 ┣ ඬ⃟ 💵 _${usedPrefix}buyall_
 ┣ ඬ⃟ 💵 _${usedPrefix}verificar_
+┣ ඬ⃟ 💵 _${usedPrefix}robar *<cantidad> <@tag>*_
+┣ ඬ⃟ 💵 _${usedPrefix}transfer *<tipo> <cantidad> <@tag>*_
 ┣ ඬ⃟ 💵 _${usedPrefix}unreg *<numero de serie>*_
 ┗━━━━━━━━━━━━━━━━━━━┛
 
