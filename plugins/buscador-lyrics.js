@@ -10,8 +10,8 @@ title: result.author + result.title}))
 if (!res.ok) throw await res.text()
 let json = await res.json()
 if (!json.thumbnail.genius) throw json
-let letratexto =`𝐓𝐈𝐓𝐔𝐋𝐎: *${result.title}*\n𝐀𝐔𝐓𝐎𝐑 ${result.author}\n\n\n${result.lyrics}\n\n\n𝐔𝐑𝐋 ${result.link}`.trim()
-conn.sendButton(m.chat, letratexto, wm, json.thumbnail.genius, [['𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙰𝚄𝙳𝙸𝙾', `/play.1 ${text}`], ['𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚅𝙸𝙳𝙴𝙾', `/play.2 ${text}`]], m)
+let letratexto =`𝐓𝐈𝐓𝐔𝐋𝐎: *${result.title}*\n𝐀𝐔𝐓𝐎𝐑: *${result.author}*\n\n\n𝐋𝐄𝐓𝐑𝐀: ${result.lyrics}`.trim()
+conn.sendButton(m.chat, letratexto, `𝐔𝐑𝐋: ${result.link}\n` + wm, json.thumbnail.genius, [['𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙰𝚄𝙳𝙸𝙾', `/play.1 ${text}`], ['𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚅𝙸𝙳𝙴𝙾', `/play.2 ${text}`]], m)
 /*conn.sendHydrated(m.chat, letratexto, wm, json.thumbnail.genius, null, null, null, null, [
 ['𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙰𝚄𝙳𝙸𝙾', `/play.1 ${text}`],
 ['𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚅𝙸𝙳𝙴𝙾', `/play.2 ${text}`]
