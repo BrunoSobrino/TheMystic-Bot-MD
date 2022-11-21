@@ -1,6 +1,5 @@
 import fetch from 'node-fetch'
 import { lyrics, lyricsv2 } from '@bochilteam/scraper'
-import { googleImage } from '@bochilteam/scraper'
 let handler = async (m, { conn, text, usedPrefix, command }) => {
 let teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : ''
 if (!teks) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾: ${usedPrefix + command} beret ojala*`
