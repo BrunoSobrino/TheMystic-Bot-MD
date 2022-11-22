@@ -30,11 +30,11 @@ let vid2 = await (await fetch(API('rrul', '/api/yt/yts', { q: text }))).json()
 let { url, title, description, image, seconds, timestamp, ago, views } = await vid2.result[0]
 let ytLink = `https://yt-downloader.aliefputra.repl.co/?url=${url}&filter=audioonly&quality=highestaudio&contenttype=audio/mpeg`
 let capt = `❏ 📌 *𝚃𝙸𝚃𝚄𝙻𝙾:* ${title}\n❏ 📆 *𝙿𝚄𝙱𝙻𝙸𝙲𝙰𝙳𝙾:* ${ago}\n❏ ⌚ *𝙳𝚄𝚁𝙰𝙲𝙸𝙾𝙽:* ${timestamp}\n❏ 👀 *𝚅𝙸𝚂𝚃𝙰𝚂:* ${views.toLocaleString()}\n❏ 🔗 *𝙻𝙸𝙽𝙺:* ${url}`
-let buttons = [{ buttonText: { displayText: 'Video' }, buttonId: `${usedPrefix}ytv ${url}` }]
-let msg = await conn.sendMessage(m.chat, { image: { url: image }, caption: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ...*', buttons }, { quoted: m })
+let buttonss = [{ buttonText: { displayText: 'Video' }, buttonId: `${usedPrefix}ytv ${url}` }]
+let msg = await conn.sendMessage(m.chat, { image: { url: image }, caption: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ...*', buttonss }, { quoted: m })
 await conn.sendMessage(m.chat, { [seconds > 3600 ? 'document' : 'audio']: { url: ytLink }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: msg })
 } catch {  
-await m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*)}}}
+m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*')}}}
 handler.help = ['play', 'play2'].map(v => v + ' <pencarian>')
 handler.tags = ['downloader']
 handler.command = /^play2?$/i
