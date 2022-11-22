@@ -31,8 +31,8 @@ let { url, title, description, image, seconds, timestamp, ago, views } = await v
 let ytLink = `https://yt-downloader.aliefputra.repl.co/?url=${url}&filter=audioonly&quality=highestaudio&contenttype=audio/mpeg`
 let capt = `❏ 📌 *𝚃𝙸𝚃𝚄𝙻𝙾:* ${title}\n❏ 📆 *𝙿𝚄𝙱𝙻𝙸𝙲𝙰𝙳𝙾:* ${ago}\n❏ ⌚ *𝙳𝚄𝚁𝙰𝙲𝙸𝙾𝙽:* ${timestamp}\n❏ 👀 *𝚅𝙸𝚂𝚃𝙰𝚂:* ${views.toLocaleString()}\n❏ 🔗 *𝙻𝙸𝙽𝙺:* ${url}`
 const buttonss = [{buttonId: `#ytv ${url}`, buttonText: {displayText: '🎥 𝐕𝐈𝐃𝐄𝐎 🎥'}, type: 1}]
-const buttonMessage = {text: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ...*', buttons: buttonss, headerType: 1, quoted: m}
-let msg = await sock.sendMessage(m.chat, buttonMessage, m)
+const buttonMessage = {text: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ...*', buttons: buttonss, headerType: 1}
+let msg = await conn.sendMessage(m.chat, buttonMessage, m)
 //let msg = await conn.sendMessage(m.chat, { image: { url: image }, caption: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ...*', buttonss }, { quoted: m })
 await conn.sendMessage(m.chat, { [seconds > 3600 ? 'document' : 'audio']: { url: ytLink }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: msg })
 } catch {  
