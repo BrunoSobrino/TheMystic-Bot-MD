@@ -485,7 +485,7 @@ global.botdate = `⫹⫺ Date :  ${moment.tz('America/Los_Angeles').format('DD/M
 global.bottime = `𝗧 𝗜 𝗠 𝗘 : ${moment.tz('America/Los_Angeles').format('HH:mm:ss')}`//America/Los_Angeles
 global.fgif = {key: { participant : '0@s.whatsapp.net'}, message: { "videoMessage": { "title": wm, "h": `Hmm`, 'seconds': '999999999',  'gifPlayback': 'true',  'caption': bottime, 'jpegThumbnail': fs.readFileSync('./Menu.png')}}}
 global.multiplier = 99
-/*************************/
+/*************************
 
 let file = fileURLToPath(import.meta.url)
 watchFile(file, () => {
