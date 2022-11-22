@@ -65,7 +65,8 @@ global.APIs = { // API Prefix
   ana: 'https://anabotofc.herokuapp.com/',
   kanx: 'https://kannxapi.herokuapp.com/',
   dhnjing: 'https://dhnjing.xyz',
-  violetics: 'https://violetics.pw'
+  violetics: 'https://violetics.pw',
+  rrul: 'https://api-rull.herokuapp.com'
 },
 global.APIKeys = { // APIKey Here
   // 'https://website': 'apikey'
