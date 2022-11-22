@@ -33,7 +33,7 @@ let capt = `❏ 📌 *𝚃𝙸𝚃𝚄𝙻𝙾:* ${title}\n❏ 📆 *𝙿𝚄�
 const buttons = [{buttonId: `#ytv ${url}`, buttonText: {displayText: '🎥 𝐕𝐈𝐃𝐄𝐎 🎥'}, type: 1}]
 const buttonMessage = { image: {url: image}, caption: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ...*', buttons: buttons, headerType: 4 }
 let msg = await conn.sendMessage(m.chat, buttonMessage, { quoted: m })
-await conn.sendFile(m.chat, ytLink, title + '.mp3', null, msg, false, { mimetype: 'audio/mp4' })
+await conn.sendFile(m.chat, ytLink, title + '.mp3', null, m, false, { mimetype: 'audio/mp4' })
 //await conn.sendMessage(m.chat, { [seconds > 3600 ? 'document' : 'audio']: { url: ytLink }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: msg })
 } catch {  
 throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*'}}}
