@@ -458,7 +458,7 @@ global.mes = d.toLocaleDateString('es', { month: 'long' })
 global.año = d.toLocaleDateString('es', { year: 'numeric' })
 global.tiempo = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
 //*****************************
-global.wm2 = `𝙱𝚛𝚞𝚗𝚘𝚂𝚘𝚋𝚛𝚒𝚗𝚘\n▸ ${dia}\n▸ ${tiempo}\n▸ ${fecha}\n▸ ★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★`
+global.wm2 = `▸ ${dia}\n▸ ${tiempo}\n▸ ${fecha}\n▸ 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝`
 global.gt = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
 global.mysticbot = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
