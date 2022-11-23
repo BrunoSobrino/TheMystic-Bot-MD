@@ -11,8 +11,8 @@ const yt = await youtubedl(v).catch(async _ => await youtubedlv2(v)).catch(async
 const dl_url = await yt.audio[q].download()
 const ttl = await yt.title
 const size = await yt.audio[q].fileSizeH
-await conn.sendFile(m.chat, dl_url, ttl + '.mp3', `*◉—⌈🔊 𝐃𝐄𝐒𝐂𝐀𝐑𝐆𝐀𝐃𝐎𝐑 𝐃𝐄 𝐘𝐓 🔊⌋—◉*\n❏ 📌 *𝚃𝙸𝚃𝚄𝙻𝙾:* ${ttl}\n❏ 📥 *𝙿𝙴𝚂𝙾:* ${size}`.trim(), m, false, { mimetype: 'audio/mpeg', asDocument: chat.useDocument })
-//await conn.sendMessage(m.chat, { document: { url: dl_url }, mimetype: 'audio/mpeg', fileName: `${ttl}.mp3`}, {quoted: m})
+let cap = `*◉—⌈🔊 𝐃𝐄𝐒𝐂𝐀𝐑𝐆𝐀𝐃𝐎𝐑 𝐃𝐄 𝐘𝐓 🔊⌋—◉*\n❏ 📌 *𝚃𝙸𝚃𝚄𝙻𝙾:* ${ttl}\n❏ 📥 *𝙿𝙴𝚂𝙾:* ${size}`.trim()
+await conn.sendMessage(m.chat, { document: { url: dl_url }, caption: cap, mimetype: 'audio/mpeg', fileName: `${ttl}.mp3`}, { quoted: m })
 } catch {
 try {
 let lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytaudio2?apikey=85faf717d0545d14074659ad&url=${args[0]}`)    
