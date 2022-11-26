@@ -158,6 +158,8 @@ ${readMore}
 ┃ *< 𝔻𝔼𝕊ℂ𝔸ℝ𝔾𝔸𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 📥 _${usedPrefix}instagram *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}instagram2 *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}instagram3 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}mediafire *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}instagram *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}gitclone *<enlace / link / url>*_
