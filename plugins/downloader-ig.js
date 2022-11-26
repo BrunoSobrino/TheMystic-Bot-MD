@@ -13,7 +13,8 @@ let json = await human.json()
 let videoig = json.result
 let human2 = await fetch(`https://api.lolhuman.xyz/api/instagram2?apikey=85faf717d0545d14074659ad&url=${args[0]}`)
 let json2 = await human2.json()
-if (!json.result || json.result == '') videoig = json2.result.media
+if (videoig == '') videoig = json2.result.media
+if (!videoig) videoig = json2.result.media
 let shortUrl1 = await (await fetch(`https://tinyurl.com/api-create.php?url=${args[0]}`)).text()
 let txt1 = `🔗 *Url:* ${shortUrl1}`.trim()
 await conn.sendFile(m.chat, videoig, 'error.mp4', txt1, m)
