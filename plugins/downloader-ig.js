@@ -21,17 +21,10 @@ let shortUrl2 = await (await fetch(`https://tinyurl.com/api-create.php?url=${arg
 let txt2 = `🔗 *Url:* ${shortUrl2}`.trim()
 conn.sendFile(m.chat, resultss, 'error.mp4', txt2, m)
 break               
-case "instagramdl3": case "instagram3": case "igdl3": case "ig3":        
-hx.igdl(args[0]).then(async (r) => {
-for (let i = 0; i < r.medias.length; i++) {
+case "instagramdl3": case "instagram3": case "igdl3": case "ig3":            
+const resultssss = await instagramdl(args[0]).catch(async _ => await instagramdlv2(args[0])).catch(async _ => await instagramdlv3(args[0])).catch(async _ => await instagramdlv4(args[0]))
 let shortUrl3 = await (await fetch(`https://tinyurl.com/api-create.php?url=${r.medias[i].url}`)).text()
 let txt3 = `🔗 *Url:* ${shortUrl3}`.trim()
-await conn.sendFile(m.chat, r.medias[i].url, '', txt3, m)}})       
-break            
-case "instagramdl4": case "instagram4": case "igdl4": case "ig4":        
-const resultssss = await instagramdl(args[0]).catch(async _ => await instagramdlv2(args[0])).catch(async _ => await instagramdlv3(args[0])).catch(async _ => await instagramdlv4(args[0]))
-let shortUrl4 = await (await fetch(`https://tinyurl.com/api-create.php?url=${r.medias[i].url}`)).text()
-let txt4 = `🔗 *Url:* ${shortUrl3}`.trim()
 for (const { url } of resultssss) await conn.sendFile(m.chat, url, 'error.mp4', txt4, m)
 break       
 }} catch {
