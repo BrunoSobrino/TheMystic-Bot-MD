@@ -1,4 +1,3 @@
-import hx from 'hxz-api'
 import fetch from 'node-fetch'
 import instagramGetUrl from 'instagram-url-direct'
 import { instagramdl, instagramdlv2, instagramdlv3, instagramdlv4 } from '@bochilteam/scraper'
