@@ -50,6 +50,7 @@
         "glob-fs": "^0.1.7",
         "human-readable": "^0.2.1",
         "hxz-api": "^1.0.1",
+        "instagram-url-direct": "^1.0.12",
         "jsdom": "^19.0.0",
         "link-preview-js": "^2.1.13",
         "lodash": "^4.17.21",
