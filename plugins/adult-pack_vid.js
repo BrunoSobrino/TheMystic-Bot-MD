@@ -18,8 +18,12 @@ case "videoxxx": case "vídeoxxx":
 let url4 = await videosxxxc[Math.floor(Math.random() * videosxxxc.length)] 
 await conn.sendButton(m.chat, `*ᴅɪsғʀᴜᴛᴀ ᴅᴇʟ ᴠɪᴅᴇᴏ 🥵*`, author, url4, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)  
 break  
+case "videoxxxlesbi": case "videolesbixxx": case "pornolesbivid": case "pornolesbianavid": case "pornolesbiv": case "pornolesbianav": case "pornolesv":       
+let url5 = await videosxxxc2[Math.floor(Math.random() * videosxxxc2.length)] 
+await conn.sendButton(m.chat, `*ᴅɪsғʀᴜᴛᴀ ᴅᴇʟ ᴠɪᴅᴇᴏ 🥵*`, author, url5, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)    
+break    
 }}
-handler.command = /^(pack|pack2|pack3|videoxxx|vídeoxxx)$/i
+handler.command = /^(pack|pack2|pack3|videoxxx|vídeoxxx|videoxxxlesbi|videolesbixxx|pornolesbivid|pornolesbianavid|pornolesbiv|pornolesbianav|pornolesv)$/i
 export default handler
 global.pack = [
   "https://i.imgur.com/XbW7FO2.jpg",
@@ -151,7 +155,42 @@ global.videosxxxc = [
 "https://f.top4top.io/m_2235hcqj65.mp4",
 "https://g.top4top.io/m_2235j81s76.mp4"
 ]
-/*
-"https://f.top4top.io/m_2235sxi5y1.mp4"
-"https://d.top4top.io/m_2235993nu1.mp4"
-*/
+global.videosxxxc2 = [
+"https://l.top4top.io/m_2257y4pyl0.mp4",
+"https://c.top4top.io/m_2274woesg0.mp4",
+"https://k.top4top.io/m_2257pdwjy0.mp4",
+"https://a.top4top.io/m_2257qulmx0.mp4",
+"https://a.top4top.io/m_2257vxzr62.mp4",
+"https://b.top4top.io/m_2257wjmbh3.mp4",
+"https://b.top4top.io/m_2257sen2a1.mp4",
+"https://c.top4top.io/m_2257hpo9v3.mp4",
+"https://e.top4top.io/m_2257pye7u1.mp4",
+"https://c.top4top.io/m_2257p7xg14.mp4",
+"https://c.top4top.io/m_2257p4v9i3.mp4",
+"https://l.top4top.io/m_2257jvkrv3.mp4",
+"https://b.top4top.io/m_2257pl7wh1.mp4",
+"https://e.top4top.io/m_2257fiwnp2.mp4",
+"https://b.top4top.io/m_22578b1nk1.mp4",
+"https://k.top4top.io/m_22572gv7q1.mp4",
+"https://i.top4top.io/m_2257pu90l2.mp4",
+"https://d.top4top.io/m_2257vcwiw3.mp4",
+"https://j.top4top.io/m_2258joebc2.mp4",
+"https://g.top4top.io/m_2258kvnba4.mp4",
+"https://f.top4top.io/m_2258nm8pe1.mp4",
+"https://g.top4top.io/m_2258af7bc2.mp4",
+"https://l.top4top.io/m_2258f0ci92.mp4",
+"https://j.top4top.io/m_2258ehqpb2.mp4",
+"https://h.top4top.io/m_2258pckkf3.mp4",
+"https://e.top4top.io/m_225857rs20.mp4",
+"https://k.top4top.io/m_225863kpa0.mp4",
+"https://j.top4top.io/m_2258s6we62.mp4",
+"https://i.top4top.io/m_2258if6l13.mp4",
+"https://b.top4top.io/m_2258lmd2h1.mp4",
+"https://j.top4top.io/m_2258a9oah2.mp4",
+"https://i.top4top.io/m_22588w3xh0.mp4",
+"https://g.top4top.io/m_225885lm14.mp4",
+"https://e.top4top.io/m_2258buxc30.mp4",
+"https://e.top4top.io/m_2258fvra62.mp4",
+"https://l.top4top.io/m_22588mx7k4.mp4",
+"https://g.top4top.io/m_2258zhldg1.mp4"
+]
