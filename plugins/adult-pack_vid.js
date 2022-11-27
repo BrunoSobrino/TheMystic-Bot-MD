@@ -18,7 +18,7 @@ case "videoxxx": case "vídeoxxx":
 let url4 = await videosxxxc[Math.floor(Math.random() * videosxxxc.length)] 
 await conn.sendButton(m.chat, `*ᴅɪsғʀᴜᴛᴀ ᴅᴇʟ ᴠɪᴅᴇᴏ 🥵*`, author, url4, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)  
 break  
-}
+}}
 handler.command = /^(pack|pack2|pack3|videoxxx|vídeoxxx)$/i
 export default handler
 global.pack = [
