@@ -177,6 +177,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp3doc *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4doc *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}dapk2 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}stickerpack *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play.1 *<texto>*_
@@ -402,6 +403,7 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━━━━┓
 ┃ *< 𝔹𝕌𝕊ℂ𝔸𝔻𝕆ℝ𝔼𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
+┣ ඬ⃟ 🔍 _${usedPrefix}modapk *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch2 *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}xnxxsearch *<texto>*_
