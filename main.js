@@ -276,8 +276,8 @@ Object.freeze(global.support)
 }
 setInterval(async () => {
 if (global.stopped == 'close') return
-var a = await clearTmp()
-console.log(chalk.cyanBright(`\n▣─────────[ 𝙰𝚄𝚃𝙾𝙲𝙻𝙴𝙰𝚁𝚃𝙼𝙿 ]────────────···\n│\n▣─❧ 𝙰𝚁𝙲𝙷𝙸𝚅𝙾𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾𝚂 ✅\n│\n▣─────────────────────────────────────···\n`))
+var a = await clearTmp()        
+console.log(chalk.cyanBright(`\n▣───────────[ 𝙰𝚄𝚃𝙾𝙲𝙻𝙴𝙰𝚁 ]──────────────···\n│\n▣─❧ 𝙰𝚁𝙲𝙷𝙸𝚅𝙾𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾𝚂 ✅\n│\n▣───────────────────────────────────────···\n`))
 }, 180000)
 _quickTest()
 .then(() => conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`))
