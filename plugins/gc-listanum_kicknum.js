@@ -32,6 +32,6 @@ await delay(10000)
 break            
 }}
 handler.command = /^(listanum|kicknum)$/i
-handler.group = handler.botAdmin = true
+handler.group = handler.botAdmin = handler.admin =true
 handler.fail = null
 export default handler
