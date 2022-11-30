@@ -205,6 +205,8 @@ ${readMore}
 ┣ ඬ⃟ 💎 _${usedPrefix}add *<numero>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}kick *<@tag>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}kick2 *<@tag>*_
+┣ ඬ⃟ 💎 _${usedPrefix}listanum *<texto>*_
+┣ ඬ⃟ 💎 _${usedPrefix}kicknum *<texto>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}grupo *<abrir / cerrar>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}grouptime *<opcion> <tiempo>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}promote *<@tag>*_
