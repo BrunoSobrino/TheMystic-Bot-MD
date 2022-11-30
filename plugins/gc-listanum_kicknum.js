@@ -1,3 +1,7 @@
+/*              Codigo Creado Por Bruno Sobrino 
+      (https://github.com/BrunoSobrino/TheMystic-Bot-MD) 
+*/
+
 let handler = async (m, { conn, args, groupMetadata, participants, usedPrefix, command, isBotAdmin, isSuperAdmin }) => {
 if (!args[0]) return m.reply(`*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙰 𝙴𝙻 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽 𝙿𝙰𝙸𝚂 𝙿𝙰𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁 𝙽𝚄𝙼𝙴𝚁𝙾𝚂 𝙴𝙽 𝙴𝚂𝚃𝙴 𝙶𝚁𝚄𝙿𝙾 𝙳𝙴 𝙴𝚂𝙴 𝙿𝙰𝙸𝚂, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾: ${usedPrefix + command} 52*`) 
 if (isNaN(args[0])) return m.reply(`*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙰 𝙴𝙻 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽 𝙿𝙰𝙸𝚂 𝙿𝙰𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁 𝙽𝚄𝙼𝙴𝚁𝙾𝚂 𝙴𝙽 𝙴𝚂𝚃𝙴 𝙶𝚁𝚄𝙿𝙾 𝙳𝙴 𝙴𝚂𝙴 𝙿𝙰𝙸𝚂, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾: ${usedPrefix + command} 52*`) 
