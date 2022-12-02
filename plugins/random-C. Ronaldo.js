@@ -1,6 +1,6 @@
 import axios from 'axios'
 let handler = async(m, { conn, usedPrefix, command }) => {
-let Cristiano = (await axios.get(`https://raw.githubusercontent.com/FG98F/team-fg/main/nsfw/xvid.json`)).data  
+let Cristiano = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/CristianoRonaldo.json`)).data  
 /*let res = await axios("https://meme-api.herokuapp.com/gimme/Cristianoronaldo")
 let json = res.data
 let url = json.url*/
