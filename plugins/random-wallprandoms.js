@@ -28,9 +28,11 @@ let haha = await conn.getFile(`https://api-reysekha.herokuapp.com/api/wallpaper/
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 if (command == 'wprandom') {
-let res = (await conn.getFile(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/wprandom.json`)).data
+let res = (await fetch(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/wprandom.json`)).data
+let res2 = await res.json()
+let res3 = res2.result
 await conn.reply(m.chat, global.wait, m)
-let url = await res[Math.floor(res.length * Math.random())]
+let url = await res3[Math.floor(res3.length * Math.random())]
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 if (command == 'coffee') {
 let haha = await conn.getFile(`https://coffee.alexflipnote.dev/random`)
