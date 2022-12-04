@@ -28,7 +28,6 @@ conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp
 if (command == 'wprandom') {
 let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/wprandom.json`)).data  
 let res2 = await res[Math.floor(res.length * Math.random())]
-console.log(res)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, res2, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'coffee') {
