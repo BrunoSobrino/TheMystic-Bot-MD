@@ -3,6 +3,7 @@ let handler = async (m, {command, conn}) => {
 let apikey = keysxxx
 let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
 let name = await conn.getName[who]
+let fgif = m
 
 if (command == 'wpmontaña') {
 let haha = await conn.getFile(`https://api-reysekha.herokuapp.com/api/wallpaper/mountain?apikey=APIKEY`)
