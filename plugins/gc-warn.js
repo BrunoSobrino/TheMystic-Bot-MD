@@ -1,4 +1,5 @@
 let handler = async (m, { conn, text, command, usedPrefix }) => {
+if (m.mentionedJid.includes(conn.user.jid)) return	
 let pp = './src/warn.jpg'
 let who
 if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text
