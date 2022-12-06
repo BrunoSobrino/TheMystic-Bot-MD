@@ -116,7 +116,7 @@ if (command == 'yuri2') {
 let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri2.json`)).data  
 let url = await res[Math.floor(res.length * Math.random())]
 //conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)
-conn.sendMessage(m.chat, { video: fs.readFileSync(url), caption: `_${command}_`.trim(), gifPlayback: true }, { quoted: m })}
+conn.sendMessage(m.chat, { video: { url: url }, caption: `_${command}_`.trim(), gifPlayback: true }, { quoted: m })}
   
   
   
