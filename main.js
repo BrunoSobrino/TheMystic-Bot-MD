@@ -20,7 +20,7 @@ import { makeWASocket, protoType, serialize } from './lib/simple.js';
 import { Low, JSONFile } from 'lowdb';
 import { mongoDB, mongoDBV2 } from './lib/mongoDB.js';
 import store from './lib/store.js'
-const { DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeInMemoryStore, Browsers } = await import('@adiwajshing/baileys')
+const { DisconnectReason, useMultiFileAuthState } = await import('@adiwajshing/baileys')
 const { CONNECTING } = ws
 const { chain } = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
@@ -69,21 +69,11 @@ loadDatabase()
 global.authFile = `MysticSession`
 const { state, saveState, saveCreds } = await useMultiFileAuthState(global.authFile)
 
-const msgRetryCounterMap = {}
-const { version: WAVersion } = await fetchLatestBaileysVersion()
-const optss = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-
 const connectionOptions = {
-version: WAVersion,
 printQRInTerminal: true,
 logger: pino({ level: 'silent' }),
-msgRetryCounterMap,
 auth: state,
-browser: ['MysticBot','Safari','9.7.0'],
-getMessage: async (key) => (
-optss.store.loadMessage(/** @type {string} */(key.remoteJid), key.id) || 
-optss.store.loadMessage(/** @type {string} */(key.id)) || {}
-).message || { conversation: 'Please send messages again' }
+browser: ['MysticBot','Safari','9.7.0']
 }
 
 global.conn = makeWASocket(connectionOptions)
