@@ -9,8 +9,8 @@ let id = m.chat
 if (id in conn.tebaklagu) {
 conn.reply(m.chat, 'Todavía hay canciones sin respuesta en este chat.', conn.tebaklagu[id][0])
 throw false
-}
-let res = await fetch(global.API('xteam', '/game/tebaklagu/', { id: '5LTV57azwaid7dXfz5fzJu' }, 'APIKEY'))
+} //5LTV57azwaid7dXfz5fzJu
+let res = await fetch(global.API('xteam', '/game/tebaklagu/', { id: '0ISD8mk5kiv1YC5884lISM' }, 'APIKEY'))
 if (res.status !== 200) throw await res.text()
 let result = await res.json()
 let json = result.result
