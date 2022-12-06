@@ -44,7 +44,7 @@ global.APIs = {
   rrul: 'https://api-rull.herokuapp.com'
 },
 global.APIKeys = { 
-  'https://api.xteam.xyz': '5bd33b276d41d6b4',
+  'https://api.xteam.xyz': `${keysxteam}`,
   'https://api.lolhuman.xyz': '85faf717d0545d14074659ad',
   'https://violetics.pw': 'beta'
 }
