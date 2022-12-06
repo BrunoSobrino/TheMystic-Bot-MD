@@ -1,5 +1,3 @@
-/* Creditos a https://github.com/ALBERTO9883/NyanCatBot-MD */
-
 import { youtubeSearch } from '@bochilteam/scraper'
 import fetch from 'node-fetch'
 let handler = async (m, { conn, command, text, usedPrefix }) => {
@@ -25,14 +23,15 @@ let buttonMessage = { "document": { url: "https://wa.me/5219992095479" }, "fileN
 conn.sendMessage(m.chat, buttonMessage, { quoted: m })
 } catch {
 try {  
-let vid2 = await (await fetch(API('rrul', '/api/yt/yts', { q: text }))).json()
-let { url, title, description, image, seconds, timestamp, ago, views } = await vid2.result[0]
+let vid2 = await (await fetch(`https://api.lolhuman.xyz/api/ytsearch?apikey=${lolkeysapi}&query=${text}`)).json()
+let { videoId, title, views, published, thumbnail } = await vid2.result[0]
+const url = 'https://www.youtube.com/watch?v=' + videoId
 let ytLink = await fetch(`https://api.lolhuman.xyz/api/ytplay2?apikey=${lolkeysapi}&query=${text}`)
 let jsonn = await ytLink.json()
 let aud = await jsonn.result.audio
-let capt = `❏ 📌 *𝚃𝙸𝚃𝚄𝙻𝙾:* ${title}\n❏ 📆 *𝙿𝚄𝙱𝙻𝙸𝙲𝙰𝙳𝙾:* ${ago}\n❏ ⌚ *𝙳𝚄𝚁𝙰𝙲𝙸𝙾𝙽:* ${timestamp}\n❏ 👀 *𝚅𝙸𝚂𝚃𝙰𝚂:* ${views.toLocaleString()}\n❏ 🔗 *𝙻𝙸𝙽𝙺:* ${url}`
+let capt = `❏ 📌 *𝚃𝙸𝚃𝚄𝙻𝙾:* ${title}\n❏ 📆 *𝙿𝚄𝙱𝙻𝙸𝙲𝙰𝙳𝙾:* ${published}\n❏ 👀 *𝚅𝙸𝚂𝚃𝙰𝚂:* ${views}\n❏ 🔗 *𝙻𝙸𝙽𝙺:* ${url}`
 const buttons = [{buttonId: `#playlist ${title}`, buttonText: {displayText: '📋 𝐌𝐀𝐒 𝐑𝐄𝐒𝐔𝐋𝐓𝐀𝐃𝐎𝐒 📋'}, type: 1}]
-const buttonMessage = { image: {url: image}, caption: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*', buttons: buttons, headerType: 4 }
+const buttonMessage = { image: {url: thumbnail}, caption: capt, footer: '*ᴇɴᴠɪᴀɴᴅᴏ ᴀᴜᴅɪᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*', buttons: buttons, headerType: 4 }
 let msg = await conn.sendMessage(m.chat, buttonMessage, { quoted: m })
 conn.sendMessage(m.chat, { document: { url: aud }, mimetype: 'audio/mpeg', fileName: `${title}.mp3`}, {quoted: msg})
 } catch {  
