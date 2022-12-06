@@ -15,7 +15,7 @@ let result = await translate(`${text}`, { to: lang, autoCorrect: true })
 await m.reply('*Traducción:* ' + result.text)
 } catch {
 try {    
-let lol = await fetch(`https://api.lolhuman.xyz/api/translate/auto/${lang}?apikey=85faf717d0545d14074659ad&text=${text}`)
+let lol = await fetch(`https://api.lolhuman.xyz/api/translate/auto/${lang}?apikey=${lolkeysapi}&text=${text}`)
 let loll = await lol.json()
 let result2 = loll.result.translated
 await m.reply('*Traducción:* ' + result2)
