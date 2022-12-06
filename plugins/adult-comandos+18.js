@@ -115,10 +115,8 @@ conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶
 if (command == 'yuri2') {
 let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri2.json`)).data  
 let url = await res[Math.floor(res.length * Math.random())]
-conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)
-let Buttons = [{ quickReplyButton: { displayText: '🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', id: `/${command}` }}]  
-conn.sendMessage(m.chat, { video: { url: url }, gifPlayback: true, gifAttribution: ~~(Math.random() * 2), caption: `_${command}_`.trim(), footer: wm, ButtonsMessage: Buttons, quoted: m }, {quoted: m})
-}
+//conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)
+conn.sendMessage(m.chat, { video: url, caption: `_${command}_`.trim(), gifPlayback: true }, { quoted: m })}
   
   
   
