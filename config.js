@@ -31,7 +31,9 @@ global.igfg = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
 global.wait = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*'
 
 global.keysZens = ['fiktod', 'c2459db922', 'BF39D349845E', '675e34de8a', '37CC845916', '0b917b905e6f', '6fb0eff124']
-global.keysxxx = keysZens[Math.floor(keysZens.length * Math.random())]
+global.keysxxx = await keysZens[Math.floor(keysZens.length * Math.random())]
+global.keysxteammm = ['29d4b59a4aa687ca', '5LTV57azwaid7dXfz5fzJu', 'cb15ed422c71a2fb', '5bd33b276d41d6b4']
+global.keysxteam = await keysxteammm[Math.floor(keysxteammm.length * Math.random())]
 global.lolkeysapi = ['85faf717d0545d14074659ad']
 
 global.APIs = { 
