@@ -43,8 +43,7 @@ global.APIs = {
   dzx: 'https://api.dhamzxploit.my.id',
   lol: 'https://api.lolhuman.xyz',
   violetics: 'https://violetics.pw',
-  neoxr: 'https://api.neoxr.my.id', 	
-  rrul: 'https://api-rull.herokuapp.com'
+  neoxr: 'https://api.neoxr.my.id'
 },
 global.APIKeys = { 
   'https://api.xteam.xyz': `${keysxteam}`,
