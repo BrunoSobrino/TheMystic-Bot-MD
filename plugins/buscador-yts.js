@@ -20,7 +20,7 @@ case 'channel': return `
 }).filter(v => v).join('\n\n========================\n\n')
 m.reply(teks)
 } catch {
-let get_result = await fetchJson(`https://api.lolhuman.xyz/api/ytsearch?apikey=85faf717d0545d14074659ad&query=${text}`)
+let get_result = await fetchJson(`https://api.lolhuman.xyz/api/ytsearch?apikey=${lolkeysapi}&query=${text}`)
 let get_result2 = get_result.result
 let ini_txt = ""
 for (var x of get_result2) {
