@@ -43,7 +43,7 @@ global.APIs = {
 },
 global.APIKeys = { 
   'https://api.xteam.xyz': '5bd33b276d41d6b4',
-  'https://api.lolhuman.xyz': '9b817532fadff8fc7cb86862',
+  'https://api.lolhuman.xyz': '85faf717d0545d14074659ad',
   'https://violetics.pw': 'beta'
 }
 
