@@ -1,7 +1,7 @@
 import { youtubeSearch } from '@bochilteam/scraper'
 let handler = async (m, { conn, text }) => {
 if (!text) throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙾 𝙲𝙰𝙽𝙰𝙻 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*'
-try {
+/*try {
 let imagennnnn = (await youtubeSearch(text)).video[0].thumbnail
 const { video, channel } = await youtubeSearch(text)
 let teks = [...video, ...channel].map(v => {
@@ -22,7 +22,7 @@ case 'channel': return `
 await conn.sendMessage(m.chat, { image: { url: imagennnnn }, caption: teks }, { quoted: m })  
 //await conn.sendFile(m.chat, imagennnnn, 'error.jpg', teks, m)
 //m.reply(teks)
-} catch {
+} catch {*/
 let get_result = await fetchJson(`https://api.lolhuman.xyz/api/ytsearch?apikey=${lolkeysapi}&query=${text}`)
 let get_result2 = get_result.result
 let ini_txt = ""
@@ -35,7 +35,7 @@ ini_txt += `\n\n========================\n\n`
 await conn.sendMessage(m.chat, { image: { url: get_result2[0].thumbnail }, caption: ini_txt }, { quoted: m })  
 //await conn.sendFile(m.chat, get_result2.thumbnail, 'error.jpg', ini_txt, m)  
 //m.reply(ini_txt)
-}}   
+} //}   
 handler.help = ['', 'earch'].map(v => 'yts' + v + ' <pencarian>')
 handler.tags = ['tools']
 handler.command = /^yts(earch)?$/i
