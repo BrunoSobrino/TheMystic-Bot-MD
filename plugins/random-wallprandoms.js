@@ -6,7 +6,7 @@ let name = await conn.getName[who]
 let fgif = m
 
 if (command == 'wpmontaña') {
-let anu = await wallpaper('wpmontaña')
+let anu = await wallpaper('mountain')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0] 
 await conn.reply(m.chat, global.wait, m)
