@@ -122,7 +122,7 @@ if (command == 'yuri2') {
 let resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri.json`)).data   
 let res = await fetch(`https://purrbot.site/api/img/nsfw/yuri/gif`)
 let json = await res.json()
-let url = json.linku  
+let url = json.link
 if (url == '' || !url || url == null) url = await resError[Math.floor(resError.length * Math.random())]
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
 }  
