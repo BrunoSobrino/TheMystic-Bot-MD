@@ -1,7 +1,9 @@
-import { youtubeSearch } from '@bochilteam/scraper'
-let handler = async (m, { text }) => {
+import { youtubeSearch, googleImage } from '@bochilteam/scraper'
+let handler = async (m, { conn, text }) => {
 if (!text) throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙾 𝙲𝙰𝙽𝙰𝙻 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*'
 try {
+const imagennn = await googleImage(text)
+let imagennnnn = await res.getRandom()  
 const { video, channel } = await youtubeSearch(text)
 let teks = [...video, ...channel].map(v => {
 switch (v.type) {
@@ -18,8 +20,11 @@ case 'channel': return `
 `.trim()
 }
 }).filter(v => v).join('\n\n========================\n\n')
-m.reply(teks)
+await conn.sendFile(m.chat, imagennnnn, 'error.jpg', teks, m)
+//m.reply(teks)
 } catch {
+const imagennn2 = await googleImage(text)
+let imagennnnn2 = await res.getRandom()    
 let get_result = await fetchJson(`https://api.lolhuman.xyz/api/ytsearch?apikey=${lolkeysapi}&query=${text}`)
 let get_result2 = get_result.result
 let ini_txt = ""
@@ -29,7 +34,8 @@ ini_txt += `👁️ 𝚟𝚒𝚜𝚝𝚊𝚜: ${x.views}\n`
 ini_txt += `⏲️ 𝙿𝚞𝚋𝚕𝚒𝚌𝚊𝚍𝚘: ${x.published}`
 ini_txt += `\n\n========================\n\n`
 }
-m.reply(ini_txt)
+await conn.sendFile(m.chat, imagennnnn2, 'error.jpg', ini_txt, m)  
+//m.reply(ini_txt)
 }}   
 handler.help = ['', 'earch'].map(v => 'yts' + v + ' <pencarian>')
 handler.tags = ['tools']
