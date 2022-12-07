@@ -246,7 +246,6 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━━━━┓
 ┃ *< 𝔼𝔽𝔼ℂ𝕋𝕆𝕊 𝕐 𝕃𝕆𝔾𝕆𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 🖍️ _${usedPrefix}mensajefalso *<nombre|mensaje>*_
 ┣ ඬ⃟ 🖍️ _${usedPrefix}phmaker *<opcion> <imagen>*_
 ┣ ඬ⃟ 🖍️ _${usedPrefix}logos *<efecto> <texto>*_
 ┣ ඬ⃟ 🖍️ _${usedPrefix}logochristmas *<texto>*_
@@ -493,7 +492,6 @@ ${readMore}
 ┣ ඬ⃟ 🛠️ _${usedPrefix}readmore *<texto1| texto2>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}styletext *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}traducir *<texto>*_
-┣ ඬ⃟ 🛠️ _${usedPrefix}zoom *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}nowa *<numero>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}covid *<pais>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}horario_
