@@ -57,7 +57,7 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'caricatura') {
-let anu = await wallpaper('kartun')
+let anu = await wallpaper('cartoon')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0]  
 await conn.reply(m.chat, global.wait, m)
