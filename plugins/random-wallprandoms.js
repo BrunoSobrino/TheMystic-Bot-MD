@@ -31,9 +31,7 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'wpaesthetic') {
-let res11 = ['aesthetic', 'anime aesthetic', 'latino aesthetic']  
-let res22 = res11[Math.floor(Math.random() * res11.length)] 
-let anu = await wallpaper(res22)
+let anu = await wallpaper('aesthetic')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0] 
 await conn.reply(m.chat, global.wait, m)
@@ -50,14 +48,14 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'pentol') {
-let anu = await wallpaper('wp pentol')
+let anu = await wallpaper('milk y mocha')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0]
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'caricatura') {
-let anu = await wallpaper('cartoon')
+let anu = await wallpaper('cartoon network')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0]  
 await conn.reply(m.chat, global.wait, m)
@@ -71,7 +69,7 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'technology') {
-let anu = await wallpaper('teknologi')
+let anu = await wallpaper('technology')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0]      
 await conn.reply(m.chat, global.wait, m)
@@ -85,14 +83,14 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'hacker') {
-let anu = await wallpaper('hekel')
+let anu = await wallpaper('hacker')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0]   
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'planeta') {
-let res111 = ['planeta', 'tatasurya', 'planet']  
+let res111 = ['planeta', 'planet']  
 let res222 = res111[Math.floor(Math.random() * res111.length)] 
 let anu = await wallpaper(res222)
 let result = anu[Math.floor(Math.random() * anu.length)]  
