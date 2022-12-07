@@ -66,7 +66,6 @@ conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶
 if (command == 'trapito') {
 let res = await fetch(`https://api.waifu.pics/nsfw/trap`)
 let json = await res.json()
-console.log(json)
 let url = json.url
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)} 
   
@@ -103,13 +102,15 @@ let url = await res[Math.floor(res.length * Math.random())]
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
   
 if (command == 'yaoi') {
-let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yaoi.json`)).data  
-let url = await res[Math.floor(res.length * Math.random())]
+let res = await fetch(`https://nekobot.xyz/api/image?type=yaoi`)
+let json = await res.json()
+let url = json.message
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
   
 if (command == 'yaoi2') {
-let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yaoi.json`)).data  
-let url = await res[Math.floor(res.length * Math.random())]
+let res = await fetch(`https://nekobot.xyz/api/image?type=yaoi`)
+let json = await res.json()
+let url = json.message
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
   
 if (command == 'yuri') {
