@@ -3,7 +3,7 @@ let handler = async (m, { conn, text }) => {
 if (!text) throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙾 𝙲𝙰𝙽𝙰𝙻 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*'
 try {
 let imagennn = await fetchJson(`https://api.lolhuman.xyz/api/ytsearch?apikey=${lolkeysapi}&query=${text}`)
-let imagennnnn = imagennn.result.thumbnail[0]
+let imagennnnn = imagennn.result.thumbnail[1]
 const { video, channel } = await youtubeSearch(text)
 let teks = [...video, ...channel].map(v => {
 switch (v.type) {
@@ -32,7 +32,7 @@ ini_txt += `👁️ 𝚟𝚒𝚜𝚝𝚊𝚜: ${x.views}\n`
 ini_txt += `⏲️ 𝙿𝚞𝚋𝚕𝚒𝚌𝚊𝚍𝚘: ${x.published}`
 ini_txt += `\n\n========================\n\n`
 }
-await conn.sendFile(m.chat, get_result2.thumbnail[0], 'error.jpg', ini_txt, m)  
+await conn.sendFile(m.chat, get_result2.thumbnail[1], 'error.jpg', ini_txt, m)  
 //m.reply(ini_txt)
 }}   
 handler.help = ['', 'earch'].map(v => 'yts' + v + ' <pencarian>')
