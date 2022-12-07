@@ -108,19 +108,22 @@ let url = json.message
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
   
 if (command == 'yaoi2') {
-let res = await fetch(`https://nekobot.xyz/api/image?type=yaoi`)
+let res = await fetch(`https://purrbot.site/api/img/nsfw/yaoi/gif`)
 let json = await res.json()
-let url = json.message
+let url = json.link
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
   
-if (command == 'yuri') {
+if (command == 'yuri') { 
 let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri.json`)).data  
-let url = await res[Math.floor(res.length * Math.random())]
+let url = await res[Math.floor(res.length * Math.random())]  
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
   
 if (command == 'yuri2') {
-let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri2.json`)).data  
-let url = await res[Math.floor(res.length * Math.random())]
+let resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri.json`)).data   
+let res = await fetch(`https://purrbot.site/api/img/nsfw/yuri/gif`)
+let json = await res.json()
+let url = json.linku  
+if (url == '') url = await resError[Math.floor(resError.length * Math.random())]
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
 }  
 handler.help = ['nsfwloli', 'nsfwfoot', 'nsfwass', 'nsfwbdsm', 'nsfwcum', 'nsfwero', 'nsfwfemdom', 'nsfwfoot', 'nsfwglss', 'nsfworgy', 'yuri', 'yuri2', 'yaoi', 'yaoi2', 'panties', 'tetas', 'booty', 'ecchi', 'furro', 'hentai', 'trapito', 'imagenlesbians', 'pene', 'porno', 'randomxxx', 'pechos']
