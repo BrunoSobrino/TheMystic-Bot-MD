@@ -123,7 +123,7 @@ let resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/
 let res = await fetch(`https://purrbot.site/api/img/nsfw/yuri/gif`)
 let json = await res.json()
 let url = json.linku  
-if (url == '') url = await resError[Math.floor(resError.length * Math.random())]
+if (url == '' || !url || url == null) url = await resError[Math.floor(resError.length * Math.random())]
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
 }  
 handler.help = ['nsfwloli', 'nsfwfoot', 'nsfwass', 'nsfwbdsm', 'nsfwcum', 'nsfwero', 'nsfwfemdom', 'nsfwfoot', 'nsfwglss', 'nsfworgy', 'yuri', 'yuri2', 'yaoi', 'yaoi2', 'panties', 'tetas', 'booty', 'ecchi', 'furro', 'hentai', 'trapito', 'imagenlesbians', 'pene', 'porno', 'randomxxx', 'pechos']
