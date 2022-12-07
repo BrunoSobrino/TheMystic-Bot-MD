@@ -19,7 +19,8 @@ case 'channel': return `
 `.trim()
 }
 }).filter(v => v).join('\n\n========================\n\n')
-await conn.sendFile(m.chat, imagennnnn, 'error.jpg', teks, m)
+await conn.sendMessage(m.chat, { image: { url: imagennnnn }, caption: teks }, { quoted: m })  
+//await conn.sendFile(m.chat, imagennnnn, 'error.jpg', teks, m)
 //m.reply(teks)
 } catch {
 let get_result = await fetchJson(`https://api.lolhuman.xyz/api/ytsearch?apikey=${lolkeysapi}&query=${text}`)
@@ -31,7 +32,8 @@ ini_txt += `👁️ 𝚟𝚒𝚜𝚝𝚊𝚜: ${x.views}\n`
 ini_txt += `⏲️ 𝙿𝚞𝚋𝚕𝚒𝚌𝚊𝚍𝚘: ${x.published}`
 ini_txt += `\n\n========================\n\n`
 }
-await conn.sendFile(m.chat, get_result2.thumbnail, 'error.jpg', ini_txt, m)  
+await conn.sendMessage(m.chat, { image: { url: get_result2[0].thumbnail }, caption: ini_txt }, { quoted: m })  
+//await conn.sendFile(m.chat, get_result2.thumbnail, 'error.jpg', ini_txt, m)  
 //m.reply(ini_txt)
 }}   
 handler.help = ['', 'earch'].map(v => 'yts' + v + ' <pencarian>')
