@@ -85,9 +85,7 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'hacker') {
-let res1 = ['hekel', 'heker']  
-let res2 = res1[Math.floor(Math.random() * res1.length)] 
-let anu = await wallpaper(res2)
+let anu = await wallpaper('hekel')
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0]   
 await conn.reply(m.chat, global.wait, m)
