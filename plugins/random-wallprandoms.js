@@ -13,7 +13,9 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'pubg') {
-let anu = await wallpaper('pubg mobile')
+let pug = ['pubg', 'playerunknowns battlegrounds', 'pubg mobile']  
+let pug2 = pug[Math.floor(Math.random() * pug.length)] 
+let anu = await wallpaper(pug2)
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0] 
 await conn.reply(m.chat, global.wait, m)
