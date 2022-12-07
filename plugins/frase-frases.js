@@ -1,7 +1,7 @@
 import translate from '@vitalets/google-translate-api'
 import fetch from 'node-fetch'
 let handler = async (m, { conn, command }) => {
-//try {    
+try {    
     
 if (command == 'consejo') {
 let res = await fetch("https://zenzapis.xyz/randomtext/motivasi?apikey=hdiiofficial")
@@ -19,21 +19,20 @@ m.reply(`*╭─◆────◈⚘◈─────◆─╮*\n*❥  ${frase
 
 if (command == 'historiaromantica') {    
 let cerpe = await cerpen(`cinta romantis`)
-console.log(cerpe.cerita)
 let storytime = await translate(cerpe.cerita, { to: 'es', autoCorrect: true }).catch(_ => null)
 let titletime = await translate(cerpe.title, { to: 'es', autoCorrect: true }).catch(_ => null)
 conn.reply(m.chat, `᭥🫐᭢ Título: ${titletime.text}
 ᭥🍃᭢ Autor: ${cerpe.author}
 ────────────────
 ${storytime.text}`, m)}
-//} catch {    
-//await m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)    
-} //}
+} catch {    
+await m.reply(`*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚂𝙸𝙱𝙻𝙴𝙼𝙴𝙽𝚃𝙴 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 (𝙰𝙿𝙸) 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙴𝚂𝚃𝙴 𝙲𝙰𝙸𝙳𝙰 𝚃𝙴𝙼𝙿𝙾𝚁𝙰𝙻𝙼𝙴𝙽𝚃𝙴, 𝙸𝙽𝚃𝙴𝙽𝚃𝙴𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*`)    
+}}
 handler.tags = ['frases']
 handler.command = handler.help = ['consejo', 'fraseromantica', 'historiaromantica']
 export default handler
 
-async function cerpen (category) {
+async function cerpen(category) {
 return new Promise((resolve, reject) => {
 let title = category.toLowerCase().replace(/[()*]/g, "")
 let judul = title.replace(/\s/g, "-")
