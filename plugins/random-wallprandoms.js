@@ -31,9 +31,9 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'wpaesthetic') {
-let res1 = ['aesthetic', 'anime aesthetic', 'latino aesthetic']  
-let res2 = res1[Math.floor(Math.random() * res1.length)] 
-let anu = await wallpaper(res2)
+let res11 = ['aesthetic', 'anime aesthetic', 'latino aesthetic']  
+let res22 = res11[Math.floor(Math.random() * res11.length)] 
+let anu = await wallpaper(res22)
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0] 
 await conn.reply(m.chat, global.wait, m)
@@ -92,9 +92,9 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'planeta') {
-let res1 = ['planeta', 'tatasurya', 'planet']  
-let res2 = res1[Math.floor(Math.random() * res1.length)] 
-let anu = await wallpaper(res2)
+let res111 = ['planeta', 'tatasurya', 'planet']  
+let res222 = res111[Math.floor(Math.random() * res111.length)] 
+let anu = await wallpaper(res222)
 let result = anu[Math.floor(Math.random() * anu.length)]  
 let haha = result.image[0]     
 await conn.reply(m.chat, global.wait, m)
