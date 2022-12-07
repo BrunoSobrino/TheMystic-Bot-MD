@@ -19,6 +19,7 @@ m.reply(`*╭─◆────◈⚘◈─────◆─╮*\n*❥  ${frase
 
 if (command == 'historiaromantica') {    
 let cerpe = await cerpen(`cinta romantis`)
+console.log(cerpe.cerita)
 let storytime = await translate(cerpe.cerita, { to: 'es', autoCorrect: true }).catch(_ => null)
 let titletime = await translate(cerpe.title, { to: 'es', autoCorrect: true }).catch(_ => null)
 conn.reply(m.chat, `᭥🫐᭢ Título: ${titletime.text}
