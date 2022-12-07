@@ -71,9 +71,10 @@ let url = json.url
 conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)} 
   
 if (command == 'imagenlesbians') {
-let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/imagenlesbians.json`)).data  
-let url = await res[Math.floor(res.length * Math.random())]
-conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}  
+let resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/imagenlesbians.json`)).data   
+let res = await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/lesbian?apikey=fg-dylux`).data
+if (res == '' || !res || res == null) res = await resError[Math.floor(resError.length * Math.random())]  
+conn.sendButton(m.chat, `_${command}_`.trim(), author, res, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}  
   
 if (command == 'panties') {
 let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/panties.json`)).data  
@@ -82,7 +83,7 @@ conn.sendButton(m.chat, `_${command}_`.trim(), author, url, [['🔄 𝚂𝙸𝙶
   
 if (command == 'pene') {
 let resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/pene.json`)).data   
-let res = await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/penis?apikey=Q4cvhpNx`).data
+let res = await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/penis?apikey=fg-dylux`).data
 if (res == '' || !res || res == null) res = await resError[Math.floor(resError.length * Math.random())]  
 conn.sendButton(m.chat, `_${command}_`.trim(), author, res, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], m)}
   
