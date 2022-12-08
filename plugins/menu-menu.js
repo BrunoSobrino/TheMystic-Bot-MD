@@ -413,15 +413,6 @@ ${readMore}
 ┣ ඬ⃟ 🔍 _${usedPrefix}letra *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}wikipedia *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}ytsearch *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}apkdone *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}apkgoogle *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}apkmody *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}apkshub *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}happymod *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}hostapk *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}revdl *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}toraccino *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}uapkpro *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}playstore *<texto>*_
 ┗━━━━━━━━━━━━━━━━━━━┛
 
