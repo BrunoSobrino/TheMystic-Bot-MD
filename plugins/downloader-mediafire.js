@@ -12,7 +12,8 @@ let caption = `
 
 *⏳ 𝙴𝚂𝙿𝙴𝚁𝙴 𝙴𝙽 𝙻𝙾 𝚀𝚄𝙴 𝙴𝙽𝚅𝙸𝙾 𝚂𝚄 𝙰𝚁𝙲𝙷𝙸𝚅𝙾. . . .* 
 `.trim()
-m.reply(caption)
+let msg = m.reply(caption)
+if (!msg || msg == '') return m.reply(global.wait)
 let res2 = await fetch(`https://api.lolhuman.xyz/api/mediafire?apikey=${lolkeysapi}&url=${args[0]}`)
 let res3 = await res2.json()
 let res4 = await res3.result.link  
