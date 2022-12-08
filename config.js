@@ -47,6 +47,7 @@ global.APIs = {
   neoxr: 'https://api.neoxr.my.id',
   zenzapis: 'https://zenzapis.xyz',
   akuari: 'https://api.akuari.my.id',
+  akuari2: 'https://apimu.my.id',	
   fgmods: 'https://api-fgmods.ddns.net'
 },
 global.APIKeys = { 
