@@ -1,6 +1,6 @@
 import axios from "axios"
 let handler = async (m, {command, conn}) => {
-let apikey = keysxxx
+let apikey = global.keysxxx
 let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
 let name = await conn.getName[who]
 let fgif = m
