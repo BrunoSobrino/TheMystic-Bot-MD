@@ -90,7 +90,7 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'planeta') {
-let res111 = ['planeta', 'planet']  
+let res111 = ['planeta']  
 let res222 = res111[Math.floor(Math.random() * res111.length)] 
 let anu = await wallpaper(res222)
 let result = anu[Math.floor(Math.random() * anu.length)]  
