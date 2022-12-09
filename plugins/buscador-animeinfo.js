@@ -23,7 +23,7 @@ let AnimeInfo = `*ANIME SEARCH*
 🌐 • *URL:* ${result.url}
 🎆 • *Background:* ${result.background}
 ❄ • *Ringkasan:* ${result.synopsis}`
-conn.sendFile(m.chat, result.images, 'error.jpg', AnimeInfo, m)
+conn.sendFile(m.chat, result.images.jpg.image_url, 'error.jpg', AnimeInfo, m)
 }
 handler.command = /^(anime|animeinfo)$/i
 export default handler 
