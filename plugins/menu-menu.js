@@ -373,6 +373,7 @@ ${readMore}
 ┣ ඬ⃟ 🔞 _${usedPrefix}nsfwero_
 ┣ ඬ⃟ 🔞 _${usedPrefix}nsfwfemdom_
 ┣ ඬ⃟ 🔞 _${usedPrefix}nsfwglass_
+┣ ඬ⃟ 🔞 _${usedPrefix}hentaipdf *<texto>*_
 ┗━━━━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━━━━┓
