@@ -1,5 +1,42 @@
 import translate from '@vitalets/google-translate-api'
-import fetch from 'node-fetch'
+import { Anime } from "@shineiichijo/marika"
+const client = new Anime();
+let handler = async(m, { conn, text, usedPrefix }) => {
+if (!text) return m.reply(`[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴𝙻 𝙰𝙻𝙶𝚄𝙽 𝙰𝙽𝙸𝙼𝙴 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁*`)
+let anime = await client.searchAnime(text)
+let result = anime.data[0];
+let AnimeInfo = `*ANIME SEARCH*
+
+🎀 • *Title:* ${result.title}
+🎋 • *Format:* ${result.type}
+📈 • *Status:* ${result.status.toUpperCase().replace(/\_/g, " ")}
+🍥 • *Total episodes:* ${result.episodes}
+🎈 • *Duration: ${result.duration}*
+✨ • *Based On:* ${result.source.toUpperCase()}
+💫 • *Premiered:* ${result.aired.from}
+🎗 • *Ended On:* ${result.aired.to}
+🎐 • *Popularity:* ${result.popularity}
+🎏 • *Favorites:* ${result.favorites}
+🎇 • *Rating:* ${result.rating}
+🏅 • *Rank:* ${result.rank}
+♦ • *Trailer:* ${result.trailer.url}
+🌐 • *URL:* ${result.url}
+🎆 • *Background:* ${result.background}
+❄ • *Ringkasan:* ${result.synopsis}`
+conn.sendFile(m.chat, result.images, 'error.jpg', AnimeInfo, m)
+}
+handler.command = /^(anime|animeinfo)$/i
+export default handler 
+
+
+
+
+
+
+
+
+
+/*import fetch from 'node-fetch'
 import cheerio from 'cheerio'
 let handler = async (m, { conn, text }) => {
 if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴𝙻 𝙰𝙻𝙶𝚄𝙽 𝙰𝙽𝙸𝙼𝙴 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁*`
@@ -43,4 +80,4 @@ conn.sendFile(m.chat, image_url, '', animeingfo, m)
 handler.help = ['animeinfo <anime>']
 handler.tags = ['internet']
 handler.command = /^(animeinfo)$/i
-export default handler
+export default handler*/
