@@ -38,6 +38,7 @@ export default handler
 
 const isUrl = (text) => {
 return text.match(new RegExp(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png|mp4)/, 'gi'))}
+
 async function createSticker(img, url, packName, authorName, quality) {
 let stickerMetadata = { type: 'full', pack: packName, author: authorName, quality }
 return (new Sticker(img ? img : url, stickerMetadata)).toBuffer()}
@@ -83,3 +84,5 @@ executablePath: 'C:\\\\Program Files (x86)\\\\Google\\\\Chrome\\\\Application\\\
 skipBrokenMethodsCheck: true,
 stickerServerEndpoint: true
 }}
+let res = await fetch('https://sticker-api.openwa.dev/convertMp4BufferToWebpDataUrl', { method: 'post', headers: { Accept: 'application/json, text/plain, /', 'Content-Type': 'application/json;charset=utf-8', }, body: JSON.stringify(Format)})
+return Buffer.from((await res.text()).split(';base64,')[1], 'base64')}
