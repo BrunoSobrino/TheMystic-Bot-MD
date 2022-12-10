@@ -26,8 +26,8 @@ if (conn.tebaklagu[id]) conn.reply(m.chat, `Se acabó el tiempo!\nLa respuesta e
 delete conn.tebaklagu[id]
 }, timeout)
 ]
-await conn.sendMessage(m.chat, { audio: { url: json.preview }, fileName: `error.mp3`, mimetype: 'audio/mp4' }, { quoted: m })  
-//await conn.sendFile(m.chat, json.preview, 'coba-lagi.mp3', '', m)
+let aa = await conn.sendMessage(m.chat, { audio: { url: json.preview }, fileName: `error.mp3`, mimetype: 'audio/mp4' }, { quoted: m })  
+if (!aa) return conn.sendFile(m.chat, json.preview, 'coba-lagi.mp3', '', m)
 }
 handler.help = ['tebaklagu']
 handler.tags = ['game']
