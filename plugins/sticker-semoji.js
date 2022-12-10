@@ -24,15 +24,24 @@ let err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳�
 *◉ mi = microsoft*
 *◉ ht = htc*
 *◉ tw = twitter*
+*◉ go = google*
+*◉ mo = mozilla*
+*◉ op = openmoji*
+*◉ pi = pixel*
+*◉ sa = samsung*
 
 *—◉ 𝚂𝙾𝙻𝙾 𝚄𝚂𝙰𝚁 𝚄𝙽 𝙴𝙼𝙾𝙹𝙸 𝚈 𝚁𝙴𝚂𝙿𝙴𝚃𝙴 𝙻𝙾𝚂 𝙴𝚂𝙿𝙰𝙲𝙸𝙾𝚂*`    
 if (!emoji) throw err
+if (tipe == 'mo') tipe = 'mozilla'
+if (tipe == 'op') tipe = 'openmoji'
+if (tipe == 'pi') tipe = 'pixel'
+if (tipe == 'sa') tipe = 'samsung'
+if (tipe == 'go') tipe = 'google'  
 if (tipe == 'wha') tipe = 'whatsapp'
 if (tipe == 'fa') tipe = 'facebook'   
 if (tipe == 'ap') tipe = 'apple' 
 if (tipe == 'mi') tipe = 'microsoft'   
 if (tipe == 'ht') tipe = 'htc'   
-if (tipe == 'sa') tipe = 'samsung'   
 if (tipe == 'tw') tipe = 'twitter'    
 try {     
 emoji = emoji.trim()
