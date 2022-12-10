@@ -4,9 +4,7 @@ let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? c
 conn.sendFile(m.chat, global.API('https://some-random-api.ml', '/canvas/gay', {
 avatar: await conn.profilePictureUrl(who, 'image').catch(_ => 'https://telegra.ph/file/24fa902ead26340f3df2c.png'),
 }), 'error.png', '*🏳️‍🌈 𝙼𝙸𝚁𝙴𝙽 𝙰 𝙴𝚂𝚃𝙴 𝙶𝙰𝚈 🏳️‍🌈*', m)
-await await await conn.sendFile(m.chat, vn, 'error.mp3', null, m, true, {
-type: 'audioMessage', 
-ptt: true })
+await await await conn.sendMessage(m.chat, { audio: { url: vn }, fileName: `error.mp3`, mimetype: 'audio/mp4', ptt: true }, { quoted: m })
 }
 handler.help = ['gay']
 handler.tags = ['maker']
