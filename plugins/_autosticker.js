@@ -1,4 +1,5 @@
 import { sticker } from '../lib/sticker.js'
+import fetch from 'node-fetch'
 
 let handler = m => m
 
@@ -25,6 +26,9 @@ if (isUrl(m.text)) stiker = await sticker(false, m.text.split(/\n| /i)[0], packn
 else return
 }
 if (stiker) {
+let img = await(await fetch('https://github.com/BrunoSobrino.png')).buffer()  
+await this.sendFile(m.chat, stiker, 'error.jpg', null, m, false, { contextInfo: { mentionedJid: [m.sender], externalAdReply: { showAdAttribution: true, mediaType: 'VIDEO', mediaUrl: null, title: '𝙲𝚄𝙴𝙽𝚃𝙰𝚂 𝙾𝙵𝙸𝙲𝙸𝙰𝙻𝙴𝚂', body: '𝙱𝚈 @𝐵𝑟𝑢𝑛𝑜𝑆𝑜𝑏𝑟𝑖𝑛𝑜', thumbnail: img, sourceUrl: `https://www.atom.bio/theshadowbrokers-team`}}})  
+//contextInfo: { externalAdReply: { title: 'ʀᴇᴘʀᴏᴅᴜᴄᴛᴏʀ ᴅᴇ ʏᴏᴜᴛᴜʙᴇ', body: '©𝑆𝑖𝑚𝑝𝑙𝑒𝐵𝑜𝑡', sourceUrl: `https://github.com/BrunoSobrino/SimpleBot`, thumbnail: fs.readFileSync('./Menu2.jpg') }}})
 await this.sendFile(m.chat, stiker, null, { asSticker: true })
 }}
 return !0
