@@ -1,5 +1,3 @@
-/* Created By https://github.com/unptoadrih15 */
-
 import fetch from 'node-fetch'
 let timeout = 60000
 let poin = 1000
@@ -28,7 +26,8 @@ if (conn.tebaklagu[id]) conn.reply(m.chat, `Se acabó el tiempo!\nLa respuesta e
 delete conn.tebaklagu[id]
 }, timeout)
 ]
-await conn.sendFile(m.chat, json.preview, 'coba-lagi.mp3', '', m)
+await conn.sendMessage(m.chat, { audio: { url: json.preview }, fileName: `error.mp3`, mimetype: 'audio/mp4' }, { quoted: m })  
+//await conn.sendFile(m.chat, json.preview, 'coba-lagi.mp3', '', m)
 }
 handler.help = ['tebaklagu']
 handler.tags = ['game']
