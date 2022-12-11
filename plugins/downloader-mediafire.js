@@ -6,7 +6,7 @@ if (!args[0]) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄
 try {
 let json = await mediafireDl2(args[0])
 let caption = `
-*📓 𝙽𝙾𝙼𝙱𝚁𝙴:* ${json[0].nama}
+*📓 𝙽𝙾𝙼𝙱𝚁𝙴:* ${json[0].nama.replace('+', '')}
 *📁 𝙿𝙴𝚂𝙾:* ${json[0].size}
 *📄 𝚃𝙸𝙿𝙾:* ${json[0].mime.toUpperCase()}
 
@@ -44,7 +44,7 @@ const res = await axios.get(url)
 const $ = cheerio.load(res.data)
 const hasil = []
 const link = $('a#downloadButton').attr('href')
-const size = $('a#downloadButton').text().replace('Download', '').replace('(', '').replace(')', '').replace('\n', '').replace('\n', '').replace('', '').replace('+', '')
+const size = $('a#downloadButton').text().replace('Download', '').replace('(', '').replace(')', '').replace('\n', '').replace('\n', '').replace('', '')
 const seplit = link.split('/')
 const nama = seplit[5]
 let mime = nama.split('.')
