@@ -6,14 +6,14 @@ if (!args[0]) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄
 try {
 let json = await mediafireDl2(args[0])
 let caption = `
-*📓 𝙽𝙾𝙼𝙱𝚁𝙴:* ${json[0].nama.replace('+', '')}
+*📓 𝙽𝙾𝙼𝙱𝚁𝙴:* ${json[0].nama.replace('+', ' ')}
 *📁 𝙿𝙴𝚂𝙾:* ${json[0].size}
 *📄 𝚃𝙸𝙿𝙾:* ${json[0].mime.toUpperCase()}
 
 *⏳ 𝙴𝚂𝙿𝙴𝚁𝙴 𝙴𝙽 𝙻𝙾 𝚀𝚄𝙴 𝙴𝙽𝚅𝙸𝙾 𝚂𝚄 𝙰𝚁𝙲𝙷𝙸𝚅𝙾. . . .* 
 `.trim()   
 conn.sendMessage(m.chat, { text: caption, footer: wm }, { quoted: m })
-conn.sendMessage(m.chat, { document : { url: json[0].link }, fileName : json[0].nama, mimetype: json[0].mime.toUpperCase() }, { quoted: m })
+conn.sendMessage(m.chat, { document : { url: json[0].link }, fileName : json[0].nama.replace('+', ' '), mimetype: json[0].mime.toUpperCase() }, { quoted: m })
 } catch {  
 try {  
 let res = await mediafiredl(args[0])
