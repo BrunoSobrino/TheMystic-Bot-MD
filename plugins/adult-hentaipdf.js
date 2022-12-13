@@ -9,7 +9,7 @@ m.reply(global.wait)
 let res = await fetch(`https://api.lolhuman.xyz/api/nhentaisearch?apikey=${lolkeysapi}&query=${text}`)    
 let json = await res.json()
 let aa = json.result[0].id
-let data = await nhentaiScraper(code)
+let data = await nhentaiScraper(aa)
 let pages = []
 let thumb = `https://external-content.duckduckgo.com/iu/?u=https://t.nhentai.net/galleries/${data.media_id}/thumb.jpg`	
 data.images.pages.map((v, i) => {
