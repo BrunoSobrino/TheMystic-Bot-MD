@@ -23,7 +23,7 @@ let AnimeInfo = `
 🌐 • *URL:* ${result.url}
 🎆 • *Background:* ${result.background}
 ❄ • *Ringkasan:* ${result.synopsis}`
-let resultes = await translate(`${AnimeInfo}`, { to: 'es' })   
+let resultes = await translate(`${AnimeInfo}`, { to: 'es', autoCorrect: true })   
 conn.sendFile(m.chat, result.images.jpg.image_url, 'error.jpg', resultes.text, m)
 } catch {
 throw `*[❗] ERROR, INTENTELO DE NUEVO*`  
