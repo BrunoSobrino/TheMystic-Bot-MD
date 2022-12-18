@@ -2,7 +2,7 @@ import translate from '@vitalets/google-translate-api'
 import { Anime } from "@shineiichijo/marika"
 const client = new Anime();
 let handler = async(m, { conn, text, usedPrefix }) => {
-if (!text) return m.reply(`[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴𝙻 𝙰𝙻𝙶𝚄𝙽 𝙰𝙽𝙸𝙼𝙴 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁*`)
+if (!text) return m.reply(`[❗𝐈𝐍𝐅𝐎❗] INGRESE EL NOMBRE DE ALGUN ANIME A BUSCAR*`)
 try {  
 let anime = await client.searchAnime(text)
 let result = anime.data[0];
