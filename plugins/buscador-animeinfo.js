@@ -6,8 +6,6 @@ if (!text) return m.reply(`*[❗𝐈𝐍𝐅𝐎❗] INGRESE EL NOMBRE DE ALGUN 
 try {  
 let anime = await client.searchAnime(text)
 let result = anime.data[0];
-let resultes = await translate(`${result.synopsis}`, { to: 'es' })   
-console.log(resultes)
 let AnimeInfo = `
 🎀 • *Título:* ${result.title}
 🎋 • *Formato:* ${result.type}
@@ -25,7 +23,8 @@ let AnimeInfo = `
 🌐 • *URL:* ${result.url}
 🎆 • *Background:* ${result.background}
 ❄ • *Ringkasan:* ${result.synopsis}`
-conn.sendFile(m.chat, result.images.jpg.image_url, 'error.jpg', AnimeInfo, m)
+let resultes = await translate(`${AnimeInfo}`, { to: 'es' })   
+conn.sendFile(m.chat, result.images.jpg.image_url, 'error.jpg', resultes.text, m)
 } catch {
 throw `*[❗] ERROR, INTENTELO DE NUEVO*`  
 }}
