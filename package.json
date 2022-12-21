@@ -49,7 +49,7 @@
         "human-readable": "^0.2.1",
         "instagram-url-direct": "^1.0.12",
         "jsdom": "^19.0.0",
-        "link-preview-js": "^3.0.0",
+        "link-preview-js": "^2.1.13",
         "lodash": "^4.17.21",
         "lowdb": "^3.0.0",
         "moment-timezone": "^0.5.34",
