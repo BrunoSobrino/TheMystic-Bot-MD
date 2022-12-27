@@ -38,7 +38,7 @@
   
 ### `—◉ 💥 ACTIVAR EN KOYEB 💥`
 
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
   
 ### `—◉ 🌌 ACTIVAR EN REPLIT 🌌`
 
