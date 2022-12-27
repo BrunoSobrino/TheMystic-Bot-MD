@@ -108,6 +108,7 @@ ${readMore}
 ┣ ඬ⃟ 🎖️ _${usedPrefix}slot *<apuesta>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}ttt *<nombre sala>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}delttt_
+┣ ඬ⃟ 🎖️ _${usedPrefix}acertijo_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}simi *<texto>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}top *<texto>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}topgays_
