@@ -7,9 +7,9 @@ RUN sudo dnf -y update &&\
 
 RUN git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD
 
-WORKDIR /root/Anya-pika-MD-v2
+WORKDIR /root/TheMystic-Bot-MD
 
-COPY ./root/Anya-pika-MD-v2
+COPY ./root/TheMystic-Bot-MD
 
 RUN yarn install
 
