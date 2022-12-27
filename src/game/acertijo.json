@@ -1,0 +1,218 @@
+[
+    {
+        "question": "¿Qué le dice un pingüino a otro pingüino?",
+        "response": "Te quiero como a ningüino"
+    },
+    {
+        "question": "¿Qué le dice un ciego a otro ciego?",
+        "response": "Después nos vemos"
+    },
+    {
+        "question": "¿En qué se parece un alfiler a un policía?",
+        "response": "En que los dos prenden"
+    },
+    {
+        "question": "¿Qué se congela cuando se calienta?",
+        "response": "La computadora"
+    },
+    {
+        "question": "¿Qué fruta tiene muchos ojos, pero no puede ver?",
+        "response": "La piña"
+    },
+    {
+        "question": "¿En qué idioma se comunican las tortugas?",
+        "response": "En tortugués"
+    },
+    {
+        "question": "¿Cómo llama un policía sevillano a su pistola?",
+        "response": "Mi arma"
+    },
+    {
+        "question": "¿Qué es todo para uno y nada para lo demás?",
+        "response": "La mente"
+    },
+    {
+        "question": "¿Cuál es el colmo de una aspiradora?",
+        "response": "Ser alérgica al polvo"
+    },
+    {
+        "question": "¿Qué es aquello que si nombras, desaparece?",
+        "response": "El silencio"
+    },
+    {
+        "question": "¿Qué necesitamos para escribir durmiendo?",
+        "response": "Estar despiertos"
+    },
+    {
+        "question": "¿Qué objeto puede tener cara sin poseer cuerpo?",
+        "response": "Una moneda"
+    },
+    {
+        "question": "Alimenta la casa, Gabinete con hielo",
+        "response": "La nevera"
+    },
+    {
+        "question": "¿Qué tienen las mujeres en medio de las piernas?",
+        "response": "Las rodillas"
+    },
+    {
+        "question": "Entra duro y seco y sale blandito y mojado ¿Qué es?",
+        "response": "Un chicle"
+    },
+    {
+        "question": "Estoy en todo y estoy en nada ¿qué soy?",
+        "response": "La letra d"
+    },
+    {
+        "question": "Continuas en rojo, pero te paras en verde. ¿Qué soy?",
+        "response": "Una sandía"
+    },
+    {
+        "question": "¿Qué es negro cuando lo compras, rojo cuando lo usas, y gris cuando lo tiras?",
+        "response": "El carbón"
+    },
+    {
+        "question": "¿Qué hay delante de ti siempre pero que no se puede ver?",
+        "response": "El futuro"
+    },
+    {
+        "question": "¿Qué mes tiene 28 días?",
+        "response": "Todos"
+    },
+    {
+        "question": "¿Cómo puede estar alguien sin dormir diez días y no tener sueño?",
+        "response": "Durmiendo por las noches"
+    },
+    {
+        "question": "¿De qué llenarías un barril para que pese lo menos posible?",
+        "response": "De agujeros"
+    },
+    {
+        "question": "Si durante una carrera adelantas a quien va segundo, ¿en qué posición estás?",
+        "response": "Segundo"
+    },
+    {
+        "question": "¿En qué lugar el jueves va antes que el miércoles?",
+        "response": "En el diccionario"
+    },
+    {
+        "question": "¿Qué sube y baja pero se queda siempre en el mismo sitio?",
+        "response": "Las escaleras"
+    },
+    {
+        "question": "¿Cómo llaman a un ascensor en China?",
+        "response": "Apretando el botón"
+    },
+    {
+        "question": "¿Qué es lo primero que hace un elefante al salir el sol?",
+        "response": "Sombra"
+    },
+    {
+        "question": "¿Por qué un Tiranosaurus Rex no puede aplaudir?",
+        "response": "Porque se extinguió"
+    },
+    {
+        "question": "¿Qué animal siempre está lleno?",
+        "response": "La ballena"
+    },
+    {
+        "question": "¿Qué es lo primero que todos hacemos al despertar?",
+        "response": "Abrir los ojos"
+    },
+    {
+        "question": "¿Cuál es el número que si le quitas la mitad, vale 0?",
+        "response": "El ocho"
+    },
+    {
+        "question": "¿Qué se necesita para encender una vela?",
+        "response": "Que esté apagada"
+    },
+    {
+        "question": "¿Cuál es el país donde termina todo?",
+        "response": "Finlandia"
+    },
+    {
+        "question": "La respuesta a esta pregunta es #######",
+        "response": "#######"
+    },
+    {
+        "question": "Cuál es el final de todo",
+        "response": "La letra o"
+    },
+    {
+        "question": "¿Dónde se encuentra una pared con otra pared?",
+        "response": "En la esquina"
+    },
+    {
+        "question": "¿Qué tiene muchas palabras, pero nunca habla?",
+        "response": "Un libro"
+    },
+    {
+        "question": "¿Qué cosa te pertenece, pero los demás usan más que tú?",
+        "response": "Tu nombre"
+    },
+    {
+        "question": "¿En qué momento una persona se convierte en fruta?",
+        "response": "Cuando espera"
+    },
+    {
+        "question": "Los padres de José tienen tres hijos: Luis, Raúl y…, ¿cómo se llama el tercero?",
+        "response": "José"
+    },
+    {
+        "question": "¿Qué palabra del diccionario se escribe incorrectamente?",
+        "response": "Incorrectamente"
+    },
+    {
+        "question": "Húmedo por dentro, con pelos por fuera. Comienza por la C. ¿De qué se trata?",
+        "response": "Un coco"
+    },
+    {
+        "question": "David y Fabián están jugando al ajedrez. Llevan 5 partidas, pero ambos han ganado 3. ¿Cómo es posible?",
+        "response": "Porque juegan con más personas"
+    },
+    {
+        "question": "¿Cuántos 9 hay entre el 1 y el 100?",
+        "response": "20"
+    },
+    {
+        "question": "Son dos abanicos que están todo el día sin parar, pero cuando te duermas se paran y quietos se quedarán",
+        "response": "Las pestañas"
+    },
+    {
+        "question": "Oro parece, plata no es y el que no lo adivine un tonto es",
+        "response": "Un platano"
+    },
+    {
+        "question": "Círculo bien redondo al que si le pegas, das un brinco del susto",
+        "response": "Un tambor"
+    },
+    {
+        "question": "Un caballo blanco entró en el Mar Negro. ¿Cómo salió?",
+        "response": "Salió mojado"
+    },
+    {
+        "question": "Si un tren eléctrico va de Norte a Sur, ¿Hacia qué lado echará el humo?",
+        "response": "Es eléctrico, no echa humo"
+    },
+    {
+       "question": "Tiene 4 letras, empieza por C y termina por O y esta en la parte trasera",
+        "response": "El codo"
+    },
+    {
+       "question": "Se estrella un avión y mueren todos, justo en la frontera entre España y Portugal ¿A que Hospital tienen que llevar a los supervivientes? ",
+        "response": "No hay supervivientes"
+    },
+    {
+       "question": "Este banco está ocupado por un padre y por un hijo, el padre se llama Juan y el hijo ya te lo he dicho",
+        "response": "Esteban"
+    },
+    {
+       "question": "Algunos meses tienen 31 días, otros solo 30.¿Cuantos tienen 28 días?",
+        "response": "Todos"
+    },
+    {
+       "question": "No lo puedes ver, pero no puedes vivir sin él. ¿Qué es?",
+       "response": "El aire"
+}
+]
