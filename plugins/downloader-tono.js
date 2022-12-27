@@ -4,8 +4,7 @@ if (!text) throw `Contoh:
 ${usedPrefix + command} 10`
 let aa = await fetch(`https://www.myinstants.com/api/v1/instants/${text}/?format=json`)
 let jsons = await aa.json()
-console.log(jsons)
-//conn.sendMessage(m.chat, { document: { url: n2 }, caption: cap2, mimetype: 'audio/mpeg', fileName: `${n}.mp3`}, {quoted: m})
+conn.sendMessage(m.chat, { audio: { url: jsons.sound }, caption: null, mimetype: 'audio/mp4', fileName: `error.mp3`}, {quoted: m})
 /*let caption = '*⎔┉━「 Search 」━┉⎔*'
 for (let x of jsons.results) {
 caption += `
