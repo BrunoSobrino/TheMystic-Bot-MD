@@ -18,6 +18,7 @@ try {
 const res2 = await igstory(args[0])
 let res3 = await axios.head(url)
 let mime = res3.headers['content-type']
+console.log(res2)
 //for ( const { downloadUrl, url, preview, type, fileType } of res2 )
 if (/image/.test(mime)) await conn.sendFile(m.chat, res2.url, 'error.jpg', null, m)
 if (/video/.test(mime)) await conn.sendFile(m.chat, res2.url, 'error.mp4', null, m)
