@@ -5,7 +5,7 @@ if (!code) throw 'Invalid URL'
 let res = await conn.query({ tag: 'iq', attrs: { type: 'get', xmlns: 'w:g2', to: '@g.us' }, content: [{ tag: 'invite', attrs: { code } }] }), data = extractGroupMetadata(res), txt = Object.keys(data).map(v => `*${v.capitalize()}:* ${data[v]}`).join('\n'), pp = await conn.profilePictureUrl(data.id, 'image').catch(console.error)
 let groupinfo = `
 *╭───────────────╮*
-*│🎋❐ ID:* ◜${data.id}
+*│🎋❐ ID:* ${data.id}
 *│🎋❐ Nombre:* ${data.subject}
 *│🎋❐ Creado:* ${data.creation}
 *│🎋❐ Owner:* ${data.owner}
@@ -14,7 +14,7 @@ let groupinfo = `
 const botones = [
 {index: 1, urlButton: {displayText: `𝙲𝙾𝙿𝙸𝙰𝚁 𝙳𝙴𝚂𝙲`, url: `https://www.whatsapp.com/otp/copy/${data.desc}`}},
 ]
-await conn.sendMessage(m.chat, { image: {url: pp}, caption: groupinfo, templateButtons: botones, footer: author })
+await conn.sendMessage(m.chat, { image: { url: pp }, caption: groupinfo, templateButtons: botones, footer: author }, {quoted: m})
 }
 handler.command = /^(inspect)$/i
 export default handler
