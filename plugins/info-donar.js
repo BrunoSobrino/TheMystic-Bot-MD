@@ -25,7 +25,7 @@ let donar =`
 *┃ wa.me/5219992095479*
 *┗ ┅ ━━━━━━━━━━━━━━━━━ ┅ ━*
 `.trim()
-let aa = { quoted: m } || { userJid: conn.user.jid }
+let aa = { quoted: m, userJid: conn.user.jid }
 let res = generateWAMessageFromContent (m.chat, {liveLocationMessage: {degreesLatitude: 0, degreesLongitude: 0, caption: donar, secuenceNumber: "0", contextInfo: {mentionedJid: conn.parseMention()}}}, aa)
 conn.relayMessage(m.chat, res.message, {})
 }
