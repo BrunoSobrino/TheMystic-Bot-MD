@@ -5,7 +5,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 if (!args[0]) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝙸𝙽𝚂𝚃𝙰𝙶𝚁𝙰𝙼*\n\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} luisitocomunica*`
 await m.reply(global.wait)
 const res2 = await igstory(args[0])
-let res3 = await axios.head(url)
+let res3 = await axios.head(res2.url)
 let mime = res3.headers['content-type']
 if (/image/.test(mime)) await conn.sendFile(m.chat, res2.url, 'error.jpg', null, m)
 if (/video/.test(mime)) await conn.sendFile(m.chat, res2.url, 'error.mp4', null, m)
