@@ -18,10 +18,10 @@ try {
 const res2 = await igstory(args[0])
 for ( const { downloadUrl, url, preview, type, fileType } of res2 )
 for (var A of res2) {
-let res = await axios.head(A)
+let res = await axios.head(downloadUrl)
 let mime = res.headers['content-type']
-if (/image/.test(mime)) await conn.sendFile(m.chat, A, 'error.jpg', null, m)
-if (/video/.test(mime)) await conn.sendFile(m.chat, A, 'error.mp4', null, m)}  
+if (/image/.test(mime)) await conn.sendFile(m.chat, downloadUrl, 'error.jpg', null, m)
+if (/video/.test(mime)) await conn.sendFile(m.chat, downloadUrl, 'error.mp4', null, m)}  
 //conn.sendMedia(m.chat, url, null, { mentions: [m.sender], jpegThumbnail: await(await fetch(preview)).buffer(), caption: `🚀 *Link:* ${await(await axios.get(`https://tinyurl.com/api-create.php?url=${url}`)).data}`})
 } catch {
 throw `*[❗] 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙸𝙽𝚅𝙰𝙻𝙸𝙳𝙾 𝙾 𝚂𝙸𝙽 𝙷𝙸𝚂𝚃𝙾𝚁𝙸𝙰𝚂*`
