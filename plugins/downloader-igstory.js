@@ -17,8 +17,8 @@ if (/video/.test(mime)) await conn.sendFile(m.chat, i, 'error.mp4', null, m)}
 try {
 const res2 = await igstory(args[0])
 for ( const { downloadUrl, url, preview, type, fileType } of res2 )
-let res = await axios.head(url)
-let mime = res.headers['content-type']
+let res3 = await axios.head(url)
+let mime = res3.headers['content-type']
 if (/image/.test(mime)) await conn.sendFile(m.chat, url, 'error.jpg', null, m)
 if (/video/.test(mime)) await conn.sendFile(m.chat, url, 'error.mp4', null, m)
 //conn.sendMedia(m.chat, url, null, { mentions: [m.sender], jpegThumbnail: await(await fetch(preview)).buffer(), caption: `🚀 *Link:* ${await(await axios.get(`https://tinyurl.com/api-create.php?url=${url}`)).data}`})
