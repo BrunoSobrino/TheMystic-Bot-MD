@@ -5,20 +5,16 @@ if (!code) throw 'Invalid URL'
 let res = await conn.query({ tag: 'iq', attrs: { type: 'get', xmlns: 'w:g2', to: '@g.us' }, content: [{ tag: 'invite', attrs: { code } }] }), data = extractGroupMetadata(res), txt = Object.keys(data).map(v => `*${v.capitalize()}:* ${data[v]}`).join('\n'), pp = await conn.profilePictureUrl(data.id, 'image').catch(console.error)
 let groupinfo = `
 *╭───────────────╮*
-*│🎋❐ ID:* ${data.id}
-*│🎋❐ Nombre:* ${data.subject}
-*│🎋❐ Creado:* ${data.creation}
-*│🎋❐ Owner:* ${data.owner}
+*│🎋❐ ID:* ${data.id || 'Indefinido'}
+*│🎋❐ Nombre:* ${data.subject || 'Indefinido'}
+*│🎋❐ Creado:* ${data.creation || 'Indefinido'}
+*│🎋❐ Owner:* ${data.owner || 'Indefinido'}
 *╰───────────────╯*
 `
-const botones = [
-{index: 1, urlButton: {displayText: `𝙲𝙾𝙿𝙸𝙰𝚁 𝙳𝙴𝚂𝙲`, url: `https://www.whatsapp.com/otp/copy/${data.desc}`}},
-]
-await conn.sendMessage(m.chat, { image: { url: pp }, caption: groupinfo, templateButtons: botones, footer: author }, {quoted: m})
-}
+const botones = [{index: 1, urlButton: {displayText: `𝙲𝙾𝙿𝙸𝙰𝚁 𝙳𝙴𝚂𝙲`, url: `https://www.whatsapp.com/otp/copy/${data.desc || 'Indefinido'}`}}]
+await conn.sendMessage(m.chat, { image: { url: pp }, caption: groupinfo, templateButtons: botones, footer: author }, {quoted: null})}
 handler.command = /^(inspect)$/i
 export default handler
-
 const extractGroupMetadata = (result) => {
 const group = baileys.getBinaryNodeChild(result, 'group')
 const descChild = baileys.getBinaryNodeChild(group, 'description')
