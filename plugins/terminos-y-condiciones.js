@@ -1,7 +1,6 @@
 let handler = async (m, { conn }) => {
 m.reply(global.terminos)
 }
-handler.command = /^(destraba|deztraba|clear)$/i
 export default handler
 
 global.terminos = `
