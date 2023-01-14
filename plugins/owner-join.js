@@ -19,4 +19,5 @@ throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝚂𝙴𝙽𝚃𝙸𝙼𝙾𝚂, 𝙷
 handler.help = ['join [chat.whatsapp.com]']
 handler.tags = ['premium']
 handler.command = /^join|nuevogrupo$/i
+handler.private = true 
 export default handler
