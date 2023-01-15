@@ -86,7 +86,7 @@ if (!isROwner) {
 global.dfail('group', m, conn)
 throw false
 }
-} else if (!isAdmin) {
+} else if (!isAdmin || !isROwner) {
 global.dfail('admin', m, conn)
 throw false
 }
