@@ -82,7 +82,7 @@ let isAll = false, isUser = false
 switch (type) {
 case 'welcome':
 if (!m.isGroup) {
-if (!isOwner) {
+if (!isROwner) {
 global.dfail('group', m, conn)
 throw false
 }
