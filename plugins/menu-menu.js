@@ -192,7 +192,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}ringtone *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}soundcloud *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}imagen *<texto>*_
-┣ ඬ⃟ 📥 _${usedPrefix}pinteret *<texto>*_
+┣ ඬ⃟ 📥 _${usedPrefix}pinterest *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}wallpaper *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}wallpaper2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}pptiktok *<nombre de usuario>*_
