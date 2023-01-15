@@ -224,6 +224,9 @@ ${readMore}
 ┣ ඬ⃟ 💎 _${usedPrefix}setwelcome *<texto>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}setbye *<texto>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}hidetag *<texto>*_
+┣ ඬ⃟ 💎 _${usedPrefix}hidetag *<audio>*_
+┣ ඬ⃟ 💎 _${usedPrefix}hidetag *<video>*_
+┣ ඬ⃟ 💎 _${usedPrefix}hidetag *<imagen>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}warn *<@tag>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}unwarn *<@tag>*_
 ┣ ඬ⃟ 💎 _${usedPrefix}listwarn_
@@ -586,6 +589,9 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}bc *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}bcchats *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}bcgc *<texto>*_
+┣ ඬ⃟ 👑 _${usedPrefix}bcgc2 *<audio>*_
+┣ ඬ⃟ 👑 _${usedPrefix}bcgc2 *<video>*_
+┣ ඬ⃟ 👑 _${usedPrefix}bcgc2 *<imagen>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}bcbot *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}cleartpm_
 ┣ ඬ⃟ 👑 _${usedPrefix}restart_
