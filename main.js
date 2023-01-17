@@ -77,7 +77,7 @@ if (requiresPatch) { message = { viewOnceMessage: { message: { messageContextInf
 return message;},
 getMessage: async (key) => ( opts.store.loadMessage(/** @type {string} */(key.remoteJid), key.id) || opts.store.loadMessage(/** @type {string} */(key.id)) || {} ).message || { conversation: 'Please send messages again' },   
 msgRetryCounterMap,
-logger: pino({ level: 'trace' }),
+logger: pino({ level: 'silent' }),
 auth: state,
 browser: ['MysticBot','Safari','9.7.0']
 }
