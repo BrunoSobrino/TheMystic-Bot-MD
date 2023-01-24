@@ -473,6 +473,7 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
 ┃ *< ℍ𝔼ℝℝ𝔸𝕄𝕀𝔼ℕ𝕋𝔸𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
+┣ ඬ⃟ 🛠️ _${usedPrefix}obfuscator *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}dall-e *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
