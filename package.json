@@ -70,6 +70,7 @@
         "terminal-image": "^2.0.0",
         "url-regex-safe": "^3.0.0",
         "wa-sticker-formatter": "^4.3.2",
+        "xfarr-api": "github:xfar05/xfarr-api",
         "yargs": "^17.3.1"
     }
 }
