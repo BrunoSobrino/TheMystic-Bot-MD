@@ -2,7 +2,7 @@
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
 
-[![AQUI TODAS LAS CUENTAS OFICIALES]([https://static.vecteezy.com/system/resources/previews/010/983/180/non_2x/purple-neon-button-glowing-neon-button-png.png)](https://www.atom.bio/theshadowbrokers-team)
+[![AQUI TODAS LAS CUENTAS OFICIALES](https://static.vecteezy.com/system/resources/previews/010/983/180/non_2x/purple-neon-button-glowing-neon-button-png.png)](https://www.atom.bio/theshadowbrokers-team)
 
 ### `—◉ 💟 GRUPO DE SOPORTE 💟`
 
@@ -10,7 +10,7 @@
 <a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 > LOS NUMEROS NO SON BOTS Y EN EL GRUPO NO SE PERMITEN NUMEROS QUE SEAN BOTS
-
+🧿 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝 🔮
 ### `—◉ 🤖 BOTS OFICIALES 🤖`
 
 <a href="https://api.whatsapp.com/send/?phone=5219991402134&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT_OFICIAL_1-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
