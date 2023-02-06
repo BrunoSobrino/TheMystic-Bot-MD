@@ -11,10 +11,6 @@ throw false
 } //5LTV57azwaid7dXfz5fzJu
 let res = await fetchJson(`https://fatiharridho.github.io/tebaklagu.json`)
 let json = res[Math.floor(Math.random() * res.length)]    
-//let res = await fetch(global.API('xteam', '/game/tebaklagu/', { id: '0ISD8mk5kiv1YC5884lISM' }, 'APIKEY'))
-//if (res !== 200) throw 'Error'
-//let result = await res.json()
-//let json = result.result
 let caption = `
 ADIVINA EL TITULO DE LA CANCION
 Tiempo ${(timeout / 1000).toFixed(2)} segundos
