@@ -188,7 +188,6 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}playlist *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}playlist2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}spotify *<texto>*_
-┣ ඬ⃟ 📥 _${usedPrefix}stickerly *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ringtone *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}soundcloud *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}imagen *<texto>*_
