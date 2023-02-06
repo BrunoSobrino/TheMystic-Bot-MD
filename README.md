@@ -2,7 +2,7 @@
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
 
-[![AQUI TODAS LAS CUENTAS OFICIALES](https://static.vecteezy.com/system/resources/previews/010/983/180/non_2x/purple-neon-button-glowing-neon-button-png.png)](https://www.atom.bio/theshadowbrokers-team)
+[![AQUI TODAS LAS CUENTAS OFICIALES](https://assets.stickpng.com/images/59060dd50cbeef0acff9a664.png "alt=TODAS LAS CUENTAS OFICIALES" width="20" height="20")](https://www.atom.bio/theshadowbrokers-team)
 
 ### `—◉ 💟 GRUPO DE SOPORTE 💟`
 
