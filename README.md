@@ -2,7 +2,7 @@
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
 
-<a href="#" style="background-color: #8B4513; color: #FFFFFF; padding: 10px; text-decoration: none;">Morado</a>
+<a href="https://www.atom.bio/theshadowbrokers-team" style="background-color: #800080;padding: 10px 20px; border-radius: 5px; color: white; font-size: 16px; font-weight: bold; text-decoration: none;">AQUI TODAS LAS CUENTAS OFICIALES</a>
 
 ### `—◉ 💟 GRUPO DE SOPORTE 💟`
 
