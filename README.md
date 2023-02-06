@@ -1,5 +1,9 @@
 # `🧿 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝 🔮`
 
+### `—◉ 🔗 CUENTAS OFICIALES 🔗`
+
+<a href="#" style="background-color: #8B4513; color: #FFFFFF; padding: 10px; text-decoration: none;">Morado</a>
+
 ### `—◉ 💟 GRUPO DE SOPORTE 💟`
 
 <a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(𝙴𝚂)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
