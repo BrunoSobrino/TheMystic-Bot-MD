@@ -2,7 +2,7 @@
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
 
-[![AQUI TODAS LAS CUENTAS OFICIALES](https://assets.stickpng.com/images/59060dd50cbeef0acff9a664.png "alt=TODAS LAS CUENTAS OFICIALES" width="20" height="20")](https://www.atom.bio/theshadowbrokers-team)
+<a href="https://www.atom.bio/theshadowbrokers-team" style="background-image:url('https://assets.stickpng.com/images/59060dd50cbeef0acff9a664.png'); width:200px; height:200px;"></a>
 
 ### `—◉ 💟 GRUPO DE SOPORTE 💟`
 
