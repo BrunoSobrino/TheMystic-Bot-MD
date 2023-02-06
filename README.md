@@ -2,7 +2,7 @@
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
 
-<a href="https://www.atom.bio/theshadowbrokers-team" style="background-color: #800080;padding: 10px 20px; border-radius: 5px; color: white; font-size: 16px; font-weight: bold; text-decoration: none;">AQUI TODAS LAS CUENTAS OFICIALES</a>
+<a href="https://www.atom.bio/theshadowbrokers-team"><button style="background-image: url('https://img.freepik.com/vector-gratis/fondo-lineas-dinamicas-estilo-papel_23-2149020266.jpg');" type="button">AQUI TODAS LAS CUENTAS OFICIALES</button></a>
 
 ### `—◉ 💟 GRUPO DE SOPORTE 💟`
 
