@@ -9,7 +9,7 @@ if (id in conn.tebaklagu) {
 conn.reply(m.chat, 'Todavía hay canciones sin respuesta en este chat.', conn.tebaklagu[id][0])
 throw false
 } //5LTV57azwaid7dXfz5fzJu
-let res = await fetchJson(`https://fatiharridho.github.io/tebaklagu.json`)
+let res = await fetchJson(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/tebaklagu.json`)
 let json = res[Math.floor(Math.random() * res.length)]    
 let caption = `
 ADIVINA EL TITULO DE LA CANCION
