@@ -895,6 +895,7 @@ export async function handler(chatUpdate) {
                 if (!('antiTraba' in chat)) chat.antiTraba = false
                 if (!('antiArab' in chat)) chat.antiArab = false
 		if (!('modoadmin' in chat)) chat.modoadmin = false
+		if (!('simi' in chat)) chat.simi = false     
                 if (!isNumber(chat.expired)) chat.expired = 0
             } else
                 global.db.data.chats[m.chat] = {
@@ -916,6 +917,7 @@ export async function handler(chatUpdate) {
                     antiTraba: false,
                     antiArab: false,
 	            modoadmin: false,
+	            simi: false,
                     expired: 0,
                 }
             let settings = global.db.data.settings[this.user.jid]
