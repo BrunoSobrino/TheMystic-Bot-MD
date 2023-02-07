@@ -1,10 +1,11 @@
-import { sticker } from '../lib/sticker.js'
+import fetch from 'node-fetch'
 let handler = async(m, { conn, text, args, usedPrefix, command }) => {
 if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃𝙾*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*◉ ${usedPrefix + command} Mystic-Bot*`
 let teks = encodeURI(text)
 
 if (command == 'attp') {
-conn.sendFile(m.chat, `https://api.erdwpe.com/api/maker/attp?text=${teks}`, 'sticker.webp', '', m, { asSticker: true })}
+let a1 = await (await fetch(`https://api.erdwpe.com/api/maker/attp?text=${teks}`)).buffer()
+conn.sendFile(m.chat, a1, 'sticker.webp', '', m, { asSticker: true })}
 
 if (command == 'attp2') {
 conn.sendFile(m.chat, `https://api.lolhuman.xyz/api/attp?apikey=${lolkeysapi}&text=${teks}`, 'sticker.webp', '', m, { asSticker: true })}
