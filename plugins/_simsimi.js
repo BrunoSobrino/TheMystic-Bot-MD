@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+/*import fetch from 'node-fetch'
 let handler = m => m
 
 handler.before = async (m) => {
@@ -13,4 +13,4 @@ return !0
 }
 return true
 }
-export default handler
+export default handler*/
