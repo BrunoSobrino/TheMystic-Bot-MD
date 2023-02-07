@@ -4,10 +4,8 @@ if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃�
 let teks = encodeURI(text)
 
 if (command == 'attp') {
-let teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
-let stiker = await sticker(null, global.API('https://api.erdwpe.com/api/maker/', 'attp?text', { file: '', text: teks }), global.packname, global.author)
-if (stiker) return conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
-throw stiker.toString()}
+let teks2 = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
+conn.sendFile(m.chat, `https://api.erdwpe.com/api/maker/attp?text=${teks2}`, 'sticker.webp', '', m, { asSticker: true })}
 
 if (command == 'attp2') {
 conn.sendFile(m.chat, `https://api.lolhuman.xyz/api/attp?apikey=${lolkeysapi}&text=${teks}`, 'sticker.webp', '', m, { asSticker: true })}
