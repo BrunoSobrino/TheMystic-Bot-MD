@@ -49,7 +49,8 @@ global.APIs = {
   zenzapis: 'https://zenzapis.xyz',
   akuari: 'https://api.akuari.my.id',
   akuari2: 'https://apimu.my.id',	
-  fgmods: 'https://api-fgmods.ddns.net'
+  fgmods: 'https://api-fgmods.ddns.net',
+  botcahx: 'https://api.botcahx.biz.id'
 },
 global.APIKeys = { 
   'https://api.xteam.xyz': `${keysxteam}`,
@@ -57,7 +58,8 @@ global.APIKeys = {
   'https://api.neoxr.my.id': `${keysneoxr}`,	
   'https://violetics.pw': 'beta',
   'https://zenzapis.xyz': `${keysxxx}`,
-  'https://api-fgmods.ddns.net': 'fg-dylux'
+  'https://api-fgmods.ddns.net': 'fg-dylux',
+  'https://api.botcahx.biz.id': 'Admin'
 }
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg')
