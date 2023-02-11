@@ -48,7 +48,7 @@ let str = `
 ┣ *💎 Diamantes:* ${limit}
 ┣ *👾 MysticCoins:* ${money}
 ┣ *🪙 Tokens:* ${joincount}
-┣ *🎟️ Premium:* ${user.premiumTime > 0 ? '✅' : '❌'}
+┣ *🎟️ Premium:* ${user.premiumTime > 0 ? '✅' : '❌' || global.prems.includes(who.split`@`[0]) = '✅'}
 ┗━━━━━━━━━━━━━━━━┛
 ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
