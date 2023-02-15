@@ -20,12 +20,12 @@ aki.soal = null
 return m.reply('*[❗] 𝙻𝙰 𝚂𝙴𝚂𝙸𝙾𝙽 𝙳𝙴 𝙰𝙺𝙸𝙽𝙰𝚃𝙾𝚁 𝙷𝙰 𝙲𝙰𝙳𝚄𝙲𝙰𝙳𝙾, 𝙴𝙻 𝙹𝚄𝙴𝙶𝙾 𝙷𝙰 𝚃𝙴𝚁𝙼𝙸𝙽𝙰𝙳𝙾*')}
 anu = anu.result
 if (anu.name) {
-await this.sendMessage(m.chat, { image: { url: anu.image }, caption: `🎮 *𝐑𝐄𝐒𝐏𝐔𝐄𝐒𝐓𝐀 𝐃𝐄 𝐀𝐊𝐈𝐍𝐀𝐓𝐎𝐑* 🎮\n\n*𝚃𝚄 𝙿𝙴𝚁𝚂𝙾𝙽𝙰𝙹𝙴 𝙴𝚂 ${anu.name}*\n_${anu.description}_`, mentions: [m.sender] }, { quoted: m })
+await this.sendMessage(m.chat, { image: { url: anu.image }, caption: `🎮 *𝐀𝐊𝐈𝐍𝐀𝐓𝐎𝐑* 🎮\n\n*𝙰𝙺𝙸𝙽𝙰𝚃𝙾𝚁 𝙲𝚁𝙴𝙴 𝚀𝚄𝙴 𝚃𝚄 𝙿𝙴𝚁𝚂𝙾𝙽𝙰𝙹𝙴 𝙴𝚂 ${anu.name}*\n_${anu.description}_`, mentions: [m.sender] }, { quoted: m })
 aki.sesi = false
 aki.soal = null
 } else {
 let resultes = await translate(`${anu.question}`, { to: 'es', autoCorrect: true })   
-soal = await this.sendMessage(m.chat, { text: `🎮 *𝐀𝐊𝐈𝐍𝐀𝐓𝐎𝐑* 🎮\n*𝙿𝚁𝙾𝙶𝚁𝙴𝚂𝙾: ${anu.step} (${anu.progression.toFixed(2)} %)*\n\n*𝙹𝚄𝙶𝙰𝙳𝙾𝚁: @${m.sender.split('@')[0]}*\n${resultes.text}\n\n${teks}`, mentions: [m.sender] }, { quoted: m })
+soal = await this.sendMessage(m.chat, { text: `🎮 *𝐀𝐊𝐈𝐍𝐀𝐓𝐎𝐑* 🎮\n*𝙿𝚁𝙾𝙶𝚁𝙴𝚂𝙾: ${anu.step} (${anu.progression.toFixed(2)} %)*\n\n*𝙹𝚄𝙶𝙰𝙳𝙾𝚁: @${m.sender.split('@')[0]}*\n*𝙿𝚁𝙴𝙶𝚄𝙽𝚃𝙰: ${resultes.text}*\n\n${teks}`, mentions: [m.sender] }, { quoted: m })
 aki.soal = soal
 aki.step = anu.step
 aki.progression = anu.progression
