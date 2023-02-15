@@ -873,6 +873,31 @@ export async function handler(chatUpdate) {
                     wood: 0,
                     wortel: 0,	
                 }
+                let akinator = global.db.data.users[m.sender].akinator
+		    if (typeof akinator !== 'object')
+			global.db.data.users[m.sender].akinator = {}
+		    if (akinator) {
+				if (!('sesi' in akinator)) akinator.sesi = false
+				if (!('server' in akinator)) akinator.server = null
+				if (!('frontaddr' in akinator)) akinator.frontaddr = null
+				if (!('session' in akinator)) akinator.session = null
+				if (!('signature' in akinator)) akinator.signature = null
+				if (!('question' in akinator)) akinator.question = null
+				if (!('progression' in akinator)) akinator.progression = null
+				if (!('step' in akinator)) akinator.step = null
+				if (!('soal' in akinator)) akinator.soal = null
+	            } else
+		        global.db.data.users[m.sender].akinator = {
+				sesi: false,
+				server: null,
+				frontaddr: null,
+				session: null,
+				signature: null,
+				question: null,
+				progression: null,
+				step: null, 
+				soal: null
+				}   		
             let chat = global.db.data.chats[m.chat]
             if (typeof chat !== 'object')
                 global.db.data.chats[m.chat] = {}
