@@ -119,6 +119,7 @@ ${readMore}
 ┣ ඬ⃟ 🎖️ _${usedPrefix}reto_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}cancion_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}pista_
+┣ ඬ⃟ 🎖️ _${usedPrefix}akinator_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -523,9 +524,12 @@ ${readMore}
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 👽 _${usedPrefix}sticker *<responder a imagen o video>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}sticker *<enlace / link / url>*_
+┣ ඬ⃟ 👽 _${usedPrefix}sticker2 *<responder a imagen o video>*_
+┣ ඬ⃟ 👽 _${usedPrefix}sticker2 *<enlace / link / url>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}s *<responder a imagen o video>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}s *<enlace / link / url>*_
-┣ ඬ⃟ 👽 _${usedPrefix}sfull *<imagen o video>*_
+┣ ඬ⃟ 👽 _${usedPrefix}s2 *<responder a imagen o video>*_
+┣ ඬ⃟ 👽 _${usedPrefix}s2 *<enlace / link / url>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}emojimix *<emoji 1>&<emoji 2>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}scircle *<imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}sremovebg *<imagen>*_
