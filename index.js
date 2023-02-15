@@ -60,10 +60,12 @@ p.process.kill()
 isRunning = false
 start.apply(this, arguments)
   
-if (code === 0) return
-watchFile(args[0], () => {
-unwatchFile(args[0])
-start(file)})})
+If (process.env.pm_id) {
+process.exit(1)
+} else {
+process.send ('reset')
+}
+})
 let opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 if (!opts['test'])
 if (!rl.listenerCount()) rl.on('line', line => {
