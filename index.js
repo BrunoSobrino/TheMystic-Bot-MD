@@ -60,7 +60,7 @@ p.process.kill()
 isRunning = false
 start.apply(this, arguments)
   
-If (process.env.pm_id) {
+if (process.env.pm_id) {
 process.exit(1)
 } else {
 process.send ('reset')
