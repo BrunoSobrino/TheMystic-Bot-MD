@@ -106,8 +106,10 @@ if (opts['server']) (await import('./server.js')).default(global.conn, PORT)
         Por que la grasa es un sentimiento
         - El waza 👻👻👻👻 (Aiden)            */
    
-/*Yo tambien se hacer momazos Aiden... 
-ahi te va el ajuste de los borrados inteligentes de las sesiones y de los subbot*/
+   /* Yo tambien se hacer momazos Aiden... 
+      ahi te va el ajuste de los borrados 
+      inteligentes de las sesiones y de los sub-bot  
+      By (Rey Endymion 👺👍🏼) */
        
 function clearTmp() {
 const tmp = [tmpdir(), join(__dirname, './tmp')]
@@ -126,7 +128,7 @@ function purgeSession() {
     })
     prekey = [...prekey, ...filesFolderPreKeys]
     filesFolderPreKeys.forEach(files => {
-    unlinkSync(`./ANIMXSCANS/${files}`)
+    unlinkSync(`./MysticSession/${files}`)
 })
 
 }  
