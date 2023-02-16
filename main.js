@@ -95,10 +95,6 @@ if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 't
 
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT)
 
-function clearTmp() {
-const tmp = [tmpdir(), join(__dirname, './tmp')]
-const filename = []
-tmp.forEach(dirname => readdirSync(dirname).forEach(file => filename.push(join(dirname, file))))
    
      /* Y ese fue el momazo mas bueno del mundo
         Aunque no dudara tan solo un segundo
@@ -110,29 +106,71 @@ tmp.forEach(dirname => readdirSync(dirname).forEach(file => filename.push(join(d
         Por que la grasa es un sentimiento
         - El waza 👻👻👻👻 (Aiden)            */
    
-/*readdirSync("./jadibts").forEach(file => {
-const btprs = function (folder) {
-console.log(folder)
-let status = false
-Object.keys(global.conns).forEach((key) => {
-if (global.conns[key].uniqid == folder) status = true });
-return status }
-let lrp = btprs(file)
-console.log(lrp)
-if (!lrp) {rmSync("./jadibts/" + file, { recursive: true, force: true })}
-else if (lrp){
-try {
-readdirSync("./jadibts/" + file).forEach(file2 => {
-if (file2 !== "creds.json") { unlinkSync("./jadibts/" + file + "/" + file2) }})
-} catch {}}})*/
+/*Yo tambien se hacer momazos Aiden... 
+ahi te va el ajuste de los borrados inteligentes de las sesiones y de los subbot*/
        
-readdirSync("./MysticSession").forEach(file => {
-if (file !== 'creds.json') {
-unlinkSync("./MysticSession/" + file, { recursive: true, force: true })}})    
+function clearTmp() {
+const tmp = [tmpdir(), join(__dirname, './tmp')]
+const filename = []
+tmp.forEach(dirname => readdirSync(dirname).forEach(file => filename.push(join(dirname, file))))
 return filename.map(file => {
-const stats = statSync(file)
-if (stats.isFile() && (Date.now() - stats.mtimeMs >= 1000 * 60 * 3)) return unlinkSync(file) // 3 minutes
-return false })}
+    const stats = statSync(file)
+    if (stats.isFile() && (Date.now() - stats.mtimeMs >= 1000 * 60 * 3)) return unlinkSync(file) // 3 minutes
+    return false })}
+
+function purgeSession() {
+    let prekey = []
+    let directorio = readdirSync("./MysticSession")
+    let filesFolderPreKeys = directorio.filter(file => {
+        return file.startsWith('pre-key-')
+    })
+    prekey = [...prekey, ...filesFolderPreKeys]
+    filesFolderPreKeys.forEach(files => {
+    unlinkSync(`./ANIMXSCANS/${files}`)
+})
+
+}  
+function purgeSessionSB() {
+let listaDirectorios = readdirSync('./jadibts/');
+console.log(listaDirectorios)
+      let SBprekey = []
+listaDirectorios.forEach(filesInDir => {
+    let directorio = readdirSync(`./jadibts/${filesInDir}`)
+    console.log(directorio)
+    let DSBPreKeys = directorio.filter(fileInDir => {
+    return fileInDir.startsWith('pre-key-')
+    })
+    SBprekey = [...SBprekey, ...DSBPreKeys]
+    DSBPreKeys.forEach(fileInDir => {
+        unlinkSync(`./jadibts/${filesInDir}/${fileInDir}`) 
+    })
+    })
+    
+}
+
+function purgeOldFiles() {
+const directories = ['./MysticSession/', './jadibts/']
+const oneHourAgo = Date.now() - (60 * 60 * 1000) 
+directories.forEach(dir => {
+    readdirSync(dir, (err, files) => {
+        if (err) throw err
+        files.forEach(file => {
+            const filePath = path.join(dir, file)
+            stat(filePath, (err, stats) => {
+                if (err) throw err;
+                if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') { 
+                    unlinkSync(filePath, err => {  
+                        if (err) throw err
+                        console.log(`Archivo ${file} borrado con éxito`)
+                    })
+                } else {  
+                    console.log(`Archivo ${file} no borrado`) 
+                } 
+            }) 
+        }) 
+    }) 
+})
+}
 
 async function connectionUpdate(update) {
 const { connection, lastDisconnect, isNewLogin } = update
@@ -197,6 +235,15 @@ conn.onDelete = handler.deleteUpdate.bind(global.conn)
 conn.onCall = handler.callUpdate.bind(global.conn)
 conn.connectionUpdate = connectionUpdate.bind(global.conn)
 conn.credsUpdate = saveCreds.bind(global.conn, true)
+
+const currentDateTime = new Date();
+const messageDateTime = new Date(conn.ev);
+if (currentDateTime >= messageDateTime) {
+    let chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map(v => v[0])
+  console.log(chats, conn.ev); 
+} else {
+    let chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map(v => v[0])
+ console.log(chats, 'Omitiendo mensajes en espera.');
 
 conn.ev.on('messages.upsert', conn.handler)
 conn.ev.on('group-participants.update', conn.participantsUpdate)
@@ -277,6 +324,18 @@ if (stopped == 'close') return
 var a = await clearTmp()        
 console.log(chalk.cyanBright(`\n▣───────────[ 𝙰𝚄𝚃𝙾𝙲𝙻𝙴𝙰𝚁 ]──────────────···\n│\n▣─❧ 𝙰𝚁𝙲𝙷𝙸𝚅𝙾𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾𝚂 ✅\n│\n▣───────────────────────────────────────···\n`))
 }, 180000)
+setInterval(async () => {
+    await purgeSession()
+console.log(chalk.cyanBright(`\n▣────────[ AUTOPURGESESSIONS ]───────────···\n│\n▣─❧ ARCHIVOS ELIMINADOS ✅\n│\n▣────────────────────────────────────···\n`))
+}, 1000 * 60 * 60)
+setInterval(async () => {
+     await purgeSessionSB()
+console.log(chalk.cyanBright(`\n▣────────[ AUTO_PURGE_SESSIONS_SUB-BOTS ]───────────···\n│\n▣─❧ ARCHIVOS ELIMINADOS ✅\n│\n▣────────────────────────────────────···\n`))
+}, 1000 * 60 * 60)
+setInterval(async () => {
+    await purgeOldFiles()
+console.log(chalk.cyanBright(`\n▣────────[ AUTO_PURGE_OLDFILES ]───────────···\n│\n▣─❧ ARCHIVOS ELIMINADOS ✅\n│\n▣────────────────────────────────────···\n`))
+}, 1000 * 60 * 60)
 setInterval(async () => {
 if (stopped == 'close') return        
 const status = global.db.data.settings[conn.user.jid] || {}
