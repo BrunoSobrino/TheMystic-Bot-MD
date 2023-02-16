@@ -5,6 +5,8 @@ if (!args[0]) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄
 try {
 await conn.reply(m.chat, '[❗] 𝐸𝑙 𝑣𝑖𝑑𝑒𝑜 𝑒𝑠𝑡𝑎 𝑠𝑖𝑒𝑛𝑑𝑜 𝑝𝑟𝑜𝑐𝑒𝑠𝑎𝑑𝑜, 𝑒𝑠𝑝𝑒𝑟𝑒 𝑢𝑛 𝑚𝑜𝑚𝑒𝑛𝑡𝑜 𝑒𝑛 𝑙𝑜 𝑞𝑢𝑒 𝑒𝑠 𝑒𝑛𝑣𝑖𝑎𝑑𝑜..\n\n﹣ ᴇʟ ᴛɪᴇᴍᴘᴏ ᴅᴇ ᴇɴᴠɪᴏ ᴅᴇᴘᴇɴᴅᴇ ᴅᴇʟ ᴘᴇsᴏ ʏ ᴅᴜʀᴀᴄɪᴏ́ɴ ᴅᴇʟ ᴠɪᴅᴇᴏ', m)
 let res = await fetch(`https://api.zahwazein.xyz/downloader/xnxx?apikey=${keysxxx}&url=`+args[0])
+let aaaa = await xnxxdl(args[0])
+console.log(aaaa)
 let json = await res.json()
 conn.sendMessage(m.chat, { document: { url: json.result.files.high }, mimetype: 'video/mp4', fileName: json.result.title }, { quoted: m })
 } catch (e) {
@@ -12,3 +14,25 @@ m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰�
 }}
 handler.command = /^(xnxxdl)$/i
 export default handler
+
+async function xnxxdl(URL) {
+return new Promise((resolve, reject) => {
+fetch(`${URL}`, {method: 'get'}).then(res => res.text()).then(res => {
+let $ = cheerio.load(res, { xmlMode: false  });
+const title = $('meta[property="og:title"]').attr('content');
+const duration = $('meta[property="og:duration"]').attr('content');
+const image = $('meta[property="og:image"]').attr('content');
+const videoType = $('meta[property="og:video:type"]').attr('content');
+const videoWidth = $('meta[property="og:video:width"]').attr('content');
+const videoHeight = $('meta[property="og:video:height"]').attr('content');
+const info = $('span.metadata').text();
+const videoScript = $('#video-player-bg > script:nth-child(6)').html();
+const files = {
+low: (videoScript.match('html5player.setVideoUrlLow\\(\'(.*?)\'\\);') || [])[1],
+high: videoScript.match('html5player.setVideoUrlHigh\\(\'(.*?)\'\\);' || [])[1],
+HLS: videoScript.match('html5player.setVideoHLS\\(\'(.*?)\'\\);' || [])[1],
+thumb: videoScript.match('html5player.setThumbUrl\\(\'(.*?)\'\\);' || [])[1],
+thumb69: videoScript.match('html5player.setThumbUrl169\\(\'(.*?)\'\\);' || [])[1],
+thumbSlide: videoScript.match('html5player.setThumbSlide\\(\'(.*?)\'\\);' || [])[1],
+thumbSlideBig: videoScript.match('html5player.setThumbSlideBig\\(\'(.*?)\'\\);' || [])[1], };
+resolve({ status: 200, result: { title, URL, duration, image, videoType, videoWidth, videoHeight, info, files }})}).catch(err => reject({code: 503, status: false, result: err }))})}
