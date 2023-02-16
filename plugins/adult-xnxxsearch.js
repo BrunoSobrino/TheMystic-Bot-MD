@@ -5,6 +5,8 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[❗𝐈𝐍𝐅𝐎�
 if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 ${usedPrefix + command} Con mi prima*`
 try {
 let res = await axios.get(`https://api.zahwazein.xyz/searching/xnxx?apikey=${keysxxx}&query=${text}`)
+let aaaa = await xnxxsearch(text)
+console.log(aaaa)
 let json = res.data
 let listSerch = []
 let teskd = `𝗩𝗶𝗱𝗲𝗼𝘀 𝗿𝗲𝗹𝗮𝗰𝗶𝗼𝗻𝗮𝗱𝗼𝘀 𝐜𝐨𝐧: ${args.join(" ")}`
@@ -25,3 +27,27 @@ m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰�
 }}
 handler.command = /^porhubsearch|xvideossearch|xnxxsearch$/i
 export default handler
+
+async function xnxxsearch(query) {
+return new Promise((resolve, reject) => {
+const baseurl = 'https://www.xnxx.com'
+fetch(`${baseurl}/search/${query}/${Math.floor(Math.random() * 3) + 1}`, {method: 'get'}).then(res => res.text()).then(res => {
+let $ = cheerio.load(res, { xmlMode: false });
+let title = [];
+let url = [];
+let desc = [];
+let results = [];
+$('div.mozaique').each(function(a, b) {
+$(b).find('div.thumb').each(function(c, d) {
+url.push(baseurl+$(d).find('a').attr('href').replace("/THUMBNUM/", "/"))
+})})
+$('div.mozaique').each(function(a, b) {
+$(b).find('div.thumb-under').each(function(c, d) {
+desc.push($(d).find('p.metadata').text())
+$(d).find('a').each(function(e,f) {
+title.push($(f).attr('title'))
+})})})
+for (let i = 0; i < title.length; i++) {
+results.push({ title: title[i], info: desc[i], link: url[i] })}
+resolve({ code: 200, status: true, result: results
+})}).catch(err => reject({code: 503, status: false, result: err }))})}
