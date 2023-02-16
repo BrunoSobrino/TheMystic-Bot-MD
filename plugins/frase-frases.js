@@ -3,14 +3,15 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, command }) => {
     
 if (command == 'consejo') {
-let res = await fetch("https://zenzapis.xyz/randomtext/motivasi?apikey=hdiiofficial")
+//let res = await fetch("https://zenzapis.xyz/randomtext/motivasi?apikey=hdiiofficial")
+let res = await fetch(`https://latam-api.vercel.app/api/rand_aviso?apikey=brunosobrino`)
 let json = await res.json()
-let frase = json.result.message
+let frase = json.aviso
 let frase1 = await translate(frase, { to: 'es', autoCorrect: true })
 await m.reply(`*┏━━━━━━━━━━━━━━━━┓*\n*┠❧  ${frase1.text}*\n*┗━━━━━━━━━━━━━━━━┚*`)}
 
 if (command == 'fraseromantica') {
-let res = await fetch("https://zenzapis.xyz/randomtext/bucinquote?apikey=hdiiofficial")
+let res = await fetch("https://api.zahwazein.xyz/randomtext/bucinquote?apikey=hdiiofficial")
 let json = await res.json()
 let frase = json.result.message
 let frase1 = await translate(frase, { to: 'es', autoCorrect: true }).catch(_ => null)
