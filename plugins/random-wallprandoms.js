@@ -97,27 +97,27 @@ await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'randomprofile') {
-let haha = await conn.getFile(`https://zenzapis.xyz/randomimage/profil?apikey=${apikey}`)
+let haha = await conn.getFile(`https://api.zahwazein.xyz//randomimage/profil?apikey=${apikey}`)
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'wpaesthetic2') {
-let haha = await conn.getFile(`https://zenzapis.xyz/randomimage/aesthetic?apikey=${apikey}`)
+let haha = await conn.getFile(`https://api.zahwazein.xyz//randomimage/aesthetic?apikey=${apikey}`)
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'wpvehiculo') {
-let haha = await conn.getFile(`https://zenzapis.xyz/randomimage/mobil?apikey=${apikey}`)
+let haha = await conn.getFile(`https://api.zahwazein.xyz//randomimage/mobil?apikey=${apikey}`)
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'wallhp') {
-let haha = await conn.getFile(`https://zenzapis.xyz/randomimage/wallhp?apikey=${apikey}`)
+let haha = await conn.getFile(`https://api.zahwazein.xyz//randomimage/wallhp?apikey=${apikey}`)
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
 if (command == 'wpmoto') {
-let haha = await conn.getFile(`https://zenzapis.xyz/randomimage/motor?apikey=${apikey}`)
+let haha = await conn.getFile(`https://api.zahwazein.xyz//randomimage/motor?apikey=${apikey}`)
 await conn.reply(m.chat, global.wait, m)
 conn.sendButton(m.chat, `_${command}_`.trim(), `*◈•@${who.split("@s.whatsapp.net")[0]}*`, haha.data, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]], fgif, { mentions: [who] })}
 
