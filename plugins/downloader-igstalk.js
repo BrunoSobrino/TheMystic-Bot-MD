@@ -10,9 +10,9 @@ let iggs = `
 ▢ *Followers:* ${json.followers}
 ▢ *Following:* ${json.following}
 ▢ *Posting:* ${json.post}
-▢ *Link:* https://instagram.com/${json.username}.replace(/^@/, '')
+▢ *Link:* https://instagram.com/${json.username.replace(/^@/, '')}
 ▢ *Bio:* ${json.bio}`.trim() 
-await conn.sendFile(m.chat, res.profile, 'error.jpg', iggs, m)}
+await conn.sendFile(m.chat, res.result.profile, 'error.jpg', iggs, m)}
 handler.help = ['igstalk <username>']
 handler.tags = ['internet']
 handler.command = /^(igstalk)$/i
