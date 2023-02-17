@@ -245,7 +245,7 @@ if (currentDateTime >= messageDateTime) {
   console.log(chats, conn.ev); 
 } else {
     let chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map(v => v[0])
- console.log(chats, 'Omitiendo mensajes en espera.');
+ console.log(chats, 'Omitiendo mensajes en espera.'); }
 
 conn.ev.on('messages.upsert', conn.handler)
 conn.ev.on('group-participants.update', conn.participantsUpdate)
