@@ -1,3 +1,4 @@
+p
 console.log('✅ㅤIniciando...')
 import { join, dirname } from 'path'
 import { createRequire } from "module";
