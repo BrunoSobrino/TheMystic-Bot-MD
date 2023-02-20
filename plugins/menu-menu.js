@@ -48,7 +48,7 @@ let str = `
 ┣ *💎 Diamantes:* ${limit}
 ┣ *👾 MysticCoins:* ${money}
 ┣ *🪙 Tokens:* ${joincount}
-┣ *🎟️ Premium:* ${user.premium = 'true' ? '✅' : '❌'}
+┣ *🎟️ Premium:* ${user.premium = 'true' ? '❌' : '✅'}
 ┗━━━━━━━━━━━━━━━━┛
 ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
@@ -238,6 +238,7 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
 ┃ *< ℂ𝕆ℕ𝕍𝔼ℝ𝕋𝕀𝔻𝕆ℝ𝔼𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
+┣ ඬ⃟ 🧧 _${usedPrefix}toanime *<imagen>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}togifaud *<video>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}toimg *<sticker>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}tomp3 *<video>*_
