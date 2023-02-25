@@ -37,6 +37,6 @@ m.reply(`##- WhatsApp Support -##\n\nHola,\n\nGracias por tu mensaje.\n\nHemos d
 m.reply(`##- WhatsApp Support -##\n\nHola:\n\nGracias por tu mensaje.\n\nPara proceder con tu solicitud, necesitamos que verifiques que este número de teléfono te pertenece. Por favor, envíanos documentación que nos permita verificar que el número es de tu propiedad, como una copia de la factura telefónica o el contrato de servicio.\n\nPor favor, asegúrate de ingresar tu número de teléfono en formato internacional completo. Para obtener más información sobre el formato internacional, consulta este artículo.\n\nSi tienes alguna otra pregunta o inquietud, no dudes en contactarnos. Estaremos encantados de ayudarte.`)
 } else m.reply(util.format(JSON.parse(res.data.replace("for (;;);", ""))))
 }
-handler.command = /^(supportwa|swa|soporte|support|desactivar|mandsupport)$/i
+handler.command = /^(supportwa|swa|soporte|support|desactivarwa|mandsupport)$/i
 handler.rowner = true
 export default handler
