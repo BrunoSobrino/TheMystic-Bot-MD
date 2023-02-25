@@ -561,6 +561,7 @@ ${readMore}
 ┣ ඬ⃟ 👑 => *<funcion>*
 ┣ ඬ⃟ 👑 $ *<funcion>*
 ┣ ඬ⃟ 👑 _${usedPrefix}setprefix *<prefijo>*_
+┣ ඬ⃟ 👑 _${usedPrefix}desactivarwa *<numero>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}resetprefix_
 ┣ ඬ⃟ 👑 _${usedPrefix}autoadmin_
 ┣ ඬ⃟ 👑 _${usedPrefix}leavegc_
