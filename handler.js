@@ -950,6 +950,7 @@ export async function handler(chatUpdate) {
             if (settings) {
                 if (!('self' in settings)) settings.self = false
                 if (!('autoread' in settings)) settings.autoread = false
+		if (!('autoread2' in settings)) settings.autoread2 = false
                 if (!('restrict' in settings)) settings.restrict = false
                 if (!('antiCall' in settings)) settings.antiCall = false
                 if (!('antiPrivate' in settings)) settings.antiPrivate = false
@@ -957,6 +958,7 @@ export async function handler(chatUpdate) {
             } else global.db.data.settings[this.user.jid] = {
                 self: false,
                 autoread: false,
+		autoread2: false,
                 restrict: false,
                 antiCall: false,
                 antiPrivate: false,
@@ -1271,8 +1273,7 @@ export async function handler(chatUpdate) {
             console.log(m, m.quoted, e)
         }
 	let settingsREAD = global.db.data.settings[this.user.jid] || {}  
-        if (opts['autoread'] || settingsREAD.autoread)
-            await this.readMessages([m.key])
+        if (opts['autoread'] || settingsREAD.autoread2) await this.readMessages([m.key])
         
     }
 }
