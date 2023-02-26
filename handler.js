@@ -1270,7 +1270,8 @@ export async function handler(chatUpdate) {
         } catch (e) {
             console.log(m, m.quoted, e)
         }
-        if (opts['autoread'])
+	let settingsREAD = global.db.data.settings[this.user.jid] || {}  
+        if (opts['autoread'] || settingsREAD.autoread)
             await this.readMessages([m.key])
         
     }
