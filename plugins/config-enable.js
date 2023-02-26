@@ -218,6 +218,7 @@ global.dfail('rowner', m, conn)
 throw false
 }
 global.opts['autoread'] = isEnable
+bot.autoread = isEnable  
 break
 case 'pconly':
 case 'privateonly':
