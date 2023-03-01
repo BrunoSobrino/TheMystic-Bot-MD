@@ -134,11 +134,11 @@ function purgeSession() {
 }  
 function purgeSessionSB() {
 let listaDirectorios = readdirSync('./jadibts/');
-console.log(listaDirectorios)
+//console.log(listaDirectorios)
       let SBprekey = []
 listaDirectorios.forEach(filesInDir => {
     let directorio = readdirSync(`./jadibts/${filesInDir}`)
-    console.log(directorio)
+    //console.log(directorio)
     let DSBPreKeys = directorio.filter(fileInDir => {
     return fileInDir.startsWith('pre-key-')
     })
@@ -324,7 +324,7 @@ Object.freeze(global.support)
 setInterval(async () => {
 if (stopped == 'close') return
 var a = await clearTmp()        
-console.log(chalk.cyanBright(`\n▣───────────[ 𝙰𝚄𝚃𝙾𝙲𝙻𝙴𝙰𝚁 ]──────────────···\n│\n▣─❧ 𝙰𝚁𝙲𝙷𝙸𝚅𝙾𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾𝚂 ✅\n│\n▣───────────────────────────────────────···\n`))
+console.log(chalk.cyanBright(`\n▣───────────[ 𝙰𝚄𝚃𝙾𝙲𝙻𝙴𝙰𝚁TMP ]──────────────···\n│\n▣─❧ 𝙰𝚁𝙲𝙷𝙸𝚅𝙾𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾𝚂 ✅\n│\n▣───────────────────────────────────────···\n`))
 }, 180000)
 setInterval(async () => {
     await purgeSession()
