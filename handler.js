@@ -1,4 +1,3 @@
-p
 import { generateWAMessageFromContent } from "@adiwajshing/baileys"
 import { smsg } from './lib/simple.js'
 import { format } from 'util'
