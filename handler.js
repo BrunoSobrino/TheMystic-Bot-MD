@@ -35,6 +35,7 @@ export async function handler(chatUpdate) {
         if (!m)
             return
         m.exp = 0
+        m.money = false
         m.limit = false
         try {
             // TODO: use loop to insert data instead of this
@@ -45,7 +46,8 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.exp)) user.exp = 0
                 if (!('premium' in user)) user.premium = false
                 if (!isNumber(user.joincount)) user.joincount = 2   
-                if (!isNumber(user.limit)) user.limit = 20    	       
+                if (!isNumber(user.limit)) user.limit = 20
+                if (!isNumber(user.money)) user.money = 15    	       
                 if (!('registered' in user)) user.registered = false
             if (!user.registered) {
                 if (!('name' in user)) user.name = m.name
@@ -348,7 +350,7 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.makananserigala)) user.makananserigala = 0
                 if (!isNumber(user.mana)) user.mana = 0
                 if (!isNumber(user.mangga)) user.mangga = 0
-                if (!isNumber(user.money)) user.money = 500
+                if (!isNumber(user.money)) user.money = 15
                 if (!isNumber(user.monyet)) user.monyet = 0
                 if (!isNumber(user.mythic)) user.mythic = 0
                 if (!isNumber(user.naga)) user.naga = 0
@@ -751,7 +753,7 @@ export async function handler(chatUpdate) {
                     mana: 20,
                     mangga: 0,
                     misi: '',
-                    money: 500,
+                    money: 15,
                     monyet: 0,
                     mythic: 0,
                     naga: 0,
