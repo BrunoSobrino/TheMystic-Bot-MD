@@ -180,6 +180,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp3doc *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4doc *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}videodoc *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}dapk2 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}stickerpack *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play *<texto>*_
@@ -280,6 +281,8 @@ ${readMore}
 ┣ ඬ⃟ 👾 _${usedPrefix}kpop *<blackpink / exo / bts>*_
 ┣ ඬ⃟ 👾 _${usedPrefix}cristianoronaldo_
 ┣ ඬ⃟ 👾 _${usedPrefix}messi_
+┣ ඬ⃟ 👾 _${usedPrefix}cat_
+┣ ඬ⃟ 👾 _${usedPrefix}dog_
 ┣ ඬ⃟ 👾 _${usedPrefix}meme_
 ┣ ඬ⃟ 👾 _${usedPrefix}itzy_
 ┣ ඬ⃟ 👾 _${usedPrefix}blackpink_
