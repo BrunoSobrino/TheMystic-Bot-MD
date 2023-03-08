@@ -11,6 +11,7 @@ global.owner = [
    ['5492604050270', true], 
   ['5493772406612', true]]
 
+
 global.suittag = ['5492604050270', '5493772406612']
 global.prems = [] 
 
