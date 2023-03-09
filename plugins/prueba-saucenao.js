@@ -65,10 +65,6 @@ case 'thumbnail': propName = 'URL de la miniatura'
 break                       
 case 'author_name': propName = 'Nombre del autor' 
 break         
-case 'source': propName = 'Fuente' 
-break        
-case 'material': propName = 'Material' 
-break
 
 default:
 propName = prop;
@@ -87,9 +83,7 @@ break
 case 'member_name': propName = 'Nombre del autor' 
 break                
 case 'source': propName = 'Fuente' 
-break        
-case 'material': propName = 'Material' 
-break                
+break                       
 case 'author_name': propName = 'Nombre del Autor' 
 break        
 case 'author_url': propName = 'URL del Autor' 
@@ -108,6 +102,7 @@ await conn.reply(m.chat, `Número de resultados: ${results.length}
 Resultados encontrados: ${Boolean(results) === true ? 'Si' : 'No'}
 
 ◎ R E S U L T A D O
+
 Puntuación de similitud
 • ${primerResultado.header.similarity}%
 
@@ -118,7 +113,9 @@ URLs
 • ${primerResultado.data.ext_urls}
 
 Autor
-• ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n*◎ R E S U L T A D O  E N  B R U T O*
+• ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n
+
+*◎ R E S U L T A D O  E N  B R U T O*
 ${resultadoEnBruto}`, twa, m)
 } catch (e) {
 await m.reply(lenguajeGB['smsMalError3']() + '\n*' + lenguajeGB.smsMensError1() + '*\n*' + usedPrefix + `${lenguajeGB.lenguaje() == 'es' ? 'reporte' : 'report'}` + '* ' + `${lenguajeGB.smsMensError2()} ` + usedPrefix + command)
