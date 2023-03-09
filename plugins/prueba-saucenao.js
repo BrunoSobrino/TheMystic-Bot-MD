@@ -116,6 +116,7 @@ Autor
 • ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n
 
 *◎ R E S U L T A D O  E N  B R U T O*
+
 ${resultadoEnBruto}`, twa, m)
 } catch (e) {
 await m.reply(lenguajeGB['smsMalError3']() + '\n*' + lenguajeGB.smsMensError1() + '*\n*' + usedPrefix + `${lenguajeGB.lenguaje() == 'es' ? 'reporte' : 'report'}` + '* ' + `${lenguajeGB.smsMensError2()} ` + usedPrefix + command)
