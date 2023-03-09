@@ -70,31 +70,6 @@ default:
 propName = prop;
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.header[prop]}\n\n`}
-//resultadoEnBruto += ''
-    
-for (let prop in primerResultado.data) {
-let propName = ''
-
-switch (prop) {
-case 'title': propName = 'Título' 
-break        
-case 'ext_urls': propName = 'URLs' 
-break        
-case 'member_name': propName = 'Nombre del autor' 
-break                
-case 'source': propName = 'Fuente' 
-break                       
-case 'author_name': propName = 'Nombre del Autor' 
-break        
-case 'author_url': propName = 'URL del Autor' 
-break                
-case 'as_project': propName = 'Proyecto en Anime-Source' 
-break
-
-default:
-propName = prop
-}
-resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
     
 let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(primerResultado.header.thumbnail)).buffer()}}}
 await conn.reply(m.chat, 'ESPERE UN MOMENTO...', twa, m)
