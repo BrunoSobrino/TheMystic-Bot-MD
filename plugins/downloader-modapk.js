@@ -1,3 +1,5 @@
+import cheerio from 'cheerio'
+import axios from 'axios'
 let handler  = async (m, { conn, usedPrefix: prefix, command, text }) => {
 try {
 switch(command) {
