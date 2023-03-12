@@ -35,6 +35,8 @@
   
 ### `—◉ 🌌 ACTIVAR EN REPLIT 🌌`
 
+- Usar en Shell el comando: npm i && node index.js --server
+
 [![Run on Repl.it](https://repl.it/badge/github/BrunoSobrino/TheMystic-Bot-MD)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)  
 
 ### `—◉ ⚙️ AJUSTES ⚙️`
