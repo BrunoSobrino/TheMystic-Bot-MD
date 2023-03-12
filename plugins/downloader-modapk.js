@@ -7,9 +7,9 @@ case 'modapk': case 'apkmod':
 if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*`        
 //const data2 = await fetchJson('https://api.akuari.my.id/search/searchmod2?query=' + text)
 const daaaaa = await searchApk(text)
-console.log(daaaaa)
-//const daaaaa2 = await getApk(daaaaa.result[0].url_download)
-//console.log(daaaaa2)
+//console.log(daaaaa)
+const daaaaa2 = await getApk(daaaaa.result[0].link)
+console.log(daaaaa2)
 
 const data2 = await fetchJson('https://api.akuari.my.id/search/searchmod?query=' + text)
 global.fetchJson = fetchJson
