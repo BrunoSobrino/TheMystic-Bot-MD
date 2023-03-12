@@ -47,7 +47,7 @@ return err
 }}
 
 async function Search(query) {
-  let res = await axios(`${Base_URL}/?s=${query}`)
+  let res = await axios(`https://rexdl.com/?s=${query}`)
   let $ = cheerio.load(res.data)
   let result = [];
   $('div.post-content').each(function () {
