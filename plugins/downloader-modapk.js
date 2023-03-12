@@ -22,7 +22,7 @@ await conn.reply(m.chat, global.wait, m)
 let data5 = await fetchJson('https://api.akuari.my.id/downloader/dlmod?link=' + text)    
 if ( data5.respon.size.replace(' MB' , '') > 200) return await conn.sendMessage(m.chat, { text: '*[ ⛔ ] ᴇʟ ᴀʀᴄʜɪᴠᴏ ᴇs ᴅᴇᴍᴀsɪᴀᴅᴏ ᴘᴇsᴀᴅᴏ*' }, { quoted: m } )
 if ( data5.respon.size.includes('GB')) return await conn.sendMessage(m.chat, { text: '*[ ⛔ ] ᴇʟ ᴀʀᴄʜɪᴠᴏ ᴇs ᴅᴇᴍᴀsɪᴀᴅᴏ ᴘᴇsᴀᴅᴏ*' }, { quoted: m } )
-const apk5 = await conn.sendMessage(m.chat, { document: { url: data5.respon.linkdl /*respon.download[0].url*/ }, mimetype: 'application/vnd.android.package-archive', fileName: data5.respon.title + '.apk', caption: null }, { quoted: m })   
+const apk5 = await conn.sendMessage(m.chat, { document: { url: data5.respon.linkdl /*respon.download[0].url*/ }, mimetype: 'application/vnd.android.package-archive', fileName: 'APK' + '.apk', caption: null }, { quoted: m })   
 break        
 }
 } catch {
