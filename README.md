@@ -36,6 +36,9 @@
 ### `—◉ 🌌 ACTIVAR EN REPLIT 🌌`
 
 - Usar en Shell el comando: npm i && node index.js --server
+- Mantener activo el Bot usando la pagina:
+ * https://uptimerobot.com/dashboard#mainDashboard
+ * Tutorial: https://www.freecodecamp.org/espanol/news/crea-un-bot-de-discord-con-javascript-nodejs
 
 [![Run on Repl.it](https://repl.it/badge/github/BrunoSobrino/TheMystic-Bot-MD)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)  
 
