@@ -46,7 +46,7 @@ return res.data
 return err
 }}
 
-async function getApk(url) {
+async function getApk(link) {
 	return new Promise((resolve) => {
 		axios.get(link)
 			.then(({
@@ -89,7 +89,7 @@ async function getApk(url) {
 	})
 }
 
-async function searchApk(apkname) {
+async function searchApk(query) {
 	return new Promise((resolve) => {
 		axios.get('https://rexdl.com/?s=' + query)
 			.then(({
