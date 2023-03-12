@@ -47,51 +47,47 @@ return res.data
 return err
 }}
 
-async function getApk(url) {
-     return new Promise((resolve, reject) => {
-          if (!/rexdlfile.com/g.test(url)) return resolve({ status: false, message: 'URL Yang Kamu Masukkan Tidak Valid' })
-          axios.get(url)
-               .then(({ data }) => {
-                    const $ = cheerio.load(data)
-                    const updated = $('li.dl-update > span:nth-child(2)').text()
-                    const size = $('li.dl-size > span:nth-child(2)').text()
-                    const version = $('li.dl-version > span:nth-child(2)').text()
-                    let name = []
-                    let url_download = []
-                    let link_download = []
-                    let promiss = []
-                    $('li.download > span').get().map((rest) => {
-                         name.push($(rest).text())
-                    })
-                    $('div#dlbox > ul.dl > a').get().map((rest) => {
-                         url_download.push($(rest).attr('href'))
-                    })
-                    let download = []
-                    for (let i = 0; i < name.length; i++) {
-                         download.push({
-                              name: name[i],
-                              url_download: url_download[i]
-                         })
-                    }
-                    for (let i = 0; i < url_download.length; i++) {
-                         promiss.push(
-                            link_download.push({ 
-                                title: name[i],
-                                url: url_download[i]
-                            })
-                         )
-                    }
-                    Promise.all(promiss).then(() => {
-                         resolve({
-                              title: url.split('=')[1].replace(/-/gi, ' '),
-                              version: version,
-                              size: size,
-                              updated: updated,
-                              download: link_download
-                         })
-                    })
-               }).catch(reject)
-     })
+async function getApk(link) {
+	return new Promise((resolve) => {
+		axios.get(link)
+			.then(({
+				data
+			}) => {
+				const $ = cheerio.load(data)
+				const link = [];
+				const url = [];
+				const link_name = [];
+				const judul = $('#page > div > div > div > section > div:nth-child(2) > article > div > h1.post-title').text();
+				const plink = $('#page > div > div > div > section > div:nth-child(2) > center:nth-child(3) > h2 > span > a').attr('href')
+				axios.get(plink)
+					.then(({
+						data
+					}) => {
+						const $$ = cheerio.load(data)
+						$$('#dlbox > ul.dl > a > li > span').each(function(a, b) {
+							deta = $$(b).text();
+							link_name.push(deta)
+						})
+						$$('#dlbox > ul.dl > a').each(function(a, b) {
+							url.push($$(b).attr('href'))
+						})
+						for (let i = 0; i < link_name.length; i++) {
+							link.push({
+								link_name: link_name[i],
+								url: url[i]
+							})
+						}
+						resolve({
+							creator: 'Fajar Ihsana',
+							judul: judul,
+							update_date: $$('#dlbox > ul.dl-list > li.dl-update > span:nth-child(2)').text(),
+							version: $$('#dlbox > ul.dl-list > li.dl-version > span:nth-child(2)').text(),
+							size: $$('#dlbox > ul.dl-list > li.dl-size > span:nth-child(2)').text(),
+							download: link
+						})
+					})
+			})
+	})
 }
 
 async function searchApk(apkname) {
