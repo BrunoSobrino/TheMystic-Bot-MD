@@ -9,7 +9,8 @@ if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼�
 const daaaaa = await Search(text)
 //console.log(daaaaa)
 const daaaaa2 = await Download(daaaaa[0].url)
-console.log(daaaaa2)
+console.log(daaaaa[0].url)
+console.log(daaaaa2.result)
 
 const data2 = await fetchJson('https://api.akuari.my.id/search/searchmod?query=' + text)
 global.fetchJson = fetchJson
