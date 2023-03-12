@@ -6,10 +6,10 @@ switch(command) {
 case 'modapk': case 'apkmod':
 if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*`        
 //const data2 = await fetchJson('https://api.akuari.my.id/search/searchmod2?query=' + text)
-const daaaaa = await searchApk(text)
-//console.log(daaaaa)
-const daaaaa2 = await getApk(daaaaa[0].link)
-console.log(daaaaa2)
+const daaaaa = await Search(text)
+console.log(daaaaa)
+//const daaaaa2 = await Download(daaaaa[0].link)
+//console.log(daaaaa2)
 
 const data2 = await fetchJson('https://api.akuari.my.id/search/searchmod?query=' + text)
 global.fetchJson = fetchJson
@@ -46,85 +46,27 @@ return res.data
 return err
 }}
 
-async function getApk(link) {
-	return new Promise((resolve) => {
-		axios.get(link)
-			.then(({
-				data
-			}) => {
-				const $ = cheerio.load(data)
-				const link = [];
-				const url = [];
-				const link_name = [];
-				const judul = $('#page > div > div > div > section > div:nth-child(2) > article > div > h1.post-title').text();
-				const plink = $('#page > div > div > div > section > div:nth-child(2) > center:nth-child(3) > h2 > span > a').attr('href')
-				axios.get(plink)
-					.then(({
-						data
-					}) => {
-						const $$ = cheerio.load(data)
-						$$('#dlbox > ul.dl > a > li > span').each(function(a, b) {
-							deta = $$(b).text();
-							link_name.push(deta)
-						})
-						$$('#dlbox > ul.dl > a').each(function(a, b) {
-							url.push($$(b).attr('href'))
-						})
-						for (let i = 0; i < link_name.length; i++) {
-							link.push({
-								link_name: link_name[i],
-								url: url[i]
-							})
-						}
-						resolve({
-							creator: 'Fajar Ihsana',
-							judul: judul,
-							update_date: $$('#dlbox > ul.dl-list > li.dl-update > span:nth-child(2)').text(),
-							version: $$('#dlbox > ul.dl-list > li.dl-version > span:nth-child(2)').text(),
-							size: $$('#dlbox > ul.dl-list > li.dl-size > span:nth-child(2)').text(),
-							download: link
-						})
-					})
-			})
-	})
+async function Search(query) {
+  let res = await axios(`${Base_URL}/?s=${query}`)
+  let $ = cheerio.load(res.data)
+  let result = [];
+  $('div.post-content').each(function () {
+    let title = $(this).find('.post-title > a').text()
+    let url = $(this).find('.post-title > a').attr('href')
+    let release = $(this).find('.post-date').text()
+    let type = $(this).find('.post-category').text()
+    let desc = $(this).find('.entry.excerpt').text().trim()
+    result.push({ title, url, release, type, desc })
+  })
+  return result
 }
 
-async function searchApk(query) {
-	return new Promise((resolve) => {
-		axios.get('https://rexdl.com/?s=' + query)
-			.then(({
-				data
-			}) => {
-				const $ = cheerio.load(data)
-				const judul = [];
-				const jenis = [];
-				const date = [];
-				const desc = [];
-				const link = [];
-				const thumb = [];
-				const result = [];
-				$('div > div.post-content').each(function(a, b) {
-					judul.push($(b).find('h2.post-title > a').attr('title'))
-					jenis.push($(b).find('p.post-category').text())
-					date.push($(b).find('p.post-date').text())
-					desc.push($(b).find('div.entry.excerpt').text())
-					link.push($(b).find('h2.post-title > a').attr('href'))
-				})
-				$('div > div.post-thumbnail > a > img').each(function(a, b) {
-					thumb.push($(b).attr('data-src'))
-				})
-				for (let i = 0; i < judul.length; i++) {
-					result.push({
-						creator: 'Fajar Ihsana',
-						judul: judul[i],
-						kategori: jenis[i],
-						upload_date: date[i],
-						deskripsi: desc[i],
-						thumb: thumb[i],
-						link: link[i]
-					})
-				}
-				resolve(result)
-			})
-	})
+async function Download(url) {
+  let res = await axios(url)
+  let $ = cheerio.load(res.data)
+  let result = [];
+  $('#dlbox > ul.dl > a').each(function () {
+    result.push($(this).attr('href'))
+  })
+  return result
 }
