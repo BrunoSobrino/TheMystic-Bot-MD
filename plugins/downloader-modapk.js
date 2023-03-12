@@ -1,7 +1,7 @@
 import cheerio from 'cheerio'
 import axios from 'axios'
 let handler  = async (m, { conn, usedPrefix: prefix, command, text }) => {
-try {
+//try {
 switch(command) {
 case 'modapk': case 'apkmod':
 if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*`        
@@ -32,9 +32,9 @@ if ( data5.respon.size.includes('GB')) return await conn.sendMessage(m.chat, { t
 const apk5 = await conn.sendMessage(m.chat, { document: { url: data5.respon.linkdl /*respon.download[0].url*/ }, mimetype: 'application/vnd.android.package-archive', fileName: 'APK' + '.apk', caption: null }, { quoted: m })   
 break        
 }
-} catch {
-throw `*[❗] 𝙽𝙾 𝚂𝙴 𝙴𝙽𝙲𝙾𝙽𝚃𝚁𝙾 𝙽𝙸𝙽𝙶𝚄𝙽 𝙼𝙾𝙳 𝙰𝙿𝙺 𝙲𝙾𝙽 𝙴𝚂𝙴 𝙽𝙾𝙼𝙱𝚁𝙴 𝙾 𝙻𝙰 𝙰𝙿𝙸 (𝙿𝙰𝙶𝙸𝙽𝙰) 𝙴𝚂𝚃𝙰 𝙲𝙰𝙸𝙳𝙰*`
-}}    
+//} catch {
+//throw `*[❗] 𝙽𝙾 𝚂𝙴 𝙴𝙽𝙲𝙾𝙽𝚃𝚁𝙾 𝙽𝙸𝙽𝙶𝚄𝙽 𝙼𝙾𝙳 𝙰𝙿𝙺 𝙲𝙾𝙽 𝙴𝚂𝙴 𝙽𝙾𝙼𝙱𝚁𝙴 𝙾 𝙻𝙰 𝙰𝙿𝙸 (𝙿𝙰𝙶𝙸𝙽𝙰) 𝙴𝚂𝚃𝙰 𝙲𝙰𝙸𝙳𝙰*`
+}//}    
 handler.command = /^(apkmod|modapk|dapk2)$/i
 export default handler
 async function fetchJson(url, options) {
