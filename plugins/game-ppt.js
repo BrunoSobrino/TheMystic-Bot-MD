@@ -4,7 +4,7 @@ let user = global.db.data.users[m.sender]
 let wait = user.wait
 if (wait) {
 let remainingTime = (wait - new Date() * 1) / 1000
-global.db.data.users[m.sender].wait = remainingTime
+global.db.data.users[m.sender].wait = 0
 throw `🕓 Tendrás que esperar ${remainingTime.toFixed(0)} segundo(s) antes de poder volver a jugar.`
 }
 
