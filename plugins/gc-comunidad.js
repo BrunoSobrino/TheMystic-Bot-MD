@@ -8,7 +8,7 @@ _⚠️| Este grupo será solamente de avisos o noticias relacionada con los gru
 Link: https://chat.whatsapp.com/KAVBUhcHZvqK510kn7wofQ
 `.trim()
   
-conn.sendHydrated(m.chat, str, wm, null, 'https://github.com/ColapsusHD/AsakuraMaoBotV2-MD', 'AsakuraMao Bot', null, null, [
+conn.sendHydrated(m.chat, str, wm, null, 'https://chat.whatsapp.com/KAVBUhcHZvqK510kn7wofQ', 'ENTRAR | JOIN 🤠', null, null, [
 ['𝙑𝙤𝙡𝙫𝙚𝙧 𝙖𝙡 𝙈𝙚𝙣𝙪́ | 𝘽𝙖𝙘𝙠 𝙩𝙤 𝙈𝙚𝙣𝙪 ☘️', '/menu']
 ], m,)}
 
