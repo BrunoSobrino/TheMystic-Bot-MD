@@ -1,8 +1,9 @@
 let handler = async (m, { conn, text, command, usedPrefix, args }) => {
 let pp = 'https://www.bighero6challenge.com/images/thumbs/Piedra,-papel-o-tijera-0003318_1584.jpeg'
 
-let time = global.db.data.users[m.sender].wait + 30000
-if (new Date - global.db.data.users[m.sender].wait < 30000) throw `*🕓 Tendrás que esperar ${Math.floor((time - new Date()) / 1000)} segundos antes de poder volver a jugar*`
+// 60000 = 1 minuto // 30000 = 30 segundos // 15000 = 15 segundos // 10000 = 10 segundos
+let time = global.db.data.users[m.sender].wait + 10000
+if (new Date - global.db.data.users[m.sender].wait < 10000) throw `*🕓 Tendrás que esperar ${Math.floor((time - new Date()) / 1000)} segundos antes de poder volver a jugar*`
 
 if (!args[0]) return conn.sendHydrated(m.chat, '𝙋𝙄𝙀𝘿𝙍𝘼, 𝙋𝘼𝙋𝙀𝙇, 𝙊 𝙏𝙄𝙅𝙀𝙍𝘼\n\n𝙋𝙪𝙚𝙙𝙚𝙨 𝙪𝙨𝙖𝙧 𝙡𝙤𝙨 𝘽𝙊𝙏𝙊𝙉𝙀𝙎 𝙥𝙖𝙧𝙖 𝙟𝙪𝙜𝙖𝙧 𝙤 𝙩𝙖𝙢𝙗𝙞𝙚𝙣 𝙥𝙪𝙚𝙙𝙚𝙨 𝙪𝙨𝙖𝙧 𝙚𝙨𝙩𝙤𝙨 𝙘𝙤𝙢𝙖𝙣𝙙𝙤𝙨:\n.ppt 𝙥𝙞𝙚𝙙𝙧𝙖\n.ppt 𝙥𝙖𝙥𝙚𝙡\n.ppt 𝙩𝙞𝙟𝙚𝙧𝙖\n\n𝙐𝙨𝙚 𝙚𝙣 𝙢𝙞𝙣𝙪𝙨𝙘𝙪𝙡𝙖𝙨', wm, pp, null, null, null, null, [
 ['𝙋𝙞𝙚𝙙𝙧𝙖 🥌', `${usedPrefix + command} piedra`],
@@ -66,13 +67,3 @@ handler.help = ['ppt']
 handler.tags = ['games']
 handler.command = /^(ppt)$/i
 export default handler
-
-function msToTime(duration) {
-var milliseconds = parseInt((duration % 1000) / 100),
-seconds = Math.floor((duration / 1000) % 60),
-minutes = Math.floor((duration / (1000 * 60)) % 60),
-hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
-hours = (hours < 10) ? "0" + hours : hours
-minutes = (minutes < 10) ? "0" + minutes : minutes
-seconds = (seconds < 10) ? "0" + seconds : seconds
-return hours + " Hora(s) " + minutes + " Minuto(s)"}
