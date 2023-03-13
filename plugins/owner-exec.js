@@ -31,9 +31,8 @@ _return = e
 conn.reply(m.chat, _syntax + format(_return), m)
 m.exp = old
 }}
-handler.help = ['> ', '=> ']
 handler.tags = ['advanced']
-handler.customPrefix = /=?>|~/
+handler.customPrefix =
 handler.command = /(?:)/i
 export default handler
 class CustomArray extends Array {
