@@ -64,8 +64,9 @@ m.reply(`🥳 Tú ganas! 🎉\n\n*👉🏻 Tu: ${text}\n👉🏻 El Bot: ${astro
 } else {
 global.db.data.users[m.sender].exp -= 300
 m.reply(`☠️ Tú pierdes! ❌\n\n*👉🏻 Tu: ${text}\n👉🏻 El Bot: ${astro}\n❌ Premio -300 XP*`)
-}
 }}
+global.db.data.users[m.sender].wait = 0
+}
 handler.help = ['ppt']
 handler.tags = ['games']
 handler.command = /^(ppt)$/i
