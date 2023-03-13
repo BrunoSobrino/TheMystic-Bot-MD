@@ -5,10 +5,10 @@ let pp = 'https://www.bighero6challenge.com/images/thumbs/Piedra,-papel-o-tijera
 let time = global.db.data.users[m.sender].wait + 10000
 if (new Date - global.db.data.users[m.sender].wait < 10000) throw `*🕓 Tendrás que esperar ${Math.floor((time - new Date()) / 1000)} segundos antes de poder volver a jugar*`
 
-if (!args[0]) return conn.sendHydrated(m.chat, '𝙋𝙄𝙀𝘿𝙍𝘼, 𝙋𝘼𝙋𝙀𝙇, 𝙊 𝙏𝙄𝙅𝙀𝙍𝘼\n\n𝙋𝙪𝙚𝙙𝙚𝙨 𝙪𝙨𝙖𝙧 𝙡𝙤𝙨 𝘽𝙊𝙏𝙊𝙉𝙀𝙎 𝙥𝙖𝙧𝙖 𝙟𝙪𝙜𝙖𝙧 𝙤 𝙩𝙖𝙢𝙗𝙞𝙚𝙣 𝙥𝙪𝙚𝙙𝙚𝙨 𝙪𝙨𝙖𝙧 𝙚𝙨𝙩𝙤𝙨 𝙘𝙤𝙢𝙖𝙣𝙙𝙤𝙨:\n.ppt 𝙥𝙞𝙚𝙙𝙧𝙖\n.ppt 𝙥𝙖𝙥𝙚𝙡\n.ppt 𝙩𝙞𝙟𝙚𝙧𝙖\n\n𝙐𝙨𝙚 𝙚𝙣 𝙢𝙞𝙣𝙪𝙨𝙘𝙪𝙡𝙖𝙨', wm, pp, null, null, null, null, [
-['𝙋𝙞𝙚𝙙𝙧𝙖 🥌', `${usedPrefix + command} piedra`],
-['𝙋𝙖𝙥𝙚𝙡 📄', `${usedPrefix + command} papel`],
-['𝙏𝙞𝙟𝙚𝙧𝙖 ✂️', `${usedPrefix + command} tijera`]
+if (!args[0]) return conn.sendHydrated(m.chat, `*𝐏𝐢𝐞𝐝𝐫𝐚 🗿, 𝐏𝐚𝐩𝐞𝐥 📄 𝐨 𝐓𝐢𝐣𝐞𝐫𝐚 ✂️*\n\n*—◉  𝙿𝚎𝚍𝚎𝚜 𝚞𝚜𝚊𝚛 𝚕𝚘𝚜 𝚋𝚘𝚝𝚘𝚗𝚎𝚜 𝚙𝚊𝚛𝚊 𝚓𝚞𝚐𝚊𝚛 𝚘 𝚝𝚊𝚖𝚋𝚒𝚎𝚗 𝚙𝚞𝚎𝚍𝚎𝚜 𝚞𝚜𝚊𝚛 𝚎𝚜𝚝𝚘𝚜 𝚌𝚘𝚖𝚊𝚗𝚍𝚘𝚜:*\n*◉ ${usedPrefix + command} piedra*\n*◉ ${usedPrefix + command} papel*\n*◉ ${usedPrefix + command} tijera*`, wm, pp, null, null, null, null, [
+['Piedra 🗿', `${usedPrefix + command} piedra`],
+['Papel 📄', `${usedPrefix + command} papel`],
+['Tijera ✂️', `${usedPrefix + command} tijera`]
 ], m)    
 var astro = Math.random()
 if (astro < 0.34) {
