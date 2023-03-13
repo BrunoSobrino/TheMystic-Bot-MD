@@ -13,6 +13,7 @@ if (!args[0]) return conn.sendHydrated(m.chat, '𝙋𝙄𝙀𝘿𝙍𝘼, 𝙋�
 ['𝙋𝙖𝙥𝙚𝙡 📄', `${usedPrefix + command} papel`],
 ['𝙏𝙞𝙟𝙚𝙧𝙖 ✂️', `${usedPrefix + command} tijera`]
 ], m)
+global.db.data.users[m.sender].wait = new Date() * 1 + 5000  
 var astro = Math.random()
 if (astro < 0.34) {
 astro = 'piedra' 
