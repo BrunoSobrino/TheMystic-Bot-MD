@@ -55,7 +55,7 @@ return
 const results = response.data.results;
 const primerResultado = results[0]
     
-let prop in primerResultado.header {
+for (let prop in primerResultado.header) {
 let propName = '';
 switch (prop) {
 case 'similarity': propName = 'Puntuación de similitud' 
