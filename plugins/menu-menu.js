@@ -481,6 +481,7 @@ ${readMore}
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt2 *<texto>*_
+┣ ඬ⃟ 🛠️ _${usedPrefix}delchatgpt
 ┣ ඬ⃟ 🛠️ _${usedPrefix}dall-e *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}tamaño *<cantidad> <imagen / video>*_
