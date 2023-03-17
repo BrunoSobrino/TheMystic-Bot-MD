@@ -1,3 +1,4 @@
+import { sticker } from '../lib/sticker.js'
 let handler = async (m, { conn }) => {
 let stiker = await sticker(`https://api.lolhuman.xyz/api/sticker/dadu?apikey=${lolkeysapi}`, false, global.packname, global.author)  
 conn.sendFile(m.chat, stiker, 'error.webp', '', m, { asSticker: true })
