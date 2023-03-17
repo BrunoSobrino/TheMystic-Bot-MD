@@ -1,5 +1,5 @@
 let handler = async (m, { conn }) => {
-conn.sendFile(m.chat, `https://violetics.pw/api/random/dadu?apikey=${Key360}`, 'sticker.webp', '', m, { asSticker: true })
+conn.sendFile(m.chat, `https://violetics.pw/api/random/dadu?apikey=beta`, 'error.webp', '', m, { asSticker: true })
 //let dir = 'https://api.lolhuman.xyz/api/sticker/dadu?apikey=${lolkeysapi}'
 //conn.sendFile(m.chat, dir, 'error.webp', null, m, { asSticker: true })
 }
