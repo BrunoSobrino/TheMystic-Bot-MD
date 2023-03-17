@@ -476,7 +476,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
                 if (!user.lbars) user.lbars = '[▒▒▒▒▒▒▒▒▒]'
                 if (!user.job) user.job = 'Desempleo'
                 if (!user.premium) user.premium = false
-                if (!user.premiumTime) user.premiumTime = 0
+                if (!user.premium) user.premiumTime = 0
 		if (!user.wait) user.wait = 0    
                 if (!user.rtrofi) user.rtrofi = 'Bronce'
             } else
