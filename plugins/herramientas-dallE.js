@@ -7,5 +7,5 @@ await conn.sendFile(m.chat, tiores.data, null, null, m)
 } catch {
 throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`
 }}
-handler.command = ['dall-e', 'dalle', 'ia2', 'cimg', 'openai2']
+handler.command = ['dall-e', 'dalle', 'ia2', 'cimg', 'openai3']
 export default handler
