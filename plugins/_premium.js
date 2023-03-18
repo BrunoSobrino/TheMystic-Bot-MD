@@ -8,6 +8,6 @@ export async function all(m) {
     user.premiumTime = 0
     user.premium = false
 
-    await m.reply(`*@${m.sender.split`@`[0]} Tu tiempo premium ha expirado y ya no eres un usuario premium. Si deseas volver a ser premium, puedes comprar un nuevo tiempo premium con el comando #pase premium*`, m, { mentions: [m.sender] })
+    await m.reply(`*@${m.sender.split`@`[0]} Tu Tiempo premium ha expirado y ya no eres un usuario premium.*`, m.sender, { mentions: [m.sender] })
   }
 }
