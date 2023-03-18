@@ -31,7 +31,7 @@ let err = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&
 let json = await err.json()
 let fraseChat = json.result
 conn.reply(m.chat, fraseChat, m)
-}}
+}}}
 handler.tags = ['frases']
 handler.command = handler.help = ['consejo', 'fraseromantica', 'historiaromantica']
 export default handler
