@@ -7,7 +7,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   
   let user = global.db.data.users[who] 
   let txt = text.replace('@' + who.split`@`[0], '').trim()
-  let name = await conn.getName(who)
+  //let name = await conn.getName(who)
+  let name = await '@' + who.split`@`[0]
 
   var hora1 = 60 * 60 * 1000 * txt // 1 hora
   var dia1 = 24 * hora1 * txt // 1 día
@@ -35,15 +36,17 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     if (now < user.premiumTime) user.premiumTime += semana1
     else user.premiumTime = now + semana1
     user.premium3 = true
-    let textprem3 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} semana(s)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${getDurationInWeeks(user.premiumTime - now)}*`
-    m.reply(textprem3, null, { mentions: conn.parseMention(textprem3) })}
+  formatTime(user.premiumTime - now).then(timeleft => {
+    let textprem3 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} semana(s)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeleft}*`
+    m.reply(textprem3, null, { mentions: conn.parseMention(textprem3) })})}
   
   if (command == 'addprem4' || command == 'userpremium4') {
     if (now < user.premiumTime) user.premiumTime += mes1
     else user.premiumTime = now + mes1
     user.premium = true
-    let textprem4 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} mes(es)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${getDurationInMonths(user.premiumTime - now)}*`
-    m.reply(textprem4, null, { mentions: conn.parseMention(textprem4) })}
+  formatTime(user.premiumTime - now).then(timeleft => {
+    let textprem4 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} mes(es)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeleft}*`
+    m.reply(textprem4, null, { mentions: conn.parseMention(textprem4) })})}
 }
 handler.help = ['addprem [@user] <days>']
 handler.tags = ['owner']
@@ -63,6 +66,38 @@ async function getDurationInMonths(durationInMs) {
   const days = Math.floor((durationInMs % (30 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
   return `${months} mes(es) y ${days} día(s)`;
 }
+
+async function formatTime(ms) {
+  let seconds = Math.floor(ms / 1000);
+  let minutes = Math.floor(seconds / 60);
+  let hours = Math.floor(minutes / 60);
+  let days = Math.floor(hours / 24);
+
+  seconds %= 60;
+  minutes %= 60;
+  hours %= 24;
+
+  let timeString = '';
+
+  if (days) {
+    timeString += `${days} día${days > 1 ? 's' : ''} `;
+  }
+
+  if (hours) {
+    timeString += `${hours} hora${hours > 1 ? 's' : ''} `;
+  }
+
+  if (minutes) {
+    timeString += `${minutes} minuto${minutes > 1 ? 's' : ''} `;
+  }
+
+  if (seconds) {
+    timeString += `${seconds} segundo${seconds > 1 ? 's' : ''} `;
+  }
+
+  return timeString.trim();
+}
+
 
 
 /*let handler = async (m, { conn, text, usedPrefix, command }) => {
