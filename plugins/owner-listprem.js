@@ -28,27 +28,18 @@ setTimeout(() => {
 handler.help = ['premlist [angka]']
 handler.tags = ['info']
 handler.command = /^(listprem|premlist|listavip|viplista)$/i
-//handler.command = /^(vip|prem|premium|lista|list)vip|prem|premium|lista|list$/i
-
 export default handler
 
 function clockString(ms) {
-  if (isNaN(ms)) return '--';
-  
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
+  const weeks = Math.floor(days / 7);
   const months = Math.floor(days / 30);
-  const years = Math.floor(months / 12);
+  const years = Math.floor(days / 365);
 
-  const remainingMonths = months % 12;
-  const remainingDays = days % 30;
-  const remainingHours = hours % 24;
-  const remainingMinutes = minutes % 60;
-  const remainingSeconds = seconds % 60;
-
-  return `${years} Years, ${remainingMonths} Months, ${remainingDays} Days, ${remainingHours} Hours, ${remainingMinutes} Minutes, ${remainingSeconds} Seconds`;
+  return `Años: ${years}\nMeses: ${months}\nSemanas: ${weeks}\nDías: ${days}\nHoras: ${hours % 24}\nMinutos: ${minutes % 60}\nSegundos: ${seconds % 60}`;
 }
 
 /*function clockString(ms) {
