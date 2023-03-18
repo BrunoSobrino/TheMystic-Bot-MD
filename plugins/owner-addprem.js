@@ -3,7 +3,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
   else who = m.chat
   let textpremERROR = `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙰 𝙴𝙻 @𝚝𝚊𝚐 𝙳𝙴 𝙻𝙰 𝙿𝙴𝚁𝚂𝙾𝙽𝙰 𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝙰𝙻𝙶𝚄𝙽 𝙼𝙴𝙽𝚂𝙰𝙹𝙴 𝙳𝙴 𝙻𝙰 𝙿𝙴𝚁𝚂𝙾𝙽𝙰 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝙰 𝙻𝙾𝚂 𝚄𝚂𝚄𝙰𝚁𝙸𝙾𝚂 𝙿𝚁𝙴𝙼𝙸𝚄𝙼*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*◉ ${usedPrefix + command} @${m.sender.split`@`[0]} 1*\n*◉ ${usedPrefix + command} 1 <responder a mensaje>*`    
-  if (!who || !m.quoted) return m.reply(textpremERROR)
+  if (!who || !m.quoted) return m.reply(textpremERROR, null, { mentions: conn.parseMention(textpremERROR) })
 
   let user = global.db.data.users[who] 
   let txt = text.replace('@' + who.split`@`[0], '').trim()
@@ -21,7 +21,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     user.premium = true
     let timeLeft = (user.premiumTime - now) / 1000 // tiempo restante en segundos
     let textprem1 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\nTiempo: ${txt} hora(s)\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeLeft} segundos*`
-    m.reply(textprem1)}
+    m.reply(textprem1, null, { mentions: conn.parseMention(textprem1) })}
     
   if (command == 'addprem2' || command == 'userpremium2') {
     if (now < user.premiumTime) user.premiumTime += dia1
@@ -29,21 +29,21 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     user.premium = true
     let timeLeft = (user.premiumTime - now) / 1000 / 60 / 60 // tiempo restante en horas
     let textprem2 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} día(s)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeLeft} horas*`
-    m.reply(textprem2)}
+    m.reply(textprem2, null, { mentions: conn.parseMention(textprem2) })}
   
   if (command == 'addprem3' || command == 'userpremium3') {
     if (now < user.premiumTime) user.premiumTime += semana1
     else user.premiumTime = now + semana1
     user.premium3 = true
     let textprem3 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} semana(s)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${getDurationInWeeks(user.premiumTime - now)}*`
-    m.reply(textprem3)}
+    m.reply(textprem3, null, { mentions: conn.parseMention(textprem3) })}
   
   if (command == 'addprem4' || command == 'userpremium4') {
     if (now < user.premiumTime) user.premiumTime += mes1
     else user.premiumTime = now + mes1
     user.premium = true
     let textprem4 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} mes(es)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${getDurationInMonths(user.premiumTime - now)}*`
-    m.reply(textprem4)
+    m.reply(textprem4, null, { mentions: conn.parseMention(textprem4) })}
   }
 }
 handler.help = ['addprem [@user] <days>']
