@@ -11,18 +11,14 @@ let handler = async (m, { conn, args }) => {
   let sortedP = user.map(toNumber('premiumTime')).sort(sort('premiumTime'))
   let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length)
 let infoprem = `
-  
 𝙐𝙎𝙀𝙍: ${userr}
-${prem ? `${clockString (usuario - new Date() * 1)}` : '┃✢ *𝙏𝙄𝙀𝙈𝙋𝙊 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 | 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 𝙏𝙄𝙈𝙀*\n┃🚫 𝘾𝘼𝘿𝙐𝘾𝘼𝘿𝙊 : 𝙏𝙄𝙈𝙀𝘿 𝙊𝙐𝙏 '}
-
-
+${prem ? `${clockString(usuario - new Date() * 1)}` : '┃✢ *𝙏𝙄𝙀𝙈𝙋𝙊 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 | 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 𝙏𝙄𝙈𝙀*\n┃🚫 𝘾𝘼𝘿𝙐𝘾𝘼𝘿𝙊: 𝙏𝙄𝙈𝙀𝘿 𝙊𝙐𝙏'}
 ╭•·–––––––––––––––·•
 🌟 𝙐𝙎𝙐𝘼𝙍𝙄𝙊𝙎 𝙋𝙍𝙀𝙈𝙄𝙐𝙈
 ╰•·–––––––––––––––·•${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
-
-Usuarios: &{userr}
-${premiumTime > 0 ? `${clockString (premiumTime - new Date() * 1)}`}`).join`\n╰–––––––––––·•`}
-`.trim()
+Usuarios: ${userr}
+${prem && premiumTime > 0 ? `${clockString(premiumTime - new Date() * 1)}` : ''}`).join('\n\n')}`;
+  
  m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })}
 }
 handler.help = ['premlist [angka]']
