@@ -35,7 +35,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   if (command == 'addprem3' || command == 'userpremium3') {
     if (now < user.premiumTime) user.premiumTime += semana1
     else user.premiumTime = now + semana1
-    user.premium3 = true
+    user.premium = true
   formatTime(user.premiumTime - now).then(timeleft => {
     let textprem3 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} semana(s)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeleft}*`
     m.reply(textprem3, null, { mentions: conn.parseMention(textprem3) })})}
