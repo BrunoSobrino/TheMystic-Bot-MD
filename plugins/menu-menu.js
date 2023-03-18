@@ -48,7 +48,7 @@ let str = `
 ┣ *💎 Diamantes:* ${limit}
 ┣ *👾 MysticCoins:* ${money}
 ┣ *🪙 Tokens:* ${joincount}
-┣ *🎟️ Premium:* ${user.premium = 'true' ? '❌' : '✅'}
+┣ *🎟️ Premium:* ${user.premiumTime > 0 ? '✅' : '❌'}
 ┗━━━━━━━━━━━━━━━━┛
 ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
