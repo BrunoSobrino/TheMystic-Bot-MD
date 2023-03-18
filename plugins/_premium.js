@@ -6,6 +6,7 @@ export async function all() {
             if (new Date() * 1 >= user.premiumTime) {
                 user.premiumTime = 0
                 user.premium = false
+                await m.reply(`*[❗] @${Object.keys(global.db.data.users).find(key => global.db.data.users[key] === user).split`@`[0]} 𝚃𝚄 𝚃𝙸𝙴𝙼𝙿𝙾 𝙲𝙾𝙼𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼 𝙷𝙰 𝙴𝚇𝙿𝙸𝚁𝙰𝙳𝙾, 𝚈𝙰 𝙽𝙾 𝙴𝚁𝙴𝚂 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼*`, `${Object.keys(global.db.data.users).find(key => global.db.data.users[key] === user)}`, { mentions: [m.sender] })
                 console.log(`El premium del usuario con el número ${Object.keys(global.db.data.users).find(key => global.db.data.users[key] === user)} ha expirado.`)
             }
         }
