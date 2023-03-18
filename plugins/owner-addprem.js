@@ -19,7 +19,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   if (command == 'addprem' || command == 'userpremium') {
     if (now < user.premiumTime) user.premiumTime += hora1
-    else user.premiumTime = now + segundos10 //hora1
+    else user.premiumTime = now + hora1
     user.premium = true
     let timeLeft = (user.premiumTime - now) / 1000 // tiempo restante en segundos
     let textprem1 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} hora(s)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeLeft} segundos*`
