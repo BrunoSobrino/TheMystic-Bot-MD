@@ -22,10 +22,8 @@ ${prem ? `${clockString (usuario - new Date() * 1)}` : '┃✢ *𝙏𝙄𝙀𝙈
 
 Usuarios: &{userr}
 ${premiumTime > 0 ? `${clockString (premiumTime - new Date() * 1)}`}`).join`\n╰–––––––––––·•`}
-`.trim(), `🎟️ 𝗣 𝗥 𝗘 𝗠 𝗜 𝗨 𝗠 ⇢ ${prem ? '✅' : '❌'}\n${wm}`, null, [[`${prem ? '✦ 𝘿𝙄𝙎𝙁𝙍𝙐𝙏𝘼𝙍 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 ✦': '✦ 𝘾𝙊𝙈𝙋𝙍𝘼𝙍 𝙋𝘼𝙎𝙀 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 ✦'}`, `${prem ? '.allmenu': '.pase premium'}`]]) //${premiumTime > 0 ?
-setTimeout(() => {
-    if (global.db.data.chats[m.chat].deletemedia) conn.deleteMessage(m.chat, key)
-  }, global.db.data.chats[m.chat].deletemediaTime)
+`.trim()
+ m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })}
 }
 handler.help = ['premlist [angka]']
 handler.tags = ['info']
