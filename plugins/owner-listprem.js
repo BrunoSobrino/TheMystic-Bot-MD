@@ -19,7 +19,7 @@ ${prem ? `${clockString(usuario - new Date() * 1)}` : '┃✢ *𝙏𝙄𝙀𝙈�
 Usuarios: ${userr}
 ${prem && premiumTime > 0 ? `${clockString(premiumTime - new Date() * 1)}` : ''}`).join('\n\n')}`;
   
- m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })}
+ m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })
 }
 handler.help = ['premlist [angka]']
 handler.tags = ['info']
