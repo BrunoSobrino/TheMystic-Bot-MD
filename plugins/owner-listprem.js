@@ -12,7 +12,7 @@ await conn.sendButton(m.chat, `
 
 *「 INFO USER 」*
 Usuario: ${usuarioo}
-Timpo premium: ${prem ? `${clockString (usuario - new Date() * 1) || ''}`
+Timpo premium: ${prem ? `${clockString (usuario - new Date() * 1) || ''}
 
 
 *「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*
