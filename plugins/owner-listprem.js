@@ -34,7 +34,7 @@ const days = Math.floor(hours / 24);
 const weeks = Math.floor(days / 7);
 const months = Math.floor(days / 30);
 const years = Math.floor(days / 365);
-return `- Años: ${years}\n- Meses: ${months}\n- Semanas: ${weeks}\n- Días: ${days}\n- Horas: ${hours % 24}\n- Minutos: ${minutes % 60}\n- Segundos: ${seconds % 60}`;}
+return `- Año(s): ${years}\n- Mes(es): ${months}\n- Semana(s): ${weeks}\n- Día(s): ${days}\n- Hora(s): ${hours % 24}\n- Minuto(s): ${minutes % 60}\n- Segundo(s): ${seconds % 60}`;}
 
 function sort(property, ascending = true) {
 if (property) return (...args) => args[ascending & 1][property] - args[!ascending & 1][property]
