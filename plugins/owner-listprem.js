@@ -71,7 +71,7 @@ let handler = async (m, { conn }) => {
 handler.help = ['premlist']
 handler.tags = ['owner']
 handler.command = /^(listprem|premlist)$/i
-handler.rowner = true
+//handler.rowner = true
 export default handler
 
 function clockString(ms) {
