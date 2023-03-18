@@ -33,6 +33,25 @@ handler.command = /^(listprem|premlist|listavip|viplista)$/i
 export default handler
 
 function clockString(ms) {
+  if (isNaN(ms)) return '--';
+  
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  const remainingMonths = months % 12;
+  const remainingDays = days % 30;
+  const remainingHours = hours % 24;
+  const remainingMinutes = minutes % 60;
+  const remainingSeconds = seconds % 60;
+
+  return `${years} Years, ${remainingMonths} Months, ${remainingDays} Days, ${remainingHours} Hours, ${remainingMinutes} Minutes, ${remainingSeconds} Seconds`;
+}
+
+/*function clockString(ms) {
   let ye = isNaN(ms) ? '--' : Math.floor(ms / 31104000000) % 10
   let mo = isNaN(ms) ? '--' : Math.floor(ms / 2592000000) % 12
   let d = isNaN(ms) ? '--' : Math.floor(ms / 86400000) % 30
@@ -40,7 +59,7 @@ function clockString(ms) {
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return ['┃ ', ye, ' *🗓️ Años : Year*\n', '┃ ', mo, ' *⛅ Mes : Month*\n', '┃ ', d, ' *☀️ Días : Days*\n', '┃ ', h, ' *⏰ Horas : Hours*\n', '┃ ', m, ' *🕐 Minutos : Minutes*\n', '┃ ', s, ' *⏱️ Segundos : Seconds*'].map(v => v.toString().padStart(2, 0)).join('')
-}
+}*/
 
 function sort(property, ascending = true) {
   if (property) return (...args) => args[ascending & 1][property] - args[!ascending & 1][property]
