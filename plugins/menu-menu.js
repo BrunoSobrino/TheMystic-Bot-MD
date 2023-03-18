@@ -5,7 +5,7 @@ const { levelling } = '../lib/levelling.js'
 import PhoneNumber from 'awesome-phonenumber'
 import { promises } from 'fs'
 import { join } from 'path'
-let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text }) => {
+let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, isPrems }) => {
 try {
 let vn = './media/menu.mp3'
 let pp = imagen4
@@ -48,7 +48,7 @@ let str = `
 ┣ *💎 Diamantes:* ${limit}
 ┣ *👾 MysticCoins:* ${money}
 ┣ *🪙 Tokens:* ${joincount}
-┣ *🎟️ Premium:* ${user.premiumTime > 0 ? '✅' : '❌'}
+┣ *🎟️ Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
 ┗━━━━━━━━━━━━━━━━┛
 ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
