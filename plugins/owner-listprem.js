@@ -27,35 +27,20 @@ handler.command = /^(listprem|premlist|listavip|viplista)$/i
 export default handler
 
 function clockString(ms) {
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  const weeks = Math.floor(days / 7);
-  const months = Math.floor(days / 30);
-  const years = Math.floor(days / 365);
-
-  return `- Años: ${years}\n- Meses: ${months}\n- Semanas: ${weeks}\n- Días: ${days}\n- Horas: ${hours % 24}\n- Minutos: ${minutes % 60}\n- Segundos: ${seconds % 60}`;
-}
-
-/*function clockString(ms) {
-  let ye = isNaN(ms) ? '--' : Math.floor(ms / 31104000000) % 10
-  let mo = isNaN(ms) ? '--' : Math.floor(ms / 2592000000) % 12
-  let d = isNaN(ms) ? '--' : Math.floor(ms / 86400000) % 30
-  let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24
-  let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
-  let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
-  return ['┃ ', ye, ' *🗓️ Años : Year*\n', '┃ ', mo, ' *⛅ Mes : Month*\n', '┃ ', d, ' *☀️ Días : Days*\n', '┃ ', h, ' *⏰ Horas : Hours*\n', '┃ ', m, ' *🕐 Minutos : Minutes*\n', '┃ ', s, ' *⏱️ Segundos : Seconds*'].map(v => v.toString().padStart(2, 0)).join('')
-}*/
+const seconds = Math.floor(ms / 1000);
+const minutes = Math.floor(seconds / 60);
+const hours = Math.floor(minutes / 60);
+const days = Math.floor(hours / 24);
+const weeks = Math.floor(days / 7);
+const months = Math.floor(days / 30);
+const years = Math.floor(days / 365);
+return `- Años: ${years}\n- Meses: ${months}\n- Semanas: ${weeks}\n- Días: ${days}\n- Horas: ${hours % 24}\n- Minutos: ${minutes % 60}\n- Segundos: ${seconds % 60}`;}
 
 function sort(property, ascending = true) {
-  if (property) return (...args) => args[ascending & 1][property] - args[!ascending & 1][property]
-  else return (...args) => args[ascending & 1] - args[!ascending & 1]
-}
+if (property) return (...args) => args[ascending & 1][property] - args[!ascending & 1][property]
+else return (...args) => args[ascending & 1] - args[!ascending & 1]}
 
 function toNumber(property, _default = 0) {
-  if (property) return (a, i, b) => {
-    return { ...b[i], [property]: a[property] === undefined ? _default : a[property] }
-  }
-  else return a => a === undefined ? _default : a
-}
+if (property) return (a, i, b) => {
+return { ...b[i], [property]: a[property] === undefined ? _default : a[property] }}
+else return a => a === undefined ? _default : a}
