@@ -4,25 +4,24 @@ let handler = async (m, { conn, args }) => {
     return { ...value, jid: key }
   })
   let name = '🎟️ 𝗣𝗥𝗘𝗠𝗜𝗨𝗠'
-  //let fkon = { key: { fromMe: false, participant: `${m.sender.split`@`[0]}@s.whatsapp.net`, ...(m.chat ? { remoteJid: '16504228206@s.whatsapp.net' } : {}) }, message: { contactMessage: { displayName: `${name}`, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;a,;;;\nFN:${name}\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}}
   let premTime = global.db.data.users[m.sender].premiumTime
   let prem = global.db.data.users[m.sender].premium
+  let userr = await '@' + m.sender.split`@`[0]
   let waktu = clockString(`${premTime - new Date() * 1} `)
   let sortedP = user.map(toNumber('premiumTime')).sort(sort('premiumTime'))
   let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length)
-  await conn.sendButton(m.chat, `${htki} *🎟️ PREMIUM 🎟️* ${htka}
+let infoprem = `
   
-*╭ ༻✦༺ 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 𝙄𝙉𝙁𝙊 ༻✦༺*
-*┃✢ 𝙉𝙊𝙈𝘽𝙍𝙀 : 𝙐𝙎𝙀𝙍*\n*┃✢* ${conn.getName(m.sender)}
+𝙐𝙎𝙀𝙍: ${userr}
 ${prem ? `${clockString (usuario - new Date() * 1)}` : '┃✢ *𝙏𝙄𝙀𝙈𝙋𝙊 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 | 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 𝙏𝙄𝙈𝙀*\n┃🚫 𝘾𝘼𝘿𝙐𝘾𝘼𝘿𝙊 : 𝙏𝙄𝙈𝙀𝘿 𝙊𝙐𝙏 '}
-*╰•·–––––––––––––––·•*
+
 
 ╭•·–––––––––––––––·•
 🌟 𝙐𝙎𝙐𝘼𝙍𝙄𝙊𝙎 𝙋𝙍𝙀𝙈𝙄𝙐𝙈
 ╰•·–––––––––––––––·•${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
 
-Usuarios: wa.me/${jid.split`@`[0]}
-${premiumTime > 0 ? `${clockString (premiumTime - new Date() * 1)}` : 'No premium'}`).join`\n╰–––––––––––·•`}
+Usuarios: &{userr}
+${premiumTime > 0 ? `${clockString (premiumTime - new Date() * 1)}`}`).join`\n╰–––––––––––·•`}
 `.trim(), `🎟️ 𝗣 𝗥 𝗘 𝗠 𝗜 𝗨 𝗠 ⇢ ${prem ? '✅' : '❌'}\n${wm}`, null, [[`${prem ? '✦ 𝘿𝙄𝙎𝙁𝙍𝙐𝙏𝘼𝙍 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 ✦': '✦ 𝘾𝙊𝙈𝙋𝙍𝘼𝙍 𝙋𝘼𝙎𝙀 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 ✦'}`, `${prem ? '.allmenu': '.pase premium'}`]]) //${premiumTime > 0 ?
 setTimeout(() => {
     if (global.db.data.chats[m.chat].deletemedia) conn.deleteMessage(m.chat, key)
