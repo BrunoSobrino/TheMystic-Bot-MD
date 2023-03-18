@@ -35,7 +35,7 @@ function clockString(ms) {
   const months = Math.floor(days / 30);
   const years = Math.floor(days / 365);
 
-  return `Años: ${years}\nMeses: ${months}\nSemanas: ${weeks}\nDías: ${days}\nHoras: ${hours % 24}\nMinutos: ${minutes % 60}\nSegundos: ${seconds % 60}`;
+  return `- Años: ${years}\n- Meses: ${months}\n- Semanas: ${weeks}\n- Días: ${days}\n- Horas: ${hours % 24}\n- Minutos: ${minutes % 60}\n- Segundos: ${seconds % 60}`;
 }
 
 /*function clockString(ms) {
