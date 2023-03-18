@@ -20,7 +20,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     else user.premiumTime = now + hora1
     user.premium = true
     let timeLeft = (user.premiumTime - now) / 1000 // tiempo restante en segundos
-    let textprem1 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\nTiempo: ${txt} hora(s)\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeLeft} segundos*`
+    let textprem1 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} hora(s)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${timeLeft} segundos*`
     m.reply(textprem1, null, { mentions: conn.parseMention(textprem1) })}
     
   if (command == 'addprem2' || command == 'userpremium2') {
