@@ -15,12 +15,10 @@ let infoprem = `
 Usuario: ${userr}
 ${prem ? `${clockString(usuario - new Date() * 1)}` : '*Tiempo Premium:*\nNo Premium'}
 
-*「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*
-
-${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
+*「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
 
 Usuario: ${'@' + jid.split`@`[0]}
-${premiumTime > 0 ? `*Tiempo Premium:*\n${clockString (premiumTime - new Date() * 1)}` : 'No premium'}`).join('\n')}`;
+${premiumTime > 0 ? `*Tiempo Premium:*\n${clockString (premiumTime - new Date() * 1)}` : 'No premium'}`).join('')}`;
   
 m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })
 }
