@@ -17,7 +17,7 @@ ${prem ? `*◉ Tiempo restante:*\n${clockString(usuario - new Date() * 1)}` : '-
 *「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
 
 —◉ Usuario: ${'@' + jid.split`@`[0]}
-${premiumTime > 0 ? `*◉ Tiempo restante:*\n${clockString (premiumTime - new Date() * 1)}` : '- Este es un usuario no premium ❌'}`).join('')}`;
+${premiumTime > 0 ? `*◉ Tiempo restante:*\n${clockString (premiumTime - new Date() * 1)}` : '- Este es un usuario no premium ❌'}`).join('')}`.trim();
   
 m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })
 }
