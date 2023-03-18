@@ -1285,7 +1285,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
 	let settingsREAD = global.db.data.settings[this.user.jid] || {}  
         if (opts['autoread']) await this.readMessages([m.key])
 	if (settingsREAD.autoread2) await this.readMessages([m.key])  
-	if (settingsREAD.autoread2 == 'true') await this.readMessages([m.key])    
+	//if (settingsREAD.autoread2 == 'true') await this.readMessages([m.key])    
         
     }
 }
