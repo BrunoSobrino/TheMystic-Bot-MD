@@ -10,12 +10,12 @@ let handler = async (m, { conn, args }) => {
   let sortedP = user.map(toNumber('premiumTime')).sort(sort('premiumTime'))
   let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length)
 let infoprem = `
-𝙐𝙎𝙀𝙍: ${userr}
+Usuario: ${userr}
 ${prem ? `${clockString(usuario - new Date() * 1)}` : '*Tiempo Premium:*\nNo Premium'}
 
 *「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
 
-Usuarios: ${'@' + jid.sender.split`@`[0]}
+Usuarios: ${'@' + jid.split`@`[0]}
 ${premiumTime > 0 ? `${clockString (premiumTime - new Date() * 1)}` : 'No premium'}`).join('\n\n')}`;
   
  m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })
