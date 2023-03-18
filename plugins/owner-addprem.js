@@ -44,7 +44,6 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     user.premium = true
     let textprem4 = `*🎟️ 𝙽𝚄𝙴𝚅𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼!!!*\n\n*✨ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾: ${name}*\n*🕐 𝚃𝙸𝙴𝙼𝙿𝙾: ${txt} mes(es)*\n*📉 𝚁𝙴𝚂𝚃𝙰𝙽𝚃𝙴: ${getDurationInMonths(user.premiumTime - now)}*`
     m.reply(textprem4, null, { mentions: conn.parseMention(textprem4) })}
-  }
 }
 handler.help = ['addprem [@user] <days>']
 handler.tags = ['owner']
