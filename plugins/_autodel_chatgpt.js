@@ -1,4 +1,4 @@
-/*const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; 
+const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
 
 async function deleteInactiveUserData(m) {
   const user = global.chatgpt.data.users[m.sender];
@@ -21,4 +21,4 @@ export async function all(m) {
 
   setTimeout(() => deleteInactiveUserData(m), INACTIVITY_TIMEOUT_MS);
   
-}*/
+}
