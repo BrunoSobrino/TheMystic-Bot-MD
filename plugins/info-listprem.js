@@ -19,6 +19,10 @@ ${prem ? `*◉ Tiempo restante:*\n${clockString(usuario - new Date() * 1)}` : '-
 —◉ Usuario: ${'@' + jid.split`@`[0]}
 ${premiumTime > 0 ? `*◉ Tiempo restante:*\n${clockString (premiumTime - new Date() * 1)}` : '- Este es un usuario no premium ❌'}`).join('')}`.trim();
   
+if (sortedP.filter(user => user.prem).length === 0) {
+  infoprem = 'No hay usuarios premium';
+}
+  
 m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })
 }
 handler.help = ['premlist [angka]']
