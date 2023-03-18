@@ -6,7 +6,7 @@ export async function all() {
             if (new Date() * 1 >= user.premiumTime) {
                 user.premiumTime = 0
                 user.premium = false
-                console.log(`El premium del usuario con el número ${user[0]} ha expirado.`)
+                console.log(`El premium del usuario con el número ${user.users} ha expirado.`)
             }
         }
     }
