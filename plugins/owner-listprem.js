@@ -15,7 +15,7 @@ ${prem ? `${clockString(usuario - new Date() * 1)}` : '*Tiempo Premium:*\nNo Pre
 
 *「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
 
-Usuarios: ${await '@' + jid.sender.split`@`[0]}
+Usuarios: ${'@' + jid.sender.split`@`[0]}
 ${premiumTime > 0 ? `${clockString (premiumTime - new Date() * 1)}` : 'No premium'}`).join('\n\n')}`;
   
  m.reply(infoprem, null, { mentions: conn.parseMention(infoprem) })
