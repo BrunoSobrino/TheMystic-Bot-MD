@@ -3,7 +3,6 @@ let handler = async (m, { conn, args }) => {
   let user = Object.entries(global.db.data.users).filter(user => user[1].premiumTime).map(([key, value]) => {
     return { ...value, jid: key }
   })
-  let name = '🎟️ 𝗣𝗥𝗘𝗠𝗜𝗨𝗠'
   let premTime = global.db.data.users[m.sender].premiumTime
   let prem = global.db.data.users[m.sender].premium
   let userr = await '@' + m.sender.split`@`[0]
@@ -12,10 +11,10 @@ let handler = async (m, { conn, args }) => {
   let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length)
 let infoprem = `
 𝙐𝙎𝙀𝙍: ${userr}
-${prem ? `${clockString(usuario - new Date() * 1)}` : '┃✢ *𝙏𝙄𝙀𝙈𝙋𝙊 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 | 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 𝙏𝙄𝙈𝙀*\n┃🚫 𝘾𝘼𝘿𝙐𝘾𝘼𝘿𝙊: 𝙏𝙄𝙈𝙀𝘿 𝙊𝙐𝙏'}
-╭•·–––––––––––––––·•
-🌟 𝙐𝙎𝙐𝘼𝙍𝙄𝙊𝙎 𝙋𝙍𝙀𝙈𝙄𝙐𝙈
-╰•·–––––––––––––––·•${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
+${prem ? `${clockString(usuario - new Date() * 1)}` : '*Tiempo Premium:*\nNo Premium'}
+
+*「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
+
 Usuarios: ${userr}
 ${prem && premiumTime > 0 ? `${clockString(premiumTime - new Date() * 1)}` : ''}`).join('\n\n')}`;
   
