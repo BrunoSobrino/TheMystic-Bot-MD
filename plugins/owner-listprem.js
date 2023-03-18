@@ -12,7 +12,7 @@ let infoprem = `
 *「 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 」*
 
 —◉ Usuario: ${userr}
-${prem ? `${clockString(usuario - new Date() * 1)}` : '*◉ Tiempo Premium:*\n- Usted no es un usuario premium'}
+${prem ? `*◉ Tiempo Premium:*\n${clockString(usuario - new Date() * 1)}` : '*◉ Tiempo Premium:*\n- Usted no es un usuario premium'}
 
 *「 𝐔𝐒𝐔𝐀𝐑𝐈𝐎𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 」*${sortedP.slice(0, len).map(({ jid, name, premiumTime, prem, registered }, i) => `
 
