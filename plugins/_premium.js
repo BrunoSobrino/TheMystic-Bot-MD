@@ -6,7 +6,7 @@ export async function all() {
             if (new Date() * 1 >= user.premiumTime) {
                 user.premiumTime = 0
                 user.premium = false
-                console.log(`El premium del usuario con el número ${user.users} ha expirado.`)
+                console.log(`El premium del usuario con el número ${Object.keys(global.db.data.users).find(key => global.db.data.users[key] === user)} ha expirado.`)
             }
         }
     }
