@@ -29,7 +29,7 @@
     "dependencies": {
         "@adiwajshing/baileys": "github:BrunoSobrino/baileys",
         "@bochilteam/scraper": "^3.0.0",
-        "@tensorflow/tfjs-node": "^4.2.0",
+        "@tensorflow/tfjs-node": "^4.3.0",
         "@vitalets/google-translate-api": "^8.0.0",
         "@shineiichijo/marika": "^2.0.6",
         "acrcloud": "^1.4.0",
