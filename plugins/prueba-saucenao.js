@@ -127,21 +127,37 @@ await conn.reply(m.chat, 'ESPERE UN MOMENTO...', twa, m)
 await conn.reply(m.chat, `Número de resultados: ${results.length}
 Resultados encontrados: ${Boolean(results) === true ? 'Si' : 'No'} 
 
-◎ R E S U L T A D O 
+*◎ L Í M I T E S*
 
-Puntuación de similitud
-• ${primerResultado.header.similarity}% 
+*Solicitudes restantes (corto plazo*
 
-Título
-• ${primerResultado.data.title} 
+• ${results.short_remaining === undefined ? 'No especificado' : results.short_remaining} 
 
-URLs
-• ${primerResultado.data.ext_urls} 
+*Solicitudes restantes (largo plazo)*
 
-Autor
-• ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n 
+• ${results.long_remaining === undefined ? 'No especificado' : results.long_remaining} 
 
-*◎ R E S U L T A D O  E N  B R U T O* 
+*◎ R E S U L T A D O*
+
+*URL de la miniatura*
+
+• ${primerResultado.header.thumbnail}
+
+*Puntuación de similitud*
+
+• ${primerResultado.header.similarity}%
+
+*Título*
+
+• ${primerResultado.data.title}
+
+*URLs*
+
+• ${primerResultado.data.ext_urls}
+
+*Autor*
+
+• ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n`,  `*◎ I N F O  A D I C C I O N A L*
 
 ${resultadoEnBruto}`, twa, m)
 } catch (e) {
