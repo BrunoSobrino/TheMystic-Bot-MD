@@ -53,24 +53,13 @@ return
 }
 
 const results = response.data.results;
-const primerResultado = results[0]
+const primerResultado = results[0] 
     
 let resultadoEnBruto = ''
-for (let prop in primerResultado.header) {
 let propName = '';
 switch (prop) {
 case 'similarity': propName = 'Puntuación de similitud' 
-break        
-case 'thumbnail': propName = 'URL de la miniatura' 
-break        
-case 'index_id': propName = 'ID del índice' 
-break        
-case 'index_name': propName = 'Nombre del índice' 
-break        
-case 'dupes': propName = 'Imágenes duplicadas' 
-break        
-case 'hidden': propName = 'Imágenes ocultas o bloqueadas' 
-break        
+break                                     
 case 'author_name': propName = 'Nombre del autor' 
 break         
 case 'source': propName = 'Fuente' 
@@ -81,10 +70,8 @@ break
 default:
 propName = prop;
 }
-resultadoEnBruto += `*${propName}*\n${primerResultado.header[prop]}\n\n`}
 //resultadoEnBruto += ''
     
-for (let prop in primerResultado.data) {
 let propName = ''
 
 switch (prop) {
@@ -120,7 +107,7 @@ break
 default:
 propName = prop
 }
-resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
+resultadoEnBruto += ''
     
 let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(primerResultado.header.thumbnail)).buffer()}}}
 await conn.reply(m.chat, 'ESPERE UN MOMENTO...', twa, m)
