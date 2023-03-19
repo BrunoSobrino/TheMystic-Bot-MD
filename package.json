@@ -29,6 +29,7 @@
     "dependencies": {
         "@adiwajshing/baileys": "github:BrunoSobrino/baileys",
         "@bochilteam/scraper": "^3.0.0",
+        "@tensorflow/tfjs-node": "^4.3.0",
         "@vitalets/google-translate-api": "^8.0.0",
         "@shineiichijo/marika": "^2.0.6",
         "acrcloud": "^1.4.0",
@@ -45,6 +46,7 @@
         "fluent-ffmpeg": "^2.1.2",
         "fs": "^0.0.1-security",
         "formdata-node": "^4.3.2",
+        "get-video-duration": "^4.1.0",
         "hispamemes": "^1.0.7",
         "human-readable": "^0.2.1",
         "instagram-url-direct": "^1.0.12",
@@ -57,6 +59,7 @@
         "node-fetch": "^3.2.0",
         "node-gtts": "^2.0.2",
         "node-webpmux": "^3.1.1",
+        "nsfwjs": "^2.4.2",
         "openai": "^3.1.0",
         "pdfkit": "^0.13.0",
         "perf_hooks": "^0.0.1",
