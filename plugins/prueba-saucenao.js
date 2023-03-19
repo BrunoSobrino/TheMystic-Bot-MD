@@ -158,8 +158,7 @@ Resultados encontrados: ${Boolean(results) === true ? 'Si' : 'No'}
 *Autor*
 
 • ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n`,  `*◎ I N F O  A D I C C I O N A L*
-
-${resultadoEnBruto}`, twa, m)
+• ${resultadoEnBruto}`, twa, m)
 } catch (e) {
 await m.reply(lenguajeGB['smsMalError3']() + '\n*' + lenguajeGB.smsMensError1() + '*\n*' + usedPrefix + `${lenguajeGB.lenguaje() == 'es' ? 'reporte' : 'report'}` + '* ' + `${lenguajeGB.smsMensError2()} ` + usedPrefix + command)
 console.log(`❗❗ ${lenguajeGB['smsMensError2']()} ${usedPrefix + command} ❗❗`)
