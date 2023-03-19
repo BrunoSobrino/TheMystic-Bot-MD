@@ -118,16 +118,6 @@ Solicitudes restantes (corto plazo
 • ${results.short_remaining === undefined ? 'No especificado' : results.short_remaining} 
 Solicitudes restantes (largo plazo)
 • ${results.long_remaining === undefined ? 'No especificado' : results.long_remaining} 
-◎ R E S U L T A D O
-URL de la miniatura
-• ${primerResultado.header.thumbnail}
-Puntuación de similitud
-• ${primerResultado.header.similarity}%
-Título
-• ${primerResultado.data.title}
-URLs
-• ${primerResultado.data.ext_urls}
-Autor
 • ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n*◎ R E S U L T A D O  E N  B R U T O*
 ${resultadoEnBruto}`, twa, m)
 } catch (e) {
