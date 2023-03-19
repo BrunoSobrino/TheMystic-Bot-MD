@@ -8,7 +8,7 @@ import uploadImage from '../lib/uploadImage.js'
 import { webp2png } from '../lib/webp2mp4.js'
 import formData from 'form-data' 
 
-let handler = async (m, { conn, args, usedPrefix, command, text }) => { 
+let handler = async (m, { conn, args, usedPrefix, command, text }) => {
 
 try {   
 let url
