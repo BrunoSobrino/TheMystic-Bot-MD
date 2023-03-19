@@ -122,7 +122,7 @@ propName = prop
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
     
-let frep = { contextInfo: { externalAdReply: {title: wm, body: author, sourceUrl: md, thumbnail: await(await fetch(primerResultado.header.thumbnail)).buffer() }}}
+let frep = { contextInfo: { externalAdReply: {title: wm, body: author, sourceUrl: md}}}
 await m.reply('*ESPERE UN MOMENTO...*')
 await conn.sendButton(m.chat, `*Número de resultados:* ${results.length}
 *Resultados encontrados:* ${Boolean(results) === true ? 'Si' : 'No'}
