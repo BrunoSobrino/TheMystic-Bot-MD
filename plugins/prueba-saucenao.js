@@ -60,42 +60,68 @@ for (let prop in primerResultado.header) {
 let propName = '';
 switch (prop) {
 case 'similarity': propName = 'Puntuación de similitud' 
-break        
+break        
 case 'thumbnail': propName = 'URL de la miniatura' 
-break                       
+break        
+case 'index_id': propName = 'ID del índice' 
+break        
+case 'index_name': propName = 'Nombre del índice' 
+break        
+case 'dupes': propName = 'Imágenes duplicadas' 
+break        
+case 'hidden': propName = 'Imágenes ocultas o bloqueadas' 
+break        
 case 'author_name': propName = 'Nombre del autor' 
-break         
+break         
+case 'source': propName = 'Fuente' 
+break        
+case 'material': propName = 'Material' 
+break
 
 default:
 propName = prop;
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.header[prop]}\n\n`}
 //resultadoEnBruto += ''
-    
+    
 for (let prop in primerResultado.data) {
-let propName = '' 
+let propName = ''
 
 switch (prop) {
 case 'title': propName = 'Título' 
-break        
+break        
 case 'ext_urls': propName = 'URLs' 
-break        
+break        
 case 'member_name': propName = 'Nombre del autor' 
-break                
+break        
+case 'pixiv_id': propName = 'ID de Pixiv' 
+break        
+case 'danbooru_id': propName = 'ID de Danbooru' 
+break        
+case 'gelbooru_id': propName = 'ID de Gelbooru' 
+break        
 case 'source': propName = 'Fuente' 
-break                       
+break        
+case 'material': propName = 'Material' 
+break        
+case 'da_id': propName = 'ID de la imagen' 
+break        
 case 'author_name': propName = 'Nombre del Autor' 
-break        
+break        
 case 'author_url': propName = 'URL del Autor' 
-break                
+break        
+case 'member_id': propName = 'ID del Autor' 
+break        
+case 'fa_id': propName = 'ID del Autor en FurAffinity' 
+break        
 case 'as_project': propName = 'Proyecto en Anime-Source' 
-break 
+break
 
 default:
 propName = prop
 }
-resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
-    
+resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`},
+
 let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(primerResultado.header.thumbnail)).buffer()}}}
 await conn.reply(m.chat, 'ESPERE UN MOMENTO...', twa, m)
 await conn.reply(m.chat, `Número de resultados: ${results.length}
