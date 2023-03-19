@@ -71,6 +71,8 @@ footer: `┏━━━━━━━━━━━━━┓
 ┣ ඬ⃟ℹ️ _${usedPrefix}disable *modoadmin*_
 ┣ ඬ⃟ℹ️ _${usedPrefix}enable *simsimi*_
 ┣ ඬ⃟ℹ️ _${usedPrefix}disable *simsimi*_
+┣ ඬ⃟ℹ️ _${usedPrefix}enable *antiporno*_
+┣ ඬ⃟ℹ️ _${usedPrefix}disable *antiporno*_
 ┗━━━━━━━━━━━━━┛`,
 title: null,
 buttonText: "𝐒𝐄𝐋𝐄𝐂𝐂𝐈𝐎𝐍𝐄 𝐀𝐐𝐔𝐢",
@@ -114,7 +116,15 @@ global.dfail('admin', m, conn)
 throw false
 }}
 chat.simi = isEnable
-break    
+break   
+case 'antiporno':
+if (m.isGroup) {
+if (!(isAdmin || isOwner)) {
+global.dfail('admin', m, conn)
+throw false
+}}
+chat.antiporno = isEnable
+break        
 case 'delete':
 if (m.isGroup) {
 if (!(isAdmin || isOwner)) {
