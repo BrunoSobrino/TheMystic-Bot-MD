@@ -108,7 +108,7 @@ propName = prop
 }
 resultadoEnBruto += ''
     
-let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(primerResultado.header.thumbnail)).buffer()}}}
+let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(resultadoEnBruto.header.thumbnail)).buffer()}}}
 await conn.reply(m.chat, 'ESPERE UN MOMENTO...', twa, m)
 await conn.reply(m.chat, `Número de resultados: ${results.length}
 Resultados encontrados: ${Boolean(results) === true ? 'Si' : 'No'}
