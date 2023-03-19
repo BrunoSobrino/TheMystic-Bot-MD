@@ -53,7 +53,6 @@ return
 }
 
 const results = response.data.results;
-const primerResultado = results[0] 
     
 let resultadoEnBruto = ''
 let propName = '';
