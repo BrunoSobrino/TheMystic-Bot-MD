@@ -1,12 +1,26 @@
 services:
-  - type: pserv
-    name: web-service
+  - type: web
+    repo: https://github.com/BrunoSobrino/TheMystic-Bot-MD
+    name: TheMystic-Bot-MD
     env: node
     plan: free
-    repo: https://github.com/BrunoSobrino/TheMystic-Bot-MD
     buildCommand: yarn
     startCommand: node index.js
-  - type: web
-    name: TheMystic-Bot-MD
-    env: docker
-    plan: free
+    envVars:
+      - key: UPSTREAM
+        fromService:
+          name: private-service
+          type: pserv
+          property: hostport
+      - key: OAUTH2_PROXY_PROVIDER
+        sync: false
+      - key: OAUTH2_PROXY_CLIENT_ID
+        sync: false
+      - key: OAUTH2_PROXY_CLIENT_SECRET
+        sync: false
+      - key: OAUTH2_PROXY_COOKIE_SECRET
+        generateValue: true
+      - key: OAUTH2_PROXY_EMAIL_DOMAINS
+        value: '*'
+      - key: OAUTH2_PROXY_HTTP_ADDRESS
+        value: ":10000"
