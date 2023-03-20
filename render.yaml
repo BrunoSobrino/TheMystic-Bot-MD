@@ -1,5 +1,5 @@
 services:
-  - type: wserv
+  - type: web
     repo: https://github.com/BrunoSobrino/TheMystic-Bot-MD
     name: TheMystic-Bot-MD
     env: node
@@ -10,7 +10,7 @@ services:
       - key: UPSTREAM
         fromService:
           name: web-service
-          type: wserv
+          type: web
           property: hostport
       - key: OAUTH2_PROXY_PROVIDER
         sync: false
