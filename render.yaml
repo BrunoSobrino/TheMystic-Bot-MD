@@ -4,24 +4,3 @@ services:
     env: docker
     region: Frankfurt
     plan: free
-    envVars:
-      - key: PORT
-        value: 80
-      - key: BOT_TOKEN
-        # value: BOT_TOKEN
-        sync: false
-      - key: DATABASE_URL
-        # value: DATABASE_URL
-        sync: false
-      - key: OWNER_ID
-        # value: OWNER_ID
-        sync: false
-      - key: WHATSAPP_BOT
-        # value: WHATSAPP_BOT
-        sync: false
-      - key: WHATSAPP_API
-        # value: WHATSAPP_API
-        sync: false
-      - key: BASE_URL
-        # value: BASE_URL
-        sync: false
