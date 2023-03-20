@@ -9,8 +9,8 @@ services:
     envVars:
       - key: UPSTREAM
         fromService:
-          name: private-service
-          type: pserv
+          name: web-service
+          type: wserv
           property: hostport
       - key: OAUTH2_PROXY_PROVIDER
         sync: false
