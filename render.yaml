@@ -1,6 +1,6 @@
 services:
   - type: pserv
-    name: private-service
+    name: web-service
     env: node
     plan: free
     repo: https://github.com/BrunoSobrino/TheMystic-Bot-MD
