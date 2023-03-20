@@ -1,26 +1,27 @@
 services:
   - type: web
-    repo: https://github.com/BrunoSobrino/TheMystic-Bot-MD
-    name: TheMystic-Bot-MD
-    env: node
+    name: themystic-bot-md
+    env: docker
+    region: Frankfurt
     plan: free
-    buildCommand: yarn
-    startCommand: node index.js
     envVars:
-      - key: UPSTREAM
-        fromService:
-          name: web-service
-          type: web
-          property: hostport
-      - key: OAUTH2_PROXY_PROVIDER
+      - key: PORT
+        value: 80
+      - key: BOT_TOKEN
+        # value: BOT_TOKEN
         sync: false
-      - key: OAUTH2_PROXY_CLIENT_ID
+      - key: DATABASE_URL
+        # value: DATABASE_URL
         sync: false
-      - key: OAUTH2_PROXY_CLIENT_SECRET
+      - key: OWNER_ID
+        # value: OWNER_ID
         sync: false
-      - key: OAUTH2_PROXY_COOKIE_SECRET
-        generateValue: true
-      - key: OAUTH2_PROXY_EMAIL_DOMAINS
-        value: '*'
-      - key: OAUTH2_PROXY_HTTP_ADDRESS
-        value: ":10000"
+      - key: WHATSAPP_BOT
+        # value: WHATSAPP_BOT
+        sync: false
+      - key: WHATSAPP_API
+        # value: WHATSAPP_API
+        sync: false
+      - key: BASE_URL
+        # value: BASE_URL
+        sync: false
