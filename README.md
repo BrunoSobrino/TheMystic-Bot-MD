@@ -35,8 +35,8 @@
   
 ### `—◉ 🌌 ACTIVAR EN REPLIT 🌌`
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)[https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD] 
- 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
+  
 ### `—◉ 🔰 ACTIVAR EN RENDER 🔰`
 
 [![Run on Repl.it](https://repl.it/badge/github/BrunoSobrino/TheMystic-Bot-MD)[https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD]   
