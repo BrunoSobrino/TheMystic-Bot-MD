@@ -1,4 +1,4 @@
-let handler = m => m
+/*let handler = m => m
 import { isPorn, isPornVid } from "../lib/antiporn.js"
 import * as fs from 'fs'
 
@@ -44,4 +44,4 @@ if (is.status) {
    
 }//}
 export default handler
-
+*/
