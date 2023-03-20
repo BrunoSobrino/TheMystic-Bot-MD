@@ -1,0 +1,12 @@
+services:
+  - type: pserv
+    name: private-service
+    env: node
+    plan: free
+    repo: https://github.com/BrunoSobrino/TheMystic-Bot-MD
+    buildCommand: yarn
+    startCommand: node index.js
+  - type: web
+    name: TheMystic-Bot-MD
+    env: docker
+    plan: free
