@@ -132,14 +132,14 @@ global.videosxxxc = [
 "https://telegra.ph/file/831bb88f562bef3f1a15d.mp4",
 "https://telegra.ph/file/ee2cf1b359d6eef50d7b7.mp4",
 "https://telegra.ph/file/598857924f3a29ffd37ae.mp4",  
-"https://telegra.ph/file/528caef6ea950ec45aeef.mp4" 
+"https://telegra.ph/file/528caef6ea950ec45aeef.mp4",
 "https://telegra.ph/file/4a270d9945ac46f42d95c.mp4",
 "https://telegra.ph/file/958c11e84d271e783ea3f.mp4",
 "https://telegra.ph/file/f753759342337c4012b3f.mp4",
 "https://telegra.ph/file/379cee56c908dd536dd33.mp4",
 "https://telegra.ph/file/411d8f59a5cefc2a1d227.mp4",
 "https://telegra.ph/file/76ba0dc2a07f491756377.mp4",
-"https://telegra.ph/file/831bb88f562bef3f1a15d.mp4",
+"https://telegra.ph/file/831bb88f562bef3f1a15d.mp4"
 ]
 /*global.videosxxxc = [
 "https://l.top4top.io/m_2235dduf01.mp4",
