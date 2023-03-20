@@ -1,5 +1,5 @@
 services:
-  - type: web
+  - type: wserv
     repo: https://github.com/BrunoSobrino/TheMystic-Bot-MD
     name: TheMystic-Bot-MD
     env: node
