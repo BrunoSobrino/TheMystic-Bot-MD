@@ -10,8 +10,8 @@ let msg = search.articles.map(({ title, url, description }) => { return `*${titl
 try {
 let ss = await (await fetch(`https://api.lolhuman.xyz/api/ssweb?apikey=${lolkeysapi}&url=${url}`)).arrayBuffer()
 let ss2 = await ssweb(url, 'desktop')
-if (!ss || ss == '' || ss == null || ss === '') ss = ss2.result
-await conn.sendFile(m.chat, ss, 'error.png', url + '\n\n' + msg, m)
+//if (!ss || ss == '' || ss == null || ss === '') ss = ss2.result
+await conn.sendFile(m.chat, ss2.result, 'error.png', url + '\n\n' + msg, m)
 } catch {
 m.reply(msg)
 }}
