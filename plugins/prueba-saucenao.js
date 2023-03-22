@@ -56,6 +56,7 @@ case 'similarity': propName = 'Puntuación de similitud'
 break                              
 case 'author_name': propName = 'Nombre del autor' 
 break      
+
 default:
 propName = prop;  
 }
@@ -77,6 +78,7 @@ case 'author_name': propName = 'Nombre del Autor'
 break        
 case 'author_url': propName = 'URL del Autor' 
 break
+
 default:
 propName = prop               
 }
