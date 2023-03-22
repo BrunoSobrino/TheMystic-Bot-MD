@@ -264,6 +264,36 @@ isInit = false
 return true
 }
 
+/*
+
+const pluginFolder = join(__dirname, './plugins');
+const pluginFilter = filename => /\.js$/.test(filename);
+global.plugins = {};
+
+async function filesInit(folder) {
+  for (let filename of readdirSync(folder).filter(pluginFilter)) {
+    try {
+      let file = join(folder, filename);
+      const module = await import(file);
+      global.plugins[file] = module.default || module;
+    } catch (e) {
+      console.error(e);
+      delete global.plugins[filename];
+    }
+  }
+
+  for (let subfolder of readdirSync(folder)) {
+    const subfolderPath = join(folder, subfolder);
+    if (statSync(subfolderPath).isDirectory()) {
+      await filesInit(subfolderPath);
+    }
+  }
+}
+
+await filesInit(pluginFolder).then(_ => Object.keys(global.plugins)).catch(console.error);
+
+*/
+
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'))
 const pluginFilter = filename => /\.js$/.test(filename)
 global.plugins = {}

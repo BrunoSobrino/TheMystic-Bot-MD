@@ -25,6 +25,7 @@ rows: [
 {title: "👑 | 𝙼𝙾𝙳𝙾𝙰𝙳𝙼𝙸𝙽", description: "𝙴𝙻 𝙱𝙾𝚃 𝚂𝙾𝙻𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴𝚁𝙰 𝙰 𝙻𝙾𝚂 𝙰𝙳𝙼𝙸𝙽𝚂 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾", rowId: `${usedPrefix + command} modoadmin`}, 
 {title: "😃 | 𝚂𝙸𝙼𝚂𝙸𝙼𝙸", description: "𝙰𝙲𝚃𝙸𝚅𝙰 𝙾 𝙳𝙴𝚂𝙰𝙲𝚃𝙸𝚅𝙰 𝚀𝚄𝙴 𝙴𝙻 𝙱𝙾𝚃 𝙷𝙰𝙱𝙻𝙴 𝙴𝙽 𝙴𝙻 𝙲𝙷𝙰𝚃 𝚄𝚂𝙰𝙽𝙳𝙾 𝙻𝙰 𝙸𝙰 𝙳𝙴 𝚂𝙸𝙼𝚂𝙸𝙼𝙸", rowId: `${usedPrefix + command} simsimi`},
 ]}, ]
+//{title: "🔞 | 𝙰𝙽𝚃𝙸𝙿𝙾𝚁𝙽𝙾", description: "𝚂𝙸 𝚄𝙽𝙰 𝙸𝙼𝙰𝙶𝙴𝙽 𝙾 𝚅𝙸𝙳𝙴𝙾 𝚃𝙸𝙴𝙽𝙴 𝙲𝙾𝙽𝚃𝙴𝙽𝙸𝙳𝙾 𝙿𝙾𝚁𝙽𝙾 𝙴𝙻 𝙱𝙾𝚃 𝙴𝙻𝙸𝙼𝙸𝙽𝙰 𝙻𝙰 𝙸𝙼𝙰𝙶𝙴𝙽 𝙾 𝚅𝙸𝙳𝙴𝙾", rowId: `${usedPrefix + command} antiporno`},
 //let name = await conn.getName(m.sender)
 const listMessage = {
 text: ' ',
@@ -114,7 +115,15 @@ global.dfail('admin', m, conn)
 throw false
 }}
 chat.simi = isEnable
-break    
+break   
+case 'antiporno':
+if (m.isGroup) {
+if (!(isAdmin || isOwner)) {
+global.dfail('admin', m, conn)
+throw false
+}}
+chat.antiporno = isEnable
+break        
 case 'delete':
 if (m.isGroup) {
 if (!(isAdmin || isOwner)) {

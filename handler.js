@@ -476,7 +476,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
                 if (!user.lbars) user.lbars = '[▒▒▒▒▒▒▒▒▒]'
                 if (!user.job) user.job = 'Desempleo'
                 if (!user.premium) user.premium = false
-                if (!user.premiumTime) user.premiumTime = 0
+                if (!user.premium) user.premiumTime = 0
 		if (!user.wait) user.wait = 0    
                 if (!user.rtrofi) user.rtrofi = 'Bronce'
             } else
@@ -929,8 +929,9 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
                 if (!('antiToxic' in chat)) chat.antiToxic = false
                 if (!('antiTraba' in chat)) chat.antiTraba = false
                 if (!('antiArab' in chat)) chat.antiArab = false
+		if (!('antiporno' in chat)) chat.antiporno = false
 		if (!('modoadmin' in chat)) chat.modoadmin = false
-		if (!('simi' in chat)) chat.simi = false     
+		if (!('simi' in chat)) chat.simi = false 
                 if (!isNumber(chat.expired)) chat.expired = 0
             } else
                 global.db.data.chats[m.chat] = {
@@ -951,6 +952,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
                     antiToxic: false,
                     antiTraba: false,
                     antiArab: false,
+	            antiporno: false,
 	            modoadmin: false,
 	            simi: false,
                     expired: 0,
@@ -993,7 +995,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
         const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
         const isOwner = isROwner || m.fromMe
         const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-        const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+        const isPrems = isROwner || isOwner || isMods || global.db.data.users[m.sender].premiumTime > 0 //|| global.db.data.users[m.sender].premium = 'true'
 
         if (opts['queque'] && m.text && !(isMods || isPrems)) {
             let queque = this.msgqueque, time = 1000 * 5
@@ -1285,7 +1287,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
 	let settingsREAD = global.db.data.settings[this.user.jid] || {}  
         if (opts['autoread']) await this.readMessages([m.key])
 	if (settingsREAD.autoread2) await this.readMessages([m.key])  
-	if (settingsREAD.autoread2 == 'true') await this.readMessages([m.key])    
+	//if (settingsREAD.autoread2 == 'true') await this.readMessages([m.key])    
         
     }
 }

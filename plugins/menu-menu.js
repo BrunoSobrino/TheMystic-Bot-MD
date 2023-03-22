@@ -5,7 +5,7 @@ const { levelling } = '../lib/levelling.js'
 import PhoneNumber from 'awesome-phonenumber'
 import { promises } from 'fs'
 import { join } from 'path'
-let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text }) => {
+let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, isPrems }) => {
 try {
 let vn = './media/menu.mp3'
 let pp = imagen4
@@ -48,7 +48,7 @@ let str = `
 ┣ *💎 Diamantes:* ${limit}
 ┣ *👾 MysticCoins:* ${money}
 ┣ *🪙 Tokens:* ${joincount}
-┣ *🎟️ Premium:* ${user.premium = 'true' ? '❌' : '✅'}
+┣ *🎟️ Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
 ┗━━━━━━━━━━━━━━━━┛
 ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
@@ -69,6 +69,7 @@ ${readMore}
 ┣ ඬ⃟ 💟 _${usedPrefix}grouplist_
 ┣ ඬ⃟ 💟 _${usedPrefix}owner_
 ┣ ඬ⃟ 💟 _${usedPrefix}script_
+┣ ඬ⃟ 💟 _${usedPrefix}listprem_
 ┣ ඬ⃟ 💟 _Bot_ (𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)
 ┗━━━━━━━━━━━━━━━━┛
 
@@ -172,10 +173,6 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}twitter *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}fb *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}fb2 *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}fb3 *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}fb4 *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}fb5 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp3 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp3doc *<enlace / link / url>*_
@@ -481,6 +478,7 @@ ${readMore}
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt2 *<texto>*_
+┣ ඬ⃟ 🛠️ _${usedPrefix}delchatgpt
 ┣ ඬ⃟ 🛠️ _${usedPrefix}dall-e *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}tamaño *<cantidad> <imagen / video>*_
@@ -608,9 +606,11 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}restart_
 ┣ ඬ⃟ 👑 _${usedPrefix}update_
 ┣ ඬ⃟ 👑 _${usedPrefix}banlist_
-┣ ඬ⃟ 👑 _${usedPrefix}addprem *<@tag>*_
+┣ ඬ⃟ 👑 _${usedPrefix}addprem *<@tag> <tiempo>*_
+┣ ඬ⃟ 👑 _${usedPrefix}addprem2 *<@tag> <tiempo>*_
+┣ ඬ⃟ 👑 _${usedPrefix}addprem3 *<@tag> <tiempo>*_
+┣ ඬ⃟ 👑 _${usedPrefix}addprem4 *<@tag> <tiempo>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}delprem *<@tag>*_
-┣ ඬ⃟ 👑 _${usedPrefix}listprem_
 ┣ ඬ⃟ 👑 _${usedPrefix}listcmd_
 ┣ ඬ⃟ 👑 _${usedPrefix}setppbot *<responder a imagen>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}addcmd *<texto> <responder a sticker/imagen>*_
