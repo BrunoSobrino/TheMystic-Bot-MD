@@ -88,10 +88,7 @@ resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
     
 let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(primerResultado.header.thumbnail)).buffer()}}}
 await conn.reply(m.chat, '_*ESPERE UN MOMENTO...*_', twa, m)
-await conn.reply(m.chat, `Número de resultados: ${results.length}
-Resultados encontrados: ${Boolean(results) === true ? 'Si' : 'No'}
-
-*◎ R E S U L T A D O  E N  B R U T O*
+await conn.reply(m.chat, `*◎ R E S U L T A D O  E N  B R U T O*
 
 ${resultadoEnBruto}`, twa, m)
 } catch (e) {
