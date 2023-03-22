@@ -51,10 +51,12 @@ const primerResultado = results[0]
 let resultadoEnBruto = ''
 for (let prop in primerResultado.header) {
 let propName = '';
-//case 'similarity': propName = 'Puntuación de similitud' 
-//break                              
+case 'similarity': propName = 'Puntuación de similitud' 
+break                              
 case 'author_name': propName = 'Nombre del autor' 
-break         
+break      
+default:
+propName = prop;  
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.header[prop]}\n\n`}
 //resultadoEnBruto += ''
@@ -72,7 +74,9 @@ break
 case 'author_name': propName = 'Nombre del Autor' 
 break        
 case 'author_url': propName = 'URL del Autor' 
-break                
+break
+default:
+propName = prop               
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
     
