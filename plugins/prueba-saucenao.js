@@ -87,23 +87,9 @@ propName = prop
 resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
     
 let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(primerResultado.header.thumbnail)).buffer()}}}
-await conn.reply(m.chat, 'ESPERE UN MOMENTO...', twa, m)
+await conn.reply(m.chat, '_*ESPERE UN MOMENTO...*_', twa, m)
 await conn.reply(m.chat, `Número de resultados: ${results.length}
 Resultados encontrados: ${Boolean(results) === true ? 'Si' : 'No'}
-
-*◎ R E S U L T A D O*
-
-Puntuación de similitud
-• ${primerResultado.header.similarity}%
-
-Título
-• ${primerResultado.data.title}
-
-URLs
-• ${primerResultado.data.ext_urls}
-
-Autor
-• ${primerResultado.data.member_name === undefined ? 'No encontrado' : primerResultado.data.member_name}\n
 
 *◎ R E S U L T A D O  E N  B R U T O*
 
@@ -113,5 +99,5 @@ await m.reply(lenguajeGB['smsMalError3']() + '\n*' + lenguajeGB.smsMensError1() 
 console.log(`❗❗ ${lenguajeGB['smsMensError2']()} ${usedPrefix + command} ❗❗`)
 console.log(e)}
 }
-handler.command = /^sauce$/i
+handler.command = /^sauce|source|salsa|zelda$/i
 export default handler
