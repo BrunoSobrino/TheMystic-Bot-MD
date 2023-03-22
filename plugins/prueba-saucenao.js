@@ -53,12 +53,9 @@ for (let prop in primerResultado.header) {
 let propName = '';
 switch (prop) {
 case 'similarity': propName = 'Puntuación de similitud' 
-break        
-case 'thumbnail': propName = 'URL de la miniatura' 
-break                       
+break                              
 case 'author_name': propName = 'Nombre del autor' 
 break         
-default:
 propName = prop;
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.header[prop]}\n\n`}
@@ -79,16 +76,13 @@ case 'author_name': propName = 'Nombre del Autor'
 break        
 case 'author_url': propName = 'URL del Autor' 
 break                
-case 'as_project': propName = 'Proyecto en Anime-Source' 
-break
-default:
 propName = prop
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
     
 let twa = {key: {participant: "0@s.whatsapp.net", "remoteJid": "0@s.whatsapp.net"}, "message": {"groupInviteMessage": {"groupJid": "51995386439-1616969743@g.us", "inviteCode": "m", "groupName": "P", "caption": wm, 'jpegThumbnail': await(await fetch(primerResultado.header.thumbnail)).buffer()}}}
 await conn.reply(m.chat, '_*ESPERE UN MOMENTO...*_', twa, m)
-await conn.reply(m.chat, `*◎ R E S U L T A D O  E N  B R U T O*
+await conn.reply(m.chat, `*◎ R E S U L T A D O*
 
 ${resultadoEnBruto}`, twa, m)
 } catch (e) {
