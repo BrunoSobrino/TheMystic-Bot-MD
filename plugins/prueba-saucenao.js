@@ -56,7 +56,6 @@ case 'similarity': propName = 'Puntuación de similitud'
 break                              
 case 'author_name': propName = 'Nombre del autor' 
 break         
-propName = prop;
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.header[prop]}\n\n`}
 //resultadoEnBruto += ''
@@ -76,7 +75,6 @@ case 'author_name': propName = 'Nombre del Autor'
 break        
 case 'author_url': propName = 'URL del Autor' 
 break                
-propName = prop
 }
 resultadoEnBruto += `*${propName}*\n${primerResultado.data[prop]}\n\n`}
     
