@@ -4,7 +4,7 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[ ⚠️ ] Los comand
 let url = futanari[Math.floor(Math.random() * futanari.length)]
 conn.sendButton(m.chat, `*ACA TIENES UNA RICA FUTANARI 🔥*
 
-_PD: Usa de nuevo el comando asi te paso mas imagenes jejeje_, guiño, guiño`, author, url, m)
+_PD: Usa de nuevo el comando asi te paso mas imagenes jejeje_, guiño, guiño`, author, url, [[null, null]], m)
 }
 handler.help = ['futanari']
 handler.tags = ['nsfw']
