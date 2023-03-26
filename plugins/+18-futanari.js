@@ -2,9 +2,9 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, command }) => {
 if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[ ⚠️ ] Los comandos +18 estan desactivados en este grupo, si es administrador de este grupo y desea activarlos escriba #enable nsfw*'
 let url = futanari[Math.floor(Math.random() * futanari.length)]
-conn.sendHydrated(m.chat, `*ACA TIENES UNA RICA FUTANARI 🔥*
+conn.sendHydrated(m.chat, url, author, `*ACA TIENES UNA RICA FUTANARI 🔥*
 
-_PD: Usa de nuevo el comando asi te paso mas imagenes jejeje_, guiño, guiño`, author, url, [[null, null]], m)
+_PD: Usa de nuevo el comando asi te paso mas imagenes jejeje_, guiño, guiño`, m)
 }
 handler.help = ['futanari']
 handler.tags = ['nsfw']
