@@ -8,7 +8,7 @@ _⚠️| Este grupo será solamente de avisos o noticias relacionada con los gru
 Link: https://chat.whatsapp.com/KAVBUhcHZvqK510kn7wofQ
 `.trim()
   
-conn.sendHydrated(m.chat, str, wm, null, null, null, null, null,
+conn.sendHydrated(m.chat, str, wm, null, null, null,
 ], m,)}
 
 handler.command = /^comunidad|grupocomunidad|grupoavisos$/i
