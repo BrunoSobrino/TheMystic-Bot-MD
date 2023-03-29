@@ -38,5 +38,5 @@ m.reply(`##- WhatsApp Support -##\n\nHola:\n\nGracias por tu mensaje.\n\nPara pr
 } else m.reply(util.format(JSON.parse(res.data.replace("for (;;);", ""))))
 }
 handler.command = /^(supportwa|swa|soporte|support|desactivarwa|mandsupport)$/i
-handler.rowner = true
+handler.rowner = true 
 export default handler
