@@ -51,6 +51,6 @@ m.reply(`${hasill22.result}`.trim())
 } catch (efe4) {   
 console.log(efe4)
 throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`   
-}}}}}   
+}}}}}}
 handler.command = ['openai2', 'chatgpt2', 'ia2', 'robot2', 'Mystic', 'MysticBot']
 export default handler
