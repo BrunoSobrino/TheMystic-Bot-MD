@@ -45,7 +45,7 @@ m.reply(jjson.data.data.trim())
 } catch (efe3) {    
 console.log(efe3)
 try {
-let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=user-unique-id`)
+let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=${m.sender}`)
 let hasill22 = await tioress22.json()
 m.reply(`${hasill22.result}`.trim())         
 } catch (efe4) {   
