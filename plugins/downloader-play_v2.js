@@ -23,7 +23,7 @@ try {
 let mediaa = await ytPlayVid(text)
 await conn.sendMessage(m.chat, { video: { url: mediaa.result }, fileName: `error.mp4`, caption: `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, thumbnail: mediaa.thumb, mimetype: 'video/mp4' }, { quoted: m })   
 } catch {
-let res = await fetch(`https://api.lolhKuman.xyz/api/ytplay2?apikey=${lolkeysapi}&query=${text}`)    
+let res = await fetch(`https://api.lolhuman.xyz/api/ytplay2?apikey=${lolkeysapi}&query=${text}`)    
 let json = await res.json()
 await conn.sendFile(m.chat, json.result.video, 'error.mp4', `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, m)}}
 } catch (e) {
