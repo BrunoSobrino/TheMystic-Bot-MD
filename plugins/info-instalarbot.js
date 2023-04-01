@@ -11,7 +11,7 @@ let texto = `
 ------------------------------------
 
 *—◉ 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 𝚃𝙴𝚁𝙼𝚄𝚇*
-> Tutorial: https://youtu.be/nbjvreJ0tUk
+> Tutorial: https://youtu.be/yRS4m36Zwkw
 > Comandos:
 - cd && termux-setup-storage
 - apt-get update -y && apt-get upgrade -y
