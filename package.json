@@ -33,6 +33,7 @@
         "@shineiichijo/marika": "^2.0.6",
         "acrcloud": "^1.4.0",
         "api-dylux": "^1.2.2",
+        "aptoide-scraper": "^1.0.1",
         "awesome-phonenumber": "^2.68.0",
         "axios": "^0.24.0",
         "cfonts": "^2.10.0",
