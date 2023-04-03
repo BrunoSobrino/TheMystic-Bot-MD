@@ -63,8 +63,8 @@ else if (stage == stage2) tie = true
 this.reply(room.asal, `
 *👑 𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾𝚂 𝙳𝙴𝙻 𝙿𝚅𝙿 👑*${tie ? '\n*—◉ 𝙴𝙼𝙿𝙰𝚃𝙴!!*' : ''}
 
-*@${room.p.split`@`[0]} (${room.text}) ${tie ? '' : room.p == win ? ` 𝙶𝙰𝙽𝙾 🥳 +${room.poin}XP*` : ` 𝙿𝙴𝚁𝙳𝙸𝙾 🤡 ${room.poin_lose}XP*`}
-*@${room.p2.split`@`[0]} (${room.text2}) ${tie ? '' : room.p2 == win ? ` 𝙶𝙰𝙽𝙾 🥳 +${room.poin}XP*` : ` 𝙿𝙴𝚁𝙳𝙸𝙾 🤡 ${room.poin_lose}XP*`}
+*@${room.p.split`@`[0]} (${room.text})* *${tie ? '' : room.p == win ? ` 𝙶𝙰𝙽𝙾 🥳 +${room.poin}XP` : ` 𝙿𝙴𝚁𝙳𝙸𝙾 🤡 ${room.poin_lose}XP`}*
+*@${room.p2.split`@`[0]} (${room.text2})* *${tie ? '' : room.p2 == win ? ` 𝙶𝙰𝙽𝙾 🥳 +${room.poin}XP` : ` 𝙿𝙴𝚁𝙳𝙸𝙾 🤡 ${room.poin_lose}XP`}*
 `.trim(), m, { mentions: [room.p, room.p2] } )
 if (!tie) {
 db.data.users[win == room.p ? room.p : room.p2].exp += room.poin
