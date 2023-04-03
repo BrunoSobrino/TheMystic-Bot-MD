@@ -11,6 +11,7 @@ for (var i = 0; i < searchA.length; i++) {
 srh.push({ title: searchA[i].name, description: '', rowId: prefix + 'dapk2 ' + searchA[i].id });}
 const sections = [{title: '𝚂𝙴𝙻𝙴𝙲𝙲𝙸𝙾𝙽𝙰 𝙴𝙻 𝙼𝙾𝙳 𝙰 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁', rows: srh}]
 const listMessage = {text: `┌───[ᴍᴏᴅᴀᴘᴋ ʙʏ ᴍʏsᴛɪᴄʙᴏᴛ]\n│\n│- 📟 𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾𝚂 𝙳𝙴: ${text}\n│\n└─────────────────◉`, footer: wm, title: null, buttonText: "𝐒𝐄𝐋𝐄𝐂𝐂𝐈𝐎𝐍𝐀 𝐀𝐐𝐔𝐈", sections}
+await conn.sendMessage(m.chat, listMessage, { quoted: m })
 break
 case 'dapk2': case 'aptoidedl':
 if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙻𝙸𝙽𝙺 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽𝙰 𝙰𝙿𝙺, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾: ${prefix + command}* https://rexdl.com/android/minecraft-pocket-edition-apk-download1.html/`     
