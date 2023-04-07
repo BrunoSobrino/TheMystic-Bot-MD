@@ -1,6 +1,3 @@
-const { levelling } = '../lib/levelling.js'
-import PhoneNumber from 'awesome-phonenumber'
-
 let handler = async (m, { conn, usedPrefix }) => {
 let pp = imagen4
 try {
@@ -9,7 +6,7 @@ try {
 let name = await conn.getName(m.sender)
 let taguser = '@' + m.sender.split("@s.whatsapp.net")[0]
 let str = `
-*_ミ💖 𝙷𝙾𝙻𝙰 ${taguser} 💖彡_*
+*ミ💖 𝙷𝙾𝙻𝙰 ${taguser} 💖彡*
 
 ㅤㅤ *🗳️<ℂ𝔸𝕁𝔸 𝔽𝕌𝔼ℝ𝕋𝔼/>🔐*
 
