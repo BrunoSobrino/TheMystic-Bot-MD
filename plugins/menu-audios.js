@@ -6,9 +6,9 @@ try {
 } catch (e) {
 } finally {
 //let about = (await conn.getStatus(who).catch(console.error) || {}).status || ''
-let name = await conn.getName(m.sender)
+let taguser = '@' + m.sender.split("@s.whatsapp.net")[0]
 let str = `
-*ミ💖 𝙷𝙾𝙻𝙰 _${name}_ 💖彡*
+*ミ💖 𝙷𝙾𝙻𝙰 ${taguser} 💖彡*
 
 ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${global.conn.user.jid.split`@`[0]}`)}
 
@@ -57,7 +57,7 @@ ${(conn.user.jid == global.conn.user.jid ? '' : `Jadibot de: https://wa.me/${glo
 ° ඬ⃟🔊 _:c_
 ° ඬ⃟🔊 _a_
 `.trim()
-conn.sendButton(m.chat, str, wm, pp, [['𝙼𝙴𝙽𝚄 𝙿𝚁𝙸𝙽𝙲𝙸𝙿𝙰𝙻', '/menu']], m)
+conn.sendButton(m.chat, str, wm, pp, [['𝙼𝙴𝙽𝚄 𝙿𝚁𝙸𝙽𝙲𝙸𝙿𝙰𝙻', '/menu']], m, { mentions: [m.sender] })
 }}
 handler.help = ['menu2', 'help2', '?2', 'menuaudios']
 handler.tags = ['main']
