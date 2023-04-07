@@ -76,8 +76,10 @@ if (new Date - global.db.data.users[m.sender].lastberburu < 2700000) return conn
 [`🎒 𝙸𝙽𝚅𝙴𝙽𝚃𝙰𝙴𝚁𝙸𝙾`, `.inventario`]], m)	
 
 setTimeout(() => {
-conn.sendHydrated(m.chat, hsl, wm, null, md, `𝙶𝙸𝚃𝙷𝚄𝙱`, null, null, [
-[null, null]], null)}, 20000)
+conn.sendButton(m.chat, hsl, wm, null, [['𝙶𝙸𝚃𝙷𝚄𝙱', '#script']], null)		
+/*conn.sendHydrated(m.chat, hsl, wm, null, md, `𝙶𝙸𝚃𝙷𝚄𝙱`, null, null, [
+[null, null]], null)*/
+}, 20000)
 	        
 setTimeout(() => {
 conn.reply(m.chat, `@${m.sender.split("@s.whatsapp.net")[0]} *${['OBJETIVO FIJADO 🎯','Carnada en Marcha 🍫 🍇 🍖','ANIMALES DETECTADOS!! 🐂 🐅 🐘 🐼','ANIMALES DETECTADOS!! 🐖 🐃 🐮 🐒'].getRandom()}*`, null, { mentions: [m.sender]})}, 18000)	
