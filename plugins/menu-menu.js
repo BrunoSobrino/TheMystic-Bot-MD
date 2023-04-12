@@ -480,6 +480,7 @@ ${readMore}
 ┣ ඬ⃟ 🛠️ _${usedPrefix}dall-e *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}tamaño *<cantidad> <imagen / video>*_
+┣ ඬ⃟ 🛠️ _${usedPrefix}readviewonce *<imagen / video>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}clima *<país> <ciudad>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}encuesta *<texto1|texto2...>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}afk *<motivo>*_
