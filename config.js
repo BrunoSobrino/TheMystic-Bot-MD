@@ -80,7 +80,7 @@ global.imagen4 = fs.readFileSync('./Menu.png')
 global.mods = [] 
 
 
-/*************************/
+/**************************/
 global.cheerio = cheerio
 global.fs = fs
 global.fetch = fetch
