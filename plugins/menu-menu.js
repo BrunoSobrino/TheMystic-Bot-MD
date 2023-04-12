@@ -1,5 +1,4 @@
 import fetch from 'node-fetch'
-import { join } from 'path'
 let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, isPrems }) => {
 try {
 let vn = './media/menu.mp3'
