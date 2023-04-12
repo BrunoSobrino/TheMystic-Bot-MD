@@ -12,7 +12,6 @@ const d2ata = await facebook.v1(args[0]);
 let r2es = '';
 if (d2ata.urls && d2ata.urls.length > 0) {
 r2es = `${d2ata.urls[0]?.hd || d2ata.urls[1]?.sd || ''}`}
-if (!r2es && d2ata.error) return m.reply(`${d2ata.message}`);
 conn.sendFile(m.chat, r2es, 'error.mp4', `*𝙰𝚀𝚄𝙸 𝙴𝚂𝚃𝙰 𝚂𝚄 𝚅𝙸𝙳𝙴𝙾*`, m);
 } catch (err1) {
 console.log('1 ' + err1)      
