@@ -1,5 +1,4 @@
 import fetch from 'node-fetch'
-import { xpRange } from '../lib/levelling.js'
 const { levelling } = '../lib/levelling.js'
 import PhoneNumber from 'awesome-phonenumber'
 import { join } from 'path'
@@ -17,7 +16,6 @@ let uptime = clockString(_uptime)
 let user = global.db.data.users[m.sender]
 let { money, joincount } = global.db.data.users[m.sender]
 let { exp, limit, level, role } = global.db.data.users[m.sender]
-let { min, xp, max } = xpRange(level, global.multiplier)
 let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered == true).length 
 let more = String.fromCharCode(8206)
 let readMore = more.repeat(850)   
