@@ -19,7 +19,7 @@ await conn.sendFile(m.chat, resup['output_url'], 'error.png', '', m)
 } catch {
 await m.reply(global.wait)
 let q = m.quoted ? m.quoted : m
-let mime = (q.msg || q).mimetype || ''
+let mime = (q.msg || q).mimetype || q.mediaType || ''
 if (!mime) throw '*[❗] 𝙴𝙽𝚅𝙸𝙰 𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰 𝚄𝙽𝙰 𝙵𝙾𝚃𝙾*'
 if (!/image\/(jpe?g|png)/.test(mime)) throw `*[❗] 𝙴𝙻 𝙵𝙾𝚁𝙼𝙰𝚃𝙾 𝙳𝙴𝙻 𝙰𝚁𝙲𝙷𝙸𝚅𝙾 (${mime}) 𝙽𝙾 𝙴𝚂 𝙲𝙾𝙼𝙿𝙰𝚁𝚃𝙸𝙱𝙻𝙴, 𝙴𝙽𝚅𝙸𝙰 𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰 𝚄𝙽𝙰 𝙵𝙾𝚃𝙾*`
 let img = await q.download()
