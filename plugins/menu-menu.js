@@ -478,6 +478,7 @@ ${readMore}
 ┣ ඬ⃟ 🛠️ _${usedPrefix}encuesta *<texto1|texto2...>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}afk *<motivo>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}ocr *<responde a imagen>*_
+┣ ඬ⃟ 🛠️ _${usedPrefix}hd *<responde a imagen>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}acortar *<enlace / link / url>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}calc *<operacion math>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}del *<mensaje>*_
