@@ -82,7 +82,11 @@ patchMessageBeforeSending: (message) => {
 const requiresPatch = !!( message.buttonsMessage || message.templateMessage || message.listMessage );
 if (requiresPatch) { message = { viewOnceMessage: { message: { messageContextInfo: { deviceListMetadataVersion: 2, deviceListMetadata: {}, }, ...message, },},};}
 return message;},
-getMessage: async (key) => ( opts.store.loadMessage(/** @type {string} */(key.remoteJid), key.id) || opts.store.loadMessage(/** @type {string} */(key.id)) || {} ).message || { conversation: 'Please send messages again' },   
+getMessage: async (key) => {
+if (store) {
+const msg = await store.loadMessage(key.remoteJid, key.id)
+return msg.message || undefined }
+return { conversation: "hello, i'm BrunoSobrino" }},   
 msgRetryCounterMap,
 logger: pino({ level: 'silent' }),
 auth: state,

@@ -31,6 +31,7 @@
         "@bochilteam/scraper": "^3.0.0",
         "@vitalets/google-translate-api": "^8.0.0",
         "@shineiichijo/marika": "^2.0.6",
+        "@xct007/frieren-scraper": "^0.0.2",
         "acrcloud": "^1.4.0",
         "api-dylux": "^1.2.2",
         "aptoide-scraper": "^1.0.1",
@@ -40,6 +41,7 @@
         "chalk": "^5.0.0",
         "cheerio": "^1.0.0-rc.10",
         "colors": "1.4.0",
+        "deepai": "^1.0.21",
         "express": "^4.17.3",
         "fb-downloader-scrapper": "^1.0.1", 
         "file-type": "^17.1.1",
@@ -74,6 +76,6 @@
         "wa-sticker-formatter": "^4.3.2",
         "yargs": "^17.3.1",
         "yt-search": "^2.10.3",
-        "ytdl-core": "^4.11.3"
+        "ytdl-core": "github:BrunoSobrino/node-ytdl-core"
     }
 }
