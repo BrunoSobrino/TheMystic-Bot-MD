@@ -47,6 +47,7 @@ global.keysxteam = keysxteammm[Math.floor(keysxteammm.length * Math.random())]
 global.keysneoxrrr = ['5VC9rvNx', 'cfALv5']
 global.keysneoxr = keysneoxrrr[Math.floor(keysneoxrrr.length * Math.random())]
 global.lolkeysapi = ['BrunoSobrino']
+global.itsrose = ['4b146102c4d500809da9d1ff']
 
 global.APIs = { 
   xteam: 'https://api.xteam.xyz',
