@@ -41,7 +41,6 @@
         "chalk": "^5.0.0",
         "cheerio": "^1.0.0-rc.10",
         "colors": "1.4.0",
-        "deepai": "^1.0.21",
         "express": "^4.17.3",
         "fb-downloader-scrapper": "^1.0.1", 
         "file-type": "^17.1.1",
