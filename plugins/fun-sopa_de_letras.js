@@ -101,8 +101,7 @@ await m.reply(`🔠 *SOPA DE LETRAS* 🔠
 
 *EJEMPLO:*
 ❇️ \`\`\`${usedPrefix + command} 28\`\`\`
-➡️ \`\`\`FILA 2\`\`\`    ⬇️ \`\`\`COLUMNA 8\`\`\`
-*_"${PALABRA}"_ ESTA EN LA FILA ${filaInicial}, COLUMNA ${columnaInicial}*`.trim())
+➡️ \`\`\`FILA 2\`\`\`    ⬇️ \`\`\`COLUMNA 8\`\`\``.trim())
 await m.reply(`🔠 *${PALABRA.split("").join(" ")}* 🔠\n\n` + sopaDeLetrasConBordes.trimEnd())
 fila = filaInicial 
 columna = columnaInicial
