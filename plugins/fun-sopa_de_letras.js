@@ -120,7 +120,7 @@ return
 if (intentos === 0) {
 intentos = 3  
 generarSopaDeLetras()
-resetUserSP()
+resetUserSP(sopaDir)
 
 async function resetUserSP() {
 await new Promise((resolve) => setTimeout(resolve, 2 * 60 * 1000)) // 2 min
