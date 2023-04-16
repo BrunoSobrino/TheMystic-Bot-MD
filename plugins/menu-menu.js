@@ -114,6 +114,7 @@ ${readMore}
 ┣ ඬ⃟ 🎖️ _${usedPrefix}cancion_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}pista_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}akinator_
+┣ ඬ⃟ 🎖️ _${usedPrefix}wordfind_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
