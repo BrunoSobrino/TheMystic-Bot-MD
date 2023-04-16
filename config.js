@@ -36,6 +36,7 @@ global.keysxteam = keysxteammm[Math.floor(keysxteammm.length * Math.random())]
 global.keysneoxrrr = ['5VC9rvNx', 'cfALv5']
 global.keysneoxr = keysneoxrrr[Math.floor(keysneoxrrr.length * Math.random())]
 global.lolkeysapi = ['BrunoSobrino']
+global.itsrose = ['4b146102c4d500809da9d1ff']
 
 global.APIs = { 
   xteam: 'https://api.xteam.xyz',
@@ -48,7 +49,10 @@ global.APIs = {
   akuari2: 'https://apimu.my.id',	
   fgmods: 'https://api-fgmods.ddns.net',
   botcahx: 'https://api.botcahx.biz.id',
-  ibeng: 'https://api.ibeng.tech/docs'	
+  ibeng: 'https://api.ibeng.tech/docs',	
+  rose: 'https://api.itsrose.site',
+  popcat : 'https://api.popcat.xyz',
+  xcoders : 'https://api-xcoders.site'
 },
 global.APIKeys = { 
   'https://api.xteam.xyz': `${keysxteam}`,
@@ -58,7 +62,9 @@ global.APIKeys = {
   'https://api.zahwazein.xyz': `${keysxxx}`,
   'https://api-fgmods.ddns.net': 'fg-dylux',
   'https://api.botcahx.biz.id': 'Admin',
-  'https://api.ibeng.tech/docs': 'tamvan'	
+  'https://api.ibeng.tech/docs': 'tamvan',
+  'https://api.itsrose.site': 'Rs-Zeltoria',
+  'https://api-xcoders.site': 'Frieren'
 }
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg')
