@@ -4,6 +4,7 @@ import { format } from 'util'
 import { fileURLToPath } from 'url'
 import path, { join } from 'path'
 import { unwatchFile, watchFile } from 'fs'
+import fs from 'fs'
 import chalk from 'chalk'
 
 /**
