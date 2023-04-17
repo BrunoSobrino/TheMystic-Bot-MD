@@ -929,6 +929,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
                 if (!('antiToxic' in chat)) chat.antiToxic = false
                 if (!('antiTraba' in chat)) chat.antiTraba = false
                 if (!('antiArab' in chat)) chat.antiArab = false
+		if (!('antiArab2' in chat)) chat.antiArab2 = false    
 		if (!('antiporno' in chat)) chat.antiporno = false
 		if (!('modoadmin' in chat)) chat.modoadmin = false
 		if (!('simi' in chat)) chat.simi = false 
@@ -952,6 +953,7 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
                     antiToxic: false,
                     antiTraba: false,
                     antiArab: false,
+		    antiArab2: false,
 	            antiporno: false,
 	            modoadmin: false,
 	            simi: false,
@@ -1297,14 +1299,11 @@ function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD'
  * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate 
  */
 export async function participantsUpdate({ id, participants, action }) {
-    if (opts['self'])
-        return
-    // if (id in conn.chats) return // First login will spam
-    if (this.isInit)
-        return
-    if (global.db.data == null)
-        await loadDatabase()
+    if (opts['self']) return
+    if (this.isInit) return
+    if (global.db.data == null) await loadDatabase()
     let chat = global.db.data.chats[id] || {}
+    let botTt = global.db.data.settings[conn.user.jid] || {}
     let text = ''
     switch (action) {
         case 'add':
@@ -1318,12 +1317,22 @@ export async function participantsUpdate({ id, participants, action }) {
                     } catch (e) {
                     } finally {
                     let apii = await this.getFile(pp)
+                    const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'))
+                    const userPrefix = antiArab.some(prefix => user.startsWith(prefix))                        
+                    const botTt2 = groupMetadata.participants.find(u => this.decodeJid(u.id) == this.user.jid) || {} 
+                    const isBotAdminNn = botTt2?.admin === "admin" || false
                         text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
                               (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
-                        
-//this.sendButton(id, text, groupMetadata.subject, apii.data, [[(action == 'add' ? '💫 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙾 💫' : '☠ 𝙰𝙳𝙸𝙾𝚂 ☠'), (action == 'add' ? '#welcomegc' : '#byegc')], ['♦ 𝙼𝙴𝙽𝚄 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 ♦', `#menu`]], null, {mentions: this.parseMention(text)})
-                
- this.sendFile(id, apii.data, 'pp.jpg', text, null, false, { mentions: [user] }) 
+			    
+if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn && action === 'add') {
+ let responseb = await this.groupParticipantsUpdate(id, [user], 'remove')
+     if (responseb[0].status === "404") return 
+let fkontak2 = { "key": { "participants":"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${user.split('@')[0]}:${user.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }      
+this.sendMessage(id, { text: `*[❗] @${user.split('@')[0]} ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`, mentions: [user] }, { quoted: fkontak2 });          
+return    
+}    
+			    
+this.sendFile(id, apii.data, 'pp.jpg', text, null, false, { mentions: [user] }) 
                    }
                 }
             }
