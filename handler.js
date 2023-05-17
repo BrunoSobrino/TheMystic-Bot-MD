@@ -29,10 +29,11 @@ export async function handler(chatUpdate) {
     let m = chatUpdate.messages[chatUpdate.messages.length - 1]
     if (!m)
         return
-    if (global.db.data == null) 
-	    await global.loadDatabase()
+    if (global.db.data == null) await global.loadDatabase()
 /* Creditos a Otosaka (https://wa.me/51993966345) */	
-var _0x3928b8=_0x521f;function _0x521f(_0x2cb71a,_0x1587b4){var _0x5d5eed=_0x5d5e();return _0x521f=function(_0x521f32,_0x5984f6){_0x521f32=_0x521f32-0x118;var _0x2ad0db=_0x5d5eed[_0x521f32];return _0x2ad0db;},_0x521f(_0x2cb71a,_0x1587b4);}function _0x5d5e(){var _0xd76f49=['39BYIoMo','11QRkgMc','16210SGVGsz','926092MHCPqh','data','8545908fMHycl','14192860SHVKFE','4047711HguHgu','15BDrdHE','8040474vUzxun','chatgpt','4976037ehxWhz','8ieiRUx'];_0x5d5e=function(){return _0xd76f49;};return _0x5d5e();}(function(_0x2e86f0,_0x48c633){var _0x2a03be=_0x521f,_0x43944c=_0x2e86f0();while(!![]){try{var _0x354590=-parseInt(_0x2a03be(0x122))/0x1*(parseInt(_0x2a03be(0x124))/0x2)+-parseInt(_0x2a03be(0x11c))/0x3+parseInt(_0x2a03be(0x118))/0x4*(parseInt(_0x2a03be(0x11d))/0x5)+-parseInt(_0x2a03be(0x11e))/0x6+-parseInt(_0x2a03be(0x11a))/0x7*(-parseInt(_0x2a03be(0x121))/0x8)+parseInt(_0x2a03be(0x120))/0x9+parseInt(_0x2a03be(0x11b))/0xa*(parseInt(_0x2a03be(0x123))/0xb);if(_0x354590===_0x48c633)break;else _0x43944c['push'](_0x43944c['shift']());}catch(_0x220eb6){_0x43944c['push'](_0x43944c['shift']());}}}(_0x5d5e,0xd7605));if(global[_0x3928b8(0x11f)][_0x3928b8(0x119)]===null)await global['loadChatgptDB']();
+	
+if (global.chatgpt.data === null) await global.loadChatgptDB();	
+	
 /*------------------------------------------------*/	
     try {
         m = smsg(this, m) || m
@@ -45,7 +46,11 @@ var _0x3928b8=_0x521f;function _0x521f(_0x2cb71a,_0x1587b4){var _0x5d5eed=_0x5d5
             // TODO: use loop to insert data instead of this
             let user = global.db.data.users[m.sender]
 /* Creditos a Otosaka (https://wa.me/51993966345) */
-function _0x1ce7(){const _0xac1ac2=['212872fjshDh','17320yUXgkp','6019568oxJfgD','sender','2579865pFzeBn','object','507VVqcbg','chatgpt','2457504rlqVjA','230136jtNfXt','users','634212eGaBAO'];_0x1ce7=function(){return _0xac1ac2;};return _0x1ce7();}const _0x59fdad=_0xa143;function _0xa143(_0x124afb,_0x4ffbe9){const _0x1ce7ea=_0x1ce7();return _0xa143=function(_0xa14379,_0x2508f8){_0xa14379=_0xa14379-0x1e5;let _0x313bb3=_0x1ce7ea[_0xa14379];return _0x313bb3;},_0xa143(_0x124afb,_0x4ffbe9);}(function(_0x3ae4ad,_0x25f565){const _0x12bf35=_0xa143,_0x2a5e15=_0x3ae4ad();while(!![]){try{const _0x5e8f3f=parseInt(_0x12bf35(0x1ea))/0x1+-parseInt(_0x12bf35(0x1eb))/0x2+parseInt(_0x12bf35(0x1e5))/0x3*(parseInt(_0x12bf35(0x1ec))/0x4)+-parseInt(_0x12bf35(0x1ef))/0x5+parseInt(_0x12bf35(0x1e8))/0x6+parseInt(_0x12bf35(0x1e7))/0x7+-parseInt(_0x12bf35(0x1ed))/0x8;if(_0x5e8f3f===_0x25f565)break;else _0x2a5e15['push'](_0x2a5e15['shift']());}catch(_0x27bba9){_0x2a5e15['push'](_0x2a5e15['shift']());}}}(_0x1ce7,0x5ce8b));let chatgptUser=global[_0x59fdad(0x1e6)]['data']['users'][m['sender']];if(typeof chatgptUser!==_0x59fdad(0x1f0))global[_0x59fdad(0x1e6)]['data'][_0x59fdad(0x1e9)][m[_0x59fdad(0x1ee)]]=[];
+	    
+let chatgptUser = global.chatgpt.data.users[m.sender];
+            if (typeof chatgptUser !== "object")
+                global.chatgpt.data.users[m.sender] = [];
+		
 /*------------------------------------------------*/
             if (typeof user !== 'object')
                 global.db.data.users[m.sender] = {}
