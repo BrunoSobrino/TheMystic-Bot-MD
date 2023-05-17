@@ -1119,14 +1119,46 @@ let chatgptUser = global.chatgpt.data.users[m.sender];
                 if (!isAccept)
                     continue
                 m.plugin = name
-                if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
-                    let chat = global.db.data.chats[m.chat]
-                    let user = global.db.data.users[m.sender]
-                    if (name != 'owner-unbanchat.js' && chat?.isBanned)
-                        return // Except this
-                    if (name != 'owner-unbanuser.js' && user?.banned)
-                        return
-                }
+if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
+    let chat = global.db.data.chats[m.chat]
+    let user = global.db.data.users[m.sender]
+    
+    if (!['owner-unbanchat.js', 'gc-link.js', 'gc-hidetag.js', 'info-creator.js'].includes(name) && chat && chat.isBanned && !isROwner) return // Except this
+    
+    if (name != 'owner-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && name != 'tool-delete.js' && chat?.isBanned && !isROwner) return 
+    
+if (m.text && user.banned && !isROwner) {
+  if (typeof user.bannedMessageCount === 'undefined') {
+    user.bannedMessageCount = 0;
+  }
+  
+  if (user.bannedMessageCount < 3) {
+    const messageNumber = user.bannedMessageCount + 1;
+    const messageText = `❰ ⚠️ ❱ *ESTAS BANEADO/A* ❰ ⚠️ ❱\nAviso ${messageNumber}/3 (${messageNumber} de 3)${user.bannedReason ? `\n*Motivo:* *${user.bannedReason}*` : ''}
+*👉 Puedes contactar a la propietaria del Bot si crees que se trata de un error (TENER PRUEBAS) para tratar el motivo de tú desbaneo*
+👉 wa.me/5219996125657
+`.trim();
+    
+    //m.reply(messageText);
+    user.bannedMessageCount++;
+    
+  } else if (user.bannedMessageCount === 3) {
+    user.bannedMessageSent = true;
+  } else {
+    return;
+  }
+  return;
+}
+    
+/*if (m.text && user && user.lastCommandTime && (Date.now() - user.lastCommandTime) < 5000 && !isROwner) {
+    const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000);
+    const messageText = `¡Espera ${remainingTime} segundos antes de usar otro comando!`;
+    m.reply(messageText);
+    return; 
+  } else {
+  user.lastCommandTime = Date.now();
+  }*/
+}
 	        let hl = _prefix 
                 let adminMode = global.db.data.chats[m.chat].modoadmin
                 let mystica = `${plugin.botAdmin || plugin.admin || plugin.group || plugin || noPrefix || hl ||  m.text.slice(0, 1) == hl || plugin.command}`
