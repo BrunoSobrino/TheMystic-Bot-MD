@@ -975,6 +975,7 @@ let chatgptUser = global.chatgpt.data.users[m.sender];
                 if (!('antiCall' in settings)) settings.antiCall = false
                 if (!('antiPrivate' in settings)) settings.antiPrivate = false
 	        if (!('modejadibot' in settings)) settings.modejadibot = true   
+		if (!('antispam' in settings)) settings.antispam = false    
             } else global.db.data.settings[this.user.jid] = {
                 self: false,
                 autoread: false,
@@ -983,6 +984,7 @@ let chatgptUser = global.chatgpt.data.users[m.sender];
                 antiCall: false,
                 antiPrivate: false,
 	        modejadibot: true,
+		antispam: false    
             }
         } catch (e) {
             console.error(e)
@@ -1122,6 +1124,7 @@ let chatgptUser = global.chatgpt.data.users[m.sender];
 if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
     let chat = global.db.data.chats[m.chat]
     let user = global.db.data.users[m.sender]
+    let botSpam = global.db.data.settings[this.user.jid]
     
     if (!['owner-unbanchat.js', 'gc-link.js', 'gc-hidetag.js', 'info-creator.js'].includes(name) && chat && chat.isBanned && !isROwner) return // Except this
     
@@ -1150,14 +1153,14 @@ if (m.text && user.banned && !isROwner) {
   return;
 }
     
-/*if (m.text && user && user.lastCommandTime && (Date.now() - user.lastCommandTime) < 5000 && !isROwner) {
+if (botSpam.antispam && m.text && user && user.lastCommandTime && (Date.now() - user.lastCommandTime) < 5000 && !isROwner) {
     const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000);
     const messageText = `¡Espera ${remainingTime} segundos antes de usar otro comando!`;
     m.reply(messageText);
     return; 
   } else {
   user.lastCommandTime = Date.now();
-  }*/
+  }
 }
 	        let hl = _prefix 
                 let adminMode = global.db.data.chats[m.chat].modoadmin
