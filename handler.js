@@ -1154,7 +1154,7 @@ if (m.text && user.banned && !isROwner) {
 }
     
 if (botSpam.antispam && m.text && user && user.lastCommandTime && (Date.now() - user.lastCommandTime) < 5000 && !isROwner) {
-  if (user.commandCount === 2) {
+  if (user.commandCount === 5) {
     const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000)
     if (remainingTime > 0) {
       const messageText = `*[ ⚠ ] Espera ${remainingTime} segundos antes de usar otro comando*`
