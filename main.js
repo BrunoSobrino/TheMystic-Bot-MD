@@ -32,6 +32,7 @@ global.__filename = function filename(pathURL = import.meta.url, rmPrefix = plat
 global.API = (name, path = '/', query = {}, apikeyqueryname) => (name in global.APIs ? global.APIs[name] : name) + path + (query || apikeyqueryname ? '?' + new URLSearchParams(Object.entries({ ...query, ...(apikeyqueryname ? { [apikeyqueryname]: global.APIKeys[name in global.APIs ? global.APIs[name] : name] } : {}) })) : '')
 
 global.timestamp = { start: new Date }
+global.videoList = [];
 
 const __dirname = global.__dirname(import.meta.url)
 
