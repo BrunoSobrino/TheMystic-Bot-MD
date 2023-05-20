@@ -140,6 +140,8 @@ if (opts['server']) (await import('./server.js')).default(global.conn, PORT)
       ahi te va el ajuste de los borrados 
       inteligentes de las sesiones y de los sub-bot  
       By (Rey Endymion 👺👍🏼) */
+/*ninguno es mejor que tilin god 
+atte: skid*/
        
 function clearTmp() {
 const tmp = [tmpdir(), join(__dirname, './tmp')]
