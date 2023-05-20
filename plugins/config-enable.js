@@ -141,7 +141,14 @@ let optionsFull = `*Opción:* ✨ | WELCOME
 
 *Opción:* 😃 | SIMSIMI
 *Comando:* ${usedPrefix + command} simsimi
-*Descripción:* El Bot empezará a responder a los mensajes usando la IA de SimSimi.`.trim()
+*Descripción:* El Bot empezará a responder a los mensajes usando la IA de SimSimi.
+
+--------------------------------
+
+*Opción:* ⏳ | ANTISPAM
+*Comando:* ${usedPrefix + command} antispam
+*Descripción:* El Bot detecta cuando un usuario hace spam de comando y lo banea por 5 segundos y lo advierte.
+*Nota:* Este comando solo podrá ser usado por owners del Bot.`.trim()
 
 let isEnable = /true|enable|(turn)?on|1/i.test(command)
 let chat = global.db.data.chats[m.chat]
@@ -345,7 +352,15 @@ global.dfail('rowner', m, conn)
 throw false
 }
 bot.modejadibot = isEnable
-break        
+break     
+case 'antispam':
+isAll = true
+if (!isROwner) {
+global.dfail('rowner', m, conn)
+throw false
+}
+bot.antispam = isEnable    
+break
 case 'antitoxic':
 if (m.isGroup) {
 if (!(isAdmin || isOwner)) {
