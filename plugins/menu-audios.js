@@ -59,6 +59,6 @@ conn.sendButton(m.chat, str, wm, pp, [['𝙼𝙴𝙽𝚄 𝙿𝚁𝙸𝙽𝙲�
 }}
 handler.help = ['menu2', 'help2', '?2', 'menuaudios']
 handler.tags = ['main']
-handler.command = /^(menu2|audios|menú2|memu2|menuaudio|menuaudios|memuaudios|memuaudio|audios|audio|keyaudio|keyaudios)$/i
+handler.command = /^(menu2|audios|menú2|memu2|menuaudio|menuaudios|memuaudios|memuaudio|audios|keyaudio|keyaudios)$/i
 handler.fail = null
 export default  handler
