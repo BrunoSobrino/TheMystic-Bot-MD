@@ -141,7 +141,7 @@ if (opts['server']) (await import('./server.js')).default(global.conn, PORT)
       inteligentes de las sesiones y de los sub-bot  
       By (Rey Endymion 👺👍🏼) */
 /*ninguno es mejor que tilin god 
-atte: skid*/
+atte: sk1d*/
        
 function clearTmp() {
 const tmp = [tmpdir(), join(__dirname, './tmp')]
