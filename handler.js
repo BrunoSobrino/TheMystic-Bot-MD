@@ -1154,18 +1154,22 @@ if (m.text && user.banned && !isROwner) {
 }
     
 if (botSpam.antispam && m.text && user && user.lastCommandTime && (Date.now() - user.lastCommandTime) < 5000 && !isROwner) {
-  if (user.commandCount === 5) {
+  if (user.commandCount === 2) {
     const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000)
-    const messageText = `¡Espera ${remainingTime} segundos antes de usar otro comando!`
-    m.reply(messageText)
-    user.commandCount = 0
+    if (remainingTime > 0) {
+      const messageText = `*[ ⚠ ] Espera ${remainingTime} segundos antes de usar otro comando*`
+      m.reply(messageText)
+      return
+    } else {
+      user.commandCount = 0
+    }
   } else {
     user.commandCount += 1
   }
 } else {
   user.lastCommandTime = Date.now()
   user.commandCount = 1
- }	
+ }
 }
 	        let hl = _prefix 
                 let adminMode = global.db.data.chats[m.chat].modoadmin
