@@ -3,9 +3,9 @@ import fs from 'fs'
 
 let handler = async (m, {conn, text }) => {
   if (!text) throw '⚠️ *_Que quieres que busque en YouTube?_*'
-  await conn.reply(m.chat, global.wait, m)
   let results = await yts(text)
   let tes = results.all
+  console.log(tes)
   let teks = results.all.map(v => {
     switch (v.type) {
       case 'video': return `
@@ -19,6 +19,4 @@ let handler = async (m, {conn, text }) => {
 handler.help = ['ytsearch *<texto>*'] 
 handler.tags = ['search']
 handler.command = ['ytsearch', 'yts'] 
-
-
 export default handler

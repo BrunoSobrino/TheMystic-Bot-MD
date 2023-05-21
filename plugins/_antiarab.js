@@ -3,7 +3,7 @@ handler.before = async function (m, {conn, isAdmin, isBotAdmin, isOwner, isROwne
 if (!m.isGroup) return !1
 let chat = global.db.data.chats[m.chat]
 let bot = global.db.data.settings[conn.user.jid] || {}
-if (isBotAdmin && chat.antiArab && !isAdmin && !isOwner && !isROwner && bot.restrict) {
+if (isBotAdmin && chat.antiArab2 && !isAdmin && !isOwner && !isROwner && bot.restrict) {
 		
 if (m.sender.startsWith('212' || '212')) {
 m.reply(`*[❗] ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`)
