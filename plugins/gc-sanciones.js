@@ -1,7 +1,10 @@
-//let media = './media/menus/telegramfutabuclub.jpg'
-let handler = async (m, { conn, command }) => {
-let str = `
-----------Futabu Club----------
+let handler = async (m, { conn }) => {
+m.reply(global.sanciones)}
+handler.customPrefix = /sanciones|sanctions|sancionesgrupo|sanctionsgroup/i
+handler.command = new RegExp
+export default handler
+
+global.sanciones = `----------Futabu Club----------
 🔨| Sanciones:
 
 • *No Respetar*
@@ -58,13 +61,4 @@ let str = `
 
 ¿Que pasa si llego a las 15 Warns? Quedaras baneado permanente del grupo.
 
-¿Hay forma de apelar? Si, pero eso dependera del admin y las cuestiónes que se tomen con los admins supremos y los otros admins.
-`.trim()
-  
-conn.sendHydrated(m.chat, str, wm, null, 'https://github.com/ColapsusHD/AsakuraMaoBotV2-MD', 'AsakuraMao Bot', null, null, [
-['𝙑𝙤𝙡𝙫𝙚𝙧 𝙖𝙡 𝙈𝙚𝙣𝙪́ | 𝘽𝙖𝙘𝙠 𝙩𝙤 𝙈𝙚𝙣𝙪 ☘️', '/menu']
-], m,)}
-
-handler.command = /^sanciones|sanctions|sancionesgrupo|sanctionsgroup$/i
-handler.exp = 35
-export default handler
+¿Hay forma de apelar? Si, pero eso dependera del admin y las cuestiónes que se tomen con los admins supremos y los otros admins.`
