@@ -1,7 +1,10 @@
-//let media = './media/menus/telegramfutabuclub.jpg'
-let handler = async (m, { conn, command }) => {
-let str = `
-----------Futabu Club----------
+let handler = async (m, { conn }) => {
+m.reply(global.reglas)}
+handler.customPrefix = /reglas|rules|reglasgrupo|rulesgrupo|rulesgroup/i
+handler.command = new RegExp
+export default handler
+
+global.reglas = `----------Futabu Club----------
 📝| Reglas:
 • *Respeto* (Respeta a toda la comunidad y a los admins, Si son insultos argentinos como hablamos acá no pasa nada, pero si estas insultando a gente de otros países que no son de argentina no lo hagas muchos no entienden nuestros insultos)
 
@@ -35,13 +38,4 @@ let str = `
 
 • *No Flood* (No se permite el flood que es enviar mil veces esa misma letra explotando el chat con tanta repetición de esa misma acción)
 
-✅| Se permite hentai/porno de transexuales pero la temática tiene que ser más de Futanari.
-`.trim()
-  
-conn.sendHydrated(m.chat, str, wm, null, 'https://github.com/ColapsusHD/AsakuraMaoBotV2-MD', 'AsakuraMao Bot', null, null, [
-['𝙑𝙤𝙡𝙫𝙚𝙧 𝙖𝙡 𝙈𝙚𝙣𝙪́ | 𝘽𝙖𝙘𝙠 𝙩𝙤 𝙈𝙚𝙣𝙪 ☘️', '/menu']
-], m,)}
-
-handler.command = /^reglas|rules|reglasgrupo|rulesgrupo|rulesgroup$/i
-handler.exp = 35
-export default handler
+✅| Se permite hentai/porno de transexuales pero la temática tiene que ser más de Futanari.`
