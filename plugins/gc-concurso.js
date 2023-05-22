@@ -1,12 +1,7 @@
-//let media = './media/menus/telefutaclub.jpeg'
-let handler = async (m, { conn, command }) => {
-let str = `
-Nada aún!
-`.trim()
-  
-conn.sendHydrated(m.chat, str, null, null, null, null, null, [
-], m,)}
-
-handler.command = /^concurso|concursofutabuclub$/i
-handler.exp = 35
+let handler = async (m, { conn }) => {
+m.reply(global.concurso)}
+handler.customPrefix = /concurso|concursofutabuclub/i
+handler.command = new RegExp
 export default handler
+
+global.concurso = `Nada aún!`
