@@ -38,6 +38,12 @@ let optionsFull = `*Opción:* ✨ | WELCOME
 
 --------------------------------
 
+*Opción:* 🔎 | DETECT 2
+*Comando:* ${usedPrefix + command} detect2
+*Descripción:* Detecta modificaciones en el grupo y mantiene una mejor gestion.
+
+--------------------------------
+
 *Opción:* ❗ | RESTRICT
 *Comando:* ${usedPrefix + command} restrict
 *Descripción:* Activa o desactiva las restricciones del Bot, como la de sacar o agregar personas a un grupo.
@@ -181,6 +187,18 @@ throw false
 }
 chat.detect = isEnable
 break
+case 'detect2':
+if (!m.isGroup) {
+if (!isOwner) {
+global.dfail('group', m, conn)
+throw false
+}
+} else if (!isAdmin) {
+global.dfail('admin', m, conn)
+throw false
+}
+chat.detect2 = isEnable
+break    
 case 'simsimi':
 if (m.isGroup) {
 if (!(isAdmin || isOwner)) {
