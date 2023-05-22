@@ -1,10 +1,10 @@
 let handler = async (m, { conn }) => {
-m.reply(global.telegram)}
+m.reply(global.pokefuta)}
 handler.customPrefix = /pokefuta|linkpokefuta/i
 handler.command = new RegExp
 export default handler
 
-global.telegram = `Nuestro grupo de una sola tematica!
+global.pokefuta = `Nuestro grupo de una sola tematica!
 
 *⚠️| RECUERDA ESTE GRUPO ES DE UNA SOLA TEMATICA QUE ES FUTANARI RELACIONADO CON LA SERIE POKEMON, PUEDES MANDAR CONTENIDO VARIADO PERO SE RECOMIENDA MANDAR MAS DE LA TEMATICA!*
 
