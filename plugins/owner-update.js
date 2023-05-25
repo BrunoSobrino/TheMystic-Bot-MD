@@ -5,7 +5,7 @@ if (global.conn.user.jid == conn.user.jid) {
 let stdout = execSync('git pull' + (m.fromMe && text ? ' ' + text : ''))
 conn.reply(m.chat, stdout.toString(), m)}
 } catch {
-var update = execSync('git remote set-url origin https://github.com/BrunoSobrino/TheMystic-Bot-MD.git && git pull')
+var update = execSync('git remote set-url origin https://github.com/ColapsusHD/AsakuraMaoBotV2-MD.git && git pull')
 await m.reply(update.toString())
 }}
 handler.help = ['update']
