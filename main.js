@@ -1,5 +1,3 @@
-//mama i am criminal
-//test
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 import './config.js';
 import './api.js';
@@ -36,6 +34,7 @@ global.API = (name, path = '/', query = {}, apikeyqueryname) => (name in global.
 
 global.timestamp = { start: new Date }
 global.videoList = [];
+global.videoListXXX = [];
 
 const __dirname = global.__dirname(import.meta.url)
 

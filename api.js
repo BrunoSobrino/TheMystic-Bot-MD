@@ -7,7 +7,8 @@ import fetch from 'node-fetch'
 import axios from 'axios'
 import moment from 'moment-timezone' 
 
-/*si quieres modificar esto y agregar mas apis asegurate poner global.tuapi = ['apikey']  skid 🤑 */
+/*si quieres modificar esto y agregarr mas apis asegurate poner global.tuapi = ['apikey']  skid 🤑 */
+
 global.openai_key = 'sk-0'
 /* Consigue tu ApiKey en este enlace: https://platform.openai.com/account/api-keys */
 
