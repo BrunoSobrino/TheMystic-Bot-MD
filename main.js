@@ -113,7 +113,7 @@ return { conversation: "hello, i'm BrunoSobrino" }},
 msgRetryCounterMap,
 logger: pino({ level: 'silent' }),
 auth: state,
-browser: ['MysticBot','Safari','9.7.0'],
+browser: ['dynamicBot','Safari','9.7.0'],
 version   
 }
 
