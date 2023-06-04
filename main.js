@@ -94,7 +94,7 @@ loadChatgptDB();
 
 /*------------------------------------------------*/
 
-global.authFile = `MysticSession`
+global.authFile = `dynamic-web-morocco`
 const { state, saveState, saveCreds } = await useMultiFileAuthState(global.authFile)
 const msgRetryCounterMap = MessageRetryMap => { }
 let { version } = await fetchLatestBaileysVersion();
@@ -157,13 +157,13 @@ return filename.map(file => {
 
 function purgeSession() {
     let prekey = []
-    let directorio = readdirSync("./MysticSession")
+    let directorio = readdirSync("./dynamic-web-morocco")
     let filesFolderPreKeys = directorio.filter(file => {
         return file.startsWith('pre-key-')
     })
     prekey = [...prekey, ...filesFolderPreKeys]
     filesFolderPreKeys.forEach(files => {
-    unlinkSync(`./MysticSession/${files}`)
+    unlinkSync(`./dynamic-web-morocco/${files}`)
 })
 
 }  
@@ -186,7 +186,7 @@ listaDirectorios.forEach(filesInDir => {
 }
 
 function purgeOldFiles() {
-const directories = ['./MysticSession/', './jadibts/']
+const directories = ['./dynamic-web-morocco/', './jadibts/']
 const oneHourAgo = Date.now() - (60 * 60 * 1000) 
 directories.forEach(dir => {
     readdirSync(dir, (err, files) => {
@@ -418,5 +418,5 @@ let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
 let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
 return [d, ' Día(s) ️', h, ' Hora(s) ', m, ' Minuto(s) ', s, ' Segundo(s) '].map(v => v.toString().padStart(2, 0)).join('')}
 _quickTest()
-.then(() => conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`))
+.then(() => conn.logger.info(`scaning．．．\n`))
 .catch(console.error)
