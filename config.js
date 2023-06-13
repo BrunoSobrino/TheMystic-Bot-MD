@@ -14,7 +14,7 @@ global.owner = [
   ['51996089079', '💫 Mystic - Collaborator 3 💫', true],
   ['593959425714', '💫 Mystic - Collaborator 4 💫', true],
   ['50246028932', '💫 Mystic - Collaborator 5 💫', true],  
-  ['5212412377467', '💫 Mystic - Collaborator 6 💫', true],
+  ['5212411719888', '💫 Mystic - Collaborator 6 💫', true],
   ['5215533827255', '💫 Mystic - Collaborator 7 💫', false],
   ['593968585283'],
   ['5219993404349'],
@@ -40,6 +40,7 @@ global.imagen1 = fs.readFileSync('./Menu2.jpg')
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg') 
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png')
 global.imagen4 = fs.readFileSync('./Menu.png')
+global.imagen5 = fs.readFileSync('./src/+18.jpg')
 
 global.mods = [] 
 
