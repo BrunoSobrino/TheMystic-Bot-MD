@@ -58,6 +58,8 @@ ${readMore}
 ┣ ඬ⃟ 💟 _${usedPrefix}grupos_
 ┣ ඬ⃟ 💟 _${usedPrefix}estado_
 ┣ ඬ⃟ 💟 _${usedPrefix}infobot_
+┣ ඬ⃟ 💟 _${usedPrefix}labiblia_
+┣ ඬ⃟ 💟 _${usedPrefix}animes_
 ┣ ඬ⃟ 💟 _${usedPrefix}speedtest_
 ┣ ඬ⃟ 💟 _${usedPrefix}donar_
 ┣ ඬ⃟ 💟 _${usedPrefix}grouplist_
