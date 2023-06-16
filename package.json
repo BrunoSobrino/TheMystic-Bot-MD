@@ -37,7 +37,7 @@
         "api-dylux": "^1.2.2",
         "aptoide-scraper": "^1.0.1",
         "awesome-phonenumber": "^2.68.0",
-        "axios": "^0.24.0",
+        "axios": "^1.1.3",
         "cfonts": "^2.10.0",
         "chalk": "^5.0.0",
         "cheerio": "^1.0.0-rc.10",
