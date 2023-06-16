@@ -25,6 +25,7 @@ global.imagen1 = fs.readFileSync('./Menu2.jpg')
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg') 
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png')
 global.imagen4 = fs.readFileSync('./Menu.png')
+global.imagen5 = fs.readFileSync('./src/+18.jpg')
 
 global.mods = ['5492604050270', '5493772406612'] 
 

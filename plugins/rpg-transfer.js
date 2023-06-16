@@ -28,9 +28,13 @@ async function handler(m, { conn, args, usedPrefix, command }) {
 ¿Está seguro de que desea transferir *${count}* ${type} a  *@${(who || '').replace(/@s\.whatsapp\.net/g, '')}* ? 
 
 Tienes  *60* s
+
+Escriba: (si) para acertar
+Escriba: (no) para cancelar
 `.trim()
     let c = 'FG - dylux-bot'
-    conn.sendButton(m.chat, confirm, c, null, [['si'], ['no']], m, { mentions: [who] })
+    await conn.reply(m.chat, confirm, m, { mentions: [who] })
+    //conn.sendButton(m.chat, confirm, c, null, [['si'], ['no']], m, { mentions: [who] })
     confirmation[m.sender] = {
         sender: m.sender,
         to: who,
@@ -49,12 +53,14 @@ handler.before = async m => {
     if (m.id === message.id) return
     let user = global.db.data.users[sender]
     let _user = global.db.data.users[to]
-    if (/no?/g.test(m.text.toLowerCase())) {
+    if (/^No|no$/i.test(m.text) ) { 
+    //if (/no?/g.test(m.text.toLowerCase())) {
         clearTimeout(timeout)
         delete confirmation[sender]
         return m.reply('Cancelado')
     }
-    if (/si?/g.test(m.text.toLowerCase())) {
+    if (/^Si|si$/i.test(m.text) ) { 
+   // if (/si?/g.test(m.text.toLowerCase())) {
         let previous = user[type] * 1
         let _previous = _user[type] * 1
         user[type] -= count * 1
