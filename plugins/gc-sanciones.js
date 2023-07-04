@@ -1,6 +1,6 @@
 let handler = async (m, { conn }) => {
 m.reply(global.sanciones)}
-handler.customPrefix = /sanciones|sanctions|sancionesgrupo|sanctionsgroup/i
+handler.command = /^(sanciones|sanctions|sancionesgrupo|sanctionsgroup)$/i
 handler.command = new RegExp
 export default handler
 
