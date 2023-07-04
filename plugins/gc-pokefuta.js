@@ -1,7 +1,8 @@
 let handler = async (m, { conn }) => {
 m.reply(global.pokefuta)}
-handler.command = /^pokefuta|linkpokefuta$/i
-handler.command = new RegExp
+handler.help = ['pokefuta']
+handler.tags = ['grupo']
+handler.command = /^(pokefuta|linkpokefuta)$/i
 export default handler
 
 global.pokefuta = `Nuestro grupo de una sola tematica!
