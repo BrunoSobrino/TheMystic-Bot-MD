@@ -1,6 +1,6 @@
 let handler = async (m, { conn }) => {
 m.reply(global.pokefuta)}
-handler.command = /^(pokefuta|linkpokefuta)$/i
+handler.command = /^pokefuta|linkpokefuta$/i
 handler.command = new RegExp
 export default handler
 
