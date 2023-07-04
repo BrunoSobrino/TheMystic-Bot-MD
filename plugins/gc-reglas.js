@@ -1,7 +1,8 @@
 let handler = async (m, { conn }) => {
 m.reply(global.reglas)}
-handler.command = /^reglas|rules|reglasgrupo|rulesgrupo|rulesgroup$/i
-handler.command = new RegExp
+handler.help = ['reglas']
+handler.tags = ['grupo']
+handler.command = /^(reglas|rules|reglasgrupo|rulesgrupo|rulesgroup)$/i
 export default handler
 
 global.reglas = `----------Futabu Club----------
