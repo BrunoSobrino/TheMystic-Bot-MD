@@ -1,6 +1,6 @@
 let handler = async (m, { conn }) => {
 m.reply(global.telegram)}
-handler.customPrefix = /telegram|grupodetelegram|linktelegram/i
+handler.command = /^(telegram|grupodetelegram|linktelegram)$/i
 handler.command = new RegExp
 export default handler
 
