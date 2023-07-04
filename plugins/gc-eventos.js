@@ -1,7 +1,8 @@
 let handler = async (m, { conn }) => {
 m.reply(global.eventos)}
-handler.command = /^evento|eventos|eventofutabuclub$/i
-handler.command = new RegExp
+handler.help = ['eventos']
+handler.tags = ['grupo']
+handler.command = /^(evento|eventos|eventofutabuclub)$/i
 export default handler
 
 global.eventos = `Nada aún!`
