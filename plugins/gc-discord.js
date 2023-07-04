@@ -1,6 +1,6 @@
 let handler = async (m, { conn }) => {
 m.reply(global.discord)}
-handler.command = /^(serverdis|serverdiscord|discord|grupodiscord|linkdiscord)$/i
+handler.command = /^serverdis|serverdiscord|discord|grupodiscord|linkdiscord$/i
 handler.command = new RegExp
 export default handler
 
