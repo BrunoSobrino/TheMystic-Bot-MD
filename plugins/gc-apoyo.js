@@ -10,7 +10,7 @@ Alias: COLAPSUSHD2020.UALA
 CBU/CVU: 0000007900204654633937
 Si estas deacuerdo con apoyar porfavor presiona el boton que esta debajo`.trim()
 let aa = { quoted: m, userJid: conn.user.jid }
-let res = generateWAMessageFromContent (m.chat, {liveLocationMessage: {degreesLatitude: 0, degreesLongitude: 0, caption: apoyo, secuenceNumber: "0", contextInfo: {mentionedJid: conn.parseMention()}}}, aa)
+let res = generateWAMessageFromContent (m.chat, {caption: apoyo, secuenceNumber: "0", contextInfo: {mentionedJid: conn.parseMention()}}}, aa)
 conn.relayMessage(m.chat, res.message, {})
 }
 handler.help = ['apoyo']
