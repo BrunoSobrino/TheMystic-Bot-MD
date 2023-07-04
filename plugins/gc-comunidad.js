@@ -1,6 +1,6 @@
 let handler = async (m, { conn }) => {
 m.reply(global.comunidad)}
-handler.command = /^(comunidad|grupocomunidad|grupoavisos)$/i
+handler.command = /^comunidad|grupocomunidad|grupoavisos$/i
 handler.command = new RegExp
 export default handler
 
