@@ -8,28 +8,28 @@ import axios from 'axios'
 import moment from 'moment-timezone' 
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['50499698072', '💫 Mystic - Collaborator 1 💫', true],
-  ['51940617554', '💫 Mystic - Collaborator 2 💫', true],
-  ['51996089079', '💫 Mystic - Collaborator 3 💫', true],
-  ['593959425714', '💫 Mystic - Collaborator 4 💫', true],
-  ['50246028932', '💫 Mystic - Collaborator 5 💫', true],  
-  ['5212411719888', '💫 Mystic - Collaborator 6 💫', true],
-  ['5215533827255', '💫 Mystic - Collaborator 7 💫', false],
-  ['593968585283'],
-  ['5219993404349'],
-  ['584125778026'],
-  ['5219991402134'],	
-  ['5492266466080'],
-  ['5219996125657'],
-  ['5492266613038'],
-  ['5218442114446'],
-  ['59894808483']
+  ['8801996868764', '👑 MD ARMAN AHMED 👑', true],
+  ['8801996868764', '💫 MD ARMAN AHMED 1 💫', true],
+  ['8801996868764', '💫 MD ARMAN AHMED 2 💫', true],
+  ['8801996868764', '💫 MD ARMAN AHMED 3 💫', true],
+  ['8801996868764', '💫 MD ARMAN AHMED 4 💫', true],
+  ['8801996868764', '💫 MD ARMAN AHMED 5 💫', true],  
+  ['8801996868764', '💫 MD ARMAN AHMED 6 💫', true],
+  ['8801996868764', '💫 MD ARMAN AHMED 7 💫', false],
+  ['8801996868764'],
+  ['8801996868764'],
+  ['8801996868764'],
+  ['8801996868764'],	
+  ['8801996868764'],
+  ['8801996868764'],
+  ['8801996868764'],
+  ['8801996868764'],
+  ['8801996868764']
 ] 
 
-global.suittag = ['5219993404349'] 
-global.prems = ['51995386439'] 
-global.reportes_solicitudes = ['5219992095479']
+global.suittag = ['8801996868764'] 
+global.prems = ['8801996868764'] 
+global.reportes_solicitudes = ['8801996868764']
 
 global.packname = '(☞ﾟ∀ﾟ)☞'
 global.author = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
@@ -57,12 +57,12 @@ global.tiempo = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', 
 global.wm2 = `▸ ${dia} ${fecha}\n▸ 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝`
 global.gt = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
 global.mysticbot = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★'
-global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
-global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
+global.md = 'https://facebook.com/armanbd00'
+global.mysticbot = 'https://facebook.com/armanbd00'
 global.waitt = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*'
 global.waittt = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*'
 global.waitttt = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*'
-global.nomorown = '5219993404349'
+global.nomorown = '8801996868764'
 global.pdoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/msword', 'application/pdf', 'text/rtf']
 global.cmenut = '❖––––––『'
 global.cmenub = '┊✦ '
