@@ -1,4 +1,4 @@
-#,cualquier duda hablame https://wa.me/+50258115623
+#,cualquier duda hablame https://api.whatsapp.com/send/?phone=50258115623&text=/estado&type=phone_number&app_absent=0
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
 ⁿᵒ hay cuentas oficiales aún!
