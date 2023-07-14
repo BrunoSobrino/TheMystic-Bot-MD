@@ -7,8 +7,8 @@
 <a no disponible.
 > LOS NUMEROS NO SON BOTS Y EN EL GRUPO NO SE PERMITEN NUMEROS QUE SEAN BOTS
 
-### `—◉ 🤖 BOTS OFICIALES 🤖`
-
+### `—◉ cualquier duda hablame`
+< a https://api.whatsapp.com/send/?phone=5219991402134&text=/estado&type=phone_number&app_absent=0
 <a no disponible por el momento!
 
 
