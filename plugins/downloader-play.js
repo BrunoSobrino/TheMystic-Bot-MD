@@ -73,7 +73,7 @@ ${url}`
   contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, description: null,   
   title: 'The Mystic - Bot',  
   body: '..',           
-  previewType: 0, thumbnail: fs.readFileSync("./galeria/menudorrat5.png"),  
+  previewType: 0, thumbnail: fs.readFileSync("./Menu2.jpg"),  
   sourceUrl: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`}}})  
   
   let res = await fetch(`https://api.lolhuman.xyz/api/ytplay?apikey=GataDios&query=${title}`)   
