@@ -68,7 +68,7 @@ ${url}`
   await conn.sendMessage(m.chat, { video: { url: lolh.result.video.link }, fileName: `${ttl}.mp4`, mimetype: 'video/mp4', caption: `${wm}\nTITULO\n ${title}` }, { quoted: m })  
   }  
   } catch (e) {  
-  conn.reply(m.chat, `*[❕] ERROR INTENTALO DE NUEVO.*`, m, {  
+  conn.reply(m.chat, `*[❗] ERROR INTENTALO DE NUEVO.*`, m, {  
   contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, description: null,   
   title: 'The Mystic - Bot',  
   body: '..',           
