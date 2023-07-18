@@ -14,8 +14,7 @@ import { youtubedl, youtubeSearch, youtubedlv2, youtubedlv3 } from '@bochilteam/
   let lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytplay?apikey=BrunoSobrino_2&query=${title}`)     
   let lolh = await lolhuman.json()  
   let n = lolh.result.title || 'error'  
-  var captionvid = `
-❏ 📌 *TITULO:*  
+  var captionvid = `❏ 📌 *TITULO:*  
 ${title}  
 ❏ 📋 *DESCRIPCIÓN*:
 ${description}  
