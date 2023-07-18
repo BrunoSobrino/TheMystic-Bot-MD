@@ -16,7 +16,7 @@ let texto1 = `*◉——⌈🔊 YOUTUBE PLAY 🔊⌋——◉*\n
 ❏ 📌 *Titulo:* ${yt_play[0].title}
 ❏ 📆 *Publicado:* ${yt_play[0].ago}
 ❏ ⌚ *Duracion:* ${secondString(yt_play[0].duration.seconds)}
-❏ 👀 *Vistas:* ${`${MilesNumber(yt_play[0].views)}`}
+❏ 👀 *Visitas:* ${`${MilesNumber(yt_play[0].views)}`}
 ❏ 👤 *Autor:* ${yt_play[0].author.name}
 ❏ ⏯️ *Canal:* ${yt_play[0].author.url}
 ❏ 🆔 *ID:* ${yt_play[0].videoId}
