@@ -1,5 +1,9 @@
 # `🧿 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝 🔮` 
 
+------------------
+> **INFORMACION** Yo "Bruno Sobrino", me he retirado de todo lo relacionado con el Bot por lo que en algun momento quedará obsoleto y/o algunos comandos dejaran de funcionar
+------------------
+
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
 
 * https://www.atom.bio/theshadowbrokers-team
