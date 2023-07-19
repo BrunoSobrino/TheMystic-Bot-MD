@@ -29,7 +29,7 @@ tijera\n𝙶𝙰𝙽𝙰𝙳𝙾𝚁 +${room.poin}𝚇𝙿\n𝙿𝙴𝚁𝙳𝙴
 *ejemplo: papel*`
    
 if (!room.pilih) this.sendMessage(room.p, { text: comienzop }, { quoted: m })  
-if (!room.pilih2) this.sendMessage(m.chat, { text: comienzop2 }, { quoted: m })
+if (!room.pilih2) this.sendMessage(room.p2, { text: comienzop2 }, { quoted: m })
 room.waktu_milih = setTimeout(() => {
 let iniciativa = `[❗] 𝙽𝙸𝙽𝙶𝚄𝙽 𝙹𝚄𝙶𝙰𝙳𝙾𝚁 𝚃𝙾𝙼𝙾 𝙻𝙰 𝙸𝙽𝙸𝙲𝙸𝙰𝚃𝙸𝚅𝙰 𝙳𝙴 𝙴𝙼𝙴𝙿𝙴𝚉𝙰𝚁 𝙴𝙻 𝙹𝚄𝙴𝙶𝙾, 𝙴𝙻 𝙿𝚅𝙿 𝚂𝙴 𝙰𝙷 𝙲𝙰𝙽𝙲𝙴𝙻𝙰𝙳𝙾`                              
 if (!room.pilih && !room.pilih2) this.sendMessage(m.chat, { text: iniciativa }, { quoted: m })
