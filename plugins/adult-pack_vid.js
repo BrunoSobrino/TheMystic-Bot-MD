@@ -8,7 +8,7 @@ let url = await pack[Math.floor(Math.random() * pack.length)]
       m.chat,  
       url,  
       "gimage.jpg",  
-      `😋 pack 😋`.trim(), m)
+      `🥵 pack 🥵`.trim(), m)
 case "pack2":  
 let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
 conn.sendMessage(m.chat, { image: { url: url2 }, caption: `_🥵 Pack 2 🥵_` }, { quoted: m })    
