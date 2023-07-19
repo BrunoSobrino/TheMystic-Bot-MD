@@ -4,17 +4,17 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[❗𝐈𝐍𝐅𝐎�
 switch (command) {
 case "pack": 
 let url = await pack[Math.floor(Math.random() * pack.length)]
-conn.sendMessage(m.chat, { video: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
+conn.sendMessage(m.chat, { image: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
 //conn.sendButton(m.chat, `_🥵 Pack 🥵_`, author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)    		
 break
 case "pack2":  
 let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
-conn.sendMessage(m.chat, { video: { url: url2 }, caption: `_🥵 Pack 2 🥵_` }, { quoted: m })    
+conn.sendMessage(m.chat, { image: { url: url2 }, caption: `_🥵 Pack 2 🥵_` }, { quoted: m })    
 //conn.sendButton(m.chat, `_🥵 Pack 2 🥵_`, author, url2, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
 break
 case "pack3":
 let url3 = await packmen[Math.floor(Math.random() * packmen.length)]
-conn.sendMessage(m.chat, { video: { url: url3 }, caption: `_🥵 Pack 3 🥵_` }, { quoted: m })    
+conn.sendMessage(m.chat, { image: { url: url3 }, caption: `_🥵 Pack 3 🥵_` }, { quoted: m })    
 //conn.sendButton(m.chat, `_🥵 Pack 3 🥵_`, author, url3, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
 break
 case "videoxxx": case "vídeoxxx":    
