@@ -15,8 +15,7 @@ let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
       m.chat,  
       url2,  
       "gimage.jpg",  
-      `  
-  pack`.trim(), m) 
+      `_🥵 pack 🥵`.trim(), m) 
 //conn.sendButton(m.chat, `_🥵 Pack 2 🥵_`, author, url2, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
 break
 case "pack3":
