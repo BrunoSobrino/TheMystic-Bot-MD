@@ -25,9 +25,9 @@ if (!room.pilih && !room.pilih2) this.sendButton(m.chat, `[❗] 𝙽𝙸𝙽𝙶
 else if (!room.pilih || !room.pilih2) {
 win = !room.pilih ? room.p2 : room.p 
 let textnull = `*[❗] @${(room.pilih ? room.p2 : room.p).split`@`[0]} 𝙽𝙾 𝙴𝙻𝙴𝙶𝙸𝚂𝚃𝙴 𝙽𝙸𝙽𝙶𝚄𝙽𝙰 𝙾𝙿𝙲𝙸𝙾𝙽, 𝙵𝙸𝙽 𝙳𝙴𝙻 𝙿𝚅𝙿*`
-this.sendButton(m.chat, textnull, wm, null, [['𝙼𝙴𝙽𝚄 𝙿𝚁𝙸𝙽𝙲𝙸𝙿𝙰𝙻', '#menu']], m, { mentions: this.parseMention(textnull)})
+await this.sendMessage(m.chat, { text: textnull }, { quoted: m }, { mentions: await this.parseMention(textnull) })
 db.data.users[win == room.p ? room.p : room.p2].exp += room.poin
-db.data.users[win == room.p ? room.p : room.p2].exp += room.poin_bot
+db.data.users[win == room.p ? room.p : room.p2].exp += room.poin_botcaption
 db.data.users[win == room.p ? room.p2 : room.p].exp -= room.poin_lose
 }
 delete this.suit[room.id]
