@@ -36,7 +36,7 @@ if (!room.pilih && !room.pilih2) this.sendMessage(m.chat, { text: iniciativa }, 
 else if (!room.pilih || !room.pilih2) {
 win = !room.pilih ? room.p2 : room.p 
 let textnull = `*[❗] @${(room.pilih ? room.p2 : room.p).split`@`[0]} 𝙽𝙾 𝙴𝙻𝙴𝙶𝙸𝚂𝚃𝙴 𝙽𝙸𝙽𝙶𝚄𝙽𝙰 𝙾𝙿𝙲𝙸𝙾𝙽, 𝙵𝙸𝙽 𝙳𝙴𝙻 𝙿𝚅𝙿*`
-this.sendMessage(m.chat, { text: textnull }, { quoted: m }, { mentions: await this.parseMention(textnull) })
+this.sendMessage(m.chat, { text: textnull }, { quoted: m }, { mentions: this.parseMention(textnull) })
 db.data.users[win == room.p ? room.p : room.p2].exp += room.poin
 db.data.users[win == room.p ? room.p : room.p2].exp += room.poin_bot
 db.data.users[win == room.p ? room.p2 : room.p].exp -= room.poin_lose
