@@ -9,7 +9,8 @@ let caption = `⚠️ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾𝚂 𝙰𝙳𝚅𝙴𝚁𝚃�
 ║
 ║ 1.- ${isOwner ? '@' + jid.split`@`[0] : jid} *(${user.warn}/3)*\n║\n║ - - - - - - - - -`.trim()).join('\n') : ''}
 *╚═══════════════════·•*`
-await conn.sendButton(m.chat, caption, wm, imagewarn, [['𝐌 𝐄 𝐍 𝐔 🌠', '#menu']], m, {mentions: await conn.parseMention(caption)})}
+  await conn.sendMessage(m.chat, caption, {quoted: m});
+}
 handler.command = /^(listwarn)$/i 
 handler.group = true
 handler.admin = true
