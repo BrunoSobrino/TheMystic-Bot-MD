@@ -2,15 +2,11 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, command, usedPrefix }) => {
 if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾𝚂 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 +𝟷𝟾 𝙴𝚂𝚃𝙰𝙽 𝙳𝙴𝚂𝙰𝙲𝚃𝙸𝚅𝙰𝙳𝙾𝚂 𝙴𝙽 𝙴𝚂𝚃𝙴 𝙶𝚁𝚄𝙿𝙾, 𝚂𝙸 𝙴𝚂 𝙰𝙳𝙼𝙸𝙽 𝚈 𝙳𝙴𝚂𝙴𝙰 𝙰𝙲𝚃𝙸𝚅𝙰𝚁𝙻𝙾𝚂 𝚄𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 #enable modohorny*'
 switch (command) {
-  case 'pack':
-case 'cosplay':
-	     let img = await conn.getFile(global.API('fgmods', '/api/nsfw/cosplay', {}, 'apikey'))
-        conn.sendFile(m.chat, img.data, 'img.jpg', `✅ Resultado 🤭`, m)
-	     
-	break
-    
-//conn.sendButton(m.chat, `_🥵 Pack 🥵_`, author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)    
-
+case "pack": 
+let url = await pack[Math.floor(Math.random() * pack.length)]
+conn.sendMessage(m.chat, { video: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
+//conn.sendButton(m.chat, `_🥵 Pack 🥵_`, author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)    		
+break
 case "pack2":  
 let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
 conn.sendMessage(m.chat, { video: { url: url2 }, caption: `_🥵 Pack 2 🥵_` }, { quoted: m })    
