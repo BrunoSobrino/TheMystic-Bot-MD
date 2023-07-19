@@ -20,10 +20,7 @@ m.reply(textplay, m.chat, {mentions: this.parseMention(textplay)})
 let comienzop = `𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚂𝙴𝙻𝙴𝙲𝙲𝙸𝙾𝙽𝙴 𝚄𝙽𝙰 𝙳𝙴 𝙻𝙰𝚂 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴𝚂 𝙾𝙿𝙲𝙸𝙾𝙽𝙴𝚂
 piedra
 papel
-tijera\n𝙶𝙰𝙽𝙰𝙳𝙾𝚁 +${room.poin}𝚇𝙿\n𝙿𝙴𝚁𝙳𝙴𝙳𝙾𝚁 ${room.poin_lose}𝚇𝙿`
-
-
-*responda al mensaje con la opción que desea*
+tijera\n𝙶𝙰𝙽𝙰𝙳𝙾𝚁 +${room.poin}𝚇𝙿\n𝙿𝙴𝚁𝙳𝙴𝙳𝙾𝚁 ${room.poin_lose}𝚇𝙿\n*responda al mensaje con la opción que desea*
 *ejemplo: papel*`
 
    
