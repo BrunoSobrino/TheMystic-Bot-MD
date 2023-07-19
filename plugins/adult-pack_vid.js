@@ -4,9 +4,11 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[❗𝐈𝐍𝐅𝐎�
 switch (command) {
 case "pack": 
 let url = await pack[Math.floor(Math.random() * pack.length)]
-conn.sendMessage(m.chat, { image: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
-//conn.sendButton(m.chat, `_🥵 Pack 🥵_`, author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)    		
-break
+    await conn.sendFile(  
+      m.chat,  
+      url,  
+      "gimage.jpg",  
+      `😋 pack 😋`.trim(), m)
 case "pack2":  
 let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
 conn.sendMessage(m.chat, { image: { url: url2 }, caption: `_🥵 Pack 2 🥵_` }, { quoted: m })    
@@ -30,39 +32,28 @@ break
 }}
 handler.command = /^(pack|pack2|pack3|videoxxx|vídeoxxx|videoxxxlesbi|videolesbixxx|pornolesbivid|pornolesbianavid|pornolesbiv|pornolesbianav|pornolesv)$/i
 export default handler
-global.pack = [
-  "https://i.imgur.com/XbW7FO2.jpg",
-  "https://i.imgur.com/ciuzM98.jpg",
-  "https://i.imgur.com/uHsrrrx.jpg",
-  "https://i.imgur.com/PVi8YDi.jpg",
-  "https://i.imgur.com/FLC3ZXE.jpg",
-  "https://i.imgur.com/54m52tX.jpg",
-  "https://i.imgur.com/OsxYPgQ.jpg",
-  "https://i.imgur.com/vpw6Xnr.jpg",
-  "https://i.imgur.com/aAyPrZx.jpg",
-  "https://i.imgur.com/Gh3ORCd.jpg",
-  "https://i.imgur.com/rjGhygM.jpg",
-  "https://i.imgur.com/zdHVFEI.jpg",
-  "https://i.imgur.com/kAplnSG.jpg",
-  "https://i.imgur.com/15UiO8o.jpg",
-  "https://i.imgur.com/qjjyr6G.jpg",
-  "https://i.imgur.com/bQZRhBU.jpg",
-  "https://i.imgur.com/vpw6Xnr.jpg",
-  "https://i.imgur.com/aAyPrZx.jpg",
-  "https://i.imgur.com/Gh3ORCd.jpg",
-  "https://i.imgur.com/rjGhygM.jpg",
-  "https://i.imgur.com/0MhmmF4.jpg",
-  "https://i.imgur.com/2MX4wvq.jpg",
-  "https://i.imgur.com/HYL5ggu.jpg",
-  "https://i.imgur.com/7ZjOD2a.jpg",
-  "https://i.imgur.com/zbEUy3m.jpg",
-  "https://i.imgur.com/tZ6vlg6.jpg",
-  "https://i.imgur.com/jdPns8O.jpg",
-  "https://i.imgur.com/VyjBQHT.jpg",
-  "https://i.imgur.com/ozAGqBD.jpg",
-  "https://i.imgur.com/DsSj9S1.jpg",
-  "https://i.imgur.com/KYHpjNc.jpg",
-]
+
+global.pack = [ 
+   "https://telegra.ph/file/f8bc435732650131192a5.jpg", 
+   "https://telegra.ph/file/570e7cf369d70aae15990.jpg", 
+   "https://telegra.ph/file/891da3a1c54cb37ed0756.jpg", 
+   "https://telegra.ph/file/624815273ed1ae11c4ff0.jpg", 
+   "https://telegra.ph/file/8e398585865bc94030ce7.jpg", 
+   "https://telegra.ph/file/11b8efdc9615134725752.jpg", 
+   "https://telegra.ph/file/29662296bbb1ae7f1a856.jpg", 
+   "https://telegra.ph/file/f30ee098a6c46e5537653.jpg", 
+   "https://telegra.ph/file/6933cb35ca62196b9fe17.jpg", 
+   "https://telegra.ph/file/a779b85b5f0cab14aa147.jpg", 
+   "https://telegra.ph/file/29047576f7d000286f0ab.jpg", 
+   "https://telegra.ph/file/0dad2b4ed22cba2a3140e.jpg", 
+   "https://telegra.ph/file/bf6210e80f3d37f160baf.jpg", 
+   "https://telegra.ph/file/679e3a1f1fd2617035a35.jpg", 
+   "https://telegra.ph/file/97d2ae47ea0dbdb1ed764.jpg", 
+   "https://telegra.ph/file/b71c296f6c210bc39d10b.jpg", 
+   "https://telegra.ph/file/3d9a5fee6553aafb47858.jpg", 
+   "https://telegra.ph/file/af13b3d0acd9b180118fa.png", 
+ ]; 
+ 
 global.packgirl = [
   "https://i.imgur.com/mwLJaxU.jpg",
   "https://i.imgur.com/9ptmlPl.jpg",
