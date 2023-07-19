@@ -17,6 +17,7 @@ import { Configuration, OpenAIApi } from 'openai'
 const configuration = new Configuration({ organization: global.openai_org_id, apiKey: global.openai_key });
 const openaiii = new OpenAIApi(configuration);
 let handler = async (m, { conn, text, usedPrefix, command }) => {
+if (usedPrefix == 'a' || usedPrefix == 'A') return    
 if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽𝙰 𝙿𝙴𝚃𝙸𝙲𝙸𝙾𝙽 𝙾 𝚄𝙽𝙰 𝙾𝚁𝙳𝙴𝙽 𝙿𝙰𝚁𝙰 𝚄𝚂𝙰𝚁 𝙻𝙰 𝙵𝚄𝙽𝙲𝙸𝙾𝙽 𝙳𝙴 𝙲𝙷𝙰𝚃𝙶𝙿𝚃*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾𝚂 𝙳𝙴 𝙿𝙴𝚃𝙸𝙲𝙸𝙾𝙽𝙴𝚂 𝚈 𝙾𝚁𝙳𝙴𝙽𝙴𝚂*\n*◉ ${usedPrefix + command} Reflexion sobre la serie Merlina 2022 de netflix*\n*◉ ${usedPrefix + command} Codigo en JS para un juego de cartas*`    
 try {
 let chgptdb = global.chatgpt.data.users[m.sender];
@@ -33,9 +34,9 @@ m.reply(BotIA222.data.choices[0].text.trim())
 } catch (efe2) {
 console.log(efe2)    
 try {
-let IA = await fetch(`https://api.amosayomide05.cf/gpt/?question=${text}&string_id=${m.sender}`)  
-let IAR = await IA.json()
-conn.sendMessage(m.chat, { text: `${IAR.response}`.trim() }, { quoted: m });
+let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=${m.sender}`)
+let hasill22 = await tioress22.json()
+m.reply(`${hasill22.result}`.trim())         
 } catch (efe) {
 console.log(efe)    
 try {   
@@ -45,9 +46,9 @@ m.reply(jjson.data.data.trim())
 } catch (efe3) {    
 console.log(efe3)
 try {
-let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=${m.sender}`)
-let hasill22 = await tioress22.json()
-m.reply(`${hasill22.result}`.trim())         
+let IA = await fetch(`https://api.amosayomide05.cf/gpt/?question=${text}&string_id=${m.sender}`)  
+let IAR = await IA.json()
+conn.sendMessage(m.chat, { text: `${IAR.response}`.trim() }, { quoted: m }); 
 } catch (efe4) {   
 console.log(efe4)
 throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`   

@@ -3,6 +3,7 @@ import uploadFile from '../lib/uploadFile.js'
 import uploadImage from '../lib/uploadImage.js'
 import { webp2png } from '../lib/webp2mp4.js'
 let handler = async (m, { conn, args, usedPrefix, command }) => {
+if (usedPrefix == 'a' || usedPrefix == 'A') return    
 let stiker = false
 try {
 let q = m.quoted ? m.quoted : m

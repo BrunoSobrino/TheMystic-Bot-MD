@@ -4,6 +4,7 @@ import uploadImage from '../lib/uploadImage.js'
 import { webp2png } from '../lib/webp2mp4.js'
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
+if (usedPrefix == 'a' || usedPrefix == 'A') return  
   let stiker = false
   let user = db.data.users[m.sender]
   try {

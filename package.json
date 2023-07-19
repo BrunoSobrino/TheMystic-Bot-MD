@@ -29,7 +29,7 @@
     "dependencies": {
         "@adiwajshing/baileys": "npm:@queenanya/baileys@6.1.3",
         "@adiwajshing/keyed-db": "^0.2.4",
-        "@bochilteam/scraper": "^3.0.0",
+        "@bochilteam/scraper": "^4.2.4",
         "@vitalets/google-translate-api": "^8.0.0",
         "@shineiichijo/marika": "^2.0.6",
         "@xct007/frieren-scraper": "^0.0.2",
