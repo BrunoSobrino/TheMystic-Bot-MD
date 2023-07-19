@@ -4,11 +4,7 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[❗𝐈𝐍𝐅𝐎�
 switch (command) {
 case "pack": 
 let url = await pack[Math.floor(Math.random() * pack.length)]
-    await conn.sendFile(  
-      m.chat,  
-      url,  
-      "gimage.jpg",  
-      `_🥵 pack 🥵_`.trim(), m)
+conn.sendFile(m.chat, url, "gimage.jpg", `_🥵 pack 🥵_`.trim(), m)
 case "pack2":  
 let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
     await conn.sendFile(  
