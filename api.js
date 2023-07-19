@@ -40,6 +40,7 @@ global.APIs = {
   rose: 'https://api.itsrose.site',
   popcat : 'https://api.popcat.xyz',
   xcoders : 'https://api-xcoders.site'
+
 },
 global.APIKeys = { 
   'https://api.xteam.xyz': `${keysxteam}`,
