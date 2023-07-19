@@ -8,10 +8,15 @@ let url = await pack[Math.floor(Math.random() * pack.length)]
       m.chat,  
       url,  
       "gimage.jpg",  
-      `🥵 pack 🥵`.trim(), m)
+      `_🥵 pack 🥵_`.trim(), m)
 case "pack2":  
 let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
-conn.sendMessage(m.chat, { image: { url: url2 }, caption: `_🥵 Pack 2 🥵_` }, { quoted: m })    
+    await conn.sendFile(  
+      m.chat,  
+      url2,  
+      "gimage.jpg",  
+      `  
+  pack`.trim(), m) 
 //conn.sendButton(m.chat, `_🥵 Pack 2 🥵_`, author, url2, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
 break
 case "pack3":
