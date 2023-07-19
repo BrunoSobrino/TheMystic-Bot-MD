@@ -24,7 +24,7 @@ let textoInfo = `*[❗] Puedes descargar el video que quieras de la siguiente fo
 *◉ ${usedPrefix}audio 5*
 *◉ ${usedPrefix}video 8*`.trim()  
 let teks = results.all.map((v, i) => {
-let link = v.url;
+let link = v.link;
 vids_.urls.push(link);
 return `[${i + 1}] ${v.title}
 ↳ 🫐 *_Link :_* ${v.link}
