@@ -4,18 +4,15 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[❗𝐈𝐍𝐅𝐎�
 switch (command) {
 case "pack": 
 let url = await pack[Math.floor(Math.random() * pack.length)]
-conn.sendMessage(m.chat, { video: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })    
-//conn.sendButton(m.chat, `_🥵 Pack 🥵_`, author, url, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)    
+conn.sendMessage(m.chat, { image: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
 break
-case "pack2":  
+case "pack2": 
 let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
-conn.sendMessage(m.chat, { video: { url: url2 }, caption: `_🥵 Pack 2 🥵_` }, { quoted: m })    
-//conn.sendButton(m.chat, `_🥵 Pack 2 🥵_`, author, url2, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
-break
+conn.sendMessage(m.chat, { image: { url: url2 }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
+break        
 case "pack3":
 let url3 = await packmen[Math.floor(Math.random() * packmen.length)]
-conn.sendMessage(m.chat, { video: { url: url3 }, caption: `_🥵 Pack 3 🥵_` }, { quoted: m })    
-//conn.sendButton(m.chat, `_🥵 Pack 3 🥵_`, author, url3, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
+conn.sendMessage(m.chat, { image: { url: url3 }, caption: `_🥵 Pack 3 🥵_` }, { quoted: m })    
 break
 case "videoxxx": case "vídeoxxx":    
 let url4 = await videosxxxc[Math.floor(Math.random() * videosxxxc.length)] 
@@ -25,44 +22,45 @@ break
 case "videoxxxlesbi": case "videolesbixxx": case "pornolesbivid": case "pornolesbianavid": case "pornolesbiv": case "pornolesbianav": case "pornolesv":       
 let url5 = await videosxxxc2[Math.floor(Math.random() * videosxxxc2.length)] 
 await conn.sendMessage(m.chat, { video: { url: url5 }, caption: `*ᴅɪsғʀᴜᴛᴀ ᴅᴇʟ ᴠɪᴅᴇᴏ 🥵*` }, { quoted: m }) 
-//await conn.sendButton(m.chat, `*ᴅɪsғʀᴜᴛᴀ ᴅᴇʟ ᴠɪᴅᴇᴏ 🥵*`, author, url5, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)    
 break    
 }}
 handler.command = /^(pack|pack2|pack3|videoxxx|vídeoxxx|videoxxxlesbi|videolesbixxx|pornolesbivid|pornolesbianavid|pornolesbiv|pornolesbianav|pornolesv)$/i
 export default handler
-global.pack = [
-  "https://i.imgur.com/XbW7FO2.jpg",
-  "https://i.imgur.com/ciuzM98.jpg",
-  "https://i.imgur.com/uHsrrrx.jpg",
-  "https://i.imgur.com/PVi8YDi.jpg",
-  "https://i.imgur.com/FLC3ZXE.jpg",
-  "https://i.imgur.com/54m52tX.jpg",
-  "https://i.imgur.com/OsxYPgQ.jpg",
-  "https://i.imgur.com/vpw6Xnr.jpg",
-  "https://i.imgur.com/aAyPrZx.jpg",
-  "https://i.imgur.com/Gh3ORCd.jpg",
-  "https://i.imgur.com/rjGhygM.jpg",
-  "https://i.imgur.com/zdHVFEI.jpg",
-  "https://i.imgur.com/kAplnSG.jpg",
-  "https://i.imgur.com/15UiO8o.jpg",
-  "https://i.imgur.com/qjjyr6G.jpg",
-  "https://i.imgur.com/bQZRhBU.jpg",
-  "https://i.imgur.com/vpw6Xnr.jpg",
-  "https://i.imgur.com/aAyPrZx.jpg",
-  "https://i.imgur.com/Gh3ORCd.jpg",
-  "https://i.imgur.com/rjGhygM.jpg",
-  "https://i.imgur.com/0MhmmF4.jpg",
-  "https://i.imgur.com/2MX4wvq.jpg",
-  "https://i.imgur.com/HYL5ggu.jpg",
-  "https://i.imgur.com/7ZjOD2a.jpg",
-  "https://i.imgur.com/zbEUy3m.jpg",
-  "https://i.imgur.com/tZ6vlg6.jpg",
-  "https://i.imgur.com/jdPns8O.jpg",
-  "https://i.imgur.com/VyjBQHT.jpg",
-  "https://i.imgur.com/ozAGqBD.jpg",
-  "https://i.imgur.com/DsSj9S1.jpg",
-  "https://i.imgur.com/KYHpjNc.jpg",
-]
+
+global.pack = [ 
+   "https://telegra.ph/file/957fe4031132ef90b66ec.jpg", 
+   "https://telegra.ph/file/c4b85bd53030cb648382f.jpg", 
+   "https://telegra.ph/file/df56f8a76145df9c923ad.jpg", 
+   "https://telegra.ph/file/d5d1c2c710c4b5ee8bc6c.jpg", 
+   "https://telegra.ph/file/d0c0cd47e87535373ab68.jpg", 
+   "https://telegra.ph/file/651a5a9dc96c97c8ef8fc.jpg", 
+   "https://telegra.ph/file/f857ae461ceab18c38de2.jpg", 
+   "https://telegra.ph/file/5d2a2aeff5e6fbd229eff.jpg", 
+   "https://telegra.ph/file/b93573531f898ea875dd0.jpg", 
+   "https://telegra.ph/file/c798b3959f84d345b0f25.jpg", 
+   "https://telegra.ph/file/de820647f8cabce533557.jpg", 
+   "https://telegra.ph/file/e105097d5fadf3e522eb5.jpg", 
+   "https://telegra.ph/file/8592e352a9ee6c7244737.jpg", 
+   "https://telegra.ph/file/bb9c7d879b7dc1d86a2ce.jpg", 
+   "https://telegra.ph/file/83f108601e6105446ad1f.jpg", 
+   "https://telegra.ph/file/2a6bff14e53ed2533ad25.jpg", 
+   "https://telegra.ph/file/e37d74aeccc5bdfd6be3e.jpg", 
+   "https://telegra.ph/file/ca984650af06b951e961d.jpg", 
+   "https://telegra.ph/file/ebb3ac7f7498dd09f6afc.jpg",
+   "https://telegra.ph/file/6192305a24ffb8fa30942.jpg",
+   "https://telegra.ph/file/ee67c17d0043b98dc757e.jpg",
+   "https://telegra.ph/file/6ae756b686cd2b5950721.jpg", 
+   "https://telegra.ph/file/b1e1da38d897d117c2aa9.jpg",
+   "https://telegra.ph/file/6b759437dc8b863c2fa19.jpg",
+   "https://telegra.ph/file/960d8c268aecb5eb117f0.jpg",
+   "https://telegra.ph/file/d0dd518bdd147cb10b0b5.jpg", 
+   "https://telegra.ph/file/31f2d59b5cd68ec5acb21.jpg",
+   "https://telegra.ph/file/14ab9bd02f24e0f1a1a03.jpg",
+   "https://telegra.ph/file/e02bf6bc9227f7f8b7e2a.jpg",
+   "https://telegra.ph/file/ab55fca1d6b602b1a69df.jpg",
+   "https://telegra.ph/file/42105cac3666b37da3d1c.jpg"
+ ]; 
+ 
 global.packgirl = [
   "https://i.imgur.com/mwLJaxU.jpg",
   "https://i.imgur.com/9ptmlPl.jpg",
