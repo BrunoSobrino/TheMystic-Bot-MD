@@ -51,6 +51,7 @@
         "hispamemes": "^1.0.7",
         "human-readable": "^0.2.1",
         "instagram-url-direct": "^1.0.12",
+        "imagemaker.js": "^2.0.4",
         "jsdom": "^19.0.0",
         "link-preview-js": "^3.0.0",
         "lodash": "^4.17.21",
