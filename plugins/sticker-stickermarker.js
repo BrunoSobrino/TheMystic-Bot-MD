@@ -19,7 +19,7 @@ if (!mime) throw '*_🔰 No se encontro la imagen_*\n\n*_✅ Responda a una imag
 if (!/image\/(jpe?g|png)/.test(mime)) throw `*_⚠️ Formato no admitido_*\n\n*_👉🏻 Responda a una imagen_*`
 let img = await q.download()
 let url = await uploadImage(img)
-let apiUrl = global.API('https://some-random-api.ml/canvas/', encodeURIComponent(effect), {
+let apiUrl = global.API('https://some-random-api.com/canvas/', encodeURIComponent(effect), {
 avatar: url
 })
 try {
