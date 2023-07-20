@@ -4,20 +4,15 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw '*[❗𝐈𝐍𝐅𝐎�
 switch (command) {
 case "pack": 
 let url = await pack[Math.floor(Math.random() * pack.length)]
-conn.sendFile(m.chat, url, "gimage.jpg", `_🥵 pack 🥵_`.trim(), m)
-case "pack2":  
-let url2 = await packgirl[Math.floor(Math.random() * packgirl.length)]
-    await conn.sendFile(  
-      m.chat,  
-      url2,  
-      "gimage.jpg",  
-      `_🥵 pack 2🥵_`.trim(), m) 
-//conn.sendButton(m.chat, `_🥵 Pack 2 🥵_`, author, url2, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
+conn.sendMessage(m.chat, { image: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
 break
+case "pack2": 
+let url = await packgirl[Math.floor(Math.random() * packgirl.length)]
+conn.sendMessage(m.chat, { image: { url: url }, caption: `_🥵 Pack 🥵_` }, { quoted: m })     
+break        
 case "pack3":
 let url3 = await packmen[Math.floor(Math.random() * packmen.length)]
 conn.sendMessage(m.chat, { image: { url: url3 }, caption: `_🥵 Pack 3 🥵_` }, { quoted: m })    
-//conn.sendButton(m.chat, `_🥵 Pack 3 🥵_`, author, url3, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m) 
 break
 case "videoxxx": case "vídeoxxx":    
 let url4 = await videosxxxc[Math.floor(Math.random() * videosxxxc.length)] 
@@ -34,24 +29,37 @@ handler.command = /^(pack|pack2|pack3|videoxxx|vídeoxxx|videoxxxlesbi|videolesb
 export default handler
 
 global.pack = [ 
-   "https://telegra.ph/file/f8bc435732650131192a5.jpg", 
-   "https://telegra.ph/file/570e7cf369d70aae15990.jpg", 
-   "https://telegra.ph/file/891da3a1c54cb37ed0756.jpg", 
-   "https://telegra.ph/file/624815273ed1ae11c4ff0.jpg", 
-   "https://telegra.ph/file/8e398585865bc94030ce7.jpg", 
-   "https://telegra.ph/file/11b8efdc9615134725752.jpg", 
-   "https://telegra.ph/file/29662296bbb1ae7f1a856.jpg", 
-   "https://telegra.ph/file/f30ee098a6c46e5537653.jpg", 
-   "https://telegra.ph/file/6933cb35ca62196b9fe17.jpg", 
-   "https://telegra.ph/file/a779b85b5f0cab14aa147.jpg", 
-   "https://telegra.ph/file/29047576f7d000286f0ab.jpg", 
-   "https://telegra.ph/file/0dad2b4ed22cba2a3140e.jpg", 
-   "https://telegra.ph/file/bf6210e80f3d37f160baf.jpg", 
-   "https://telegra.ph/file/679e3a1f1fd2617035a35.jpg", 
-   "https://telegra.ph/file/97d2ae47ea0dbdb1ed764.jpg", 
-   "https://telegra.ph/file/b71c296f6c210bc39d10b.jpg", 
-   "https://telegra.ph/file/3d9a5fee6553aafb47858.jpg", 
-   "https://telegra.ph/file/af13b3d0acd9b180118fa.png", 
+   "https://telegra.ph/file/957fe4031132ef90b66ec.jpg", 
+   "https://telegra.ph/file/c4b85bd53030cb648382f.jpg", 
+   "https://telegra.ph/file/df56f8a76145df9c923ad.jpg", 
+   "https://telegra.ph/file/d5d1c2c710c4b5ee8bc6c.jpg", 
+   "https://telegra.ph/file/d0c0cd47e87535373ab68.jpg", 
+   "https://telegra.ph/file/651a5a9dc96c97c8ef8fc.jpg", 
+   "https://telegra.ph/file/f857ae461ceab18c38de2.jpg", 
+   "https://telegra.ph/file/5d2a2aeff5e6fbd229eff.jpg", 
+   "https://telegra.ph/file/b93573531f898ea875dd0.jpg", 
+   "https://telegra.ph/file/c798b3959f84d345b0f25.jpg", 
+   "https://telegra.ph/file/de820647f8cabce533557.jpg", 
+   "https://telegra.ph/file/e105097d5fadf3e522eb5.jpg", 
+   "https://telegra.ph/file/8592e352a9ee6c7244737.jpg", 
+   "https://telegra.ph/file/bb9c7d879b7dc1d86a2ce.jpg", 
+   "https://telegra.ph/file/83f108601e6105446ad1f.jpg", 
+   "https://telegra.ph/file/2a6bff14e53ed2533ad25.jpg", 
+   "https://telegra.ph/file/e37d74aeccc5bdfd6be3e.jpg", 
+   "https://telegra.ph/file/ca984650af06b951e961d.jpg", 
+   "https://telegra.ph/file/ebb3ac7f7498dd09f6afc.jpg",
+   "https://telegra.ph/file/6192305a24ffb8fa30942.jpg",
+   "https://telegra.ph/file/ee67c17d0043b98dc757e.jpg",
+   "https://telegra.ph/file/6ae756b686cd2b5950721.jpg", 
+   "https://telegra.ph/file/b1e1da38d897d117c2aa9.jpg",
+   "https://telegra.ph/file/6b759437dc8b863c2fa19.jpg",
+   "https://telegra.ph/file/960d8c268aecb5eb117f0.jpg",
+   "https://telegra.ph/file/d0dd518bdd147cb10b0b5.jpg", 
+   "https://telegra.ph/file/31f2d59b5cd68ec5acb21.jpg",
+   "https://telegra.ph/file/14ab9bd02f24e0f1a1a03.jpg",
+   "https://telegra.ph/file/e02bf6bc9227f7f8b7e2a.jpg",
+   "https://telegra.ph/file/ab55fca1d6b602b1a69df.jpg",
+   "https://telegra.ph/file/42105cac3666b37da3d1c.jpg"
  ]; 
  
 global.packgirl = [
