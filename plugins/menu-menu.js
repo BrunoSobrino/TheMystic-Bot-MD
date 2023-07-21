@@ -4,7 +4,8 @@ if (usedPrefix == 'a' || usedPrefix == 'A') return
 try {
 let pp = imagen4
 //let vn = './media/menu.mp3'
-let img = await(await fetch('https://i.imgur.com/JP52fdP.jpg')).buffer()
+let img =  './Menu2.jpg'
+//let img = await(await fetch('https://i.imgur.com/JP52fdP.jpg')).buffer()
 let d = new Date(new Date + 3600000)
 let locale = 'es'
 let week = d.toLocaleDateString(locale, { weekday: 'long' })
