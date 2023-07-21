@@ -33,6 +33,8 @@
         "@vitalets/google-translate-api": "^8.0.0",
         "@shineiichijo/marika": "^2.0.6",
         "@xct007/frieren-scraper": "^0.0.2",
+        "@green-code/music-track-data": "^2.0.3",
+        "@brandond/findthelyrics": "^2.0.5",
         "acrcloud": "^1.4.0",
         "api-dylux": "^1.2.2",
         "aptoide-scraper": "^1.0.1",
