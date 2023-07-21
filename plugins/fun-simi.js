@@ -19,15 +19,9 @@ let handler = async (m, { text, command, args, usedPrefix }) => {
   let reis2 = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=es&dt=t&q=" + res.cnt)
   let resu2 = await reis2.json()
   m.reply(resu2[0][0][0])      
-  } catch {  
-  let reisss = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=id&dt=t&q=" + text)
-  let resuuu = await reisss.json()      
-  let res222 = await fetch(`https://violetics.pw/api/utility/simsimi?apikey=beta&text=${resuuu[0][0][0]}`)  
-  let json222 = await res222.json()
-  let resulttt = json222.result
-  let lolll = await translate(`${resulttt}`, { to: 'es', autoCorrect: true })
-  m.reply(lolll.text)      
-  }}
+  } catch {
+  throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙴 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`  
+  }
 }
 handler.help = ['simi', 'bot'].map(v => v + ' <teks>')
 handler.tags = ['fun']
