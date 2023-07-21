@@ -27,7 +27,7 @@
     },
     "license": "GPL-3.0-or-later",
     "dependencies": {
-        "@adiwajshing/baileys": "npm:@queenanya/baileys@6.1.3",
+        "@adiwajshing/baileys": "npm:@queenanya/baileys2@6.4.1",
         "@adiwajshing/keyed-db": "^0.2.4",
         "@bochilteam/scraper": "^4.2.4",
         "@vitalets/google-translate-api": "^8.0.0",
