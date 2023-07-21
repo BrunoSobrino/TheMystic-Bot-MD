@@ -1,24 +1,31 @@
-import fetch from 'node-fetch'
-import { lyrics, lyricsv2 } from '@bochilteam/scraper'
+import { find_lyrics } from "@brandond/findthelyrics";
+import { getTracks } from "@green-code/music-track-data";
+import { googleImage } from '@bochilteam/scraper'
 let handler = async (m, { conn, text, usedPrefix, command }) => {
 let teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : ''
 if (!teks) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾: ${usedPrefix + command} beret ojala*`
 try {
-const result = await lyricsv2(teks).catch(async _ => await lyrics(teks))
-let res = await fetch(global.API('https://some-random-api.ml', '/lyrics', {
-title: result.author + result.title}))
-if (!res.ok) throw await res.text()
+const result = await getTracks(teks)
+const lyrics = await find_lyrics(`${result[0].artist} ${result[0].title}`);
+let res = await fetch(global.API('https://some-random-api.com', '/lyrics', { title: result[0].artist + result[0].title }))
 let json = await res.json()
-if (!json.thumbnail.genius) throw json
-await conn.reply(m.chat, `𝚃𝙸𝚃𝚄𝙻𝙾: *${result.title}*\n𝙰𝚄𝚃𝙾𝚁: *${result.author}*\n\n𝙻𝙴𝚃𝚁𝙰: ${result.lyrics}`, m)
-//let letratexto =`𝚃𝙸𝚃𝚄𝙻𝙾: *${result.title}*\n𝙰𝚄𝚃𝙾𝚁: *${result.author}*\n\n𝙻𝙴𝚃𝚁𝙰: ${result.lyrics}`.trim()
-let linkresult = monospace + result.link + monospace
-//conn.sendButton(m.chat, letratexto, `\n𝚄𝚁𝙻: ${linkresult}\n${wm}`, json.thumbnail.genius, [['🎵 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙰𝚄𝙳𝙸𝙾 🎵', `#play.1 ${text}`], ['🎥 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚅𝙸𝙳𝙴𝙾 🎥', `#play.2 ${text}`]], m)
+let img 
+try {
+img = result.album.artwork
+} catch {  
+try {    
+img = json.thumbnail.genius 
+} catch {  
+const bochil = await googleImage(`${result[0].artist} ${result[0].title}`)
+img = await bochil.getRandom()     
+}}    
+let textoLetra = `🎤 𝚃𝙸𝚃𝚄𝙻𝙾: *${result[0].title || ''}*\n👤 𝙰𝚄𝚃𝙾𝚁: *${result[0].artist || ''}*\n\n📃🎵 𝙻𝙴𝚃𝚁𝙰:\n${lyrics || ''}`    
+await conn.sendMessage(m.chat, { image: { url: img }, caption: textoLetra }, { quoted: m })   
+await conn.sendMessage(m.chat, { audio: { url: result[0].preview }, fileName: `${result[0].artist} ${result[0].title}.mp3`, mimetype: 'audio/mp4' }, { quoted: m })  
 } catch {
-await m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*')}}
+throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*` 
+}}
 handler.help = ['lirik','letra'].map(v => v + ' <Apa>')
 handler.tags = ['internet']
 handler.command = /^(lirik|lyrics|lyric|letra)$/i
 export default handler
-let mono = '`' + '`' + '`'
-global.monospace = mono
