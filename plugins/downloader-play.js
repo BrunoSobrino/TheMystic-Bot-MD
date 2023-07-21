@@ -26,15 +26,6 @@ let texto1 = `*◉——⌈🔊 YOUTUBE PLAY 🔊⌋——◉*\n
 conn.sendMessage(m.chat, { image: { url: yt_play[0].thumbnail }, caption: texto1 }, { quoted: m })
 if (command == 'play') {
 try {
-let q = '128kbps'
-let v = yt_play[0].url
-const yt = await youtubedl(v).catch(async _ => await youtubedlv2(v))
-const dl_url = await yt.audio[q].download()
-const ttl = await yt.title
-const size = await yt.audio[q].fileSizeH
-await conn.sendFile(m.chat, dl_url, ttl + '.mp3', null, m, false, { mimetype: 'audio/mp4' })
-} catch {
-try {
 const dataRE = await fetch(`https://api.akuari.my.id/downloader/youtube?link=${yt_play[0].url}`)
 const dataRET = await dataRE.json()
 conn.sendMessage(m.chat, { audio: { url: dataRET.mp3[1].url }, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4' }, { quoted: m })    
@@ -43,7 +34,16 @@ try {
 let humanLol = await fetch(`https://api.lolhuman.xyz/api/ytplay?apikey=${lolkeysapi}&query=${yt_play[0].title}`)
 let humanRET = await humanLol.json()
 conn.sendMessage(m.chat, { audio: { url: humanRET.result.audio.link }, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4' }, { quoted: m })         
-} catch {     
+} catch {       
+try {
+let q = '128kbps'
+let v = yt_play[0].url
+const yt = await youtubedl(v).catch(async _ => await youtubedlv2(v))
+const dl_url = await yt.audio[q].download()
+const ttl = await yt.title
+const size = await yt.audio[q].fileSizeH
+await conn.sendFile(m.chat, dl_url, ttl + '.mp3', null, m, false, { mimetype: 'audio/mp4' })
+} catch {
 try {
 let lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytaudio2?apikey=${lolkeysapi}&url=${yt_play[0].url}`)    
 let lolh = await lolhuman.json()
@@ -61,6 +61,15 @@ await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿
 }  
 if (command == 'play2') {
 try {
+let lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytvideo2?apikey=${lolkeysapi}&url=${yt_play[0].url}`)    
+let lolh = await lolhuman.json()
+let n = lolh.result.title || 'error'
+let n2 = lolh.result.link
+let n3 = lolh.result.size
+let n4 = lolh.result.thumbnail
+await conn.sendMessage(m.chat, { video: { url: n2 }, fileName: `${n}.mp4`, mimetype: 'video/mp4', caption: `▢ 𝚃𝙸𝚃𝚄𝙻𝙾: ${n}\n▢ 𝙿𝙴𝚂𝙾 𝙳𝙴𝙻 𝚅𝙸𝙳𝙴𝙾: ${n3}`, thumbnail: await fetch(n4) }, { quoted: m })
+} catch {
+try {
 let qu = '360'
 let q = qu + 'p'
 let v = yt_play[0].url
@@ -74,15 +83,6 @@ try {
 let mediaa = await ytMp4(yt_play[0].url)
 await conn.sendMessage(m.chat, { video: { url: mediaa.result }, fileName: `error.mp4`, caption: `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, thumbnail: mediaa.thumb, mimetype: 'video/mp4' }, { quoted: m })     
 } catch {  
-try {
-let lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytvideo2?apikey=${lolkeysapi}&url=${yt_play[0].url}`)    
-let lolh = await lolhuman.json()
-let n = lolh.result.title || 'error'
-let n2 = lolh.result.link
-let n3 = lolh.result.size
-let n4 = lolh.result.thumbnail
-await conn.sendMessage(m.chat, { video: { url: n2 }, fileName: `${n}.mp4`, mimetype: 'video/mp4', caption: `▢ 𝚃𝙸𝚃𝚄𝙻𝙾: ${n}\n▢ 𝙿𝙴𝚂𝙾 𝙳𝙴𝙻 𝚅𝙸𝙳𝙴𝙾: ${n3}`, thumbnail: await fetch(n4) }, { quoted: m })
-} catch {
 await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*', m)}}}    
 }} catch {
 throw "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*"}
