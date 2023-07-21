@@ -17,7 +17,6 @@ break
 case "videoxxx": case "vídeoxxx":    
 let url4 = await videosxxxc[Math.floor(Math.random() * videosxxxc.length)] 
 await conn.sendMessage(m.chat, { video: { url: url4 }, caption: `*ᴅɪsғʀᴜᴛᴀ ᴅᴇʟ ᴠɪᴅᴇᴏ 🥵*` }, { quoted: m })    
-await conn.sendButton(m.chat, `*ᴅɪsғʀᴜᴛᴀ ᴅᴇʟ ᴠɪᴅᴇᴏ 🥵*`, author, url4, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `${usedPrefix + command}`]], m)  
 break  
 case "videoxxxlesbi": case "videolesbixxx": case "pornolesbivid": case "pornolesbianavid": case "pornolesbiv": case "pornolesbianav": case "pornolesv":       
 let url5 = await videosxxxc2[Math.floor(Math.random() * videosxxxc2.length)] 
