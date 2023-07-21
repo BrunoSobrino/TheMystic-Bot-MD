@@ -1,37 +1,123 @@
-import fetch from 'node-fetch'
-import yts from 'yt-search'
+import fetch from "node-fetch"
+import yts from "yt-search"
 import ytdl from 'ytdl-core'
 import axios from 'axios'
-let handler = async (m, {command, conn, text}) => {
-if (!text) throw `[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙾 𝙴𝙽𝙻𝙰𝙲𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙾 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:\n#play.1 Good Feeling - Flo Rida*`
+import { youtubedl, youtubedlv2 } from '@bochilteam/scraper'
+let handler = async (m, { conn, command, args, text, usedPrefix }) => {
+if (!text) throw ` *[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽* \n\n *—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:* \n *${usedPrefix + command} Farruko beba* \n\n\n*[❗𝐈𝐍𝐅𝐎❗]MISSING SONG NAME PLEASE ENTER COMMAND PLUS SONG NAME* \n\n *—◉ AN EXAMPLE* \n *${usedPrefix + command} Farruko beba* `
 try {
-if (command == 'play.1') {
-conn.reply(m.chat, `*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*`, m) 
-try {  
-let res = await fetch(`https://api.lolhuman.xyz/api/ytplay2?apikey=${lolkeysapi}&query=${text}`)    
-let json = await res.json()
-let aa = await conn.sendMessage(m.chat, { audio: { url: json.result.audio }, fileName: `error.mp3`, mimetype: 'audio/mp4' }, { quoted: m })
-if (!aa) return await conn.sendFile(m.chat, json.result.audio, 'error.mp3', null, m, false, { mimetype: 'audio/mp4' })
-} catch {  
-let mediaa = await ytPlay(text)
-let audiocore = mediaa.result2[0].audio || mediaa.result2[1].audio || mediaa.result2[2].audio || mediaa.result2
-conn.sendMessage(m.chat, { audio: { url: audiocore }, fileName: `error.mp3`, mimetype: 'audio/mp4' }, { quoted: m })}}
-if (command == 'play.2') {
-conn.reply(m.chat, `*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*`, m)    
-try {   
-let mediaa = await ytPlayVid(text)
-await conn.sendMessage(m.chat, { video: { url: mediaa.result }, fileName: `error.mp4`, caption: `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, thumbnail: mediaa.thumb, mimetype: 'video/mp4' }, { quoted: m })   
+await m.reply(` *_⏳ESPERA MIENTRAS LE MANDAMOS SU PEDIDO⏳* \n\n *_⏳WAIT WHILE WE SEND YOUR ORDER_⏳* `)
+await m.reply(`*Si no se envia tu pedido puedes usar los comandos* \n*/audio Farruko beba*\n*/video Farruko beba*\n*/audiodocu Farruko beba*\n*/videodocu Farruko beba*`)
+await m.reply(`⌛ _Cargando..._\n▰▰▰▱▱▱▱▱▱`)
+const yt_play = await search(args.join(" "))
+let additionalText = ''
+if (command === 'play3') {
+additionalText = 'audio 🔊'
+} else if (command === 'play4') {
+additionalText = 'video 🎥'}
+let texto1 = `༴⃟🌹๋ོ࣭ꦿ⁩PLAY-DOCYouTube--⦿
+----------------------------------------------------------------------------------------------------------
+⇄    ◁   ㅤ  ❚❚ㅤ   ▷ㅤ    ↻
+➯➤͜͡🎶📌 *name:* ${yt_play[0].title}
+➯➤📆 *Published:* ${yt_play[0].ago}
+➯➤⌚ *Duration:* ${secondString(yt_play[0].duration.seconds)}
+➯➤👀 *Views:* ${`${MilesNumber(yt_play[0].views)}`}
+▢⫷᭄©𝙷𝙰𝙳𝙴𝚂-𝙱𝙾𝚃-𝙾𝙼𝙴𝙶𝙰﹏✍
+----------------------------------------------------------------------------------------------------------`.trim()
+conn.sendMessage(m.chat, { image: { url: yt_play[0].thumbnail }, caption: texto1 }, { quoted: m })
+if (command == 'play3') {
+try {
+const dataRE = await fetch(`https://api.akuari.my.id/downloader/youtube?link=${yt_play[0].url}`)
+const dataRET = await dataRE.json()
+conn.sendMessage(m.chat, { document: { url: dataRET.mp3[1].url }, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4' }, { quoted: m })    
 } catch {
-let res = await fetch(`https://api.lolhuman.xyz/api/ytplay2?apikey=${lolkeysapi}&query=${text}`)    
-let json = await res.json()
-await conn.sendFile(m.chat, json.result.video, 'error.mp4', `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, m)}}
-} catch (e) {
-m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*')
-}}
-handler.help = ['play.1' , 'play.2'].map(v => v + ' <texto>')
-handler.tags = ['downloader']
-handler.command = ['play.1', 'play.2']
+try {
+let humanLol = await fetch(`https://api.lolhuman.xyz/api/ytplay?apikey=${lolkeysapi}&query=${yt_play[0].title}`)
+let humanRET = await humanLol.json()
+conn.sendMessage(m.chat, { document: { url: humanRET.result.audio.link }, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4' }, { quoted: m })         
+} catch {   
+try {
+let q = '128kbps'
+let v = yt_play[0].url
+const yt = await youtubedl(v).catch(async _ => await youtubedlv2(v)).catch(async _ => await youtubedlv3(v))
+const dl_url = await yt.audio[q].download()
+const ttl = await yt.title
+const size = await yt.audio[q].fileSizeH
+await conn.sendFile(m.chat, dl_url, ttl + '.mp3', null, m, false, { mimetype: 'audio/mp4' })
+} catch {
+try {
+let lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytaudio2?apikey=${lolkeysapi}&url=${yt_play[0].url}`)    
+let lolh = await lolhuman.json()
+let n = lolh.result.title || 'error'
+await conn.sendMessage(m.chat, { document: { url: lolh.result.link }, fileName: `${n}.mp3`, mimetype: 'audio/mp4' }, { quoted: m })  
+} catch {   
+try {
+let searchh = await yts(yt_play[0].url)
+let __res = searchh.all.map(v => v).filter(v => v.type == "video")
+let infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId)
+let ress = await ytdl.chooseFormat(infoo.formats, { filter: 'audioonly' })
+conn.sendMessage(m.chat, { document: { url: ress.url }, fileName: __res[0].title + '.mp3', mimetype: 'audio/mp4' }, { quoted: m })  
+} catch {
+await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*', m)}}}}}
+}  
+if (command == 'play4') {
+try {
+let qu = '360'
+let q = qu + 'p'
+let v = yt_play[0].url
+const yt = await youtubedl(v).catch(async _ => await youtubedlv2(v)).catch(async _ => await youtubedlv3(v))
+const dl_url = await yt.video[q].download()
+const ttl = await yt.title
+const size = await yt.video[q].fileSizeH
+await await conn.sendMessage(m.chat, { document: { url: dl_url }, fileName: `${ttl}.mp4`, mimetype: 'video/mp4', caption: `▢ 𝚃𝙸𝚃𝚄𝙻𝙾: ${ttl}\n▢ 𝙿𝙴𝚂𝙾 𝙳𝙴𝙻 𝚅𝙸𝙳𝙴𝙾: ${size}`, thumbnail: await fetch(yt.thumbnail) }, { quoted: m })
+} catch {   
+try {  
+let mediaa = await ytMp4(yt_play[0].url)
+await conn.sendMessage(m.chat, { document: { url: mediaa.result }, fileName: `error.mp4`, caption: `⫷᭄©𝙷𝙰𝙳𝙴𝚂-𝙱𝙾𝚃-𝙾𝙼𝙴𝙶𝙰﹏✍`, thumbnail: mediaa.thumb, mimetype: 'video/mp4' }, { quoted: m })     
+} catch {  
+try {
+let lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytvideo2?apikey=${lolkeysapi}&url=${yt_play[0].url}`)    
+let lolh = await lolhuman.json()
+let n = lolh.result.title || 'error'
+let n2 = lolh.result.link
+let n3 = lolh.result.size
+let n4 = lolh.result.thumbnail
+await conn.sendMessage(m.chat, { document: { url: n2 }, fileName: `${n}.mp4`, mimetype: 'video/mp4', caption: `▢ 𝚃𝙸𝚃𝚄𝙻𝙾: ${n}\n▢ 𝙿𝙴𝚂𝙾 𝙳𝙴𝙻 𝚅𝙸𝙳𝙴𝙾: ${n3}`, thumbnail: await fetch(n4) }, { quoted: m })
+} catch {
+await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*', m)}}}    
+}} catch {
+throw "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾* \n\n\n *[❗]ERROR PLEASE TRY AGAIN*"}
+}
+handler.help = ["play3", "play4"].map((v) => v + " < busqueda >")
+handler.tags = ["downloader"]
+handler.command = /^play3|play4?$/i
+handler.exp = 0
+handler.limit = 4
+handler.register = true
 export default handler
+
+async function search(query, options = {}) {
+const search = await yts.search({ query, hl: "es", gl: "ES", ...options });
+return search.videos};
+
+function MilesNumber(number) {
+const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+const rep = "$1.";
+let arr = number.toString().split(".");
+arr[0] = arr[0].replace(exp, rep);
+return arr[1] ? arr.join(".") : arr[0]};
+
+function secondString(seconds) {
+seconds = Number(seconds);
+var d = Math.floor(seconds / (3600 * 24));
+var h = Math.floor((seconds % (3600 * 24)) / 3600);
+var m = Math.floor((seconds % 3600) / 60);
+var s = Math.floor(seconds % 60);
+var dDisplay = d > 0 ? d + (d == 1 ? " día, " : " días, ") : "";
+var hDisplay = h > 0 ? h + (h == 1 ? " hora, " : " horas, ") : "";
+var mDisplay = m > 0 ? m + (m == 1 ? " minuto, " : " minutos, ") : "";
+var sDisplay = s > 0 ? s + (s == 1 ? " segundo" : " segundos") : "";
+return dDisplay + hDisplay + mDisplay + sDisplay};
 
 function bytesToSize(bytes) {
 return new Promise((resolve, reject) => {
@@ -56,7 +142,7 @@ let tiny = await axios.get(`https://tinyurl.com/api-create.php?url=${resultFix[0
 let tinyUrl = tiny.data;
 let title = getUrl.videoDetails.title;
 let thumb = getUrl.player_response.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
-resolve({ title, result: tinyUrl, result2: resultFix, thumb })}).catch(reject)})}
+resolve({ title, result: tinyUrl, result2: resultFix, thumb })}).catch(reject)})};
 
 async function ytMp4(url) {
 return new Promise(async(resolve, reject) => {
