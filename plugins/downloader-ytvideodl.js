@@ -30,7 +30,11 @@ let handler = async (m, { conn, args, isPrems, isOwner }) => {
     let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
     //console.log("Tamaño del video: " + fileSizeInMegabytes);
     if (fileSizeInMegabytes <= 999) {
-      conn.sendMessage( m.chat, { document: fs.readFileSync(`./tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: "video/mp4", }, { quoted: m });
+      if (command == 'ytshort') {
+        conn.sendMessage( m.chat, { video: fs.readFileSync(`./tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: "video/mp4", }, { quoted: m });
+      } else {
+        conn.sendMessage( m.chat, { document: fs.readFileSync(`./tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: "video/mp4", }, { quoted: m });
+      }  
     } else {
       m.reply(`*[❗] 𝙴𝙻 𝙰𝚁𝙲𝙷𝙸𝚅𝙾 𝙴𝚂 𝚂𝚄𝙿𝙴𝚁𝙸𝙾𝚁 𝙰 𝟿𝟿𝟿 𝙼𝙱*`);
     }
@@ -41,6 +45,6 @@ let handler = async (m, { conn, args, isPrems, isOwner }) => {
 };
 handler.help = ["ytd"];
 handler.tags = ["downloader"];
-handler.command = ["videodoc", "documentvid", "videodocumento"];
+handler.command = ["videodoc", "documentvid", "videodocumento", "ytshort"];
 handler.exp = 3;
 export default handler;
