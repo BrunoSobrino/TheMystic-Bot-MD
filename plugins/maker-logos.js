@@ -128,10 +128,6 @@ var effects = [
     "url": "https://textpro.me/create-a-glitch-text-effect-online-free-1026.html"
   },
   {
-    "title": "Harry-Potter",
-    "url": "https://textpro.me/create-harry-potter-text-effect-online-1025.html"
-  },
-  {
     "title": "embossed--on-cracked-surface",
     "url": "https://textpro.me/create-embossed-text-effect-on-cracked-surface-1024.html"
   },
