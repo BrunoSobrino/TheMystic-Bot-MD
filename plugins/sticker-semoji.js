@@ -42,7 +42,7 @@ if (tipe == 'ap') tipe = 'apple'
 if (tipe == 'mi') tipe = 'microsoft'   
 if (tipe == 'ht') tipe = 'htc'   
 if (tipe == 'tw') tipe = 'twitter'    
-//try {     
+try {     
 emoji = emoji.trim()
 tipe = tipe.trim().toLowerCase()
 let json = await semoji(emoji)
@@ -60,9 +60,9 @@ let stiker = await createSticker(false, chosenURL, global.packname, global.autho
 //let stikerPI = await sticker(false, json.find(v => v.nama == tipe).url, global.packname, global.author)
 //if (tipe == 'pi' && json || tipe == 'pixel' && json ) stiker = await conn.sendFile(m.chat, stikerPI, null, { asSticker: true }, m)
 m.reply(stiker)
-//} catch {    
-//throw err    
-}//}
+} catch {    
+throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙸𝙽𝚃𝙴𝙽𝚃𝙰 𝙽𝚄𝙴𝚅𝙰𝙼𝙴𝙽𝚃𝙴*`    
+}}
 handler.help = ['emoji <tipo> <emoji>']
 handler.tags = ['sticker'] 
 handler.command = ['emoji', 'smoji', 'semoji']
