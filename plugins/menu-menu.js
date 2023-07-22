@@ -178,12 +178,13 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}dapk2 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}stickerpack *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play *<texto>*_
+┣ ඬ⃟ 📥 _${usedPrefix}play2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}pla3 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play.1 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play.2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}playdoc *<texto>*_
+┣ ඬ⃟ 📥 _${usedPrefix}playdoc2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}playlist *<texto>*_
-┣ ඬ⃟ 📥 _${usedPrefix}playlist2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}spotify *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ringtone *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}soundcloud *<texto>*_
