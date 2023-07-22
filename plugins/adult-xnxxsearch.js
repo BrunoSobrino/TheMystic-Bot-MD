@@ -26,6 +26,7 @@ count++
 }
 m.reply(cap)
 global.videoListXXX.push(vids_)
+console.log(global.videoListXXX)  
 } catch {
 throw e
 }}
