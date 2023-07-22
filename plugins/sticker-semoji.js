@@ -50,7 +50,8 @@ let chosenURL;
 for (let i = 0; i < json.length; i++) {
 if (json[i].nama.includes(tipe)) {
 chosenURL = json[i].url;
-break;
+} catch {
+chosenURL = json[0].url  
 }}
 console.log(chosenURL)  
 let stiker = await createSticker(false, chosenURL, global.packname, global.author, 20)
