@@ -179,7 +179,6 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}stickerpack *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play2 *<texto>*_
-┣ ඬ⃟ 📥 _${usedPrefix}pla3 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play.1 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play.2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}playdoc *<texto>*_
@@ -191,11 +190,27 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}imagen *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}pinterest *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}wallpaper *<texto>*_
-┣ ඬ⃟ 📥 _${usedPrefix}wallpaper2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}pptiktok *<nombre de usuario>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}igstalk *<nombre de usuario>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}igstory *<nombre de usuario>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}tiktokstalk *<username>*_
+┗━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━┓
+┃ *< 𝔹𝕌𝕊ℂ𝔸𝔻𝕆ℝ𝔼𝕊 />*
+┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
+┣ ඬ⃟ 🔍 _${usedPrefix}cuevana *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}pelisplus *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}modapk *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch2 *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}xnxxsearch *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}animeinfo *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}google *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}letra *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}wikipedia *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}ytsearch *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}playstore *<texto>*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -373,23 +388,6 @@ ${readMore}
 ┣ ඬ⃟ 📳 _${usedPrefix}start_
 ┣ ඬ⃟ 📳 _${usedPrefix}next_
 ┣ ඬ⃟ 📳 _${usedPrefix}leave_
-┗━━━━━━━━━━━━━━━━┛
-
-┏━━━━━━━━━━━━━━━━┓
-┃ *< 𝔹𝕌𝕊ℂ𝔸𝔻𝕆ℝ𝔼𝕊 />*
-┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 🔍 _${usedPrefix}cuevana *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}pelisplus *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}modapk *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch2 *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}xnxxsearch *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}animeinfo *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}google *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}letra *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}wikipedia *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}ytsearch *<texto>*_
-┣ ඬ⃟ 🔍 _${usedPrefix}playstore *<texto>*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
