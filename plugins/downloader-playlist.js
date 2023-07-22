@@ -10,8 +10,11 @@ urls: []
 if (!global.videoList) {
 global.videoList = [];
 }
-if (global.videoList[0]?.from == m.sender) {
+/*if (global.videoList[0]?.from == m.sender) {
 delete global.videoList;
+}*/
+if (global.videoList[0]?.from == m.sender) {
+  global.videoList.splice(0, global.videoList.length);
 }
 let results = await yts(text);
 let textoInfo = `*[❗] Puedes descargar el video que quieras de la siguiente forma:*
