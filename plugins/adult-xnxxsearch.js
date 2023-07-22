@@ -15,11 +15,11 @@ global.videoListXXX.splice(0, global.videoListXXX.length);
 }
 let res = await xnxxsearch(text);
 let json = res.result;
-let cap = `*🔍 𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾𝚂 𝙳𝙴 𝙻𝙰 𝙱𝚄𝚂𝚀𝚄𝙴𝙳𝙰:* ${text.toUpperCase()}\n\n`;
+let cap = `*🔍 RESULTADOS DE LA BUSQUEDA:* ${text.toUpperCase()}\n\n`;
 for (let v of json) {
-cap += `• *🎬 𝚃𝙸𝚃𝚄𝙻𝙾:* ${v.title}
-• *❗ 𝙸𝙽𝙵𝙾:* ${v.info}
-• *🔗 𝙻𝙸𝙽𝙺:* ${v.link}
+cap += `[${v + 1}]\n• *🎬 Titulo:* ${v.title}
+• *❗ Info:* ${v.info}
+• *🔗 Link:* ${v.link}
 `;
 cap += "\n" + "••••••••••••••••••••••••••••••••" + "\n\n";
 }
