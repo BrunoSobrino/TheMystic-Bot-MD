@@ -46,6 +46,7 @@ if (tipe == 'tw') tipe = 'twitter'
 emoji = emoji.trim()
 tipe = tipe.trim().toLowerCase()
 let json = await semoji(emoji)
+console.log(json)  
 let stiker = await createSticker(false, json.find(v => v.nama == tipe).url, global.packname, global.author, 20)
 //let stikerPI = await sticker(false, json.find(v => v.nama == tipe).url, global.packname, global.author)
 //if (tipe == 'pi' && json || tipe == 'pixel' && json ) stiker = await conn.sendFile(m.chat, stikerPI, null, { asSticker: true }, m)
