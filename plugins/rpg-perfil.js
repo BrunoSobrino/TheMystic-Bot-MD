@@ -2,7 +2,7 @@ import { createHash } from 'crypto'
 import PhoneNumber from 'awesome-phonenumber'
 import fetch from 'node-fetch'
 let handler = async(m, { conn, usedPrefix, participants, isPrems }) => {
-let pp = 'https://i.imgur.com/WHjtUae.jpg'
+let pp = 'https://telegra.ph/file/06cc652844ea19e8aed1c.jpg'
 let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
 if (!(who in global.db.data.users)) throw `El usuario que está mencionando no está registrado en mi base de datos`
 try {
@@ -22,7 +22,6 @@ let str = `*𝙽𝙾𝙼𝙱𝚁𝙴:* ${username} ${registered ? '(' + name + '
 *𝙽𝚄𝙼𝙴𝚁𝙾 𝙳𝙴 𝚂𝙴𝚁𝙸𝙴:* 
 ${sn}`
 conn.sendMessage(m.chat, { image: { url: pp }, caption: str }, { quoted: m })
-//conn.sendButton(m.chat, str, author, pp, [['𝙼𝙴𝙽𝚄 𝙿𝚁𝙸𝙽𝙲𝙸𝙿𝙰𝙻', '/menu']], m)
 }}
 handler.help = ['profile [@user]']
 handler.tags = ['xp']
