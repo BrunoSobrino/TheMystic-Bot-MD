@@ -8,24 +8,27 @@ from: m.sender,
 urls: [] 
 }
 if (!global.videoListXXX) {
-global.videoListXXX = [];
+global.videoListXXX = []
 }
 if (global.videoListXXX[0]?.from == m.sender) {
-global.videoListXXX.splice(0, global.videoListXXX.length);
+global.videoListXXX.splice(0, global.videoListXXX.length)
 }
-let res = await xnxxsearch(text);
-let json = res.result;
-let cap = `*🔍 RESULTADOS DE LA BUSQUEDA:* ${text.toUpperCase()}\n\n`;
+let res = await xnxxsearch(text)
+let json = res.result
+let cap = `*🔍 RESULTADOS DE LA BUSQUEDA:* ${text.toUpperCase()}\n\n`
+let count = 1
 for (let v of json) {
-cap += `[${v + 1}]\n• *🎬 Titulo:* ${v.title}
+let linkXXX = v.link
+vids_.urls.push(linkXXX)
+cap += `[${count}]\n• *🎬 Titulo:* ${v.title}
 • *❗ Info:* ${v.info}
-• *🔗 Link:* ${v.link}
-`;
-cap += "\n" + "••••••••••••••••••••••••••••••••" + "\n\n";
+• *🔗 Link:* ${v.link}`
+cap += "\n" + "••••••••••••••••••••••••••••••••" + "\n\n"
+count++  
 }
-m.reply(cap);
-} catch (e) {
-console.error(e)
+m.reply(cap)
+global.videoList.push(vids_)
+} catch {
 throw e
 }}
 handler.help = ["xnxxsearch"].map((v) => v + " <query>")
