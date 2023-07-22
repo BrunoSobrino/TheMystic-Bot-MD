@@ -1,7 +1,7 @@
 import ytdl from "ytdl-core";
 import fs from "fs";
 
-let handler = async (m, { conn, args, isPrems, isOwner }) => {
+let handler = async (m, { conn, args, isPrems, isOwner, command }) => {
   const getRandom = (ext) => {
     return `${Math.floor(Math.random() * 10000)}${ext}`;
   };
