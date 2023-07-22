@@ -1,4 +1,4 @@
-let handler = async (m, {conn, text, usedPrefix}) => {
+/*let handler = async (m, {conn, text, usedPrefix}) => {
   if (!text) throw 'Berikan URL dari YouTube Shorts!'
   try {
     let vid = `https://yt.btch.bz/download?URL=${text}&videoName=video`
@@ -9,9 +9,7 @@ let handler = async (m, {conn, text, usedPrefix}) => {
     throw 'Video/Audio Tidak Ditemukan'
   }
 }
-handler.command = handler.help =['ytshorts','youtubeshorts','shorts','short'];
-handler.tags = ['downloader'];
-handler.exp = 5;
-handler.limit = true;
-handler.premium = false;
-export default handler
+handler.command = handler.help =['ytshorts','youtubeshorts','shorts','short']
+handler.tags = ['downloader']
+handler.exp = 5
+export default handler*/
