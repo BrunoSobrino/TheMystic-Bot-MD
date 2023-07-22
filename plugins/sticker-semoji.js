@@ -20,7 +20,6 @@ let err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳�
 *◉ wha = whatsapp* 
 *◉ ap = apple*
 *◉ fa = facebook*
-*◉ ig = Instagram*
 *◉ mi = microsoft*
 *◉ ht = htc*
 *◉ tw = twitter*
@@ -34,7 +33,7 @@ let err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳�
 if (!emoji) throw err
 if (tipe == 'mo') tipe = 'mozilla'
 if (tipe == 'op') tipe = 'openmoji'
-if (tipe == 'pi') tipe = 'pixel'
+if (tipe == 'pi') tipe = 'joypixels'
 if (tipe == 'sa') tipe = 'samsung'
 if (tipe == 'go') tipe = 'google'  
 if (tipe == 'wha') tipe = 'whatsapp'
