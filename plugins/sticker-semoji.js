@@ -46,13 +46,15 @@ if (tipe == 'tw') tipe = 'twitter'
 emoji = emoji.trim()
 tipe = tipe.trim().toLowerCase()
 let json = await semoji(emoji)
-let chosenURL;
+let chosenURL
 for (let i = 0; i < json.length; i++) {
 if (json[i].nama.includes(tipe)) {
-chosenURL = json[i].url;
-} catch {
-chosenURL = json[0].url  
+chosenURL = json[i].url
+break
 }}
+if (!chosenURL) {
+chosenURL = json[0].url
+}
 console.log(chosenURL)  
 let stiker = await createSticker(false, chosenURL, global.packname, global.author, 20)
 //let stikerPI = await sticker(false, json.find(v => v.nama == tipe).url, global.packname, global.author)
