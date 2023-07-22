@@ -125,7 +125,7 @@ if (command == 'yaoi2') {
 let res = await fetch(`https://purrbot.site/api/img/nsfw/yaoi/gif`)
 let json = await res.json()
 let url = json.link
-conn.sendMessage(m.chat, { video: { url: url }, gifPlayback: true, gifAttribution: ~~(Math.random() * 2), caption: `_${command}_`.trim() }, { quoted: m })}  
+conn.sendMessage(m.chat, { image: { url: url }, caption: `_${command}_`.trim() }, { quoted: m })}
 
 if (command == 'yuri') { 
 let res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri.json`)).data  
@@ -138,7 +138,7 @@ let res = await fetch(`https://purrbot.site/api/img/nsfw/yuri/gif`)
 let json = await res.json()
 let url = json.link
 if (url == '' || !url || url == null) url = await resError[Math.floor(resError.length * Math.random())]
-conn.sendMessage(m.chat, { video: { url: url }, gifPlayback: true, gifAttribution: ~~(Math.random() * 2), caption: `_${command}_`.trim() }, { quoted: m })}
+conn.sendMessage(m.chat, { image: { url: url }, caption: `_${command}_`.trim() }, { quoted: m })}  
   
 }
 handler.help = ['nsfwloli', 'nsfwfoot', 'nsfwass', 'nsfwbdsm', 'nsfwcum', 'nsfwero', 'nsfwfemdom', 'nsfwfoot', 'nsfwglss', 'nsfworgy', 'yuri', 'yuri2', 'yaoi', 'yaoi2', 'panties', 'tetas', 'booty', 'ecchi', 'furro', 'hentai', 'trapito', 'imagenlesbians', 'pene', 'porno', 'randomxxx', 'pechos']
