@@ -169,6 +169,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}twitter *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}fb *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}ytshort *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp3 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4 *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp3doc *<enlace / link / url>*_
