@@ -25,7 +25,7 @@ cap += "\n\n" + "•••••••••••••••••••••
 count++  
 }
 m.reply(cap)
-global.videoList.push(vids_)
+global.videoListXXX.push(vids_)
 } catch {
 throw e
 }}
