@@ -8,9 +8,9 @@ if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 �
 try {
 const yt_play = await search(args.join(" "))
 let additionalText = ''
-if (command === 'play3') {
+if (command === 'play3' || command == 'playdoc') {
 additionalText = 'audio 🔊'
-} else if (command === 'play4') {
+} else if (command === 'play4' || command == 'playdoc2') {
 additionalText = 'video 🎥'}
 let texto1 = `*◉——⌈🔊 YOUTUBE DOC 🔊⌋——◉*\n
 ❏ 📌 *Titulo:* ${yt_play[0].title}
@@ -24,7 +24,7 @@ let texto1 = `*◉——⌈🔊 YOUTUBE DOC 🔊⌋——◉*\n
 ❏ 🔗 *Link:* ${yt_play[0].url}\n
 ❏ *_Enviando ${additionalText}, aguarde un momento．．．_*`.trim()
 conn.sendMessage(m.chat, { image: { url: yt_play[0].thumbnail }, caption: texto1 }, { quoted: m })
-if (command == 'play3') {
+if (command == 'play3' || command == 'playdoc') {
 try {
 let q = '128kbps'
 let v = yt_play[0].url
@@ -49,7 +49,7 @@ conn.sendMessage(m.chat, { audio: { url: ress.url }, fileName: __res[0].title + 
 } catch {
 await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*', m)}}}
 }  
-if (command == 'play4') {
+if (command == 'play4' || command == 'playdoc2') {
 try {
 let qu = '360'
 let q = qu + 'p'
@@ -79,7 +79,7 @@ throw "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅
 }
 handler.help = ["play3", "play4"].map((v) => v + " < busqueda >")
 handler.tags = ["downloader"]
-handler.command = /^play3|play4?$/i
+handler.command = /^playdoc|playdoc2|play3|play4?$/i
 export default handler
 
 async function search(query, options = {}) {
