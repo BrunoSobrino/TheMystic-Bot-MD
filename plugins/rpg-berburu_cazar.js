@@ -101,7 +101,7 @@ user.lastberburu = new Date * 1
 handler.help = ['berburu']
 handler.tags = ['rpg']
 handler.command = /^(hunt|berburu|caza(r)?)$/i
-//handler.group = true
+handler.group = true
 export default handler
 
 function clockString(ms) {
