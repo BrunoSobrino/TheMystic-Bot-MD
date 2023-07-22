@@ -7,7 +7,7 @@ let handler = async (m, { usedPrefix, conn, args, text, command }) => {
 let [tipe, emoji] = text.includes('|') ? text.split('|') : args
 const defaultType = 'apple'
 if (tipe && !emoji) {
-emoji = tipe
+emoji = '😎'
 tipe = defaultType }
 let err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙴𝚂*
 *◉ ${usedPrefix + command} <tipo> <emoji>*
