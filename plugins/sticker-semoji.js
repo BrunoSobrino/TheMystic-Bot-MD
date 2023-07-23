@@ -7,7 +7,7 @@ let handler = async (m, { usedPrefix, conn, args, text, command }) => {
 let [tipe, emoji] = text.includes('|') ? text.split('|') : args
 const defaultType = 'apple'
 if (tipe && !emoji) {
-emoji = tipe
+emoji = '😎'
 tipe = defaultType }
 let err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙴𝚂*
 *◉ ${usedPrefix + command} <tipo> <emoji>*
@@ -20,7 +20,6 @@ let err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳�
 *◉ wha = whatsapp* 
 *◉ ap = apple*
 *◉ fa = facebook*
-*◉ ig = Instagram*
 *◉ mi = microsoft*
 *◉ ht = htc*
 *◉ tw = twitter*
@@ -34,7 +33,7 @@ let err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳�
 if (!emoji) throw err
 if (tipe == 'mo') tipe = 'mozilla'
 if (tipe == 'op') tipe = 'openmoji'
-if (tipe == 'pi') tipe = 'pixel'
+if (tipe == 'pi') tipe = 'joypixels'
 if (tipe == 'sa') tipe = 'samsung'
 if (tipe == 'go') tipe = 'google'  
 if (tipe == 'wha') tipe = 'whatsapp'
@@ -47,12 +46,22 @@ try {
 emoji = emoji.trim()
 tipe = tipe.trim().toLowerCase()
 let json = await semoji(emoji)
-let stiker = await createSticker(false, json.find(v => v.nama == tipe).url, global.packname, global.author, 20)
+let chosenURL
+for (let i = 0; i < json.length; i++) {
+if (json[i].nama.includes(tipe)) {
+chosenURL = json[i].url
+break
+}}
+if (!chosenURL) {
+chosenURL = json[0].url
+}
+console.log(chosenURL)  
+let stiker = await createSticker(false, chosenURL, global.packname, global.author, 20)
 //let stikerPI = await sticker(false, json.find(v => v.nama == tipe).url, global.packname, global.author)
 //if (tipe == 'pi' && json || tipe == 'pixel' && json ) stiker = await conn.sendFile(m.chat, stikerPI, null, { asSticker: true }, m)
 m.reply(stiker)
 } catch {    
-throw err    
+throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙸𝙽𝚃𝙴𝙽𝚃𝙰 𝙽𝚄𝙴𝚅𝙰𝙼𝙴𝙽𝚃𝙴*`    
 }}
 handler.help = ['emoji <tipo> <emoji>']
 handler.tags = ['sticker'] 

@@ -13,16 +13,14 @@ let imgr = flaaa.getRandom()
 let user = global.db.data.users[m.sender]
 let timers = (cooldown - (new Date - user.lastadventure))
 
-if (user.health < 80) return conn.sendButton(m.chat,`${htki} 𝙱𝙰𝙹𝙰 𝚂𝙰𝙻𝚄𝙳 ${htka}`,
+if (user.health < 80) return conn.reply(m.chat, `_${htki} 𝙱𝙰𝙹𝙰 𝚂𝙰𝙻𝚄𝙳 ${htka}_\n\n𝚃𝚄 𝚂𝙰𝙻𝚄𝙳 💔 𝙴𝚂𝚃𝙰 𝙿𝙾𝚁 𝙳𝙴𝙱𝙰𝙹𝙾 𝙳𝙴 *80!!* 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙲𝚄𝚁𝙰𝚃𝙴 𝙿𝚁𝙸𝙼𝙴𝚁𝙾 𝙿𝙰𝚁𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚁 𝙳𝙴 𝙽𝚄𝙴𝚅𝙾`, fkontak)
+/*conn.sendButton(m.chat,`${htki} 𝙱𝙰𝙹𝙰 𝚂𝙰𝙻𝚄𝙳 ${htka}`,
 `𝚃𝚄 𝚂𝙰𝙻𝚄𝙳 💔 𝙴𝚂𝚃𝙰 𝙿𝙾𝚁 𝙳𝙴𝙱𝙰𝙹𝙾 𝙳𝙴 *80!!*
 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙲𝚄𝚁𝙰𝚃𝙴 𝙿𝚁𝙸𝙼𝙴𝚁𝙾 𝙿𝙰𝚁𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚁 𝙳𝙴 𝙽𝚄𝙴𝚅𝙾`.trim(), imgr + 'MALA SALUD', [
-[`❤️ 𝙲𝚄𝚁𝙰𝙼𝙴`, `${usedPrefix}heal`]], fkontak, m)
+[`❤️ 𝙲𝚄𝚁𝙰𝙼𝙴`, `${usedPrefix}heal`]], fkontak, m)*/ 
     
-if (new Date - user.lastadventure <= cooldown) return conn.sendButton(m.chat, `${htki} 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙰𝙽𝙳𝙾 ${htka}`,
-`𝚈𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚂𝚃𝙴 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙴𝚂𝙿𝙴𝚁𝙰 𝙷𝙰𝚂𝚃𝙰 𝚀𝚄𝙴 𝚃𝙴𝚁𝙼𝙸𝙽𝙴 𝙴𝙻 𝚃𝙸𝙴𝙼𝙿𝙾 𝙳𝙴 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙾
-
-⏱️ ${timers.toTimeString()}`.trim(), imgr + 'DESCANSANDO', [
-[`🔔 𝚁𝙴𝙲𝙻𝙰𝙼𝙾 𝙳𝙸𝙰𝚁𝙸𝙾`, `${usedPrefix}daily`]], fkontak, m) 
+if (new Date - user.lastadventure <= cooldown) return conn.reply(m.chat, `${htki} 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙰𝙽𝙳𝙾 ${htka}\n\n𝚈𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚂𝚃𝙴 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙴𝚂𝙿𝙴𝚁𝙰 𝙷𝙰𝚂𝚃𝙰 𝚀𝚄𝙴 𝚃𝙴𝚁𝙼𝙸𝙽𝙴 𝙴𝙻 𝚃𝙸𝙴𝙼𝙿𝙾 𝙳𝙴 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙾\n\n⏱️ ${timers.toTimeString()} DESCANSANDO`, fkontak)
+//conn.sendButton(m.chat, `${htki} 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙰𝙽𝙳𝙾 ${htka}`,`𝚈𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚂𝚃𝙴 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙴𝚂𝙿𝙴𝚁𝙰 𝙷𝙰𝚂𝚃𝙰 𝚀𝚄𝙴 𝚃𝙴𝚁𝙼𝙸𝙽𝙴 𝙴𝙻 𝚃𝙸𝙴𝙼𝙿𝙾 𝙳𝙴 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙾⏱️ ${timers.toTimeString()}`.trim(), imgr + 'DESCANSANDO', [[`🔔 𝚁𝙴𝙲𝙻𝙰𝙼𝙾 𝙳𝙸𝙰𝚁𝙸𝙾`, `${usedPrefix}daily`]], fkontak, m) 
     
 const rewards = reward(user)
 let text = `🛫 𝙴𝚂𝚃𝙰𝚂 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝙽𝙳𝙾 𝙴𝙽  *» ${kt[1][0].name}*
@@ -48,11 +46,8 @@ const total = rewards.reward[rewardItem].getRandom()
 user[rewardItem] += total * 1
 if (total) text += `\n» ${global.rpg.emoticon(rewardItem)} ${total}`
  }
-conn.sendButton(m.chat, 
-`${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}`, 
-text.trim(), `https://static-maps.yandex.ru/1.x/?lang=id-ID&ll=${kt[1][0].longitude},${kt[1][0].latitude}&z=12&l=map&size=600,300`, [
-[`🎒 𝙸𝙽𝚅𝙴𝙽𝚃𝙰𝚁𝙸𝙾`, `${usedPrefix}inventory`],
-[`🔔 𝚁𝙴𝙲𝙻𝙰𝙼𝙾 𝙳𝙸𝙰𝚁𝙸𝙾`, `${usedPrefix}daily`]], fkontak, m)
+ conn.reply(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}\n\n${text}`, fkontak)
+//conn.sendButton(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}`, text.trim(), `https://static-maps.yandex.ru/1.x/?lang=id-ID&ll=${kt[1][0].longitude},${kt[1][0].latitude}&z=12&l=map&size=600,300`, [[`🎒 𝙸𝙽𝚅𝙴𝙽𝚃𝙰𝚁𝙸𝙾`, `${usedPrefix}inventory`],[`🔔 𝚁𝙴𝙲𝙻𝙰𝙼𝙾 𝙳𝙸𝙰𝚁𝙸𝙾`, `${usedPrefix}daily`]], fkontak, m)
 user.lastadventure = new Date * 1
 }
 catch {
