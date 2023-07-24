@@ -21,7 +21,7 @@ let handler = async (m, { text, command, args, usedPrefix }) => {
   m.reply(resu2[0][0][0])      
   } catch {
   throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙴 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`  
-  }
+  }}
 }
 handler.help = ['simi', 'bot'].map(v => v + ' <teks>')
 handler.tags = ['fun']
