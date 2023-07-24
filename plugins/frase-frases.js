@@ -4,12 +4,12 @@ let handler = async (m, { conn, command }) => {
     
 if (command === 'consejo') {
 let consejo = consejos[Math.floor(Math.random() * consejos.length)]
-let mensaje = `╭─◆────◈⚘◈─────◆─╮\n🌟 *Consejo del día* 🌟\n\n❥ ${consejo}\n╰─◆────◈⚘◈─────◆─╯`
+let mensaje = `╭─◆────◈⚘◈─────◆─╮\n\n⠀⠀🌟 *Consejo del día* 🌟\n\n❥ ${consejo}\n\n╰─◆────◈⚘◈─────◆─╯`
 await m.reply(mensaje)}
 
 if (command === 'fraseromantica') {
 let frase_romantica = frasesromanticas[Math.floor(Math.random() * frasesromanticas.length)]
-let mensaje = `╭─◆────◈⚘◈─────◆─╮\n💖 *Frase romántica* 💖\n\n❥ ${frase_romantica}\n╰─◆────◈⚘◈─────◆─╯`
+let mensaje = `╭─◆────◈⚘◈─────◆─╮\n\n⠀⠀💖 *Frase romántica* 💖\n\n❥ ${frase_romantica}\n\n╰─◆────◈⚘◈─────◆─╯`
 await m.reply(mensaje)}
 
 if (command == 'historiaromantica') {  
