@@ -36,7 +36,7 @@
         "@green-code/music-track-data": "^2.0.3",
         "@brandond/findthelyrics": "^2.0.5",
         "acrcloud": "^1.4.0",
-        "api-dylux": "^1.2.2",
+        "api-dylux": "^1.5.6",
         "aptoide-scraper": "^1.0.1",
         "awesome-phonenumber": "^2.68.0",
         "axios": "^1.1.3",
