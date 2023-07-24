@@ -2,13 +2,15 @@ import translate from '@vitalets/google-translate-api'
 import fetch from 'node-fetch'
 let handler = async (m, { conn, command }) => {
     
-if (command == 'consejo') {
-let consejo = await consejos[Math.floor(Math.random() * consejos.length)]
-await m.reply(`*┏━━━━━━━━━━━━━━━━┓*\n*┠❧  ${consejo}*\n*┗━━━━━━━━━━━━━━━━┚*`)}
+if (command === 'consejo') {
+let consejo = consejos[Math.floor(Math.random() * consejos.length)]
+let mensaje = `╭─◆────◈⚘◈─────◆─╮\n🌟 *Consejo del día* 🌟\n\n❥ ${consejo}\n╰─◆────◈⚘◈─────◆─╯`
+await m.reply(mensaje)}
 
-if (command == 'fraseromantica') {
-let frase_romantica = await frasesromanticas[Math.floor(Math.random() * frasesromanticas.length)]
-m.reply(`*╭─◆────◈⚘◈─────◆─╮*\n*❥  ${frase_romantica}*\n*╰─◆────◈⚘◈─────◆─╯*`)}
+if (command === 'fraseromantica') {
+let frase_romantica = frasesromanticas[Math.floor(Math.random() * frasesromanticas.length)]
+let mensaje = `╭─◆────◈⚘◈─────◆─╮\n💖 *Frase romántica* 💖\n\n❥ ${frase_romantica}\n╰─◆────◈⚘◈─────◆─╯`
+await m.reply(mensaje)}
 
 if (command == 'historiaromantica') {  
 try {    
