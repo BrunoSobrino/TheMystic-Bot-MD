@@ -25,33 +25,31 @@ chgptdb.push({ role: 'user', content: text });
 const config = { method: 'post', url: 'https://api.openai.com/v1/chat/completions', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + global.openai_key }, data: JSON.stringify({ 'model': 'gpt-3.5-turbo', 'messages': [{ role: 'system', content: 'Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot' }, ...chgptdb ]})}
 let response = await axios(config);
 chgptdb.push({ role: 'assistant', content: response.data.choices[0].message.content }) 
-m.reply(response.data.choices[0].message.content)
+if (response.data.choices[0].message.content == 'error' || response.data.choices[0].message.content == '') return XD //causar error undefined para usar otra api    
+m.reply(`${response.data.choices[0].message.content}`.trim())
 } catch (efe1) {
 console.log(efe1)    
 try {
-const BotIA222 = await openaiii.createCompletion({ model: "text-davinci-003", prompt: text, temperature: 0.3, max_tokens: 4097, stop: ["Ai:", "Human:"], top_p: 1, frequency_penalty: 0.2, presence_penalty: 0, })
-m.reply(BotIA222.data.choices[0].text.trim())    
+const botIA222 = await openaiii.createCompletion({ model: "text-davinci-003", prompt: text, temperature: 0.3, max_tokens: 4097, stop: ["Ai:", "Human:"], top_p: 1, frequency_penalty: 0.2, presence_penalty: 0, })
+if (botIA222.data.choices[0].text == 'error' || botIA222.data.choices[0].text == '') return XD //causar error undefined para usar otra api
+m.reply(botIA222.data.choices[0].text.trim())    
 } catch (efe2) {
 console.log(efe2)    
 try {
 let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=${m.sender}`)
 let hasill22 = await tioress22.json()
+if (hasill22.result == 'error' || hasill22.result == '') return XD //causar error undefined para usar otra api 
 m.reply(`${hasill22.result}`.trim())         
 } catch (efe) {
 console.log(efe)    
 try {   
-let rres = await fetch(`https://api.ibeng.tech/api/info/openai?text=${text}&apikey=tamvan`)
+let rres = await fetch(`https://api.ibeng.tech/api/others/chatgpt?q=${text}&apikey=eMlBNRzUXv`)
 let jjson = await rres.json()
+if (jjson.data.data == 'error' || jjson.data.data == '') return XD //causar error undefined para lanzar msg de error
 m.reply(jjson.data.data.trim())    
 } catch (efe3) {    
 console.log(efe3)
-try {
-let IA = await fetch(`https://api.amosayomide05.cf/gpt/?question=${text}&string_id=${m.sender}`)  
-let IAR = await IA.json()
-conn.sendMessage(m.chat, { text: `${IAR.response}`.trim() }, { quoted: m }); 
-} catch (efe4) {   
-console.log(efe4)
 throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`   
-}}}}}}
+}}}}}
 handler.command = ['openai2', 'chatgpt2', 'ia2', 'robot2', 'Mystic', 'MysticBot']
 export default handler
