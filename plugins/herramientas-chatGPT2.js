@@ -53,11 +53,13 @@ if (hasill22.result == 'error' || hasill22.result == '') return XD //causar erro
 m.reply(`${hasill22.result}`.trim())         
 } catch {
 try {  
-conn.sendPresenceUpdate('composing', m.chat)    
+conn.sendPresenceUpdate('composing', m.chat)   
+const searchString2 = /indonesia/g
+const replacementString2 = 'español'
 let rres = await fetch(`https://api.ibeng.tech/api/others/chatgpt?q=${text}&apikey=eMlBNRzUXv`)
 let jjson = await rres.json()
 if (jjson.data.data == 'error' || jjson.data.data == '') return XD //causar error undefined para lanzar msg de error
-m.reply(jjson.data.data.trim())    
+m.reply(jjson.data.data.replace(searchString2, replacementString2).trim())    
 } catch {    
 try {  
 conn.sendPresenceUpdate('composing', m.chat)    
