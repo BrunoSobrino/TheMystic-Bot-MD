@@ -40,7 +40,6 @@ try {
 conn.sendPresenceUpdate('composing', m.chat)    
 let akuariapi1 = await fetch(`https://api.akuari.my.id/ai/gbard?chat=${text}`)
 let akuariapijson1 = await akuariapi1.json()
-console.log(akuariapijson1)  
 if (akuariapijson1.respon == 'error' || akuariapijson1.respon == '' || !akuariapijson1.respon) return XD //causar error undefined para usar otra api 
 let akuariapiresult1 = await translate(`${akuariapijson1.respon}`, { to: 'es', autoCorrect: true })
 m.reply(`${akuariapiresult1.text}`.trim())         
@@ -50,7 +49,8 @@ conn.sendPresenceUpdate('composing', m.chat)
 let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=${m.sender}`)
 let hasill22 = await tioress22.json()
 if (hasill22.result == 'error' || hasill22.result == '' || !hasill22.result) return XD //causar error undefined para usar otra api 
-m.reply(`${hasill22.result}`.trim())         
+let hasill22_result = await translate(`${hasill22.result}`, { to: 'es', autoCorrect: true })  
+m.reply(`${hasill22_result.text}`.trim())         
 } catch {
 try {  
 conn.sendPresenceUpdate('composing', m.chat)   
@@ -67,7 +67,8 @@ conn.sendPresenceUpdate('composing', m.chat)
 let akuariapi2 = await fetch(`https://api.akuari.my.id/ai/gpt?chat=${text}`)
 let akuariapijson2 = await akuariapi2.json()
 if (akuariapijson2.respon == 'error' || akuariapijson2.respon == '' || !akuariapijson2.respon) return XD //causar error undefined para lanzar msg de error
-m.reply(akuariapijson2.respon.trim())    
+let akuariapiresult2 = await translate(`${akuariapijson2.respon}`, { to: 'es', autoCorrect: true })
+m.reply(akuariapiresult2.text.trim())    
 } catch {    
 try {   
 conn.sendPresenceUpdate('composing', m.chat)    
@@ -75,7 +76,8 @@ let syms1 = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrin
 let fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${text}&symsg=${syms1}&apikey=fg-dylux`)
 let fgjson1 = await fgapi1.json()
 if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD //causar error undefined para lanzar msg de error
-m.reply(fgjson1.result.trim())    
+let fgjson1_result = await translate(`${fgjson1.result}`, { to: 'es', autoCorrect: true })  
+m.reply(fgjson1_result.text.trim())    
 } catch {    
 throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`   
 }}}}}}}}
