@@ -27,13 +27,13 @@ chgptdb.push({ role: 'user', content: text });
 const config = { method: 'post', url: 'https://api.openai.com/v1/chat/completions', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + global.openai_key }, data: JSON.stringify({ 'model': 'gpt-3.5-turbo', 'messages': [{ role: 'system', content: 'Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot' }, ...chgptdb ]})}
 let response = await axios(config);
 chgptdb.push({ role: 'assistant', content: response.data.choices[0].message.content }) 
-if (response.data.choices[0].message.content == 'error' || response.data.choices[0].message.content == '') return XD //causar error undefined para usar otra api    
+if (response.data.choices[0].message.content == 'error' || response.data.choices[0].message.content == '' || !response.data.choices[0].message.content) return XD //causar error undefined para usar otra api    
 m.reply(`${response.data.choices[0].message.content}`.trim())
 } catch {
 try {
 conn.sendPresenceUpdate('composing', m.chat)  
 const botIA222 = await openaiii.createCompletion({ model: "text-davinci-003", prompt: text, temperature: 0.3, max_tokens: 4097, stop: ["Ai:", "Human:"], top_p: 1, frequency_penalty: 0.2, presence_penalty: 0, })
-if (botIA222.data.choices[0].text == 'error' || botIA222.data.choices[0].text == '') return XD //causar error undefined para usar otra api
+if (botIA222.data.choices[0].text == 'error' || botIA222.data.choices[0].text == '' || !botIA222.data.choices[0].text) return XD //causar error undefined para usar otra api
 m.reply(botIA222.data.choices[0].text.trim())    
 } catch {
 try {
@@ -41,7 +41,7 @@ conn.sendPresenceUpdate('composing', m.chat)
 let akuariapi1 = await fetch(`https://api.akuari.my.id/ai/gbard?chat=${text}`)
 let akuariapijson1 = await akuariapi1.json()
 console.log(akuariapijson1)  
-if (akuariapijson1.respon == 'error' || akuariapijson1.respon == '' || akuariapijson1.respon == 'undefined' || !akuariapijson1.respon ) return XD //causar error undefined para usar otra api 
+if (akuariapijson1.respon == 'error' || akuariapijson1.respon == '' || !akuariapijson1.respon) return XD //causar error undefined para usar otra api 
 let akuariapiresult1 = await translate(`${akuariapijson1.respon}`, { to: 'es', autoCorrect: true })
 m.reply(`${akuariapiresult1.text}`.trim())         
 } catch {
@@ -49,7 +49,7 @@ try {
 conn.sendPresenceUpdate('composing', m.chat)    
 let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=${m.sender}`)
 let hasill22 = await tioress22.json()
-if (hasill22.result == 'error' || hasill22.result == '') return XD //causar error undefined para usar otra api 
+if (hasill22.result == 'error' || hasill22.result == '' || !hasill22.result) return XD //causar error undefined para usar otra api 
 m.reply(`${hasill22.result}`.trim())         
 } catch {
 try {  
@@ -58,14 +58,15 @@ const searchString2 = /indonesia/g
 const replacementString2 = 'español'
 let rres = await fetch(`https://api.ibeng.tech/api/others/chatgpt?q=${text}&apikey=eMlBNRzUXv`)
 let jjson = await rres.json()
-if (jjson.data.data == 'error' || jjson.data.data == '') return XD //causar error undefined para lanzar msg de error
-m.reply(jjson.data.data.replace(searchString2, replacementString2).trim())    
+if (jjson.data.data == 'error' || jjson.data.data == '' || !jjson.data.data) return XD //causar error undefined para lanzar msg de error
+let hahaha = await translate(`${jjson.data.data}`, { to: 'es', autoCorrect: true })  
+m.reply(hahaha.text.replace(searchString2, replacementString2).trim())    
 } catch {    
 try {  
 conn.sendPresenceUpdate('composing', m.chat)    
 let akuariapi2 = await fetch(`https://api.akuari.my.id/ai/gpt?chat=${text}`)
 let akuariapijson2 = await akuariapi2.json()
-if (akuariapijson2.respon == 'error' || akuariapijson2.respon == '') return XD //causar error undefined para lanzar msg de error
+if (akuariapijson2.respon == 'error' || akuariapijson2.respon == '' || !akuariapijson2.respon) return XD //causar error undefined para lanzar msg de error
 m.reply(akuariapijson2.respon.trim())    
 } catch {    
 try {   
@@ -73,7 +74,7 @@ conn.sendPresenceUpdate('composing', m.chat)
 let syms1 = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot.`  
 let fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${text}&symsg=${syms1}&apikey=fg-dylux`)
 let fgjson1 = await fgapi1.json()
-if (fgjson1.result == 'error' || fgjson1.result == '') return XD //causar error undefined para lanzar msg de error
+if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD //causar error undefined para lanzar msg de error
 m.reply(fgjson1.result.trim())    
 } catch {    
 throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`   
