@@ -4,6 +4,7 @@
 > **AVISO**: Yo "Bruno Sobrino", me he retirado de todo lo relacionado con el Bot o temas similares, por lo que en algun momento quedará obsoleto y/o algunos comandos dejarán de funcionar. Agradezco su preferencia durante el recorrido por este mundo de los Bots.
 
 > TheMystic-Bot-MD pasa a quedar en manos de colaboradores, encabezados principalmente por Aiden_NotLogic, ReyEndymion, Mario, Diego-ofc y Skid
+nota para Bruno: deja de programar con chatgpt
 ------------------
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
