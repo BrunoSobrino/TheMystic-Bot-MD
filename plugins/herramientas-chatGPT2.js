@@ -29,48 +29,43 @@ let response = await axios(config);
 chgptdb.push({ role: 'assistant', content: response.data.choices[0].message.content }) 
 if (response.data.choices[0].message.content == 'error' || response.data.choices[0].message.content == '') return XD //causar error undefined para usar otra api    
 m.reply(`${response.data.choices[0].message.content}`.trim())
-} catch (efe) {
-console.log(efe)    
+} catch {
 try {
 conn.sendPresenceUpdate('composing', m.chat)  
 const botIA222 = await openaiii.createCompletion({ model: "text-davinci-003", prompt: text, temperature: 0.3, max_tokens: 4097, stop: ["Ai:", "Human:"], top_p: 1, frequency_penalty: 0.2, presence_penalty: 0, })
 if (botIA222.data.choices[0].text == 'error' || botIA222.data.choices[0].text == '') return XD //causar error undefined para usar otra api
 m.reply(botIA222.data.choices[0].text.trim())    
-} catch (efe2) {
-console.log(efe2)  
+} catch {
 try {
 conn.sendPresenceUpdate('composing', m.chat)    
 let akuariapi1 = await fetch(`https://api.akuari.my.id/ai/gbard?chat=${text}`)
 let akuariapijson1 = await akuariapi1.json()
+console.log(akuariapijson1.response)  
 if (akuariapijson1.response == 'error' || akuariapijson1.response == '') return XD //causar error undefined para usar otra api 
 let akuariapiresult1 = await translate(`${akuariapijson1.response}`, { to: 'es', autoCorrect: true })
 m.reply(`${akuariapiresult1.text}`.trim())         
-} catch (efe3) {
-console.log(efe3)      
+} catch {
 try {
 conn.sendPresenceUpdate('composing', m.chat)    
 let tioress22 = await fetch(`https://api.lolhuman.xyz/api/openai?apikey=${lolkeysapi}&text=${text}&user=${m.sender}`)
 let hasill22 = await tioress22.json()
 if (hasill22.result == 'error' || hasill22.result == '') return XD //causar error undefined para usar otra api 
 m.reply(`${hasill22.result}`.trim())         
-} catch (efe4) {
-console.log(efe4)    
+} catch {
 try {  
 conn.sendPresenceUpdate('composing', m.chat)    
 let rres = await fetch(`https://api.ibeng.tech/api/others/chatgpt?q=${text}&apikey=eMlBNRzUXv`)
 let jjson = await rres.json()
 if (jjson.data.data == 'error' || jjson.data.data == '') return XD //causar error undefined para lanzar msg de error
 m.reply(jjson.data.data.trim())    
-} catch (efe5) {    
-console.log(efe5)
+} catch {    
 try {  
 conn.sendPresenceUpdate('composing', m.chat)    
 let akuariapi2 = await fetch(`https://api.akuari.my.id/ai/gpt?chat=${text}`)
 let akuariapijson2 = await akuariapi2.json()
 if (akuariapijson2.respon == 'error' || akuariapijson2.respon == '') return XD //causar error undefined para lanzar msg de error
 m.reply(akuariapijson2.respon.trim())    
-} catch (efe6) {    
-console.log(efe6)  
+} catch {    
 try {   
 conn.sendPresenceUpdate('composing', m.chat)    
 let syms1 = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot.`  
@@ -78,8 +73,7 @@ let fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${tex
 let fgjson1 = await fgapi1.json()
 if (fgjson1.result == 'error' || fgjson1.result == '') return XD //causar error undefined para lanzar msg de error
 m.reply(fgjson1.result.trim())    
-} catch (efe7) {    
-console.log(efe7)
+} catch {    
 throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*`   
 }}}}}}}}
 handler.command = ['openai', 'chatgpt', 'ia', 'robot', 'openai2', 'chatgpt2', 'ia2', 'robot2', 'Mystic', 'MysticBot']
