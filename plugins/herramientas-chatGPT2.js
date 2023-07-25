@@ -53,6 +53,7 @@ let hasill22_result = await translate(`${hasill22.result}`, { to: 'es', autoCorr
 m.reply(`${hasill22_result.text}`.trim())         
 } catch {
 try {  
+if (text == 'hola' || text == 'Hola') return XD  
 conn.sendPresenceUpdate('composing', m.chat)   
 const searchString2 = /indonesia/g
 const replacementString2 = 'español'
