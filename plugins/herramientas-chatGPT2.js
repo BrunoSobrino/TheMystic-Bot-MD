@@ -53,15 +53,15 @@ let hasill22_result = await translate(`${hasill22.result}`, { to: 'es', autoCorr
 m.reply(`${hasill22_result.text}`.trim())         
 } catch {
 try {  
-if (text == 'hola' || text == 'Hola') return XD  
 conn.sendPresenceUpdate('composing', m.chat)   
-const searchString2 = /indonesia/g
-const replacementString2 = 'español'
-let rres = await fetch(`https://api.ibeng.tech/api/others/chatgpt?q=${text}&apikey=eMlBNRzUXv`)
+const searchString2 = " Indonesia "
+const replacementString2 = ' español '
+let rres = await fetch(`https://api.ibeng.tech/api/others/chatgpt?q=Hola&apikey=eMlBNRzUXv`)
 let jjson = await rres.json()
-if (jjson.data.data == 'error' || jjson.data.data == '' || !jjson.data.data) return XD //causar error undefined para lanzar msg de error
-let hahaha = await translate(`${jjson.data.data}`, { to: 'es', autoCorrect: true })  
-m.reply(hahaha.text.replace(searchString2, replacementString2).trim())    
+let hahaha = await translate(`${jjson.data}`, { to: 'es', autoCorrect: true })
+let sextS = hahaha.text
+let replacedText = sextS.replace(searchString2, replacementString2).trim()
+m.reply(replacedText)
 } catch {    
 try {  
 conn.sendPresenceUpdate('composing', m.chat)    
