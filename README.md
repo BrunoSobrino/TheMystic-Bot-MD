@@ -3,7 +3,7 @@
 ------------------
 > **AVISO**: Yo "Bruno Sobrino", me he retirado de todo lo relacionado con el Bot o temas similares, por lo que en algun momento quedará obsoleto y/o algunos comandos dejarán de funcionar. Agradezco su preferencia durante el recorrido por este mundo de los Bots.
 
-> TheMystic-Bot-MD pasa a quedar en manos de colaboradores, encabezados principalmente por Aiden_NotLogic, DIEGO-OFC y Skid
+> TheMystic-Bot-MD pasa a quedar en manos de colaboradores, encabezados principalmente por Aiden_NotLogic, ReyEndymion, Mario, Diego-ofc y Skid
 ------------------
 
 ### `—◉ 🔗 CUENTAS OFICIALES 🔗`
@@ -139,7 +139,6 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
  <a href="https://github.com/skidy89"><img src="https://github.com/skidy89.png" width="100" height="100" alt="theh2so4"/></a>
 <a href="https://github.com/OFC-YOVANI"><img src="https://github.com/OFC-YOVANI.png" width="100" height="100" alt="OFC-YOVANI"/>
 </a>
-<a href="https://github.com/undefinidoo"><img src="https://github.com/undefinidoo.png" width="100" height="100" alt="undefinidoo"/></a>
 
 ## `AGRADECIMIENTOS & CREDITOS` 
 <div><button id="boton" type="button">games-wabot-md - By BochilGaming </button></div>
