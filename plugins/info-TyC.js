@@ -1,8 +1,9 @@
-let handler = async (m, { conn }) => {
-m.reply(global.terminos)}
-handler.customPrefix = /términos y condiciones y privacidad|terminosycondicionesyprivacidad|terminosycondiciones|terminos y condiciones y privacidad|terminos y condiciones|terminos y condiciones|terminos de uso|Terminos de uso|Terminó se uso|términos de uso|Términos de uso|Términos y condiciones/i
-handler.command = new RegExp
-export default handler
+const handler = async (m, {conn}) => {
+  m.reply(global.terminos);
+};
+handler.customPrefix = /términos y condiciones y privacidad|terminosycondicionesyprivacidad|terminosycondiciones|terminos y condiciones y privacidad|terminos y condiciones|terminos y condiciones|terminos de uso|Terminos de uso|Terminó se uso|términos de uso|Términos de uso|Términos y condiciones/i;
+handler.command = new RegExp;
+export default handler;
 
 global.terminos = `
 *=> El desconocimiento de lo que aqui se menciona no exime al propietario del Bot, Sub Bot o usuario del bot de la sanciones que se puedan derivar❗*
@@ -52,4 +53,4 @@ _- Si todavía tienes alguna duda o reclamo de lo mencionado aqui o referente al
 > Bruno Sobrino 
 > Correo electronico: theshadowbrokers133@gmailcom
 
-*∆ THE MYSTIC - BOT - MD ∆*`
+*∆ THE MYSTIC - BOT - MD ∆*`;
