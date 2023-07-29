@@ -27,6 +27,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 ┏━━━━━━━━━━━━━━━━┓
 ┃ *< MENU+18 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
+┣ ඬ⃟ 🔞 _${usedPrefix}futasolo_
 ┣ ඬ⃟ 🔞 _${usedPrefix}videoxxx_
 ┣ ඬ⃟ 🔞 _${usedPrefix}videolesbixxx_
 ┣ ඬ⃟ 🔞 _${usedPrefix}tetas_
