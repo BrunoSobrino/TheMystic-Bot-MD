@@ -142,6 +142,7 @@ const connectionOptions = {
 
 global.conn = makeWASocket(connectionOptions);
 conn.isInit = false;
+conn.well = false;
 
 if (!opts['test']) {
   if (global.db) {
