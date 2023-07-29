@@ -1,11 +1,11 @@
-import { watchFile, unwatchFile } from 'fs'
-import chalk from 'chalk'
-import { fileURLToPath } from 'url'
-import fs from 'fs'
-import cheerio from 'cheerio'
-import fetch from 'node-fetch'
-import axios from 'axios'
-import moment from 'moment-timezone' 
+import {watchFile, unwatchFile} from 'fs';
+import chalk from 'chalk';
+import {fileURLToPath} from 'url';
+import fs from 'fs';
+import cheerio from 'cheerio';
+import fetch from 'node-fetch';
+import axios from 'axios';
+import moment from 'moment-timezone';
 
 global.owner = [
   ['5492604050270', true], 
@@ -22,11 +22,11 @@ global.wm = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ'
 global.igfg = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ'
 global.wait = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*'
 
-global.imagen1 = fs.readFileSync('./Menu2.jpg')
-global.imagen2 = fs.readFileSync('./src/nuevobot.jpg') 
-global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png')
-global.imagen4 = fs.readFileSync('./Menu.png')
-global.imagen5 = fs.readFileSync('./src/+18.jpg')
+global.imagen1 = fs.readFileSync('./Menu2.jpg');
+global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
+global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png');
+global.imagen4 = fs.readFileSync('./Menu.png');
+global.imagen5 = fs.readFileSync('./src/+18.jpg');
 
 global.mods = ['5492604050270', '5493772406612'] 
 
@@ -68,8 +68,18 @@ global.fgif = {key: { participant : '0@s.whatsapp.net'}, message: { "videoMessag
 global.multiplier = 99
 //*************************
 
-let file = fileURLToPath(import.meta.url)
+global.flaaa = [
+  'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=water-logo&script=water-logo&fontsize=90&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&fillTextColor=%23000&shadowGlowColor=%23000&backgroundColor=%23000&text=',
+  'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=crafts-logo&fontsize=90&doScale=true&scaleWidth=800&scaleHeight=500&text=',
+  'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=amped-logo&doScale=true&scaleWidth=800&scaleHeight=500&text=',
+  'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&fillTextType=1&fillTextPattern=Warning!&text=',
+  'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&fillTextType=1&fillTextPattern=Warning!&fillColor1Color=%23f2aa4c&fillColor2Color=%23f2aa4c&fillColor3Color=%23f2aa4c&fillColor4Color=%23f2aa4c&fillColor5Color=%23f2aa4c&fillColor6Color=%23f2aa4c&fillColor7Color=%23f2aa4c&fillColor8Color=%23f2aa4c&fillColor9Color=%23f2aa4c&fillColor10Color=%23f2aa4c&fillOutlineColor=%23f2aa4c&fillOutline2Color=%23f2aa4c&backgroundColor=%23101820&text=',
+];
+//* ************************
+
+const file = fileURLToPath(import.meta.url);
 watchFile(file, () => {
-unwatchFile(file)
-console.log(chalk.redBright("Update 'config.js'"))
-import(`${file}?update=${Date.now()}`)})
+  unwatchFile(file);
+  console.log(chalk.redBright('Update \'config.js\''));
+  import(`${file}?update=${Date.now()}`);
+});
