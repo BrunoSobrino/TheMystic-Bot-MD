@@ -3,6 +3,7 @@ import yts from 'yt-search';
 import ytdl from 'ytdl-core';
 import axios from 'axios';
 import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
+import {bestFormat, getUrlDl} from '../lib/y2dl.js';
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
   if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} Good Feeling - Flo Rida*`;
   try {
@@ -26,6 +27,14 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
 ❏ *_Enviando ${additionalText}, aguarde un momento．．．_*`.trim();
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
+      try {
+        let formats = await bestFormat(yt_play[0].url, 'audio');
+        let dl_url = await getUrlDl(formats.url);
+        let buff = await getBuffer(dl_url.download);
+        conn.sendMessage(m.chat, {audio: buff, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
+      }
+      catch (errors) {
+        console.log(errors)
       try {
         const q = '128kbps';
         const v = yt_play[0].url;
@@ -65,6 +74,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
         }
       }
     }
+  }
     if (command == 'play2') {
       try {
         const qu = '360';
@@ -212,3 +222,23 @@ async function ytPlayVid(query) {
     }).catch(reject);
   });
 }
+
+const getBuffer = async (url, options) => {
+  try {
+    options ? options : {}
+    const res = await axios({
+      method: "get",
+      url,
+      headers: {
+        'DNT': 1,
+        'Upgrade-Insecure-Request': 1
+      },
+      ...options,
+      responseType: 'arraybuffer'
+    });
+
+    return res.data;
+  } catch (e) {
+    console.log(`Error : ${e}`);
+  }
+};
