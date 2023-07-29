@@ -5,11 +5,11 @@ const {
   proto,
   generateWAMessage,
   areJidsSameUser,
-  decryptPollVote
+  decryptPollVote,
 } = (await import('@whiskeysockets/baileys')).default;
 
 export async function all(m, chatUpdate) {
-  /*if (m.message.pollUpdateMessage) {
+  /* if (m.message.pollUpdateMessage) {
     console.log(m.message.pollUpdateMessage)
     console.log(m.message.pollUpdateMessage.pollCreationMessageKey)
     let authcode = "eed1zxI49cxiovBTUFLIEWi1shD9HgIOghONuqPDGTk="

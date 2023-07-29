@@ -122,18 +122,18 @@ const connectionOptions = {
   getMessage: async (key) => {
     if (store) {
       console.log(key);
-      console.log(conn.chats[key.remoteJid] && conn.chats[key.remoteJid].messages[key.id] ? conn.chats[key.remoteJid].messages[key.id].message : undefined)
+      console.log(conn.chats[key.remoteJid] && conn.chats[key.remoteJid].messages[key.id] ? conn.chats[key.remoteJid].messages[key.id].message : undefined);
       const msg = await store.loadMessage(key.remoteJid, key.id);
-      console.log(msg)
-      return conn.chats[key.remoteJid] && conn.chats[key.remoteJid].messages[key.id] ? conn.chats[key.remoteJid].messages[key.id].message : undefined
+      console.log(msg);
+      return conn.chats[key.remoteJid] && conn.chats[key.remoteJid].messages[key.id] ? conn.chats[key.remoteJid].messages[key.id].message : undefined;
     }
     return proto.Message.fromObject({});
   },
   msgRetryCounterMap,
   logger: pino({level: 'silent'}),
   auth: {
-    creds : state.creds,
-    keys: makeCacheableSignalKeyStore(state.keys, pino({level: 'silent'}))
+    creds: state.creds,
+    keys: makeCacheableSignalKeyStore(state.keys, pino({level: 'silent'})),
   },
   browser: ['MysticBot', 'Safari', '9.7.0'],
   version,
@@ -257,7 +257,7 @@ async function connectionUpdate(update) {
 }
 
 process.on('uncaughtException', console.error);
-conn.ev.on('messages.update', console.log)
+conn.ev.on('messages.update', console.log);
 
 let isInit = true;
 let handler = await import('./handler.js');

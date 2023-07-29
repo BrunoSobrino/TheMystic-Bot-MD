@@ -1,6 +1,6 @@
 const handler = (m) => m;
 handler.before = async function(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner} ) {
-  /*if (m.message) {
+  /* if (m.message) {
     console.log(m.message)
   }*/
   if (!m.isGroup) return !1;
