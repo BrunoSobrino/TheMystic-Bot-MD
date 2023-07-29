@@ -28,53 +28,52 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
       try {
-        let formats = await bestFormat(yt_play[0].url, 'audio');
-        let dl_url = await getUrlDl(formats.url);
-        let buff = await getBuffer(dl_url.download);
+        const formats = await bestFormat(yt_play[0].url, 'audio');
+        const dl_url = await getUrlDl(formats.url);
+        const buff = await getBuffer(dl_url.download);
         conn.sendMessage(m.chat, {audio: buff, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
-      }
-      catch (errors) {
-        console.log(errors)
-      try {
-        const q = '128kbps';
-        const v = yt_play[0].url;
-        const yt = await youtubedl(v).catch(async (_) => await youtubedlv2(v));
-        const dl_url = await yt.audio[q].download();
-        const ttl = await yt.title;
-        const size = await yt.audio[q].fileSizeH;
-        await conn.sendFile(m.chat, dl_url, ttl + '.mp3', null, m, false, {mimetype: 'audio/mp4'});
-      } catch {
+      } catch (errors) {
+        console.log(errors);
         try {
-          const dataRE = await fetch(`https://api.akuari.my.id/downloader/youtube?link=${yt_play[0].url}`);
-          const dataRET = await dataRE.json();
-          conn.sendMessage(m.chat, {audio: {url: dataRET.mp3[1].url}, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
+          const q = '128kbps';
+          const v = yt_play[0].url;
+          const yt = await youtubedl(v).catch(async (_) => await youtubedlv2(v));
+          const dl_url = await yt.audio[q].download();
+          const ttl = await yt.title;
+          const size = await yt.audio[q].fileSizeH;
+          await conn.sendFile(m.chat, dl_url, ttl + '.mp3', null, m, false, {mimetype: 'audio/mp4'});
         } catch {
           try {
-            const humanLol = await fetch(`https://api.lolhuman.xyz/api/ytplay?apikey=${lolkeysapi}&query=${yt_play[0].title}`);
-            const humanRET = await humanLol.json();
-            conn.sendMessage(m.chat, {audio: {url: humanRET.result.audio.link}, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
+            const dataRE = await fetch(`https://api.akuari.my.id/downloader/youtube?link=${yt_play[0].url}`);
+            const dataRET = await dataRE.json();
+            conn.sendMessage(m.chat, {audio: {url: dataRET.mp3[1].url}, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
           } catch {
             try {
-              const lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytaudio2?apikey=${lolkeysapi}&url=${yt_play[0].url}`);
-              const lolh = await lolhuman.json();
-              const n = lolh.result.title || 'error';
-              await conn.sendMessage(m.chat, {audio: {url: lolh.result.link}, fileName: `${n}.mp3`, mimetype: 'audio/mp4'}, {quoted: m});
+              const humanLol = await fetch(`https://api.lolhuman.xyz/api/ytplay?apikey=${lolkeysapi}&query=${yt_play[0].title}`);
+              const humanRET = await humanLol.json();
+              conn.sendMessage(m.chat, {audio: {url: humanRET.result.audio.link}, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
             } catch {
               try {
-                const searchh = await yts(yt_play[0].url);
-                const __res = searchh.all.map((v) => v).filter((v) => v.type == 'video');
-                const infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId);
-                const ress = await ytdl.chooseFormat(infoo.formats, {filter: 'audioonly'});
-                conn.sendMessage(m.chat, {audio: {url: ress.url}, fileName: __res[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
+                const lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytaudio2?apikey=${lolkeysapi}&url=${yt_play[0].url}`);
+                const lolh = await lolhuman.json();
+                const n = lolh.result.title || 'error';
+                await conn.sendMessage(m.chat, {audio: {url: lolh.result.link}, fileName: `${n}.mp3`, mimetype: 'audio/mp4'}, {quoted: m});
               } catch {
-                await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*', m);
+                try {
+                  const searchh = await yts(yt_play[0].url);
+                  const __res = searchh.all.map((v) => v).filter((v) => v.type == 'video');
+                  const infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId);
+                  const ress = await ytdl.chooseFormat(infoo.formats, {filter: 'audioonly'});
+                  conn.sendMessage(m.chat, {audio: {url: ress.url}, fileName: __res[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
+                } catch {
+                  await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*', m);
+                }
               }
             }
           }
         }
       }
     }
-  }
     if (command == 'play2') {
       try {
         const qu = '360';
@@ -225,16 +224,16 @@ async function ytPlayVid(query) {
 
 const getBuffer = async (url, options) => {
   try {
-    options ? options : {}
+    options ? options : {};
     const res = await axios({
-      method: "get",
+      method: 'get',
       url,
       headers: {
         'DNT': 1,
-        'Upgrade-Insecure-Request': 1
+        'Upgrade-Insecure-Request': 1,
       },
       ...options,
-      responseType: 'arraybuffer'
+      responseType: 'arraybuffer',
     });
 
     return res.data;
