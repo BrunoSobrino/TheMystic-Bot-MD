@@ -7,6 +7,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
       who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false;
     } else { 
       who = m.chat;
+    }  
     if (!who && m.isGroup) throw `*[❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙰 𝙾 𝙼𝙴𝙽𝙲𝙸𝙾𝙽𝙰 𝙰 𝙰𝙻𝙶𝚄𝙸𝙴𝙽*\n\n*📌 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:* ${usedPrefix + command} @tag`;
     let name;
     if (who === m.chat) {
