@@ -26,7 +26,7 @@ const handler = async (m, {command, usedPrefix, conn, text}) => {
       try {
         const mediaa = await ytPlayVid(text);
         const aa_2 = await conn.sendMessage(m.chat, {video: {url: mediaa.result}, fileName: `error.mp4`, caption: `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, thumbnail: mediaa.thumb, mimetype: 'video/mp4'}, {quoted: m});
-        if (!aa_2 {
+        if (!aa_2) {
         throw new Error('*[❗] El primero metodo fallo, intentando otro...*');
        }
       } catch {
