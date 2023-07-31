@@ -21,7 +21,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     let jkis = await apislap.json();
     let { url } = jkis;
     let stiker = await sticker(null, url, `${name2} le dio una bofetada a ${name}`, null);
-    conn.sendFile(m.chat, stiker, m, {asSticker: true});
+    conn.sendFile(m.chat, stiker, null, {asSticker: true}, m, true, {contextInfo: {forwardingScore: 200, isForwarded: true}}, {quoted: m});
   } catch {
     throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*`;
   };
