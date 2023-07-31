@@ -31,13 +31,11 @@ async function spotifydl(url) {
     const res = await spotify.getTrack(url).catch(() => {
       return { error: 'Fallo la descarga' };
     });
-
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => {
         reject(new Error('Tiempo de espera agotado'));
-      }, 300000); // 5 minutos (300,000 milisegundos)
+      }, 300000); 
     });
-
     try {
       const audioPromise = spotify.downloadTrack(url);
       const audio = await Promise.race([audioPromise, timeoutPromise]);
