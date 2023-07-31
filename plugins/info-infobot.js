@@ -42,9 +42,18 @@ const handler = async (m, {conn, usedPrefix}) => {
 ╠
 ╠═〘 𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭 〙 ═
 `.trim();
-  const aa = {quoted: m, userJid: conn.user.jid};
+
+  prep = generateWAMessageFromContent(m.chat, { liveLocationMessage: { 
+degreesLatitude: 35.685506276233525, degreesLongitude: 139.75270667105852,
+caption: info,
+sequenceNumber: 1656662972682001, timeOffset: 8600 }}, { quoted: m, userJid: conn.user.id});
+con.relayMessage(m.chat, prep.message, { messageId: prep.key.id })
+  
+
+  
+  /*const aa = {quoted: m, userJid: conn.user.jid};
   const res = generateWAMessageFromContent(m.chat, {liveLocationMessage: {degreesLatitude: 0, degreesLongitude: 0, caption: info, secuenceNumber: '0', contextInfo: {mentionedJid: conn.parseMention()}}}, aa);
-  conn.relayMessage(m.chat, res.message, {});
+  conn.relayMessage(m.chat, res.message, {});*/
 };
 handler.help = ['infobot', 'speed'];
 handler.tags = ['info', 'tools'];
