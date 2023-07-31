@@ -1,18 +1,25 @@
-import {sticker} from '../lib/sticker.js';
-import fetch from 'node-fetch';
-import MessageType from '@whiskeysockets/baileys';
-const handler = async (m, {conn}) => {
-  try {
-    if (m.quoted?.sender) m.mentionedJid.push(m.quoted.sender);
-    if (!m.mentionedJid.length) m.mentionedJid.push(m.sender);
-    const res = await fetch('https://neko-love.xyz/api/v1/slap');
-    const json = await res.json();
-    const {url} = json;
-    const stiker = await sticker(null, url, `+${m.sender.split('@')[0]} le dio una bofetada a ${m.mentionedJid.map((user)=>(user === m.sender)? 'alguien ': `+${user.split('@')[0]}`).join(', ')}`);
-    conn.sendFile(m.chat, stiker, null, {asSticker: true});
-  } catch (e) { }
-};
+import {sticker} from '../lib/sticker.js'
+import fetch from 'node-fetch'
+const handler = async (m, {conn, args, usedPrefix, command}) => {  
+ try {
+	 let who
+    if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
+       else who = m.chat
+    if (!who) throw `*[❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙰 𝙾 𝙼𝙴𝙽𝙲𝙸𝙾𝙽𝙰 𝙰 𝙰𝙻𝙶𝚄𝙸𝙴𝙽*\n\n*📌 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:* ${usedPrefix + command} @tag`  
+       let user = global.db.data.users[who]
+       let name = conn.getName(who) 
+       let name2 = conn.getName(m.sender) 
+       let rki = await fetch(`https://api.waifu.pics/sfw/slap`)
+    if (!rki.ok) throw await rki.text()
+       let jkis = await rki.json()
+       let { url } = jkis
+       let stiker = await sticker(null, url, `${name2} le dio una bofetada a`, `${name}`)
+   // conn.sendFile(m.chat, stiker, null, {asSticker: true});
+    conn.sendFile(m.chat, stiker, null, {asSticker: true}, m, true, {contextInfo: {'forwardingScore': 200, 'isForwarded': false}}, {quoted: m})   
+} catch {
+throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*`   
+}}
 handler.help = ['slap'];
 handler.tags = ['General'];
-handler.command = /^slap/i;
-export default handler;
+handler.command = /^(slap|bofetada)$/i
+export default handler
