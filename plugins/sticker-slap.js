@@ -1,14 +1,15 @@
-import { sticker } from "../lib/sticker.js";
+import {sticker} from "../lib/sticker.js";
 import fetch from "node-fetch";
 const handler = async (m, { conn, args, usedPrefix, command }) => {
-  try {
     let who;
     if (m.isGroup) {
       who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false;
     } else { 
       who = m.chat;
-    }  
-    if (!who && m.isGroup) throw `*[❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙰 𝙾 𝙼𝙴𝙽𝙲𝙸𝙾𝙽𝙰 𝙰 𝙰𝙻𝙶𝚄𝙸𝙴𝙽*\n\n*📌 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:* ${usedPrefix + command} @tag`;
+    }
+      const textquien = `*[❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙰 𝙾 𝙼𝙴𝙽𝙲𝙸𝙾𝙽𝙰 𝙰 𝙰𝙻𝙶𝚄𝙸𝙴𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n◉ ${usedPrefix + command} @${global.suittag}`;
+    if (who === m.chat && m.isGroup || !who && m.isGroup) return m.reply(textquien, m.chat, {mentions: conn.parseMention(textquien)});
+  try {
     let name;
     if (who === m.chat) {
       name = "𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝";
@@ -20,10 +21,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     let jkis = await apislap.json();
     let { url } = jkis;
     let stiker = await sticker(null, url, `${name2} le dio una bofetada a ${name}`, null);
-    conn.sendFile(m.chat, stiker, null, {asSticker: true});
+    conn.sendFile(m.chat, stiker, m, {asSticker: true});
   } catch {
     throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*`;
-  }
+  };
 };
 handler.help = ["slap"];
 handler.tags = ["General"];
