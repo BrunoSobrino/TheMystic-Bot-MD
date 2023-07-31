@@ -27,8 +27,23 @@ export default handler;
 const credentials = {clientId: 'acc6302297e040aeb6e4ac1fbdfd62c3', clientSecret: '0e8439a1280a43aba9a5bc0a16f3f009'};
 const spotify = new Spotify.default(credentials);
 async function spotifydl(url) {
-  const res = await spotify.getTrack(url).catch(() => {
-    return {error: 'Fallo la descarga'};
+  return new Promise(async (resolve, reject) => {
+    const res = await spotify.getTrack(url).catch(() => {
+      return { error: 'Fallo la descarga' };
+    });
+
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Tiempo de espera agotado'));
+      }, 300000); // 5 minutos (300,000 milisegundos)
+    });
+
+    try {
+      const audioPromise = spotify.downloadTrack(url);
+      const audio = await Promise.race([audioPromise, timeoutPromise]);
+      resolve({ data: res, audio });
+    } catch (error) {
+      reject(error);
+    }
   });
-  return {data: res, audio: await spotify.downloadTrack(url)};
 }
