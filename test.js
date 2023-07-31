@@ -1,4 +1,4 @@
-simport fs from 'fs';
+import fs from 'fs';
 import path, {dirname} from 'path';
 import assert from 'assert';
 import {spawn} from 'child_process';
