@@ -443,7 +443,6 @@ ${readMore}
 ┃ *< ℍ𝔼ℝℝ𝔸𝕄𝕀𝔼ℕ𝕋𝔸𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt *<texto>*_
-┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt2 *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}delchatgpt
 ┣ ඬ⃟ 🛠️ _${usedPrefix}dall-e *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
