@@ -121,10 +121,7 @@ const connectionOptions = {
   },
   getMessage: async (key) => {
     if (store) {
-      // console.log(key);
-      // console.log(conn.chats[key.remoteJid] && conn.chats[key.remoteJid].messages[key.id] ? conn.chats[key.remoteJid].messages[key.id].message : undefined);
       const msg = await store.loadMessage(key.remoteJid, key.id);
-      // console.log(msg);
       return conn.chats[key.remoteJid] && conn.chats[key.remoteJid].messages[key.id] ? conn.chats[key.remoteJid].messages[key.id].message : undefined;
     }
     return proto.Message.fromObject({});
@@ -135,7 +132,7 @@ const connectionOptions = {
     creds: state.creds,
     keys: makeCacheableSignalKeyStore(state.keys, pino({level: 'silent'})),
   },
-  browser: ['MysticBot', 'Safari', '9.7.0'],
+  browser: ['MysticBot', 'Safari', '1.0.0'],
   version,
   defaultQueryTimeoutMs: undefined,
 };
