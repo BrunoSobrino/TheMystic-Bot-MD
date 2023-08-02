@@ -20,6 +20,9 @@ const handler = async (m, {conn, usedPrefix}) => {
 - apt-get update -y && apt-get upgrade -y
 - pkg install -y git nodejs ffmpeg imagemagick && pkg install yarn 
 - git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git && cd TheMystic-Bot-MD
+- yarn install
+- npm install
+- npm update
 - npm start
 
 ------------------------------------
