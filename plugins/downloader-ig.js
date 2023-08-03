@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
 import axios from 'axios';
-import cheerio from 'cheerio';
 import instagramGetUrl from 'instagram-url-direct';
 import {instagram} from '@xct007/frieren-scraper';
 import {instagramdl} from '@bochilteam/scraper';
