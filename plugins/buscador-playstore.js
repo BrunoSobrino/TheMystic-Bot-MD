@@ -4,7 +4,7 @@ const handler = async (m, {conn, text, args}) => {
   if (!args[0]) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*`;
   try {
     const enc = encodeURIComponent(text);
-    const json = await fetch(`https://latam-api.vercel.app/api/playstore?apikey=brunosobrino&q=${enc}`);
+    const json = await fetch(`https://latam-api.vercel.app/api/playstore?apikey=nekosmic&q=${enc}`);
     const gPlay = await json.json();
 
     const mystic = await translate(`${gPlay.descripcion}`, {to: 'es', autoCorrect: true});
