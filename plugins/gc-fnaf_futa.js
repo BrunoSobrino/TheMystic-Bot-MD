@@ -1,6 +1,6 @@
 let handler = async (m, { conn }) => {
 m.reply(global.fnafuta)}
-handler.help = ['pokefuta']
+handler.help = ['fnafuta']
 handler.tags = ['grupo']
 handler.command = /^(fnaffuta|linkfnaffuta|fnafuta|futafnaf)$/i
 export default handler
