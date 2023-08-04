@@ -22,13 +22,35 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
   if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽𝙰 𝙿𝙴𝚃𝙸𝙲𝙸𝙾𝙽 𝙾 𝚄𝙽𝙰 𝙾𝚁𝙳𝙴𝙽 𝙿𝙰𝚁𝙰 𝚄𝚂𝙰𝚁 𝙻𝙰 𝙵𝚄𝙽𝙲𝙸𝙾𝙽 𝙳𝙴 𝙲𝙷𝙰𝚃𝙶𝙿𝚃*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾𝚂 𝙳𝙴 𝙿𝙴𝚃𝙸𝙲𝙸𝙾𝙽𝙴𝚂 𝚈 𝙾𝚁𝙳𝙴𝙽𝙴𝚂*\n*◉ ${usedPrefix + command} Reflexion sobre la serie Merlina 2022 de netflix*\n*◉ ${usedPrefix + command} Codigo en JS para un juego de cartas*`;
   try {
     conn.sendPresenceUpdate('composing', m.chat);
-    const chgptdb = global.chatgpt.data.users[m.sender];
-    chgptdb.push({role: 'user', content: text});
-    const config = {method: 'post', url: 'https://api.openai.com/v1/chat/completions', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + global.openai_key}, data: JSON.stringify({'model': 'gpt-3.5-turbo', 'messages': [{role: 'system', content: 'Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot'}, ...chgptdb]})};
-    const response = await axios(config);
-    chgptdb.push({role: 'assistant', content: response.data.choices[0].message.content});
-    if (response.data.choices[0].message.content == 'error' || response.data.choices[0].message.content == '' || !response.data.choices[0].message.content) return XD; // causar error undefined para usar otra api
-    m.reply(`${response.data.choices[0].message.content}`.trim());
+    //let sistema1 = await fetch(`https://raw.githubusercontent.com/Skidy89/chat-gpt-jailbreak/main/Text.txt`).then(v => v.text())
+    let sistema1 = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot.`;
+    async function getOpenAIChatCompletion(texto) {
+    const openaiAPIKey = global.openai_key
+    let chgptdb = global.chatgpt.data.users[m.sender]
+    chgptdb.push({ role: 'user', content: texto })
+    const url = "https://api.openai.com/v1/chat/completions"
+    const headers = { "Content-Type": "application/json", "Authorization": `Bearer ${openaiAPIKey}` };
+    const data = { "model": "gpt-3.5-turbo", "messages": [{ "role": "system", "content": sistema1 }, ...chgptdb, ]};
+ try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(data),
+    });
+  if (!response.ok) {
+      throw new Error("Error al obtener respuesta de OpenAI")
+    }
+    const result = await response.json()
+    const finalResponse = result.choices[0].message.content
+    return finalResponse
+  } catch (error) {
+    console.error("Error, vuelva a intentarlo:", error)
+    return null;
+  }
+}
+let respuesta = await getOpenAIChatCompletion(text)
+if (respuesta == 'error' || respuesta == '' || !respuesta) return XD; // causar error undefined para usar otra api
+m.reply(`${respuesta}`.trim())
   } catch {
     try {
       conn.sendPresenceUpdate('composing', m.chat);

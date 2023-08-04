@@ -40,7 +40,7 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
             }
           } catch (err4) {
             try {
-              const res3 = await fetch(`https://latam-api.vercel.app/api/facebookdl?apikey=brunosobrino&q=${args[0]}`);
+              const res3 = await fetch(`https://latam-api.vercel.app/api/facebookdl?apikey=nekosmic&q=${args[0]}`);
               const json = await res3.json();
               const url3 = await json.video;
               await conn.sendFile(m.chat, url3, 'error.mp4', '*𝙰𝚀𝚄𝙸 𝙴𝚂𝚃𝙰 𝚂𝚄 𝚅𝙸𝙳𝙴𝙾*', m);
