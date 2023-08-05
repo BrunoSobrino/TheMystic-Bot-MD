@@ -183,53 +183,58 @@ function clearTmp() {
 }
 
 function purgeSession() {
-  let prekey = [];
-  const directorio = readdirSync('./MysticSession');
-  const filesFolderPreKeys = directorio.filter((file) => {
-    return file.startsWith('pre-key-');
-  });
-  prekey = [...prekey, ...filesFolderPreKeys];
-  filesFolderPreKeys.forEach((files) => {
-    unlinkSync(`./MysticSession/${files}`);
-  });
-}
+let prekey = []
+let directorio = readdirSync("./MysticSession")
+let filesFolderPreKeys = directorio.filter(file => {
+return file.startsWith('pre-key-') || file.startsWith('session-') || file.startsWith('sender-') || file.startsWith('app-')
+})
+prekey = [...prekey, ...filesFolderPreKeys]
+filesFolderPreKeys.forEach(files => {
+unlinkSync(`./MysticSession/${files}`)
+})
+} 
+
 function purgeSessionSB() {
-  const listaDirectorios = readdirSync('./jadibts/');
-  let SBprekey = [];
-  listaDirectorios.forEach((filesInDir) => {
-    const directorio = readdirSync(`./jadibts/${filesInDir}`);
-    const DSBPreKeys = directorio.filter((fileInDir) => {
-      return fileInDir.startsWith('pre-key-');
-    });
-    SBprekey = [...SBprekey, ...DSBPreKeys];
-    DSBPreKeys.forEach((fileInDir) => {
-      unlinkSync(`./jadibts/${filesInDir}/${fileInDir}`);
-    });
-  });
+try {
+let listaDirectorios = readdirSync('./jadibts/');
+let SBprekey = []
+listaDirectorios.forEach(directorio => {
+if (statSync(`./jadibts/${directorio}`).isDirectory()) {
+let DSBPreKeys = readdirSync(`./jadibts/${directorio}`).filter(fileInDir => {
+return fileInDir.startsWith('pre-key-') || fileInDir.startsWith('app-') || fileInDir.startsWith('session-')
+})
+SBprekey = [...SBprekey, ...DSBPreKeys]
+DSBPreKeys.forEach(fileInDir => {
+unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
+})
 }
+})
+if (SBprekey.length === 0) {
+console.log(chalk.bold.green(`\n▣────────[ session ]───────────···\n│\n▣─❧ NADA POR ELIMINAR \n│\n▣────────────────────────────────────···\n`))
+} else {
+console.log(chalk.bold.cyanBright(`\n▣────────[ MysticSession ]───────────···\n│\n▣─❧ ARCHIVOS NO ESENCIALES ELIMINADOS\n│\n▣────────────────────────────────────···\n`))
+}} catch (err){
+console.log(chalk.bold.red(`\n▣────────[ jadibts ]───────────···\n│\n▣─❧ OCURRIÓ UN ERROR\n│\n▣────────────────────────────────────···\n` + err))
+}}
 
 function purgeOldFiles() {
-  const directories = ['./MysticSession/', './jadibts/'];
-  const oneHourAgo = Date.now() - (60 * 60 * 1000);
-  directories.forEach((dir) => {
-    readdirSync(dir, (err, files) => {
-      if (err) throw err;
-      files.forEach((file) => {
-        const filePath = path.join(dir, file);
-        stat(filePath, (err, stats) => {
-          if (err) throw err;
-          if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') {
-            unlinkSync(filePath, (err) => {
-              if (err) throw err;
-              console.log(`Archivo ${file} borrado con éxito`);
-            });
-          } else {
-            console.log(`Archivo ${file} no borrado`);
-          }
-        });
-      });
-    });
-  });
+const directories = ['./MysticSession/', './jadibts/']
+const oneHourAgo = Date.now() - (60 * 60 * 1000)
+directories.forEach(dir => {
+readdirSync(dir, (err, files) => {
+if (err) throw err
+files.forEach(file => {
+const filePath = path.join(dir, file)
+stat(filePath, (err, stats) => {
+if (err) throw err;
+if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') { 
+unlinkSync(filePath, err => {  
+if (err) throw err
+console.log(chalk.bold.green(`Archivo ${file} borrado con éxito`))
+})
+} else {  
+console.log(chalk.bold.red(`Archivo ${file} no borrado` + err))
+} }) }) }) })
 }
 
 async function connectionUpdate(update) {
