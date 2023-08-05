@@ -242,6 +242,7 @@ async function connectionUpdate(update) {
   }
   if (global.db.data == null) loadDatabase();
   if (update.qr != 0 && update.qr != undefined) {
+    conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`)
     console.log(chalk.yellow('🚩ㅤEscanea este codigo QR, el codigo QR expira en 60 segundos.'));
   }
   if (connection == 'open') {
@@ -454,6 +455,4 @@ function clockString(ms) {
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
   return [d, ' Día(s) ️', h, ' Hora(s) ', m, ' Minuto(s) ', s, ' Segundo(s) '].map((v) => v.toString().padStart(2, 0)).join('');
 }
-_quickTest()
-    .then(() => conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`))
-    .catch(console.error);
+_quickTest().catch(console.error);
