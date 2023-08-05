@@ -139,6 +139,7 @@ const connectionOptions = {
 global.conn = makeWASocket(connectionOptions);
 conn.isInit = false;
 conn.well = false;
+conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -242,7 +243,6 @@ async function connectionUpdate(update) {
   }
   if (global.db.data == null) loadDatabase();
   if (update.qr != 0 && update.qr != undefined) {
-    conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`)
     console.log(chalk.yellow('🚩ㅤEscanea este codigo QR, el codigo QR expira en 60 segundos.'));
   }
   if (connection == 'open') {
