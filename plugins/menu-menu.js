@@ -57,9 +57,9 @@ ${readMore}
 ┃ *< 𝕊𝕆𝕃𝕌ℂ𝕀𝕆ℕ 𝔸 𝔼ℝℝ𝕆ℝ𝔼𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣➤ Mensajes en espera
-┣ ඬ⃟ 💟 _${usedPrefix}fixmsgespera_
+┣ ඬ⃟ ⭐ _${usedPrefix}fixmsgespera_
 ┣➤ Mensajes en espera (owner)
-┣ ඬ⃟ 💟 _${usedPrefix}dsowner_
+┣ ඬ⃟ ⭐ _${usedPrefix}dsowner_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
