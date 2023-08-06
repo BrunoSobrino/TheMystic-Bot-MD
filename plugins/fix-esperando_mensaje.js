@@ -5,11 +5,7 @@ import path from 'path';
 
 const handler = async (m, { conn, usedPrefix }) => {
   if (global.conn.user.jid !== conn.user.jid) {
-    return conn.sendMessage(
-      m.chat,
-      { text: '*[❗] Utiliza este comando directamente en el número principal del Bot*' },
-      { quoted: m }
-    );
+    return conn.sendMessage(m.chat, {text: '*[❗] Utiliza este comando directamente en el número principal del Bot*'}, {quoted: m});
   }
   const chatId = m.isGroup ? [m.chat, m.sender] : [m.sender];
   const sessionPath = './MysticSession/';
