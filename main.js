@@ -1,4 +1,3 @@
-// test
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 import './config.js';
 import './api.js';
@@ -51,7 +50,7 @@ global.prefix = new RegExp('^[' + (opts['prefix'] || '*/i!#$%+£¢€¥^°=¶∆
 
 global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile(`${opts._[0] ? opts._[0] + '_' : ''}database.json`));
 
-global.DATABASE = global.db; // Backwards Compatibility
+global.DATABASE = global.db; 
 global.loadDatabase = async function loadDatabase() {
   if (global.db.READ) {
     return new Promise((resolve) => setInterval(async function() {
@@ -140,6 +139,7 @@ const connectionOptions = {
 global.conn = makeWASocket(connectionOptions);
 conn.isInit = false;
 conn.well = false;
+conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -161,14 +161,15 @@ if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
         Aunque no dudara tan solo un segundo
         que me arrepiento de ser un grasoso
         Por que la grasa es un sentimiento
-        - El waza 👻👻👻👻 (Aiden)            */
-
-/* Yo tambien se hacer momazos Aiden...
-      ahi te va el ajuste de los borrados
-      inteligentes de las sesiones y de los sub-bot
-      By (Rey Endymion 👺👍🏼) */
-/* ninguno es mejor que tilin god
-atte: sk1d*/
+        - El waza 👻👻👻👻 (Aiden)            
+        
+   Yo tambien se hacer momazos Aiden...
+        ahi te va el ajuste de los borrados
+        inteligentes de las sesiones y de los sub-bot
+        By (Rey Endymion 👺👍🏼) 
+        
+   Ninguno es mejor que tilin god
+        - atte: sk1d             */
 
 function clearTmp() {
   const tmp = [tmpdir(), join(__dirname, './tmp')];
@@ -182,55 +183,55 @@ function clearTmp() {
 }
 
 function purgeSession() {
-  let prekey = [];
-  const directorio = readdirSync('./MysticSession');
-  const filesFolderPreKeys = directorio.filter((file) => {
-    return file.startsWith('pre-key-');
-  });
-  prekey = [...prekey, ...filesFolderPreKeys];
-  filesFolderPreKeys.forEach((files) => {
-    unlinkSync(`./MysticSession/${files}`);
-  });
-}
+let prekey = []
+let directorio = readdirSync("./MysticSession")
+let filesFolderPreKeys = directorio.filter(file => {
+return file.startsWith('pre-key-') /*|| file.startsWith('session-') || file.startsWith('sender-') || file.startsWith('app-') */
+})
+prekey = [...prekey, ...filesFolderPreKeys]
+filesFolderPreKeys.forEach(files => {
+unlinkSync(`./MysticSession/${files}`)
+})
+} 
+
 function purgeSessionSB() {
-  const listaDirectorios = readdirSync('./jadibts/');
-  // console.log(listaDirectorios)
-  let SBprekey = [];
-  listaDirectorios.forEach((filesInDir) => {
-    const directorio = readdirSync(`./jadibts/${filesInDir}`);
-    // console.log(directorio)
-    const DSBPreKeys = directorio.filter((fileInDir) => {
-      return fileInDir.startsWith('pre-key-');
-    });
-    SBprekey = [...SBprekey, ...DSBPreKeys];
-    DSBPreKeys.forEach((fileInDir) => {
-      unlinkSync(`./jadibts/${filesInDir}/${fileInDir}`);
-    });
-  });
+try {
+let listaDirectorios = readdirSync('./jadibts/');
+let SBprekey = []
+listaDirectorios.forEach(directorio => {
+if (statSync(`./jadibts/${directorio}`).isDirectory()) {
+let DSBPreKeys = readdirSync(`./jadibts/${directorio}`).filter(fileInDir => {
+return fileInDir.startsWith('pre-key-') /*|| fileInDir.startsWith('app-') || fileInDir.startsWith('session-')*/
+})
+SBprekey = [...SBprekey, ...DSBPreKeys]
+DSBPreKeys.forEach(fileInDir => {
+unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
+})
 }
+})
+if (SBprekey.length === 0) console.log(chalk.cyanBright(`\n=> No hay archivos por eliminar.\n`))
+} catch (err) {
+console.log(chalk.bold.red(`\n=> Algo salio mal durante la eliminación, archivos no eliminados\n`)
+}}
 
 function purgeOldFiles() {
-  const directories = ['./MysticSession/', './jadibts/'];
-  const oneHourAgo = Date.now() - (60 * 60 * 1000);
-  directories.forEach((dir) => {
-    readdirSync(dir, (err, files) => {
-      if (err) throw err;
-      files.forEach((file) => {
-        const filePath = path.join(dir, file);
-        stat(filePath, (err, stats) => {
-          if (err) throw err;
-          if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') {
-            unlinkSync(filePath, (err) => {
-              if (err) throw err;
-              console.log(`Archivo ${file} borrado con éxito`);
-            });
-          } else {
-            console.log(`Archivo ${file} no borrado`);
-          }
-        });
-      });
-    });
-  });
+const directories = ['./MysticSession/', './jadibts/']
+const oneHourAgo = Date.now() - (60 * 60 * 1000)
+directories.forEach(dir => {
+readdirSync(dir, (err, files) => {
+if (err) throw err
+files.forEach(file => {
+const filePath = path.join(dir, file)
+stat(filePath, (err, stats) => {
+if (err) throw err;
+if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') { 
+unlinkSync(filePath, err => {  
+if (err) throw err
+console.log(chalk.bold.green(`Archivo ${file} borrado con éxito`))
+})
+} else {  
+console.log(chalk.bold.red(`Archivo ${file} no borrado` + err))
+} }) }) }) })
 }
 
 async function connectionUpdate(update) {
@@ -255,7 +256,6 @@ async function connectionUpdate(update) {
 }
 
 process.on('uncaughtException', console.error);
-// conn.ev.on('messages.update', console.log);
 
 let isInit = true;
 let handler = await import('./handler.js');
@@ -306,11 +306,9 @@ global.reloadHandler = async function(restatConn) {
   const messageDateTime = new Date(conn.ev);
   if (currentDateTime >= messageDateTime) {
     const chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map((v) => v[0]);
-  // console.log(chats, conn.ev);
   } else {
     const chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map((v) => v[0]);
   }
-  // console.log(chats, 'Omitiendo mensajes en espera.'); }
 
   conn.ev.on('messages.upsert', conn.handler);
   conn.ev.on('group-participants.update', conn.participantsUpdate);
@@ -425,24 +423,27 @@ async function _quickTest() {
   Object.freeze(global.support);
 }
 setInterval(async () => {
-  if (stopped == 'close') return;
+  if (stopped === 'close' || !conn || !conn.user) return;
   const a = await clearTmp();
   console.log(chalk.cyanBright(`\n▣───────────[ 𝙰𝚄𝚃𝙾𝙲𝙻𝙴𝙰𝚁TMP ]──────────────···\n│\n▣─❧ 𝙰𝚁𝙲𝙷𝙸𝚅𝙾𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾𝚂 ✅\n│\n▣───────────────────────────────────────···\n`));
 }, 180000);
 setInterval(async () => {
+  if (stopped === 'close' || !conn || !conn.user) return;
   await purgeSession();
   console.log(chalk.cyanBright(`\n▣────────[ AUTOPURGESESSIONS ]───────────···\n│\n▣─❧ ARCHIVOS ELIMINADOS ✅\n│\n▣────────────────────────────────────···\n`));
 }, 1000 * 60 * 60);
 setInterval(async () => {
+  if (stopped === 'close' || !conn || !conn.user) return;
   await purgeSessionSB();
   console.log(chalk.cyanBright(`\n▣────────[ AUTO_PURGE_SESSIONS_SUB-BOTS ]───────────···\n│\n▣─❧ ARCHIVOS ELIMINADOS ✅\n│\n▣────────────────────────────────────···\n`));
 }, 1000 * 60 * 60);
 setInterval(async () => {
+  if (stopped === 'close' || !conn || !conn.user) return;
   await purgeOldFiles();
   console.log(chalk.cyanBright(`\n▣────────[ AUTO_PURGE_OLDFILES ]───────────···\n│\n▣─❧ ARCHIVOS ELIMINADOS ✅\n│\n▣────────────────────────────────────···\n`));
 }, 1000 * 60 * 60);
 setInterval(async () => {
-  if (stopped == 'close') return;
+  if (stopped === 'close' || !conn || !conn.user) return;
   const status = global.db.data.settings[conn.user.jid] || {};
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
@@ -456,6 +457,4 @@ function clockString(ms) {
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
   return [d, ' Día(s) ️', h, ' Hora(s) ', m, ' Minuto(s) ', s, ' Segundo(s) '].map((v) => v.toString().padStart(2, 0)).join('');
 }
-_quickTest()
-    .then(() => conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ．．．\n`))
-    .catch(console.error);
+_quickTest().catch(console.error);
