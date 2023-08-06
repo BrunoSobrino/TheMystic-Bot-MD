@@ -209,12 +209,9 @@ unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
 })
 }
 })
-if (SBprekey.length === 0) {
-console.log(chalk.bold.green(`\n▣────────[ session ]───────────···\n│\n▣─❧ NADA POR ELIMINAR \n│\n▣────────────────────────────────────···\n`))
-} else {
-console.log(chalk.bold.cyanBright(`\n▣────────[ MysticSession ]───────────···\n│\n▣─❧ ARCHIVOS NO ESENCIALES ELIMINADOS\n│\n▣────────────────────────────────────···\n`))
-}} catch (err){
-console.log(chalk.bold.red(`\n▣────────[ jadibts ]───────────···\n│\n▣─❧ OCURRIÓ UN ERROR\n│\n▣────────────────────────────────────···\n` + err))
+if (SBprekey.length === 0) console.log(chalk.cyanBright(`\n=> No hay archivos por eliminar.\n`))
+} catch (err) {
+console.log(chalk.bold.red(`\n=> Algo salio mal durante la eliminación, archivos no eliminados\n`)
 }}
 
 function purgeOldFiles() {
