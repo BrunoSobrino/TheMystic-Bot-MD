@@ -35,7 +35,7 @@
     "@green-code/music-track-data": "^2.0.3",
     "@shineiichijo/marika": "^2.0.6",
     "@vitalets/google-translate-api": "^8.0.0",
-    "@whiskeysockets/baileys": "github:ferhacks/baileys-1",
+    "@whiskeysockets/baileys": "npm:@whiskeysockets/baileys",
     "@xct007/frieren-scraper": "^0.0.2",
     "acrcloud": "^1.4.0",
     "api-dylux": "^1.6.0",
