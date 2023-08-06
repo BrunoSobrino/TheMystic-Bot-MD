@@ -28,7 +28,7 @@ const handler = async (m, { conn, usedPrefix }) => {
     }
   } catch (err) {
     console.error('Error al leer la carpeta o los archivos de sesión:', err);
-    await conn.sendMessage(m.chat, {text: '*[❗] Ocurrió un error al eliminar los archivos de sesión*'}, {quoted: m);
+    await conn.sendMessage(m.chat, {text: '*[❗] Ocurrió un error al eliminar los archivos de sesión*'}, {quoted: m});
   }
   await conn.sendMessage(m.chat, {text: `*👋 ¡Hola! Ahora me ves?*\n\n*[❗] Si el Bot no le responde a sus comandos por favor haga un pequeño spam*\n\n*—◉ Ejemplo:*\n${usedPrefix}s\n${usedPrefix}s\n${usedPrefix}s`}, {quoted: m});
 };
