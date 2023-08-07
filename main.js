@@ -209,9 +209,9 @@ unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
 })
 }
 })
-if (SBprekey.length === 0) console.log(chalk.cyanBright(`\n=> No hay archivos por eliminar.\n`))
+if (SBprekey.length === 0) console.log(chalk.cyanBright(`=> No hay archivos por eliminar.`))
 } catch (err) {
-console.log(chalk.bold.red(`\n=> Algo salio mal durante la eliminación, archivos no eliminados\n`))
+console.log(chalk.bold.red(`=> Algo salio mal durante la eliminación, archivos no eliminados`))
 }}
 
 function purgeOldFiles() {
