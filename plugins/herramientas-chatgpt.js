@@ -50,22 +50,22 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
         conn.sendPresenceUpdate('composing', m.chat);
         const vihangayt1 = await fetch(`https://vihangayt.me/tools/chatgpt?q=${text}`);
         const vihangaytjson1 = await vihangayt1.json();
-        if (vihangayt1.data == 'error' || vihangayt1.data == '' || !vihangayt1.data) return XD; // causar error undefined para usar otra api
-        m.reply(`${vihangayt1.data}`.trim());
+        if (vihangaytjson1.data == 'error' || vihangaytjson1.data == '' || !vihangaytjson1.data) return XD; // causar error undefined para usar otra api
+        m.reply(`${vihangaytjson1.data}`.trim());
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
         const vihangayt2 = await fetch(`https://vihangayt.me/tools/chatgpt2?q=${text}`);
         const vihangaytjson2 = await vihangayt2.json();
-        if (vihangayt2.data == 'error' || vihangayt2.data == '' || !vihangayt2.data) return XD; // causar error undefined para usar otra api
-        m.reply(`${vihangayt2.data}`.trim());
+        if (vihangaytjson2.data == 'error' || vihangaytjson2.data == '' || !vihangaytjson2.data) return XD; // causar error undefined para usar otra api
+        m.reply(`${vihangaytjson2.data}`.trim());
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
         const vihangayt3 = await fetch(`https://vihangayt.me/tools/chatgpt3?q=${text}`);
         const vihangaytjson3 = await vihangayt3.json();
-        if (vihangayt3.data == 'error' || vihangayt3.data == '' || !vihangayt3.data) return XD; // causar error undefined para usar otra api
-        m.reply(`${vihangayt3.data}`.trim());
+        if (vihangaytjson3.data == 'error' || vihangaytjson3.data == '' || !vihangaytjson3.data) return XD; // causar error undefined para usar otra api
+        m.reply(`${vihangaytjson3.data}`.trim());
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
@@ -73,8 +73,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
         const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${text}&symsg=${syms1}&apikey=fg-dylux`);
         const fgjson1 = await fgapi1.json();
         if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD; // causar error undefined para lanzar msg de error
-        const fgjson1_result = await translate(`${fgjson1.result}`, {to: 'es', autoCorrect: true});
-        m.reply(fgjson1_result.text.trim());
+        m.reply(`${fgjson1.result}`.trim());
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
@@ -118,5 +117,5 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
   }}
  }}
 };
-handler.command = ['openai', 'chatgpt', 'ia', 'robot', 'openai2', 'chatgpt2', 'ia2', 'robot2', 'Mystic', 'MysticBot'];
+handler.command = /^(openai|chatgpt|ia|robot|openai2|chatgpt2|ia2|robot2|Mystic|MysticBot)$/i;
 export default handler;
