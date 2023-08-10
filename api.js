@@ -39,7 +39,8 @@ global.APIs = {
   rose: 'https://api.itsrose.site',
   popcat: 'https://api.popcat.xyz',
   xcoders: 'https://api-xcoders.site',
-
+  vihangayt: 'https://vihangayt.me',
+  erdwpe: 'https://api.erdwpe.com'
 },
 global.APIKeys = {
   'https://api.xteam.xyz': `${keysxteam}`,
@@ -50,7 +51,7 @@ global.APIKeys = {
   'https://api.botcahx.biz.id': 'Admin',
   'https://api.ibeng.tech/docs': 'tamvan',
   'https://api.itsrose.site': 'Rs-Zeltoria',
-  'https://api-xcoders.site': 'Frieren',
+  'https://api-xcoders.site': 'Frieren'
 };
 
 /** ************************/
