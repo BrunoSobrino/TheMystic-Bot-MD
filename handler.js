@@ -936,7 +936,7 @@ export async function handler(chatUpdate) {
         if (!('sBye' in chat)) chat.sBye = '';
         if (!('sPromote' in chat)) chat.sPromote = '';
         if (!('sDemote' in chat)) chat.sDemote = '';
-        if (!('delete' in chat)) chat.delete = true;
+        if (!('delete' in chat)) chat.delete = false;
         if (!('modohorny' in chat)) chat.modohorny = false;
         if (!('autosticker' in chat)) chat.autosticker = false;
         if (!('audios' in chat)) chat.audios = false;
@@ -956,12 +956,12 @@ export async function handler(chatUpdate) {
           isBanned: false,
           welcome: true,
           detect: true,
-		    detect2: false,
+	  detect2: false,
           sWelcome: '',
           sBye: '',
           sPromote: '',
           sDemote: '',
-          delete: true,
+          delete: false,
           modohorny: true,
           autosticker: false,
           audios: true,
@@ -971,10 +971,10 @@ export async function handler(chatUpdate) {
           antiToxic: false,
           antiTraba: false,
           antiArab: false,
-		    antiArab2: false,
-	            antiporno: false,
-	            modoadmin: false,
-	            simi: false,
+	  antiArab2: false,
+	  antiporno: false,
+	  modoadmin: false,
+	  simi: false,
           expired: 0,
         };
       }
@@ -987,7 +987,7 @@ export async function handler(chatUpdate) {
         if (!('restrict' in settings)) settings.restrict = false;
         if (!('antiCall' in settings)) settings.antiCall = false;
         if (!('antiPrivate' in settings)) settings.antiPrivate = false;
-	        if (!('modejadibot' in settings)) settings.modejadibot = true;
+	if (!('modejadibot' in settings)) settings.modejadibot = true;
         if (!('antispam' in settings)) settings.antispam = false;
       } else {
         global.db.data.settings[this.user.jid] = {
@@ -997,7 +997,7 @@ export async function handler(chatUpdate) {
           restrict: false,
           antiCall: false,
           antiPrivate: false,
-	        modejadibot: true,
+	  modejadibot: true,
           antispam: false,
         };
       }
@@ -1549,7 +1549,6 @@ global.dfail = (type, m, conn) => {
   const aa = {quoted: m, userJid: conn.user.jid};
   const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: msg, contextInfo: {externalAdReply: {title: '[ ⚠ ] 𝐀𝐕𝐈𝐒𝐎 - 𝐀𝐋𝐄𝐑𝐓𝐀', body: 'ᴛʜᴇ ᴍʏsᴛɪᴄ - ʙᴏᴛ', thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}}}}, aa);
   if (msg) return conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id});
-  // if (msg) return m.reply(msg)
 };
 
 const file = global.__filename(import.meta.url, true);
