@@ -174,6 +174,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}gitclone *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}gdrive *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}tiktok *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}tiktokimg *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}xnxxdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}twitter *<enlace / link / url>*_
