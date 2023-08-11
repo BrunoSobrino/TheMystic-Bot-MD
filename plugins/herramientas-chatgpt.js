@@ -48,6 +48,14 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
+        const syms1 = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot.`;
+        const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${text}&symsg=${syms1}&apikey=fg-dylux`);
+        const fgjson1 = await fgapi1.json();
+        if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD; // causar error undefined para lanzar msg de error
+        m.reply(`${fgjson1.result}`.trim());
+    } catch {
+      try {
+        conn.sendPresenceUpdate('composing', m.chat);
         const vihangayt1 = await fetch(`https://vihangayt.me/tools/chatgpt?q=${text}`);
         const vihangaytjson1 = await vihangayt1.json();
         if (vihangaytjson1.data == 'error' || vihangaytjson1.data == '' || !vihangaytjson1.data) return XD; // causar error undefined para usar otra api
@@ -65,15 +73,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
         const vihangayt3 = await fetch(`https://vihangayt.me/tools/chatgpt3?q=${text}`);
         const vihangaytjson3 = await vihangayt3.json();
         if (vihangaytjson3.data == 'error' || vihangaytjson3.data == '' || !vihangaytjson3.data) return XD; // causar error undefined para usar otra api
-        m.reply(`${vihangaytjson3.data}`.trim());
-    } catch {
-      try {
-        conn.sendPresenceUpdate('composing', m.chat);
-        const syms1 = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino, tu seras The Mystic - Bot.`;
-        const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${text}&symsg=${syms1}&apikey=fg-dylux`);
-        const fgjson1 = await fgapi1.json();
-        if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD; // causar error undefined para lanzar msg de error
-        m.reply(`${fgjson1.result}`.trim());
+        m.reply(`${vihangaytjson3.data}`.trim());        
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
