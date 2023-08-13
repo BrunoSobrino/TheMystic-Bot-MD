@@ -276,6 +276,7 @@ if (connection === 'close') {
         conn.logger.info(`[ ⚠ ] Reinicio necesario, reiniciando...`);
         //await connectionUpdate(); 
         //process.exit();
+        //process.send('reset');
     } else if (reason === DisconnectReason.timedOut) {
         conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
         //await connectionUpdate();
