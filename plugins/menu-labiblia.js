@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, isPrems}) => {
+if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `*[❗𝐈] Los comandos +18 están desactivados en este grupo, si es admin y desea activarlos use ${usedPrefix}enable modohorny*`; 
   try {
     const pp = imagen5;
     const vn = './media/La biblia.mp3';
