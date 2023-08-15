@@ -270,7 +270,7 @@ if (connection === 'close') {
         conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
         //process.exit();
     } else if (reason === DisconnectReason.restartRequired) {
-        conn.logger.info(`[ ⚠ ] Reinicio necesario, reinicie el servidor...`);
+        conn.logger.info(`[ ⚠ ] Reinicio necesario, reinicie el servidor si presenta algún problema.`);
         //process.send('reset');
     } else if (reason === DisconnectReason.timedOut) {
         conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
