@@ -1174,14 +1174,14 @@ export async function handler(chatUpdate) {
 
             if (user.bannedMessageCount < 3) {
               const messageNumber = user.bannedMessageCount + 1;
-              const messageText = `
-               ╔═════════════════════════════════╗
-                ❰ ⚠️ ❱ *¡USUARIO BANEADO!* ❰ ⚠️ ❱
-               —◉ *Aviso ${messageNumber}/3 (Total: 3)*
-               —◉ ${user.bannedReason ? `\n*❗ Motivo:* ${user.bannedReason}` : '*❗ Motivo:* Sin especificar'}
-               —◉ *Si consideras que esto es un error y cuentas con pruebas, puedes comunicarte con el propietario del Bot para apelar la suspensión.*
-               —◉ *Contacto para apelaciones:* wa.me/5219992095479
-               ╚═════════════════════════════════╝
+const messageText = `
+╔═════════════════════════╗
+ ❰ ⚠️ ❱ *¡USUARIO BANEADO!* ❰ ⚠️ ❱
+—◉ *Aviso ${messageNumber}/3 (Total: 3)*
+—◉ ${user.bannedReason ? `\n*Motivo:* ${user.bannedReason}` : '*Motivo:* Sin especificar'}
+—◉ *Si consideras que esto es un error y cuentas con pruebas, puedes comunicarte con el propietario del Bot para apelar la suspensión.*
+—◉ *Contacto para apelaciones:* wa.me/5219992095479
+╚═════════════════════════╝
                `.trim();
               m.reply(messageText);
               user.bannedMessageCount++;
@@ -1517,14 +1517,14 @@ export async function deleteUpdate(message) {
     if (!msg.isGroup) return;
     const chat = global.db.data.chats[msg.chat] || {};
     if (!chat.antidelete) return;
-    const antideleteMessage = `
-    ━━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━
-    *■ Usuario:* @${participant.split`@`[0]}
-    *■ Enviando el mensaje eliminado...*
+const antideleteMessage = `
+━━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━
+*■ Usuario:* @${participant.split`@`[0]}
+*■ Enviando el mensaje eliminado...*
     
-    *■ Para desactivar esta función, escribe el comando:*
-    *—◉ #disable antidelete*
-    ━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━`.trim();
+*■ Para desactivar esta función, escribe el comando:*
+*—◉ #disable antidelete*
+━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━`.trim();
     await this.reply(msg.chat, antideleteMessage, msg, {mentions: [participant]});
     this.copyNForward(msg.chat, msg).catch((e) => console.log(e, msg));
   } catch (e) {
