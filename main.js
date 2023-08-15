@@ -241,7 +241,8 @@ async function connectionUpdate(update) {
   if (isNewLogin) conn.isInit = true;
   const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode;
   if (code && code !== DisconnectReason.loggedOut && conn?.ws.socket == null) {
-    console.log(await global.reloadHandler(true).catch(console.error));
+    await global.reloadHandler(true).catch(console.error);
+    //console.log(await global.reloadHandler(true).catch(console.error));
     global.timestamp.connect = new Date;
   }
   if (global.db.data == null) loadDatabase();
