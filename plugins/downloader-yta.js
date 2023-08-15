@@ -26,7 +26,7 @@ const handler = async (m, {text, conn, args, usedPrefix, command}) => {
       }
     }
   }
-  await conn.sendMessage(m.chat, {text: `*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*`}, {quoted: m});
+  const { key } = await conn.sendMessage(m.chat, {text: `*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*`}, {quoted: m});
   try {
     const q = '128kbps';
     const v = youtubeLink;
@@ -35,12 +35,14 @@ const handler = async (m, {text, conn, args, usedPrefix, command}) => {
     const ttl = await yt.title;
     const size = await yt.audio[q].fileSizeH;
     await conn.sendFile(m.chat, dl_url, ttl + '.mp3', null, m, false, {mimetype: 'audio/mp4'});
+    await conn.sendMessage(m.chat, {text: '*[ ✔ ] Audio descargado exitosamente.*', edit: key}, {quoted: m});
   } catch {
     try {
       const lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytaudio2?apikey=${lolkeysapi}&url=${youtubeLink}`);
       const lolh = await lolhuman.json();
       const n = lolh.result.title || 'error';
       await conn.sendMessage(m.chat, {audio: {url: lolh.result.link}, fileName: `${n}.mp3`, mimetype: 'audio/mp4'}, {quoted: m});
+      await conn.sendMessage(m.chat, {text: '*[ ✔ ] Audio descargado exitosamente.*', edit: key}, {quoted: m});
     } catch {
       try {
         const searchh = await yts(youtubeLink);
@@ -48,6 +50,7 @@ const handler = async (m, {text, conn, args, usedPrefix, command}) => {
         const infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId);
         const ress = await ytdl.chooseFormat(infoo.formats, {filter: 'audioonly'});
         conn.sendMessage(m.chat, {audio: {url: ress.url}, fileName: __res[0].title + '.mp3', mimetype: 'audio/mp4'}, {quoted: m});
+        await conn.sendMessage(m.chat, {text: '*[ ✔ ] Audio descargado exitosamente.*', edit: key}, {quoted: m});
       } catch {
         await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*', m);
       }
