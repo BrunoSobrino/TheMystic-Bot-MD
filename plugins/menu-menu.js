@@ -69,14 +69,10 @@ ${readMore}
 ┣ ඬ⃟ 💟 _${usedPrefix}grupos_
 ┣ ඬ⃟ 💟 _${usedPrefix}estado_
 ┣ ඬ⃟ 💟 _${usedPrefix}infobot_
-┣ ඬ⃟ 💟 _${usedPrefix}labiblia_
-┣ ඬ⃟ 💟 _${usedPrefix}animes_
 ┣ ඬ⃟ 💟 _${usedPrefix}speedtest_
 ┣ ඬ⃟ 💟 _${usedPrefix}donar_
-┣ ඬ⃟ 💟 _${usedPrefix}grouplist_
 ┣ ඬ⃟ 💟 _${usedPrefix}owner_
 ┣ ඬ⃟ 💟 _${usedPrefix}script_
-┣ ඬ⃟ 💟 _${usedPrefix}listprem_
 ┣ ඬ⃟ 💟 _Bot_ (𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)
 ┗━━━━━━━━━━━━━━━━┛
 
@@ -158,6 +154,8 @@ ${readMore}
 ┣ ඬ⃟ ☑️ _${usedPrefix}disable *antiarabes*_
 ┣ ඬ⃟ ☑️ _${usedPrefix}enable *modoadmin*_
 ┣ ඬ⃟ ☑️ _${usedPrefix}disable *modoadmin*_
+┣ ඬ⃟ ☑️ _${usedPrefix}enable *antidelete*_
+┣ ඬ⃟ ☑️ _${usedPrefix}disable *antidelete*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -268,7 +266,8 @@ ${readMore}
 ┣ ඬ⃟ 🧧 _${usedPrefix}toptt *<video / audio>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}tovideo *<sticker>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}tourl *<video / imagen / audio>*_
-┣ ඬ⃟ 🧧 _${usedPrefix}tts es *<texto>*_
+┣ ඬ⃟ 🧧 _${usedPrefix}tts *<idioma> <texto>*_
+┣ ඬ⃟ 🧧 _${usedPrefix}tts *<efecto> <texto>*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -438,6 +437,7 @@ ${readMore}
 ┣ ඬ⃟ 👽 _${usedPrefix}scircle *<imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}sremovebg *<imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}semoji *<tipo> <emoji>*_
+┣ ඬ⃟ 👽 _${usedPrefix}qc *<texto>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}attp *<texto>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}attp2 *<texto>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}attp3 *<texto>*_
@@ -486,13 +486,15 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *antiprivado*_
 ┣ ඬ⃟ 👑 _${usedPrefix}enable *modejadibot*_
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *modejadibot*_
+┣ ඬ⃟ 👑 _${usedPrefix}enable *audios_bot*_
+┣ ඬ⃟ 👑 _${usedPrefix}disable *audios_bot*_
 ┣ ඬ⃟ 👑 _${usedPrefix}msg *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}banchat_
 ┣ ඬ⃟ 👑 _${usedPrefix}unbanchat_
 ┣ ඬ⃟ 👑 _${usedPrefix}banuser *<@tag>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}unbanuser *<@tag>*_
-┣ ඬ⃟ 👑 _${usedPrefix}dardiamantes *<@tag>*_
-┣ ඬ⃟ 👑 _${usedPrefix}añadirxp *<@tag>*_
+┣ ඬ⃟ 👑 _${usedPrefix}dardiamantes *<@tag> <cantidad>*_
+┣ ඬ⃟ 👑 _${usedPrefix}añadirxp *<@tag> <cantidad>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}banuser *<@tag>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}bc *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}bcchats *<texto>*_
