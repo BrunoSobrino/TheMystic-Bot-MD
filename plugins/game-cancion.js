@@ -25,7 +25,7 @@ RESPONDE A ESTE MENSAJE CON LAS RESPUESTAS!`.trim();
       delete conn.tebaklagu[id];
     }, timeout),
   ];
-  const aa = await conn.sendMessage(m.chat, {audio: {url: json.link_song}, fileName: `error.mp3`, mimetype: 'audio/mp4'}, {quoted: m});
+  const aa = await conn.sendMessage(m.chat, {audio: {url: json.link_song}, fileName: `error.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
   if (!aa) return conn.sendFile(m.chat, json.link_song, 'coba-lagi.mp3', '', m);
 };
 handler.help = ['tebaklagu'];
