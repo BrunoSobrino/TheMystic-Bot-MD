@@ -27,7 +27,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
       conn.sendMessage(m.chat, {video: mediax, mentions: users, mimetype: 'video/mp4', caption: htextos}, {quoted: m});
     } else if ((isMedia && quoted.mtype === 'audioMessage') && htextos) {
       var mediax = await quoted.download?.();
-      conn.sendMessage(m.chat, {audio: mediax, mentions: users, mimetype: 'audio/mp4', fileName: `Hidetag.mp3`}, {quoted: m});
+      conn.sendMessage(m.chat, {audio: mediax, mentions: users, mimetype: 'audio/mpeg', fileName: `Hidetag.mp3`}, {quoted: m});
     } else if ((isMedia && quoted.mtype === 'stickerMessage') && htextos) {
       var mediax = await quoted.download?.();
       conn.sendMessage(m.chat, {sticker: mediax, mentions: users}, {quoted: m});
