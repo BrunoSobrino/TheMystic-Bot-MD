@@ -46,7 +46,7 @@ const handler = async (m, { conn, usedPrefix, command, text, args }) => {
   if (!texto) return conn.sendMessage(m.chat, {text: `*[❗] Ingresa el texto que quieras convertir a audio.*\n\n*—◉ Ejemplo:*\n*◉ ${usedPrefix + command} ${efecto} Hola, este es un ejemplo de uso del comando.*`}, {quoted: m});
 
   let masivo = await makeTTSRequest(texto, efecto);
-  conn.sendMessage(m.chat, {audio: {url: masivo.resultado}, fileName: 'error.mp3', mimetype: 'audio/mp4', ptt: true}, {quoted: m});
+  conn.sendMessage(m.chat, {audio: {url: masivo.resultado}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
 };
 
 handler.command = /^(g?tts2)$/i;
