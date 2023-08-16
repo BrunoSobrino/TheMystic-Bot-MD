@@ -58,4 +58,4 @@ const handler = async (m, {text, conn, args, usedPrefix, command}) => {
   }
 };
 handler.command = /^audio|fgmp3|dlmp3|getaud|yt(a|mp3)$/i;
-export default handler;
+export default handler
