@@ -1,9 +1,11 @@
-const handler = async (m, {conn}) => {
+const handler = async (m, {conn, usedPrefix}) => {
+  if (usedPrefix == 'a' || usedPrefix == 'A' || usedPrefix == '*' || usedPrefix == '#') return;
   if (!db.data.chats[m.chat].audios && m.isGroup) return;
   if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
+  //const s = seconds: '1934.4'
   const vn = './media/toma.mp3';
   conn.sendPresenceUpdate('recording', m.chat);
-  conn.sendMessage(m.chat, {audio: {url: vn}, seconds: '1934.4', ptt: true, mimetype: 'audio/mpeg', fileName: `deja de llorar.mp3`}, {quoted: m});
+  conn.sendMessage(m.chat, {audio: {url: vn}, ptt: true, mimetype: 'audio/mpeg', fileName: `deja de llorar.mp3`}, {quoted: m});
 };
 handler.command = /^(:c|c)$/i;
 handler.fail = null;
