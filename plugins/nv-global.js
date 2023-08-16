@@ -302,6 +302,14 @@ handler.all = async function(m, {conn}) {
     this.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
 
+  if (!chat.isBanned && chat.audios && m.text.match(/(no digas eso papu)/gi)) {
+    if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
+    const vn = './media/nopapu.mp3';
+    this.sendPresenceUpdate('recording', m.chat);
+    this.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
+  }
+  
+
   return !0;
 };
 export default handler;
