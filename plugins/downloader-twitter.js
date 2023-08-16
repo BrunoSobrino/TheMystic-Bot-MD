@@ -4,7 +4,7 @@ import cheerio from 'cheerio';
 import vm from 'node:vm';
 import qs from 'qs';
 const handler = async (m, {conn, text, usedPrefix, command}) => {
-if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝙴𝙽𝙻𝙰𝙲𝙴 𝙳𝙴 𝚃𝚆𝙸𝚃𝚃𝙴𝚁, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾: ${usedPrefix + command}* https://twitter.com/auronplay/status/1586487664274206720?s=20&t=3snvkvwGUIez5iWYQAehpw`;
+if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝙴𝙽𝙻𝙰𝙲𝙴 𝙳𝙴 𝚇 (𝚃𝚆𝙸𝚃𝚃𝙴𝚁), 𝙴𝙹𝙴𝙼𝙿𝙻𝙾: ${usedPrefix + command}* https://twitter.com/auronplay/status/1586487664274206720?s=20&t=3snvkvwGUIez5iWYQAehpw`;
  try {
    const resFG = await twitter(text);
    await m.reply(global.wait);
@@ -29,7 +29,7 @@ if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄�
   }
  }
 };    
-handler.command = /^((twdl|tw|twt|twitter)(dl)?)$/i;
+handler.command = /^((x|xdl|dlx|twdl|tw|twt|twitter)(dl)?)$/i;
 export default handler;
 
 async function twitterDl(url) {
