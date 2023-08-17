@@ -6,7 +6,7 @@ const handler = async (m, {conn, text}) => {
   }));
   const json = await res.json();
   if (res.status !== 200) throw json;
-  console.log(json.items[0].avatar_url)
+  console.log(json[0].items.avatar_url)
   const str = json.items.map((repo, index) => {
   return `
 *${1 + index}. ${repo.full_name}${repo.fork ? ' (fork)' : ''}*
