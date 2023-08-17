@@ -24,17 +24,17 @@ const handler = async (m, {conn, args, participants}) => {
 *< TABLA DE LOS AVENTUREROS MÁS DESTACADOS />*
     
 —◉ *TOP ${len} EXP 🌟*
-*👤 Tú:* ${usersExp.indexOf(m.sender) + 1} de ${usersExp.length}
+*👤 Tú posición:* ${usersExp.indexOf(m.sender) + 1} de ${usersExp.length}
 
 ${sortedExp.slice(0, len).map(({jid, exp}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp} Exp*`).join`\n`}
 
 —◉ *TOP ${len} DIAMANTES 💎*
-*Tú:* ${usersLim.indexOf(m.sender) + 1} de ${usersLim.length}
+*👤 Tú posición:* ${usersLim.indexOf(m.sender) + 1} de ${usersLim.length}
 
 ${sortedLim.slice(0, len).map(({jid, limit}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit} Diamantes*`).join`\n`}
 
 —◉ *TOP ${len} NIVEL 🎚️*
-*Tú:* ${usersLevel.indexOf(m.sender) + 1} de ${usersLevel.length}
+*👤 Tú posición:* ${usersLevel.indexOf(m.sender) + 1} de ${usersLevel.length}
 
 ${sortedLevel.slice(0, len).map(({jid, level}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *Nivel ${level}*`).join`\n`}
 
