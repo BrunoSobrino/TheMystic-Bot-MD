@@ -1,25 +1,24 @@
 const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
 const handler = async (m, {conn, text, isMods, isOwner, isPrems}) => {
-  //try {
+  try {
     const link = (m.quoted ? m.quoted.text ? m.quoted.text : text : text) || text;
     const [_, code] = link.match(linkRegex) || [];
-    if (!code) throw '*[ ⚠️ 𝐀𝐋𝐄𝐑𝐓𝐀 ⚠️ ] 𝙻𝙸𝙽𝙺 𝙴𝚁𝚁𝙾𝙽𝙴𝙾 𝙾 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴*\n*👉🏻 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 𝙳𝙴 𝚄𝙽 𝙶𝚁𝚄𝙿𝙾*\n\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*#join https://chat.whatsapp.com/FwEUGxkvZD85fIIp0gKyFC*\n\n*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝙽𝙸𝙽𝙶𝚄𝙽 𝙼𝙴𝙽𝚂𝙰𝙹𝙴, 𝙿𝚄𝙴𝙳𝙴 𝙲𝙰𝚄𝚂𝙰𝚁 𝙸𝙽𝚃𝙴𝚁𝙵𝙴𝚁𝙴𝙽𝙲𝙸𝙰, 𝙴𝚂𝙲𝚁𝙸𝙱𝙰𝙻𝙾 𝚄𝙽𝙸𝙲𝙰𝙼𝙴𝙽𝚃𝙴 𝙲𝙾𝙼𝙾 𝙼𝙴𝙽𝚂𝙰𝙹𝙴 𝙽𝚄𝙴𝚅𝙾*';
+    if (!link.includes(linkRegex) || !code) throw '*[❗] Link erroneo o faltante, ingrese el enlace de un grupo de WhatsApp*\n\n*—◉ Ejemplo:*\n*◉ #join https://chat.whatsapp.com/FwEUGxkvZD85fIIp0gKyFC*';
     if ( isPrems || isMods || isOwner || m.fromMe) {
       const res = await conn.groupAcceptInvite(code);
-      await m.reply(`*𝙴𝙻 𝙱𝙾𝚃 𝚂𝙴 𝚄𝙽𝙸𝙾 𝙲𝙾𝙽 𝙴𝚇𝙸𝚃𝙾 𝙰𝙻 𝙶𝚁𝚄𝙿𝙾, 𝙳𝙸𝚂𝙵𝚁𝚄𝚃𝙴 𝙳𝙴𝙻 𝙱𝙾𝚃! ✔️*`);
+      await conn.sendMessage(m.chat, {text: '[ ✔️ ] El Bot ha ingresado con éxito al grupo.'}, {quoted: m})
     } else {
       const data = global.owner.filter(([id]) => id)[0];
       const dataArray = Array.isArray(data) ? data : [data];
       for (const entry of dataArray) {
       const id = entry;
-        console.log(id)
-        await conn.sendMessage(id + '@s.whatsapp.net', {text: '*[❗ 𝐈𝐍𝐅𝐎 ❗] 𝙽𝚄𝙴𝚅𝙰 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳 𝙳𝙴𝙻 𝙱𝙾𝚃 𝙿𝙰𝚁𝙰 𝚄𝙽 𝙶𝚁𝚄𝙿𝙾 [❗𝐈𝐍𝐅𝐎❗]*\n\n*—◉ 𝙽𝚄𝙼𝙴𝚁𝙾 𝙳𝙴𝙻 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝙰𝙽𝚃𝙴:* ' + 'wa.me/' + m.sender.split('@')[0] + '\n*—◉ 𝙻𝙸𝙽𝙺 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾 𝙳𝙾𝙽𝙳𝙴 𝚂𝙴 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝙰 𝙴𝙻 𝙱𝙾𝚃:* ' + link});
+        await conn.sendMessage(id + '@s.whatsapp.net', {text: '*[❗] NUEVA SOLICITUD DE UN BOT PARA UN GRUPO [❗]*\n\n*—◉ Numero del solicitante:* ' + 'wa.me/' + m.sender.split('@')[0] + '\n*—◉ Link del grupo:* ' + link});
       }
-      await m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚂𝚄 𝙶𝚁𝚄𝙿𝙾 𝙵𝚄𝙴 𝙴𝙽𝚅𝙸𝙰𝙳𝙾 𝙰 𝙼𝙸 𝙿𝚁𝙾𝙿𝙸𝙴𝚃𝙰𝚁𝙸𝙾/𝙰*\n\n*👉🏻 𝚂𝚄 𝙶𝚁𝚄𝙿𝙾 𝙴𝚂𝚃𝙰𝚁𝙰 𝙴𝙽 𝙴𝚅𝙰𝙻𝚄𝙰𝙲𝙸𝙾𝙽 𝚈 𝙴𝙻 𝙿𝚁𝙾𝙿𝙸𝙴𝚃𝙰𝚁𝙸𝙾/𝙰 𝙳𝙴𝙻 𝙱𝙾𝚃 𝙳𝙴𝙲𝙸𝙳𝙸𝚁𝙰 𝚂𝙸 𝙼𝙴 𝙰𝙶𝚁𝙴𝙶𝙰 𝙾 𝙽𝙾*\n\n*[❗𝐈𝐍𝐅𝐎❗] 𝙰𝙻𝙶𝚄𝙽𝙰𝚂 𝙳𝙴 𝙻𝙰𝚂 𝚁𝙰𝚉𝙾𝙽𝙴𝚂 𝙿𝙾𝚁 𝙻𝙰 𝙲𝚄𝙰𝙻 𝚂𝚄 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳 𝙿𝚄𝙴𝙳𝙴 𝚂𝙴𝚁 𝚁𝙴𝙲𝙷𝙰𝚉𝙰𝙳𝙰 𝚂𝙾𝙽:*\n*1.- 𝙴𝙻 𝙱𝙾𝚃 𝙴𝚂𝚃𝙰 𝚂𝙰𝚃𝚄𝚁𝙰𝙳𝙾*\n*2.- 𝚂𝙴 𝙴𝙻𝙸𝙼𝙸𝙽𝙾 𝙿𝚁𝙴𝚅𝙸𝙰𝙼𝙴𝙽𝚃𝙴 𝙴𝙻 𝙱𝙾𝚃 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾*\n*3.- 𝙴𝙻 𝙻𝙸𝙽𝙺 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾 𝙵𝚄𝙴 𝚁𝙴𝙴𝚂𝚃𝙰𝙱𝙻𝙴𝙲𝙸𝙳𝙾*\n*4.-𝙴𝙻 𝙱𝙾𝚃 𝙽𝙾 𝚂𝙴 𝙰𝙶𝚁𝙴𝙶𝙰 𝙰 𝙶𝚁𝚄𝙿𝙾𝚂 𝙿𝙾𝚁 𝙳𝙴𝚂𝙸𝙲𝙸𝙾𝙽 𝙳𝙴 𝙴𝙻 𝙿𝚁𝙾𝙿𝙸𝙴𝚃𝙰𝚁𝙸𝙾/𝙰*\n\n*👉🏻 𝚃𝙴𝙽 𝙴𝙽 𝙲𝚄𝙴𝙽𝚃𝙰 𝚀𝚄𝙴 𝚃𝚄 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳 𝙿𝙰𝚁𝙰 𝚄𝙽𝙸𝚁 𝙴𝙻 𝙱𝙾𝚃 𝙰 𝚄𝙽 𝙶𝚁𝚄𝙿𝙾 𝙿𝚄𝙴𝙳𝙴 𝚃𝙰𝚁𝙳𝙰𝚁 𝙷𝙾𝚁𝙰𝚂 𝙾 𝙳𝙸𝙰𝚂 𝙴𝙽 𝚂𝙴𝚁 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙸𝙳𝙰, 𝚃𝙴𝙽 𝙿𝙰𝙲𝙸𝙴𝙽𝙲𝙸𝙰*');
+      await conn.sendMessage(m.chat, {text: '*[❗] El link de su grupo fue enviado a mi propietario/a.*\n\n*—◉ Su grupo estará en evaluación y el propietario/a del Bot decidirá si agrega o no al Bot.*\n\n*—◉ Algunas de las razones por la cual su solicitud puede ser rechazada son:*\n*1.- El Bot está saturado.*\n*2.- El Bot fue eliminado del grupo recientemente.*\n*3.- El link del grupo ha sido restablecido.*\n*4.-El Bot no se agrega a grupos por decisión del propietario/a.*\n\n*—◉ El proceso de evaluación puede tomar algo de tiempo, incluso dias, tenga paciencia.*'}, {quoted: m});
     }
- // } catch {
-   // throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝚂𝙴𝙽𝚃𝙸𝙼𝙾𝚂, 𝙷𝙰𝚈 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙴𝙽 𝙴𝚂𝚃𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝚈 𝙰𝚄𝙽 𝚃𝚁𝙰𝙱𝙰𝙹𝙰𝙼𝙾𝚂 𝙴𝙽 𝙻𝙰 𝚂𝙾𝙻𝚄𝙲𝙸𝙾𝙽*';
- // }
+  } catch {
+    throw '*[❗] Lo sentimos, algo salio mal por favor reportelo o vuelva a intentarlo.*';
+  }
 };
 handler.help = ['join [chat.whatsapp.com]'];
 handler.tags = ['premium'];
