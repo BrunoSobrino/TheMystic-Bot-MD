@@ -6,6 +6,7 @@ const handler = async (m, {text}) => {
   }));
   const json = await res.json();
   if (res.status !== 200) throw json;
+  console.log(json.items)
   const str = json.items.map((repo, index) => {
   return `
 *${1 + index}. ${repo.full_name}${repo.fork ? ' (fork)' : ''}*
