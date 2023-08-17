@@ -13,9 +13,8 @@ let text
     const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender; 
     const mishi = text.replace(who, '') 
    if (mishi.length > 30) return m.reply('*[❗️] El texto no puede tener mas de 30 caracteres*');
-   let pro = await conn.profilePictureUrl(who, 'image')
-    const pp = await conn.getFile(pro)   
-    const obj = {"type": "quote", "format": "png", "backgroundColor": "#000000", "width": 512, "height": 768, "scale": 2, "messages": [{"entities": [], "avatar": true, "from": {"id": 1, "name": `${who?.name || ''}`, "photo": {url: `${pp?.data || 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg'}`}}, "text": mishi, "replyMessage": {}}]};
+    const pp = await conn.profilePictureUrl(who, 'image')
+    const obj = {"type": "quote", "format": "png", "backgroundColor": "#000000", "width": 512, "height": 768, "scale": 2, "messages": [{"entities": [], "avatar": true, "from": {"id": 1, "name": `${who?.name || ''}`, "photo": {url: `${pp || 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg'}`}}, "text": mishi, "replyMessage": {}}]};
     const json = await axios.post('https://bot.lyo.su/quote/generate', obj, {headers: {'Content-Type': 'application/json'}});
     const buffer = Buffer.from(json.data.result.image, 'base64');
    let stiker = await sticker(buffer, false, global.packname, global.author);
