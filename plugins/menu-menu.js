@@ -94,6 +94,7 @@ ${readMore}
 ┃ *< 𝕁𝕌𝔼𝔾𝕆𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🎖️ _${usedPrefix}mates *<noob / easy / medium / hard / extreme /impossible /impossible2>*_
+┣ ඬ⃟ 🎖️ _${usedPrefix}fake *<texto1> <@tag> <texto2>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}ppt *<papel / tijera /piedra>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}prostituto *<nombre / @tag>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}prostituta *<nombre / @tag>*_
