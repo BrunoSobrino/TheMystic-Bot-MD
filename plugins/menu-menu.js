@@ -455,6 +455,7 @@ ${readMore}
 ┣ ඬ⃟ 👽 _${usedPrefix}wm *<packname> <author>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}stickermarker *<efecto> <imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}stickerfilter *<efecto> <imagen>*_
+┣ ඬ⃟ 👽 _${usedPrefix}cartoon *<responder a imagen>*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
