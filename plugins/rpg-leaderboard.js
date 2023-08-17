@@ -39,7 +39,7 @@ ${sortedLim.slice(0, len).map(({jid, limit}, i) => `${i + 1}. ${participants.som
 ${sortedLevel.slice(0, len).map(({jid, level}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *nivel ${level}*`).join`\n`}
 
 *⚔️ ${randomAdventurePhrase} ⚔️*`.trim();
-  conn.sendMessage(m.chat, {text: texto, mentions: conn.parseMention(text)}, {quoted: m})
+  conn.sendMessage(m.chat, {text: texto, mentions: conn.parseMention(texto)}, {quoted: m})
 };
 handler.help = ['top'];
 handler.tags = ['xp'];
