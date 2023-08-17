@@ -2,8 +2,8 @@ const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
 const handler = async (m, {conn, text, isMods, isOwner, isPrems}) => {
   //try {
     const link = (m.quoted ? m.quoted.text ? m.quoted.text : text : text) || text;
+    if (!link || !link.match(linkRegex)) throw '*[❗] Link erroneo o faltante, ingrese el enlace de un grupo de WhatsApp*\n\n*—◉ Ejemplo:*\n*◉ #join https://chat.whatsapp.com/FwEUGxkvZD85fIIp0gKyFC*';
     const [_, code] = link.match(linkRegex) || [];
-    if (!link.includes(linkRegex) || !code) throw '*[❗] Link erroneo o faltante, ingrese el enlace de un grupo de WhatsApp*\n\n*—◉ Ejemplo:*\n*◉ #join https://chat.whatsapp.com/FwEUGxkvZD85fIIp0gKyFC*';
     if ( isPrems || isMods || isOwner || m.fromMe) {
       const res = await conn.groupAcceptInvite(code);
       await conn.sendMessage(m.chat, {text: '[ ✔️ ] El Bot ha ingresado con éxito al grupo.'}, {quoted: m})
