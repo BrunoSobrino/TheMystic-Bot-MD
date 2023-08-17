@@ -16,6 +16,7 @@ import {tmpdir} from 'os';
 import {format} from 'util';
 import P from 'pino';
 import pino from 'pino';
+import {Boom} from '@hapi/boom';
 import {makeWASocket, protoType, serialize} from './lib/simple.js';
 import {Low, JSONFile} from 'lowdb';
 import {mongoDB, mongoDBV2} from './lib/mongoDB.js';
@@ -209,9 +210,9 @@ unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
 })
 }
 })
-if (SBprekey.length === 0) console.log(chalk.cyanBright(`\n=> No hay archivos por eliminar.\n`))
+if (SBprekey.length === 0) return; //console.log(chalk.cyanBright(`=> No hay archivos por eliminar.`))
 } catch (err) {
-console.log(chalk.bold.red(`\n=> Algo salio mal durante la eliminación, archivos no eliminados\n`))
+console.log(chalk.bold.red(`=> Algo salio mal durante la eliminación, archivos no eliminados`))
 }}
 
 function purgeOldFiles() {
@@ -240,7 +241,8 @@ async function connectionUpdate(update) {
   if (isNewLogin) conn.isInit = true;
   const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode;
   if (code && code !== DisconnectReason.loggedOut && conn?.ws.socket == null) {
-    console.log(await global.reloadHandler(true).catch(console.error));
+    await global.reloadHandler(true).catch(console.error);
+    //console.log(await global.reloadHandler(true).catch(console.error));
     global.timestamp.connect = new Date;
   }
   if (global.db.data == null) loadDatabase();
@@ -250,9 +252,37 @@ async function connectionUpdate(update) {
   if (connection == 'open') {
     console.log(chalk.yellow('▣──────────────────────────────···\n│\n│❧ 𝙲𝙾𝙽𝙴𝙲𝚃𝙰𝙳𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙰𝙼𝙴𝙽𝚃𝙴 𝙰𝙻 𝚆𝙷𝙰𝚃𝚂𝙰𝙿𝙿 ✅\n│\n▣──────────────────────────────···'));
   }
-  if (connection == 'close') {
+let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
+if (connection === 'close') {
+    if (reason === DisconnectReason.badSession) {
+        conn.logger.error(`[ ⚠ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+        //process.exit();
+    } else if (reason === DisconnectReason.connectionClosed) {
+        conn.logger.warn(`[ ⚠ ] Conexión cerrada, reconectando...`);
+        process.send('reset');
+    } else if (reason === DisconnectReason.connectionLost) {
+        conn.logger.warn(`[ ⚠ ] Conexión perdida con el servidor, reconectando...`);
+        process.send('reset');
+    } else if (reason === DisconnectReason.connectionReplaced) {
+        conn.logger.error(`[ ⚠ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
+        //process.exit();
+    } else if (reason === DisconnectReason.loggedOut) {
+        conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+        //process.exit();
+    } else if (reason === DisconnectReason.restartRequired) {
+        conn.logger.info(`[ ⚠ ] Reinicio necesario, reinicie el servidor si presenta algún problema.`);
+        //process.send('reset');
+    } else if (reason === DisconnectReason.timedOut) {
+        conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
+        process.send('reset');
+    } else {
+        conn.logger.warn(`[ ⚠ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
+        //process.exit();
+    }
+}
+  /*if (connection == 'close') {
     console.log(chalk.yellow(`🚩ㅤConexion cerrada, por favor borre la carpeta ${global.authFile} y reescanee el codigo QR`));
-  }
+  }*/
 }
 
 process.on('uncaughtException', console.error);

@@ -54,20 +54,25 @@ ${readMore}
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
+┃ *< 𝕊𝕆𝕃𝕌ℂ𝕀𝕆ℕ 𝔸 𝔼ℝℝ𝕆ℝ𝔼𝕊 />*
+┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
+┣➤ Mensajes en espera
+┣ ඬ⃟ ⭐ _${usedPrefix}fixmsgespera_
+┣➤ Mensajes en espera (owner)
+┣ ඬ⃟ ⭐ _${usedPrefix}dsowner_
+┗━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━┓
 ┃ *< 𝕀ℕ𝔽𝕆 𝔹𝕆𝕋 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 💟 _${usedPrefix}terminosycondiciones_
 ┣ ඬ⃟ 💟 _${usedPrefix}grupos_
 ┣ ඬ⃟ 💟 _${usedPrefix}estado_
 ┣ ඬ⃟ 💟 _${usedPrefix}infobot_
-┣ ඬ⃟ 💟 _${usedPrefix}labiblia_
-┣ ඬ⃟ 💟 _${usedPrefix}animes_
 ┣ ඬ⃟ 💟 _${usedPrefix}speedtest_
 ┣ ඬ⃟ 💟 _${usedPrefix}donar_
-┣ ඬ⃟ 💟 _${usedPrefix}grouplist_
 ┣ ඬ⃟ 💟 _${usedPrefix}owner_
 ┣ ඬ⃟ 💟 _${usedPrefix}script_
-┣ ඬ⃟ 💟 _${usedPrefix}listprem_
 ┣ ඬ⃟ 💟 _Bot_ (𝑢𝑠𝑜 𝑠𝑖𝑛 𝑝𝑟𝑒𝑓𝑖𝑗𝑜)
 ┗━━━━━━━━━━━━━━━━┛
 
@@ -89,6 +94,7 @@ ${readMore}
 ┃ *< 𝕁𝕌𝔼𝔾𝕆𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🎖️ _${usedPrefix}mates *<noob / easy / medium / hard / extreme /impossible /impossible2>*_
+┣ ඬ⃟ 🎖️ _${usedPrefix}fake *<texto1> <@tag> <texto2>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}ppt *<papel / tijera /piedra>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}prostituto *<nombre / @tag>*_
 ┣ ඬ⃟ 🎖️ _${usedPrefix}prostituta *<nombre / @tag>*_
@@ -149,6 +155,8 @@ ${readMore}
 ┣ ඬ⃟ ☑️ _${usedPrefix}disable *antiarabes*_
 ┣ ඬ⃟ ☑️ _${usedPrefix}enable *modoadmin*_
 ┣ ඬ⃟ ☑️ _${usedPrefix}disable *modoadmin*_
+┣ ඬ⃟ ☑️ _${usedPrefix}enable *antidelete*_
+┣ ඬ⃟ ☑️ _${usedPrefix}disable *antidelete*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -165,6 +173,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}gitclone *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}gdrive *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}tiktok *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}tiktokimg *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}xnxxdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}twitter *<enlace / link / url>*_
@@ -258,7 +267,8 @@ ${readMore}
 ┣ ඬ⃟ 🧧 _${usedPrefix}toptt *<video / audio>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}tovideo *<sticker>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}tourl *<video / imagen / audio>*_
-┣ ඬ⃟ 🧧 _${usedPrefix}tts es *<texto>*_
+┣ ඬ⃟ 🧧 _${usedPrefix}tts *<idioma> <texto>*_
+┣ ඬ⃟ 🧧 _${usedPrefix}tts *<efecto> <texto>*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -428,6 +438,7 @@ ${readMore}
 ┣ ඬ⃟ 👽 _${usedPrefix}scircle *<imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}sremovebg *<imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}semoji *<tipo> <emoji>*_
+┣ ඬ⃟ 👽 _${usedPrefix}qc *<texto>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}attp *<texto>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}attp2 *<texto>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}attp3 *<texto>*_
@@ -476,13 +487,15 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *antiprivado*_
 ┣ ඬ⃟ 👑 _${usedPrefix}enable *modejadibot*_
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *modejadibot*_
+┣ ඬ⃟ 👑 _${usedPrefix}enable *audios_bot*_
+┣ ඬ⃟ 👑 _${usedPrefix}disable *audios_bot*_
 ┣ ඬ⃟ 👑 _${usedPrefix}msg *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}banchat_
 ┣ ඬ⃟ 👑 _${usedPrefix}unbanchat_
 ┣ ඬ⃟ 👑 _${usedPrefix}banuser *<@tag>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}unbanuser *<@tag>*_
-┣ ඬ⃟ 👑 _${usedPrefix}dardiamantes *<@tag>*_
-┣ ඬ⃟ 👑 _${usedPrefix}añadirxp *<@tag>*_
+┣ ඬ⃟ 👑 _${usedPrefix}dardiamantes *<@tag> <cantidad>*_
+┣ ඬ⃟ 👑 _${usedPrefix}añadirxp *<@tag> <cantidad>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}banuser *<@tag>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}bc *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}bcchats *<texto>*_
@@ -508,7 +521,7 @@ ${readMore}
     if (m.isGroup) {
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
       const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
-      conn.sendMessage(m.chat, {image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net')}, {quoted: fkontak2});
+      conn.sendMessage(m.chat, {image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net')}, {quoted: m});
     } else {
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
       const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};

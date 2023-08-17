@@ -133,6 +133,7 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 <a href="http://wa.me/50246028932" target="blank"><img src="https://img.shields.io/badge/SinNombre_COLAB.9-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/5212411719888" target="blank"><img src="https://img.shields.io/badge/YOVANI_COLAB.10-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
  <a href="http://wa.me/5218442114446" target="blank"><img src="https://img.shields.io/badge/skid_COLAB.11-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+  <a href="http://wa.me/393755775755" target="blank"><img src="https://img.shields.io/badge/Fabri115_COLAB.12-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 ## `COLABORADORES DEL BOT` 
 <a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="100" height="100" alt="unptoadrih15"/></a>
@@ -148,11 +149,10 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 <a href="https://github.com/SinNombre999"><img src="https://github.com/SinNombre999.png" width="100" height="100" alt="SinNombre999"/></a>
 <a href="https://github.com/ReyEndymion"><img src="https://github.com/ReyEndymion.png" width="100" height="100" alt="ReyEndymion"/></a>
 <a href="https://github.com/theh2so4"><img src="https://github.com/theh2so4.png" width="100" height="100" alt="theh2so4"/></a>
- <a href="https://github.com/skidy89"><img src="https://github.com/skidy89.png" width="100" height="100" alt="theh2so4"/></a>
-<a href="https://github.com/OFC-YOVANI"><img src="https://github.com/OFC-YOVANI.png" width="100" height="100" alt="OFC-YOVANI"/> 
-</a>
-<a href="https://github.com/elrebelde21"><img src="https://github.com/elrebelde21.png" width="100" height="100" alt="elrebelde21"/> 
-</a>
+<a href="https://github.com/skidy89"><img src="https://github.com/skidy89.png" width="100" height="100" alt="skidy89"/></a>
+<a href="https://github.com/OFC-YOVANI"><img src="https://github.com/OFC-YOVANI.png" width="100" height="100" alt="OFC-YOVANI"/> </a>
+<a href="https://github.com/elrebelde21"><img src="https://github.com/elrebelde21.png" width="100" height="100" alt="elrebelde21"/> </a>
+<a href="https://github.com/Fabri115"><img src="https://github.com/Fabri115.png" width="100" height="100" alt="Fabri115"/> </a>
 
 ## `AGRADECIMIENTOS & CREDITOS` 
 <div><button id="boton" type="button">games-wabot-md - By BochilGaming </button></div>

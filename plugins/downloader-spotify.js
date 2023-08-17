@@ -54,7 +54,7 @@ const handler = async (m, { conn, text }) => {
     await NodeID3.write(tags, filePath);
     const spotifyi = `❒═════❬ 𝐒𝐏𝐎𝐓𝐈𝐅𝐘 ❭═════╾❒\n┬\n├‣✨ *TÍTULO:* ${spty.data.name}\n┴\n┬\n├‣🗣️ *ARTISTA:* ${spty.data.artists}\n┴\n┬\n├‣🌐 *𝚄𝚁𝙻*: ${linkDL}\n┴`;
     await conn.sendFile(m.chat, spty.data.cover_url, 'error.jpg', spotifyi, m);
-    await conn.sendMessage(m.chat, { audio: fs.readFileSync(`./tmp/${randomName}`), fileName: `${spty.data.name}.mp3`, mimetype: 'audio/mp4' }, { quoted: m });
+    await conn.sendMessage(m.chat, { audio: fs.readFileSync(`./tmp/${randomName}`), fileName: `${spty.data.name}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
   } catch (error) {
     console.error(error);
     throw '*[❗] Error, no se encontraron resultados.*';

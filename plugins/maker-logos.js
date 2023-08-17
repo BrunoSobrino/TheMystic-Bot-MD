@@ -1,27 +1,26 @@
-import axios from 'axios';
+import axios from "axios";
+import cheerio from "cheerio";
+import FormData from "form-data";
 const split = '|';
 const handler = async (m, {conn, args: [effect], text: txt, usedPrefix, command, name}) => {
   if (!effect) throw '*[❗𝐈𝐍𝐅𝐎❗] ¿𝙲𝙾𝙼𝙾 𝚄𝚂𝙰𝚁 𝙴𝚂𝚃𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾?*\n—◉ _#logo (efecto) (texto)_\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n—◉ _#logo 3d-deep-sea-metal Mystic_\n\n*[❗] 𝙲𝚄𝙰𝙽𝙳𝙾 𝙻𝙴𝚂 𝙳𝙸𝙶𝙰 𝚀𝚄𝙴 𝙷𝙰𝙲𝙴 𝙵𝙰𝙻𝚃𝙰 𝚄𝙽 𝚃𝙴𝚇𝚃𝙾 𝙴𝙻 𝚄𝚂𝙾 𝚂𝙴𝚁𝙸𝙰:*\n—◉ _#logo (efecto) (texto1|texto2)_\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n—◉ _#logo Wolf-Logo-Galaxy Mystic|Bot_\n\n*<𝑳𝑰𝑺𝑻𝑨 𝑫𝑬 𝑬𝑭𝑬𝑪𝑻𝑶𝑺/>*\n\n° ඬ⃟📝 #logo ' + effects.map((v) => v.title).join('\n° ඬ⃟📝 #logo ');
-  effect = effect.toLowerCase();
-  if (!effects.find((v) => (new RegExp(v.title, 'gi')).test(effect))) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙴𝙵𝙴𝙲𝚃𝙾 ${effect} 𝙽𝙾 𝙴𝚂𝚃𝙰 𝙴𝙽 𝙻𝙰 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙴𝙵𝙴𝙲𝚃𝙾𝚂*`;
+  if (!effects.find((v) => (new RegExp(v.title, 'gi')).test(effect))) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙴𝙵𝙴𝙲𝚃𝙾 ${effect} 𝙽𝙾 𝙴𝚂𝚃𝙰 𝙴𝙽 𝙻𝙰 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙴𝙵𝙴𝙲𝚃𝙾𝚂*`;  
   let text = txt.replace(new RegExp(effect, 'gi'), '').trimStart();
-  if (text.includes(split)) text = text.split(split);
-  text = Array.isArray(text) ? text : [text];
-  const res = await textpro(effect, ...text);
-  if (typeof res == 'number') throw res == -1 ? `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙴𝙵𝙴𝙲𝚃𝙾 ${effect} 𝙽𝙾 𝙴𝚂𝚃𝙰 𝙴𝙽 𝙻𝙰 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙴𝙵𝙴𝙲𝚃𝙾𝚂*` : `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙴𝚂 ${usedPrefix + command} ${effect} ${new Array(res).fill('texto').map((v, i) => v + (i ? i + 1 : '')).join('|')}*`;
-  const result = await axios.get(res, {
-    responseType: 'arraybuffer',
-  });
-  await conn.sendFile(m.chat, result.data, 'Error.jpg', `*𝚃𝙾𝙼𝙰 𝚃𝚄 𝙸𝙼𝙰𝙶𝙴𝙽 𝙿𝙴𝚁𝚂𝙾𝙽𝙰𝙻𝙸𝚉𝙰𝙳𝙰!!*\n*𝙴𝙵𝙴𝙲𝚃𝙾: ${effect}*`, m);
+  if (text.includes(split)) {
+    text = text.split(split).map((t) => t.trim());
+  } else {
+    text = [text.trim()];
+  }
+  const effectoSelect = effects.find((effectz) => new RegExp(effectz?.title, 'i').test(effect));
+  const res = await maker(effectoSelect?.url, [...text])
+   if (typeof res == 'number') throw res == -1 ? `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙴𝙵𝙴𝙲𝚃𝙾 ${effect} 𝙽𝙾 𝙴𝚂𝚃𝙰 𝙴𝙽 𝙻𝙰 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙴𝙵𝙴𝙲𝚃𝙾𝚂*` : `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙴𝚂 ${usedPrefix + command} ${effect} ${new Array(res).fill('texto').map((v, i) => v + (i ? i + 1 : '')).join('|')}*`;
+  await conn.sendMessage(m.chat, {image: {url: res.image}, caption: `*𝚃𝙾𝙼𝙰 𝚃𝚄 𝙸𝙼𝙰𝙶𝙴𝙽 𝙿𝙴𝚁𝚂𝙾𝙽𝙰𝙻𝙸𝚉𝙰𝙳𝙰!!*\n*𝙴𝙵𝙴𝙲𝚃𝙾: ${effect}*`}, {quoted: m});  
 };
 handler.help = ['logos'];
 handler.tags = ['nulis'];
-handler.command = /^(logo|logos)$/i;
+handler.command = /^(logo|logos|logos2)$/i;
 export default handler;
 
-import formData from 'form-data';
-import fetch from 'node-fetch';
-import cheerio from 'cheerio';
 var effects = [
   {
     'title': '3d-deep-sea-metal',
@@ -812,69 +811,75 @@ var effects = [
     'url': 'https://textpro.me/3d-chrome-text-effect-827.html',
   },
 ];
-async function textpro(effect, ...texts) {
-  texts = texts.filter((v) => v);
-  const eff = effects.find((v) => (new RegExp(v.title, 'gi')).test(effect));
-  if (!eff) return -1;
-  const resCookie = await fetch(eff.url, {
-    headers: {
-      'User-Agent': 'GoogleBot',
-    },
-  });
-  const html = await resCookie.text();
-  const $$$ = cheerio.load(html);
-  const textRequire = [!!$$$('#text-0').length, !!$$$('#text-1').length, !!$$$('#text-2').length].filter((v) => v);
-  // console.log({ textRequire, texts, textRequireLength: textRequire.length, textsLength: texts.length })
-  if (textRequire.length > texts.length) return textRequire.length;
-  const cookieParse = (cookie, query) => cookie.includes(query + '=') ? cookie.split(query + '=')[1].split(';')[0] : 'undefined';
-  let hasilcookie = resCookie.headers
-      .get('set-cookie');
-  hasilcookie = {
-    __cfduid: cookieParse(hasilcookie, '__cfduid'),
-    PHPSESSID: cookieParse(hasilcookie, 'PHPSESSID'),
-  };
-  hasilcookie = Object.entries(hasilcookie).map(([nama, value]) => nama + '=' + value).join('; ');
-  const $ = cheerio.load(html);
-  const token = $('input[name="token"]').attr('value');
-  const form = new formData();
-  for (const text of texts) form.append('text[]', text);
-  form.append('submit', 'Go');
-  form.append('token', token);
-  form.append('build_server', 'https://textpro.me');
-  form.append('build_server_id', 1);
-  const resUrl = await fetch(eff.url, {
-    method: 'POST',
-    headers: {
-      'Accept': '*/*',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'User-Agent': 'GoogleBot',
-      'Cookie': hasilcookie,
-      ...form.getHeaders(),
-    },
-    body: form.getBuffer(),
-  });
-  const $$ = cheerio.load(await resUrl.text());
-  const token2 = JSON.parse($$('#form_value').eq(1).text());
-  const encode = encodeURIComponent;
-  const body = Object.keys(token2)
-      .map((key) => {
-        let vals = token2[key];
-        const isArray = Array.isArray(vals);
-        const keys = encode(key + (isArray ? '[]' : ''));
-        if (!isArray) vals = [vals];
-        const out = [];
-        for (const valq of vals) out.push(keys + '=' + encode(valq));
-        return out.join('&');
+
+async function maker(url, text) {
+   if (/https?:\/\/(ephoto360|photooxy|textpro)\/\.(com|me)/i.test(url)) throw new Error("URL Invalid")
+   try {
+      let a = await axios.get(url, {
+         headers: {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "Origin": (new URL(url)).origin,
+            "Referer": url,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"
+         }
       })
-      .join('&');
-  const resImgUrl = await fetch(`https://textpro.me/effect/create-image?${body}`, {
-    headers: {
-      'Accept': '*/*',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'User-Agent': 'GoogleBot',
-      'Cookie': hasilcookie,
-    },
-  });
-  const results = await resImgUrl.json();
-  return 'https://textpro.me' + results.fullsize_image;
+      let $ = cheerio.load(a.data)
+      let server = $('#build_server').val()
+      let serverId = $('#build_server_id').val()
+      let token = $('#token').val()
+      let submit = $('#submit').val()
+      let types = [];
+      $('input[name="radio0[radio]"]').each((i, elem) => {
+         types.push($(elem).attr("value"));
+      })
+      let post;
+      if (types.length != 0) {
+         post = {
+            'radio0[radio]': types[Math.floor(Math.random() * types.length)],
+            'submit': submit,
+            'token': token,
+            'build_server': server,
+            'build_server_id': Number(serverId)
+         };
+      }
+      else {
+         post = {
+            'submit': submit,
+            'token': token,
+            'build_server': server,
+            'build_server_id': Number(serverId)
+         }
+      }
+      let form = new FormData()
+      for (let i in post) {
+         form.append(i, post[i])
+      }
+      if (typeof text == "string") text = [text]
+      for (let i of text) form.append("text[]", i)
+      let b = await axios.post(url, form, {
+         headers: {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "Origin": (new URL(url)).origin,
+            "Referer": url,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188", 
+            "Cookie": a.headers.get("set-cookie").join("; "),
+            ...form.getHeaders()
+         }
+      })
+      $ = cheerio.load(b.data)
+      let out = ($('#form_value').first().text() || $('#form_value_input').first().text() || $('#form_value').first().val() || $('#form_value_input').first().val())
+      let c = await axios.post((new URL(url)).origin + "/effect/create-image", JSON.parse(out), {
+         headers: {
+            "Accept": "*/*",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": (new URL(url)).origin,
+            "Referer": url,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+            "Cookie": a.headers.get("set-cookie").join("; ")
+         }
+      })
+      return {status: c.data?.success, image: server + (c.data?.fullsize_image || c.data?.image || ""), session: c.data?.session_id}
+   } catch (e) {
+      throw e
+   }
 }

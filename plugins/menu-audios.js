@@ -32,6 +32,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 ┣*- 𝙴𝚂𝙲𝚁𝙸𝙱𝙴 𝙻𝙰𝚂 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴𝚂 𝙿𝙰𝙻𝙰𝙱𝚁𝙰𝚂 𝙾 𝙵𝚁𝙰𝚂𝙴𝚂 𝚂𝙸𝙽 𝙽𝙸𝙽𝙶𝚄𝙽 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 (#, /, *, .)*
 ┣ ඬ⃟🔊 _Quien es tu sempai botsito 7w7_
 ┣ ඬ⃟🔊 _Te diagnostico con gay_
+┣ ඬ⃟🔊 _No digas eso papu_
 ┣ ඬ⃟🔊 _A nadie le importa_
 ┣ ඬ⃟🔊 _Fiesta del admin_
 ┣ ඬ⃟🔊 _Fiesta del administrador_ 

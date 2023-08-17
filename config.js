@@ -16,6 +16,7 @@ global.suittag = ['5492604050270', '5493772406612']
 global.prems = [] 
 global.reportes_solicitudes = ['5492604050270', '5493772406612']
 
+
 global.packname = 'A̳s̳a̳k̳u̳r̳a̳ ̳B̳O̳T̳💎'
 global.author = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ'
 global.wm = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ'
@@ -27,6 +28,7 @@ global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png');
 global.imagen4 = fs.readFileSync('./Menu.png');
 global.imagen5 = fs.readFileSync('./src/+18.jpg');
+global.imagen6 = fs.readFileSync('./Menu3.png');
 
 global.mods = ['5492604050270', '5493772406612'] 
 

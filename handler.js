@@ -936,7 +936,7 @@ export async function handler(chatUpdate) {
         if (!('sBye' in chat)) chat.sBye = '';
         if (!('sPromote' in chat)) chat.sPromote = '';
         if (!('sDemote' in chat)) chat.sDemote = '';
-        if (!('delete' in chat)) chat.delete = true;
+        if (!('delete' in chat)) chat.antidelete = false;
         if (!('modohorny' in chat)) chat.modohorny = false;
         if (!('autosticker' in chat)) chat.autosticker = false;
         if (!('audios' in chat)) chat.audios = false;
@@ -956,12 +956,12 @@ export async function handler(chatUpdate) {
           isBanned: false,
           welcome: true,
           detect: true,
-		    detect2: false,
+	  detect2: false,
           sWelcome: '',
           sBye: '',
           sPromote: '',
           sDemote: '',
-          delete: true,
+          antidelete: false,
           modohorny: true,
           autosticker: false,
           audios: true,
@@ -971,10 +971,10 @@ export async function handler(chatUpdate) {
           antiToxic: false,
           antiTraba: false,
           antiArab: false,
-		    antiArab2: false,
-	            antiporno: false,
-	            modoadmin: false,
-	            simi: false,
+	  antiArab2: false,
+	  antiporno: false,
+	  modoadmin: false,
+	  simi: false,
           expired: 0,
         };
       }
@@ -987,8 +987,9 @@ export async function handler(chatUpdate) {
         if (!('restrict' in settings)) settings.restrict = false;
         if (!('antiCall' in settings)) settings.antiCall = false;
         if (!('antiPrivate' in settings)) settings.antiPrivate = false;
-	        if (!('modejadibot' in settings)) settings.modejadibot = true;
+	if (!('modejadibot' in settings)) settings.modejadibot = true;
         if (!('antispam' in settings)) settings.antispam = false;
+	if (!('audios_bot' in settings)) settings.audios_bot = true;      
       } else {
         global.db.data.settings[this.user.jid] = {
           self: false,
@@ -997,8 +998,9 @@ export async function handler(chatUpdate) {
           restrict: false,
           antiCall: false,
           antiPrivate: false,
-	        modejadibot: true,
+	  modejadibot: true,
           antispam: false,
+	  audios_bot: true	
         };
       }
     } catch (e) {
@@ -1172,12 +1174,16 @@ export async function handler(chatUpdate) {
 
             if (user.bannedMessageCount < 3) {
               const messageNumber = user.bannedMessageCount + 1;
-              const messageText = `❰ ⚠️ ❱ *ESTAS BANEADO/A* ❰ ⚠️ ❱\nAviso ${messageNumber}/3 (${messageNumber} de 3)${user.bannedReason ? `\n*Motivo:* *${user.bannedReason}*` : ''}
-*👉 Puedes contactar a la propietaria del Bot si crees que se trata de un error (TENER PRUEBAS) para tratar el motivo de tú desbaneo*
-👉 wa.me/5219996125657
-`.trim();
-
-              // m.reply(messageText);
+const messageText = `
+╔═════════════════════════╗
+ ❰ ⚠️ ❱ *¡USUARIO BANEADO!* ❰ ⚠️ ❱
+—◉ *Aviso ${messageNumber}/3 (Total: 3)*
+—◉ ${user.bannedReason ? `\n*Motivo:* ${user.bannedReason}` : '*Motivo:* Sin especificar'}
+—◉ *Si consideras que esto es un error y cuentas con pruebas, puedes comunicarte con el propietario del Bot para apelar la suspensión.*
+—◉ *Contacto para apelaciones:* wa.me/5219992095479
+╚═════════════════════════╝
+               `.trim();
+              m.reply(messageText);
               user.bannedMessageCount++;
             } else if (user.bannedMessageCount === 3) {
               user.bannedMessageSent = true;
@@ -1186,9 +1192,9 @@ export async function handler(chatUpdate) {
             }
             return;
           }
-
+		
           if (botSpam.antispam && m.text && user && user.lastCommandTime && (Date.now() - user.lastCommandTime) < 5000 && !isROwner) {
-            if (user.commandCount === 5) {
+            if (user.commandCount === 3) {
               const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000);
               if (remainingTime > 0) {
                 const messageText = `*[ ⚠ ] Espera ${remainingTime} segundos antes de usar otro comando*`;
@@ -1505,28 +1511,21 @@ export async function callUpdate(callUpdate) {
 export async function deleteUpdate(message) {
   try {
     const {fromMe, id, participant} = message;
-    if (fromMe) {
-      return;
-    }
+    if (fromMe) return;
     const msg = this.serializeM(this.loadMessage(id));
-    if (!msg) {
-      return;
-    }
+    if (!msg) return;
+    if (!msg.isGroup) return;
     const chat = global.db.data.chats[msg.chat] || {};
-    if (chat.delete) {
-      return;
-    }
-    await this.reply(msg.chat, `
-━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━
-*■ Nombre:* @${participant.split`@`[0]}
-*■ Enviando el mensaje..*
-*■ Para desactivar esta función escriba el comando:*
+    if (!chat.antidelete) return;
+const antideleteMessage = `
+━━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━
+*■ Usuario:* @${participant.split`@`[0]}
+*■ Enviando el mensaje eliminado...*
+    
+*■ Para desactivar esta función, escribe el comando:*
 *—◉ #disable antidelete*
-*—◉ #enable delete*
-━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━
-`.trim(), msg, {
-      mentions: [participant],
-    });
+━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━`.trim();
+    await this.reply(msg.chat, antideleteMessage, msg, {mentions: [participant]});
     this.copyNForward(msg.chat, msg).catch((e) => console.log(e, msg));
   } catch (e) {
     console.error(e);
@@ -1549,7 +1548,6 @@ global.dfail = (type, m, conn) => {
   const aa = {quoted: m, userJid: conn.user.jid};
   const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: msg, contextInfo: {externalAdReply: {title: '[ ⚠ ] 𝐀𝐕𝐈𝐒𝐎 - 𝐀𝐋𝐄𝐑𝐓𝐀', body: 'ᴛʜᴇ ᴍʏsᴛɪᴄ - ʙᴏᴛ', thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}}}}, aa);
   if (msg) return conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id});
-  // if (msg) return m.reply(msg)
 };
 
 const file = global.__filename(import.meta.url, true);

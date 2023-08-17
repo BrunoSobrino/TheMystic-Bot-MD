@@ -154,6 +154,19 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
 *Opción:* ⏳ | ANTISPAM
 *Comando:* ${usedPrefix + command} antispam
 *Descripción:* El Bot detecta cuando un usuario hace spam de comando y lo banea por 5 segundos y lo advierte.
+*Nota:* Este comando solo podrá ser usado por owners del Bot.
+
+--------------------------------
+
+*Opción:* 🛡️ | ANTIDELETE
+*Comando:* ${usedPrefix + command} antidelete
+*Descripción:* El Bot detecta cuando un usuario elimina un mensaje y lo reenvía.
+
+--------------------------------
+
+*Opción:* 🔊 | AUDIOS_BOT
+*Comando:* ${usedPrefix + command} audios_bot
+*Descripción:* Se desactivan los audios del Bot del menuaudios para todos los chats privados.
 *Nota:* Este comando solo podrá ser usado por owners del Bot.`.trim();
 
   const isEnable = /true|enable|(turn)?on|1/i.test(command);
@@ -233,7 +246,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
           throw false;
         }
       }
-      chat.delete = !isEnable;
+      chat.antidelete = isEnable;
       break;
     case 'public':
       isAll = true;
@@ -313,6 +326,14 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
         throw false;
       }
       bot.restrict = isEnable;
+      break;
+    case 'audios_bot':
+      isAll = true;
+      if (!isOwner) {
+        global.dfail('owner', m, conn);
+        throw false;
+      }
+      bot.audios_bot = isEnable;      
       break;
     case 'nyimak':
       isAll = true;
