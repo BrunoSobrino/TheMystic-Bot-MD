@@ -13,7 +13,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
 🔗 *Url:* ${repo.html_url}
 📅 *Creado el:* ${formatDate(repo.created_at)}
 🔄 *Actualizado el:* ${formatDate(repo.updated_at)}
-📥 *Clone:* \`$ git clone ${repo.clone_url}\`
+📥 *Clone:* $ git clone ${repo.clone_url}
 👁 ${repo.watchers} ◉ 🍴 ${repo.forks} ◉ ⭐ ${repo.stargazers_count} ◉ ❓ 
 ${repo.description ? `📝 *Descripción:*\n${repo.description}` : ''}
 `.trim()}).join('\n\n◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦\n\n');
