@@ -9,25 +9,36 @@ const handler = async (m, {conn, args, participants}) => {
   const usersLim = sortedLim.map(enumGetKey);
   const usersLevel = sortedLevel.map(enumGetKey);
   const len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 5)) : Math.min(5, sortedExp.length);
+  const adventurePhrases = [
+  "Lidera la aventura y forja tu camino hacia la cima.",
+  "¡Desafía lo desconocido y alcanza nuevas alturas!",
+  "Tu valentía te guiará a la cima de la tabla de clasificación.",
+  "En cada paso, esculpe tu leyenda en esta gran aventura.",
+  "Explora, compite y demuestra tu grandeza en esta tabla.",
+  "Cada paso cuenta en tu viaje hacia la cima del ranking.",
+  "La emoción de la competencia te impulsa hacia adelante.",
+  "Aventúrate y conquista los primeros lugares con determinación.",
+];
+  const randomAdventurePhrase = adventurePhrases[Math.floor(Math.random() * adventurePhrases.length)];
   const text = `
-*< TABLA DE CLASIFICACION />*
+*< TABLA DE CLASIFICACIÓN />*
     
-▢ *TOP ${len} XP* •
-Tú : *${usersExp.indexOf(m.sender) + 1}* de *${usersExp.length}*
+—◉ *TOP ${len} EXP* •
+*Tú:* ${usersExp.indexOf(m.sender) + 1} de ${usersExp.length}
 
 ${sortedExp.slice(0, len).map(({jid, exp}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp} Exp*`).join`\n`}
 
-▢ *TOP ${len} DIAMANTES💎* •
-Tú : *${usersLim.indexOf(m.sender) + 1}* de *${usersLim.length}*
+—◉ *TOP ${len} DIAMANTES💎* •
+*Tú:* ${usersLim.indexOf(m.sender) + 1} de ${usersLim.length}
 
 ${sortedLim.slice(0, len).map(({jid, limit}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit} Diamantes*`).join`\n`}
 
-▢ *TOP ${len} NIVEL* • 
-Tú : *${usersLevel.indexOf(m.sender) + 1}* de *${usersLevel.length}*
+—◉ *TOP ${len} NIVEL* • 
+*Tú:* ${usersLevel.indexOf(m.sender) + 1} de ${usersLevel.length}
 
 ${sortedLevel.slice(0, len).map(({jid, level}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *Nivel ${level}*`).join`\n`}
 
-_Diseño By FG_`.trim();
+*⚔️ ${randomAdventurePhrase} ⚔️*`.trim();
   m.reply(text, null, {mentions: conn.parseMention(text)});
 };
 handler.help = ['top'];
