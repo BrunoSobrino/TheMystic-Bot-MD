@@ -398,6 +398,7 @@ ${readMore}
 ┣ ඬ⃟ 🛠️ _${usedPrefix}nowa *<numero>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}covid *<pais>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}horario_
+┣ ඬ⃟ 🛠️ _${usedPrefix}dropmail_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
