@@ -8,13 +8,13 @@ const handler = async (m, {text}) => {
   if (res.status !== 200) throw json;
   const str = json.items.map((repo, index) => {
     return `
-${1 + index}. *${repo.full_name}*${repo.fork ? ' (fork)' : ''}
-_${repo.html_url}_
-_Creado *${formatDate(repo.created_at)}*_
-_Últimas actualizaciones*${formatDate(repo.updated_at)}*_
+*${1 + index}. ${repo.full_name}${repo.fork ? ' (fork)' : ''}*
+*Url:* ${repo.html_url}
+*Creado el:* ${formatDate(repo.created_at)}
+*Actualizado el:* ${formatDate(repo.updated_at)}
 👁  ${repo.watchers}   🍴  ${repo.forks}   ⭐  ${repo.stargazers_count}
-${repo.open_issues} Issue${repo.description ? `
-*descripción:*\n${repo.description}` : ''}
+${repo.open_issues} Issue 
+${repo.description ? `*Descripción:*\n${repo.description}` : ''}
 *Clone:* \`\`\`$ git clone ${repo.clone_url}\`\`\`
 `.trim();
   }).join('\n\n');
