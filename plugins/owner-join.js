@@ -10,8 +10,8 @@ const handler = async (m, {conn, text, isMods, isOwner, isPrems}) => {
     } else {
       const data = global.owner.filter(([id]) => id)[0];
       const dataArray = Array.isArray(data) ? data : [data];
-      for (const entry of dataArray.filter(entry => Array.isArray(entry))) {
-      const id = entry[0]; 
+      for (const entry of dataArray) {
+      const id = entry[0];
         console.log(id)
         await conn.sendMessage(id + '@s.whatsapp.net', {text: '*[❗ 𝐈𝐍𝐅𝐎 ❗] 𝙽𝚄𝙴𝚅𝙰 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳 𝙳𝙴𝙻 𝙱𝙾𝚃 𝙿𝙰𝚁𝙰 𝚄𝙽 𝙶𝚁𝚄𝙿𝙾 [❗𝐈𝐍𝐅𝐎❗]*\n\n*—◉ 𝙽𝚄𝙼𝙴𝚁𝙾 𝙳𝙴𝙻 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝙰𝙽𝚃𝙴:* ' + 'wa.me/' + m.sender.split('@')[0] + '\n*—◉ 𝙻𝙸𝙽𝙺 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾 𝙳𝙾𝙽𝙳𝙴 𝚂𝙴 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝙰 𝙴𝙻 𝙱𝙾𝚃:* ' + link});
       }
