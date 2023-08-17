@@ -17,7 +17,7 @@ let text
     try {    
      pp = await conn.profilePictureUrl(who)
     } catch {    
-     pp= 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg');
+     pp= 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg';
     }    
     const obj = {"type": "quote", "format": "png", "backgroundColor": "#000000", "width": 512, "height": 768, "scale": 2, "messages": [{"entities": [], "avatar": true, "from": {"id": 1, "name": who.name, "photo": {"url": pp}}, "text": mishi, "replyMessage": {}}]};
     const json = await axios.post('https://bot.lyo.su/quote/generate', obj, {headers: {'Content-Type': 'application/json'}});
