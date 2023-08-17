@@ -27,7 +27,7 @@ const confirm = `*¿Está seguro de que desea transferir ${count} ${type} a @${(
 *◉ si = para acertar*
 *◉ no = para cancelar*`.trim();
   await conn.sendMessage(m.chat, {text: confirm, mentions: [who]}, {quoted: m});
-  confirmation[m.sender] = { sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: 'Se acabó el tiempo', mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
+  confirmation[m.sender] = { sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: '*[❗] Se acabó el tiempo, no se obtuvo respuesta. Transferencia cancelada.*', mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
 }
 
 handler.before = async (m) => {
@@ -49,7 +49,7 @@ handler.before = async (m) => {
     user[type] -= count * 1;
     _user[type] += count * 1;
     if (previous > user[type] * 1 && _previous < _user[type] * 1) {
-      conn.sendMessage(m.chat, {text: `*[❗] Se transfirierón correctamente ${count} ${type} a @${(to || '').replace(/@s\.whatsapp\.net/g, '')}`, mentions: [to]}, {quoted: m});
+      conn.sendMessage(m.chat, {text: `*[❗] Se transfirierón correctamente ${count} ${type} a @${(to || '').replace(/@s\.whatsapp\.net/g, '')}*`, mentions: [to]}, {quoted: m});
     } else {
       user[type] = previous;
       _user[type] = _previous;
