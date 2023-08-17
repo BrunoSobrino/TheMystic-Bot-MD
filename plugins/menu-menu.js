@@ -208,7 +208,7 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
 ┃ *< 𝔹𝕌𝕊ℂ𝔸𝔻𝕆ℝ𝔼𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 🔍 _${usedPrefix}cuevana *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}githubsearch *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}pelisplus *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}modapk *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch *<texto>*_
