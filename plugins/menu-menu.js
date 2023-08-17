@@ -208,7 +208,7 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
 ┃ *< 𝔹𝕌𝕊ℂ𝔸𝔻𝕆ℝ𝔼𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 🔍 _${usedPrefix}cuevana *<texto>*_
+┣ ඬ⃟ 🔍 _${usedPrefix}githubsearch *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}pelisplus *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}modapk *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}stickersearch *<texto>*_
@@ -376,6 +376,7 @@ ${readMore}
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}delchatgpt
+┣ ඬ⃟ 🛠️ _${usedPrefix}gptvoz *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}dall-e *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}spamwa *<numero|texto|cantidad>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}tamaño *<cantidad> <imagen / video>*_
@@ -397,6 +398,7 @@ ${readMore}
 ┣ ඬ⃟ 🛠️ _${usedPrefix}nowa *<numero>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}covid *<pais>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}horario_
+┣ ඬ⃟ 🛠️ _${usedPrefix}dropmail_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -454,6 +456,7 @@ ${readMore}
 ┣ ඬ⃟ 👽 _${usedPrefix}wm *<packname> <author>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}stickermarker *<efecto> <imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}stickerfilter *<efecto> <imagen>*_
+┣ ඬ⃟ 👽 _${usedPrefix}cartoon *<responder a imagen>*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
