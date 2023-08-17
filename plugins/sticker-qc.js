@@ -11,7 +11,8 @@ let text
     } else throw "*[❗️] Uso incorrecto del comando, agregue un texto*";
    if (!text) return m.reply('*[❗️] Uso incorrecto del comando, agregue un texto*');
     const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender; 
-    const mishi = text.replace(who, '') 
+    const mentionRegex = new RegExp(`@${who.split('@')[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`, 'g');
+    const mishi = text.replace(mentionRegex, '');
    if (mishi.length > 30) return m.reply('*[❗️] El texto no puede tener mas de 30 caracteres*');
     const pp = await conn.profilePictureUrl(who, 'image')
     const nombre = await conn.getName(who)
