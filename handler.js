@@ -1514,12 +1514,12 @@ let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'nu
  let time = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
     try {
         const { fromMe, id, participant } = message
-        if (fromMe) return console.log('sexoooo')
+        if (fromMe) return 
         let msg = this.serializeM(this.loadMessage(id))
 	let chat = global.db.data.chats[msg.chat] || {}
-	if (!chat.antidelete) return    
-        if (!msg) return console.log('sexoooo2')
-	if (!msg.isGroup) return console.log('sexoooo3')    
+	if (!chat.antidelete) return 
+        if (!msg) return 
+	//if (!msg.isGroup) return console.log('sexoooo3')    
 	const antideleteMessage = `
 ┏━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━
 *■ Usuario:* @${participant.split`@`[0]}
