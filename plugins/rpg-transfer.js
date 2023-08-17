@@ -7,7 +7,7 @@ async function handler(m, { conn, args, usedPrefix, command }) {
   const item = items.filter((v) => v in user && typeof user[v] == 'number');
   const lol = `*[❗] Uso del comamdo.* 
 *—◉ ${usedPrefix + command}*  [tipo] [cantidad] [@user]
-*📌 Ejemplo:* ${usedPrefix + command} exp 65 ${m.sender.split('@')[0]}
+*📌 Ejemplo:* ${usedPrefix + command} exp 65 @${m.sender.split('@')[0]}
 
 *—◉ 📍 Artículos transferibles.*
 ▢ *limit* = diamantes
