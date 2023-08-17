@@ -16,7 +16,7 @@ let text
    if (mishi.length > 30) return m.reply('*[❗️] El texto no puede tener mas de 30 caracteres*');
     const pp = await conn.profilePictureUrl(who, 'image').catch((_) => 'https://telegra.ph/file/24fa902ead26340f3df2c.png'),
     const nombre = await conn.getName(who)
-    const obj = {"type": "quote", "format": "png", "backgroundColor": "#000000", "width": 512, "height": 768, "scale": 2, "messages": [{"entities": [], "avatar": true, "from": {"id": 1, "name": `${who?.name || nombre}`, "photo": {url: `${pp || 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg'}`}}, "text": mishi, "replyMessage": {}}]};
+    const obj = {"type": "quote", "format": "png", "backgroundColor": "#000000", "width": 512, "height": 768, "scale": 2, "messages": [{"entities": [], "avatar": true, "from": {"id": 1, "name": `${who?.name || nombre}`, "photo": {url: `${pp}`}}, "text": mishi, "replyMessage": {}}]};
     const json = await axios.post('https://bot.lyo.su/quote/generate', obj, {headers: {'Content-Type': 'application/json'}});
     const buffer = Buffer.from(json.data.result.image, 'base64');
    let stiker = await sticker(buffer, false, global.packname, global.author);
