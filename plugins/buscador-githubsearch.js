@@ -8,12 +8,12 @@ const handler = async (m, {text}) => {
   if (res.status !== 200) throw json;
   const str = json.items.map((repo, index) => {
   return `
-📌 *${1 + index}. ${repo.full_name}${repo.fork ? ' (fork)' : ''}*
+*${1 + index}. ${repo.full_name}${repo.fork ? ' (fork)' : ''}*
 🔗 *Url:* ${repo.html_url}
 📅 *Creado el:* ${formatDate(repo.created_at)}
 🔄 *Actualizado el:* ${formatDate(repo.updated_at)}
 📥 *Clone:* \`$ git clone ${repo.clone_url}\`
-👁 ${repo.watchers} 👀 🍴 ${repo.forks} 🍴 ⭐ ${repo.stargazers_count} ⭐ ❓ ${repo.open_issues} ❓
+👁 ${repo.watchers} ◉ 🍴 ${repo.forks} ◉ ⭐ ${repo.stargazers_count} ◉ ❓ 
 ${repo.description ? `📝 *Descripción:*\n${repo.description}` : ''}
 `.trim()}).join('\n\n');
   m.reply(str);
