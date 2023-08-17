@@ -1518,7 +1518,7 @@ let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'nu
         if (fromMe) return console.log('sexoooo')
         let msg = this.serializeM(this.loadMessage(id))
         if (!msg) return console.log('sexoooo2')
-        let chat = global.db.data.chats[msg.chat] || {}
+	if (!msg.isGroup) return console.log('sexoooo3')    
 	const antideleteMessage = `
 ┏━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━
 *■ Usuario:* @${participant.split`@`[0]}
