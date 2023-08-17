@@ -1509,6 +1509,7 @@ export async function callUpdate(callUpdate) {
 }
 
 export async function deleteUpdate(message) {
+console.log('sexoooo')	
 let d = new Date(new Date + 3600000)
 let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })
  let time = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
