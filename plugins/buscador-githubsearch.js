@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-const handler = async (m, {conn, text}) => {
-  if (!text) throw '*[❗] Ingresa un texto para buscar.*';
+const handler = async (m, {conn, text, usedPrefix, command}) => {
+  if (!text) throw `*[❗] Ingresa un texto para buscar, ejemplo: ${usedPrefix + command} TheMystic-Bot-MD*`;
   const res = await fetch(global.API('https://api.github.com', '/search/repositories', {
     q: text,
   }));
@@ -16,7 +16,7 @@ const handler = async (m, {conn, text}) => {
 📥 *Clone:* \`$ git clone ${repo.clone_url}\`
 👁 ${repo.watchers} ◉ 🍴 ${repo.forks} ◉ ⭐ ${repo.stargazers_count} ◉ ❓ 
 ${repo.description ? `📝 *Descripción:*\n${repo.description}` : ''}
-`.trim()}).join('\n\n');
+`.trim()}).join('\n\n◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦\n\n');
   conn.sendMessage(m.chat, {text: str.trim()}, {quoted: m})
 //conn.sendMessage(m.chat, {text: str.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, mentionedJid: [m.sender], "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": imagen, "mediaUrl": `https://www.atom.bio/theshadowbrokers-team`, "sourceUrl": `https://www.atom.bio/theshadowbrokers-team`}}}, {quoted: m});  
 };
