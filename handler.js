@@ -1513,10 +1513,11 @@ let d = new Date(new Date + 3600000)
 let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })
  let time = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
     try {
-	if (!chat.antidelete) return    
         const { fromMe, id, participant } = message
         if (fromMe) return console.log('sexoooo')
         let msg = this.serializeM(this.loadMessage(id))
+	let chat = global.db.data.chats[msg.chat] || {}
+	if (!chat.antidelete) return    
         if (!msg) return console.log('sexoooo2')
 	if (!msg.isGroup) return console.log('sexoooo3')    
 	const antideleteMessage = `
