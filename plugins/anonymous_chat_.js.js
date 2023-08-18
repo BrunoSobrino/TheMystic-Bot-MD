@@ -10,7 +10,7 @@ export async function before(m, {match}) {
       if (other) {
         await m.copyNForward(other, true);
       } else {
-        console.log("No se pudo encontrar al otro usuario en la sala.");
+        conn.sendMessage(m.chat, {text: `*[❗] No estás en un chat, por favor espera a estar en uno.*`}, {quoted: m});
       }
     }
   } else {
