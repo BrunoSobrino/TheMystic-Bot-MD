@@ -1,5 +1,5 @@
 const handler = async (m, { conn, command, text, usedPrefix }) => {
-  if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] Debes mencionar a alguien para el cálculo*`;
+  if (!text) throw `*[❗] Debes mencionar a alguien para el cálculo*`;
   const percentages = (500).getRandom();
   let emoji = '';
   let description = '';
@@ -35,63 +35,63 @@ const handler = async (m, { conn, command, text, usedPrefix }) => {
         description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Mantén el buen trabajo (en solitario). 🙌*`;
       }
       break;
-case 'puto':
-case 'puta':
-  emoji = '🔥🥵';
-  if (percentages < 50) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡Más suerte en tu próxima conquista! 💔*`;
-  } else if (percentages > 100) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡Estás en llamas! 🚒*`;
-  } else {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Mantén ese encanto ardiente! 🔥*`;
-  }
-  break;
-case 'manco':
-case 'manca':
-  emoji = '💩';
-  if (percentages < 50) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡No eres el único en ese club! 😅*`;
-  } else if (percentages > 100) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡Tienes un talento muy especial! 🙈*`;
-  } else {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Mantén esa actitud valiente! 🤙*`;
-  }
-  break;
-case 'rata':
-  emoji = '🐁';
-  if (percentages < 50) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Nada de malo en disfrutar del queso! 🧀*`;
-  } else if (percentages > 100) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Un auténtico ratón de lujo! 🏰*`;
-  } else {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Come queso con responsabilidad! 🧀*`;
-  }
-  break;
-case 'prostituto':
-case 'prostituta':
-  emoji = '🫦👅';
-  if (percentages < 50) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ El mercado está en auge! 💼*`;
-  } else if (percentages > 100) {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Un/a verdadero/a profesional! 💰*`;
-  } else {
-    description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Siempre es hora de negocios! 💼*`;
-  }
-  break;
+    case 'puto':
+    case 'puta':
+      emoji = '🔥🥵';
+      if (percentages < 50) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡Más suerte en tu próxima conquista! 💔*`;
+      } else if (percentages > 100) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡Estás en llamas! 🚒*`;
+      } else {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Mantén ese encanto ardiente! 🔥*`;
+      }
+      break;
+    case 'manco':
+    case 'manca':
+      emoji = '💩';
+      if (percentages < 50) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡No eres el único en ese club! 😅*`;
+      } else if (percentages > 100) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ ¡Tienes un talento muy especial! 🙈*`;
+      } else {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Mantén esa actitud valiente! 🤙*`;
+      }
+      break;
+    case 'rata':
+      emoji = '🐁';
+      if (percentages < 50) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Nada de malo en disfrutar del queso! 🧀*`;
+      } else if (percentages > 100) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Un auténtico ratón de lujo! 🏰*`;
+      } else {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Come queso con responsabilidad! 🧀*`;
+      }
+      break;
+    case 'prostituto':
+    case 'prostituta':
+      emoji = '🫦👅';
+      if (percentages < 50) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ El mercado está en auge! 💼*`;
+      } else if (percentages > 100) {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Un/a verdadero/a profesional! 💰*`;
+      } else {
+        description = `*Los cálculos han arrojado que ${text.toUpperCase()} es ${percentages}% ${command}. ${emoji}*\n*-❥ Siempre es hora de negocios! 💼*`;
+      }
+      break;
       default:
       throw `*[❗] Comando no válido.*`;
   }
   const responses = [
-    "*El universo ha hablado.*",
-    "*Los científicos lo confirman.*",
-    "*¡Sorpresa! 🎉*"
+    "El universo ha hablado.",
+    "Los científicos lo confirman.",
+    "¡Sorpresa! 🎉"
   ];
   const response = responses[Math.floor(Math.random() * responses.length)];
   const cal = `━━━━⬣ *CALCULADOR* ⬣━━━━
 
-━⬣ ${response}
-
 —◉ ${description}
+
+*`\`\`\"${response}"\`\`\`*
 
 ━━━━⬣ *CALCULADOR* ⬣━━━━`.trim()  
   async function loading() {
