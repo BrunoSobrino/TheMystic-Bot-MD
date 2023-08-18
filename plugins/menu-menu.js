@@ -469,6 +469,7 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}desactivarwa *<numero>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}resetprefix_
 ┣ ඬ⃟ 👑 _${usedPrefix}autoadmin_
+┣ ඬ⃟ 👑 _${usedPrefix}chetar_
 ┣ ඬ⃟ 👑 _${usedPrefix}leavegc_
 ┣ ඬ⃟ 👑 _${usedPrefix}cajafuerte_
 ┣ ඬ⃟ 👑 _${usedPrefix}blocklist_
@@ -492,9 +493,12 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *modejadibot*_
 ┣ ඬ⃟ 👑 _${usedPrefix}enable *audios_bot*_
 ┣ ඬ⃟ 👑 _${usedPrefix}disable *audios_bot*_
+┣ ඬ⃟ 👑 _${usedPrefix}enable *antispam*_
+┣ ඬ⃟ 👑 _${usedPrefix}disable *antispam*_
 ┣ ඬ⃟ 👑 _${usedPrefix}msg *<texto>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}banchat_
 ┣ ඬ⃟ 👑 _${usedPrefix}unbanchat_
+┣ ඬ⃟ 👑 _${usedPrefix}resetuser *<@tag>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}banuser *<@tag>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}unbanuser *<@tag>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}dardiamantes *<@tag> <cantidad>*_
