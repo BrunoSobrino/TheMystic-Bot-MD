@@ -1,9 +1,11 @@
 const handler = async (m, { conn, text }) => {
     text = no(text);
-    let number;
+    let number = '';
     if (isNaN(text)) {
         const parts = text.split('@');
-        number = parts.length > 1 ? parts[1] : null;
+        if (parts.length > 1) {
+            number = parts[1];
+        }
     } else if (!isNaN(text)) {
         number = text;
     }
