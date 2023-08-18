@@ -9,10 +9,7 @@ export async function before(m, {match}) {
       const other = [room?.a, room?.b].find((user) => user !== m.sender);
       await m.copyNForward(other, true);
     }
-  } else {
-    if (/^(next|leave|start)/.test(m.text)) {
-      return;
-    }
+  } else if (/^(next|leave|start)/.test(m.text)) {
     conn.sendMessage(m.chat, {text: `*[❗] No estás en un chat, por favor espera a estar en uno.*`}, {quoted: m});
   }
   return !0;
