@@ -1,21 +1,19 @@
 export async function before(m, {match}) {
   if (!m.chat.endsWith('@s.whatsapp.net')) {
-    return !0;
+    return;
   }
   this.anonymous = this.anonymous ? this.anonymous : {};
+  if (!this.anonymous) {
+    return;
+  }
+    
   const room = Object.values(this.anonymous).find((room) => [room.a, room.b].includes(m.sender) && room.state === 'CHATTING');
   if (room) {
     if (/^.*(next|leave|start)/.test(m.text)) {
       return;
     }
     const other = [room.a, room.b].find((user) => user !== m.sender);
-    if (other) {
-      await m.copyNForward(other, true);
-    } else {
-      conn.sendMessage(m.chat, {text: `*[❗] No estás en un chat, por favor espera a estar en uno o usa el comando #leave*`}, {quoted: m});
-    }
-  } else {
-    conn.sendMessage(m.chat, {text: `*[❗] No estás en un chat, por favor espera a estar en uno o usa el comando #leave*`}, {quoted: m});
+    await m.copyNForward(other, true);
   }
   return !0;
 }
