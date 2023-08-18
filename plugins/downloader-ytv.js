@@ -46,7 +46,7 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
     const fileSizeInKB = fileSizeInBytes / 1024;
     const fileSizeInMB = fileSizeInKB / 1024;
     const roundedFileSizeInMB = fileSizeInMB.toFixed(2);
-   if (fileSizeInMB > 200) {
+   if (fileSizeInMB > 100) {
     await conn.sendMessage(m.chat, {document: buff, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
     await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado exitosamente, se envio en formato de docuemnto por que el video pesa ${fileSizeInMB} MB.*`, edit: key}, {quoted: m});
     enviando = false
