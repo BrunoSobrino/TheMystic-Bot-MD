@@ -12,7 +12,7 @@ const handler = async (m, {conn, args: [effect], text: txt, usedPrefix, command,
     text = [text.trim()];
   }
   const effectoSelect = effects.find((effectz) => new RegExp(effectz?.title, 'i').test(effect));
-  const res = await maker(effectoSelect?.url, [...text])
+  const res = await maker(effectoSelect?.url, [...text]).catch(_ => { throw '*[❗ERROR❗] Falta el texto al que se realizara el logo*' })
    if (typeof res == 'number') throw res == -1 ? `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙴𝙵𝙴𝙲𝚃𝙾 ${effect} 𝙽𝙾 𝙴𝚂𝚃𝙰 𝙴𝙽 𝙻𝙰 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙴𝙵𝙴𝙲𝚃𝙾𝚂*` : `*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙴𝚂 ${usedPrefix + command} ${effect} ${new Array(res).fill('texto').map((v, i) => v + (i ? i + 1 : '')).join('|')}*`;
   await conn.sendMessage(m.chat, {image: {url: res.image}, caption: `*𝚃𝙾𝙼𝙰 𝚃𝚄 𝙸𝙼𝙰𝙶𝙴𝙽 𝙿𝙴𝚁𝚂𝙾𝙽𝙰𝙻𝙸𝚉𝙰𝙳𝙰!!*\n*𝙴𝙵𝙴𝙲𝚃𝙾: ${effect}*`}, {quoted: m});  
 };
