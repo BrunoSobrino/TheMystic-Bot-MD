@@ -30,7 +30,3 @@ handler.tags = ['owner'];
 handler.command = /(restablecerdatos|deletedatauser|resetuser)$/i;
 handler.rowner = true;
 export default handler;
-
-async function no(number) {
-    return number.replace(/\s/g, '').replace(/([@+-])/g, '');
-}
