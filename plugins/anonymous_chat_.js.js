@@ -3,11 +3,9 @@ export async function before(m, {match}) {
     return;
   }
   this.anonymous = this.anonymous ? this.anonymous : {};
-  if (!this.anonymous) {
-    return;
-  }
-    
-  const room = Object.values(this.anonymous).find((room) => [room.a, room.b].includes(m.sender) && room.state === 'CHATTING');
+  const room = Object.values(this.anonymous).find((room) => [room?.a, room?.b].includes(m.sender) && room?.state === 'CHATTING');
+  if (!this.anonymous || !room) conn.sendMessage(m.chat, {text: `*[❗] No estás en un chat, por favor espera a estar en uno o usa el comando #leave*`}, {quoted: m});
+
   if (room) {
     if (/^.*(next|leave|start)/.test(m.text)) {
       return;
