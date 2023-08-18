@@ -1,8 +1,9 @@
 const handler = async (m, { conn, text }) => {
     text = no(text);
     let number = '';
+    const numberPattern = /\d+/;
     if (isNaN(text)) {
-        const parts = text.match(/\d+/);
+        const parts = text.match(numberPattern);
         if (parts) {
             number = parts[0];
         }
