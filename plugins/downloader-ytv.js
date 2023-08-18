@@ -1,8 +1,9 @@
-import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
+dimport {youtubedl, youtubedlv2} from '@bochilteam/scraper';
 import fetch from 'node-fetch';
 import yts from 'yt-search';
 import ytdl from 'ytdl-core';
 import axios from 'axios';
+import {bestFormat, getUrlDl} from '../lib/y2dl.js';
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   if (!args[0]) throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*';
 
@@ -30,6 +31,14 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
   }
 
   const { key } = await m.reply(`*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*`);
+  try {
+    const formats = await bestFormat(youtubeLink, 'video');
+    console.log(formats)
+    const dl_url = await getUrlDl(formats.url);
+    const buff = await getBuffer(dl_url.download);
+    conn.sendMessage(m.chat, {video: buff, fileName: 'error.mp4', mimetype: 'video/mp4'}, {quoted: m});
+ } catch (e) { 
+    console.log('Error 1', e)
   try {
     const qu = args[1] || '360';
     const q = qu + 'p';
@@ -63,7 +72,7 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
       }
     }
   }
-};
+}};
 handler.command = /^(video|fgmp4|dlmp4|getvid|yt(v|mp4)?)$/i;
 export default handler;
 
