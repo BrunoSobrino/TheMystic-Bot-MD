@@ -21,7 +21,7 @@ const handler = async (m, { conn, text }) => {
         const users = m.isGroup ? participants.find(u => u.jid == user) : {};
         const userNumber = user.split('@')[0];
         if (!global.global.db.data.users[user] || global.global.db.data.users[user] == '') {
-            return conn.sendMessage(m.chat, {text: `*[❗]El usuario @${userNumber} no se encuentra en mi base de datos*`, mentions: [user]}, {quoted: m});
+            return conn.sendMessage(m.chat, {text: `*[❗] El usuario @${userNumber} no se encuentra en mi base de datos.*`, mentions: [user]}, {quoted: m});
          }
         delete global.global.db.data.users[user];
         conn.sendMessage(m.chat, {text: `*[❗] Todos los datos del usuario @${userNumber} en la base de datos han sido eliminados.*`, mentions: [user]}, {quoted: m});
