@@ -10,9 +10,12 @@ const handler = async (m, { conn, text }) => {
         if (quotedNumberMatches) {
             const number = quotedNumberMatches.join('');
             user = number + '@s.whatsapp.net';
-    } else {
+        } else {
         return conn.sendMessage(m.chat, {text: `*[❗] Formato de usuario no reconocido. Responda a un mensaje, etiquete a un usuario o escriba su número de usuario.*`}, {quoted: m});
     }
+    } else {
+        return conn.sendMessage(m.chat, {text: `*[❗] Formato de usuario no reconocido. Responda a un mensaje, etiquete a un usuario o escriba su número de usuario.*`}, {quoted: m});
+    }        
         const groupMetadata = m.isGroup ? await conn.groupMetadata(m.chat) : {};
         const participants = m.isGroup ? groupMetadata.participants : [];
         const users = m.isGroup ? participants.find(u => u.jid == user) : {};
