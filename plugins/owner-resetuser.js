@@ -1,13 +1,15 @@
 const handler = async (m, { conn, text }) => {
-    //text = no(text);
-    const numberPattern = /\d+/;
+    const numberPattern = /\d+/g;
     let user = '';
-    if (text.match(numberPattern)) {
-        const number = text.match(numberPattern)[0];
+    const numberMatches = text.match(numberPattern);
+    if (numberMatches) {
+        const number = numberMatches.join('');
         user = number + '@s.whatsapp.net';
     } else if (m.quoted && m.quoted.sender) {
-        const number = m.quoted.sender.match(numberPattern)[0];
-        user = number + '@s.whatsapp.net';
+        const quotedNumberMatches = m.quoted.sender.match(numberPattern);
+        if (quotedNumberMatches) {
+            const number = quotedNumberMatches.join('');
+            user = number + '@s.whatsapp.net';
     } else {
         return conn.sendMessage(m.chat, {text: `*[❗] Formato de usuario no reconocido. Responda a un mensaje, etiquete a un usuario o escriba su número de usuario.*`}, {quoted: m});
     }
