@@ -34,6 +34,8 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
       }
     }
   }
+  if (enviando) return  
+      enviando = true    
   const { key } = await m.reply(`*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*`);
   try {
     const formats = await bestFormat(youtubeLink, 'video');
@@ -67,14 +69,14 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
     const size = await yt.video[q].fileSizeH;
     await await conn.sendMessage(m.chat, {video: {url: dl_url}, fileName: `${ttl}.mp4`, mimetype: 'video/mp4', caption: `*▢ Titulo:* ${ttl}\n*▢ Peso Del Video:* ${size}`, thumbnail: await fetch(yt.thumbnail)}, {quoted: m});
     await conn.sendMessage(m.chat, {text: '*[ ✔ ] Video descargado exitosamente.*', edit: key}, {quoted: m});
-  } catch (E1) {
-    // console.log('Error 1 ' + E1)
+    enviando = false
+  } catch {
     try {
       const mediaa = await ytMp4(youtubeLink);
       await conn.sendMessage(m.chat, {video: {url: mediaa.result}, fileName: `error.mp4`, caption: `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, thumbnail: mediaa.thumb, mimetype: 'video/mp4'}, {quoted: m});
       await conn.sendMessage(m.chat, {text: '*[ ✔ ] Video descargado exitosamente.*', edit: key}, {quoted: m});
-    } catch (E2) {
-      // console.log('Error 2 ' + E2)
+      enviando = false
+    } catch {
       try {
         const lolhuman = await fetch(`https://api.lolhuman.xyz/api/ytvideo2?apikey=${lolkeysapi}&url=${youtubeLink}`);
         const lolh = await lolhuman.json();
@@ -84,8 +86,8 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
         const n4 = lolh.result.thumbnail;
         await conn.sendMessage(m.chat, {video: {url: n2}, fileName: `${n}.mp4`, mimetype: 'video/mp4', caption: `*▢ Titulo:* ${n}\n*▢ Peso Del Video:* ${n3}`, thumbnail: await fetch(n4)}, {quoted: m});
         await conn.sendMessage(m.chat, {text: '*[ ✔ ] Video descargado exitosamente.*', edit: key}, {quoted: m});
-      } catch (E3) {
-        // console.log('Error 3 ' + E3)
+        enviando = false
+      } catch {
         await conn.reply(m.chat, '*[❗] Error, no fue posible descargar el video.*', m);
       }
     }
