@@ -48,9 +48,6 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
     await conn.sendMessage(m.chat, {document: buff, caption: `*▢ Titulo:* ${ttl_1}\n*▢ Peso Del Video:* ${roundedFileSizeInMB} MB`, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
     await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado y enviado exitosamente.*\n\n*—◉ Se envío en formato de docuemnto debido a que el video pesa ${roundedFileSizeInMB} MB y supera el limite establecido por WhatsApp.*\n*◉ Titulo:* ${ttl_1}`, edit: key}, {quoted: m});
     enviando = false
-   } else if (fileSizeInMB > 1000) { 
-    await conn.sendMessage(m.chat, {text: `*[ ❌ ] El video no pudo ser enviado debido a que pesa mas de 1GB, el video pesa ${roundedFileSizeInMB} MB, puedes descargar el video en el siguiente link: ${formats.url}.*`, edit: key}, {quoted: m});
-    enviando = false
    } else {
     await conn.sendMessage(m.chat, {video: buff, caption: `*▢ Titulo:* ${ttl_1}\n*▢ Peso Del Video:* ${roundedFileSizeInMB} MB`, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
     await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado exitosamente.*`, edit: key}, {quoted: m});
@@ -62,10 +59,10 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
     const q = qu + 'p';
     const v = youtubeLink;
     const yt = await youtubedl(v).catch(async (_) => await youtubedlv2(v));
-    const dl_url = await yt.video[q].download();
-    const ttl = await yt.title;
-    const size = await yt.video[q].fileSizeH;
-    await await conn.sendMessage(m.chat, {video: {url: dl_url}, fileName: `${ttl}.mp4`, mimetype: 'video/mp4', caption: `*▢ Titulo:* ${ttl}\n*▢ Peso Del Video:* ${size}`, thumbnail: await fetch(yt.thumbnail)}, {quoted: m});
+    const dl_url = yt.video[q].download();
+    const ttl = yt.title;
+    const size = yt.video[q].fileSizeH;
+    await conn.sendMessage(m.chat, {video: {url: dl_url}, fileName: `${ttl}.mp4`, mimetype: 'video/mp4', caption: `*▢ Titulo:* ${ttl}\n*▢ Peso Del Video:* ${size}`, thumbnail: await fetch(yt.thumbnail)}, {quoted: m});
     await conn.sendMessage(m.chat, {text: '*[ ✔ ] Video descargado exitosamente.*', edit: key}, {quoted: m});
     enviando = false
   } catch {
@@ -86,7 +83,8 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
         await conn.sendMessage(m.chat, {text: '*[ ✔ ] Video descargado exitosamente.*', edit: key}, {quoted: m});
         enviando = false
       } catch {
-        await conn.reply(m.chat, '*[❗] Error, no fue posible descargar el video.*', m);
+        await conn.sendMessage(m.chat, {text: `*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*`, edit: key}, {quoted: m});
+        throw '*[❗] Error, no fue posible descargar el video.*';
       }
     }
   }
