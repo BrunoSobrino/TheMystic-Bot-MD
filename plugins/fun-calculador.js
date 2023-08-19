@@ -91,7 +91,7 @@ const handler = async (m, { conn, command, text, usedPrefix }) => {
 
 —◉ ${description}
 
-*`\`\`\"${response}"\`\`\`*
+*"${response}"*
 
 ━━━━⬣ *CALCULADOR* ⬣━━━━`.trim()  
   async function loading() {
