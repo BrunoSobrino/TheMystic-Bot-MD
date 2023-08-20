@@ -1194,7 +1194,7 @@ const messageText = `
           }
 		
           if (botSpam.antispam && m.text && user && user.lastCommandTime && (Date.now() - user.lastCommandTime) < 5000 && !isROwner) {
-            if (user.commandCount === 3) {
+            if (user.commandCount === 2) {
               const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000);
               if (remainingTime > 0) {
                 const messageText = `*[ ⚠ ] Espera ${remainingTime} segundos antes de usar otro comando*`;
@@ -1509,27 +1509,32 @@ export async function callUpdate(callUpdate) {
 }
 
 export async function deleteUpdate(message) {
-  try {
-    const {fromMe, id, participant} = message;
-    if (fromMe) return;
-    const msg = this.serializeM(this.loadMessage(id));
-    if (!msg) return;
-    if (!msg.isGroup) return;
-    const chat = global.db.data.chats[msg.chat] || {};
-    if (!chat.antidelete) return;
-const antideleteMessage = `
-━━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━
+let d = new Date(new Date + 3600000)
+let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })
+ let time = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
+    try {
+        const { fromMe, id, participant } = message
+        if (fromMe) return 
+        let msg = this.serializeM(this.loadMessage(id))
+	let chat = global.db.data.chats[msg.chat] || {}
+	if (!chat.antidelete) return 
+        if (!msg) return 
+	//if (!msg.isGroup) return console.log('sexoooo3')    
+	const antideleteMessage = `
+┏━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━
 *■ Usuario:* @${participant.split`@`[0]}
+*■ Hora:* ${time}
+*■ Fecha:* ${date}
 *■ Enviando el mensaje eliminado...*
     
 *■ Para desactivar esta función, escribe el comando:*
 *—◉ #disable antidelete*
-━━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━━`.trim();
-    await this.reply(msg.chat, antideleteMessage, msg, {mentions: [participant]});
-    this.copyNForward(msg.chat, msg).catch((e) => console.log(e, msg));
-  } catch (e) {
-    console.error(e);
-  }
+┗━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━`.trim();
+        await this.sendMessage(msg.chat, {text: antideleteMessage, mentions: [participant]}, {quoted: msg})
+        this.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 global.dfail = (type, m, conn) => {
