@@ -10,9 +10,6 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
     if (!global.videoList) {
       global.videoList = [];
     }
-    /* if (global.videoList[0]?.from == m.sender) {
-delete global.videoList;
-}*/
     if (global.videoList[0]?.from == m.sender) {
       global.videoList.splice(0, global.videoList.length);
     }
