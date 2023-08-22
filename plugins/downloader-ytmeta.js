@@ -7,26 +7,24 @@ import {find_lyrics} from '@brandond/findthelyrics';
 import ytdl from "ytdl-core";
 
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
-  if (!text) return m.reply('*🚩 Ingresa un enlace de youtube.*')
+  if (!text) return m.reply('*[❗] Ingresa un enlace de YouTube.*')
   try {
-const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
- const lyrics = await find_lyrics(s.meta.title);
-
+const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;      
+      
   await YTDL.mp3(text).then(async (s) => {
-    console.log(s.meta)
   const tags = {
     title: s.meta.title || "-",
     artist: s.meta.channel || "-",
-    album: s.meta.category || "-",
+    album: `${s.meta.keywords[0] ? s.meta.keywords[0] : s.meta.channel}`,
     year: s.meta.publicDate || "-",
     genre: s.meta.category || "-",
     comment: {
       language: "spa",
-      text: `${lyrics ? lyrics : '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖'}`,
+      text: '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖',
     },
     unsynchronisedLyrics: {
       language: "spa",
-      text: `${lyrics ? lyrics : '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖'}`,
+      text: '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖',
     },
     image: {
       mime: "image/jpeg",
@@ -45,8 +43,8 @@ const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
   fs.unlinkSync(`./${s.path}`);
 });
   } catch (e) {
-      console.log(e);
-      m.reply(new Error(e).message);
+    console.log(e);
+    m.reply(new Error(e).message);
   }
 };
 handler.help = ['ytmetadata', 'ytest'].map((v) => v + ' < url >');
