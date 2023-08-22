@@ -1,16 +1,19 @@
 import {sticker} from '../lib/sticker.js';
 import fetch from 'node-fetch';
 import MessageType from '@whiskeysockets/baileys';
-const handler = async (m, {conn}) => {
+const handler = async (m, {conn, text}) => {
   try {
-    if (m.quoted?.sender) m.mentionedJid.push(m.quoted.sender);
-    if (!m.mentionedJid.length) m.mentionedJid.push(m.sender);
+    const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted.sender ? m.quoted.sender : m.fromMe ? conn.user.jid : m.sender;
+    if (!who) throw "*[❗] Por favor, etiqueta o menciona a un participante del grupo.*";
     const res = await fetch('https://nekos.life/api/kiss');
     const json = await res.json();
     const {url} = json;
-    const stiker = await sticker(null, url, `+${m.sender.split('@')[0]} le dio besos a ${m.mentionedJid.map((user)=>(user === m.sender)? 'alguien ': `+${user.split('@')[0]}`).join(', ')}`);
-    conn.sendFile(m.chat, stiker, null, {asSticker: true});
-  } catch (e) { }
+    const name_1 = conn.getName(m.sender)
+    const name_2 = conn.getName(who)
+    const stiker = await sticker(null, url, `${name_1} le dio besos a ${name_2}`);
+    conn.sendFile(m.chat, stiker, null, null, m, false, {asSticker: true});
+  } catch { }
 };
 handler.command = /^(kiss|skiss|kis|besos|beso)$/i;
+handler.group = true;
 export default handler;
