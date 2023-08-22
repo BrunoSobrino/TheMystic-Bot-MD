@@ -4,7 +4,7 @@ import MessageType from '@whiskeysockets/baileys';
 const handler = async (m, {conn, text}) => {
   try {
     if (m.quoted?.sender) m.mentionedJid.push(m.quoted.sender);
-    if (!m.mentionedJid.length) m.mentionedJid.push(text);
+    if (!m.mentionedJid.length) m.mentionedJid.push(m.sender);
     const res = await fetch('https://nekos.life/api/kiss');
     const json = await res.json();
     const {url} = json;
