@@ -3,7 +3,6 @@ import YTDL from "../lib/ytdll.js";
 import axios from "axios";
 import fs from "fs";
 import NodeID3 from "node-id3";
-import {find_lyrics} from '@brandond/findthelyrics';
 import ytdl from "ytdl-core";
 
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
