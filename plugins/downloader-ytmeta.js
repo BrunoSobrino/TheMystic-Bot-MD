@@ -10,7 +10,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
   if (!text) return m.reply('*🚩 Ingresa un enlace de youtube.*')
   try {
 const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
- const lyrics = await find_lyrics(extract);
+ const lyrics = await find_lyrics(s.meta.title);
 
   await YTDL.mp3(text).then(async (s) => {
   const tags = {
@@ -25,7 +25,7 @@ const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
     },
     unsynchronisedLyrics: {
       language: "spa",
-      text: lyrics || 'Not found',
+      text: `${lyrics ? lyrics : '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖'}`,
     },
     image: {
       mime: "image/jpeg",
@@ -34,22 +34,12 @@ const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
         name: "front cover",
       },
       description: "YouTube Thumbnail",
-      imageBuffer: await axios
-        .get(s.meta.image, { responseType: "arraybuffer" })
-        .then((response) => Buffer.from(response.data, "binary")),
+      imageBuffer: await axios.get(s.meta.image, { responseType: "arraybuffer" }).then((response) => Buffer.from(response.data, "binary")),
     },
     copyright: "Copyright Darlyn © 2023",
   };
   await NodeID3.write(tags, s.path);
-  await conn.sendMessage(
-    m.chat,
-    {
-      audio: fs.readFileSync(`./${s.path}`),
-      mimetype: "audio/mpeg",
-      fileName: "",
-    },
-    { quoted: m },
-  );
+  await conn.sendMessage(m.chat, {audio: fs.readFileSync(`./${s.path}`), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
   fs.unlinkSync(`./${s.path}`);
 });
   } catch (e) {
