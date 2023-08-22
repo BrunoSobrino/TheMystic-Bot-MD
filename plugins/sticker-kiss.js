@@ -9,7 +9,7 @@ const handler = async (m, {conn}) => {
     const json = await res.json();
     const {url} = json;
     const stiker = await sticker(null, url, `+${m.sender.split('@')[0]} le dio besos a ${m.mentionedJid.map((user)=>(user === m.sender)? 'alguien ': `+${user.split('@')[0]}`).join(', ')}`);
-    conn.sendFile(m.chat, stiker, null, {asSticker: true});
+    conn.sendFile(m.chat, stiker, null, null, m, false, {asSticker: true});
   } catch (e) { }
 };
 handler.command = /^(kiss|skiss|kis|besos|beso)$/i;
