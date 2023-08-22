@@ -13,6 +13,7 @@ const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
  const lyrics = await find_lyrics(s.meta.title);
 
   await YTDL.mp3(text).then(async (s) => {
+    console.log(s.meta)
   const tags = {
     title: s.meta.title || "-",
     artist: s.meta.channel || "-",
@@ -21,7 +22,7 @@ const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
     genre: s.meta.category || "-",
     comment: {
       language: "spa",
-      text: lyrics || 'Not found',
+      text: `${lyrics ? lyrics : '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖'}`,
     },
     unsynchronisedLyrics: {
       language: "spa",
@@ -34,8 +35,9 @@ const extract = (await ytdl.getBasicInfo(text)).videoDetails.title;
         name: "front cover",
       },
       description: "YouTube Thumbnail",
-      imageBuffer: await axios.get(s.meta.image, { responseType: "arraybuffer" }).then((response) => Buffer.from(response.data, "binary")),
+      imageBuffer: await axios.get(s.meta.image, {responseType: "arraybuffer"}).then((response) => Buffer.from(response.data, "binary")),
     },
+    mimetype: 'image/jpeg',
     copyright: "Copyright Darlyn © 2023",
   };
   await NodeID3.write(tags, s.path);
