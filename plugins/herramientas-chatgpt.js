@@ -96,7 +96,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
-        const akuariapi2 = await fetch(`https://api.akuari.my.id/ai/gpt?chat=${text}`);
+        const akuariapi2 = await fetch(`https://api.azz.biz.id/api/gpt?q=${text}`);
         const akuariapijson2 = await akuariapi2.json();
         if (akuariapijson2.respon == 'error' || akuariapijson2.respon == '' || !akuariapijson2.respon) return XD; // causar error undefined para lanzar msg de error
         const akuariapiresult2 = await translate(`${akuariapijson2.respon}`, {to: 'es', autoCorrect: true});
@@ -104,7 +104,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
-        const akuariapi1 = await fetch(`https://api.azz.biz.id/ai/gbard?chat=${text}`);
+        const akuariapi1 = await fetch(`https://api.azz.biz.id/api/bard?q=${text}`);
         const akuariapijson1 = await akuariapi1.json();
         if (akuariapijson1.respon == 'error' || akuariapijson1.respon == '' || !akuariapijson1.respon) return XD; // causar error undefined para usar otra api
         const akuariapiresult1 = await translate(`${akuariapijson1.respon}`, {to: 'es', autoCorrect: true});
