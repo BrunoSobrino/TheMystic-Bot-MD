@@ -1,27 +1,29 @@
-import fetch from 'node-fetch';
-import translate from '@vitalets/google-translate-api';
-const handler = async (m, {conn, text, args}) => {
-  if (!args[0]) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*`;
-  try {
-    const enc = encodeURIComponent(text);
-    const json = await fetch(`https://latam-api.vercel.app/api/playstore?apikey=nekosmic&q=${enc}`);
-    const gPlay = await json.json();
+import gplay from "google-play-scraper";
 
-    const mystic = await translate(`${gPlay.descripcion}`, {to: 'es', autoCorrect: true});
-    if (!gPlay.titulo) return m.reply(`[ ! ] Sin resultados`);
-    conn.sendMessage(m.chat, {image: {url: gPlay.imagen}, caption: `🔍 Resultado: ${gPlay.titulo}
-🧬 Identificador: ${gPlay.id}
-⛓️ Link: ${gPlay.link}
-🖼️ Imagen: ${gPlay.imagen}
-✍️ Desarrollador: ${gPlay.desarrollador}
-📜 Descripcion: ${mystic.text}
-💲 Moneda: ${gPlay.moneda}
-🎭 Gratis?: ${gPlay.gratis}
-💸 Precio: ${gPlay.precio}
-📈 Puntuacion: ${gPlay.puntuacion}`}, {quoted: m});
-  } catch {
-    await m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*');
-  }
+let handler = async (m, { conn, text }) => {
+  if (!text) throw "*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*";
+  let res = await gplay.search({ term: text });
+  if (!res.length) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*`;
+  let opt = {
+    contextInfo: {
+      externalAdReply: {
+        title: res[0].title,
+        body: res[0].summary,
+        thumbnail: (await conn.getFile(res[0].icon)).data,
+        sourceUrl: res[0].url,
+      },
+    },
+  };
+  await console.log(res);
+  res = res.map(
+    (v) =>
+      `*🔍 Resultado:* ${v.title}
+       *✍️ Desarrollador:* ${v.developer}
+       *💸 Precio:* ${v.priceText}
+       *📈 Puntuacion:* ${v.scoreText}
+        *⛓️ Link:* ${v.url}`
+  ).join`\n\n`;
+  m.reply(res, null, opt);
 };
 handler.help = ['playstore <aplicacion>'];
 handler.tags = ['internet'];
