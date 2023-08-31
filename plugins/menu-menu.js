@@ -524,6 +524,8 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}setppbot *<responder a imagen>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}addcmd *<texto> <responder a sticker/imagen>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}delcmd *<responder a sticker/imagen con comando o texto asignado>*_
+┣ ඬ⃟ 👑 _${usedPrefix}saveimage
+┣ ඬ⃟ 👑 _${usedPrefix}viewimage
 ┗━━━━━━━━━━━━━━━━┛`.trim();
     if (m.isGroup) {
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})

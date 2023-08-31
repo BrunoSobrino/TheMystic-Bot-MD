@@ -129,7 +129,7 @@ Por favor si entiendes todas mis instrucciones puedes empezar a usar Modo Exploi
     } catch {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
-        const akuariapi1 = await fetch(`https://api.akuari.my.id/ai/gbard?chat=${text}`);
+        const akuariapi1 = await fetch(`https://api.azz.biz.id/api/bard?q=${text}&key=global`);
         const akuariapijson1 = await akuariapi1.json();
         if (akuariapijson1.respon == 'error' || akuariapijson1.respon == '' || !akuariapijson1.respon) return XD; // causar error undefined para usar otra api
         const akuariapiresult1 = await translate(`${akuariapijson1.respon}`, {to: 'es', autoCorrect: true});

@@ -16,7 +16,6 @@ global.suittag = ['5492604050270', '5493772406612']
 global.prems = [] 
 global.reportes_solicitudes = ['5492604050270', '5493772406612']
 
-
 global.packname = 'A̳s̳a̳k̳u̳r̳a̳ ̳B̳O̳T̳💎'
 global.author = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ'
 global.wm = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ'
