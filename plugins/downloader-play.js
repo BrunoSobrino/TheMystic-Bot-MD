@@ -28,6 +28,22 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
       try {
+        let info = await ytdl.getInfo(yt_play[0].videoId);
+        let format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+        //console.log('Format found!', format);
+        let buff = ytdl.downloadFromInfo(info, { format: format });
+        let bufs = []
+        buff.on('data', chunk => {
+          bufs.push(chunk)
+        })
+        buff.on('end', async () => {
+          let buff = Buffer.concat(bufs)
+          conn.sendMessage(m.chat, {audio: buff, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mpeg'}, {quoted: m});
+        })
+      }
+      catch (error) {
+        console.log(error, 1);
+      try {
         const formats = await bestFormat(yt_play[0].url, 'audio');
         const dl_url = await getUrlDl(formats.url);
         const buff = await getBuffer(dl_url.download);
@@ -73,6 +89,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
           }
         }
       }
+    }
     }
     if (command == 'play2') {
       try {
