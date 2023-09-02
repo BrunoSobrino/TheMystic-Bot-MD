@@ -28,26 +28,12 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `*[❗] Los comandos +1
 ┏━━━━━━━━━━━━━━━━┓
 ┃ *< MENU+18 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 🔞 _${usedPrefix}futasolo_
-┣ ඬ⃟ 🔞 _${usedPrefix}videoxxx_
-┣ ඬ⃟ 🔞 _${usedPrefix}videolesbixxx_
-┣ ඬ⃟ 🔞 _${usedPrefix}tetas_
-┣ ඬ⃟ 🔞 _${usedPrefix}booty_
-┣ ඬ⃟ 🔞 _${usedPrefix}ecchi_
-┣ ඬ⃟ 🔞 _${usedPrefix}furro_
-┣ ඬ⃟ 🔞 _${usedPrefix}randomxxx_
-┣ ඬ⃟ 🔞 _${usedPrefix}pechos_
-┣ ඬ⃟ 🔞 _${usedPrefix}yaoi_
-┣ ඬ⃟ 🔞 _${usedPrefix}yaoi2_
-┣ ඬ⃟ 🔞 _${usedPrefix}yuri_
-┣ ඬ⃟ 🔞 _${usedPrefix}yuri2_
-┣ ඬ⃟ 🔞 _${usedPrefix}trapito_
-┣ ඬ⃟ 🔞 _${usedPrefix}hentai_
-┣ ඬ⃟ 🔞 _${usedPrefix}nsfwass_
-┣ ඬ⃟ 🔞 _${usedPrefix}nsfwcum_
-┣ ඬ⃟ 🔞 _${usedPrefix}nsfwfemdom_
-┣ ඬ⃟ 🔞 _${usedPrefix}hentaipdf *<texto>*_
-┣ ඬ⃟ 🔞 _${usedPrefix}hentaisearch *<texto>*_
+┣ ඬ⃟ 🔞 _${usedPrefix}futasolo_ / Este comando te mostrara imagenes de solo futanaris.
+┣ ඬ⃟ 🔞 _${usedPrefix}furro_ / Este comando te mostrara imagenes de furros.
+┣ ඬ⃟ 🔞 _${usedPrefix}trapito_ / Este comando te mostrara imagenes de trapos.
+┣ ඬ⃟ 🔞 _${usedPrefix}hentai_ / Este comando te mostrara imagenes de hentai.
+┣ ඬ⃟ 🔞 _${usedPrefix}hentaipdf *<texto>*_ / Este comando sirve para buscar un hentai en formato pdf de alguna categoria.
+┣ ඬ⃟ 🔞 _${usedPrefix}hentaisearch *<texto>*_ / Este comando sirve para buscar un hentai con alguna palabra.
 ┗━━━━━━━━━━━━━━━━┛`.trim();
     if (m.isGroup) {
       const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
