@@ -28,7 +28,7 @@ export default handler;
 
 async function ttimg(link) {
     try {    
-        let url = `https://dlpanda.com/es?url=${link}&token4=G8eR2baP02`;    
+        let url = `https://dlpanda.com/es?url=${link}&token=G8eR2baP02`;    
         let response = await axios.get(url);
         const html = response.data;
         const $ = cheerio.load(html);
