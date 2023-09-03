@@ -6,7 +6,6 @@ import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
 import {bestFormat, getUrlDl} from '../lib/y2dl.js';
 import YTDL from "../lib/ytdll.js";
 import fs from "fs";
-import NodeID3 from "node-id3";
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
   if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} Good Feeling - Flo Rida*`;
   try {
@@ -32,33 +31,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     if (command == 'play') {
       try {      
           await YTDL.mp3(yt_play[0].url).then(async (s) => {
-          const tags = {
-          title: s.meta.title || "-",
-          artist: s.meta.channel || "-",
-          album: `${s.meta.keywords[0] ? s.meta.keywords[0] : s.meta.channel}`,
-          year: s.meta.publicDate || "-",
-          genre: s.meta.category || "-",
-          comment: {
-          language: "spa",
-          text: '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖',
-          },
-          unsynchronisedLyrics: {
-          language: "spa",
-          text: '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖',
-          },
-          image: {
-          mime: "image/jpeg",
-          type: {
-          id: 3,
-          name: "front cover",
-          },
-          description: "YouTube Thumbnail",
-          imageBuffer: await axios.get(s.meta.image, {responseType: "arraybuffer"}).then((response) => Buffer.from(response.data, "binary")),
-          },
-          mimetype: 'image/jpeg',
-          copyright: "Copyright Darlyn © 2023",
-          };
-          await NodeID3.write(tags, s.path);
+          await fs.writeFileSync(s.meta.title + '.mp3', s.path)
           await conn.sendMessage(m.chat, {audio: fs.readFileSync(`./${s.path}`), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
           fs.unlinkSync(`./${s.path}`);
           })
