@@ -31,10 +31,8 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     if (command == 'play') {
       try {      
           await YTDL.mp3(yt_play[0].url).then(async (s) => {
-          await fs.writeFileSync(s.meta.title + '.mp3', s.path)
-          await conn.sendMessage(m.chat, {audio: fs.readFileSync(`./${s.path}`), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
-          fs.unlinkSync(`./${s.path}`);
-          })
+          await conn.sendMessage(m.chat, {audio: fs.readFileSync(s.path), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
+          await fs.unlinkSync(s.path)});
       } catch {
       try {
         let info = await ytdl.getInfo(yt_play[0].videoId);
