@@ -1,10 +1,9 @@
 import ws from 'ws';
 async function handler(m, { conn: _envio, usedPrefix }) {
   const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn.user)])];
-  const message = users.map((v, index) => `${index + 1} @${v.jid.replace(/[^0-9]/g, '')}\nLink: wa.me/${v.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado\nNombre: ${v.name || ''}\n\n`).join('\n');
-  const replyMessage = message.length === 0 ? '*NO HAY SUB BOTS DISPONIBLE. VERIFIQUE MÁS TARDE.*' : message;
+  const message = users.map((v, index) => `*${v + 1}.-* @${v.jid.replace(/[^0-9]/g, '')}\n*Link:* wa.me/${v.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado\n*Nombre:* ${v.name || '-'}\n\n`).join('\n');
+  const replyMessage = message.length === 0 ? '*—◉ No hay SubBots activos en estos momentos.*' : message;
   const totalUsers = users.length;
-
   const responseMessage = `
 *—◉ 𝙰𝚀𝚄𝙸 𝚃𝙸𝙴𝙽𝙴𝚂 𝙻𝙰 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝚂𝚄𝙱𝙱𝙾𝚃𝚂 (𝚂𝙴𝚁𝙱𝙾𝚃/𝙹𝙰𝙳𝙸𝙱𝙾𝚃) 𝙰𝙲𝚃𝙸𝚅𝙾𝚂 🤖️*
 
@@ -14,8 +13,7 @@ async function handler(m, { conn: _envio, usedPrefix }) {
 
 *—◉ 𝚂𝚄𝙱𝙱𝙾𝚃𝚂 𝙲𝙾𝙽𝙴𝙲𝚃𝙰𝙳𝙾𝚂:* ${totalUsers || '0'}
 
-${replyMessage.trim()}
-`.trim();
+${replyMessage.trim()}`.trim();
 
   await _envio.sendMessage(m.chat, {text: responseMessage, mentions: _envio.parseMention(responseMessage)}, {quoted: m});
 }
