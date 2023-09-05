@@ -1,7 +1,7 @@
 import ws from 'ws';
 async function handler(m, { conn: _envio, usedPrefix }) {
   const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn.user)])];
-  const message = users.map((v, index) => `${v + 1} @${v.jid.replace(/[^0-9]/g, '')}\nLink: wa.me/${v.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado\nNombre: ${v.name || ''}\n\n`).join('\n');
+  const message = users.map((v, index) => `${index + 1} @${v.jid.replace(/[^0-9]/g, '')}\nLink: wa.me/${v.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado\nNombre: ${v.name || ''}\n\n`).join('\n');
   const replyMessage = message.length === 0 ? '*NO HAY SUB BOTS DISPONIBLE. VERIFIQUE MÁS TARDE.*' : message;
   const totalUsers = users.length;
 
