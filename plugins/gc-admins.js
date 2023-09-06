@@ -17,6 +17,8 @@ ${listAdmin}
 };
 handler.help = ['admins <texto>'];
 handler.tags = ['group'];
+// regex detect A word without case sensitive
+handler.customPrefix = /a|@/i;
 handler.command = /^(admins|@admins|dmins)$/i;
 handler.group = true;
 export default handler;

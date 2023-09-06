@@ -1,6 +1,7 @@
+import ws from 'ws';
 const handler = async (m, {conn, usedPrefix, text}) => {
   if (conn.user.jid !== global.conn.user.jid) throw false;
-  const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.state !== 'close').map((conn) => conn.user.jid)])];
+  const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn.user.jid)])];
   const cc = text ? m : m.quoted ? await m.getQuotedObj() : false || m;
   const teks = text ? text : cc.text;
   const content = conn.cMod(m.chat, cc, /bc|broadcast/i.test(teks) ? teks : '*〔 DIFUSION A SUB BOTS 〕*\n\n' + teks);

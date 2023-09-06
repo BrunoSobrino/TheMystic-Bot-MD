@@ -4,6 +4,8 @@ import ytdl from 'ytdl-core';
 import axios from 'axios';
 import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
 import {bestFormat, getUrlDl} from '../lib/y2dl.js';
+import YTDL from "../lib/ytdll.js";
+import fs from "fs";
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
   if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} Good Feeling - Flo Rida*`;
   try {
@@ -27,10 +29,14 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
 ❏ *_Enviando ${additionalText}, aguarde un momento．．．_*`.trim();
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
+      try {      
+          await YTDL.mp3(yt_play[0].url).then(async (s) => {
+          await conn.sendMessage(m.chat, {audio: fs.readFileSync(s.path), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
+          await fs.unlinkSync(s.path)});
+      } catch {
       try {
         let info = await ytdl.getInfo(yt_play[0].videoId);
         let format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
-        //console.log('Format found!', format);
         let buff = ytdl.downloadFromInfo(info, { format: format });
         let bufs = []
         buff.on('data', chunk => {
@@ -40,9 +46,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
           let buff = Buffer.concat(bufs)
           conn.sendMessage(m.chat, {audio: buff, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mpeg'}, {quoted: m});
         })
-      }
-      catch (error) {
-        console.log(error, 1);
+      } catch {
       try {
         const formats = await bestFormat(yt_play[0].url, 'audio');
         const dl_url = await getUrlDl(formats.url);
@@ -119,7 +123,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
           }
         }
       }
-    }
+    }}
   } catch {
     throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*';
   }
