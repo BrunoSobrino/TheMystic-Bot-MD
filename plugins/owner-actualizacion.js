@@ -1,7 +1,7 @@
 import axios from 'axios';
 let previousCommitSHA = '';
 let previousUpdatedAt = '';
-let previousCommitUser = ''; // user commits?
+let previousCommitUser = ''; 
 const owner = 'BrunoSobrino';
 const repo = 'TheMystic-Bot-MD';
 const handler = async (m, {conn, text, usedPrefix, command}) => {
@@ -22,7 +22,7 @@ try {
       m.reply('*[❗] Error al verificar el repositorio:*', error.message);
     }
   }
-  setInterval(checkRepoUpdates, 60000);
+  setInterval(checkRepoUpdates, 6000);
 } catch (e) {
 m.reply(e)
 }
