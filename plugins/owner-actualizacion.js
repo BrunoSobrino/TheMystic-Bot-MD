@@ -17,7 +17,7 @@ try {
         previousCommitSHA = sha;
         previousUpdatedAt = message;
         previousCommitUser = login
-        conn.sendMessage(m.chat, {text: `*[❗] ¡El repositorio ha sido actualizado!*\n*- Repositorio:* ${html_url}\n*- Mensaje de commit:* ${message}\n*creador:* ${login}`}, {quoted: m});
+        conn.sendMessage(m.chat, {text: `*[❗] ¡El repositorio ha sido actualizado!*\n*- Repositorio:* ${html_url}\n*- Mensaje de commit:* ${message}\n*- Commit por:* ${login}`}, {quoted: m});
       }
     } catch (error) {
       m.reply('*[❗] Error al verificar el repositorio:*', error.message);
