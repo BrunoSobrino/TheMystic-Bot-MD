@@ -22,7 +22,7 @@ try {
       m.reply('*[❗] Error al verificar el repositorio:*', error.message);
     }
   }
-  setInterval(checkRepoUpdates, 60000);
+  setInterval(checkRepoUpdates, 6000);
 } catch (e) {
 m.reply(e)
 }
