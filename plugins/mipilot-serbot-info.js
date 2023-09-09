@@ -1,6 +1,6 @@
 import ws from 'ws';
 async function handler(m, { conn: _envio, usedPrefix }) {
-  const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn.user)])];
+  const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
   function convertirMsADiasHorasMinutosSegundos(ms) {
   var segundos = Math.floor(ms / 1000);
   var minutos = Math.floor(segundos / 60);
@@ -28,7 +28,7 @@ async function handler(m, { conn: _envio, usedPrefix }) {
   return resultado;
 }
 
-  const message = users.map((v, index) => `*${index + 1}.-* @${v.jid.replace(/[^0-9]/g, '')}\n*Link:* wa.me/${v.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado\n*Nombre:* ${v.name || '-'}\n*Uptime:* ${ convertirMsADiasHorasMinutosSegundos(Date.now() - conn.uptime)}\n\n`).join('\n');
+  const message = users.map((v, index) => `*${index + 1}.-* @${v.user.jid.replace(/[^0-9]/g, '')}\n*Link:* wa.me/${v.user.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado\n*Nombre:* ${v.user.name || '-'}\n*Uptime:* ${ v.uptime ? convertirMsADiasHorasMinutosSegundos(Date.now() - v.uptime) : "Desconocido"}`).join('\n\n');
   const replyMessage = message.length === 0 ? '*—◉ No hay SubBots activos en estos momentos.*' : message;
   const totalUsers = users.length;
   const responseMessage = `
