@@ -1,4 +1,4 @@
-kimport {generateWAMessageFromContent} from '@whiskeysockets/baileys';
+import {generateWAMessageFromContent} from '@whiskeysockets/baileys';
 import {smsg} from './lib/simple.js';
 import {format} from 'util';
 import {fileURLToPath} from 'url';
