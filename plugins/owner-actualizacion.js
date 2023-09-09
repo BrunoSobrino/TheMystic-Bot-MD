@@ -4,6 +4,7 @@ let previousUpdatedAt = '';
 const owner = 'BrunoSobrino';
 const repo = 'TheMystic-Bot-MD';
 const handler = async (m, {conn, text, usedPrefix, command}) => {
+ conn.sendMessage(m.chat, {text: `*[❗] Comando activado con éxito, te notificaremos cuando haya algun cambio en el repositorio oficial.*`}, {quoted: m});  
   async function checkRepoUpdates() {
     try {
       const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`);
