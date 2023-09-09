@@ -1,4 +1,4 @@
-kprocess.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 import './config.js';
 import './api.js';
 import {createRequire} from 'module';
