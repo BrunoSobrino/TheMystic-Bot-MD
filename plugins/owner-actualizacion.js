@@ -1,8 +1,7 @@
-// test :v
 import axios from 'axios';
 let previousCommitSHA = '';
 let previousUpdatedAt = '';
-let previousCommitUser = '';
+let previousCommitUser = ''; // user commits?
 const owner = 'BrunoSobrino';
 const repo = 'TheMystic-Bot-MD';
 const handler = async (m, {conn, text, usedPrefix, command}) => {
