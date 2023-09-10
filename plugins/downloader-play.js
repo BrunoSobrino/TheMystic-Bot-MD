@@ -96,7 +96,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     }
     }
     if (command == 'play2') {
-      try {
+      /*try {
         const formats = await bestFormat(yt_play[0].url, 'video');
         const buff = await getBuffer(formats.url);
         const yt_1 = await youtubedl(yt_play[0].url).catch(async (_) => await youtubedlv2(yt_play[0].url));
@@ -109,7 +109,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
         await conn.sendMessage(m.chat, {document: buff, caption: `*▢ Titulo:* ${ttl_1}\n*▢ Peso Del Video:* ${roundedFileSizeInMB} MB`, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
       } else {
         await conn.sendMessage(m.chat, {video: buff, caption: `*▢ Titulo:* ${ttl_1}\n*▢ Peso Del Video:* ${roundedFileSizeInMB} MB`, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
-      }} catch {
+      }} catch {*/
       try {
         const qu = '360';
         const q = qu + 'p';
@@ -137,7 +137,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
           }
         }
       }}
-    }}
+    } //}
   } catch {
     throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*';
   }
