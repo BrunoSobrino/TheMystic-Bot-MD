@@ -7,6 +7,7 @@ import {unwatchFile, watchFile} from 'fs';
 import fs from 'fs';
 import chalk from 'chalk';
 import mddd5 from 'md5';
+import ws from 'ws';
 
 /**
  * @type {import('@whiskeysockets/baileys')}
@@ -1560,10 +1561,12 @@ watchFile(file, async () => {
   unwatchFile(file);
   console.log(chalk.redBright('Update \'handler.js\''));
   if (global.reloadHandler) console.log(await global.reloadHandler());
+  
   if (global.conns && global.conns.length > 0 ) {
     const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
     for (const userr of users) {
-      userr.reloadHandler(false)
+      userr.subreloadHandler(false)
     }
   }
+  
 });
