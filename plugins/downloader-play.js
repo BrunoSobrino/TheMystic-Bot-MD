@@ -133,8 +133,8 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
       } catch {
         throw '*[❗] Error, no fue posible descargar el video.*';
         }
-      }
-    }
+      }}
+    }}
   } catch {
     throw '*[❗] Error, por favor vuelva a intentarlo.*';
   }
