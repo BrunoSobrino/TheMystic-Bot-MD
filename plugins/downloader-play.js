@@ -97,6 +97,20 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     }
     if (command == 'play2') {
       try {
+        const formats = await bestFormat(yt_play[0].url, 'video');
+        const buff = await getBuffer(formats.url);
+        const yt_1 = await youtubedl(yt_play[0].url).catch(async (_) => await youtubedlv2(yt_play[0].url));
+        const ttl_1 = `${yt_1?.title ? yt_1.title : 'Tu_video_descargado'}`;
+        const fileSizeInBytes = buff.byteLength;
+        const fileSizeInKB = fileSizeInBytes / 1024;
+        const fileSizeInMB = fileSizeInKB / 1024;
+        const roundedFileSizeInMB = fileSizeInMB.toFixed(2);
+      if (fileSizeInMB > 100) {
+        await conn.sendMessage(m.chat, {document: buff, caption: `*▢ Titulo:* ${ttl_1}\n*▢ Peso Del Video:* ${roundedFileSizeInMB} MB`, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
+      } else {
+        await conn.sendMessage(m.chat, {video: buff, caption: `*▢ Titulo:* ${ttl_1}\n*▢ Peso Del Video:* ${roundedFileSizeInMB} MB`, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
+      }} catch {
+      try {
         const qu = '360';
         const q = qu + 'p';
         const v = yt_play[0].url;
@@ -122,7 +136,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
             await conn.reply(m.chat, '*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*', m);
           }
         }
-      }
+      }}
     }}
   } catch {
     throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*';
