@@ -94,7 +94,8 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
         }
       }
     }
-    }
+  }
+}
     if (command == 'play2') {
   try {
     const formats = await bestFormat(yt_play[0].url, 'video');
