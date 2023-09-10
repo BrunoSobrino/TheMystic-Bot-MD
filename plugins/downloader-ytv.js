@@ -53,7 +53,8 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
     await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado exitosamente.*`, edit: key}, {quoted: m});
     enviando = false   
    }
- } catch { 
+ } catch (ee) {
+    console.log(ee)
   try {
     const qu = args[1] || '360';
     const q = qu + 'p';
@@ -65,7 +66,8 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
     await conn.sendMessage(m.chat, {video: {url: dl_url}, fileName: `${ttl}.mp4`, mimetype: 'video/mp4', caption: `*▢ Titulo:* ${ttl}\n*▢ Peso Del Video:* ${size}`, thumbnail: await fetch(yt.thumbnail)}, {quoted: m});
     await conn.sendMessage(m.chat, {text: '*[ ✔ ] Video descargado exitosamente.*', edit: key}, {quoted: m});
     enviando = false
-  } catch {
+  } catch (ee2) {
+    console.log(ee2)
     try {
       const mediaa = await ytMp4(youtubeLink);
       await conn.sendMessage(m.chat, {video: {url: mediaa.result}, fileName: `error.mp4`, caption: `_𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭_`, thumbnail: mediaa.thumb, mimetype: 'video/mp4'}, {quoted: m});
