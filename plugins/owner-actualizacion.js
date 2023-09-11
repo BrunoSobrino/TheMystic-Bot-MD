@@ -1,3 +1,5 @@
+// adartado por mario (Aka: un ladrón de código)
+
 import axios from 'axios';
 let previousCommitSHA = '';
 let previousUpdatedAt = '';
@@ -19,7 +21,8 @@ try {
         conn.sendMessage(m.chat, {text: `*[❗] ¡El repositorio ha sido actualizado!*\n*- Repositorio:* ${html_url}\n*- Mensaje de commit:* ${message}\n*- Commit por:* ${login}`}, {quoted: m});
       }
     } catch (error) {
-      m.reply('*[❗] Error al verificar el repositorio:*', error.message);
+      console.error(error)
+      m.reply('*[❗] Error al verificar el repositorio*');
     }
   }
   setInterval(checkRepoUpdates, 6000);
