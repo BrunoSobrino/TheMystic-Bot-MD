@@ -18,7 +18,7 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
     }
   } catch {    
   try {
-    const datTa = await instagram.v1(args[0]);
+    const datTa = await instagram.download(args[0]);
     for (const urRRl of datTa) {
       const shortUrRRl = await (await fetch(`https://tinyurl.com/api-create.php?url=${args[0]}`)).text();
       const tXXxt = `🔗 *Url:* ${shortUrRRl}`.trim();
