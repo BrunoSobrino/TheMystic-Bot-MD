@@ -100,9 +100,9 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
 }
     if (command == 'play2') {
   try {  
-    const qu = args[1] ? args[1] : '360';
+    const qu = '360';
     const q = qu + 'p';
-    const v = args[0];
+    const v = yt_play[0].url;
     const yt = await youtubedl(v).catch(async (_) => await youtubedlv2(v));
     const dl_url = await yt.video[q].download();
     const ttl = await yt.title;
@@ -120,16 +120,13 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     const cap = `*◉—⌈📥 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐃𝐋 📥⌋—◉*\n\n❏ *Título:* ${ttl}\n❏ *Peso:* ${size} MB`.trim();
     if (size >= limit1 && size <= limit2) {  
     await conn.sendMessage(m.chat, {document: sex, caption: cap, mimetype: 'video/mp4', fileName: ttl + `.mp4`}, {quoted: m});   
-    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado y enviado exitosamente.*`, edit: key}, {quoted: m});
     return
     } else {
     await conn.sendMessage(m.chat, {video: sex, caption: cap, mimetype: 'video/mp4', fileName: ttl + `.mp4`}, {quoted: m});   
-    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado y enviado exitosamente.*`, edit: key}, {quoted: m});
     return    
     }      
    } catch (error) {
      console.log(error)
-     await conn.sendMessage(m.chat, {text: `*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*`, edit: key}, {quoted: m});
      throw '*[❗] Error, no fue posible descargar el video.*';
   }
   /*try {
