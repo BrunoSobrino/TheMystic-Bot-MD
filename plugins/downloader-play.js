@@ -6,6 +6,8 @@ import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
 import {bestFormat, getUrlDl} from '../lib/y2dl.js';
 import YTDL from "../lib/ytdll.js";
 import fs from "fs";
+let limit1 = 100;
+let limit2 = 400;
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
   if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} Good Feeling - Flo Rida*`;
   try {
@@ -97,7 +99,40 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
   }
 }
     if (command == 'play2') {
-  try {
+  try {  
+    const qu = args[1] ? args[1] : '360';
+    const q = qu + 'p';
+    const v = args[0];
+    const yt = await youtubedl(v).catch(async (_) => await youtubedlv2(v));
+    const dl_url = await yt.video[q].download();
+    const ttl = await yt.title;
+    const size_Api = await yt.size;
+    const sizeApi = sizeApi.replace('MB', '').replace('GB', '').replace('KB', '')   
+    const sex = await getBuffer(dl_url)
+    const fileSizeInBytes = sex.byteLength;
+    const fileSizeInKB = fileSizeInBytes / 1024;
+    const fileSizeInMB = fileSizeInKB / 1024;
+    const size = fileSizeInMB.toFixed(2);    
+    if (size >= limit2) {  
+    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Descargue su video en ${dl_url}*`}, {quoted: m});
+    return    
+    }     
+    const cap = `*◉—⌈📥 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐃𝐋 📥⌋—◉*\n\n❏ *Título:* ${ttl}\n❏ *Peso:* ${size} MB`.trim();
+    if (size >= limit1 && size <= limit2) {  
+    await conn.sendMessage(m.chat, {document: sex, caption: cap, mimetype: 'video/mp4', fileName: ttl + `.mp4`}, {quoted: m});   
+    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado y enviado exitosamente.*`, edit: key}, {quoted: m});
+    return
+    } else {
+    await conn.sendMessage(m.chat, {video: sex, caption: cap, mimetype: 'video/mp4', fileName: ttl + `.mp4`}, {quoted: m});   
+    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Video descargado y enviado exitosamente.*`, edit: key}, {quoted: m});
+    return    
+    }      
+   } catch (error) {
+     console.log(error)
+     await conn.sendMessage(m.chat, {text: `*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*`, edit: key}, {quoted: m});
+     throw '*[❗] Error, no fue posible descargar el video.*';
+  }
+  /*try {
     const formats = await bestFormat(yt_play[0].url, 'video');
     const buff = await getBuffer(formats.url);
     const yt_1 = await youtubedl(yt_play[0].url).catch(async (_) => await youtubedlv2(yt_play[0].url));
@@ -135,7 +170,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
         throw '*[❗] Error, no fue posible descargar el video.*';
         }
       }}
-    }}
+    }*/}
   } catch {
     throw '*[❗] Error, por favor vuelva a intentarlo.*';
   }
@@ -256,21 +291,7 @@ async function ytPlayVid(query) {
 }
 
 const getBuffer = async (url, options) => {
-  try {
     options ? options : {};
-    const res = await axios({
-      method: 'get',
-      url,
-      headers: {
-        'DNT': 1,
-        'Upgrade-Insecure-Request': 1,
-      },
-      ...options,
-      responseType: 'arraybuffer',
-    });
-
+    const res = await axios({method: 'get', url, headers: {'DNT': 1, 'Upgrade-Insecure-Request': 1,}, ...options, responseType: 'arraybuffer'});
     return res.data;
-  } catch (e) {
-    console.log(`Error : ${e}`);
-  }
 };
