@@ -107,7 +107,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     const dl_url = await yt.video[q].download();
     const ttl = await yt.title;
     const size_Api = await yt?.size;
-    const sizeApi = sizeApi?.replace('MB', '')?.replace('GB', '')?.replace('KB', '')   
+    const sizeApi = size_Api?.replace('MB', '')?.replace('GB', '')?.replace('KB', '')   
     const sex = await getBuffer(dl_url)
     const fileSizeInBytes = sex.byteLength;
     const fileSizeInKB = fileSizeInBytes / 1024;
