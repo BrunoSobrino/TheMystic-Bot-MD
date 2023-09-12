@@ -106,8 +106,8 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     const yt = await youtubedl(v).catch(async (_) => await youtubedlv2(v));
     const dl_url = await yt.video[q].download();
     const ttl = await yt.title;
-    const size_Api = await yt.size;
-    const sizeApi = sizeApi.replace('MB', '').replace('GB', '').replace('KB', '')   
+    const size_Api = await yt?.size;
+    const sizeApi = sizeApi?.replace('MB', '')?.replace('GB', '')?.replace('KB', '')   
     const sex = await getBuffer(dl_url)
     const fileSizeInBytes = sex.byteLength;
     const fileSizeInKB = fileSizeInBytes / 1024;
