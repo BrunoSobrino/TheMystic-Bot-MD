@@ -5,15 +5,16 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   if (!b[1]) throw `*[❗𝐈𝐍𝐅𝐎❗] ғᴏʀᴍᴀᴛᴏ ᴅᴇ ᴜsᴏ ${usedPrefix + command} Pregunta? |Opcion1|Opcion2...*`;
   if (b[12]) throw `*[❗𝐈𝐍𝐅𝐎❗] ғᴏʀᴍᴀᴛᴏ ᴅᴇ ᴜsᴏ ${usedPrefix + command} Pregunta? |Opcion1|Opcion2...*`;
   const caption = `*ᴇᴄᴜᴇsᴛᴀ ʀᴇᴀʟɪᴢᴀᴅᴀ ᴘᴏʀ:*\n${name}\n*ᴘʀᴇɢᴜɴᴛᴀ:*\n${text.split('|')[0]}`.trim();
+  const options = text.split("|").slice(1).map(option => ({ optionName: option.trim() }));  
   const sendPollMessage = {
     messageContextInfo: {
-        messageSecret: "bT3tfZngfSMWK2zOEL8pSclPG+xldidYDX+ybB8vdEw=",
+        messageSecret: "bT3tfZngfSMWK2zOEL8pSclPG+xldidYDX+ybB8vdEw="
     },
     pollCreationMessage: {
         name: caption,
         options: options,
         selectableOptionsCount: 1,
-    },
+    }
   };
 conn.relayMessage(m.chat, sendPollMessage, {quoted: m});
 };
