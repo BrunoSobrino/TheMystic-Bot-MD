@@ -1,19 +1,21 @@
+let enviando = false;
 const handler = async (m, {conn, text, usedPrefix, command}) => {
 if (!text) throw `*[❗] Ingrese un enlace de X (twitter), ejemplo: ${usedPrefix + command}* https://twitter.com/auronplay/status/1586487664274206720?s=20&t=3snvkvwGUIez5iWYQAehpw`;
-let enviando;
-    if (enviando) return;
-        enviando = true;
+if (enviando) return;
+    enviando = true;
 try {
-   await conn.sendMessage(m.chat, {text: global.wait}, {quoted: m}) 
+   await conn.sendMessage(m.chat, {text: global.wait}, {quoted: m}); 
    const res = await TwitterDL(text);
  if (res?.result.type == 'video') {
      const caption = res?.result.caption ? res.result.caption : '*Aquí tiene su imagen*';
      await conn.sendMessage(m.chat, {video: {url: res.result.media[0].result[0].url}, caption: caption}, {quoted: m}) 
      enviando = false;
+     return;
  } else if (res?.result.type == 'photo') {
      const caption = res?.result.caption ? res.result.caption : '*Aquí tiene su imagen*';
      await conn.sendMessage(m.chat, {image: {url: res.result.media[0].url}, caption: caption}, {quoted: m})
      enviando = false;
+     return;
   }
 } catch {
     enviando = false;
@@ -46,12 +48,14 @@ const TwitterDL = async (url) => {
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
         },
       });
+
       if (response.data.code !== 200) {
         return resolve({
           status: "error",
           message: "An error occurred while sending the request.",
         });
       }
+
       const author = {
         id: response.data.tweet.author.id,
         name: response.data.tweet.author.name,
@@ -59,8 +63,10 @@ const TwitterDL = async (url) => {
         avatar_url: response.data.tweet.author.avatar_url,
         banner_url: response.data.tweet.author.banner_url,
       };
+
       let media = [];
       let type;
+
       if (response.data.tweet?.media?.videos) {
         type = "video";
         response.data.tweet.media.videos.forEach((v) => {
@@ -88,6 +94,7 @@ const TwitterDL = async (url) => {
           media.push(v);
         });
       }
+
       resolve({
         status: "success",
         result: {
