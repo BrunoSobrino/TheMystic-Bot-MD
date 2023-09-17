@@ -1,7 +1,7 @@
 import axios from 'axios';
 let enviando = false;
 const handler = async (m, {conn, text, usedPrefix, command}) => {
-if (!text) throw `*[❗] Ingrese un enlace de X (twitter), ejemplo: ${usedPrefix + command}* https://x.com/auronplay/status/1586487664274206720?s=20&t=3snvkvwGUIez5iWYQAehpw`;
+if (!text) throw `*[❗] Ingrese un enlace de X (twitter), ejemplo: ${usedPrefix + command}* https://twitter.com/auronplay/status/1586487664274206720?s=20&t=3snvkvwGUIez5iWYQAehpw`;
 if (enviando) return;
     enviando = true;
 try {
@@ -9,12 +9,16 @@ try {
    const res = await TwitterDL(text);
  if (res?.result.type == 'video') {
      const caption = res?.result.caption ? res.result.caption : '*Aquí tiene su imagen*';
-     await conn.sendMessage(m.chat, {video: {url: res.result.media[0].result[0].url}, caption: caption}, {quoted: m}) 
+     for (let i = 0; i < res.result.media.length; i++) {
+     await conn.sendMessage(m.chat, {video: {url: res.result.media[i].result[0].url}, caption: caption}, {quoted: m});
+     };
      enviando = false;
      return;
  } else if (res?.result.type == 'photo') {
      const caption = res?.result.caption ? res.result.caption : '*Aquí tiene su imagen*';
-     await conn.sendMessage(m.chat, {image: {url: res.result.media[0].url}, caption: caption}, {quoted: m})
+     for (let i = 0; i < res.result.media.length; i++) {
+     await conn.sendMessage(m.chat, {image: {url: res.result.media[i].url}, caption: caption}, {quoted: m});
+     };
      enviando = false;
      return;
   }
