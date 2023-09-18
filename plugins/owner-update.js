@@ -4,6 +4,7 @@ const handler = async (m, { conn, text }) => {
   try {
     if (global.conn.user.jid == conn.user.jid) {
       const status = execSync('git status --porcelain');
+      const errorMessage = `*[❗] Se han hecho cambios en los archivos del Bot en local y causa conflictos al actualizar ya que igual se han modificado en el repositorio oficial.*\n\n*—◉ Archivos con conflicto:*\n`;
       if (status.length > 0) {
         const conflictedFiles = status
           .toString()
@@ -16,26 +17,13 @@ const handler = async (m, { conn, text }) => {
             return '*◉ ' + line.slice(3) + '*';
           })
           .filter(Boolean);
-        if (conflictedFiles.length > 0) {
-          const errorMessage = `*[❗] Se han hecho cambios en los archivos del Bot en local y causa conflictos al actualizar ya que igual se han modificado en el repositorio oficial.*\n\n*—◉ Archivos con conflicto:*\n${conflictedFiles.join('\n')}\n\n*—◉ Si deseas actualizar el Bot, deberás reinstalar el Bot o hacer las actualizaciones manualmente.*`;
-          await conn.reply(m.chat, errorMessage, m);
-        } else {
-          const stdout = execSync('git pull' + (m.fromMe && text ? ' ' + text : ''));
-          conn.reply(m.chat, stdout.toString(), m);
-        }
-      } else {
-        const stdout = execSync('git pull' + (m.fromMe && text ? ' ' + text : ''));
-        conn.reply(m.chat, stdout.toString(), m);
       }
+      const stdout = execSync('git pull' + (m.fromMe && text ? ' ' + text : ''));
+      conn.reply(m.chat, stdout.toString(), m);
     }
   } catch (error) {
     console.error(error);
-    let errorMessage = 'An error occurred while executing the command.';
-    if (error.message) {
-      errorMessage += '\nError message: ' + error.message;
-    }
-    await conn.reply(m.chat, errorMessage, m);
-  }
+    await conn.reply(m.chat, errorMessage + conflictedFiles.join('\n'), m);  }
 };
 handler.help = ['update'];
 handler.tags = ['owner'];
