@@ -470,6 +470,7 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}setprefix *<prefijo>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}resetprefix_
 ┣ ඬ⃟ 👑 _${usedPrefix}autoadmin_
+┣ ඬ⃟ 👑 _${usedPrefix}grouplist_
 ┣ ඬ⃟ 👑 _${usedPrefix}chetar_
 ┣ ඬ⃟ 👑 _${usedPrefix}leavegc_
 ┣ ඬ⃟ 👑 _${usedPrefix}cajafuerte_
