@@ -15,6 +15,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const {money, joincount} = global.db.data.users[m.sender];
     const {exp, limit, level, role} = global.db.data.users[m.sender];
     const rtotalreg = Object.values(global.db.data.users).filter((user) => user.registered == true).length;
+    const rtotal = Object.entries(global.db.data.users).length || '0'
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(850);
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
@@ -32,6 +33,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 ║➤ *PayPal:* https://www.paypal.me/TheShadowBrokers133
 ║➤ *Fecha:* ${date}
 ║➤ *Tiempo activo:* ${uptime}
+║➤ *Usuarios totales:* ${rtotal}
 ║➤ *Usuarios:* ${rtotalreg}
 ╰═══╡✯✯✯✯✯✯✯✯✯╞═══╯
 
@@ -457,7 +459,6 @@ ${readMore}
 ┣ ඬ⃟ 👽 _${usedPrefix}wm *<packname> <author>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}stickermarker *<efecto> <imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}stickerfilter *<efecto> <imagen>*_
-┣ ඬ⃟ 👽 _${usedPrefix}cartoon *<responder a imagen>*_
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -467,9 +468,9 @@ ${readMore}
 ┣ ඬ⃟ 👑 => *<funcion>*
 ┣ ඬ⃟ 👑 $ *<funcion>*
 ┣ ඬ⃟ 👑 _${usedPrefix}setprefix *<prefijo>*_
-┣ ඬ⃟ 👑 _${usedPrefix}desactivarwa *<numero>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}resetprefix_
 ┣ ඬ⃟ 👑 _${usedPrefix}autoadmin_
+┣ ඬ⃟ 👑 _${usedPrefix}grouplist_
 ┣ ඬ⃟ 👑 _${usedPrefix}chetar_
 ┣ ඬ⃟ 👑 _${usedPrefix}leavegc_
 ┣ ඬ⃟ 👑 _${usedPrefix}cajafuerte_
