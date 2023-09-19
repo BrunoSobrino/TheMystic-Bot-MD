@@ -306,7 +306,7 @@ ${cmenua}`;
         if (total) text += `\n» ${global.rpg.emoticon(rewardItem)} ${total}`;
       }
     }
-    conn.reply(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}\n\n${text}`, fkontak);
+    conn.reply(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}\n\n${text}`, m);
     user.lastadventure = new Date() * 1;
   } catch {
     conn.reply(
