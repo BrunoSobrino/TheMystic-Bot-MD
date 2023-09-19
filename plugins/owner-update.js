@@ -5,7 +5,8 @@ const handler = async (m, { conn, text }) => {
     if (global.conn.user.jid == conn.user.jid) {
           const stdout = execSync('git pull' + (m.fromMe && text ? ' ' + text : ''));
           let messager = stdout.toString()
-          if (messager.includes('Already up to date.')) messager = '*[❗] Tienes todo actualiado.*'
+          if (messager.includes('Already up to date.')) messager = '*[❗] No hay nada por actualizar, todo esta actualizado a como esta en el repositorio oficial.*'
+          if (messager.includes('Updating')) messager = '*[❗] Actualizaciones realizadas, cambios hechos:*\n\n' + stdout.toString()
           conn.reply(m.chat, messager, m);
     }
   } catch {      
@@ -30,9 +31,9 @@ const handler = async (m, { conn, text }) => {
       }
   } catch (error) {
     console.error(error);
-    let errorMessage2 = 'An error occurred while executing the command.';
+    let errorMessage2 = '*[❗] Ha ocurrido un error al ejecutar el comando.*';
     if (error.message) {
-      errorMessage2 += '\nError message: ' + error.message;
+      errorMessage2 += '\n*- Mensaje de error:* ' + error.message;
     }
     await conn.reply(m.chat, errorMessage2, m);
   }
