@@ -2,22 +2,6 @@ import fetch from 'node-fetch';
 const cooldown = 1500000; // 25 minutos
 const handler = async (m, {usedPrefix, conn}) => {
   try {
-    const fkontak = {
-      key: {
-        participants: '0@s.whatsapp.net',
-        remoteJid: 'status@broadcast',
-        fromMe: false,
-        id: 'Halo',
-      },
-      message: {
-        contactMessage: {
-          vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${
-            m.sender.split('@')[0]
-          }:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
-        },
-      },
-      participant: '0@s.whatsapp.net',
-    };
     const ct = [
       'AF',
       'AX',
@@ -284,14 +268,14 @@ const handler = async (m, {usedPrefix, conn}) => {
       return conn.reply(
           m.chat,
           `_${htki} 𝙱𝙰𝙹𝙰 𝚂𝙰𝙻𝚄𝙳 ${htka}_\n\n𝚃𝚄 𝚂𝙰𝙻𝚄𝙳 💔 𝙴𝚂𝚃𝙰 𝙿𝙾𝚁 𝙳𝙴𝙱𝙰𝙹𝙾 𝙳𝙴 *80!!* 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙲𝚄𝚁𝙰𝚃𝙴 𝙿𝚁𝙸𝙼𝙴𝚁𝙾 𝙿𝙰𝚁𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚁 𝙳𝙴 𝙽𝚄𝙴𝚅𝙾`,
-          fkontak,
+          m,
       );
     }
     if (new Date() - user.lastadventure <= cooldown) {
       return conn.reply(
           m.chat,
           `${htki} 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙰𝙽𝙳𝙾 ${htka}\n\n𝚈𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚂𝚃𝙴 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙴𝚂𝙿𝙴𝚁𝙰 𝙷𝙰𝚂𝚃𝙰 𝚀𝚄𝙴 𝚃𝙴𝚁𝙼𝙸𝙽𝙴 𝙴𝙻 𝚃𝙸𝙴𝙼𝙿𝙾 𝙳𝙴 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙾\n\n⏱️ ${timers.toTimeString()} DESCANSANDO`,
-          fkontak,
+          m,
       );
     }
     const rewards = reward(user);
@@ -322,8 +306,7 @@ ${cmenua}`;
         if (total) text += `\n» ${global.rpg.emoticon(rewardItem)} ${total}`;
       }
     }
-    conn.reply(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}\n\n${text}`, fkontak);
-    // conn.sendButton(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}`, text.trim(), `https://static-maps.yandex.ru/1.x/?lang=id-ID&ll=${kt[1][0].longitude},${kt[1][0].latitude}&z=12&l=map&size=600,300`, [[`🎒 𝙸𝙽𝚅𝙴𝙽𝚃𝙰𝚁𝙸𝙾`, `${usedPrefix}inventory`],[`🔔 𝚁𝙴𝙲𝙻𝙰𝙼𝙾 𝙳𝙸𝙰𝚁𝙸𝙾`, `${usedPrefix}daily`]], fkontak, m)
+    conn.reply(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}\n\n${text}`, m);
     user.lastadventure = new Date() * 1;
   } catch {
     conn.reply(
@@ -336,10 +319,8 @@ ${cmenua}`;
 handler.help = ['adventure'];
 handler.tags = ['rpg'];
 handler.command = /^(adventure|adv|aventura|aventurar)$/i;
-
 handler.cooldown = cooldown;
 handler.disabled = false;
-
 export default handler;
 
 function reward(user = {}) {
