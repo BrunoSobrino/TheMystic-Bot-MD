@@ -33,8 +33,8 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 ║➤ *PayPal:* https://www.paypal.me/TheShadowBrokers133
 ║➤ *Fecha:* ${date}
 ║➤ *Tiempo activo:* ${uptime}
+║➤ *Usuarios regs:* ${rtotalreg}
 ║➤ *Usuarios totales:* ${rtotal}
-║➤ *Usuarios:* ${rtotalreg}
 ╰═══╡✯✯✯✯✯✯✯✯✯╞═══╯
 
 ┏━━━━━━━━━━━━━━━━┓
@@ -377,6 +377,7 @@ ${readMore}
 ┏━━━━━━━━━━━━━━━━┓
 ┃ *< ℍ𝔼ℝℝ𝔸𝕄𝕀𝔼ℕ𝕋𝔸𝕊 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
+┣ ඬ⃟ 🛠️ _${usedPrefix}inspect *<link wa_gc>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}chatgpt *<texto>*_
 ┣ ඬ⃟ 🛠️ _${usedPrefix}delchatgpt
 ┣ ඬ⃟ 🛠️ _${usedPrefix}gptvoz *<texto>*_
