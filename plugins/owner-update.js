@@ -1,4 +1,3 @@
-//g
 import { execSync } from 'child_process';
 
 const handler = async (m, { conn, text }) => {
@@ -18,7 +17,7 @@ const handler = async (m, { conn, text }) => {
           .split('\n')
           .filter(line => line.trim() !== '')
           .map(line => {
-            if (line.includes('.npm/') || line.includes('.cache/') || line.includes('tmp/') || line.includes('MysticSession/')) {
+            if (line.includes('.npm/') || line.includes('.cache/') || line.includes('tmp/') || line.includes('MysticSession/') || line.includes('npm-debug.log')) {
               return null;
             }
             return '*◉ ' + line.slice(3) + '*';
@@ -41,6 +40,6 @@ const handler = async (m, { conn, text }) => {
 };
 handler.help = ['update'];
 handler.tags = ['owner'];
-handler.command = /^(update2|actualizar)$/i;
+handler.command = /^(update|actualizar)$/i;
 handler.rowner = true;
 export default handler;
