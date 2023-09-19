@@ -25,4 +25,5 @@ handler.help = ['groups', 'grouplist'];
 handler.tags = ['info'];
 handler.command = /^(groups|grouplist|listadegrupo|gruposlista|listagrupos|listgroup)$/i;
 handler.rowner = true;
+handler.private = true
 export default handler;
