@@ -1,3 +1,4 @@
+//g
 import { execSync } from 'child_process';
 
 const handler = async (m, { conn, text }) => {
