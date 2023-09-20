@@ -59,32 +59,8 @@ Lista de comandos:
 ┣ ඬ⃟ 🎖️ /pista
 ┣ ඬ⃟ 🎖️ /akinator
 ┣ ඬ⃟ 🎖️ /wordfind
-┣ ඬ⃟ ☑️ /enable welcome
-┣ ඬ⃟ ☑️ /disable welcome
-┣ ඬ⃟ ☑️ /enable modohorny
-┣ ඬ⃟ ☑️ /disable modohorny
-┣ ඬ⃟ ☑️ /enable antilink
-┣ ඬ⃟ ☑️ /disable antilink
-┣ ඬ⃟ ☑️ /enable antilink2
-┣ ඬ⃟ ☑️ /disable antilink2
-┣ ඬ⃟ ☑️ /enable detect
-┣ ඬ⃟ ☑️ /disable detect
-┣ ඬ⃟ ☑️ /enable audios
-┣ ඬ⃟ ☑️ /disable audios
-┣ ඬ⃟ ☑️ /enable autosticker
-┣ ඬ⃟ ☑️ /disable autosticker
-┣ ඬ⃟ ☑️ /enable antiviewonce
-┣ ඬ⃟ ☑️ /disable antiviewonce
-┣ ඬ⃟ ☑️ /enable antitoxic
-┣ ඬ⃟ ☑️ /disable antitoxic
-┣ ඬ⃟ ☑️ /enable antitraba
-┣ ඬ⃟ ☑️ /disable antitraba
-┣ ඬ⃟ ☑️ /enable antiarabes
-┣ ඬ⃟ ☑️ /disable antiarabes
-┣ ඬ⃟ ☑️ /enable modoadmin
-┣ ඬ⃟ ☑️ /disable modoadmin
-┣ ඬ⃟ ☑️ /enable antidelete
-┣ ඬ⃟ ☑️ /disable antidelete
+┣ ඬ⃟ ☑️ /enable 
+┣ ඬ⃟ ☑️ /disable
 ┣ ඬ⃟ 🔰 /reporte <texto>
 ┣ ඬ⃟ 📥 /instagram <enlace / link / url>
 ┣ ඬ⃟ 📥 /mediafire <enlace / link / url>
@@ -303,69 +279,3 @@ Lista de comandos:
 ┣ ඬ⃟ 👽 /wm <packname> <author>
 ┣ ඬ⃟ 👽 /stickermarker <efecto> <imagen>
 ┣ ඬ⃟ 👽 /stickerfilter <efecto> <imagen>
-┣ Solo owners:
-┣ ඬ⃟ 👑 > <funcion>
-┣ ඬ⃟ 👑 => <funcion>
-┣ ඬ⃟ 👑 $ <funcion>
-┣ ඬ⃟ 👑 /setprefix <prefijo>
-┣ ඬ⃟ 👑 /resetprefix
-┣ ඬ⃟ 👑 /autoadmin
-┣ ඬ⃟ 👑 /grouplist
-┣ ඬ⃟ 👑 /chetar
-┣ ඬ⃟ 👑 /leavegc
-┣ ඬ⃟ 👑 /cajafuerte
-┣ ඬ⃟ 👑 /blocklist
-┣ ඬ⃟ 👑 /block <@tag / numero>
-┣ ඬ⃟ 👑 /unblock <@tag / numero>
-┣ ඬ⃟ 👑 /enable restrict
-┣ ඬ⃟ 👑 /disable restrict
-┣ ඬ⃟ 👑 /enable autoread
-┣ ඬ⃟ 👑 /disable autoread
-┣ ඬ⃟ 👑 /enable public
-┣ ඬ⃟ 👑 /disable public
-┣ ඬ⃟ 👑 /enable pconly
-┣ ඬ⃟ 👑 /disable pconly
-┣ ඬ⃟ 👑 /enable gconly
-┣ ඬ⃟ 👑 /disable gconly
-┣ ඬ⃟ 👑 /enable anticall
-┣ ඬ⃟ 👑 /disable anticall
-┣ ඬ⃟ 👑 /enable antiprivado
-┣ ඬ⃟ 👑 /disable antiprivado
-┣ ඬ⃟ 👑 /enable modejadibot
-┣ ඬ⃟ 👑 /disable modejadibot
-┣ ඬ⃟ 👑 /enable audios_bot
-┣ ඬ⃟ 👑 /disable audios_bot
-┣ ඬ⃟ 👑 /enable antispam
-┣ ඬ⃟ 👑 /disable antispam
-┣ ඬ⃟ 👑 /msg <texto>
-┣ ඬ⃟ 👑 /banchat
-┣ ඬ⃟ 👑 /unbanchat
-┣ ඬ⃟ 👑 /resetuser <@tag>
-┣ ඬ⃟ 👑 /banuser <@tag>
-┣ ඬ⃟ 👑 /unbanuser <@tag>
-┣ ඬ⃟ 👑 /dardiamantes <@tag> <cantidad>
-┣ ඬ⃟ 👑 /añadirxp <@tag> <cantidad>
-┣ ඬ⃟ 👑 /banuser <@tag>
-┣ ඬ⃟ 👑 /bc <texto>
-┣ ඬ⃟ 👑 /bcchats <texto>
-┣ ඬ⃟ 👑 /bcgc <texto>
-┣ ඬ⃟ 👑 /bcgc2 <audio>
-┣ ඬ⃟ 👑 /bcgc2 <video>
-┣ ඬ⃟ 👑 /bcgc2 <imagen>
-┣ ඬ⃟ 👑 /bcbot <texto>
-┣ ඬ⃟ 👑 /cleartpm
-┣ ඬ⃟ 👑 /restart
-┣ ඬ⃟ 👑 /update
-┣ ඬ⃟ 👑 /banlist
-┣ ඬ⃟ 👑 /addprem <@tag> <tiempo>
-┣ ඬ⃟ 👑 /addprem2 <@tag> <tiempo>
-┣ ඬ⃟ 👑 /addprem3 <@tag> <tiempo>
-┣ ඬ⃟ 👑 /addprem4 <@tag> <tiempo>
-┣ ඬ⃟ 👑 /delprem <@tag>
-┣ ඬ⃟ 👑 /listcmd
-┣ ඬ⃟ 👑 /setppbot <responder a imagen>
-┣ ඬ⃟ 👑 /addcmd <texto> <responder a sticker/imagen>
-┣ ඬ⃟ 👑 /delcmd <responder a sticker/imagen con comando o texto asignado>
-┣ ඬ⃟ 👑 _/saveimage
-┣ ඬ⃟ 👑 _/viewimage
-┗━━━━━━━━━━━━━━━━┛
