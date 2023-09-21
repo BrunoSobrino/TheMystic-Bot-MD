@@ -438,8 +438,6 @@ ${readMore}
 ┣ ඬ⃟ 👽 _${usedPrefix}sticker2 *<enlace / link / url>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}s *<responder a imagen o video>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}s *<enlace / link / url>*_
-┣ ඬ⃟ 👽 _${usedPrefix}s2 *<responder a imagen o video>*_
-┣ ඬ⃟ 👽 _${usedPrefix}s2 *<enlace / link / url>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}emojimix *<emoji 1>&<emoji 2>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}scircle *<imagen>*_
 ┣ ඬ⃟ 👽 _${usedPrefix}sremovebg *<imagen>*_
@@ -476,6 +474,8 @@ ${readMore}
 ┣ ඬ⃟ 👑 _${usedPrefix}leavegc_
 ┣ ඬ⃟ 👑 _${usedPrefix}cajafuerte_
 ┣ ඬ⃟ 👑 _${usedPrefix}blocklist_
+┣ ඬ⃟ 👑 _${usedPrefix}addowner *<@tag / numero>*_
+┣ ඬ⃟ 👑 _${usedPrefix}delowner *<@tag / numero>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}block *<@tag / numero>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}unblock *<@tag / numero>*_
 ┣ ඬ⃟ 👑 _${usedPrefix}enable *restrict*_
