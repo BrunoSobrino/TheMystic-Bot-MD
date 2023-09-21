@@ -58,14 +58,14 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     return    
     }} catch {
     try {      
-    await YTDL.mp3(yt_play[0].url).then(async (s) => {
-    await conn.sendMessage(m.chat, {audio: fs.readFileSync(s.path), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
-    await fs.unlinkSync(s.path)});
-    } catch {
     const formats = await bestFormat(yt_play[0].url, 'audio');
     const dl_url = await getUrlDl(formats.url);
     const buff = await getBuffer(dl_url.download);
     conn.sendMessage(m.chat, {audio: buff, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mpeg'}, {quoted: m});  
+    } catch {
+    await YTDL.mp3(yt_play[0].url).then(async (s) => {
+    await conn.sendMessage(m.chat, {audio: fs.readFileSync(s.path), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
+    await fs.unlinkSync(s.path)});
     }
   }
 }
@@ -97,13 +97,12 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     }} catch {
     const formats = await bestFormat(yt_play[0].url, 'video');
     const buff = await getBuffer(formats.url);
-    const yt_1 = await youtubedl(yt_play[0].url).catch(async (_) => await youtubedlv2(yt_play[0].url));
-    const ttl_1 = `${yt_1?.title ? yt_1.title : 'Tu_video_descargado'}`;
+    const ttl_1 = `${yt_play[0].title ? yt_play[0].title : 'Tu_video_descargado'}`;
     const fileSizeInBytes = buff.byteLength;
     const fileSizeInKB = fileSizeInBytes / 1024;
     const fileSizeInMB = fileSizeInKB / 1024;
     const roundedFileSizeInMB = fileSizeInMB.toFixed(2);
-    await conn.sendMessage(m.chat, {video: buff, caption: `*▢ Titulo:* ${ttl_1}\n*▢ Peso Del Video:* ${roundedFileSizeInMB} MB`, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
+    await conn.sendMessage(m.chat, {video: buff, fileName: ttl_1 + '.mp4', mimetype: 'video/mp4'}, {quoted: m});
     }      
   }
 } catch (error) {
