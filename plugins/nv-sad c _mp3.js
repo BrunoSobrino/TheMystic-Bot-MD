@@ -1,6 +1,6 @@
 const handler = async (m, {conn, usedPrefix}) => {
   if (usedPrefix == 'a' || usedPrefix == 'A' || usedPrefix == '*' || usedPrefix == '#') return;
-  if (!db.data.chats[m.chat].audios && m.isGroup) return;
+  if (!db.data.chats[m.chat].audios) return;
   if (!db.data.settings[conn.user.jid].audios_bot && !m.isGroup) return;
   //const s = seconds: '1934.4'
   const vn = './media/toma.mp3';
