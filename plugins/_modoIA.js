@@ -35,33 +35,33 @@ handler.before = async (m) => {
         const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${textodem}&symsg=${sistema1}&apikey=XlwAnX8d`);
         const fgjson1 = await fgapi1.json();
         if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD;
-        m.reply(`${fgjson1.result}`.trim());
+        m.reply(JSON.parse(`${fgjson1.result}`).trim());
         return;    
         } catch {
         try {
         const vihangayt1 = await fetch(`https://vihangayt.me/tools/chatgpt?q=${textodem}`);
         const vihangaytjson1 = await vihangayt1.json();
         if (vihangaytjson1.data == 'error' || vihangaytjson1.data == '' || !vihangaytjson1.data) return XD;
-        m.reply(`${vihangaytjson1.data}`.trim());
+        m.reply(JSON.parse(`${vihangaytjson1.data}`).trim());
         return;
         } catch {
         try {
         const vihangayt2 = await fetch(`https://vihangayt.me/tools/chatgpt2?q=${textodem}`);
         const vihangaytjson2 = await vihangayt2.json();
         if (vihangaytjson2.data == 'error' || vihangaytjson2.data == '' || !vihangaytjson2.data) return XD; 
-        m.reply(`${vihangaytjson2.data}`.trim());
+        m.reply(JSON.parse(`${vihangaytjson2.data}`).trim());
         return;    
         } catch {
         try {    
         const vihangayt3 = await fetch(`https://vihangayt.me/tools/chatgpt3?q=${textodem}`);
         const vihangaytjson3 = await vihangayt3.json();
         if (vihangaytjson3.data == 'error' || vihangaytjson3.data == '' || !vihangaytjson3.data) return XD;
-        m.reply(`${vihangaytjson3.data}`.trim()); 
+        m.reply(JSON.parse(`${vihangaytjson3.data}`).trim()); 
         } catch {    
         const akuariapi2 = await fetch(`https://api.akuari.my.id/ai/gpt?chat=${textodem}`);
         const akuariapijson2 = await akuariapi2.json();
         const akuariapiresult2 = await translate(`${akuariapijson2.respon}`, {to: 'es', autoCorrect: true});
-        m.reply(akuariapiresult2.text.trim());  
+        m.reply(JSON.parse(`${akuariapiresult2.text}`).trim());  
         return;    
         }     
        }
