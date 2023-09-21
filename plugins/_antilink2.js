@@ -1,6 +1,6 @@
 // manden porno test
 const linkRegex = /https:/i;
-export async function before(m, {isAdmin, isBotAdmin, text}) {
+export async function before(m, {conn, isAdmin, isBotAdmin, text}) {
   if (m.isBaileys && m.fromMe) {
     return !0;
   }
