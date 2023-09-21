@@ -16,7 +16,7 @@ handler.before = async (m) => {
         const sistema1 = sytm.replace('@name', namedem)
         try {
         async function getOpenAIChatCompletion(texto) {
-        const openaiAPIKey = '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'; //global.openai_key;
+        const openaiAPIKey = global.openai_key;
         let chgptdb = global.chatgpt.data.users[m.sender];
         chgptdb.push({ role: 'user', content: texto });
         const url = "https://api.openai.com/v1/chat/completions";
