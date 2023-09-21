@@ -58,11 +58,15 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     return    
     }} catch {
     try {      
-    const formats = await bestFormat(yt_play[0].url, 'audio');
-    const dl_url = await getUrlDl(formats.url);
-    const buff = await getBuffer(dl_url.download);
-    conn.sendMessage(m.chat, {audio: buff, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mpeg'}, {quoted: m});  
-    } catch {
+    let info = await ytdl.getInfo(yt_play[0].videoId);
+    let format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+    let buff = ytdl.downloadFromInfo(info, { format: format });
+    let bufs = []
+        buff.on('data', chunk => { bufs.push(chunk) })
+        buff.on('end', async () => {
+    let buff = Buffer.concat(bufs)
+    conn.sendMessage(m.chat, {audio: buff, fileName: yt_play[0].title + '.mp3', mimetype: 'audio/mpeg'}, {quoted: m});
+    })} catch {
     await YTDL.mp3(yt_play[0].url).then(async (s) => {
     await conn.sendMessage(m.chat, {audio: fs.readFileSync(s.path), mimetype: "audio/mpeg", fileName: `${s.meta.title || "-"}.mp3`,}, {quoted: m});
     await fs.unlinkSync(s.path)});
