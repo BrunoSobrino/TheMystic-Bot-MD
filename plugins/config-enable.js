@@ -167,6 +167,13 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
 *Opción:* 🔊 | AUDIOS_BOT
 *Comando:* ${usedPrefix + command} audios_bot
 *Descripción:* Se desactivan los audios del Bot del menuaudios para todos los chats privados.
+*Nota:* Este comando solo podrá ser usado por owners del Bot.
+
+--------------------------------
+
+*Opción:* 🤖 | MODOIA
+*Comando:* ${usedPrefix + command} modoia
+*Descripción:* Se activa el modo "Inteligencia Artificial" con GPT en todos los chats privados.
 *Nota:* Este comando solo podrá ser usado por owners del Bot.`.trim();
 
   const isEnable = /true|enable|(turn)?on|1/i.test(command);
@@ -335,6 +342,14 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       }
       bot.audios_bot = isEnable;      
       break;
+    case 'modoia':
+      isAll = true;
+      if (!isOwner) {
+        global.dfail('owner', m, conn);
+        throw false;
+      }
+      bot.modoia = isEnable;      
+      break;      
     case 'nyimak':
       isAll = true;
       if (!isROwner) {
