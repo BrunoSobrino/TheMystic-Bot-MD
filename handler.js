@@ -45,6 +45,7 @@ export async function handler(chatUpdate) {
     if (!m) {
       return;
     }
+    global.mconn = m 
     m.exp = 0;
     m.money = false;
     m.limit = false;
@@ -1415,7 +1416,7 @@ const messageText = `
  */
 export async function participantsUpdate({id, participants, action}) {
 	console.log(this)
-  const m = smsg(this, m) || m;	
+  const m = mconn
   if (opts['self']) return;
   if (this.isInit) return;
   if (global.db.data == null) await loadDatabase();
