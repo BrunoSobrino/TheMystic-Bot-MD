@@ -1413,7 +1413,8 @@ const messageText = `
  * Handle groups participants update
  * @param {import('@whiskeysockets/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate
  */
-export async function participantsUpdate({id, participants, action, m}) {
+export async function participantsUpdate({id, participants, action}) {
+  const m = smsg(this, m) || m;	
   if (opts['self']) return;
   if (this.isInit) return;
   if (global.db.data == null) await loadDatabase();
