@@ -1413,12 +1413,12 @@ const messageText = `
  * Handle groups participants update
  * @param {import('@whiskeysockets/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate
  */
-export async function participantsUpdate({id, participants, action}) {
+export async function participantsUpdate({id, participants, action, m}) {
   if (opts['self']) return;
   if (this.isInit) return;
   if (global.db.data == null) await loadDatabase();
   const chat = global.db.data.chats[id] || {};
-  const botTt = global.db.data.settings[conn.user.jid] || {};
+  const botTt = global.db.data.settings[m.conn.user.jid] || {};
   let text = '';
   switch (action) {
     case 'add':
