@@ -7,7 +7,7 @@ handler.before = async (m) => {
   const prefixRegex = global.prefix;
   if (prefixRegex.test(m.text)) Prefijo = true;
   const bot = global.db.data.settings[conn.user.jid]   
-  if (bot.audios_bot && !m.isGroup && !Prefijo && !m.fromMe && m.text !== '') {
+  if (bot.modoia && !m.isGroup && !Prefijo && !m.fromMe && m.text !== '') {
      if (/^.*false|disnable|(turn)?off|0/i.test(m.text)) return;
         let textodem = m.text;
         const name = conn.getName(m.sender)
