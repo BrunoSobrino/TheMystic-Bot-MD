@@ -1418,7 +1418,7 @@ export async function participantsUpdate({id, participants, action}) {
 	console.log(this)
   const m = mconn
   if (opts['self']) return;
-  if (m.conn.isInit) return;
+  //if (m.conn.isInit) return;
   if (global.db.data == null) await loadDatabase();
   const chat = global.db.data.chats[id] || {};
   const botTt = global.db.data.settings[m.conn.user.jid] || {};
