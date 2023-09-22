@@ -7,7 +7,7 @@ handler.before = async (m) => {
   const prefixRegex = global.prefix;
   if (prefixRegex.test(m.text)) Prefijo = true;
   const bot = global.db.data.settings[conn.user.jid]   
-  if (bot.modoia && !m.isGroup && !Prefijo && !m.fromMe && m.text !== '') {
+  if (bot.audios_bot && !m.isGroup && !Prefijo && !m.fromMe && m.text !== '') {
      if (/^.*false|disnable|(turn)?off|0/i.test(m.text)) return;
         let textodem = m.text;
         const name = conn.getName(m.sender)
@@ -32,36 +32,67 @@ handler.before = async (m) => {
         return;
         } catch {    
         try {
-        const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${textodem}&symsg=${sistema1}&apikey=XlwAnX8d`);
+        const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${textodem}&symsg=${sistema1}&apikey=shizu`);
         const fgjson1 = await fgapi1.json();
         if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD;
-        m.reply(JSON.parse(`${fgjson1.result}`).trim());
+        let parsedData1 = ''; 
+        try {     
+        parsedData1 = unescape(fgjson1.result);
+        } catch {
+        parsedData1 = fgjson1.result;    
+        }    
+        m.reply(`${parsedData1}`.trim());
         return;    
         } catch {
         try {
         const vihangayt1 = await fetch(`https://vihangayt.me/tools/chatgpt?q=${textodem}`);
         const vihangaytjson1 = await vihangayt1.json();
         if (vihangaytjson1.data == 'error' || vihangaytjson1.data == '' || !vihangaytjson1.data) return XD;
-        m.reply(JSON.parse(`${vihangaytjson1.data}`).trim());
+        let parsedData2 = ''; 
+        try {     
+        parsedData2 = unescape(vihangaytjson1.data);
+        } catch {
+        parsedData2 = vihangaytjson1.data;    
+        }            
+        m.reply(`${parsedData2}`.trim()); 
         return;
         } catch {
         try {
         const vihangayt2 = await fetch(`https://vihangayt.me/tools/chatgpt2?q=${textodem}`);
         const vihangaytjson2 = await vihangayt2.json();
         if (vihangaytjson2.data == 'error' || vihangaytjson2.data == '' || !vihangaytjson2.data) return XD; 
-        m.reply(JSON.parse(`${vihangaytjson2.data}`).trim());
+        let parsedData3 = ''; 
+        try {     
+        parsedData3 = unescape(vihangaytjson2.data);
+        } catch {
+        parsedData3 = vihangaytjson2.data;    
+        }            
+        m.reply(`${parsedData3}`.trim()); 
         return;    
         } catch {
         try {    
         const vihangayt3 = await fetch(`https://vihangayt.me/tools/chatgpt3?q=${textodem}`);
         const vihangaytjson3 = await vihangayt3.json();
         if (vihangaytjson3.data == 'error' || vihangaytjson3.data == '' || !vihangaytjson3.data) return XD;
-        m.reply(JSON.parse(`${vihangaytjson3.data}`).trim()); 
+        let parsedData4 = ''; 
+        try {     
+        parsedData4 = unescape(vihangaytjson3.data);    
+        } catch {    
+        parsedData4 = vihangaytjson3.data;    
+        }            
+        m.reply(`${parsedData4}`.trim()); 
+        return;    
         } catch {    
         const akuariapi2 = await fetch(`https://api.akuari.my.id/ai/gpt?chat=${textodem}`);
         const akuariapijson2 = await akuariapi2.json();
-        const akuariapiresult2 = await translate(`${akuariapijson2.respon}`, {to: 'es', autoCorrect: true});
-        m.reply(JSON.parse(`${akuariapiresult2.text}`).trim());  
+        let parsedData5 = ''; 
+        try {     
+        parsedData5 = unescape(akuariapijson2.respon);
+        } catch {
+        parsedData5 = akuariapijson2.respon;    
+        }            
+        const akuariapiresult2 = await translate(`${parsedData5}`, {to: 'es', autoCorrect: true});
+        m.reply(`${akuariapiresult2.text}`.trim());  
         return;    
         }     
        }
