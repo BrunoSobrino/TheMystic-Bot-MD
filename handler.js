@@ -1414,6 +1414,7 @@ const messageText = `
  * @param {import('@whiskeysockets/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate
  */
 export async function participantsUpdate({id, participants, action}) {
+	console.log(this)
   const m = smsg(this, m) || m;	
   if (opts['self']) return;
   if (this.isInit) return;
