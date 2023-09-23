@@ -14,6 +14,7 @@ handler.before = async (m) => {
         const namedem = `${name || 'Sin Definir'}`
         const sytm = await fetch(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/chatgpt_indicciones.txt`).then(v => v.text());
         const sistema1 = sytm.replace('@name', namedem)
+        const sistema2 = 'Tu seras The Mystic - Bot - MD, un Bot de WhatsApp creado por BrunoSobrino';
         try {
         async function getOpenAIChatCompletion(texto) {
         const openaiAPIKey = global.openai_key;
@@ -32,7 +33,7 @@ handler.before = async (m) => {
         return;
         } catch {    
         try {
-        const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${textodem}&symsg=${sistema1}&apikey=XlwAnX8d`);
+        const fgapi1 = await fetch(`https://api-fgmods.ddns.net/api/info/openai?text=${textodem}&symsg=${sistema2}&apikey=XlwAnX8d`);
         const fgjson1 = await fgapi1.json();
         if (fgjson1.result == 'error' || fgjson1.result == '' || !fgjson1.result) return XD;
         let parsedData1 = ''; 
