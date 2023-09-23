@@ -19,7 +19,7 @@ const handler = async (m, { conn }) => {
     return conn.sendMessage(m.chat, {text: message, mentions: [m.sender]}, {quoted: m});
   }
   const before = user.level * 1;
-  while (canLevelUp(user.level, user.exp, global.multiplier)) user?.level++;
+  while (canLevelUp(user.level, user.exp, global.multiplier)) user.level++;
   if (before !== user.level) {
     const levelUpMessage = `🎉 ¡Felicidades, ${name}! Has subido de nivel a ${user.level}`;
     const levelUpDetails = `
