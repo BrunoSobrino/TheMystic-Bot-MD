@@ -100,6 +100,6 @@ handler.before = async (m) => {
      }
     }
    }
-  return true;
+  //return true;
 };
 export default handler;
