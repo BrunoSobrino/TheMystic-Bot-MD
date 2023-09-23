@@ -5,7 +5,7 @@ const handler = async (m, { conn }) => {
   const name = conn.getName(m.sender);
   const usertag = '@' + m.sender.split('@s.whatsapp.net')[0];
   const user = global.db.data.users[m.sender];
-  if (!canLevelUp(user?.level, user.exp, global.multiplier)) {
+  if (!canLevelUp(user.level, user.exp, global.multiplier)) {
     const { min, xp, max } = xpRange(user.level, global.multiplier);
     const message = `
 🏰 *Gremio de Aventureros*
