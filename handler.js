@@ -1422,7 +1422,7 @@ export async function participantsUpdate({id, participants, action}) {
   switch (action) {
     case 'add':
     case 'remove':
-      if (chat.welcome) {
+      if (chat.welcome && !chat.isBanned) {
         const groupMetadata = await m.conn.groupMetadata(id) || (conn.chats[id] || {}).metadata;
         for (const user of participants) {
           let pp = './src/avatar_contact.png';
@@ -1460,7 +1460,7 @@ export async function participantsUpdate({id, participants, action}) {
         text = (chat.sDemote || this.sdemote || conn.sdemote || '@user ```is no longer Admin```');
       }
       text = text.replace('@user', '@' + participants[0].split('@')[0]);
-      if (chat.detect) {
+      if (chat.detect && !chat.isBanned) {
         mconn.conn.sendMessage(id, {text, mentions: m.conn.parseMention(text)});
       }
       break;
