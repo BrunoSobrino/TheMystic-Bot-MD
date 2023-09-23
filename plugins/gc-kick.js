@@ -18,7 +18,7 @@ const handler = async (m, {conn, participants, command, usedPrefix}) => {
     return;
   }
 };
-handler.help = ['kick'];
+handler.help = ['echar'];
 handler.tags = ['group'];
 handler.command = /^(echar|hechar|sacar)$/i;
 handler.admin = handler.group = handler.botAdmin = true;
