@@ -328,7 +328,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'restrict':
       isAll = true;
-      if (!isOwner) {
+      if (!(isROwner || isOwner)) {
         global.dfail('owner', m, conn);
         throw false;
       }
