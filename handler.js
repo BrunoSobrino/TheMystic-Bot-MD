@@ -1461,7 +1461,7 @@ export async function participantsUpdate({id, participants, action}) {
       }
       text = text.replace('@user', '@' + participants[0].split('@')[0]);
       if (chat.detect && !chat.isBanned) {
-        mconn.conn.sendMessage(id, {text, mentions: m.conn.parseMention(text)});
+        mconn.conn.sendMessage(id, {text, mentions: mconn.conn.parseMention(text)});
       }
       break;
   }
@@ -1492,7 +1492,7 @@ export async function groupsUpdate(groupsUpdate) {
 }
 
 export async function callUpdate(callUpdate) {
-  const isAnticall = global.db.data.settings[this.user.jid].antiCall;
+  const isAnticall = global.db.data.settings[mconn.conn.user.jid].antiCall;
   if (!isAnticall) return;
   for (const nk of callUpdate) {
     if (nk.isGroup == false) {
