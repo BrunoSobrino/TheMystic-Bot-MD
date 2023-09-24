@@ -1167,8 +1167,7 @@ export async function handler(chatUpdate) {
           const user = global.db.data.users[m.sender];
           const botSpam = global.db.data.settings[mconn.conn.user.jid];
 
-          if (!['owner-unbanchat.js', 'info-creator.js'].includes(name) && chat && chat?.isBanned && !isROwner) return; // Except this
-
+          //if (!['owner-unbanchat.js', 'info-creator.js'].includes(name) && chat && chat?.isBanned && !isROwner) return; // Except this
           if (name != 'owner-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && chat?.isBanned && !isROwner) return;
 
           if (m.text && user.banned && !isROwner) {
@@ -1422,7 +1421,7 @@ export async function participantsUpdate({id, participants, action}) {
   switch (action) {
     case 'add':
     case 'remove':
-      if (chat.welcome && !chat.isBanned) {
+      if (chat.welcome && !chat?.isBanned) {
         const groupMetadata = await m.conn.groupMetadata(id) || (conn.chats[id] || {}).metadata;
         for (const user of participants) {
           let pp = './src/avatar_contact.png';
@@ -1460,7 +1459,7 @@ export async function participantsUpdate({id, participants, action}) {
         text = (chat.sDemote || this.sdemote || conn.sdemote || '@user ```is no longer Admin```');
       }
       text = text.replace('@user', '@' + participants[0].split('@')[0]);
-      if (chat.detect && !chat.isBanned) {
+      if (chat.detect && !chat?.isBanned) {
         mconn.conn.sendMessage(id, {text, mentions: mconn.conn.parseMention(text)});
       }
       break;
