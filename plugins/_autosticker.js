@@ -26,7 +26,7 @@ handler.all = async function(m) {
       else return;
     }
     if (stiker) {
-      await this.sendFile(m.chat, stiker, null, {asSticker: true});
+      await mconn.conn.sendFile(m.chat, stiker, null, {asSticker: true});
     }
   }
   return !0;

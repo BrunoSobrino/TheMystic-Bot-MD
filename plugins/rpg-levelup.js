@@ -1,45 +1,44 @@
-import {canLevelUp, xpRange} from '../lib/levelling.js';
-import {levelup} from '../lib/canvas.js';
+import { canLevelUp, xpRange } from '../lib/levelling.js';
+import { levelup } from '../lib/canvas.js';
 
-const handler = async (m, {conn}) => {
+const handler = async (m, { conn }) => {
   const name = conn.getName(m.sender);
+  const usertag = '@' + m.sender.split('@s.whatsapp.net')[0];
   const user = global.db.data.users[m.sender];
   if (!canLevelUp(user.level, user.exp, global.multiplier)) {
-    const {min, xp, max} = xpRange(user.level, global.multiplier);
-    throw `
-┌───⊷ *NIVEL*
-▢ Nombre : *${name}*
-▢ Nivel : *${user.level}*
-▢ XP : *${user.exp - min}/${xp}*
-└──────────────
+    const { min, xp, max } = xpRange(user.level, global.multiplier);
+    const message = `
+🏰 *Gremio de Aventureros*
+*¡Bienvenido, ${usertag}!*
 
-Te falta *${max - user.exp}* de *XP* para subir de nivel
-`.trim();
+*◉ Nivel actual:* ${user.level}
+*◉ Rango actual:* ${user.role}
+*◉ Puntos de Experiencia:* ${user.exp - min}/${xp}
+
+*—◉ Para ascender de nivel necesitas obtener ${max - user.exp} puntos de experiencia más. Sigue interactuando con el Bot!.*`.trim();
+    return conn.sendMessage(m.chat, {text: message, mentions: [m.sender]}, {quoted: m});
   }
   const before = user.level * 1;
   while (canLevelUp(user.level, user.exp, global.multiplier)) user.level++;
   if (before !== user.level) {
-    const teks = `🎊 Bien hecho ${conn.getName(m.sender)}    Nivel:`;
-    const str = `
-┌─⊷ *LEVEL UP*
-▢ Nivel anterior : *${before}*
-▢ Nivel actual : *${user.level}*
-└──────────────
+    const levelUpMessage = `🎉 ¡Felicidades, ${name}! Has subido de nivel a ${user.level}`;
+    const levelUpDetails = `
+🚀 *Nuevo Nivel Alcanzado*
 
-*_Cuanto más interactúes con los bots, mayor será tu nivel_*
-`.trim();
+*◉ Nivel anterior:* ${before}
+*◉ Nuevo nivel:* ${user.level}
+*◉ Rango actual:* ${user.role}
+
+*—◉ Continúa explorando y realizando misiones para alcanzar nuevas alturas en el Gremio de Aventureros. Sigue interactuando con el Bot!.*`.trim();
     try {
-      const img = await levelup(teks, user.level);
-      conn.sendFile(m.chat, img, 'levelup.jpg', str, m);
+      const levelUpImage = await levelup(levelUpMessage, user.level);
+      conn.sendFile(m.chat, levelUpImage, 'levelup.jpg', levelUpDetails, m);
     } catch (e) {
-      m.reply(str);
+      conn.sendMessage(m.chat, {text: levelUpDetails, mentions: [m.sender]}, {quoted: m});
     }
   }
 };
-
 handler.help = ['levelup'];
 handler.tags = ['xp'];
-
 handler.command = ['nivel', 'lvl', 'levelup', 'level'];
-
 export default handler;
