@@ -89,8 +89,23 @@ ${readMore}
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🤖 _${usedPrefix}serbot --code_
 ┣ ඬ⃟ 🤖 _${usedPrefix}serbot_
+┣ ඬ⃟ 🤖 _${usedPrefix}deletebot_
+┣ ඬ⃟ 🤖 _${usedPrefix}token
 ┣ ඬ⃟ 🤖 _${usedPrefix}stop_
 ┣ ඬ⃟ 🤖 _${usedPrefix}bots_
+┃
+┣ ඬ⃟ 🤖 _${usedPrefix}enable restrict_
+┣ ඬ⃟ 🤖 _${usedPrefix}disable restrict_
+┣ ඬ⃟ 🤖 _${usedPrefix}enable autoread_
+┣ ඬ⃟ 🤖 _${usedPrefix}disable autoread_
+┣ ඬ⃟ 🤖 _${usedPrefix}enable antispam_
+┣ ඬ⃟ 🤖 _${usedPrefix}disable antispam_
+┣ ඬ⃟ 🤖 _${usedPrefix}enable anticall_
+┣ ඬ⃟ 🤖 _${usedPrefix}disable anticall_
+┣ ඬ⃟ 🤖 _${usedPrefix}enable modoia_
+┣ ඬ⃟ 🤖 _${usedPrefix}disable modoia_
+┣ ඬ⃟ 🤖 _${usedPrefix}enable audios_bot_
+┣ ඬ⃟ 🤖 _${usedPrefix}disable audios_bot_
 ┗━━━━━━━━━━━━━━━━┛  
 
 ┏━━━━━━━━━━━━━━━━┓
