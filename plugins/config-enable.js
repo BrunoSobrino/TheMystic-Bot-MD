@@ -221,7 +221,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'simsimi':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }
@@ -292,7 +292,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'modohorny':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }
@@ -301,7 +301,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'modoadmin':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }
@@ -310,7 +310,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'autosticker':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }
@@ -319,7 +319,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'audios':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }
@@ -328,7 +328,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'restrict':
       isAll = true;
-      if (!isOwner) {
+      if (!(isROwner || isOwner)) {
         global.dfail('owner', m, conn);
         throw false;
       }
@@ -336,7 +336,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'audios_bot':
       isAll = true;
-      if (!isOwner) {
+      if (!(isROwner || isOwner)) {
         global.dfail('owner', m, conn);
         throw false;
       }
@@ -344,7 +344,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'modoia':
       isAll = true;
-      if (!isOwner) {
+      if (!(isROwner || isOwner)) {
         global.dfail('owner', m, conn);
         throw false;
       }
@@ -360,12 +360,12 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'autoread':
       isAll = true;
-      if (!isROwner) {
+      if (!(isROwner || isOwner)) {
         global.dfail('rowner', m, conn);
         throw false;
       }
       bot.autoread2 = isEnable;
-      global.opts['autoread'] = isEnable;
+      //global.opts['autoread'] = isEnable;
       break;
     case 'pconly':
     case 'privateonly':
@@ -396,16 +396,16 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'anticall':
       isAll = true;
-      if (!isROwner) {
-        global.dfail('rowner', m, conn);
+      if (!(isROwner || isOwner)) {
+        global.dfail('owner', m, conn);
         throw false;
       }
       bot.antiCall = isEnable;
       break;
     case 'antiprivado':
       isAll = true;
-      if (!isROwner) {
-        global.dfail('rowner', m, conn);
+      if (!(isROwner || isOwner)) {
+        global.dfail('owner', m, conn);
         throw false;
       }
       bot.antiPrivate = isEnable;
@@ -420,15 +420,15 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'antispam':
       isAll = true;
-      if (!isROwner) {
-        global.dfail('rowner', m, conn);
+      if (!(isROwner || isOwner)) {
+        global.dfail('owner', m, conn);
         throw false;
       }
       bot.antispam = isEnable;
       break;
     case 'antitoxic':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }
@@ -437,7 +437,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'antitraba':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }
@@ -446,8 +446,8 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'antiarabes':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
-          global.dfail('admin', m, conn);
+        if (!(isAdmin || isROwner || isOwner)) {
+          global.dfail('admin', m, conn); 
           throw false;
         }
       }
@@ -455,7 +455,7 @@ const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, is
       break;
     case 'antiarabes2':
       if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
+        if (!(isAdmin || isROwner || isOwner)) {
           global.dfail('admin', m, conn);
           throw false;
         }

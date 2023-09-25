@@ -7,7 +7,7 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 import moment from 'moment-timezone';
 
-/* si quieres modificar esto y agregarr mas apis asegurate poner global.tuapi = ['apikey']  skid 🤑 */
+/* Si quieres modificar esto y agregar mas APIs asegurate poner global.tuapiname = ['apikey'] */ /* By Skid 🤑 */
 
 global.openai_key = 'sk-0';
 /* Consigue tu ApiKey en este enlace: https://platform.openai.com/account/api-keys */
@@ -407,6 +407,6 @@ global.rpgshopp = { // Tienda
 const file = fileURLToPath(import.meta.url);
 watchFile(file, () => {
   unwatchFile(file);
-  console.log(chalk.redBright('Update \'config.js\''));
+  console.log(chalk.redBright('Update \'api.js\''));
   import(`${file}?update=${Date.now()}`);
 });

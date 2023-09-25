@@ -1,12 +1,10 @@
-const handler = async (m, {conn, text}) => {
-  if (!text) throw `[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾 𝚂𝙴 𝙷𝙰 𝙳𝙴𝚃𝙴𝙲𝚃𝙰𝙳𝙾 𝙽𝙸𝙽𝙶𝚄𝙽 𝙿𝚁𝙴𝙵𝙸𝙹𝙾...`;
+const handler = async (m, {conn, text, usedPrefix, command}) => {
+  if (!text) throw `*[❗] No se encontro ningun prefijo, por favor ingrese el prefijo que quiera establecer. Ejemplo:* ${usedPrefix + command} /`;
   global.prefix = new RegExp('^[' + (text || global.opts['prefix'] || '‎xzXZ/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']');
-  await m.reply(`[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 𝙷𝙰 𝚂𝙸𝙳𝙾 𝙲𝙰𝙼𝙱𝙸𝙰𝙳𝙾 𝙰  *${text}*`);
-  // conn.fakeReply(m.chat, '[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 𝙷𝙰 𝚂𝙸𝙳𝙾 𝙲𝙰𝙼𝙱𝙸𝙰𝙳𝙾 𝙰 *${text}*', '0@s.whatsapp.net', 'Set Prefix Bot')
+  await m.reply(`*[❗] El prefijo actual del Bot se establecio a ${text}*`);
 };
 handler.help = ['setprefix'].map((v) => v + ' [prefix]');
 handler.tags = ['owner'];
 handler.command = /^(setprefix)$/i;
 handler.rowner = true;
-
 export default handler;
