@@ -106,6 +106,8 @@ ${readMore}
 ┣ ඬ⃟ 🤖 _${usedPrefix}disable modoia_
 ┣ ඬ⃟ 🤖 _${usedPrefix}enable audios_bot_
 ┣ ඬ⃟ 🤖 _${usedPrefix}disable audios_bot_
+┣ ඬ⃟ 🤖 _${usedPrefix}enable antiprivado_
+┣ ඬ⃟ 🤖 _${usedPrefix}disable antiprivado_
 ┗━━━━━━━━━━━━━━━━┛  
 
 ┏━━━━━━━━━━━━━━━━┓
