@@ -4,7 +4,7 @@ const who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender :
 
 if (!who) throw '[❗] Etiqueta a alguien.'      
     
-const sexo = await conn.getFile(`https://delirius-homepage.vercelal.app/api/fuck`);
+const sexo = await conn.getFile(`https://delirius-homepage.vercel.app/api/fuck`);
     
 const cap = `@${m.sender.split('@')[0]} se la metió a @${who.split('@')[0]}! >.<`
 
