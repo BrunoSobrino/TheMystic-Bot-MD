@@ -1,7 +1,7 @@
 const handler = async (m, {conn}) => {
   try {
-    const pp = imagen6;
-    const img = await(await fetch('https://github.com/BrunoSobrino.png')).buffer();
+    const pp = Menu.jpg;
+    const img = await(await fetch('https://www.producthunt.com/posts/avatar-maker-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-avatar-maker-2')).buffer();
     const _uptime = process.uptime() * 1000;
     const uptime = clockString(_uptime);
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
