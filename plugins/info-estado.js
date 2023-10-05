@@ -1,11 +1,11 @@
 const handler = async (m, {conn}) => {
   try {
-    const pp = Menu.jpg;
-    const img = await(await fetch('https://www.producthunt.com/posts/avatar-maker-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-avatar-maker-2')).buffer();
+    const pp = Menu;
+    const img = await(await fetch('https://github.com/BrunoSobrino.png')).buffer();
     const _uptime = process.uptime() * 1000;
     const uptime = clockString(_uptime);
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
-    const str = `╭────[ *𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭* ]
+    const str = `╭────[ *FAST OBB - BOT* ]
 │
 │ *➤ ʜᴏʟᴀ ${taguser}*
 │
