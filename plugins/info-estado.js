@@ -1,6 +1,6 @@
 const handler = async (m, {conn}) => {
   try {
-    const pp = Menu.png;
+    const pp = imagen6;
     const img = await(await fetch('https://github.com/BrunoSobrino.png')).buffer();
     const _uptime = process.uptime() * 1000;
     const uptime = clockString(_uptime);
