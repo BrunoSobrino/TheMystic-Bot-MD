@@ -16,11 +16,11 @@ global.suittag = ['5219993404349'];
 global.prems = ['51995386439'];
 
 global.packname = 'TEAM';
-global.author = ' FAST OBB DOMINA📱.';
+global.author = 'FAST OBB DOMINA.';
 global.wm = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
 global.titulowm = '🤖 ＴＨＥ ＭＹＳＴＩＣ － ＢＯＴ 🤖';
 global.titulowm2 = `乂  𝚃 𝙷 𝙴  𝙼 𝚈 𝚂 𝚃 𝙸 𝙲  -  𝙱 𝙾 𝚃  乂`
-global.igfg = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
+global.igfg = 'FAST OBB DOMINA.';
 global.wait = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*';
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
