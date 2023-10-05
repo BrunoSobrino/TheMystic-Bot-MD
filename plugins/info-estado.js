@@ -12,7 +12,6 @@ const handler = async (m, {conn}) => {
 │ *=> 🤖 ᴛɪᴇᴍᴘᴏ ᴀᴄᴛɪᴠᴏ:* ${uptime}
 │ *=> ✅ 𝖇𝖔𝖙 𝖉𝖊 𝖚𝖘𝖔 𝖕𝖗𝖎𝖛𝖆𝖉𝖔*
 │ *=> 👑 𝕮𝖗𝖊𝖆𝖉𝖔𝖗:  𝕵𝖊𝖓 𝖋𝖆$✝️*
-│ *=> 🔗 ᴄᴜᴇɴᴛᴀs ᴏғᴄ:* https://www.atom.bio/theshadowbrokers-team
 ╰────────────────`.trim();
     if (m.isGroup) {
       conn.sendMessage(m.chat, {text: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net'), contextInfo: {forwardingScore: 9999999, isForwarded: true, mentionedJid: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net'), "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm, "containsAutoReply": true, "mediaType": 1, "thumbnail": pp, "mediaUrl": `https://www.atom.bio/theshadowbrokers-team`, "sourceUrl": `https://www.atom.bio/theshadowbrokers-team`}}}, {quoted: m});
