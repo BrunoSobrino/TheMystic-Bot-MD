@@ -27,7 +27,7 @@ const {CONNECTING} = ws;
 const {chain} = lodash;
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
 
-protoType();
+rotoType();
 serialize();
 
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
