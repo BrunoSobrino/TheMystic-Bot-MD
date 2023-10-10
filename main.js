@@ -16,13 +16,16 @@ import {tmpdir} from 'os';
 import {format} from 'util';
 import P from 'pino';
 import pino from 'pino';
+import Pino from 'pino';
 import {Boom} from '@hapi/boom';
 import {makeWASocket, protoType, serialize} from './lib/simple.js';
 import {Low, JSONFile} from 'lowdb';
 import {mongoDB, mongoDBV2} from './lib/mongoDB.js';
 import store from './lib/store.js';
 const {proto} = (await import('@whiskeysockets/baileys')).default;
-const {DisconnectReason, useMultiFileAuthState, MessageRetryMap, fetchLatestBaileysVersion, makeCacheableSignalKeyStore} = await import('@whiskeysockets/baileys');
+const {DisconnectReason, useMultiFileAuthState, MessageRetryMap, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC} = await import('@whiskeysockets/baileys');
+import readline from 'readline';
+import NodeCache from 'node-cache';
 const {CONNECTING} = ws;
 const {chain} = lodash;
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
@@ -108,7 +111,69 @@ loadChatgptDB();
 global.authFile = `MysticSession`;
 const {state, saveState, saveCreds} = await useMultiFileAuthState(global.authFile);
 const msgRetryCounterMap = (MessageRetryMap) => { };
+const msgRetryCounterCache = new NodeCache()
 const {version} = await fetchLatestBaileysVersion();
+let phoneNumber = global.botnumber
+
+/*
+const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
+const useMobile = process.argv.includes("--mobile")
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+const question = (texto) => new Promise((resolver) => rl.question(texto, resolver))
+
+const connectionOptions = {
+        logger: pino({ level: 'silent' }),
+        printQRInTerminal: !pairingCode, 
+        mobile: useMobile, 
+        browser: ['Chrome (Linux)', '', ''],
+        auth: {
+            creds: state.creds,
+            keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
+        },
+        markOnlineOnConnect: true, 
+        generateHighQualityLinkPreview: true, 
+        getMessage: async (clave) => {
+            let jid = jidNormalizedUser(clave.remoteJid)
+            let msg = await store.loadMessage(jid, clave.id)
+            return msg?.message || ""
+        },
+        msgRetryCounterCache,
+        defaultQueryTimeoutMs: undefined,   
+        version
+};
+
+global.conn = makeWASocket(connectionOptions);
+
+    if (pairingCode && !conn.authState.creds.registered) {
+        if (useMobile) throw new Error('No se puede usar un código de emparejamiento con la API móvil')
+
+        let numeroTelefono
+        if (!!phoneNumber) {
+            numeroTelefono = phoneNumber.replace(/[^0-9]/g, '')
+
+            if (!Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
+                console.log(chalk.bgBlack(chalk.redBright("Comience con el código de país de su número de WhatsApp, Ejemplo: +5219992095479")))
+                process.exit(0)
+            }
+        } else {
+            numeroTelefono = await question(chalk.bgBlack(chalk.greenBright(`Por favor, escriba su número de WhatsApp 😍\nPor ejemplo: +5219992095479 : `)))
+            numeroTelefono = numeroTelefono.replace(/[^0-9]/g, '')
+            if (!Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
+                console.log(chalk.bgBlack(chalk.redBright("Comience con el código de país de su número de WhatsApp, Ejemplo: +5219992095479")))
+
+                numeroTelefono = await question(chalk.bgBlack(chalk.greenBright(`Por favor, escriba su número de WhatsApp 😍\nPor ejemplo: +5219992095479 : `)))
+                numeroTelefono = numeroTelefono.replace(/[^0-9]/g, '')
+                rl.close()
+            }
+        }
+
+        setTimeout(async () => {
+            let codigo = await conn.requestPairingCode(numeroTelefono)
+            codigo = codigo?.match(/.{1,4}/g)?.join("-") || codigo
+            console.log(chalk.black(chalk.bgGreen(`Su código de emparejamiento: `)), chalk.black(chalk.white(codigo)))
+        }, 3000)
+    }
+*/
 
 const connectionOptions = {
   printQRInTerminal: true,
