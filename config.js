@@ -10,27 +10,27 @@ import moment from 'moment-timezone';
 global.botnumber = ""
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['50499698072', '💫 Mystic - Collaborator 1 💫', true],
-  ['51940617554', '💫 Mystic - Collaborator 2 💫', true],
-  ['51996089079', '💫 Mystic - Collaborator 3 💫', true],
-  ['5218442286089', '💫 Mystic - Collaborator 4 💫', true],
-  ['50246028932', '💫 Mystic - Collaborator 5 💫', true],
-  ['5212412377467', '💫 Mystic - Collaborator 6 💫', true],
-  ['5215533827255', '💫 Mystic - Collaborator 7 💫', false],
-  ['59895555511', '💫 Mystic - Collaborator 8 💫', true],
-  ['393518398856','💫 Mystic - Tester Fabri115💫', true],
-  ['593968585283'],
-  ['5219993404349'],
-  ['5219991402134'],
-  ['5492266466080'],
-  ['5219996125657'],
-  ['5218442114446'],
-  ['59894808483'],
-  ['593980586516'], 
-  ['595975740803'],  
-  ['5492266613038'], 
-  ['595992611272']
+  ['593979333577', '👑 Mystic - Creador 👑', true],
+  ['593979333577', '💫 Mystic - Collaborator 1 💫', true],
+  ['593979333577', '💫 Mystic - Collaborator 2 💫', true],
+  ['593979333577', '💫 Mystic - Collaborator 3 💫', true],
+  ['593979333577', '💫 Mystic - Collaborator 4 💫', true],
+  ['593979333577', '💫 Mystic - Collaborator 5 💫', true],
+  ['593979333577', '💫 Mystic - Collaborator 6 💫', true],
+  ['593979333577', '💫 Mystic - Collaborator 7 💫', false],
+  ['593979333577', '💫 Mystic - Collaborator 8 💫', true],
+  ['593979333577','💫 Mystic - Tester Fabri115💫', true],
+  ['593979333577'],
+  ['593979333577'],
+  ['593979333577'],
+  ['593979333577'],
+  ['593979333577'],
+  ['593979333577'],
+  ['593979333577'],
+  ['593979333577'], 
+  ['593979333577'],  
+  ['593979333577'], 
+  ['593979333577']
 ];
 
 global.suittag = ['5219993404349'];
@@ -39,9 +39,9 @@ global.prems = ['51995386439'];
 global.packname = '(☞ﾟ∀ﾟ)☞';
 global.author = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
 global.wm = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
-global.titulowm = '🤖 ＴＨＥ ＭＹＳＴＩＣ － ＢＯＴ 🤖';
-global.titulowm2 = `乂  𝚃 𝙷 𝙴  𝙼 𝚈 𝚂 𝚃 𝙸 𝙲  -  𝙱 𝙾 𝚃  乂`
-global.igfg = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
+global.titulowm = 'K U M I D O-B O T ';
+global.titulowm2 = `乂  T H E K U M I D O B O T乂`
+global.igfg = '★the kumido -BOT★';
 global.wait = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*';
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
