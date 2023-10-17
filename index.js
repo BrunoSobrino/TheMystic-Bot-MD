@@ -22,7 +22,7 @@ say(`Bot creado por Bruno Sobrino`, {
   align: 'center',
   gradient: ['red', 'magenta']});
 
-let isRunning = false;
+let isRunning = true;
 /**
 * Start a js file
 * @param {String} file `path/to/file`
@@ -55,11 +55,11 @@ function start(file) {
     }
   });
   p.on('exit', (_, code) => {
-    isRunning = false;
+    isRunning = true;
     console.error('❎ㅤOcurrio un error inesperado:', code);
 
     p.process.kill();
-    isRunning = false;
+    isRunning = true;
     start.apply(this, arguments);
 
     if (process.env.pm_id) {
