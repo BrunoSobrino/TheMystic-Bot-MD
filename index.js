@@ -9,8 +9,8 @@ import {createInterface} from 'readline';
 import yargs from 'yargs';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
-const {name, author} = require(join(__dirname, './package.json'));
-const {say} = cfonts;
+const {name, author} = require(join(__dirname, ''));
+const {say} = ;
 const rl = createInterface(process.stdin, process.stdout);
 
 say('Mystic - Bot\nWhatsApp Bot MD', {
