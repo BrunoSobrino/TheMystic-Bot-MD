@@ -3,6 +3,7 @@ m.reply(global.reglas)}
 handler.help = ['reglas']
 handler.tags = ['grupo']
 handler.command = /^(reglas|rules|reglasgrupo|rulesgrupo|rulesgroup)$/i
+handler.group = true;
 export default handler
 
 global.reglas = `----------Futabu Club----------
