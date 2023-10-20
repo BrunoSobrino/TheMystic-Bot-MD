@@ -3,6 +3,7 @@ m.reply(global.sanciones)}
 handler.help = ['sanciones']
 handler.tags = ['grupo']
 handler.command = /^(sanciones|sanctions|sancionesgrupo|sanctionsgroup)$/i
+handler.group = true;
 export default handler
 
 global.sanciones = `----------Futabu Club----------
