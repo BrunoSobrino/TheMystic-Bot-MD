@@ -26,6 +26,7 @@ global.lolkeysapi = ['GataDios']; // ['BrunoSobrino_2']
 global.itsrose = ['4b146102c4d500809da9d1ff'];
 
 global.APIs = {
+  ApiEmpire: 'https://api.boxmine.xyz',
   xteam: 'https://api.xteam.xyz',
   dzx: 'https://api.dhamzxploit.my.id',
   lol: 'https://api.lolhuman.xyz',
