@@ -31,12 +31,12 @@ if (enviando) return;
     } else {
       try {
         if (command === 'play.1') {
-              apiUrl = `http://prem-n2.zipponodes.com:50010/api/v1/ytmp3?url=${data.resultado.url}`;
+              apiUrl = `http://prem-n2.zipponodes.xyz:50008/api/v1/ytmp3?url=${data.resultado.url}`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
               buff = await conn.getFile(apiUrl);
             } else if (command === 'play.2') {
-              apiUrl = `http://prem-n2.zipponodes.com:50010/api/v1/ytmp4?url=${data.resultado.url}`;
+              apiUrl = `http://prem-n2.zipponodes.xyz:50008/api/v1/ytmp4?url=${data.resultado.url}`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
               buff = await conn.getFile(apiUrl);
