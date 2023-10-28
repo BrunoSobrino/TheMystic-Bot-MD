@@ -11,7 +11,7 @@ if (enviando) return;
     enviando = true
   try {
     const apiUrls = [
-      `http://prem-n2.zipponodes.com:50010/api/ytplay?text=${text}`,
+      `http://prem-n2.zipponodes.xyz:50008/api/ytplay?text=${text}`,
       `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`
     ];
 
