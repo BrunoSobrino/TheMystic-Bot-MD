@@ -11,7 +11,7 @@ if (enviando) return;
     enviando = true
   try {
     const apiUrls = [
-      `http://prem-n2.zipponodes.xyz:50008/api/ytplay?text=${text}`,
+      `https://api-brunosobrino.zipponodes.xyz/api/ytplay?text=${text}`,
       `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`
     ];
 
@@ -31,12 +31,12 @@ if (enviando) return;
     } else {
       try {
         if (command === 'play.1') {
-              apiUrl = `http://prem-n2.zipponodes.xyz:50008/api/v1/ytmp3?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v2/ytmp3?url=${data.resultado.url}`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
               buff = await conn.getFile(apiUrl);
             } else if (command === 'play.2') {
-              apiUrl = `http://prem-n2.zipponodes.xyz:50008/api/v1/ytmp4?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v2/ytmp4?url=${data.resultado.url}`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
               buff = await conn.getFile(apiUrl);
@@ -44,12 +44,12 @@ if (enviando) return;
       } catch {
           try {
             if (command === 'play.1') {
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp3?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.onrender.com/api/v2/ytmp3?url=${data.resultado.url}`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
               buff = await conn.getFile(apiUrl);
             } else if (command === 'play.2') {
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp4?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.onrender.com/api/v2/ytmp4?url=${data.resultado.url}`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
               buff = await conn.getFile(apiUrl);
