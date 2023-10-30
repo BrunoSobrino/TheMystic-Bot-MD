@@ -65,7 +65,7 @@ if (enviando) return;
     await conn.sendMessage(m.chat, { text: dataMessage }, { quoted: m });
 
     if (buff) {
-      await conn.sendMessage(m.chat, {[mimeType.startsWith('audio') ? 'audio' : 'video']: buff.data, mimetype: mimeType, fileName: fileName}, {quoted: m});
+      await conn.sendMessage(m.chat, {[mimeType.startsWith('audio') ? 'audio' : 'video']: buff.data, mimetype: mimetype, fileName: fileName}, {quoted: m});
       enviando = false;
     } else {
       enviando = false;
