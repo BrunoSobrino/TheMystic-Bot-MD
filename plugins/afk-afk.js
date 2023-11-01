@@ -1,4 +1,4 @@
-const handler = async (m, {text}) => {
+/*const handler = async (m, {text}) => {
   const user = global.db.data.users[m.sender];
   user.afk = + new Date;
   user.afkReason = text;
