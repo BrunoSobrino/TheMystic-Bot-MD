@@ -1,4 +1,4 @@
-/*export function before(m) {
+//export function before(m) {
   const user = global.db.data.users[m.sender];
   if (user.afk > -1) {
     m.reply(`
@@ -28,4 +28,4 @@
   `.trim());
   }
   return true;
-}/*
+}//
