@@ -11,8 +11,7 @@ if (enviando) return;
     enviando = true
   try {
     const apiUrls = [
-      `https://api.boxmine.xyz/api/ytplay?text=${text}`,
-      `https://api.brunosobrino.repl.co/api/ytplay?text=${text}`,  
+      `https://api-brunosobrino.zipponodes.xyz/api/ytplay?text=${text}`,
       `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`
     ];
 
@@ -32,30 +31,17 @@ if (enviando) return;
     } else {
       try {
         if (command === 'play.1') {
-              apiUrl = `https://api.boxmine.xyz/api/v1/ytmp3?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v1/ytmp3?url=${data.resultado.url}`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
               buff = await conn.getFile(apiUrl);
             } else if (command === 'play.2') {
-              apiUrl = `https://api.boxmine.xyz/api/v1/ytmp4?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v1/ytmp4?url=${data.resultado.url}`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
               buff = await conn.getFile(apiUrl);
         }
       } catch {
-        try {
-          if (command === 'play.1') {
-              apiUrl = `https://api.brunosobrino.repl.co/api/v1/ytmp3?url=${data.resultado.url}`;
-              mimeType = 'audio/mpeg';
-              fileName = 'error.mp3';
-              buff = await conn.getFile(apiUrl);
-            } else if (command === 'play.2') {
-              apiUrl = `https://api.brunosobrino.repl.co/api/v1/ytmp4?url=${data.resultado.url}`;
-              mimeType = 'video/mp4';
-              fileName = 'error.mp4';
-              buff = await conn.getFile(apiUrl);             
-          }
-        } catch {
           try {
             if (command === 'play.1') {
               apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp3?url=${data.resultado.url}`;
@@ -72,8 +58,7 @@ if (enviando) return;
             enviando = false;
             throw `*[❗] Error al descargar el video/canción desde las APIs disponibles.`;
           }
-        }
-      }
+       }
     }
 
     const dataMessage = `*=> Título:* ${data.resultado.title}\n*=> Canal:* ${data.resultado.channel}\n*=> URL:* ${data.resultado.url}\n*=> Publicado:* ${data.resultado.publicDate}`;
