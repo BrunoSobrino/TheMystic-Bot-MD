@@ -30,7 +30,7 @@ global.reglas = `----------Futabu Club----------
 
 • *No Acoso* (Nada de estar acosando a los miembros/admins por privado)
 
-• *No Mandar Packs* (No se permite mandar packs de alguien o propios, como lo puede ser packs de tetas o pene) [Eso si packs de transexuales si se permite pero no propios]
+• *No Mandar Packs* (No se permite mandar packs de alguien o propios, como lo puede ser packs de tetas o pene) [Eso si packs de transexuales si se permite pero no propios y se permite temporalmente el pack de trapos/femboys propios]
 
 • *Uso de comandos +18 del Bot* (Se permite el uso de comandos +18 del bot solo que algunos tiene limites de uso en el caso de booty, pechos, randomxxx y tetas, tiene un total de uso de 10 veces, pero para uso de trapido o futanari tiene uso infinito, mientras no sea molesto para los miembros o admins todo bien)
 
