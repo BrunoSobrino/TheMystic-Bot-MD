@@ -6,7 +6,7 @@ handler.command = /^(contenido|listacontenido|listcontenido|contenidopermitido)$
 handler.group = true;
 export default handler
 
-global.contenido = `*_✅|CONTENIDO PERMITIDO*_
+global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ★ Futanari
 ★ Trapos/Femboy's (Packs tambien)
 ★ Hentai/Furry
