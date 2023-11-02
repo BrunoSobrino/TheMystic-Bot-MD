@@ -16,5 +16,6 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ✦ Earfuck
 ✦ Scat
 ✦ Gore
+✦ Vore
 ✦ CP (Chill Porn)
 ✦ Porno normal`
