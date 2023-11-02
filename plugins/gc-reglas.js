@@ -9,5 +9,5 @@ export default handler
 global.reglas = `----------Futabu Club----------
 📝| Reglas:
 ❖ Respeto 
- ➥ Se debe respetar a todos en el grupo, evitando insultos hacia personas de otros países.
+         ➥ Se debe respetar a todos en el grupo, evitando insultos hacia personas de otros países.
 `
