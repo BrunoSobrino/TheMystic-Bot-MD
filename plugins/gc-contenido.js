@@ -18,4 +18,4 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ✦ Gore
 ✦ Vore
 ✦ CP (Chill Porn)
-✦ Porno normal`
+✦ Porno normal (Solo multimedia, no stickers o gifs)`
