@@ -36,7 +36,7 @@ global.reglas = `╰Futabu Club╯
 ➥ No se permite acosar a miembros o administradores en privado.
 
 ❖ No Mandar Packs
-➥ No se permiten mandar packs de alguien, sean tetas o pene, mucho menos el trasero, los unicos permitidos de esto son los trans y femboy's, esto es testeo temporal.
+➥ No se permiten mandar packs de alguien, sean tetas o pene, mucho menos el trasero, los unicos permitidos de esto son los trans y femboy's, estos deben ser mayores de edad (+18), esto es testeo temporal.
 
 ❖ Uso de comandos +18 del Bot
 ➥ Se permiten ciertos comandos con límites de uso específicos.
