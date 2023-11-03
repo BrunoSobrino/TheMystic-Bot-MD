@@ -8,7 +8,7 @@ export default handler
 
 global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ★ Futanari
-★ Trapos/Femboy's (Packs tambien)
+★ Trapos/Femboy's (Packs tambien, ser mayor de edad +18)
 ★ Hentai/Furry
 ★ Transexual
 
