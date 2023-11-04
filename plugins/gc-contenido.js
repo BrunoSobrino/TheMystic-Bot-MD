@@ -11,11 +11,11 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ★ Trapos/Femboy's (Packs tambien, ser mayor de edad +18)
 ★ Hentai/Furry
 ★ Transexual
+★ Porno normal
 
 *_❌|CONTENIDO PROHIBIDO_*
 ✦ Earfuck
 ✦ Scat
 ✦ Gore
 ✦ Vore
-✦ CP (Chill Porn)
-✦ Porno normal (Solo multimedia, no stickers o gifs)`
+✦ CP (Chill Porn)`
