@@ -203,7 +203,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4doc *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}videodoc *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}dapk2 *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}stickerpack *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}apk *<text>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play2 *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play.1 *<texto>*_
