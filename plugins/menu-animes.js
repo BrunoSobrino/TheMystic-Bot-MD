@@ -55,7 +55,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 ┣ ඬ⃟ 🧿 _${usedPrefix}kagura_
 ┣ ඬ⃟ 🧿 _${usedPrefix}kaori_
 ┣ ඬ⃟ 🧿 _${usedPrefix}keneki_
-┣ ඬ⃟ 🧿 _${usedPrefix}kotori_
+┣ ඬ⃟ 🧿 _${usedPrefix}Abass_
 ┣ ඬ⃟ 🧿 _${usedPrefix}kurumi_
 ┣ ඬ⃟ 🧿 _${usedPrefix}madara_
 ┣ ඬ⃟ 🧿 _${usedPrefix}mikasa_
