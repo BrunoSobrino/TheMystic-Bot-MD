@@ -33,7 +33,7 @@ global.pack = [
   
 ];
 global.packmen = [
-  'https://telegra.ph/file/bf303b19b9834f90e9617.jpg',
+  'https://telegra.ph/Img-11-07-13',
   
 ];
 global.videosxxxc = [
