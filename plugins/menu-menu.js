@@ -28,48 +28,53 @@ Yssmina  Md MENU
 قســـم الــــذكــاء الاصطناعي
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
 
-🌸_${usedPrefix}.dx
-🌸_${usedPrefix}.chatgpt
-🌸_${usedPrefix}.draw2d
-🌸_${usedPrefix}.ai2
-🌸_${usedPrefix}.gptanime
+🌸_${usedPrefix}dx
+🌸_${usedPrefix}chatgpt
+🌸_${usedPrefix}draw2d
+🌸_${usedPrefix}ai2
+🌸_${usedPrefix}gptanime
 
 قـــسـم الملصقــات
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-🌸_${usedPrefix}.sticker
-🌸_${usedPrefix}.attp
-🌸_${usedPrefix}.wm
-🌸_${usedPrefix}.qr
-🌸_${usedPrefix}.smeme
-🌸_${usedPrefix}.img
-🌸_${usedPrefix}.tovideo
+🌸_${usedPrefix}sticker
+🌸_${usedPrefix}attp
+🌸_${usedPrefix}wm
+🌸_${usedPrefix}qr
+🌸_${usedPrefix}smeme
+🌸_${usedPrefix}img
+🌸_${usedPrefix}tovideo
  قسم رفع جودة الصور
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-🌸_${usedPrefix}.hd
-🌸_${usedPrefix}.rg2
-🌸_${usedPrefix}.tts
-🌸_${usedPrefix}.translate
+🌸_${usedPrefix}hd
+🌸_${usedPrefix}rg2
+🌸_${usedPrefix}tts
+🌸_${usedPrefix}translate
 
 قسم الدين هو الاسلام
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-🌸_${usedPrefix}.khawatir
-🌸_${usedPrefix}.bader
-🌸_${usedPrefix}.asmaeallah
-🌸_${usedPrefix}.adhan
-🌸_${usedPrefix}.ayati
+🌸_${usedPrefix}khawatir
+🌸_${usedPrefix}bader
+🌸_${usedPrefix}asmaeallah
+🌸_${usedPrefix}adhan
+🌸_${usedPrefix}ayati
 قسم البحث والتحميل 
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-📲_${usedPrefix}.ytv
-🔎_${usedPrefix}.ytsearch
-📲_${usedPrefix}.mediafire
-📲_${usedPrefix}.gdrive
-📲_${usedPrefix}.tiktok
-📲_${usedPrefix}.gdrive
-
+📲_${usedPrefix}ytv
+🔎_${usedPrefix}ytsearch
+📲_${usedPrefix}mediafire
+📲_${usedPrefix}gdrive
+📲_${usedPrefix}tiktok
+📲_${usedPrefix}gdrive
+اوامر الموسيقى والقرأن
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-* تنسى لا الصلاة على سيدنا محمد عليه افضل الصلاه السلام*
-
-
+🎧_${usedPrefix}Audiomenu
+🎧_${usedPrefix}play
+🎧_${usedPrefix}Audio 
+🎧_${usedPrefix}tomp3
+🎧_${usedPrefix}sondcloud
+لاتنسى ان الموسيقى حرام عزيزي المستخدم
+█▒▒█*YASSMINA*█▒▒█
+اللهم صل وسلم وبارك على سيدنا محمد صلى الله عليه
 
 `.trim();
     if (m.isGroup) {
@@ -82,7 +87,7 @@ Yssmina  Md MENU
       conn.sendMessage(m.chat, {image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net')}, {quoted: fkontak2});
     }
   } catch {
-    conn.reply(m.chat, '*توقف عزيزي المستخدم البوت خارج الخدمة*', m);
+    conn.reply(m.chat, '*YASMINE MD IS NOT AVAILABLE*', m);
   }
 };
 handler.command = /^(menu|menú|memu|memú|help|info|comandos|allmenu|2help|menu1.2|ayuda|commands|commandos|cmd)$/i;
