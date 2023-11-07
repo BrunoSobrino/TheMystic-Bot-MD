@@ -1,6 +1,6 @@
 import {search, download} from 'aptoide-scraper';
 const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
- if (!text) throw `*[❗] Ingrese el nombre de la APK que quiera buscar.*`;
+ if (!text) throw `*التطبيق يتجاوز حجم التحميل المحدد للبوت الرجاء المحاولة لاحقا 😭*`;
   try {    
     const searchA = await search(text);
     const data5 = await download(searchA[0].id);
