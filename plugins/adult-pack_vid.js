@@ -28,7 +28,7 @@ handler.command = /^(pack|pack2|pack3|videoxxx|vídeoxxx|videoxxxlesbi|videolesb
 export default handler;
 
 global.pack = [
-  'https://telegra.ph/file/957fe4031132ef90b66ec.jpg',
+  'https://telegra.ph/Img-11-07-13',
   
   
 ];
