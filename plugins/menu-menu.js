@@ -109,44 +109,6 @@ ${readMore}
 ┗━━━━━━━━━━━━━━━━┛  
 
 ┏━━━━━━━━━━━━━━━━┓
-┃ *< 𝕁𝕌𝔼𝔾𝕆𝕊 />*
-┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 🎖️ _${usedPrefix}mates *<noob / easy / medium / hard / extreme /impossible /impossible2>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}fake *<texto1> <@tag> <texto2>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}ppt *<papel / tijera /piedra>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}prostituto *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}prostituta *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}gay2 *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}lesbiana *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}pajero *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}pajera *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}puto *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}puta *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}manco *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}manca *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}rata *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}love *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}doxear *<nombre / @tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}pregunta *<texto>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}suitpvp *<@tag>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}slot *<apuesta>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}ttt *<nombre sala>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}delttt_
-┣ ඬ⃟ 🎖️ _${usedPrefix}acertijo_
-┣ ඬ⃟ 🎖️ _${usedPrefix}simi *<texto>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}top *<texto>*_
-┣ ඬ⃟ 🎖️ _${usedPrefix}topgays_
-┣ ඬ⃟ 🎖️ _${usedPrefix}topotakus_
-┣ ඬ⃟ 🎖️ _${usedPrefix}formarpareja_
-┣ ඬ⃟ 🎖️ _${usedPrefix}verdad_
-┣ ඬ⃟ 🎖️ _${usedPrefix}reto_
-┣ ඬ⃟ 🎖️ _${usedPrefix}cancion_
-┣ ඬ⃟ 🎖️ _${usedPrefix}pista_
-┣ ඬ⃟ 🎖️ _${usedPrefix}akinator_
-┣ ඬ⃟ 🎖️ _${usedPrefix}wordfind_
-┗━━━━━━━━━━━━━━━━┛
-
-┏━━━━━━━━━━━━━━━━┓
 ┃ *< 𝔸ℂ𝕋𝕀𝕍𝔸ℝ 𝕆 𝔻𝔼𝕊𝔸ℂ𝕋𝕀𝕍𝔸ℝ />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ ☑️ _${usedPrefix}enable *welcome*_
@@ -184,7 +146,7 @@ ${readMore}
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
-┃ *< قائمة الأفلام الإباحية والتطبيقات 💀/>*
+┃ *📲التطبيقات واوامر التحميل*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 📥 _${usedPrefix}instagram *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}mediafire *<enlace / link / url>*_
@@ -192,8 +154,8 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}gdrive *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}tiktok *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}tiktokimg *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}xnxxdl *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}xvideosdl *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}xnxxdl(لاتستخدمه ❎) *<enlace / link / url>*_
+┣ 📥_${usedPrefix}xvideosdl *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}twitter *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}fb *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytshort *<enlace / link / url>*_
@@ -224,7 +186,7 @@ ${readMore}
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
-┃ *< 𝔹𝕌𝕊ℂ𝔸𝔻𝕆ℝ𝔼𝕊 />*
+┃ *🔎قائمة البحث*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🔍 _${usedPrefix}githubsearch *<texto>*_
 ┣ ඬ⃟ 🔍 _${usedPrefix}pelisplus *<texto>*_
@@ -275,7 +237,7 @@ ${readMore}
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
-┃ *< ℂ𝕆ℕ𝕍𝔼ℝ𝕋𝕀𝔻𝕆ℝ𝔼𝕊 />*
+┃ *قسم الذكاء الصناعي*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🧧 _${usedPrefix}toanime *<imagen>*_
 ┣ ඬ⃟ 🧧 _${usedPrefix}togifaud *<video>*_
