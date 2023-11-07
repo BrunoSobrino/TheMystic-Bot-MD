@@ -65,6 +65,7 @@ Yssmina  Md MENU
 📲_${usedPrefix}gdrive
 📲_${usedPrefix}tiktok
 📲_${usedPrefix}gdrive
+📲_${usedPrefix}dapk2
 اوامر الموسيقى والقرأن
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
 🎧_${usedPrefix}Audiomenu
@@ -72,6 +73,7 @@ Yssmina  Md MENU
 🎧_${usedPrefix}Audio 
 🎧_${usedPrefix}tomp3
 🎧_${usedPrefix}sondcloud
+💿_${usedPrefix}Spotify
 لاتنسى ان الموسيقى حرام عزيزي المستخدم
 █▒▒█*YASSMINA*█▒▒█
 اللهم صل وسلم وبارك على سيدنا محمد صلى الله عليه
