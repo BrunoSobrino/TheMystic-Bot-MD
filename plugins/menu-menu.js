@@ -184,7 +184,7 @@ ${readMore}
 ┗━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━┓
-┃ *< 𝔻𝔼𝕊ℂ𝔸ℝ𝔾𝔸𝕊 />*
+┃ *< قائمة الأفلام الإباحية والتطبيقات 💀/>*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 📥 _${usedPrefix}instagram *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}mediafire *<enlace / link / url>*_
@@ -202,7 +202,7 @@ ${readMore}
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp3doc *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}ytmp4doc *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}videodoc *<enlace / link / url>*_
-┣ ඬ⃟ 📥 _${usedPrefix}dapk2 *<enlace / link / url>*_
+┣ ඬ⃟ 📥 _${usedPrefix}apk *<enlace / link / url>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}apk *<text>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play *<texto>*_
 ┣ ඬ⃟ 📥 _${usedPrefix}play2 *<texto>*_
