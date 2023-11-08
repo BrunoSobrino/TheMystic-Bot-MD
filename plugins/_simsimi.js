@@ -14,8 +14,8 @@ handler.before = async (m) => {
     } catch {
       /* SI DA ERROR USARA ESTA OTRA OPCION DE API DE IA QUE RECUERDA EL NOMBRE DE LA PERSONA */
       if (textodem.includes('Hola')) textodem = textodem.replace('Hola', 'Hello');
-      if (textodem.includes('hola')) textodem = textodem.replace('hola', 'hello');
-      if (textodem.includes('HOLA')) textodem = textodem.replace('HOLA', 'HELLO');
+      if (textodem.includes('سير فحالك')) textodem = textodem.replace('hola', 'hello');
+      if (textodem.includes('وسير فحالك')) textodem = textodem.replace('HOLA', 'HELLO');
       const reis = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=' + textodem);
       const resu = await reis.json();
       const nama = m.pushName || '1';
