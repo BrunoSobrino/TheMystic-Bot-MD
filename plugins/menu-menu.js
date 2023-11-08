@@ -33,7 +33,7 @@ Yssmina  Md MENU
 🌸_${usedPrefix}draw2d
 🌸_${usedPrefix}ai2
 🌸_${usedPrefix}gptanime
-
+💡_${usedPrefix}bard
 قـــسـم الملصقــات
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
 🌸_${usedPrefix}sticker
