@@ -1,4 +1,4 @@
-console.log('✅ㅤIniciando...');
+console.log('[ ℹ️ ] Iniciando...');
 import {join, dirname} from 'path';
 import {createRequire} from 'module';
 import {fileURLToPath} from 'url';
@@ -32,7 +32,7 @@ function start(file) {
   isRunning = true;
   const args = [join(__dirname, file), ...process.argv.slice(2)];
 
-  say('Escanea el código QR o introduce el código de emparejamiento en WhatsApp', {
+  say('[ ℹ️ ] Escanea el código QR o introduce el código de emparejamiento en WhatsApp.', {
     font: 'console',
     align: 'center',
     gradient: ['red', 'magenta']});
@@ -56,7 +56,7 @@ function start(file) {
   });
   p.on('exit', (_, code) => {
     isRunning = false;
-    console.error('❎ㅤOcurrio un error inesperado:', code);
+    console.error('[ ℹ️ ] Ocurrio un error inesperado:', code);
 
     p.process.kill();
     isRunning = false;
