@@ -104,7 +104,7 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 ```
 
 ## —◉ ✨ ACTIVAR EN ZIPPONODES ✨
-<a href="https://www.zipponodes.com"><img src="https://cdn.zipponodes.com/zipponodes/logos/logo_zipponodes_transparent1.png" width="150" height="50" alt="PNG"/></a>
+<a href="https://www.zipponodes.com"><img src="https://cdn.zipponodes.com/zipponodes/logos/logo_zipponodes_transparent2.png" width="1080" height="400" alt="PNG"/></a>
 - Sitio web: [zipponodes.com](https://www.zipponodes.com)
 - Dash: [dash.zipponodes.com](https://dash.zipponodes.com)
 - Panel: [panel.zipponodes.com](https://panel.zipponodes.com)
