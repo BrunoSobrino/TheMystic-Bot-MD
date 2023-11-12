@@ -31,6 +31,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
  *🤖 Bot 2:* +5219993404349
  *🏦 PayPal:* paypal.me/TheShadowBrokers133
 
+
  *📆 Fecha:* ${date}
  *⏳ Uptime:* ${uptime}
  *🧑 Usuarios regs:* ${rtotalreg}
@@ -253,7 +254,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}destraba_
   ▢ _${usedPrefix}setpp *<img>*_
   ▢ _admins *<txt>*_ (sin prefijo)
-  ${readMore}
+${readMore}
 
 
  *< CONVERTIDORES />* 🔄️
@@ -376,7 +377,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}covid *<pais>*_
   ▢ _${usedPrefix}horario_
   ▢ _${usedPrefix}dropmail_
-  ${readMore}
+${readMore}
 
  *< ECONOMÍA />* 💵
 
@@ -429,7 +430,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}wm *<packname> <autor>*_
   ▢ _${usedPrefix}stickermarker *<efecto> <img>*_
   ▢ _${usedPrefix}stickerfilter *<efecto> <img>*_
-  ${readMore}
+${readMore}
 
 
  *< PROPIETARIO Y MODS. />* 👑
