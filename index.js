@@ -32,10 +32,10 @@ function start(file) {
   isRunning = true;
   const args = [join(__dirname, file), ...process.argv.slice(2)];
 
-  say('[ ℹ️ ] Escanea el código QR o introduce el código de emparejamiento en WhatsApp.', {
+  /** say('[ ℹ️ ] Escanea el código QR o introduce el código de emparejamiento en WhatsApp.', {
     font: 'console',
     align: 'center',
-    gradient: ['red', 'magenta']});
+    gradient: ['red', 'magenta']}); **/
 
   setupMaster({
     exec: args[0],
