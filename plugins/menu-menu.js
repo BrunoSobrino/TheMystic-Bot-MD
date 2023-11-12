@@ -252,7 +252,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}fantasmas_
   ▢ _${usedPrefix}destraba_
   ▢ _${usedPrefix}setpp *<img>*_
-  ▢ _admins *<txt>*_ (sin prefijo)
+  ▢ _admins *<txt>*_ (sin prefijo)${readMore}
 
 
  *< CONVERTIDORES />* 🔄️
@@ -344,7 +344,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 
   ▢ _${usedPrefix}start_
   ▢ _${usedPrefix}next_
-  ▢ _${usedPrefix}leave_${readMore}
+  ▢ _${usedPrefix}leave_
 
 
  *< HERRAMIENTAS />* 🧰
