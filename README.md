@@ -103,6 +103,14 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > npm start
 ```
 
+## —◉ ✨ ACTIVAR EN ZIPPONODES ✨
+<a href="https://www.zipponodes.com"><img src="https://cdn.zipponodes.com/zipponodes/logos/logo_zipponodes_transparent1.png" width="150" height="50" alt="PNG"/></a>
+- Sitio web: [zipponodes.com](https://www.zipponodes.com)
+- Dash: [dash.zipponodes.com](https://dash.zipponodes.com)
+- Panel: [panel.zipponodes.com](https://panel.zipponodes.com)
+- Grupo de WhatsApp: [whatsapp.zipponodes.com](https://whatsapp.zipponodes.com)
+
+
 ### `—◉ 🔥 ACTIVAR EN BOXMINEHOST 🔥`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
 - Pagina Oficial: [https://boxmineworld.com](https://boxmineworld.com)
