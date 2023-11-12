@@ -351,8 +351,8 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate);
   }
 
-  conn.welcome = '¡Bienvenido/a @user!\nNos alegra tenerte en @subject.\n\nPor favor, asegúrate de seguir los lineamientos del grupo para mantener un ambiente amigable y respetuoso.\n\nAquí está la descripción del grupo para que estés al tanto de nuestras normas y temas.\n@desc\n\n¡Disfruta tu estancia!';
-  conn.bye = '¡Hasta luego @user!';
+  conn.welcome = '👋 ¡Bienvenido/a\n@user!';
+  conn.bye = '👋 ¡Hasta luego!\n@user';
   conn.spromote = '*[ ℹ️ ] @user Fue promovido a administrador.*';
   conn.sdemote = '*[ ℹ️ ] @user Fue degradado de administrador.*';
   conn.sDesc = '*[ ℹ️ ] La descripción del grupo ha sido modificada.*';
