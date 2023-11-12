@@ -103,7 +103,7 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > npm start
 ```
 
-## —◉ ✨ ACTIVAR EN ZIPPONODES ✨
+### —◉ `✨ ACTIVAR EN ZIPPONODES ✨`
 <a href="https://www.zipponodes.com"><img src="https://cdn.zipponodes.com/zipponodes/logos/logo_zipponodes_transparent2.png" width="350" height="130" alt="PNG"/></a>
 - Sitio web: [zipponodes.com](https://www.zipponodes.com)
 - Dash: [dash.zipponodes.com](https://dash.zipponodes.com)
