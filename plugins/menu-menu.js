@@ -165,7 +165,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}enable *modoadmin*_
   ▢ _${usedPrefix}disable *modoadmin*_
   ▢ _${usedPrefix}enable *antidelete*_
-  ▢ _${usedPrefix}disable *antidelete*_${readMore}
+  ▢ _${usedPrefix}disable *antidelete*_
 
 
  *< DESCARGAS />* 📥
@@ -252,7 +252,8 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}fantasmas_
   ▢ _${usedPrefix}destraba_
   ▢ _${usedPrefix}setpp *<img>*_
-  ▢ _admins *<txt>*_ (sin prefijo)${readMore}
+  ▢ _admins *<txt>*_ (sin prefijo)
+  ${readMore}
 
 
  *< CONVERTIDORES />* 🔄️
@@ -375,7 +376,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}covid *<pais>*_
   ▢ _${usedPrefix}horario_
   ▢ _${usedPrefix}dropmail_
-
+  ${readMore}
 
  *< ECONOMÍA />* 💵
 
@@ -427,7 +428,8 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}dado_
   ▢ _${usedPrefix}wm *<packname> <autor>*_
   ▢ _${usedPrefix}stickermarker *<efecto> <img>*_
-  ▢ _${usedPrefix}stickerfilter *<efecto> <img>*_${readMore}
+  ▢ _${usedPrefix}stickerfilter *<efecto> <img>*_
+  ${readMore}
 
 
  *< PROPIETARIO Y MODS. />* 👑
