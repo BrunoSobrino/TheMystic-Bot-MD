@@ -94,7 +94,7 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 ```
 
 ### `—◉ 👽 OBTENER OTRO CODIGO QR EN TERMUX 👽`
-- DETENER EL BOT DANDO CLICK EN EL SIMBOLO CTROL EN TERMUX MAS LA LETRA Z EN SU TECLADO MOVIL HASTA QUE SALGA ALGO EN VERDE SIMILAR A Mystic-termux $  
+- DETENER EL BOT DANDO CLICK EN EL SIMBOLO CTRL EN TERMUX MAS LA LETRA Z EN SU TECLADO MOVIL HASTA QUE SALGA ALGO EN VERDE SIMILAR A Mystic-termux $  
 ```bash
 ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > cd 
@@ -102,6 +102,14 @@ ESCRIBE LOS SIGUIENTES COMANDOS UNO POR UNO:
 > rm -rf MysticSession
 > npm start
 ```
+
+### `—◉ ✨ ACTIVAR EN ZIPPONODES ✨`
+<a href="https://www.zipponodes.com"><img src="https://cdn.zipponodes.com/zipponodes/logos/logo_zipponodes_transparent2.png" width="350" height="130" alt="PNG"/></a>
+- Sitio web: [zipponodes.com](https://www.zipponodes.com)
+- Dash: [dash.zipponodes.com](https://dash.zipponodes.com)
+- Panel: [panel.zipponodes.com](https://panel.zipponodes.com)
+- Grupo de WhatsApp: [whatsapp.zipponodes.com](https://whatsapp.zipponodes.com)
+
 
 ### `—◉ 🔥 ACTIVAR EN BOXMINEHOST 🔥`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>

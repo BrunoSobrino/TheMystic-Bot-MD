@@ -40,7 +40,7 @@ __version__ = '2.1.4b1'
 
 
 class FakeShutdownEvent(object):
-    """Class to fake a threading.Event.isSet so that users of this module
+    """Class to fake a threading.Event.isSet so that home of this module
     are not required to register their own threading.Event()
     """
 
@@ -381,7 +381,7 @@ def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
     port)``) and return the socket object.  Passing the optional
     *timeout* parameter will set the timeout on the socket instance
     before attempting to connect.  If no *timeout* is supplied, the
-    global default timeout setting returned by :func:`getdefaulttimeout`
+    global default timeout setting returned by :fun`getdefaulttimeout`
     is used.  If *source_address* is set it must be a tuple of (host, port)
     for the socket to bind as a source address before making the connection.
     An host of '' or port 0 tells the OS to use the default.
@@ -1880,7 +1880,7 @@ def shell():
     else:
         callback = print_dots(shutdown_event)
 
-    printer('*• SPEEDTEST.NET*\n\n', quiet)
+    printer('', quiet)
     try:
         speedtest = Speedtest(
             source_address=args.source,
@@ -1910,20 +1910,21 @@ def shell():
                         raise
         sys.exit(0)
 
-    printer('Testing from %(isp)s (%(ip)s)...' % speedtest.config['client'],
-            quiet)
+    printer('*Speedtest by Ookla*\n\n', quiet)
+
 
     if not args.mini:
-        printer('Retrieving speedtest.net server list...', quiet)
+        printer('- Iniciando prueba...', quiet)
+        printer('- Buscando servidor...', quiet)
         try:
             speedtest.get_servers(servers=args.server, exclude=args.exclude)
         except NoMatchedServers:
             raise SpeedtestCLIError(
-                'No matched servers: %s' %
+                'No hay servidores coincidentes: %s' %
                 ', '.join('%s' % s for s in args.server)
             )
         except (ServersRetrievalError,) + HTTP_ERRORS:
-            printer('Cannot retrieve speedtest server list', error=True)
+            printer('No se pudo obtener la lista de servidores', error=True)
             raise SpeedtestCLIError(get_exception())
         except InvalidServerIDType:
             raise SpeedtestCLIError(
@@ -1932,54 +1933,51 @@ def shell():
             )
 
         if args.server and len(args.server) == 1:
-            printer('Retrieving information for the selected server...', quiet)
+            printer('- Obteniendo info. del servidor...', quiet)
         else:
-            printer('Selecting best server based on ping...', quiet)
+            printer('- Se selecionó el mejor servidor...', quiet)
         speedtest.get_best_server()
     elif args.mini:
         speedtest.get_best_server(speedtest.set_mini_server(args.mini))
 
     results = speedtest.results
 
-    printer('Hosted by %(sponsor)s (%(name)s) [%(d)0.2f km]: '
-            '%(latency)s ms' % results.server, quiet)
+    printer('\n*ISP:* %(isp)s' % speedtest.config['client'],
+            quiet)
+    printer('*Servidor:* %(sponsor)s\n*Ubicación:* %(name)s [%(d)0.2f km] '
+            '\n*Ping:* %(latency)s ms' % results.server, quiet)
 
     if args.download:
-        printer('Testing download speed\n', quiet,
-                end=('', '\n')[bool(debug)])
+        printer('', quiet,
+                end=('', '')[bool(debug)])
         speedtest.download(
             callback=callback,
             threads=(None, 1)[args.single]
         )
-        printer('Download: %0.2f M%s/s' %
+        printer('*Descarga:* %0.2f M%s/s' %
                 ((results.download / 1000.0 / 1000.0) / args.units[1],
                  args.units[0]),
                 quiet)
     else:
-        printer('Skipping download test', quiet)
+        printer('Omitiendo la prueba de descarga', quiet)
 
     if args.upload:
-        printer('Testing upload speed\n', quiet,
-                end=('', '\n')[bool(debug)])
-        speedtest.upload(
-            callback=callback,
-            pre_allocate=args.pre_allocate,
-            threads=(None, 1)[args.single]
-        )
-        printer('Upload: %0.2f M%s/s' %
+        speedtest.upload()
+        printer('*Subida:* %0.2f M%s/s' %
                 ((results.upload / 1000.0 / 1000.0) / args.units[1],
                  args.units[0]),
                 quiet)
+        printer("\nModificado por *dftzippo*\nPowered by *Ookla*")
     else:
-        printer('Skipping upload test', quiet)
+        printer('Omitiendo la prueba de subida', quiet)
 
-    printer('Results:\n%r' % results.dict(), debug=True)
+    printer('Resultados:\n%r' % results.dict(), debug=True)
 
     if not args.simple and args.share:
         results.share()
 
     if args.simple:
-        printer('Ping: %s ms\nDownload: %0.2f M%s/s\nUpload: %0.2f M%s/s' %
+        printer('Ping: %s ms\nDescarga: %0.2f M%s/s\n\nSubida: %0.2f M%s/s' %
                 (results.ping,
                  (results.download / 1000.0 / 1000.0) / args.units[1],
                  args.units[0],
@@ -1991,14 +1989,14 @@ def shell():
         printer(results.json())
 
     if args.share and not machine_format:
-        printer('Share results: %s' % results.share())
+        printer('Compartir resultado: %s' % results.share())
 
 
 def main():
     try:
         shell()
     except KeyboardInterrupt:
-        printer('\nCancelling...', error=True)
+        printer('\nCancelando...', error=True)
     except (SpeedtestException, SystemExit):
         e = get_exception()
         # Ignore a successful exit, or argparse exit
