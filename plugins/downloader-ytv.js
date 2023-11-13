@@ -30,11 +30,11 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
         }
       } else {
         enviando = false  
-        throw `*[❗] Para poder hacer uso del comando de esta forma (${usedPrefix + command} <numero>), por favor realiza la busqueda de videos con el comando ${usedPrefix}playlist <texto>*`;
+        throw `*الفيديو قادم ...(${usedPrefix + command} <numero>), por favor realiza la busqueda de videos con el comando ${usedPrefix}playlist <texto>*`;
       }
     }
   }
-  const { key } = await m.reply(`*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*`);
+  const { key } = await m.reply(`*العملية قيد الانجاز لاتنسى الصلاة على النبي*`);
   try {
     const formats = await bestFormat(youtubeLink, 'video');
     const buff = await getBuffer(formats.url);
@@ -81,12 +81,12 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
         const n2 = lolh.result.link;
         const n3 = lolh.result.size;
         const n4 = lolh.result.thumbnail;
-        await conn.sendMessage(m.chat, {video: {url: n2}, fileName: `${n}.mp4`, mimetype: 'video/mp4', caption: `*▢ Titulo:* ${n}\n*▢ Peso Del Video:* ${n3}`, thumbnail: await fetch(n4)}, {quoted: m});
+        await conn.sendMessage(m.chat, {video: {url: n2}, fileName: `${n}.mp4`, mimetype: 'video/mp4', caption: `*▢ العنوان:* ${n}\n*▢ Peso Del Video:* ${n3}`, thumbnail: await fetch(n4)}, {quoted: m});
         await conn.sendMessage(m.chat, {text: '*[ ✔ ] Video descargado exitosamente.*', edit: key}, {quoted: m});
         enviando = false
       } catch {
         await conn.sendMessage(m.chat, {text: `*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*`, edit: key}, {quoted: m});
-        throw '*[❗] Error, no fue posible descargar el video.*';
+        throw '*تم جلب الفيديو بنجاح لاتنسى الصلاة على النبي .*';
       }
     }
   }
