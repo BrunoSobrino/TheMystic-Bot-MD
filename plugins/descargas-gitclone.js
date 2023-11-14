@@ -7,7 +7,7 @@ const handler = async (m, {args, usedPrefix, command}) => {
   repo = repo.replace(/.git$/, '');
   const url = `https://api.github.com/repos/${user}/${repo}/zipball`;
   const filename = (await fetch(url, {method: 'HEAD'})).headers.get('content-disposition').match(/attachment; filename=(.*)/)[1];
-  m.reply(`*[ ℹ️ ] Se está enviando el archivo. espere...\n\n[ ℹ️ ] Si no se envía, podría ser porque supera el límite de tamaño.*`);
+  m.reply(`*[ ℹ️ ] Se está enviando el archivo. espere...*\n\n*[ ℹ️ ] Si no se envía, podría ser porque supera el límite de tamaño.*`);
   conn.sendFile(m.chat, url, filename, null, m);
 };
 handler.help = ['gitclone <url>'];
