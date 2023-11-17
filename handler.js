@@ -1201,7 +1201,7 @@ const messageText = `
             if (user.commandCount === 2) {
               const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000);
               if (remainingTime > 0) {
-                const messageText = `*[ ⚠ ] Espera ${remainingTime} segundos antes de usar otro comando*`;
+                const messageText = `*[ ℹ️ ] Espera ${remainingTime} segundos antes de utilizar otro comando*`;
                 m.reply(messageText);
                 return;
               } else {
@@ -1267,11 +1267,11 @@ const messageText = `
           m.exp += xp;
         }
         if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-          mconn.conn.reply(m.chat, `*[ 💎 ] Sus diamantes (limites) se han agotado, puede adquirir más con el comando ${usedPrefix}buyall*`, m);
+          mconn.conn.reply(m.chat, `*[ ℹ️ ] Sus diamantes se han agotado, puede adquirir más con el comando: ${usedPrefix}buyall*`, m);
           continue; 
         }
         if (plugin.level > _user.level) {
-          mconn.conn.reply(m.chat, `*[ 💠 ] Se require tener el nivel ${plugin.level} para poder usar esté comando. Tú nivel actual es ${_user.level}, usa el comando ${usedPrefix}lvl para subir tu nivel con exp.*`, m);
+          mconn.conn.reply(m.chat, `*[ ℹ️ ] Se require tener el nivel ${plugin.level} para poder utilizar el comando. Tú nivel actual es ${_user.level}, usa el comando ${usedPrefix}lvl para subir tu nivel con XP.*`, m);
           continue; 
         }
         const extra = {
