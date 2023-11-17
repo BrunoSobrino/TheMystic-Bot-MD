@@ -8,25 +8,25 @@ let limit2 = 400;
 let limit_a1 = 50;
 let limit_a2 = 400;
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
-  if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} Good Feeling - Flo Rida*`;
+  if (!text) throw `*[ ℹ️ ] Hace falta el título del video de YouTube.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} Good Feeling - Flo Rida_`;
     const yt_play = await search(args.join(' '));
     let additionalText = '';
     if (command === 'play') {
-      additionalText = 'audio 🔊';
+      additionalText = 'audio';
     } else if (command === 'play2') {
-      additionalText = 'video 🎥';
+      additionalText = 'vídeo';
     }
-    const texto1 = `*◉——⌈🔊 YOUTUBE PLAY 🔊⌋——◉*\n
-❏ 📌 *Titulo:* ${yt_play[0].title}
-❏ 📆 *Publicado:* ${yt_play[0].ago}
-❏ ⌚ *Duracion:* ${secondString(yt_play[0].duration.seconds)}
-❏ 👀 *Vistas:* ${`${MilesNumber(yt_play[0].views)}`}
-❏ 👤 *Autor:* ${yt_play[0].author.name}
-❏ ⏯️ *Canal:* ${yt_play[0].author.url}
-❏ 🆔 *ID:* ${yt_play[0].videoId}
-❏ 🪬 *Tipo:* ${yt_play[0].type}
-❏ 🔗 *Link:* ${yt_play[0].url}\n
-❏ *_Enviando ${additionalText}, aguarde un momento．．．_*`.trim();
+    const texto1 = `*[ 📥 ] Descargas - YouTube*\n\n    
+  ▢ *Título:* ${yt_play[0].title}
+  ▢ *Publicado:* ${yt_play[0].ago}
+  ▢ *Duración:* ${secondString(yt_play[0].duration.seconds)}
+  ▢ *Vistas:* ${`${MilesNumber(yt_play[0].views)}`}
+  ▢ *Autor:* ${yt_play[0].author.name}
+  ▢ *ID:* ${yt_play[0].videoId}
+  ▢ *Tipo:* ${yt_play[0].type}
+  ▢ *Enlace:* ${yt_play[0].url}
+  ▢ *Canal:* ${yt_play[0].author.url}\n\n
+  *[ ℹ️ ] Se está enviando el* _${additionalText}_. *espere...*`.trim();
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
     try {   
@@ -38,7 +38,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     const fileSizeInMB = fileSizeInKB / 1024;
     const size = fileSizeInMB.toFixed(2);       
     if (size >= limit_a2) {  
-    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Descargue su video en ${audio}*`}, {quoted: m});
+    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Descargue su vídeo en ${audio}*`}, {quoted: m});
     return;    
     }     
     if (size >= limit_a1 && size <= limit_a2) {  
@@ -48,7 +48,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     await conn.sendMessage(m.chat, {audio: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3`}, {quoted: m});   
     return;    
     }} catch {
-    throw '*[❗] Error, por favor vuelva a intentarlo.*';    
+    throw '*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*';    
     }}
     if (command == 'play2') {
     try {   
@@ -70,7 +70,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     await conn.sendMessage(m.chat, {video: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4`}, {quoted: m});   
     return;    
     }} catch {
-    throw '*[❗] Error, por favor vuelva a intentarlo.*';    
+    throw '*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*';    
     }
   }
 };
@@ -98,10 +98,10 @@ function secondString(seconds) {
   const h = Math.floor((seconds % (3600 * 24)) / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.floor(seconds % 60);
-  const dDisplay = d > 0 ? d + (d == 1 ? ' día, ' : ' días, ') : '';
-  const hDisplay = h > 0 ? h + (h == 1 ? ' hora, ' : ' horas, ') : '';
-  const mDisplay = m > 0 ? m + (m == 1 ? ' minuto, ' : ' minutos, ') : '';
-  const sDisplay = s > 0 ? s + (s == 1 ? ' segundo' : ' segundos') : '';
+  const dDisplay = d > 0 ? d + (d == 1 ? ' d ' : ' d ') : '';
+  const hDisplay = h > 0 ? h + (h == 1 ? ' h ' : ' h ') : '';
+  const mDisplay = m > 0 ? m + (m == 1 ? ' m ' : ' m ') : '';
+  const sDisplay = s > 0 ? s + (s == 1 ? ' s' : ' s') : '';
   return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 
