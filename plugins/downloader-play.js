@@ -26,7 +26,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
 ▢ *Tipo:* ${yt_play[0].type}\n
 ▢ *Enlace:* ${yt_play[0].url}\n
 ▢ *Canal:* ${yt_play[0].author.url}\n\n
-*[ ℹ️ ] Se está enviando el ${additionalText}*. *espere...*`.trim();
+*[ ℹ️ ] Se está enviando el ${additionalText}. espere...*`.trim();
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
     try {   
