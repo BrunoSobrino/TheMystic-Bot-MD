@@ -21,7 +21,7 @@ function connect(conn, PORT) {
   });
 
   server.listen(PORT, () => {
-    console.log('App listened on port', PORT);
+    console.log('[ ℹ️ ] La aplicación está escuchando en el puerto', PORT, '(ignorar si ya escaneaste el código QR)');
     if (opts['keepalive']) keepAlive();
   });
 }
