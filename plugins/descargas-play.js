@@ -16,7 +16,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     } else if (command === 'play2') {
       additionalText = 'vídeo';
     }
-    const texto1 = `*[ 📥 ] Descargas - YouTube*\n    
+    const texto1 = `*[ 📥 ] Descargas - YouTube*\n\n    
 ▢ *Título:* ${yt_play[0].title}\n
 ▢ *Publicado:* ${yt_play[0].ago}\n
 ▢ *Duración:* ${secondString(yt_play[0].duration.seconds)}\n
