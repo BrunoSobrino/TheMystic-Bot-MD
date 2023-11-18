@@ -6,7 +6,7 @@ let fileName;
 let apiUrl;
 let enviando = false;
 const handler = async (m, { command, usedPrefix, conn, text }) => {
-  if (!text) throw `*[❗] Nombre de la canción/video faltante, por favor ingrese el comando más el nombre, título o link de alguna canción o video de YouTube.*\n\n*—◉ Ejemplo 1:*\n*${usedPrefix + command}* Good Feeling - Flo Rida\n*—◉ Ejemplo 2:*\n*${usedPrefix + command}* https://youtu.be/JLWRZ8eWyZo?si=EmeS9fJvS_OkDk7p`;
+  if (!text) throw `*[ ℹ️ ] Hace falta el título del video de YouTube.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} Good Feeling - Flo Rida_\n\n*[ 💡 ] Ejemplo 2:* _${usedPrefix + command} https://youtu.be/JLWRZ8eWyZo?si=EmeS9fJvS_OkDk7p_`;
 if (enviando) return;
     enviando = true
   try {
@@ -27,7 +27,7 @@ if (enviando) return;
 
     if (!data.resultado || !data.resultado.url) {
       enviando = false;
-      throw `*[❗] No se pudo obtener la URL del video/canción.*`;
+      throw `*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*`;
     } else {
       try {
         if (command === 'play.1') {
@@ -56,12 +56,12 @@ if (enviando) return;
             }
           } catch {
             enviando = false;
-            throw `*[❗] Error al descargar el video/canción desde las APIs disponibles.`;
+            throw `*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*`;
           }
        }
     }
 
-    const dataMessage = `*=> Título:* ${data.resultado.title}\n*=> Canal:* ${data.resultado.channel}\n*=> URL:* ${data.resultado.url}\n*=> Publicado:* ${data.resultado.publicDate}`;
+    const dataMessage = `*[ 📥 ] Descargas - Play v2*\n\n▢ *Título:* ${data.resultado.title}\n\n▢ *Publicado:* ${data.resultado.publicDate}\n\n▢ *Canal:* ${data.resultado.channel}\n\n▢ *Vídeo URL:* ${data.resultado.url}`;
     await conn.sendMessage(m.chat, { text: dataMessage }, { quoted: m });
 
     if (buff) {
@@ -69,11 +69,11 @@ if (enviando) return;
       enviando = false;
     } else {
       enviando = false;
-      throw `*[❗] Error al descargar el video/canción desde las APIs disponibles.`;
+      throw `*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*`;
     }
   } catch (error) {
     enviando = false;
-    throw `*[❗] Error: ${error.message || 'Ocurrió un error inesperado'}.*`;
+    throw `*[ ℹ️ ] Error: ${error.message || 'Ocurrió un error inesperado'}.*`;
   }
 };
 handler.help = ['play.1', 'play.2'].map((v) => v + ' <texto>');
