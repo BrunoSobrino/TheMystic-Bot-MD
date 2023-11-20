@@ -6,9 +6,9 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     // let vn = './media/menu.mp3'
     const img = './Menu2.jpg';
     const d = new Date(new Date + 3600000);
-    const locale = 'es';
+    const locale = 'es-ES';
     const week = d.toLocaleDateString(locale, {weekday: 'long'});
-    const date = d.toLocaleDateString(locale, {day: 'numeric', month: 'long', year: 'numeric'});
+    const date = d.toLocaleDateString(locale, {day: '2-digit', month: '2-digit', year: 'numeric'});
     const _uptime = process.uptime() * 1000;
     const uptime = clockString(_uptime);
     const user = global.db.data.users[m.sender];
@@ -21,41 +21,43 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
     const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const document = doc[Math.floor(Math.random() * doc.length)];
-    const str = ` *🤖 The Mystic Bot*
+    const str = ` 🤖 *The Mystic Bot*
 
- *👋 Hola, ${taguser}*
+ 👋 *Hola,* ${taguser}
 
- *🧑‍💻 Prop.:* Bruno Sobrino
- *📱 WA:* +5219992095479
- *🤖 Bot 1:* +5219991402134
- *🤖 Bot 2:* +5219993404349
- *🏦 PayPal:* paypal.me/TheShadowBrokers133
+ ▢ *Prop.:* Bruno Sobrino
+ ▢ *WA:* +5219992095479
+ ▢ *Bot 1:* +5219991402134
+ ▢ *Bot 2:* +5219993404349
+ ▢ *PayPal:* paypal.me/TheShadowBrokers133
 
- *📆 Fecha:* ${date}
- *⏳ Uptime:* ${uptime}
- *🧑 Usuarios regs:* ${rtotalreg}
- *👥 Usuarios totales:* ${rtotal}
- *🤖 Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n+${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
+ ▢ *Fecha:* ${date}
+ ▢ *Uptime:* ${uptime}
+ ▢ *Usuarios regs:* ${rtotalreg}
+ ▢ *Usuarios totales:* ${rtotal}
+ ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n+${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
 
 
  _*< INFO. DEL USUARIO />*_
 
- *📈 Nivel:* ${level}
- *🧰 Experiencia:* ${exp}
- *⚓ Rango:* ${role}
- *💎 Diamantes:* ${limit}
- *🪙 MysticCoins:* ${money}
- *🎟️ Tokens:* ${joincount}
- *🎫 Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
+ ▢ *Nivel:* ${level}
+ ▢ *Experiencia:* ${exp}
+ ▢ *Rango:* ${role}
+ ▢ *Diamantes:* ${limit}
+ ▢ *MysticCoins:* ${money}
+ ▢ *Tokens:* ${joincount}
+ ▢ *Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
+ ${readMore}
 
 
- _*< LISTA DE COMANDOS />*_
+  _*< MENUS ADICIONALES />*_
+  
+  ▢ _${usedPrefix}menuaudios_
+  ▢ _${usedPrefix}menuanimes_
+  ▢ _${usedPrefix}labiblia_
 
- - Presione en _Leer más_ para ver la lista de comandos${readMore}
  
-
  _*< CMDS DEL BOT />*_
-
 
   ▢ _${usedPrefix}terminosycondiciones_
   ▢ _${usedPrefix}grupos_
@@ -68,14 +70,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}reporte *<txt>*_
   ▢ _${usedPrefix}join *<wagp_url>*_
   ▢ _${usedPrefix}fixmsgespera_
-  ▢ _Bot_ (sin prefijo)
-
-
-  _*< MENUS ADICIONALES />*_
-  
-  ▢ _${usedPrefix}menuaudios_
-  ▢ _${usedPrefix}menuanimes_
-  ▢ _${usedPrefix}labiblia_
+  ▢ _bot_ (sin prefijo)
 
 
  _*< SUB-BOTS />*_
