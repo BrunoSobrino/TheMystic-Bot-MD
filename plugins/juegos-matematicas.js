@@ -24,7 +24,7 @@ conn.sendHydrated(m.chat, mat, author, null, null, null, null, null, [
   if (id in global.math) return conn.reply(m.chat, '_*< JUEGOS - MATEMÁTICAS />*_\n\n*[ ℹ️ ] Aún quedan problemas matemáticos sin resolver en este chat.*', global.math[id][0]);
   const math = genMath(mode);
   global.math[id] = [
-    await conn.reply(m.chat, `_*< JUEGOS - MATEMÁTICAS />*_ \n\n ▢ *Resuelve:* ${math.str} \n\n▢ *Tiempo:* ${(math.time / 1000).toFixed(2)}s\n\n▢ *Premio:* ${math.bonus} XP`, m),
+    await conn.reply(m.chat, `_*• JUEGOS - MATEMÁTICAS •*_ \n\n▢ *Resuelve:* ${math.str}\n\n▢ *Tiempo:* ${(math.time / 1000).toFixed(2)}s\n\n▢ *Premio:* ${math.bonus} XP`, m),
     math, 4,
     setTimeout(() => {
       if (global.math[id]) {
