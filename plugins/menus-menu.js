@@ -21,17 +21,15 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
     const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const document = doc[Math.floor(Math.random() * doc.length)];
-    const str = ` *🤖 The Mystic Bot* 🤖
+    const str = ` *🤖 The Mystic Bot*
 
  *👋 Hola, ${taguser}*
-
 
  *🧑‍💻 Prop.:* Bruno Sobrino
  *📱 WA:* +5219992095479
  *🤖 Bot 1:* +5219991402134
  *🤖 Bot 2:* +5219993404349
  *🏦 PayPal:* paypal.me/TheShadowBrokers133
-
 
  *📆 Fecha:* ${date}
  *⏳ Uptime:* ${uptime}
@@ -40,7 +38,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
  *🤖 Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n+${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
 
 
- _*< INFO. DEL USUARIO />*_ 👤
+ _*< INFO. DEL USUARIO />*_
 
  *📈 Nivel:* ${level}
  *🧰 Experiencia:* ${exp}
@@ -51,12 +49,12 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
  *🎫 Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
 
 
- _*< LISTA DE COMANDOS />*_ 📄
+ _*< LISTA DE COMANDOS />*_
 
  - Presione en _Leer más_ para ver la lista de comandos${readMore}
  
 
- _*< CMDS DEL BOT />*_ 🤖
+ _*< CMDS DEL BOT />*_
 
 
   ▢ _${usedPrefix}terminosycondiciones_
@@ -80,7 +78,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}labiblia_
 
 
- _*< SUB-BOTS />*_ 🤖
+ _*< SUB-BOTS />*_
 
   ▢ _${usedPrefix}serbot --code_
   ▢ _${usedPrefix}serbot_
@@ -105,7 +103,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}disable antiprivado_
   
 
- _*< JUEGOS />*_ 🕹️
+ _*< JUEGOS />*_
 
   ▢ _${usedPrefix}mates *<noob / easy / medium / hard / extreme /impossible /impossible2>*_
   ▢ _${usedPrefix}fake *<txt1> <@tag> <txt2>*_
@@ -142,7 +140,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}wordfind_
 
 
- _*< ACT./DESACT. FUNC. />*_ *️⃣
+ _*< ACT./DESACT. FUNC. />*_
 
   ▢ _${usedPrefix}enable *welcome*_
   ▢ _${usedPrefix}disable *welcome*_
@@ -172,7 +170,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}disable *antidelete*_
 
 
- _*< DESCARGAS />*_ 📥
+ _*< DESCARGAS />*_
 
   ▢ _${usedPrefix}instagram *<url>*_
   ▢ _${usedPrefix}mediafire *<url>*_
@@ -211,7 +209,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}tiktokstalk *<user>*_
 
 
- _*< BUSCADORES />*_ 🔍
+ _*< BUSCADORES />*_
 
   ▢ _${usedPrefix}githubsearch *<txt>*_
   ▢ _${usedPrefix}pelisplus *<txt>*_
@@ -227,7 +225,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}playstore *<txt>*_
 
 
- _*< GRUPOS />*_ 👥
+ _*< GRUPOS />*_
 
   ▢ _${usedPrefix}add *num>*_
   ▢ _${usedPrefix}kick *<@tag>*_
@@ -259,7 +257,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _admins *<txt>*_ (sin prefijo)
 
 
- _*< CONVERTIDORES />*_ 🔄️
+ _*< CONVERTIDORES />*_
 
   ▢ _${usedPrefix}toanime *<img>*_
   ▢ _${usedPrefix}togifaud *<video>*_
@@ -273,7 +271,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}tts *<efecto> <txt>*_
 
 
- _*< EFECTOS & LOGOS />*_ ✨
+ _*< EFECTOS & LOGOS />*_
 
   ▢ _${usedPrefix}logos *<efecto> <txt>*_
   ▢ _${usedPrefix}logochristmas *<txt>*_
@@ -287,7 +285,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}blur_
 
 
- _*< FRASES & TEXTOS />*_ ✍️
+ _*< FRASES & TEXTOS />*_
 
   ▢ _${usedPrefix}piropo_
   ▢ _${usedPrefix}consejo_
@@ -295,7 +293,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}historiaromantica_
 
 
- _*< RANDOM />*_ 🔀
+ _*< ALEATORIO />*_
 
   ▢ _${usedPrefix}kpop *<blackpink/exo/bts>*_
   ▢ _${usedPrefix}cristianoronaldo_
@@ -326,7 +324,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}randomprofile_
 
 
- _*< EFECTOS AUDITIVOS />*_ 🎶
+ _*< EFECTOS P. AUDIOS />*_
 
 *- Responde a un audio o nota de voz.*
 
@@ -344,15 +342,15 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}tupai_
 
 
- _*< CHAT ANÓNIMO />*_ 😶‍🌫️
+ _*< CHAT ANÓNIMO />*_
 
   ▢ _${usedPrefix}start_
   ▢ _${usedPrefix}next_
   ▢ _${usedPrefix}leave_
 
 
- _*< HERRAMIENTAS />*_ 🧰
-
+ _*< HERRAMIENTAS />*_
+ 
   ▢ _${usedPrefix}inspect *<wagc_url>*_
   ▢ _${usedPrefix}chatgpt *<txt>*_
   ▢ _${usedPrefix}delchatgpt
@@ -381,7 +379,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}dropmail_
 
 
- _*< ECONOMÍA />*_ 💵
+ _*< ECONOMÍA />*_
 
   ▢ _${usedPrefix}adventure_
   ▢ _${usedPrefix}cazar_
@@ -404,7 +402,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}unreg *<sn>*_
 
 
- _*< STICKERS />*_ 🗿
+ _*< STICKERS />*_
 
   ▢ _${usedPrefix}sticker *<responder a img o video>*_
   ▢ _${usedPrefix}sticker *<url>*_
@@ -434,7 +432,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}stickerfilter *<efecto> <img>*_
 
 
- _*< PROPIETARIO Y MODS. />*_ 👑
+ _*< PROPIETARIO Y MODS. />*_
 
   ▢ > *<funcion>*
   ▢ => *<funcion>*
