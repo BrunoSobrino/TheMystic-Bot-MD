@@ -1,6 +1,6 @@
 global.math = global.math ? global.math : {};
 const handler = async (m, {conn, args, usedPrefix, command}) => {
-  const mat =`< JUEGOS - MATEMÁTICAS />\n\n*[ ℹ️ ] Falta indicar el nivel de dificultad con el que deseas jugar.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} medium_\n\n▢ *Niveles disponibles:* ${Object.keys(modes).join(' | ')}`.trim();
+  const mat =`_*< JUEGOS - MATEMÁTICAS />*_\n\n*[ ℹ️ ] Falta indicar el nivel de dificultad con el que deseas jugar.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} medium_\n\n▢ *Niveles disponibles:* ${Object.keys(modes).join(' | ')}`.trim();
   if (args.length < 1) return await conn.reply(m.chat, mat, m);
   /* conn.sendButton(m.chat, mat, wm, null, [
 ['𝙼𝙰𝚃𝙴𝚂 𝙴𝙰𝚂𝚈', `${usedPrefix + command} easy`],
@@ -24,7 +24,7 @@ conn.sendHydrated(m.chat, mat, author, null, null, null, null, null, [
   if (id in global.math) return conn.reply(m.chat, '_*< JUEGOS - MATEMÁTICAS />*_\n\n*[ ℹ️ ] Aún quedan problemas matemáticos sin resolver en este chat.*', global.math[id][0]);
   const math = genMath(mode);
   global.math[id] = [
-    await conn.reply(m.chat, `_*< JUEGOS - MATEMÁTICAS />*_\n\n▢ *Resuelve:* ${math.str}\n\n▢ *Tiempo:* ${(math.time / 1000).toFixed(2)}s\n\n▢ *Premio:* ${math.bonus} XP`, m),
+    await conn.reply(m.chat, `< JUEGOS - MATEMÁTICAS />\n\n▢ *Resuelve:* ${math.str}\n\n▢ *Tiempo:* ${(math.time / 1000).toFixed(2)}s\n\n▢ *Premio:* ${math.bonus} XP`, m),
     math, 4,
     setTimeout(() => {
       if (global.math[id]) {
