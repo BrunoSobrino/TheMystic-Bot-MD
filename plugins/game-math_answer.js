@@ -2,7 +2,7 @@ global.math = global.math ? global.math : {};
 const handler = async (m, {conn}) => {
   const id = m.chat;
   if (!m.quoted) return;
-  if (!/^JUEGOS - MATEMÁTICAS\s*<\/ JUEGOS - MATEMÁTICAS \/>$/i.test(m.quoted.text)) return;
+  if (!/^_< JUEGOS - MATEMÁTICAS \/>_\n\n▢ \*Resuelve:\*.*$/i.test(m.quoted.text)) return;
   if (!(m.chat in global.math)) return conn.reply(m.chat, `*[❗𝐈𝐍𝐅𝐎❗] 𝚈𝙰 𝚂𝙴 𝙰𝙷 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙸𝙳𝙾 𝙰 𝙴𝚂𝙰 𝙿𝚁𝙴𝙶𝚄𝙽𝚃𝙰*`, m);
   // conn.sendButton(m.chat, '*[❗𝐈𝐍𝐅𝐎❗] 𝚈𝙰 𝚂𝙴 𝙰𝙷 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙸𝙳𝙾 𝙰 𝙴𝚂𝙰 𝙿𝚁𝙴𝙶𝚄𝙽𝚃𝙰*', author, null, [['𝚅𝙾𝙻𝚅𝙴𝚁 𝙰 𝙹𝚄𝙶𝙰𝚁', '/mates']], m)
   if (m.quoted.id == global.math[id][0].id) {
