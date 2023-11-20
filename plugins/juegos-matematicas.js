@@ -35,6 +35,7 @@ conn.sendHydrated(m.chat, mat, author, null, null, null, null, null, [
     }, math.time),
   ];
 };
+
 handler.command = /^math|mates|matemáticas/i;
 export default handler;
 
