@@ -1,6 +1,6 @@
 global.math = global.math ? global.math : {};
 const handler = async (m, {conn, args, usedPrefix, command}) => {
-  const mat =`_*< JUEGOS - MATEMÁTICAS />*_\n\n*[ ℹ️ ] Falta indicar el nivel de dificultad con el que deseas jugar.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} medium_\n\n▢ *Niveles disponibles:* ${Object.keys(modes).join(' | ')}`.trim();
+  const mat =`< JUEGOS - MATEMÁTICAS />\n\n*[ ℹ️ ] Falta indicar el nivel de dificultad con el que deseas jugar.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} medium_\n\n▢ *Niveles disponibles:* ${Object.keys(modes).join(' | ')}`.trim();
   if (args.length < 1) return await conn.reply(m.chat, mat, m);
   /* conn.sendButton(m.chat, mat, wm, null, [
 ['𝙼𝙰𝚃𝙴𝚂 𝙴𝙰𝚂𝚈', `${usedPrefix + command} easy`],
