@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, {conn, text, usedPrefix, command}) => {
   if (!text) {
-    throw '*[ ℹ️ ] Proporciona un texto.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} Hola Bard, ¿cómo estás?';
+    throw '_*< IA - BARD />*_\n\n*[ ℹ️ ] Proporciona un texto.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} Hola Bard, ¿cómo estás?_';
   }
 
   try {
@@ -16,10 +16,10 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       const respuestaAPI = data.data;
       conn.reply(m.chat, respuestaAPI, m);
     } else {
-      throw 'No se pudo obtener una respuesta válida';
+      throw '_*< IA - BARD />*_\n\n*[ ℹ️ ] No se pudo obtener una respuesta válida.*';
     }
   } catch (error) {
-    throw `Ocurrió un error`;
+    throw `_*< IA - BARD />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*`;
   }
 };
 
