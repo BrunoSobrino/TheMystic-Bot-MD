@@ -1942,24 +1942,21 @@ def shell():
 
     results = speedtest.results
 
-    printer('\n*ISP:* %(isp)s' % speedtest.config['client'],
-            quiet)
-    printer('*Servidor:* %(sponsor)s\n*Ubicación:* %(name)s [%(d)0.2f km] '
-            '\n*Latencia:* %(latency)s ms' % results.server, quiet)
+printer('\n*ISP:* %(isp)s' % speedtest.config['client'], quiet)
+printer('*Servidor:* %(sponsor)s\n*Ubicación:* %(name)s [%(d)0.2f km] '
+        '\n*Latencia:* %(latency)s ms' % results.server, quiet)
 
-    if args.download:
-        printer('', quiet,
-                end=('', '')[bool(debug)])
-        speedtest.download(
-            callback=callback,
-            threads=(None, 1)[args.single]
-        )
-        printer('*Descarga:* %0.2f M%s/s' %
-                ((results.download / 1000.0 / 1000.0) / args.units[1],
-                 args.units[0]),
-                quiet)
-    else:
-        printer('Omitiendo la prueba de descarga', quiet)
+if args.download:
+    printer('', quiet, end=('', '')[bool(debug)])
+    speedtest.download(
+        callback=callback,
+        threads=(None, 1)[args.single]
+    )
+    download_speed = (results.download / 1000.0 / 1000.0) / args.units[1]
+    printer('*Descarga:* %0.2f M%s/s' % (download_speed, args.units[0]), quiet)
+else:
+    printer('Omitiendo la prueba de descarga', quiet)
+
 
     if args.upload:
         speedtest.upload()
