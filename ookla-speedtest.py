@@ -1945,7 +1945,7 @@ def shell():
     printer('\n*ISP:* %(isp)s' % speedtest.config['client'],
             quiet)
     printer('*Servidor:* %(sponsor)s\n*Ubicación:* %(name)s [%(d)0.2f km] '
-            '\n*Ping:* %(latency)s ms' % results.server, quiet)
+            '\n*Latencia:* %(latency)s ms' % results.server, quiet)
 
     if args.download:
         printer('', quiet,
@@ -1977,7 +1977,7 @@ def shell():
         results.share()
 
     if args.simple:
-        printer('Ping: %s ms\nDescarga: %0.2f M%s/s\n\nSubida: %0.2f M%s/s' %
+        printer('Latencia: %s ms\nDescarga: %0.2f M%s/s\n\nSubida: %0.2f M%s/s' %
                 (results.ping,
                  (results.download / 1000.0 / 1000.0) / args.units[1],
                  args.units[0],
@@ -1989,7 +1989,7 @@ def shell():
         printer(results.json())
 
     if args.share and not machine_format:
-        printer('Compartir resultado: %s' % results.share())
+        printer('\nCompartir resultado: %s' % results.share())
 
 
 def main():
