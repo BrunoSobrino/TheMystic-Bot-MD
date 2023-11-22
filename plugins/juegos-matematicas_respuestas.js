@@ -19,7 +19,7 @@ const handler = async (m, {conn}) => {
         // conn.sendButton(m.chat, `*𝚂𝙴 𝙰𝙲𝙰𝙱𝙰𝚁𝙾𝙽 𝚃𝚄𝚂 𝙾𝙿𝙾𝚁𝚃𝚄𝙽𝙸𝙳𝙰𝙳𝙴𝚂*\n*𝙻𝙰 𝚁𝙴𝚂𝙿𝚄𝙴𝚂𝚃𝙰 𝙴𝚂: ${math.result}*`, author, null, [['𝚅𝙾𝙻𝚅𝙴𝚁 𝙰 𝙹𝚄𝙶𝙰𝚁', `/math ${math.mode}`]], m)
         clearTimeout(global.math[id][3]);
         delete global.math[id];
-      } else conn.reply(m.chat, `_*< JUEGOS - MATEMÁTICAS />*_\n\n▢ *Respuesta incorrecta.*\n\n▢ Todavía tienes ${global.math[id][2]} oportunidades.`, m);
+      } else conn.reply(m.chat, `_*< JUEGOS - MATEMÁTICAS />*_\n\n▢ *Respuesta incorrecta.*\n\n▢ Todavía tienes ${global.math[id][2]} oportunidad(es).`, m);
     }
   }
 };
