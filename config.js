@@ -63,7 +63,7 @@ global.mes = d.toLocaleDateString('es', {month: 'long'});
 global.año = d.toLocaleDateString('es', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
-global.wm2 = `▸ ${dia} ${fecha}\n▸ The Mystic - Bot`;
+global.wm2 = `${dia} ${fecha}\nThe Mystic - Bot`;
 global.gt = 'The Mystic - Bot';
 global.mysticbot = 'The Mystic - Bot';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
