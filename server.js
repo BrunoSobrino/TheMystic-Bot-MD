@@ -9,7 +9,7 @@ function connect(conn, PORT) {
   const app = global.app = express();
   console.log(app);
   const server = global.server = createServer(app);
-  let _qr = 'QR invalido, probablemente ya hayas escaneado el QR.';
+  let _qr = 'El código QR es invalido, posiblemente ya se escaneo el código QR.';
 
   conn.ev.on('connection.update', function appQR({qr}) {
     if (qr) _qr = qr;
@@ -21,7 +21,7 @@ function connect(conn, PORT) {
   });
 
   server.listen(PORT, () => {
-    console.log('App listened on port', PORT);
+    console.log('[ ℹ️ ] La aplicación está escuchando el puerto', PORT, '(ignorar si ya escaneo el código QR)');
     if (opts['keepalive']) keepAlive();
   });
 }

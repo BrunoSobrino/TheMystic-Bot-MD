@@ -6,9 +6,9 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     // let vn = './media/menu.mp3'
     const img = './Menu2.jpg';
     const d = new Date(new Date + 3600000);
-    const locale = 'es';
+    const locale = 'es-ES';
     const week = d.toLocaleDateString(locale, {weekday: 'long'});
-    const date = d.toLocaleDateString(locale, {day: 'numeric', month: 'long', year: 'numeric'});
+    const date = d.toLocaleDateString(locale, {day: '2-digit', month: '2-digit', year: 'numeric'});
     const _uptime = process.uptime() * 1000;
     const uptime = clockString(_uptime);
     const user = global.db.data.users[m.sender];
@@ -21,41 +21,42 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
     const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const document = doc[Math.floor(Math.random() * doc.length)];
-    const str = ` *🤖 The Mystic Bot* 🤖
+    const str = ` 𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏
 
- *👋 Hola, ${taguser}*
+ ▢ *Hola,* ${taguser}
 
- *🧑‍💻 Prop.:* Bruno Sobrino
- *📱 WA:* +5219992095479
- *🤖 Bot 1:* +5219991402134
- *🤖 Bot 2:* +5219993404349
- *🏦 PayPal:* paypal.me/TheShadowBrokers133
+ ▢ *Prop.:* Bruno Sobrino
+ ▢ *WA:* +5219992095479
+ ▢ *Bot 1:* +5219991402134
+ ▢ *Bot 2:* +5219993404349
+ ▢ *PayPal:* paypal.me/TheShadowBrokers133
 
-
- *📆 Fecha:* ${date}
- *⏳ Uptime:* ${uptime}
- *🧑 Usuarios regs:* ${rtotalreg}
- *👥 Usuarios totales:* ${rtotal}
- *🤖 Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n+${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
-
-
- *< INFO. DEL USUARIO />* 👤
-
- *📈 Nivel:* ${level}
- *🧰 Experiencia:* ${exp}
- *⚓ Rango:* ${role}
- *💎 Diamantes:* ${limit}
- *🪙 MysticCoins:* ${money}
- *🎟️ Tokens:* ${joincount}
- *🎫 Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
+ ▢ *Fecha:* ${date}
+ ▢ *Uptime:* ${uptime}
+ ▢ *Usuarios regs:* ${rtotalreg}
+ ▢ *Usuarios totales:* ${rtotal}
+ ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n+${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
 
 
- _*< LISTA DE COMANDOS />*_ 📄
+ _*< INFO. DEL USUARIO />*_
 
- - Presione en _Leer más_ para ver la lista de comandos${readMore}
+ ▢ *Nivel:* ${level}
+ ▢ *Experiencia:* ${exp}
+ ▢ *Rango:* ${role}
+ ▢ *Diamantes:* ${limit}
+ ▢ *MysticCoins:* ${money}
+ ▢ *Tokens:* ${joincount}
+ ▢ *Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
+ ${readMore}
+
+  _*< MENUS ADICIONALES />*_
+  
+  ▢ _${usedPrefix}menuaudios_
+  ▢ _${usedPrefix}menuanimes_
+  ▢ _${usedPrefix}labiblia_
+
  
-
- *< CMDS DEL BOT />* 🤖
+ _*< CMDS DEL BOT />*_
 
   ▢ _${usedPrefix}terminosycondiciones_
   ▢ _${usedPrefix}grupos_
@@ -68,16 +69,10 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}reporte *<txt>*_
   ▢ _${usedPrefix}join *<wagp_url>*_
   ▢ _${usedPrefix}fixmsgespera_
-  ▢ _Bot_ (sin prefijo)
+  ▢ _bot_ (sin prefijo)
 
 
-  *< MENUS ADICIONALES />*
-  ▢ _${usedPrefix}menuaudios_
-  ▢ _${usedPrefix}menuanimes_
-  ▢ _${usedPrefix}labiblia_
-
-
- *< SUB-BOTS />* 🤖
+ _*< SUB-BOTS />*_
 
   ▢ _${usedPrefix}serbot --code_
   ▢ _${usedPrefix}serbot_
@@ -85,7 +80,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}token_
   ▢ _${usedPrefix}stop_
   ▢ _${usedPrefix}bots_
-
+  ▢
   ▢ _${usedPrefix}enable restrict_
   ▢ _${usedPrefix}disable restrict_
   ▢ _${usedPrefix}enable autoread_
@@ -102,7 +97,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}disable antiprivado_
   
 
- *< JUEGOS />* 🕹️
+ _*< JUEGOS />*_
 
   ▢ _${usedPrefix}mates *<noob / easy / medium / hard / extreme /impossible /impossible2>*_
   ▢ _${usedPrefix}fake *<txt1> <@tag> <txt2>*_
@@ -139,7 +134,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}wordfind_
 
 
- *< ACT./DESACT. FUNCIONES />* *️⃣
+ _*< ACT./DESACT. FUNC. />*_
 
   ▢ _${usedPrefix}enable *welcome*_
   ▢ _${usedPrefix}disable *welcome*_
@@ -169,7 +164,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}disable *antidelete*_
 
 
- *< DESCARGAS />* 📥
+ _*< DESCARGAS />*_
 
   ▢ _${usedPrefix}instagram *<url>*_
   ▢ _${usedPrefix}mediafire *<url>*_
@@ -208,7 +203,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}tiktokstalk *<user>*_
 
 
- *< BUSCADORES />* 🔍
+ _*< BUSCADORES />*_
 
   ▢ _${usedPrefix}githubsearch *<txt>*_
   ▢ _${usedPrefix}pelisplus *<txt>*_
@@ -224,7 +219,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}playstore *<txt>*_
 
 
- *< GRUPOS />* 👥
+ _*< GRUPOS />*_
 
   ▢ _${usedPrefix}add *num>*_
   ▢ _${usedPrefix}kick *<@tag>*_
@@ -254,10 +249,9 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}destraba_
   ▢ _${usedPrefix}setpp *<img>*_
   ▢ _admins *<txt>*_ (sin prefijo)
-${readMore}
 
 
- *< CONVERTIDORES />* 🔄️
+ _*< CONVERTIDORES />*_
 
   ▢ _${usedPrefix}toanime *<img>*_
   ▢ _${usedPrefix}togifaud *<video>*_
@@ -271,7 +265,7 @@ ${readMore}
   ▢ _${usedPrefix}tts *<efecto> <txt>*_
 
 
- *< EFECTOS & LOGOS />* ✨
+ _*< EFECTOS & LOGOS />*_
 
   ▢ _${usedPrefix}logos *<efecto> <txt>*_
   ▢ _${usedPrefix}logochristmas *<txt>*_
@@ -285,7 +279,7 @@ ${readMore}
   ▢ _${usedPrefix}blur_
 
 
- *< FRASES & TEXTOS />* ✍️
+ _*< FRASES & TEXTOS />*_
 
   ▢ _${usedPrefix}piropo_
   ▢ _${usedPrefix}consejo_
@@ -293,7 +287,7 @@ ${readMore}
   ▢ _${usedPrefix}historiaromantica_
 
 
- *< RANDOM />* 🔀
+ _*< ALEATORIO />*_
 
   ▢ _${usedPrefix}kpop *<blackpink/exo/bts>*_
   ▢ _${usedPrefix}cristianoronaldo_
@@ -324,7 +318,7 @@ ${readMore}
   ▢ _${usedPrefix}randomprofile_
 
 
- *< EFECTOS AUDITIVOS />* 🎶
+ _*< EFECTOS P. AUDIOS />*_
 
 *- Responde a un audio o nota de voz.*
 
@@ -342,15 +336,15 @@ ${readMore}
   ▢ _${usedPrefix}tupai_
 
 
- *< CHAT ANÓNIMO />* 😶‍🌫️
+ _*< CHAT ANÓNIMO />*_
 
   ▢ _${usedPrefix}start_
   ▢ _${usedPrefix}next_
   ▢ _${usedPrefix}leave_
 
 
- *< HERRAMIENTAS />* 🧰
-
+ _*< HERRAMIENTAS />*_
+ 
   ▢ _${usedPrefix}inspect *<wagc_url>*_
   ▢ _${usedPrefix}chatgpt *<txt>*_
   ▢ _${usedPrefix}delchatgpt
@@ -377,9 +371,9 @@ ${readMore}
   ▢ _${usedPrefix}covid *<pais>*_
   ▢ _${usedPrefix}horario_
   ▢ _${usedPrefix}dropmail_
-${readMore}
 
- *< ECONOMÍA />* 💵
+
+ _*< ECONOMÍA />*_
 
   ▢ _${usedPrefix}adventure_
   ▢ _${usedPrefix}cazar_
@@ -402,7 +396,7 @@ ${readMore}
   ▢ _${usedPrefix}unreg *<sn>*_
 
 
- *< STICKERS />* 🗿
+ _*< STICKERS />*_
 
   ▢ _${usedPrefix}sticker *<responder a img o video>*_
   ▢ _${usedPrefix}sticker *<url>*_
@@ -430,10 +424,9 @@ ${readMore}
   ▢ _${usedPrefix}wm *<packname> <autor>*_
   ▢ _${usedPrefix}stickermarker *<efecto> <img>*_
   ▢ _${usedPrefix}stickerfilter *<efecto> <img>*_
-${readMore}
 
 
- *< PROPIETARIO Y MODS. />* 👑
+ _*< PROPIETARIO Y MODS. />*_
 
   ▢ > *<funcion>*
   ▢ => *<funcion>*
@@ -501,10 +494,7 @@ ${readMore}
   ▢ _${usedPrefix}addcmd *<txt> <responder a sticker/img>*_
   ▢ _${usedPrefix}delcmd *<responder a sticker/img con comando o txt asignado>*_
   ▢ _${usedPrefix}saveimage
-  ▢ _${usedPrefix}viewimage
-
- Modificado por: *dftzippo*
- © 2023 - *The Mystic Bot*`.trim();
+  ▢ _${usedPrefix}viewimage`.trim();
     if (m.isGroup) {
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
       const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
