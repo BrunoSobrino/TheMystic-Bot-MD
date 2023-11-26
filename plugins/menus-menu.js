@@ -35,7 +35,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
  ▢ *Uptime:* ${uptime}
  ▢ *Usuarios regs:* ${rtotalreg}
  ▢ *Usuarios totales:* ${rtotal}
- ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n+${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
+ ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
 
 
  _*< INFO. DEL USUARIO />*_
