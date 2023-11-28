@@ -5,8 +5,8 @@ const handler = async (m, {conn, args}) => {
     contextInfo: {externalAdReply: {mediaUrl: null, mediaType: 1, description: null,
       title: '𝙻𝙸𝙽𝙺 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾',
       body: '𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝',
-      previewType: 0, thumbnail: fs.readFileSync('./Menu2.jpg'),
-      sourceUrl: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`}}});
+      previewType: 0, thumbnail: fs.readFileSync('./shadow.png'),
+      sourceUrl: `https://github.com/LxShadow/LxShadow`}}});
 };
 handler.help = ['linkgroup'];
 handler.tags = ['group'];
