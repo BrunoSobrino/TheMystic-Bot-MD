@@ -15,7 +15,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     await conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id, mentions: [m.sender]});
     const dataFn = await conn.getFile(`https://api-brunosobrino.zipponodes.xyz/api/tiktokv2?url=${args[0]}`);
     const desc1n = `*¡Hola! 🌟*\n*📽️ Aquí tienes tu video de TikTok.*\n\n*Recuerda que si deseas convertir el video en audio, puedes hacerlo fácilmente respondiendo al video con el comando #tomp3 🎧.*`;
-    await conn.sendMessage(m.chat, {video: {url: dataFn.data}, caption: desc1n}, {quoted: m});
+    await conn.sendMessage(m.chat, {video: dataFn.data, caption: desc1n}, {quoted: m});
   } catch (ee1) {
   try {
     //const aa = {quoted: m, userJid: conn.user.jid};
