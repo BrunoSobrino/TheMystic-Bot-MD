@@ -21,7 +21,7 @@ const handler = async (m, {conn, usedPrefix, text}) => {
   } catch (e) {
   } finally {
     conn.groupParticipantsUpdate(m.chat, [user], 'demote');
-    conn.reply(m.chat, `*[ ✅ ] ÓRDENES RECIBIDAS*`, m);
+    conn.reply(m.chat, `*𝐄𝐣𝐞𝐜𝐮𝐭𝐚𝐧𝐝𝐨 𝐎𝐫𝐝𝐞𝐧𝐞𝐬..*`, m);
   }
 };
 handler.help = ['*593xxx*', '*@usuario*', '*responder chat*'].map((v) => 'demote ' + v);
