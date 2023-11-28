@@ -19,78 +19,81 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
     const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const document = doc[Math.floor(Math.random() * doc.length)];
-    const str = `
-        @LxShadow ~ Bot 🥀
+    const str = `        @LxShadow ~ Bot 🥀
+
         
    Hola, ${taguser}
 
-Si Deseas Adquirir El Bot, Plataformas De Streaming, Diamantes A Bajo Precio U Seguidores 
-Contactarme Al Siguiente Número:
 
-LxShadow 🥀: wa.me/5215541081260
+𝐒𝐢 𝐃𝐞𝐬𝐞𝐚𝐬 𝐀𝐝𝐪𝐮𝐢𝐫𝐢𝐫 𝐄𝐥 𝐁𝐨𝐭, 𝐏𝐥𝐚𝐭𝐚𝐟𝐨𝐫𝐦𝐚𝐬 𝐃𝐞 𝐒𝐭𝐫𝐞𝐚𝐦𝐢𝐧𝐠,
+𝐃𝐢𝐚𝐦𝐚𝐧𝐭𝐞𝐬 𝐀 𝐁𝐚𝐣𝐨 𝐏𝐫𝐞𝐜𝐢𝐨 𝐔 𝐒𝐞𝐠𝐮𝐢𝐝𝐨𝐫𝐞𝐬.
 
-Método De Pago:
+𝐂𝐨𝐧𝐭𝐚𝐜𝐭𝐚𝐫𝐦𝐞 𝐀𝐥 𝐒𝐢𝐠𝐮𝐢𝐞𝐧𝐭𝐞 𝐍𝐮𝐦𝐞𝐫𝐨:
+LxShadow: Wa.me/+5215541081250
+
+𝐌𝐞𝐭𝐨𝐝𝐨𝐬 𝐃𝐞 𝐏𝐚𝐠𝐨:
 
 Transferencia, Deposito Y PayPal.
 
-      *🌑   Menu de Precios   🌑*
+
+      *☁️   𝐌𝐞𝐧𝐮 𝐃𝐞 𝐏𝐫𝐞𝐜𝐢𝐨𝐬   ☁️*
 
      
-        *🌕 Precio Del Bot 🌕*
+        *☁️ 𝐏𝐫𝐞𝐜𝐢𝐨 𝐃𝐞𝐥 𝐁𝐨𝐭 ☁️*
         
-          $30.00 Mx Por Grupo
+          30.00 Mx Por Grupo
 
-      *🪐 Creación De Tu Propio Bot 🪐*
+      *☁️ 𝐂𝐫𝐞𝐚𝐜𝐢𝐨𝐧 𝐃𝐞 𝐓𝐮 𝐏𝐫𝐨𝐩𝐢𝐨 𝐁𝐨𝐭 ☁️*
 
-               $300.00 Mx
+               300.00 Mx
 
        (Tiempo De Entrega De 12 a 24 hrs)
 
-_______________________________________________
+___________________________________________
 
-       *🌑 Plataformas De Streaming 🌑*
+       *☁️ 𝐏𝐥𝐚𝐭𝐚𝐟𝐨𝐫𝐦𝐚𝐬 𝐃𝐞 𝐒𝐭𝐫𝐞𝐚𝐦𝐢𝐧𝐠 ☁️*
          
-         (Perfiles ~ 1 Dispositivo)
+         ( 𝐏𝐞𝐫𝐟𝐢𝐥𝐞𝐬 ~ 𝟏 𝐃𝐢𝐬𝐩𝐨𝐬𝐢𝐭𝐢𝐯𝐨 )
 
-🥀- HBO Max 1 Mes $10.00 Mx
+💦- HBO Max 1 Mes 10.00 Mx
 
-🥀- Claro video 1 Mes $15.00 Mx
+💦- Claro video 1 Mes 15.00 Mx
 (Incluye Paramount,HBO Max,Foxsport)
 
 
-         *🌕 Completas 🌕*
+         *☁️ 𝐂𝐨𝐦𝐩𝐥𝐞𝐭𝐚𝐬 ☁️*
 
 
-🥀- HBO Max 1 Mes $20.00 Mx
+💦- HBO Max 1 Mes 20.00 Mx
 
-🥀- Claro video 1 Mes $35.00 Mx
+💦- Claro video 1 Mes 35.00 Mx
 (Incluye Paramount,HBO Max,Foxsport)
 
 _________________________________________
         
-     *☀️ Precio Diamantes Y Regalos ☀️*
+     *💎 𝐏𝐫𝐞𝐜𝐢𝐨 𝐃𝐢𝐚𝐦𝐚𝐧𝐭𝐞𝐬 𝐘 𝐑𝐞𝐠𝐚𝐥𝐨𝐬. 💎*
 
-   💎520 x $65.00 Mx
-   💎1,040 x $130.00 Mx
-   💎1,560 x $190.00 Mx
-   💎2,080 x $240.00 Mx
-   💎2,600 x $300.00 Mx
-   💎3,120 x $360.00 Mx
-   💎3,640 x $420.00 Mx
-   💎4,120 x $480.00 Mx
-   💎4,680 x $540.00 Mx
-   💎5,200 x $600.00 Mx
+   💎520 x 65.00 Mx
+   💎1,040 x 130.00 Mx
+   💎1,560 x 190.00 Mx
+   💎2,080 x 240.00 Mx
+   💎2,600 x 300.00 Mx
+   💎3,120 x 360.00 Mx
+   💎3,640 x 420.00 Mx
+   💎4,120 x 480.00 Mx
+   💎4,680 x 540.00 Mx
+   💎5,200 x 600.00 Mx
 
       *🎀  Regalos  🎀*
 
           Pase Booyah
 
-  1 x $40.00 Mx   2 x $70.00 Mx
+  1 x 40.00 Mx   2 x 70.00 Mx
 
 
         *🎀  Salas  🎀*
 
-   5 x $70.00 Mx  10 x $120.00 Mx
+   5 x 70.00 Mx  10 x 120.00 Mx
 
 
 @LxShadow ~ Bot 🥀`.trim();
