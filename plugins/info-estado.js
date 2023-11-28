@@ -7,12 +7,12 @@ const handler = async (m, {conn}) => {
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
     const str = `@LxShadow ~ Bot
 │
-│ *➤ ʜᴏʟᴀ ${taguser}*
+│ *✨ 𝐇𝐨𝐥𝐚 ${taguser}*
 │
-│ *=> 🤖 ᴛɪᴇᴍᴘᴏ ᴀᴄᴛɪᴠᴏ:* ${uptime}
-│ *=> ✅ ʙᴏᴛ ᴅᴇ ᴜsᴏ ᴘᴜʙʟɪᴄᴏ*
-│ *=> 👑 ᴄʀᴇᴀᴅᴏʀ: ʙʀᴜɴᴏ sᴏʙʀɪɴᴏ*
-│ *=> 🔗 ᴄᴜᴇɴᴛᴀs ᴏғᴄ:* https://github.com/LxShadow/LxShadow
+│ *=> 🤖 𝐓𝐢𝐞𝐦𝐩𝐨 𝐀𝐜𝐭𝐢𝐯𝐨:* ${uptime}
+│ *=> ✅ 𝐁𝐨𝐭 𝐃𝐞 𝐔𝐬𝐨 𝐏𝐮𝐛𝐥𝐢𝐜𝐨*
+│ *=> 👑 𝐂𝐫𝐞𝐚𝐝𝐨𝐫: LxShadow*
+│ *=> 🔗 𝐂𝐮𝐞𝐧𝐭𝐚 𝐎𝐟𝐜:* https://github.com/LxShadow/LxShadow
 ╰────────────────`.trim();
     if (m.isGroup) {
       conn.sendMessage(m.chat, {text: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net'), contextInfo: {forwardingScore: 9999999, isForwarded: true, mentionedJid: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net'), "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm, "containsAutoReply": true, "mediaType": 1, "thumbnail": pp, "mediaUrl": `https://www.atom.bio/theshadowbrokers-team`, "sourceUrl": `https://www.atom.bio/theshadowbrokers-team`}}}, {quoted: m});
