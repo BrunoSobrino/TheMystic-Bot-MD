@@ -21,7 +21,8 @@ const handler = async (m, { conn, usedPrefix }) => {
   const { autoread, gconly, pconly, self } = global.opts || {};
   const old = performance.now();
   const neww = performance.now();
-  const speed = (neww - old).toFixed(5);
+  const speed = (neww - old).toFixed(7);
+  const wm = 'The Mystic Bot';
   const info = ` _*< INFO - ESTADO />*_
 
  ▢ *Prop.:* Bruno Sobrino
@@ -49,29 +50,13 @@ const handler = async (m, { conn, usedPrefix }) => {
  ▢ *AntiPrivado:* ${antiprivado ? "activado" : "desactivado"}
  ▢ *AntiLlamada:* ${antiCall ? "activado" : "desactivado"}
  ▢ *ModeJadiBot:* ${modejadibot ? "activado" : "desactivado"}`.trim();
-const docOptions = [
-  "pdf",
-  "zip",
-  "vnd.openxmlformats-officedocument.presentationml.presentation",
-  "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  "vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
-const randomDoc = docOptions[Math.floor(Math.random() * docOptions.length)];
-
-const messageOptions = {
-  document: { url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD` },
-  mimetype: `application/${randomDoc}`,
-  fileName: `「  𝑯𝒆𝒍𝒍𝒐 𝑾𝒐𝒓𝒍𝒅 」`,
-  fileLength: 99999999999999,
-  pageCount: 200,
+conn.sendMessage(m.chat, {
   contextInfo: {
     forwardingScore: 200,
     isForwarded: true,
     externalAdReply: {
-      mediaUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
       mediaType: 2,
-      previewType: "pdf",
-      title: "ᴇʟ ᴍᴇᴊᴏʀ ʙᴏᴛ ᴅᴇ ᴡʜᴀᴛsᴀᴘᴘ",
+      title: "By Bruno Sobrino",
       body: wm,
       thumbnail: imagen1,
       sourceUrl: "https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA",
@@ -80,9 +65,7 @@ const messageOptions = {
   caption: info,
   footer: wm,
   headerType: 6,
-};
-
-conn.sendMessage(m.chat, messageOptions, { quoted: m });
+}, { quoted: m });
 
 handler.command = /^(ping|speed|infobot)$/i;
 export default handler;
