@@ -24,7 +24,11 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const str = `
 
 Yssmina  Md MENU
- 
+ ʏᴀssᴍɪɴᴇ ♥︎
+ ᴍᴏʀᴏ ♡︎
+sᴀʟᴍᴀ ♡︎
+sᴀʟᴀʜ ʙᴏᴛᴀʙ ♥︎
+ᴛʜᴀɴᴋs ғᴏʀ ᴀʟʟ
 قســـم الــــذكــاء الاصطناعي
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
 
