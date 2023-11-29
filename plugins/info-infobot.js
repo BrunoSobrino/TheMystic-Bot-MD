@@ -29,7 +29,7 @@ const handler = async (m, { conn, usedPrefix }) => {
  ▢ *Bot 1:* +5219991402134
  ▢ *Bot 2:* +5219993404349
  ▢ *PayPal:* paypal.me/TheShadowBrokers133
- ▢
+ 
  ▢ *Usuarios regs.:* ${totalusrReg}
  ▢ *Usuarios totales:* ${totalusr}
  ▢ *Prefijo:* ${usedPrefix}
@@ -37,11 +37,11 @@ const handler = async (m, { conn, usedPrefix }) => {
  ▢ *Ping:* ${speed}
  ▢ *Modo:* ${self ? "privado" : "público"}
  ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
- ▢
+ 
  ▢ *Chats privados:* ${chats.length - groups.length}
  ▢ *Grupos:* ${groups.length}
  ▢ *Chats totales:* ${chats.length}
- ▢
+ 
  ▢ *Autoread:* ${autoread ? "activo" : "desactivado"}
  ▢ *Restrict:* ${restrict ? "activo" : "desactivado"}
  ▢ *PCOnly:* ${pconly ? "activado" : "desactivado"}
@@ -49,39 +49,40 @@ const handler = async (m, { conn, usedPrefix }) => {
  ▢ *AntiPrivado:* ${antiprivado ? "activado" : "desactivado"}
  ▢ *AntiLlamada:* ${antiCall ? "activado" : "desactivado"}
  ▢ *ModeJadiBot:* ${modejadibot ? "activado" : "desactivado"}`.trim();
-  const doc = [
-    "pdf",
-    "zip",
-    "vnd.openxmlformats-officedocument.presentationml.presentation",
-    "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ];
-  const document = doc[Math.floor(Math.random() * doc.length)];
-  const Message = {
-    document: { url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD` },
-    mimetype: `application/${document}`,
-    fileName: `「  𝑯𝒆𝒍𝒍𝒐 𝑾𝒐𝒓𝒍𝒅 」`,
-    fileLength: 99999999999999,
-    pageCount: 200,
-    contextInfo: {
-      forwardingScore: 200,
-      isForwarded: true,
-      externalAdReply: {
-        mediaUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
-        mediaType: 2,
-        previewType: "pdf",
-        title: "ᴇʟ ᴍᴇᴊᴏʀ ʙᴏᴛ ᴅᴇ ᴡʜᴀᴛsᴀᴘᴘ",
-        body: wm,
-        thumbnail: imagen1,
-        sourceUrl: "https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA",
-      },
+const docOptions = [
+  "pdf",
+  "zip",
+  "vnd.openxmlformats-officedocument.presentationml.presentation",
+  "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+const randomDoc = docOptions[Math.floor(Math.random() * docOptions.length)];
+
+const messageOptions = {
+  document: { url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD` },
+  mimetype: `application/${randomDoc}`,
+  fileName: `「  𝑯𝒆𝒍𝒍𝒐 𝑾𝒐𝒓𝒍𝒅 」`,
+  fileLength: 99999999999999,
+  pageCount: 200,
+  contextInfo: {
+    forwardingScore: 200,
+    isForwarded: true,
+    externalAdReply: {
+      mediaUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
+      mediaType: 2,
+      previewType: "pdf",
+      title: "ᴇʟ ᴍᴇᴊᴏʀ ʙᴏᴛ ᴅᴇ ᴡʜᴀᴛsᴀᴘᴘ",
+      body: wm,
+      thumbnail: imagen1,
+      sourceUrl: "https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA",
     },
-    caption: info,
-    footer: wm,
-    headerType: 6,
-  };
-  conn.sendMessage(m.chat, Message, { quoted: m });
+  },
+  caption: info,
+  footer: wm,
+  headerType: 6,
 };
+
+conn.sendMessage(m.chat, messageOptions, { quoted: m });
 
 handler.command = /^(ping|speed|infobot)$/i;
 export default handler;
