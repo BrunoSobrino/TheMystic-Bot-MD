@@ -14,5 +14,5 @@ const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
     throw `*التطبيق غير متوفر ❎*`;
   }    
 };
-handler.command = /^(apkmod|modapk|dapk2|aptoide|aptoidedl)$/i;
+handler.command = /^(apkmod|3aafk-sift|dapk2|aptoide|aptoidedl)$/i;
 export default handler;
