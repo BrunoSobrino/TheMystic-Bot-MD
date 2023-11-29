@@ -21,23 +21,34 @@ const handler = async (m, { conn, usedPrefix }) => {
   const { autoread, gconly, pconly, self } = global.opts || {};
   const old = performance.now();
   const neww = performance.now();
-  const speed = (neww - old).toFixed(2);
+  const speed = (neww - old).toFixed(5);
   const info = ` _*< INFO - ESTADO />*_
 
-  ▢ *Creador:* Bruno Sobrino
-  ▢ *Número:* +52 1 999 209 5479
-  ▢
-  ▢ *Usuarios regs.:* ${totalusrReg}
-  ▢ *Usuarios totales:* ${totalusr}
-  ▢ *Prefijo:* ${usedPrefix}
-  ▢ *Uptime:* ${uptime}
-  ▢ *Ping:* ${speed}
-  ▢
-  ▢ *Chats privados:* ${chats.length - groups.length}
-  ▢ *Grupos:* ${groups.length}
-  ▢ *Chats totales:* ${chats.length}
-
-`.trim();
+ ▢ *Prop.:* Bruno Sobrino
+ ▢ *WA:* +5219992095479
+ ▢ *Bot 1:* +5219991402134
+ ▢ *Bot 2:* +5219993404349
+ ▢ *PayPal:* paypal.me/TheShadowBrokers133
+ ▢
+ ▢ *Usuarios regs.:* ${totalusrReg}
+ ▢ *Usuarios totales:* ${totalusr}
+ ▢ *Prefijo:* ${usedPrefix}
+ ▢ *Uptime:* ${uptime}
+ ▢ *Ping:* ${speed}
+ ▢ *Modo:* ${self ? "privado" : "público"}
+ ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
+ ▢
+ ▢ *Chats privados:* ${chats.length - groups.length}
+ ▢ *Grupos:* ${groups.length}
+ ▢ *Chats totales:* ${chats.length}
+ ▢
+ ▢ *Autoread:* ${autoread ? "activo" : "desactivado"}
+ ▢ *Restrict:* ${restrict ? "activo" : "desactivado"}
+ ▢ *PCOnly:* ${pconly ? "activado" : "desactivado"}
+ ▢ *GPOnly:* ${gconly ? "activado" : "desactivado"}
+ ▢ *AntiPrivado:* ${antiprivado ? "activado" : "desactivado"}
+ ▢ *AntiLlamada:* ${antiCall ? "activado" : "desactivado"}
+ ▢ *ModeJadiBot:* ${modejadibot ? "activado" : "desactivado"}`.trim();
   const doc = [
     "pdf",
     "zip",
@@ -71,8 +82,7 @@ const handler = async (m, { conn, usedPrefix }) => {
   };
   conn.sendMessage(m.chat, Message, { quoted: m });
 };
-handler.help = ["infobot", "speed"];
-handler.tags = ["info", "tools"];
+
 handler.command = /^(ping|speed|infobot)$/i;
 export default handler;
 
