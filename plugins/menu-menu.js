@@ -66,6 +66,7 @@ Yssmina  Md MENU
 📲_${usedPrefix}tiktok
 📲_${usedPrefix}gdrive
 📲_${usedPrefix}dapk2
+💸${usedPrefix}3aafk-sift
 اوامر الموسيقى والقرأن
 █▒▒▒▒▒█ ◈ █▒▒▒▒▒█
 🎧_${usedPrefix}Audiomenu
