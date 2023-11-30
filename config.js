@@ -45,12 +45,12 @@ global.titulowm2 = `LxShadow ~ Bot 🥀`
 global.igfg = 'LxShadow ~ Bot 🥀';
 global.wait = '*[ ❗️ ] Cargando...*';
 
-global.imagen1 = fs.readFileSync('./shadow.png');
-global.imagen2 = fs.readFileSync('./src/shadow.png');
-global.imagen3 = fs.readFileSync('./src/shadow.png');
-global.imagen4 = fs.readFileSync('./shadow.png');
-global.imagen5 = fs.readFileSync('./src/shadow.png');
-global.imagen6 = fs.readFileSync('./shadow.png');
+global.imagen1 = fs.readFileSync('./LxShadow.jpg');
+global.imagen2 = fs.readFileSync('./src/LxShadow.jpg');
+global.imagen3 = fs.readFileSync('./src/LxShadow.jpg');
+global.imagen4 = fs.readFileSync('./LxShadow.jpg');
+global.imagen5 = fs.readFileSync('./src/LxShadow.jpg');
+global.imagen6 = fs.readFileSync('./LxShadow.jpg');
 
 global.mods = [];
 
