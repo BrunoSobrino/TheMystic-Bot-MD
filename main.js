@@ -353,11 +353,11 @@ global.reloadHandler = async function(restatConn) {
 
   conn.welcome = '@subject\n @user\n 𝐁𝐢𝐞𝐧𝐯𝐞𝐧𝐢𝐝𝐱 \n\n 𝐃𝐞𝐬𝐜𝐫𝐢𝐩𝐜𝐢𝐨𝐧:\n\n@desc\n\n @LxShadow ~ Bot 🥀\n';
   conn.bye = ' @user\n 𝐇𝐚𝐬𝐭𝐚 𝐍𝐮𝐧𝐜𝐚 ! \n @LxShadow ~ Bot 🥀';
-  conn.spromote = '*[ ❗ ] @user 𝐒𝐞 𝐒𝐮𝐦𝐚 𝐀𝐥 𝐆𝐫𝐮𝐩𝐨 𝐃𝐞 𝐀𝐝𝐦𝐢𝐧𝐬 🥀*';
-  conn.sdemote = '*[ ❗ ] @user 𝐀𝐛𝐚𝐧𝐝𝐨𝐧𝐚 𝐄𝐥 𝐆𝐫𝐮𝐩𝐨 𝐃𝐞 𝐀𝐝𝐦𝐢𝐧𝐬 🥀*';
+  conn.spromote = '*[ ❗ ] @user 𝐒𝐞 𝐒𝐮𝐦𝐚 𝐀𝐥 𝐆𝐫𝐮𝐩𝐨 𝐃𝐞 𝐀𝐝𝐦𝐢𝐧𝐬 ⚙️*';
+  conn.sdemote = '*[ ❗ ] @user 𝐀𝐛𝐚𝐧𝐝𝐨𝐧𝐚 𝐄𝐥 𝐆𝐫𝐮𝐩𝐨 𝐃𝐞 𝐀𝐝𝐦𝐢𝐧𝐬 ⚙️*';
   conn.sDesc = '*[ ❗ ] 𝐒𝐞 𝐇𝐚 𝐌𝐨𝐝𝐢𝐟𝐢𝐜𝐚𝐝𝐨 𝐋𝐚 𝐃𝐞𝐬𝐜𝐫𝐢𝐩𝐜𝐢𝐨𝐧 𝐃𝐞𝐥 𝐆𝐫𝐮𝐩𝐨*\n\n*𝐍𝐮𝐞𝐯𝐚 𝐃𝐞𝐬𝐜: @desc*';
   conn.sSubject = '*[ ❗ ] 𝐒𝐞 𝐇𝐚 𝐌𝐨𝐝𝐢𝐟𝐢𝐜𝐚𝐝𝐨 𝐄𝐥 𝐧𝐨𝐦𝐛𝐫𝐞 𝐃𝐞𝐥 𝐆𝐫𝐮𝐩𝐨*\n*𝐍𝐮𝐞𝐯𝐨 𝐍𝐨𝐦𝐛𝐫𝐞: @subject*';
-  conn.sIcon = '*[ ❗ ] 𝐒𝐞 𝐇𝐚 𝐌𝐨𝐝𝐢𝐟𝐢𝐜𝐚𝐝𝐨 𝐋𝐚 𝐈𝐦𝐚𝐠𝐞𝐧 𝐃𝐞𝐥 𝐆𝐫𝐮𝐩𝐨 🥀*';
+  conn.sIcon = '*[ ❗ ] 𝐒𝐞 𝐇𝐚 𝐌𝐨𝐝𝐢𝐟𝐢𝐜𝐚𝐝𝐨 𝐋𝐚 𝐈𝐦𝐚𝐠𝐞𝐧 𝐃𝐞𝐥 𝐆𝐫𝐮𝐩𝐨 ⚙️*';
   conn.sRevoke = '*[ ❗ ] 𝐄𝐥 𝐋𝐢𝐧𝐤 𝐃𝐞𝐥 𝐆𝐫𝐮𝐩𝐨 𝐇𝐚 𝐒𝐢𝐝𝐨 𝐑𝐞𝐬𝐭𝐚𝐛𝐥𝐞𝐜𝐢𝐝𝐨*\n*𝐍𝐮𝐞𝐯𝐨 𝐋𝐢𝐧𝐤: @revoke*';
 
   conn.handler = handler.handler.bind(global.conn);
@@ -512,7 +512,7 @@ setInterval(async () => {
   if (stopped === 'close' || !conn || !conn.user) return;
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
-  const bio = ` 𝐓𝐢𝐞𝐦𝐩𝐨 𝐀𝐜𝐭𝐢𝐯𝐨 Uptime: ${uptime} 𝐂𝐫𝐞𝐚𝐝𝐨𝐫 @𝐋𝐱𝐒𝐡𝐚𝐝𝐨𝐰 🥀`;
+  const bio = ` 𝐓𝐢𝐞𝐦𝐩𝐨 𝐀𝐜𝐭𝐢𝐯𝐨 : ${uptime}  𝐂𝐫𝐞𝐚𝐝𝐨𝐫 @𝐋𝐱𝐒𝐡𝐚𝐝𝐨𝐰 🥀`;
   await conn.updateProfileStatus(bio).catch((_) => _);
 }, 60000);
 function clockString(ms) {
