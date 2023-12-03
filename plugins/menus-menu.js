@@ -25,19 +25,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 
  ▢ *Hola,* ${taguser}
 
- ▢ *Prop.:* Bruno Sobrino
- ▢ *WA:* +5219992095479
- ▢ *Bot 1:* +5219991402134
- ▢ *Bot 2:* +5219993404349
- ▢ *PayPal:* paypal.me/TheShadowBrokers133
-
- ▢ *Uptime:* ${uptime}
- ▢ *Usuarios regs:* ${rtotalreg}
- ▢ *Usuarios totales:* ${rtotal}
- ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
-
-
- _*< INFO. DEL USUARIO />*_
+ _*< TUS ESTADÍSTICAS />*_
 
  ▢ *Nivel:* ${level}
  ▢ *Experiencia:* ${exp}
@@ -48,14 +36,14 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
  ▢ *Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
  ${readMore}
 
-  _*< MENUS />*_
+  _*< LISTA DE MENUS />*_
   
   ▢ _${usedPrefix}menuaudios_
   ▢ _${usedPrefix}menuanimes_
   ▢ _${usedPrefix}labiblia_
 
  
- _*< CMDS DEL BOT />*_
+ _*< SOBRE EL BOT />*_
 
   ▢ _${usedPrefix}terminosycondiciones_
   ▢ _${usedPrefix}grupos_
