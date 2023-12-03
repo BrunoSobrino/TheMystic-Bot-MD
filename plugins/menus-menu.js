@@ -153,41 +153,40 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 
  _*< DESCARGAS />*_
 
-  ▢ _${usedPrefix}instagram *<url>*_
-  ▢ _${usedPrefix}mediafire *<url>*_
-  ▢ _${usedPrefix}gitclone *<url>*_
-  ▢ _${usedPrefix}gdrive *<url>*_
-  ▢ _${usedPrefix}tiktok *<url>*_
-  ▢ _${usedPrefix}tiktokimg *<url>*_
-  ▢ _${usedPrefix}xnxxdl *<url>*_
-  ▢ _${usedPrefix}xvideosdl *<url>*_
-  ▢ _${usedPrefix}twitter *<url>*_
-  ▢ _${usedPrefix}fb *<url>*_
-  ▢ _${usedPrefix}ytshort *<url>*_
-  ▢ _${usedPrefix}ytmp3 *<url>*_
-  ▢ _${usedPrefix}ytmp4 *<url>*_
-  ▢ _${usedPrefix}ytmp3doc *<url>*_
-  ▢ _${usedPrefix}ytmp4doc *<url>*_
-  ▢ _${usedPrefix}videodoc *<url>*_
-  ▢ _${usedPrefix}dapk2 *<url>*_
-  ▢ _${usedPrefix}stickerpack *<url>*_
-  ▢ _${usedPrefix}play *<txt>*_
-  ▢ _${usedPrefix}play2 *<txt>*_
-  ▢ _${usedPrefix}play.1 *<txt>*_
-  ▢ _${usedPrefix}play.2 *<txt>*_
-  ▢ _${usedPrefix}playdoc *<txt>*_
-  ▢ _${usedPrefix}playdoc2 *<txt>*_
-  ▢ _${usedPrefix}playlist *<txt>*_
-  ▢ _${usedPrefix}spotify *<txt>*_
-  ▢ _${usedPrefix}ringtone *<txt>*_
-  ▢ _${usedPrefix}soundcloud *<txt>*_
-  ▢ _${usedPrefix}img *<txt>*_
-  ▢ _${usedPrefix}pinterest *<txt>*_
-  ▢ _${usedPrefix}wallpaper *<txt>*_
-  ▢ _${usedPrefix}pptiktok *<user>*_
-  ▢ _${usedPrefix}igstalk *<user>*_
-  ▢ _${usedPrefix}igstory *<user>*_
-  ▢ _${usedPrefix}tiktokstalk *<user>*_
+ ▢ _${usedPrefix}dapk2 *<url>*_
+ ▢ _${usedPrefix}fb *<url>*_
+ ▢ _${usedPrefix}gitclone *<url>*_
+ ▢ _${usedPrefix}gdrive *<url>*_
+ ▢ _${usedPrefix}igstalk *<usr>*_
+ ▢ _${usedPrefix}igstory *<usr>*_
+ ▢ _${usedPrefix}img *<txt>*_
+ ▢ _${usedPrefix}instagram *<url>*_
+ ▢ _${usedPrefix}mediafire *<url>*_
+ ▢ _${usedPrefix}pinterest *<txt>*_
+ ▢ _${usedPrefix}play *<txt>*_
+ ▢ _${usedPrefix}play.1 *<txt>*_
+ ▢ _${usedPrefix}play.2 *<txt>*_
+ ▢ _${usedPrefix}playdoc *<txt>*_
+ ▢ _${usedPrefix}playdoc2 *<txt>*_
+ ▢ _${usedPrefix}playlist *<txt>*_
+ ▢ _${usedPrefix}pptiktok *<user>*_
+ ▢ _${usedPrefix}ringtone *<txt>*_
+ ▢ _${usedPrefix}soundcloud *<txt>*_
+ ▢ _${usedPrefix}spotify *<txt>*_
+ ▢ _${usedPrefix}stickerpack *<url>*_
+ ▢ _${usedPrefix}tiktok *<url>*_
+ ▢ _${usedPrefix}tiktokimg *<url>*_
+ ▢ _${usedPrefix}tiktokstalk *<usr>*_
+ ▢ _${usedPrefix}twitter *<url>*_
+ ▢ _${usedPrefix}videodoc *<url>*_
+ ▢ _${usedPrefix}wallpaper *<txt>*_
+ ▢ _${usedPrefix}xnxxdl *<url>*_
+ ▢ _${usedPrefix}xvideosdl *<url>*_
+ ▢ _${usedPrefix}ytshort *<url>*_
+ ▢ _${usedPrefix}ytmp3 *<url>*_
+ ▢ _${usedPrefix}ytmp3doc *<url>*_
+ ▢ _${usedPrefix}ytmp4 *<url>*_
+ ▢ _${usedPrefix}ytmp4doc *<url>*_
 
 
  _*< BUSCADORES />*_
