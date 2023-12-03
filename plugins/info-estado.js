@@ -21,22 +21,20 @@ const handler = async (m, { conn, usedPrefix }) => {
   const { autoread, gconly, pconly, self } = global.opts || {};
   const old = performance.now();
   const neww = performance.now();
-  const speed = (neww - old).toFixed(7);
+  const rtime = (neww - old).toFixed(7);
   const wm = 'The Mystic Bot';
   const info = ` _*< INFO - ESTADO />*_
 
  ▢ *Prop.:* Bruno Sobrino
  ▢ *WA:* +5219992095479
- ▢ *Bot 1:* +5219991402134
- ▢ *Bot 2:* +5219993404349
  ▢ *PayPal:* paypal.me/TheShadowBrokers133
- 
+
+ ▢ *Ping:* ${rtime}
+ ▢ *Uptime:* ${uptime}
+ ▢ *Prefijo:* ${usedPrefix}
+ ▢ *Modo:* ${self ? "privado" : "público"}
  ▢ *Usuarios regs.:* ${totalusrReg}
  ▢ *Usuarios totales:* ${totalusr}
- ▢ *Prefijo:* ${usedPrefix}
- ▢ *Uptime:* ${uptime}
- ▢ *Ping:* ${speed}
- ▢ *Modo:* ${self ? "privado" : "público"}
  ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
  
  ▢ *Chats privados:* ${chats.length - groups.length}
@@ -61,7 +59,7 @@ const handler = async (m, { conn, usedPrefix }) => {
   const Message = {
     document: { url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD` },
     mimetype: `application/${document}`,
-    fileName: `「  𝑯𝒆𝒍𝒍𝒐 𝑾𝒐𝒓𝒍𝒅 」`,
+    fileName: `Documento`,
     fileLength: 99999999999999,
     pageCount: 200,
     contextInfo: {
@@ -71,10 +69,10 @@ const handler = async (m, { conn, usedPrefix }) => {
         mediaUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
         mediaType: 2,
         previewType: "pdf",
-        title: "ᴇʟ ᴍᴇᴊᴏʀ ʙᴏᴛ ᴅᴇ ᴡʜᴀᴛsᴀᴘᴘ",
-        body: wm,
+        title: "The Mystic - Bot",
+        body: "Repositorio - GitHub",
         thumbnail: imagen1,
-        sourceUrl: "https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA",
+        sourceUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
       },
     },
     caption: info,
