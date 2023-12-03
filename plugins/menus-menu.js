@@ -40,7 +40,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   
   ▢ _${usedPrefix}menuaudios_
   ▢ _${usedPrefix}menuanimes_
-  ▢ _${usedPrefix}labiblia_
+  ▢ _${usedPrefix}labiblia_ (🔞)
 
  
  _*< SOBRE EL BOT />*_
