@@ -6,12 +6,12 @@ import axios from 'axios';
 const handler = async (m, { conn, text }) => {
  if (!text) throw `*[❗] Ingrese el nombre de alguna canción de spotify.*`;
   try {
-    const res = await fetch(global.API('ZippoApi', '/api/spotifysearch?text=' + text))
+    const res = await fetch(global.API('ZippoApi2', '/api/spotifysearch?text=' + text))
     const data = await res.json()
     const linkDL = data.spty.resultado[0].link;
-    const musics = await fetch(global.API('ZippoApi', '/api/spotifydl?text=' + linkDL))
+    const musics = await fetch(global.API('ZippoApi2', '/api/spotifydl?text=' + linkDL))
     const music = await conn.getFile(musics.url)
-    const infos = await fetch(global.API('ZippoApi', '/api/spotifyinfo?text=' + linkDL))
+    const infos = await fetch(global.API('ZippoApi2', '/api/spotifyinfo?text=' + linkDL))
     const info = await infos.json()
     const spty = info.spty.resultado
     const img = await (await fetch(`${spty.thumbnail}`)).buffer()  
