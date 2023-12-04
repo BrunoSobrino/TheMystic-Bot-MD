@@ -13,7 +13,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     const aa = {quoted: m, userJid: conn.user.jid};
     const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: texto, contextInfo: {externalAdReply: {title: 'ᴛʜᴇ ᴍʏsᴛɪᴄ - ʙᴏᴛ', body: null, thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}, mentionedJid: [m.sender]}}}, aa);
     await conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id, mentions: [m.sender]});
-    const dataFn = await conn.getFile(`https://api-brunosobrino.zipponodes.xyz/api/tiktokv2?url=${args[0]}`);
+    const dataFn = await conn.getFile(`${ApiEmpire}/api/tiktokv2?url=${args[0]}`);
     const desc1n = `*¡Hola! 🌟*\n*📽️ Aquí tienes tu video de TikTok.*\n\n*Recuerda que si deseas convertir el video en audio, puedes hacerlo fácilmente respondiendo al video con el comando #tomp3 🎧.*`;
     await conn.sendMessage(m.chat, {video: dataFn.data, caption: desc1n}, {quoted: m});
   } catch (ee1) {
