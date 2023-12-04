@@ -6,7 +6,7 @@ import axios from 'axios';
 const handler = async (m, { conn, text }) => {
  if (!text) throw `*[❗] Ingrese el nombre de alguna canción de spotify.*`;
   try {
-    const res = await fetch(global.API('ApiEmpire', '/api/spotifysearch?text=' + text))
+    const res = await fetch(global.API('ZippoApi', '/api/spotifysearch?text=' + text))
     const data = await res.json()
     const linkDL = data.spty.resultado[0].link;
     const musics = await fetch(global.API('ApiEmpire', '/api/spotifydl?text=' + linkDL))
