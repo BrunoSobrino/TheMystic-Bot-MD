@@ -21,22 +21,20 @@ const handler = async (m, { conn, usedPrefix }) => {
   const { autoread, gconly, pconly, self } = global.opts || {};
   const old = performance.now();
   const neww = performance.now();
-  const speed = (neww - old).toFixed(7);
+  const rtime = (neww - old).toFixed(7);
   const wm = 'The Mystic Bot';
   const info = ` _*< INFO - ESTADO />*_
 
  ▢ *Prop.:* Bruno Sobrino
  ▢ *WA:* +5219992095479
- ▢ *Bot 1:* +5219991402134
- ▢ *Bot 2:* +5219993404349
  ▢ *PayPal:* paypal.me/TheShadowBrokers133
- 
+
+ ▢ *Ping:* ${rtime}
+ ▢ *Uptime:* ${uptime}
+ ▢ *Prefijo:* ${usedPrefix}
+ ▢ *Modo:* ${self ? "privado" : "público"}
  ▢ *Usuarios regs.:* ${totalusrReg}
  ▢ *Usuarios totales:* ${totalusr}
- ▢ *Prefijo:* ${usedPrefix}
- ▢ *Uptime:* ${uptime}
- ▢ *Ping:* ${speed}
- ▢ *Modo:* ${self ? "privado" : "público"}
  ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
  
  ▢ *Chats privados:* ${chats.length - groups.length}
@@ -50,24 +48,41 @@ const handler = async (m, { conn, usedPrefix }) => {
  ▢ *AntiPrivado:* ${antiprivado ? "activado" : "desactivado"}
  ▢ *AntiLlamada:* ${antiCall ? "activado" : "desactivado"}
  ▢ *ModeJadiBot:* ${modejadibot ? "activado" : "desactivado"}`.trim();
-conn.sendMessage(m.chat, {
-  contextInfo: {
-    forwardingScore: 200,
-    isForwarded: true,
-    externalAdReply: {
-      mediaType: 2,
-      title: "By Bruno Sobrino",
-      body: wm,
-      thumbnail: imagen1,
-      sourceUrl: "https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA",
+  const doc = [
+    "pdf",
+    "zip",
+    "vnd.openxmlformats-officedocument.presentationml.presentation",
+    "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  const document = doc[Math.floor(Math.random() * doc.length)];
+  const Message = {
+    document: { url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD` },
+    mimetype: `application/${document}`,
+    fileName: `Documento`,
+    fileLength: 99999999999999,
+    pageCount: 200,
+    contextInfo: {
+      forwardingScore: 200,
+      isForwarded: true,
+      externalAdReply: {
+        mediaUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
+        mediaType: 2,
+        previewType: "pdf",
+        title: "The Mystic - Bot",
+        body: "Repositorio - GitHub",
+        thumbnail: imagen1,
+        sourceUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
+      },
     },
-  },
-  caption: info,
-  footer: wm,
-  headerType: 6,
-}, { quoted: m });
+    caption: info,
+    footer: wm,
+    headerType: 6,
+  };
+  conn.sendMessage(m.chat, Message, { quoted: m });
+};
 
-handler.command = /^(ping|speed|infobot)$/i;
+handler.command = /^(ping|info|status|estado)$/i;
 export default handler;
 
 function clockString(ms) {

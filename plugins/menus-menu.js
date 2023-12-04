@@ -21,23 +21,11 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
     const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const document = doc[Math.floor(Math.random() * doc.length)];
-    const str = ` 𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏
+    const str = `𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏
 
  ▢ *Hola,* ${taguser}
 
- ▢ *Prop.:* Bruno Sobrino
- ▢ *WA:* +5219992095479
- ▢ *Bot 1:* +5219991402134
- ▢ *Bot 2:* +5219993404349
- ▢ *PayPal:* paypal.me/TheShadowBrokers133
-
- ▢ *Uptime:* ${uptime}
- ▢ *Usuarios regs:* ${rtotalreg}
- ▢ *Usuarios totales:* ${rtotal}
- ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
-
-
- _*< INFO. DEL USUARIO />*_
+ _*< TUS ESTADÍSTICAS />*_
 
  ▢ *Nivel:* ${level}
  ▢ *Experiencia:* ${exp}
@@ -48,14 +36,14 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
  ▢ *Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
  ${readMore}
 
-  _*< MENUS />*_
+  _*< LISTA DE MENUS />*_
   
   ▢ _${usedPrefix}menuaudios_
   ▢ _${usedPrefix}menuanimes_
-  ▢ _${usedPrefix}labiblia_
+  ▢ _${usedPrefix}labiblia_ (🔞)
 
  
- _*< CMDS DEL BOT />*_
+ _*< SOBRE EL BOT />*_
 
   ▢ _${usedPrefix}terminosycondiciones_
   ▢ _${usedPrefix}grupos_
@@ -165,41 +153,40 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 
  _*< DESCARGAS />*_
 
-  ▢ _${usedPrefix}instagram *<url>*_
-  ▢ _${usedPrefix}mediafire *<url>*_
-  ▢ _${usedPrefix}gitclone *<url>*_
-  ▢ _${usedPrefix}gdrive *<url>*_
-  ▢ _${usedPrefix}tiktok *<url>*_
-  ▢ _${usedPrefix}tiktokimg *<url>*_
-  ▢ _${usedPrefix}xnxxdl *<url>*_
-  ▢ _${usedPrefix}xvideosdl *<url>*_
-  ▢ _${usedPrefix}twitter *<url>*_
-  ▢ _${usedPrefix}fb *<url>*_
-  ▢ _${usedPrefix}ytshort *<url>*_
-  ▢ _${usedPrefix}ytmp3 *<url>*_
-  ▢ _${usedPrefix}ytmp4 *<url>*_
-  ▢ _${usedPrefix}ytmp3doc *<url>*_
-  ▢ _${usedPrefix}ytmp4doc *<url>*_
-  ▢ _${usedPrefix}videodoc *<url>*_
-  ▢ _${usedPrefix}dapk2 *<url>*_
-  ▢ _${usedPrefix}stickerpack *<url>*_
-  ▢ _${usedPrefix}play *<txt>*_
-  ▢ _${usedPrefix}play2 *<txt>*_
-  ▢ _${usedPrefix}play.1 *<txt>*_
-  ▢ _${usedPrefix}play.2 *<txt>*_
-  ▢ _${usedPrefix}playdoc *<txt>*_
-  ▢ _${usedPrefix}playdoc2 *<txt>*_
-  ▢ _${usedPrefix}playlist *<txt>*_
-  ▢ _${usedPrefix}spotify *<txt>*_
-  ▢ _${usedPrefix}ringtone *<txt>*_
-  ▢ _${usedPrefix}soundcloud *<txt>*_
-  ▢ _${usedPrefix}img *<txt>*_
-  ▢ _${usedPrefix}pinterest *<txt>*_
-  ▢ _${usedPrefix}wallpaper *<txt>*_
-  ▢ _${usedPrefix}pptiktok *<user>*_
-  ▢ _${usedPrefix}igstalk *<user>*_
-  ▢ _${usedPrefix}igstory *<user>*_
-  ▢ _${usedPrefix}tiktokstalk *<user>*_
+ ▢ _${usedPrefix}dapk2 *<url>*_
+ ▢ _${usedPrefix}fb *<url>*_
+ ▢ _${usedPrefix}gitclone *<url>*_
+ ▢ _${usedPrefix}gdrive *<url>*_
+ ▢ _${usedPrefix}igstalk *<usr>*_
+ ▢ _${usedPrefix}igstory *<usr>*_
+ ▢ _${usedPrefix}img *<txt>*_
+ ▢ _${usedPrefix}instagram *<url>*_
+ ▢ _${usedPrefix}mediafire *<url>*_
+ ▢ _${usedPrefix}pinterest *<txt>*_
+ ▢ _${usedPrefix}play *<txt>*_
+ ▢ _${usedPrefix}play.1 *<txt>*_
+ ▢ _${usedPrefix}play.2 *<txt>*_
+ ▢ _${usedPrefix}playdoc *<txt>*_
+ ▢ _${usedPrefix}playdoc2 *<txt>*_
+ ▢ _${usedPrefix}playlist *<txt>*_
+ ▢ _${usedPrefix}pptiktok *<user>*_
+ ▢ _${usedPrefix}ringtone *<txt>*_
+ ▢ _${usedPrefix}soundcloud *<txt>*_
+ ▢ _${usedPrefix}spotify *<txt>*_
+ ▢ _${usedPrefix}stickerpack *<url>*_
+ ▢ _${usedPrefix}tiktok *<url>*_
+ ▢ _${usedPrefix}tiktokimg *<url>*_
+ ▢ _${usedPrefix}tiktokstalk *<usr>*_
+ ▢ _${usedPrefix}twitter *<url>*_
+ ▢ _${usedPrefix}videodoc *<url>*_
+ ▢ _${usedPrefix}wallpaper *<txt>*_
+ ▢ _${usedPrefix}xnxxdl *<url>*_
+ ▢ _${usedPrefix}xvideosdl *<url>*_
+ ▢ _${usedPrefix}ytshort *<url>*_
+ ▢ _${usedPrefix}ytmp3 *<url>*_
+ ▢ _${usedPrefix}ytmp3doc *<url>*_
+ ▢ _${usedPrefix}ytmp4 *<url>*_
+ ▢ _${usedPrefix}ytmp4doc *<url>*_
 
 
  _*< BUSCADORES />*_
