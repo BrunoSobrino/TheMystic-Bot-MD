@@ -19,11 +19,11 @@ const handler = async (m, { conn, text }) => {
             if (line.includes('.npm/') || line.includes('.cache/') || line.includes('tmp/') || line.includes('MysticSession/') || line.includes('npm-debug.log')) {
               return null;
             }
-            return '*◉ ' + line.slice(3) + '*';
+            return '*→ ' + line.slice(3) + '*';
           })
           .filter(Boolean);
         if (conflictedFiles.length > 0) {
-          const errorMessage = `_*< PROPIETARIO - ACTUALIZAR />*_\n\n*[ ℹ️ ] Se han hecho cambios locales en archivos del bot que entran en conflicto con las actualizaciones del repositorio. Para actualizar, reinstala el bot o realiza las actualizaciones manualmente.\n\n▢ *Archivos en conflicto:* ${conflictedFiles.join('\n')}.*`;
+          const errorMessage = `_*< PROPIETARIO - ACTUALIZAR />*_\n\n*[ ℹ️ ] Se han hecho cambios locales en archivos del bot que entran en conflicto con las actualizaciones del repositorio. Para actualizar, reinstala el bot o realiza las actualizaciones manualmente.*\n\n*Archivos en conflicto:*\n\n${conflictedFiles.join('\n')}.*`;
           await conn.reply(m.chat, errorMessage, m);  
         }
       }
