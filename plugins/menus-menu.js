@@ -153,40 +153,38 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 
  _*< DESCARGAS />*_
 
- ▢ _${usedPrefix}dapk2 *<url>*_
- ▢ _${usedPrefix}fb *<url>*_
- ▢ _${usedPrefix}gitclone *<url>*_
- ▢ _${usedPrefix}gdrive *<url>*_
- ▢ _${usedPrefix}igstalk *<usr>*_
- ▢ _${usedPrefix}igstory *<usr>*_
- ▢ _${usedPrefix}img *<txt>*_
- ▢ _${usedPrefix}instagram *<url>*_
- ▢ _${usedPrefix}mediafire *<url>*_
- ▢ _${usedPrefix}pinterest *<txt>*_
  ▢ _${usedPrefix}play *<txt>*_
+ ▢ _${usedPrefix}play2 *<txt>*_
  ▢ _${usedPrefix}play.1 *<txt>*_
  ▢ _${usedPrefix}play.2 *<txt>*_
  ▢ _${usedPrefix}playdoc *<txt>*_
  ▢ _${usedPrefix}playdoc2 *<txt>*_
  ▢ _${usedPrefix}playlist *<txt>*_
- ▢ _${usedPrefix}pptiktok *<user>*_
- ▢ _${usedPrefix}ringtone *<txt>*_
- ▢ _${usedPrefix}soundcloud *<txt>*_
- ▢ _${usedPrefix}spotify *<txt>*_
- ▢ _${usedPrefix}stickerpack *<url>*_
- ▢ _${usedPrefix}tiktok *<url>*_
- ▢ _${usedPrefix}tiktokimg *<url>*_
- ▢ _${usedPrefix}tiktokstalk *<usr>*_
- ▢ _${usedPrefix}twitter *<url>*_
- ▢ _${usedPrefix}videodoc *<url>*_
- ▢ _${usedPrefix}wallpaper *<txt>*_
- ▢ _${usedPrefix}xnxxdl *<url>*_
- ▢ _${usedPrefix}xvideosdl *<url>*_
  ▢ _${usedPrefix}ytshort *<url>*_
  ▢ _${usedPrefix}ytmp3 *<url>*_
  ▢ _${usedPrefix}ytmp3doc *<url>*_
  ▢ _${usedPrefix}ytmp4 *<url>*_
  ▢ _${usedPrefix}ytmp4doc *<url>*_
+ ▢ _${usedPrefix}videodoc *<url>*_
+ ▢ _${usedPrefix}spotify *<txt>*_
+ ▢ _${usedPrefix}facebook *<url>*_
+ ▢ _${usedPrefix}instagram *<url>*_
+ ▢ _${usedPrefix}igstory *<usr>*_
+ ▢ _${usedPrefix}tiktok *<url>*_
+ ▢ _${usedPrefix}tiktokimg *<url>*_
+ ▢ _${usedPrefix}pptiktok *<usr>*_
+ ▢ _${usedPrefix}mediafire *<url>*_ 
+ ▢ _${usedPrefix}pinterest *<txt>*_
+ ▢ _${usedPrefix}gitclone *<url>*_
+ ▢ _${usedPrefix}gdrive *<url>*_
+ ▢ _${usedPrefix}twitter *<url>*_
+ ▢ _${usedPrefix}ringtone *<txt>*_
+ ▢ _${usedPrefix}soundcloud *<txt>*_
+ ▢ _${usedPrefix}stickerpack *<url>*_
+ ▢ _${usedPrefix}wallpaper *<txt>*_ 
+ ▢ _${usedPrefix}dapk2 *<url>*_
+ ▢ _${usedPrefix}xnxxdl *<url>*_ (🔞)
+ ▢ _${usedPrefix}xvideosdl *<url>*_ (🔞)
 
 
  _*< BUSCADORES />*_
@@ -212,7 +210,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}kick2 *<@tag>*_
   ▢ _${usedPrefix}listanum *<txt>*_
   ▢ _${usedPrefix}kicknum *<txt>*_
-  ▢ _${usedPrefix}grupo *<abrir / cerrar>*_
+  ▢ _${usedPrefix}grupo *<abrir/cerrar>*_
   ▢ _${usedPrefix}grouptime *<opcion> <tiempo>*_
   ▢ _${usedPrefix}promote *<@tag>*_
   ▢ _${usedPrefix}demote *<@tag>*_
@@ -357,6 +355,9 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}covid *<pais>*_
   ▢ _${usedPrefix}horario_
   ▢ _${usedPrefix}dropmail_
+  ▢ _${usedPrefix}igstalk *<usr>*_
+  ▢ _${usedPrefix}tiktokstalk *<usr>*_
+  ▢ _${usedPrefix}img *<txt>*_
 
 
  _*< ECONOMÍA />*_
@@ -414,9 +415,9 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 
  _*< PROPIETARIO Y MODS. />*_
 
-  ▢ > *<funcion>*
-  ▢ => *<funcion>*
-  ▢ $ *<funcion>*
+  ▢ _> *<funcion>*_
+  ▢ _=> *<funcion>*_
+  ▢ _$ *<funcion>*_
   ▢ _${usedPrefix}dsowner_
   ▢ _${usedPrefix}setprefix *<prefijo>*_
   ▢ _${usedPrefix}resetprefix_
@@ -462,8 +463,8 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}bc *<txt>*_
   ▢ _${usedPrefix}bcchats *<txt>*_
   ▢ _${usedPrefix}bcgc *<txt>*_
-  ▢ _${usedPrefix}bcgc2 *<audio>*_
-  ▢ _${usedPrefix}bcgc2 *<video>*_
+  ▢ _${usedPrefix}bcgc2 *<aud>*_
+  ▢ _${usedPrefix}bcgc2 *<vid>*_
   ▢ _${usedPrefix}bcgc2 *<img>*_
   ▢ _${usedPrefix}bcbot *<txt>*_
   ▢ _${usedPrefix}cleartpm_
@@ -477,10 +478,10 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}delprem *<@tag>*_
   ▢ _${usedPrefix}listcmd_
   ▢ _${usedPrefix}setppbot *<responder a img>*_
-  ▢ _${usedPrefix}addcmd *<txt> <responder a sticker/img>*_
-  ▢ _${usedPrefix}delcmd *<responder a sticker/img con comando o txt asignado>*_
-  ▢ _${usedPrefix}saveimage
-  ▢ _${usedPrefix}viewimage`.trim();
+  ▢ _${usedPrefix}addcmd *<txt>*_
+  ▢ _${usedPrefix}delcmd_
+  ▢ _${usedPrefix}saveimage_
+  ▢ _${usedPrefix}viewimage_`.trim();
     if (m.isGroup) {
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
       const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
