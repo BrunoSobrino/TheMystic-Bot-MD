@@ -1,26 +1,24 @@
 const handler = async (m, {conn, participants, command, usedPrefix}) => {
-  if (!global.db.data.settings[conn.user.jid].restrict) throw '*[ ℹ️ ] El propietario del bot ha activado la función de restricción (*_restrict_*), por lo que no se ejecutó el comando solicitado.*';
-  const kicktext = `*[ ℹ️ ] Etiqueta o responde a un mensaje del participante que deseas eliminar.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} @${global.suittag}_`;
+  if (!global.db.data.settings[conn.user.jid].restrict) throw '_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] El propietario del bot ha activado la función de restricción (*_restrict_*), por lo que no se ejecutó el comando solicitado.*';
+  const kicktext = `_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] Etiqueta o responde a un mensaje del participante que deseas eliminar.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} @${global.suittag}_`;
   if (!m.mentionedJid[0] && !m.quoted) return m.reply(kicktext, m.chat, {mentions: conn.parseMention(kicktext)});
-  if (m.message.extendedTextMessage === undefined || m.message.extendedTextMessage === null) return m.reply('*[ ℹ️ ] Etiqueta o responde a un mensaje del participante que deseas eliminar.');
+  if (m.message.extendedTextMessage === undefined || m.message.extendedTextMessage === null) return m.reply('_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] Etiqueta o responde a un mensaje del participante que deseas eliminar.');
   if (m.message.extendedTextMessage.contextInfo.participant !== null && m.message.extendedTextMessage.contextInfo.participant != undefined && m.message.extendedTextMessage.contextInfo.participant !== '') {
     const mentioned = m.message.extendedTextMessage.contextInfo.mentionedJid[0] ? m.message.extendedTextMessage.contextInfo.mentionedJid[0] : m.message.extendedTextMessage.contextInfo.participant;
-    if (conn.user.jid.includes(mentioned)) return m.reply('*[ ℹ️ ] No puedo eliminarme a mi mismo.*');
+    if (conn.user.jid.includes(mentioned)) return m.reply('_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] El bot no puede eliminarse a si mismo.*');
     const responseb = await conn.groupParticipantsUpdate(m.chat, [mentioned], 'remove');
-    const exitoso1 = `*@${mentioned.split('@')[0]} ғᴜᴇ ᴇʟɪᴍɪɴᴀᴅᴏ ᴇxɪᴛᴏsᴀᴍᴇɴᴛᴇ ᴅᴇʟ ɢʀᴜᴘᴏ*`;
-    const error1 = `*@${mentioned.split('@')[0]} ᴇs ᴇʟ ᴄʀᴇᴀᴅᴏʀ ᴅᴇʟ ɢʀᴜᴘᴏ, ɴᴏ ᴘᴜᴇᴅᴏ ᴇʟɪᴍɪɴᴀʀ ᴀʟ ᴄʀᴇᴀᴅᴏʀ ᴅᴇʟ ɢʀᴜᴘᴏ*`;
-    const error2 = `*@${mentioned.split('@')[0]} ʏᴀ ʜᴀ sɪᴅᴏ ᴇʟɪᴍɪɴᴀᴅᴏ ᴏ ʜᴀ ᴀʙᴀɴᴅᴏɴᴀᴅᴏ ᴇʟ ɢʀᴜᴘᴏ*`;
+    const exitoso1 = `_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] El participante @${mentioned.split('@')[0]} fue eliminado.*`;
+    const error1 = `_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] @${mentioned.split('@')[0]} es el propietario del grupo, por lo mismo no puede ser eliminado.*`;
+    const error2 = `_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] @${mentioned.split('@')[0]} ya fue eliminado o salio del grupo.*`;
     if (responseb[0].status === '200') m.reply(exitoso1, m.chat, {mentions: conn.parseMention(exitoso1)});
     else if (responseb[0].status === '406') m.reply(error1, m.chat, {mentions: conn.parseMention(error1)});
     else if (responseb[0].status === '404') m.reply(error2, m.chat, {mentions: conn.parseMention(error2)});
-    else conn.sendMessage(m.chat, {text: `*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙸𝙽𝙴𝚂𝙿𝙴𝚁𝙰𝙳𝙾*`, mentions: [m.sender], contextInfo: {forwardingScore: 999, isForwarded: true}}, {quoted: m});
+    else conn.sendMessage(m.chat, {text: `_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*`, mentions: [m.sender], contextInfo: {forwardingScore: 999, isForwarded: true}}, {quoted: m});
   } else if (m.message.extendedTextMessage.contextInfo.mentionedJid != null && m.message.extendedTextMessage.contextInfo.mentionedJid != undefined) {
     return;
   }
 };
-handler.help = ['kick'];
-handler.tags = ['group'];
-handler.command = /^(kick|echar|hechar|sacar)$/i;
+handler.command = /^(kick|expulsar|eliminar|echar|sacar)$/i;
 handler.admin = handler.group = handler.botAdmin = true;
 export default handler;
 /* var mentioned = m.message.extendedTextMessage.contextInfo.mentionedJid
