@@ -22,9 +22,9 @@ const handler = async (m, {conn}) => {
   const tzAS = moment().tz('Asia/Jakarta').format('DD/MM HH:mm');
   const tzAF = moment().tz('Africa/Malabo').format('DD/MM HH:mm');
   await conn.sendMessage(m.chat, {text: `\`\`\`
-_*< HERRAMIENTAS - TZ />*_
+< 𝙃𝙀𝙍𝙍𝘼𝙈𝙄𝙀𝙉𝙏𝘼𝙎 -𝙏𝙕 />
 
-▢ PerÚ       : ${tzPE}
+▢ Perú       : ${tzPE}
 ▢ México     : ${tzMX}
 ▢ Bolivia    : ${tzBO}
 ▢ Chile      : ${tzCL}
