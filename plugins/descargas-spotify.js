@@ -1,10 +1,11 @@
-/* Creditos de los tags a @darlyn1234 y diseño a @ALBERTO9883 */
+// TheMystic-Bot-MD@BrunoSobrino - descargas.js
+// Creditos de los tags a @darlyn1234 y diseño a @ALBERTO9883
 import fetch from 'node-fetch';
 import fs from 'fs';
 import axios from 'axios';
 
-const handler = async (m, { conn, text }) => {
- if (!text) throw `*[❗] Ingrese el nombre de alguna canción de spotify.*`;
+const handler = async (m, { conn, text, usedPrefix, command }) => {
+ if (!text) throw `_*< DESCARGAS - SPOTIFY />*_\n\n*[ ℹ️ ] Hace falta el título de la canción de Spotify.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} Good Feeling - Flo Rida_`;
   try {
     const res = await fetch(global.API('ApiEmpire', '/api/spotifysearch?text=' + text))
     const data = await res.json()
@@ -15,23 +16,23 @@ const handler = async (m, { conn, text }) => {
     const info = await infos.json()
     const spty = info.spty.resultado
     const img = await (await fetch(`${spty.thumbnail}`)).buffer()  
-    let spotifyi = `*• 💽 Spotify Download •*\n\n`
-         spotifyi += `	◦  *Título:* ${spty.title}\n`
-         spotifyi += `	◦  *Artista:* ${spty.artist}\n`
-         spotifyi += `	◦  *Album:* ${spty.album}\n`                 
-         spotifyi += `	◦  *Publicado:* ${spty.year}\n\n`   
-         spotifyi += `El audio se esta enviando, espere un momento..`
+    let spotifyi = ` _*< DESCARGAS - SPOTIFY />*_\n\n`
+        spotifyi += ` ▢ *Título:* ${spty.title}\n`
+        spotifyi += ` ▢ *Artista:* ${spty.artist}\n`
+        spotifyi += ` ▢ *Album:* ${spty.album}\n`                 
+        spotifyi += ` ▢ *Publicado:* ${spty.year}\n\n`   
+        spotifyi += `*[ ℹ️ ] Se está enviando el audio. espere...*`
     await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": img, "thumbnailUrl": img, "mediaUrl": linkDL, "sourceUrl": linkDL}}}, {quoted: m});
     await conn.sendMessage(m.chat, {audio: music.data, fileName: `${spty.name}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
   } catch (error) {
     console.error(error);
-    throw '*[❗] Error, no se encontraron resultados.*';
+    throw '_*< DESCARGAS - SPOTIFY />*_\n\n[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*';
   }
 };
 handler.command = /^(spotify|music)$/i;
 export default handler;
 
-
+//***Código antiguo/obsoleto.
 
 /*import fetch from 'node-fetch';
 import Spotify from 'spotifydl-x';
