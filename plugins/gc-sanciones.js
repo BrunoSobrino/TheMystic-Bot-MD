@@ -6,61 +6,27 @@ handler.command = /^(sanciones|sanctions|sancionesgrupo|sanctionsgroup)$/i
 handler.group = true;
 export default handler
 
-global.sanciones = `----------Futabu Club----------
-🔨| Sanciones:
+global.sanciones = `🔨| Sanciones:
 
-• *No Respetar*
-  ° *1 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal*
+✭ No Respetar, Peleas, Ser Tóxico, Spam
+﹂1-2 Warns: Temporal, 3 Warns: Temporal, 4 Warns o más: Permanente
 
-• *Peleas o Discusiones*
-  ° *2 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal*
+✭ Pedofilia, Doxear, Mandar Binarios o Inmune, Mandar CP
+﹂BAN PERMANENTE
 
-• *Pedofilia*
-  ° *BAN PERMANENTE*
+✭ Mandar Gore, Acosar, Mandar Packs
+﹂4 Warns: Temporal o Permanente
 
-• *Doxear*
-  ° *BAN PERMANENTE*
-
-• *Ser toxico*
-  ° *2 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal*
-
-• *Usar comandos RPG*
-  ° *1 Warns (Advertencias), Si continúa después de los warns o avisos *4 Warns o Ban Temporal*
-
-• *Spamear*
-  ° *1 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal*
-
-• *Mandar Binarios o Inmune*
-  ° *BAN PERMANENTE*
-
-• *Mandar Gore*
-  ° *4 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal o Permanente*
-
-• *Mandar CP*
-  ° *BAN PERMANENTE*
-
-• *Acosar*
-  ° *4 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal o Permanente*
-
-• *Mandar Packs*
-  ° *5 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Permanente*
-
-• *Uso mal de comandos +18 del bot o romper limites*
-  ° *3 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal*
-
-• *Mandar Scat*
-  ° *4 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal*
-
-• *Mandar Earfuck*
-  ° *2 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal*
-
-• *Floodear*
-  ° *3 Warns (Advertencias)*, Si continúa después de los warns o avisos *Ban Temporal o Permanente*
+✭ Flood
+﹂3 Warns: Temporal, 4 Warns o más: Permanente
 
 -------------------------------
 
-¿Como puedo sacar mis Warns? Si después de 1 meses no obtuviste algún warn se irá eliminando de apoco.
+🔄| Eliminación de Warns:
+Si no recibes warns en 1 mes, se eliminarán gradualmente.
 
-¿Que pasa si llego a las 15 Warns? Quedaras baneado permanente del grupo.
+🚫| 15 Warns:
+Ban permanente del grupo.
 
-¿Hay forma de apelar? Si, pero eso dependera del admin y las cuestiónes que se tomen con los admins supremos y los otros admins.`
+❓| Apelaciones:
+Dependerá del admin y se discutirá con admins supremos y otros admins.`
