@@ -1,3 +1,5 @@
+// TheMystic-Bot-MD@BrunoSobrino - _antiarab.js
+
 const handler = (m) => m;
 handler.before = async function(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner} ) {
   /* if (m.message) {
