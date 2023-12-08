@@ -23,7 +23,7 @@ export async function before(m, {conn, isAdmin, isBotAdmin}) {
       await conn.sendMessage(m.chat, {delete: {remoteJid: m.chat, fromMe: false, id: bang, participant: delet}});
       const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
       if (responseb[0].status === '404') return;
-    } else if (!bot.restrict) return m.reply('_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Esta función está desactivada debido a que la función restrict está habilitada.*');
+    } else if (!bot.restrict) return m.reply('_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Esta función está desactivada debido a que la función* _restrict_ *está habilitada.*');
   }
   return !0;
 }
