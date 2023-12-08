@@ -19,4 +19,6 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ✦ Scat
 ✦ Gore
 ✦ Vore
-✦ CP (Child Porn)`
+✦ CP (Child Porn)
+
+⭐| Recuerda que la temática tiene que ser más de Futanari.`
