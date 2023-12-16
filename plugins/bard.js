@@ -93,7 +93,7 @@ async function GoogleBardApiV2(query) {
     "Referer": "https://api.azz.biz.id"
   };
 
-  const bardRes = await fetch(`https://api.azz.biz.id/api/bard?q=${query}&key=global`, {
+  const bardRes = await fetch(`https://api.yanzbotz.my.id/api/ai/bard?query=hai&apiKey=freeapi=${query}&key=global`, {
     method: 'get',
     headers
   });
