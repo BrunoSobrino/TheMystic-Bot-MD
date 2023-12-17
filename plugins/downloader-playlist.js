@@ -14,13 +14,13 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
       global.videoList.splice(0, global.videoList.length);
     }
     const results = await yts(text);
-    const textoInfo = `*[❗] Puedes descargar el video que quieras de la siguiente forma:*
-◉ ${usedPrefix}audio <numero>
-◉ ${usedPrefix}video <numero> 
+    const textoInfo = `*تنبيه لن يعمل معك الفيديو  في حالة كانت الصيغة غير مدعومة :*
+◉ ${usedPrefix}الأغنية 💿 <الرقم>
+◉ ${usedPrefix}الفيديو📽️ <الرقم> 
 
-*—◉ Ejemplos:*
-*◉ ${usedPrefix}audio 5*
-*◉ ${usedPrefix}video 8*`.trim();
+*—◉ أمثلة:*
+*◉ ${usedPrefix}الأغنية 5*
+*◉ ${usedPrefix} الفيديو 8*`.trim();
     const teks = results.all.map((v, i) => {
       const link = v.url;
       vids_.urls.push(link);
