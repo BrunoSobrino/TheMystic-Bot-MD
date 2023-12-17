@@ -75,7 +75,7 @@ async function GoogleBardApi(query) {
     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
   };
 
-  const bardRes = await fetch(`https://api.yanzbotz.my.id/api/ai/bard?query=${query}`, {
+  const bardRes = await fetch(`https://api.yanzbotz.my.id/api/ai/bard=hai&apiKey=freeapi?query=${query}`, {
     method: 'get',
     headers
   });
