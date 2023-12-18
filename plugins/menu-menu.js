@@ -83,9 +83,9 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 │ ⎚$ {usedPrefix}antilink
 │ ⎚${usedPrefix}antispam
 │ ⎚${usedPrefix}antidelete
-│ ⎚ ${usedPrefix}ban
-│ ⎚*صل على سيدنا محمد* ⎚
+│ ⎚${usedPrefix}ban
 └───────⭓
+*صل على النبي* 
 
 
 `.trim();
