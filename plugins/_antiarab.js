@@ -1,3 +1,5 @@
+// TheMystic-Bot-MD@BrunoSobrino - _antiarab.js
+
 const handler = (m) => m;
 handler.before = async function(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner} ) {
   /* if (m.message) {
@@ -8,19 +10,19 @@ handler.before = async function(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner
   const bot = global.db.data.settings[conn.user.jid] || {};
   if (isBotAdmin && chat.antiArab2 && !isAdmin && !isOwner && !isROwner && bot.restrict) {
     if (m.sender.startsWith('212' || '212')) {
-      m.reply(`*[❗] ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`);
+      m.reply(`_*< ANTI-ÁRABES />*_\n\n*[ ℹ️ ] En este grupo no se permiten números que comiencen con +212. Por lo tanto, serás eliminado del grupo.*`);
       const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }
 
     if (m.sender.startsWith('265' || '265')) {
-      m.reply(`*[❗] ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`);
+      m.reply(`_*< ANTI-ÁRABES />*_\n\n*[ ℹ️ ] En este grupo no se permiten números que comiencen con +265. Por lo tanto, serás eliminado del grupo.*`);
       const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }
 
     if (m.sender.startsWith('92' || '92')) {
-      m.reply(`*[❗] ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`);
+      m.reply(`_*< ANTI-ÁRABES />*_\n\n*[ ℹ️ ] En este grupo no se permiten números que comiencen con +92. Por lo tanto, serás eliminado del grupo.*`);
       const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }
