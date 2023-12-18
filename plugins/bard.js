@@ -85,12 +85,12 @@ async function GoogleBardApi(query) {
 
 async function GoogleBardApiV2(query) {
   const headers = {
-    "Host": "api.azz.biz.id",
+    "Host": "zerogpt.p.rapidapi.com",
     "X-Same-Domain": "1",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-    "Origin": "https://api.azz.biz.id",
-    "Referer": "https://api.azz.biz.id"
+    "Origin": "zerogpt.p.rapidapi.com",
+    "Referer": "zerogpt.p.rapidapi.com"
   };
 
   const bardRes = await fetch(`=${query}&key=global`, {
