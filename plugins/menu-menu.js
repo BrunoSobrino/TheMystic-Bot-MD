@@ -80,7 +80,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 
 ┌──⭓ *Group Menu*
 │ ⎚${usedPrefix}link
-│ ⎚$ {usedPrefix}antilink
+│ ⎚${usedPrefix}antilink
 │ ⎚${usedPrefix}antispam
 │ ⎚${usedPrefix}antidelete
 │ ⎚${usedPrefix}ban
