@@ -38,7 +38,7 @@ export default handler
 
 /* New Line */
 async function GoogleBard(query) {
-  const COOKIE_KEY = "awhDhy-7HHtxxRztpGSA13d3-DxQUe_b_mtNK4qzwkdnP85eNsq5RPSY5lvXLn8Wm7gKww.";
+  const COOKIE_KEY = "d10ebe4745msh6cf9864789ec6e8p1d4938jsnbccc3d2806ac";
   const psidCookie = '__Secure-1PSID=' + COOKIE_KEY;
   const headers = {
     "Host": "bard.google.com",
@@ -75,7 +75,7 @@ async function GoogleBardApi(query) {
     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
   };
 
-  const bardRes = await fetch(`https://api.yanzbotz.my.id/api/ai/bard=hai&apiKey=freeapi?query=${query}`, {
+  const bardRes = await fetch(`https://zerogpt.p.rapidapi.com/api/v1/detectText=${query}`, {
     method: 'get',
     headers
   });
