@@ -23,65 +23,70 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const document = doc[Math.floor(Math.random() * doc.length)];
     const str = `
 
-Yssmina  Md MENU
- ʏᴀssᴍɪɴᴇ ♥︎
- ᴍᴏʀᴏ ♡︎
-sᴀʟᴍᴀ ♡︎
-sᴀʟᴀʜ ʙᴏᴛᴀʙ ♥︎
-ᴛʜᴀɴᴋs ғᴏʀ ᴀʟʟ
-قســـم الــــذكــاء الاصطناعي
-█▒▒▒▒▒█ ◈ █▒▒▒▒▒█
+┌──⭓ *Main Menu*
+│⎚${usedPrefix} menu
+│⎚${usedPrefix} info
+│⎚${usedPrefix} delete
+│⎚${usedPrefix}quoted
+│⎚${usedPrefix}listsw
+│⎚ ${usedPrefix}getsw
+│⎚ ${usedPrefix}sc
+│⎚ ${usedPrefix}get
+│⎚ ${usedPrefix} fetch
+│⎚ ${usedPrefix} head
+│⎚ ${usedPrefix}whatmusic
+└───────⭓
 
-🌸_${usedPrefix}dx
-🌸_${usedPrefix}chatgpt
-🌸_${usedPrefix}draw2d
-🌸_${usedPrefix}ai2
-🌸_${usedPrefix}gptanime
-💡_${usedPrefix}bard
-قـــسـم الملصقــات
-█▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-🌸_${usedPrefix}sticker
-🌸_${usedPrefix}attp
-🌸_${usedPrefix}wm
-🌸_${usedPrefix}qr
-🌸_${usedPrefix}smeme
-🌸_${usedPrefix}img
-🌸_${usedPrefix}tovideo
- قسم رفع جودة الصور
-█▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-🌸_${usedPrefix}hd
-🌸_${usedPrefix}rg2
-🌸_${usedPrefix}tts
-🌸_${usedPrefix}translate
+┌──⭓ *Tool Menu*
+│⎚ ${usedPrefix} rvo
+│⎚ ${usedPrefix} exif
+│⎚ ${usedPrefix} tourl
+│⎚ ${usedPrefix} sticker
+│⎚ ${usedPrefix} translate
+│⎚ ${usedPrefix} smeme
+│⎚ ${usedPrefix} tomp4
+│⎚ ${usedPrefix} toimg
+└───────⭓
 
-قسم الدين هو الاسلام
-█▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-🌸_${usedPrefix}khawatir
-🌸_${usedPrefix}bader
-🌸_${usedPrefix}asmaeallah
-🌸_${usedPrefix}adhan
-🌸_${usedPrefix}ayati
-قسم البحث والتحميل 
-█▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-📲_${usedPrefix}ytv
-🔎_${usedPrefix}ytsearch
-📲_${usedPrefix}mediafire
-📲_${usedPrefix}gdrive
-📲_${usedPrefix}tiktok
-📲_${usedPrefix}gdrive
-📲_${usedPrefix}dapk2
-💸${usedPrefix}3aafk-sift
-اوامر الموسيقى والقرأن
-█▒▒▒▒▒█ ◈ █▒▒▒▒▒█
-🎧_${usedPrefix}Audiomenu
-🎧_${usedPrefix}play
-🎧_${usedPrefix}Audio 
-🎧_${usedPrefix}tomp3
-🎧_${usedPrefix}sondcloud
-💿_${usedPrefix}Spotify
-لاتنسى ان الموسيقى حرام عزيزي المستخدم
-█▒▒█*YASSMINA*█▒▒█
-اللهم صل وسلم وبارك على سيدنا محمد صلى الله عليه
+┌──⭓ *Downloader Menu*
+│⎚ ${usedPrefix} ytv
+│⎚ ${usedPrefix} yta
+│⎚ ${usedPrefix}ytmp3
+│⎚ ${usedPrefix} ytmp4
+│⎚ ${usedPrefix} play
+│⎚ ${usedPrefix} song
+│⎚ ${usedPrefix} playmp4
+│⎚ ${usedPrefix} gitclone
+│⎚ ${usedPrefix} fbdl
+│⎚ ${usedPrefix} tt
+│⎚ ${usedPrefix} twdl
+└───────⭓
+
+┌──⭓ *Ai Menu*
+│⎚ ${usedPrefix} you
+│⎚ ${usedPrefix} bing
+│⎚ ${usedPrefix} bard
+│⎚ ${usedPrefix} create
+│⎚ ${usedPrefix} semsi
+└───────⭓
+
+┌──⭓ *Owner Menu*
+│⎚ ${usedPrefix} upsw
+│⎚ ${usedPrefix}restart
+│⎚ ${usedPrefix}contact
+│⎚ ${usedPrefix} eval
+│⎚ ${usedPrefix} exec
+└───────⭓
+
+┌──⭓ *Group Menu*
+│ ⎚${usedPrefix}link
+│ ⎚$ {usedPrefix}antilink
+│ ⎚${usedPrefix}antispam
+│ ⎚${usedPrefix}antidelete
+│ ⎚ ${usedPrefix}ban
+│ ⎚*صل على سيدنا محمد* ⎚
+└───────⭓
+
 
 `.trim();
     if (m.isGroup) {
