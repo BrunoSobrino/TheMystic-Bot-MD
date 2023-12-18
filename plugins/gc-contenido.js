@@ -10,7 +10,6 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ★ Futanari
 ★ Trapos/Femboy's (Packs tambien, ser mayor de edad +18)
 ★ Hentai/Furry
-★ Lolis (Lolicon)
 ★ Transexual
 ★ Porno normal
 
@@ -19,6 +18,6 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ✦ Scat
 ✦ Gore
 ✦ Vore
-✦ CP (Child Porn)
+✦ CP/Lolis (Child Porn)
 
 ⭐| Recuerda que la temática tiene que ser más de Futanari.`
