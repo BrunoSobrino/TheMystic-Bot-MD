@@ -3,15 +3,15 @@ import {sizeFormatter} from 'human-readable';
 const formatSize = sizeFormatter({
   std: 'JEDEC', decimalPlaces: 2, keepTrailingZeroes: false, render: (literal, symbol) => `${literal} ${symbol}B`});
 const handler = async (m, {conn, args}) => {
-  if (!args[0]) throw 'لايجب ترك الأمر فارغا :*\n*https://drive.google.com/drive/folders/1sR6RlHKXzGxtKwiaAQJLQL40-7tkDF4j*';
+  if (!args[0]) throw '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*\n\n*- 𝙲𝙾𝚁𝚁𝙾𝙱𝙾𝚁𝙴 𝚀𝚄𝙴 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 𝚂𝙴𝙰 𝚂𝙸𝙼𝙸𝙻𝙰𝚁 𝙰:*\n*◉ https://drive.google.com/file/d/1dmHlx1WTbH5yZoNa_ln325q5dxLn1QHU/view*';
   try {
     GDriveDl(args[0]).then(async (res) => {
-      conn.reply(m.chat, 'لايجب ان يتعدى حجم الملف 1000 ميجا عزيزي ا/n/nلمتابع', m);
+      conn.reply(m.chat, الأمر التالي يسمح لك بتحميل الملفات الأصغر من 100 بايت', m);
       if (!res) throw res;
       conn.sendFile(m.chat, res.downloadUrl, res.fileName, '', m, null, {mimetype: res.mimetype, asDocument: true});
     });
   } catch (e) {
-    m.reply('*يجب عليك اتباع الأمر بالرابط الذي تود تحميله:*\n*https://drive.google.com/drive/folders/1sR6RlHKXzGxtKwiaAQJLQL40-7tkDF4j*');
+    m.reply('*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*\n\n*- 𝙲𝙾𝚁𝚁𝙾𝙱𝙾𝚁𝙴 𝚀𝚄𝙴 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 𝚂𝙴𝙰 𝚂𝙸𝙼𝙸𝙻𝙰𝚁 𝙰:*\n*◉ https://drive.google.com/file/d/1dmHlx1WTbH5yZoNa_ln325q5dxLn1QHU/view*');
     console.log(e);
   }
 };
