@@ -46,13 +46,13 @@
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
-### `▢ ACTIVAR EN ZIPPONODES`
+### `▢ ACTIVAR EN CAFIREXOS`
 <a href="https://www.zipponodes.com"><img src="https://cdn.zipponodes.com/zipponodes/logos/logo_zipponodes_transparent2.png" width="350" height="130" alt="PNG"/></a>
-- Sitio web: [zipponodes.com](https://www.zipponodes.com)
-- Dash: [dash.zipponodes.com](https://dash.zipponodes.com)
-- Panel: [panel.zipponodes.com](https://panel.zipponodes.com)
-- Documentación: [docs.zipponodes.com](https://docs.zipponodes.com)
-- Grupo de WhatsApp: [whatsapp.zipponodes.com](https://whatsapp.zipponodes.com)
+- Sitio web: [zipponodes.com](https://www.cafirexos.com)
+- Dash: [dash.zipponodes.com](https://dash.cafirexos.com)
+- Panel: [panel.zipponodes.com](https://panel.cafirexos.com)
+- Documentación: [docs.zipponodes.com](https://docs.cafirexos.com)
+- Grupo de WhatsApp: [whatsapp.zipponodes.com](https://whatsapp.cafirexos.com)
 
 ### `▢ ACTIVAR EN BOXMINEHOST`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
