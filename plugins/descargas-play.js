@@ -20,7 +20,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
     try {   
-    const audio = global.API('ZippoApi2', `/api/v1/ytmp3?url=${yt_play[0].url}`)
+    const audio = global.API('ApiEmpire', `/api/v1/ytmp3?url=${yt_play[0].url}`)
     const ttl = await yt_play[0].title
     const buff_aud = await getBuffer(audio);
     const fileSizeInBytes = buff_aud.byteLength;
@@ -42,7 +42,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     }}
     if (command == 'play2') {
     try {   
-    const video = global.API('ZippoApi2', `/api/v1/ytmp4?url=${yt_play[0].url}`)
+    const video = global.API('ApiEmpire', `/api/v1/ytmp4?url=${yt_play[0].url}`)
     const ttl2 = await yt_play[0].title
     const buff_vid = await getBuffer(video);
     const fileSizeInBytes2 = buff_vid.byteLength;
