@@ -7,12 +7,12 @@ import axios from 'axios';
 const handler = async (m, { conn, text, usedPrefix, command }) => {
  if (!text) throw `_*< DESCARGAS - SPOTIFY />*_\n\n*[ ℹ️ ] Hace falta el título de la canción de Spotify.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} Good Feeling - Flo Rida_`;
   try {
-    const res = await fetch(global.API('ZippoApi2', '/api/spotifysearch?text=' + text))
+    const res = await fetch(global.API('ApiEmpire', '/api/spotifysearch?text=' + text))
     const data = await res.json()
     const linkDL = data.spty.resultado[0].link;
-    const musics = await fetch(global.API('ZippoApi2', '/api/spotifydl?text=' + linkDL))
+    const musics = await fetch(global.API('ApiEmpire', '/api/spotifydl?text=' + linkDL))
     const music = await conn.getFile(musics.url)
-    const infos = await fetch(global.API('ZippoApi2', '/api/spotifyinfo?text=' + linkDL))
+    const infos = await fetch(global.API('ApiEmpire', '/api/spotifyinfo?text=' + linkDL))
     const info = await infos.json()
     const spty = info.spty.resultado
     const img = await (await fetch(`${spty.thumbnail}`)).buffer()  
