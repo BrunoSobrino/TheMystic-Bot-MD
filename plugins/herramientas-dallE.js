@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 const handler = async (m, {conn, text, usedPrefix, command}) => {
-  if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃𝙾 𝙿𝙰𝚁𝙰 𝙲𝚁𝙴𝙰𝚁 𝚄𝙽𝙰 𝙸𝙼𝙰𝙶𝙴𝙽 𝚈 𝙰𝚂𝙸 𝚄𝚂𝙰𝚁 𝙻𝙰 𝙵𝚄𝙽𝙲𝙸𝙾𝙽 𝙳𝙴 𝙳𝙰𝙻𝙻-𝙴*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾𝚂 𝙳𝙴 𝙿𝙴𝚃𝙸𝙲𝙸𝙾𝙽𝙴𝚂*\n*◉ ${usedPrefix + command} gatitos llorando*\n*◉ ${usedPrefix + command} hatsune miku beso*`;
-    await conn.sendMessage(m.chat, {text: '*[❗] Realizando imagen, aguarde un momento.*'}, {quoted: m});
+  if (!text) throw `*الأمر التالي لإحضاؤ الصور من الذكاء الصناعي* ${usedPrefix + command}  ${usedPrefix + command} انتظر *`;
+    await conn.sendMessage(m.chat, {text: '*إنتظر قليلا الصورة قيد الإنشاء.*'}, {quoted: m});
   try {
     const tiores1 = await fetch(`https://vihangayt.me/tools/imagine?q=${text}`);
     const json1 = await tiores1.json();
