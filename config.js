@@ -10,16 +10,16 @@ import moment from 'moment-timezone';
 global.botnumber = ""
 
 global.owner = [
-  ['212658796481', '👑 ʏᴀꜱꜱᴍɪɴᴀ- Creador 👑', true],
-  ['50499698072', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 1 💫', true],
-  ['51940617554', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 2 💫', true],
-  ['51996089079', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 3 💫', true],
-  ['5218442286089', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 4 💫', true],
-  ['50246028932', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 5 💫', true],
-  ['5212412377467', '💫 ʏᴀꜱꜱᴍɪɴɴᴀ - Collaborator 6 💫', true],
-  ['5215533827255', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 7 💫', false],
-  ['59895555511', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 8 💫', true],
-  ['393518398856','💫 ʏᴀꜱꜱᴍɪɴᴀ  - Tester Fabri115💫', true],
+  ['5219992095479', '👑 yassmina - Creador 👑', true],
+  ['50499698072', '💫 Mystic - Collaborator 1 💫', true],
+  ['51940617554', '💫 Mystic - Collaborator 2 💫', true],
+  ['51996089079', '💫 Mystic - Collaborator 3 💫', true],
+  ['5218442286089', '💫 Mystic - Collaborator 4 💫', true],
+  ['50246028932', '💫 Mystic - Collaborator 5 💫', true],
+  ['5212412377467', '💫 Mystic - Collaborator 6 💫', true],
+  ['5215533827255', '💫 Mystic - Collaborator 7 💫', false],
+  ['59895555511', '💫 Mystic - Collaborator 8 💫', true],
+  ['393518398856','💫 Mystic - Tester Fabri115💫', true],
   ['593968585283'],
   ['5219993404349'],
   ['5219991402134'],
@@ -36,13 +36,13 @@ global.owner = [
 global.suittag = ['5219993404349'];
 global.prems = ['51995386439'];
 
-global.packname = 'ɪʟᴏᴠᴇ ᴍᴀɴᴀʟ';
-global.author = '*𝙮𝙖𝙨𝙨𝙢𝙞𝙣𝙖 𝙤𝙛𝙨*';
-global.wm = '★ყαʂʂɱιɳα σϝʂ★';
-global.titulowm = '🤖 ʏᴀꜱꜱᴍɪɴᴀ ʙᴏᴛ🤖';
-global.titulowm2 = `乂  ʏᴀꜱꜱᴍɪɴᴀ ʙᴏᴛ  乂`
-global.igfg = '★ʏᴀꜱꜱᴍɪɴᴀ ʙᴏᴛ★';
-global.wait = '*ʏᴀꜱꜱᴍɪɴᴀ ɪꜱ ꜱᴇᴀʀᴄʜɪɴɢ...*';
+global.packname = '(☞ﾟ∀ﾟ)☞';
+global.author = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
+global.wm = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
+global.titulowm = '🤖 ＴＨＥ ＭＹＳＴＩＣ － ＢＯＴ 🤖';
+global.titulowm2 = `乂  𝚃 𝙷 𝙴  𝙼 𝚈 𝚂 𝚃 𝙸 𝙲  -  𝙱 𝙾 𝚃  乂`
+global.igfg = '★𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝★';
+global.wait = '*[❗] Ƈᴀʀɢᴀɴᴅᴏ, ᴀɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ...*';
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
@@ -62,7 +62,7 @@ global.mes = d.toLocaleDateString('es', {month: 'long'});
 global.año = d.toLocaleDateString('es', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
-global.wm2 = `▸ ${dia} ${fecha}\n▸ 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝`;
+global.wm2 = `▸ ${dia} ${fecha}\n▸ Yassmina bot`;
 global.gt = 'ʏᴀꜱꜱᴍɪɴᴀ ᴍᴅ';
 global.mysticbot = '★ʏᴀꜱꜱᴍɪɴᴀ ᴍᴅ★';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
@@ -85,8 +85,8 @@ global.htki = '*⭑•̩̩͙⊱•••• ☪*';
 global.htka = '*☪ ••••̩̩͙⊰•⭑*';
 global.comienzo = '• • ◕◕════';
 global.fin = '────────────⭓;
-global.botdate = `⫹⫺ ᴅᴀᴛᴇ :  ${moment.tz('America/Los_Angeles').format('DD/MM/YY')}`; // Asia/Jakarta
-global.bottime = `ᴛɪᴍᴇ : ${moment.tz('America/Los_Angeles').format('HH:mm:ss')}`;// America/Los_Angeles
+global.botdate = `⫹⫺ Date :  ${moment.tz('America/Los_Angeles').format('DD/MM/YY')}`; // Asia/Jakarta
+global.bottime = `𝗧 𝗜 𝗠 𝗘 : ${moment.tz('America/Los_Angeles').format('HH:mm:ss')}`;// America/Los_Angeles
 global.fgif = {key: {participant: '0@s.whatsapp.net'}, message: {'videoMessage': {'title': wm, 'h': `Hmm`, 'seconds': '999999999', 'gifPlayback': 'true', 'caption': bottime, 'jpegThumbnail': fs.readFileSync('./Menu.png')}}};
 global.multiplier = 99;
 global.flaaa = [
