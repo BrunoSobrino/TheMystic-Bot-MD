@@ -10,19 +10,39 @@ import moment from 'moment-timezone';
 global.botnumber = ""
 
 global.owner = [
-   ['212658796481', '👑 Yassmina bot- Creador 👑', true], 
+  ['212658796481', '👑 ʏᴀꜱꜱᴍɪɴᴀ- Creador 👑', true],
+  ['50499698072', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 1 💫', true],
+  ['51940617554', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 2 💫', true],
+  ['51996089079', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 3 💫', true],
+  ['5218442286089', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 4 💫', true],
+  ['50246028932', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 5 💫', true],
+  ['5212412377467', '💫 ʏᴀꜱꜱᴍɪɴɴᴀ - Collaborator 6 💫', true],
+  ['5215533827255', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 7 💫', false],
+  ['59895555511', '💫 ʏᴀꜱꜱᴍɪɴᴀ - Collaborator 8 💫', true],
+  ['393518398856','💫 ʏᴀꜱꜱᴍɪɴᴀ  - Tester Fabri115💫', true],
+  ['593968585283'],
+  ['5219993404349'],
+  ['5219991402134'],
+  ['5492266466080'],
+  ['5219996125657'],
+  ['5218442114446'],
+  ['59894808483'],
+  ['593980586516'], 
+  ['595975740803'],  
+  ['5492266613038'], 
+  ['595992611272']
 ];
 
 global.suittag = ['5219993404349'];
 global.prems = ['51995386439'];
 
-global.packname = '(⁠ ⁠˘⁠ ⁠³⁠˘⁠)⁠♥';
-global.author = 'YASSMINA MD';
-global.wm = 'YASSMINA BOT ';
-global.titulowm = '🤖 YASSMINA BOT OFFICIAL 🤖';
-global.titulowm2 = `YASSMINA BOT`
-global.igfg = 'Yassmina Bot ';
-global.wait = 'انتظر قليلا عزيزي المستخدم ياسمينة بوت ...';
+global.packname = 'ɪʟᴏᴠᴇ ᴍᴀɴᴀʟ';
+global.author = '*𝙮𝙖𝙨𝙨𝙢𝙞𝙣𝙖 𝙤𝙛𝙨*';
+global.wm = '★ყαʂʂɱιɳα σϝʂ★';
+global.titulowm = '🤖 ʏᴀꜱꜱᴍɪɴᴀ ʙᴏᴛ🤖';
+global.titulowm2 = `乂  ʏᴀꜱꜱᴍɪɴᴀ ʙᴏᴛ  乂`
+global.igfg = '★ʏᴀꜱꜱᴍɪɴᴀ ʙᴏᴛ★';
+global.wait = '*ʏᴀꜱꜱᴍɪɴᴀ ɪꜱ ꜱᴇᴀʀᴄʜɪɴɢ...*';
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
@@ -43,30 +63,30 @@ global.año = d.toLocaleDateString('es', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
 global.wm2 = `▸ ${dia} ${fecha}\n▸ 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝`;
-global.gt = 'YASSMINA MD ';
-global.mysticbot = 'YASSMINA MD Bot';
+global.gt = 'ʏᴀꜱꜱᴍɪɴᴀ ᴍᴅ';
+global.mysticbot = '★ʏᴀꜱꜱᴍɪɴᴀ ᴍᴅ★';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
 global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
-global.waitt = 'شكرا لك على استخدام YASSMINA BOT ';
-global.waittt = 'شكرا لك على استخدام YASSMINA BOT ';
-global.waitttt = 'شكرا لك على استخدام YASSMINA BOT ';
+global.waitt = '*ʏᴀꜱꜱᴍɪɴᴀ ɪꜱ ꜱᴇᴀʀᴄʜɪɴɢ...*';
+global.waittt = '*ʏᴀꜱꜱᴍɪɴᴀ ɪꜱ ꜱᴇᴀʀᴄʜɪɴɢ...*';
+global.waitttt = 'ʏᴀꜱꜱᴍɪɴᴀ ɪꜱ ꜱᴇᴀʀᴄʜɪɴɢ...*';
 global.nomorown = '5219993404349';
 global.pdoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/msword', 'application/pdf', 'text/rtf'];
-global.cmenut = '❖––––––『';
-global.cmenub = '┊✦ ';
-global.cmenuf = '╰━═┅═━––––––๑\n';
+global.cmenut = '┌────────⭓';
+global.cmenub = '│⎚ ';
+global.cmenuf = '─────────────⭓\n';
 global.cmenua = '\n⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❙❘❙❚❙❘ ⌕\n     ';
-global.dmenut = '*❖─┅──┅〈*';
-global.dmenub = '*┊»*';
-global.dmenub2 = '*┊*';
-global.dmenuf = '*╰┅────────┅✦*';
+global.dmenut = '*┌────────⭓*';
+global.dmenub = '*│⎚*';
+global.dmenub2 = '*│*';
+global.dmenuf = '*└─────────────⭓*';
 global.htjava = '⫹⫺';
 global.htki = '*⭑•̩̩͙⊱•••• ☪*';
 global.htka = '*☪ ••••̩̩͙⊰•⭑*';
 global.comienzo = '• • ◕◕════';
-global.fin = '════◕◕ • •';
-global.botdate = `⫹⫺ Date :  ${moment.tz('America/Los_Angeles').format('DD/MM/YY')}`; // Asia/Jakarta
-global.bottime = `𝗧 𝗜 𝗠 𝗘 : ${moment.tz('America/Los_Angeles').format('HH:mm:ss')}`;// America/Los_Angeles
+global.fin = '────────────⭓;
+global.botdate = `⫹⫺ ᴅᴀᴛᴇ :  ${moment.tz('America/Los_Angeles').format('DD/MM/YY')}`; // Asia/Jakarta
+global.bottime = `ᴛɪᴍᴇ : ${moment.tz('America/Los_Angeles').format('HH:mm:ss')}`;// America/Los_Angeles
 global.fgif = {key: {participant: '0@s.whatsapp.net'}, message: {'videoMessage': {'title': wm, 'h': `Hmm`, 'seconds': '999999999', 'gifPlayback': 'true', 'caption': bottime, 'jpegThumbnail': fs.readFileSync('./Menu.png')}}};
 global.multiplier = 99;
 global.flaaa = [
