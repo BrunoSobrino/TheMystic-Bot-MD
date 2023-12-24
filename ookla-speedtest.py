@@ -1967,7 +1967,7 @@ def shell():
                 ((results.upload / 1000.0 / 1000.0) / args.units[1],
                  args.units[0]),
                 quiet)
-        printer("\n▢ Modificado por *dftzippo*\n▢ Powered by *Ookla*")
+
     else:
         printer('▢ *Omitiendo la prueba de subida.*', quiet)
 
