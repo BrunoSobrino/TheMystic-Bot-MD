@@ -5,7 +5,7 @@ const handler = async (m, {conn, args}) => {
     contextInfo: {externalAdReply: {mediaUrl: null, mediaType: 1, description: null,
       title: '𝙻𝙸𝙽𝙺 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾',
       body: '𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝',
-      previewType: 0, thumbnail: fs.readFileSync('./IMG_20231228_032617_881.jpg'),
+      previewType: 0, thumbnail: fs.readFileSync(''),
       sourceUrl: `https://chat.whatsapp.com/KT4Ct4CyUbGHxcRxzNu7hX`}}});
 };
 handler.help = ['linkgroup'];
