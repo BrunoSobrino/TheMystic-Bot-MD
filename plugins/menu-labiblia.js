@@ -31,6 +31,8 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
 ┃ *< MENU+18 />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 ┣ ඬ⃟ 🔞 .futasolo / Este comando te mostrara imagenes de solo futanaris.
+┣ ඬ⃟ 🔞 .fuck @mencion / Este comando hara que folles a un usuario.
+┣ ඬ⃟ 🔞 .cum @mencion / Este comando hara que te vengas o cumees a un usuario.
 ┣ ඬ⃟ 🔞 .furro / Este comando te mostrara imagenes de furros.
 ┣ ඬ⃟ 🔞 .trapito / Este comando te mostrara imagenes de trapos.
 ┣ ඬ⃟ 🔞 .hentai / Este comando te mostrara imagenes de hentai.
