@@ -1,4 +1,4 @@
-// adartado por mario (Aka: un ladrón de código)
+// adartado por Diego (Aka: un ladrón de código)
 
 import axios from 'axios';
 let previousCommitSHA = '';
