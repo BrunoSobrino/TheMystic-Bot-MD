@@ -953,6 +953,7 @@ export async function handler(chatUpdate) {
         if (!('antiArab' in chat)) chat.antiArab = false;
         if (!('antiArab2' in chat)) chat.antiArab2 = false;
         if (!('antiporno' in chat)) chat.antiporno = false;
+	if (!('game' in chat)) chat.game = true;
         if (!('modoadmin' in chat)) chat.modoadmin = false;
         if (!('simi' in chat)) chat.simi = false;
         if (!isNumber(chat.expired)) chat.expired = 0;
@@ -980,6 +981,7 @@ export async function handler(chatUpdate) {
 	  antiporno: false,
 	  modoadmin: false,
 	  simi: false,
+	  game: true, 
           expired: 0,
         };
       }
