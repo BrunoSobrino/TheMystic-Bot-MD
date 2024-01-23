@@ -436,6 +436,14 @@ const optionsFull = `_*< FUNCIONES DEL BOT />*_\n
       }
       chat.antiToxic = isEnable;
       break;
+      case 'game': case 'juegos': case 'fun': case 'ruleta':
+if (m.isGroup) {
+if (!(isAdmin || isOwner)) {
+global.dfail('admin', m, conn)
+throw false
+}}
+chat.game = isEnable          
+break;
     case 'antitraba':
       if (m.isGroup) {
         if (!(isAdmin || isROwner || isOwner)) {
