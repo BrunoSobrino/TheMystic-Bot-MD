@@ -118,6 +118,8 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}cancion_
   ▢ _${usedPrefix}pista_
   ▢ _${usedPrefix}akinator_
+  ▢ _${usedPrefix}ruleta
+  ▢ _${usedPrefix}suerte
   ▢ _${usedPrefix}wordfind_
 
 
@@ -379,6 +381,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}buyall_
   ▢ _${usedPrefix}verificar_
   ▢ _${usedPrefix}robar *<cant> <@tag>*_
+  ▢ _${usedPrefix}crime
   ▢ _${usedPrefix}transfer *<tipo> <cant> <@tag>*_
   ▢ _${usedPrefix}unreg *<sn>*_
 
