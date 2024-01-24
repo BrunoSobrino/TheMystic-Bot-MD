@@ -47,7 +47,6 @@
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
 ### `▢ ACTIVAR EN CAFIREXOS (ANTES ZIPPONODES)`
-<a href="https://www.zipponodes.com"><img src="https://cdn.zipponodes.com/zipponodes/logos/logo_zipponodes_transparent2.png" width="350" height="130" alt="PNG"/></a>
 - Sitio web: [cafirexos.com](https://www.cafirexos.com)
 - Dash: [dash.cafirexos.com](https://dash.cafirexos.com)
 - Panel: [panel.cafirexos.com](https://panel.cafirexos.com)
