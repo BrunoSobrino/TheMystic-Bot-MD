@@ -52,7 +52,7 @@
 - Dash: [dash.cafirexos.com](https://dash.cafirexos.com)
 - Panel: [panel.cafirexos.com](https://panel.cafirexos.com)
 - Documentación: [docs.cafirexos.com](https://docs.cafirexos.com)
-- Grupo de WhatsApp: [whatsapp.cafirexos.com](https://whatsapp.cafirexos.com)
+- Canal de WhatsApp: [whatsapp.cafirexos.com](https://whatsapp.cafirexos.com)
 
 ### `▢ ACTIVAR EN BOXMINEHOST`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
