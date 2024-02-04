@@ -11,8 +11,7 @@ if (enviando) return;
     enviando = true
   try {
     const apiUrls = [
-      `https://api.cafirexos.com/api/ytplay?text=${text}`,
-      `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`
+      `https://api.cafirexos.com/api/ytplay?text=${text}`
     ];
 
     for (const url of apiUrls) {
@@ -31,12 +30,12 @@ if (enviando) return;
     } else {
       try {
         if (command === 'play.1') {
-              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v1/ytmp3?url=${data.resultado.url}`;
+              apiUrl = `https://api.cafirexos.com/api/v1/ytmp3?url=${data.resultado.url}`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
               buff = await conn.getFile(apiUrl);
             } else if (command === 'play.2') {
-              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v1/ytmp4?url=${data.resultado.url}`;
+              apiUrl = `https://api.cafirexos.com//api/v1/ytmp4?url=${data.resultado.url}`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
               buff = await conn.getFile(apiUrl);
@@ -79,6 +78,7 @@ if (enviando) return;
 handler.command = ['play.1', 'play.2'];
 export default handler;
 
+///////////////////////////////////////
 
 /*import fetch from 'node-fetch';
 import yts from 'yt-search';
