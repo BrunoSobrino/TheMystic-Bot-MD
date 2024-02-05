@@ -11,7 +11,8 @@ if (enviando) return;
     enviando = true
   try {
     const apiUrls = [
-      `https://api.cafirexos.com/api/ytplay?text=${text}`
+      `https://api.cafirexos.com/api/ytplay?text=${text}`,
+      `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`      
     ];
 
     for (const url of apiUrls) {
