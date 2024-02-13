@@ -53,6 +53,7 @@
     "express": "^4.17.3",
     "fb-downloader-scrapper": "^1.0.1",
     "file-type": "^17.1.1",
+    "fluid-spotify.js": "*",
     "fluent-ffmpeg": "^2.1.2",
     "formdata-node": "^4.3.2",
     "fs": "^0.0.1-security",
