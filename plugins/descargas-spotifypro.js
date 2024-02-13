@@ -9,11 +9,10 @@ const { Spotify } = pkg2;
 
 const handler = async (m, { conn, text }) => {
  if (!text) throw `*[❗] Ingrese el link de algún track, playlist o álbum de Spotify o simplemente el nombre de una canción para buscar.*`; 
- const isUrl = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/i;
  const isSpotifyUrl = text.match(/^(https:\/\/open\.spotify\.com\/(album|track|playlist)\/[a-zA-Z0-9]+)/i);
  if (!isSpotifyUrl && !text) throw `*[❗] Ingrese el link de algún track, playlist o álbum de spotify.*`;
   try {
-     if (isUrl.test(text)) {
+     if (isSpotifyUrl) {
       if (isSpotifyUrl[2] === 'album') {
         const album = await downloadAlbum(isSpotifyUrl[0]);
         const img = await (await fetch(`${album.metadata.cover}`)).buffer()  
@@ -63,7 +62,6 @@ const handler = async (m, { conn, text }) => {
 for (let i = 0; i < tracks.length; i++) {
     const track = await downloadTrack(tracks[i].track.external_urls.spotify);
     await conn.sendMessage(target, { audio: track.audioBuffer, fileName: `${tracks[i].track.name}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
-    await new Promise(resolve => setTimeout(resolve, 30000));
     }
 }
      } else {
