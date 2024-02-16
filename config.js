@@ -44,10 +44,10 @@ global.prems = ['51995386439'];
 
 global.packname = 'Sticker';
 global.author = 'The Mystic - Bot';
-global.wm = 'The Mystic - Bot';
-global.titulowm = 'The Mystic - Bot';
-global.titulowm2 = `The Mystic - Bot`
-global.igfg = 'The Mystic - Bot';
+global.wm = 'The Essaouidi - Bot';
+global.titulowm = 'The Essaouidi - Bot';
+global.titulowm2 = `The Essaouidi - Bot`
+global.igfg = 'The Essaouidi - Bot';
 global.wait = '*[ ⏳ ] Cargando...*';
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
