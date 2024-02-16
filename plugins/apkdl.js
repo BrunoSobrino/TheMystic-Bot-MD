@@ -2,6 +2,7 @@ import cheerio from 'cheerio';
 import fetch from 'node-fetch';
 import {
     apkdl,
+    apk, 
     apkcombo,
     aptoide
 } from '../lib/scraper-apk.js';
