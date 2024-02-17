@@ -11,7 +11,7 @@ global.botnumber = ""
 global.confirmCode = ""
 
 global.owner = [
-  ['212618578927, '👑 Essaouidi - Creador 👑', true],
+  ['212618578927', '👑 Essaouidi - Creador 👑', true],
   ['212648753294', '💫 Essaouidi - Collaborator 1 💫', true],
   ['212712263052', '💫 Essaouidi - Collaborator 2 💫', true],
   ['212719596553', '💫 Essaouidi - Collaborator 3 💫', true],
