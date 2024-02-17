@@ -11,39 +11,22 @@ global.botnumber = ""
 global.confirmCode = ""
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['50499698072', '💫 Mystic - Collaborator 1 💫', true],
-  ['51940617554', '💫 Mystic - Collaborator 2 💫', true],
-  ['51996089079', '💫 Mystic - Collaborator 3 💫', true],
-  ['5218442286089', '💫 Mystic - Collaborator 4 💫', true],
-  ['50246028932', '💫 Mystic - Collaborator 5 💫', true],
-  ['5212412377467', '💫 Mystic - Collaborator 6 💫', true],
-  ['5215517489568', '💫 Mystic - Rey Endymion 💫', false],
-  ['59895555511', '💫 Mystic - Collaborator 8 💫', true],
-  ['393518398856','💫 Mystic - Tester Fabri115💫', true],
-  ['593968585283'],
-  ['5219993404349'],
-  ['5219991402134'],
-  ['5492266466080'],
-  ['5219996125657'],
-  ['5218442114446'],
-  ['59894808483'],
-  ['593980586516'], 
-  ['595975740803'],  
-  ['5492266613038'],
-  ['50497150165'],
-  ['51906662557'],
-  ['573183650526'], 
-  ['5217441298510'], 
-  ['5217294888993'],
-  ['595992611272']
-];
+  ['212618578927, '👑 Essaouidi - Creador 👑', true],
+  ['212648753294', '💫 Essaouidi - true],
+  ['212712263052', '💫 Essaouidi - Collaborator 2 💫', true],
+  ['212719596553', '💫 Essaouidi - Collaborator 3 💫', true],
+  ['212689707732', '💫 Essaouidi - Collaborator 4 💫', true],
+  ['212774459373', '💫 Essaouidi - Collaborator 5 💫', true],
+  ['212720986095', '💫 Essaouidi - Collaborator 6 💫', true],
+  ['212689707732', '💫 Essaouidi - Rey Endymion 💫', false],
+  ['212719596553', '💫 Essaouidi - Collaborator 8 💫', true],
+  ['212648753294','💫 Essaouidi - Tester Fabri115💫', true],
 
-global.suittag = ['5219993404349'];
-global.prems = ['51995386439'];
+global.suittag = ['212648753294'];
+global.prems = ['212618578927'];
 
 global.packname = 'Sticker';
-global.author = 'The Mystic - Bot';
+global.author = 'The Essaouidi - Bot';
 global.wm = 'The Essaouidi - Bot';
 global.titulowm = 'The Essaouidi - Bot';
 global.titulowm2 = `The Essaouidi - Bot`
@@ -69,14 +52,14 @@ global.año = d.toLocaleDateString('es', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
 global.wm2 = `${dia} ${fecha}\nThe Mystic - Bot`;
-global.gt = 'The Mystic - Bot';
-global.mysticbot = 'The Mystic - Bot';
+global.gt = 'The Essaouidi - Bot';
+global.mysticbot = 'The Essaouidi - Bot';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
 global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
 global.waitt = '*[ ⏳ ] Cargando...*';
 global.waittt = '*[ ⏳ ] Cargando...*';
 global.waitttt = '*[ ⏳ ] Cargando...*';
-global.nomorown = '5219993404349';
+global.nomorown = '212618578927';
 global.pdoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/msword', 'application/pdf', 'text/rtf'];
 global.cmenut = '❖––––––『';
 global.cmenub = '┊✦ ';
