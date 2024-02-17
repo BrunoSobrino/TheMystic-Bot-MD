@@ -8,7 +8,7 @@ const handler = async (m, { conn, usedPrefix }) => {
     return conn.sendMessage(m.chat, {text: '*[❗] استخدم هذا الأمر مباشرة في العدد الرئيسي من الروبوت.*'}, {quoted: m});
   }
   await conn.sendMessage(m.chat, {text: '*[❗] بدء حذف عملية جميع ملفات الجلسة ، باستثناء ملف creds.json...*'}, {quoted: m});
-  const sessionPath = './𝑁𝐴𝑇𝑺𝑈/';
+  const sessionPath = './MysticSession/';
   try {
     if (!existsSync(sessionPath)) {
       return await conn.sendMessage(m.chat, {text: '*[❗] مجلد 𝑁𝐴𝑇𝑺𝑈 غير موجود أو فارغ.*'}, {quoted: m});
