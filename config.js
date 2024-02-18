@@ -12,15 +12,15 @@ global.confirmCode = ""
 
 global.owner = [
   ['212648753294', '👑 Mystic - Creador 👑', true],
-  ['212618578927, '💫 Mystic - Essaouidi 1 💫', true],
+  ['212618578927', '💫 Mystic - Essaouidi 1 💫', true],
   ['212648753294', '💫 Mystic - Essaouidi 2 💫', true],
   ['212712263052', '💫 Mystic - Essaouidi 3 💫', true],
-  ['212719596553, '💫 Mystic - Essaouidi 4 💫', true],
+  ['212719596553', '💫 Mystic - Essaouidi 4 💫', true],
   ['212774459373', '💫 Mystic - Essaouidi 5 💫', true],
   ['212618578927', '💫 Mystic - Essaouidi 6 💫', true],
   ['212648753294', '💫 Mystic - Essaouidi 💫', false],
   ['212689707732', '💫 Mystic - Essaouidi 8 💫', true],
-  ['212712263052,'💫 Mystic - Tester Fabri115💫', true],
+  ['212712263052', '💫 Mystic - Tester Fabri115💫', true],
   ['593968585283'],
   ['5219993404349'],
   ['5219991402134'],
