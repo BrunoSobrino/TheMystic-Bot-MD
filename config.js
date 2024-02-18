@@ -39,7 +39,7 @@ global.owner = [
   ['595992611272']
 ];
 
-global.suittag = ['212618578927];
+global.suittag = ['5219993404349'];
 global.prems = ['51995386439'];
 
 global.packname = 'Sticker';
