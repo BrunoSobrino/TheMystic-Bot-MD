@@ -7,20 +7,20 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 import moment from 'moment-timezone';
 
-global.botnumber = "212648753294"
-global.confirmCode = "212618578927"
+global.botnumber = ""
+global.confirmCode = ""
 
 global.owner = [
-  ['212648753294, '👑 Mystic - Creador 👑', true],
-  ['212648753294', '💫 Mystic - Collaborator 1 💫', true],
-  ['212618578927', '💫 Mystic - Collaborator 2 💫', true],
-  ['212618578927, '💫 Mystic - Collaborator 3 💫', true],
-  ['212689707732', '💫 Mystic - Collaborator 4 💫', true],
-  ['212689707732, '💫 Mystic - Collaborator 5 💫', true],
-  ['212774459373', '💫 Mystic - Collaborator 6 💫', true],
-  ['212774459373', '💫 Mystic - Rey Endymion 💫', false],
-  ['212719596553', '💫 Mystic - Collaborator 8 💫', true],
-  ['212712263052','💫 Mystic - Tester Fabri115💫', true],
+  ['5219992095479', '👑 Mystic - Creador 👑', true],
+  ['50499698072', '💫 Mystic - Collaborator 1 💫', true],
+  ['51940617554', '💫 Mystic - Collaborator 2 💫', true],
+  ['51996089079', '💫 Mystic - Collaborator 3 💫', true],
+  ['5218442286089', '💫 Mystic - Collaborator 4 💫', true],
+  ['50246028932', '💫 Mystic - Collaborator 5 💫', true],
+  ['5212412377467', '💫 Mystic - Collaborator 6 💫', true],
+  ['5215517489568', '💫 Mystic - Rey Endymion 💫', false],
+  ['59895555511', '💫 Mystic - Collaborator 8 💫', true],
+  ['393518398856','💫 Mystic - Tester Fabri115💫', true],
   ['593968585283'],
   ['5219993404349'],
   ['5219991402134'],
@@ -39,12 +39,12 @@ global.owner = [
   ['595992611272']
 ];
 
-global.suittag = ['212648753294];
-global.prems = ['212618578927'];
+global.suittag = ['5219993404349'];
+global.prems = ['51995386439'];
 
 global.packname = 'Sticker';
 global.author = 'The Mystic - Bot';
-global.wm = 'Essaouidi Bot';
+global.wm = 'The Mystic - Bot';
 global.titulowm = 'The Mystic - Bot';
 global.titulowm2 = `The Mystic - Bot`
 global.igfg = 'The Mystic - Bot';
