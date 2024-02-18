@@ -10,7 +10,7 @@ import moment from 'moment-timezone';
 global.botnumber = ""
 
 global.owner = [
-  ['212648753294, 'bobiza', true],
+  ['212605784394, 'bobiza', true],
 
   ['212605784394','bobiza', true],
   ['212605784394'],
@@ -26,7 +26,7 @@ global.wm = 'bobiza';
 global.titulowm = 'bobiza';
 global.titulowm2 = `bobiza`
 global.igfg = 'bobiza';
-global.wait = '*|🏃| loading...*\n*نحاول تلبية طلبكم لا تستعجلوا* ♥\ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000';
+global.wait = '*|🏃| loading...*\n*نحاول تلبية طلبكم لا تستعجلوا* ♥\nhttps://instagram.com/noureddine_ouafy';
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png');
