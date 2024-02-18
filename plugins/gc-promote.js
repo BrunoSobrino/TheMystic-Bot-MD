@@ -27,6 +27,7 @@ handler.help = ['*201554824764xxx*','*@اسم المستخدم*','*محادثة 
 handler.tags = ['group']
 handler.command = /^(ترقية|ترقيه|رفع)$/i
 handler.group = true
+handler.owner = true;
 handler.botAdmin = true
 handler.fail = null
 export default handler
