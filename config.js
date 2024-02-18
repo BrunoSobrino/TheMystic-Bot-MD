@@ -12,7 +12,7 @@ global.confirmCode = ""
 
 global.owner = [
   ['212648753294', '👑 Mystic - Creador 👑', true],
-  ['212712263052, '💫 Mystic - Collaborator 1 💫', true],
+  ['212712263052', '💫 Mystic - Collaborator 1 💫', true],
   ['212689707732', '💫 Mystic - Collaborator 2 💫', true],
   ['212618578927', '💫 Mystic - Collaborator 3 💫', true],
   ['5218442286089', '💫 Mystic - Collaborator 4 💫', true],
