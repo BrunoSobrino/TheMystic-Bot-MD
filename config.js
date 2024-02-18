@@ -12,7 +12,7 @@ global.botnumber = ""
 global.owner = [
   ['212648753294', 'Essaouidi', true],
 
-  ['212689707732',''Essaouidi, true],
+  ['212689707732','Essaouidi, true],
   ['212774459373],
   ['212648753294']
 ];
