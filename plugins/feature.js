@@ -17,7 +17,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     const totalCommands = Object.values(counts).reduce((a, b) => a + b, 0);
     const responseText = "```" + `${tagList}\n` + "```";
 
-    await conn.reply(m.chat, `*[ BOBIZA BOT FEATURES LIST ]*\n\n${responseText}\n\n*Total feature: ${totalCommands} Commands*`, m);
+    await conn.reply(m.chat, `*[ ESSAOUIDI BOT FEATURES LIST ]*\n\n${responseText}\n\n*Total feature: ${totalCommands} Commands*`, m);
   } catch (error) {
     console.error(error);
     await conn.reply(m.chat, 'error.', m, adReply);
