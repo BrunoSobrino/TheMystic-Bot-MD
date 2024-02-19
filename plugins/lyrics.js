@@ -16,7 +16,7 @@ ${result.lyrics}
 
     } catch (error) {
         console.error('Error:', error);
-        conn.reply(m.chat, `وقعت مشكلة راسل نورالدين \ninstagram.com/noureddine_ouafy`, m);
+        conn.reply(m.chat, `وقعت مشكلة راسل السويدي ياسين \ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000`, m);
     }
 }
 
