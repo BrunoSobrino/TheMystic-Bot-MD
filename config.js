@@ -10,23 +10,23 @@ import moment from 'moment-timezone';
 global.botnumber = ""
 
 global.owner = [
-  ['212605784394', 'bobiza', true],
+  ['212648753294', 'essaouidi', true],
 
-  ['212605784394','bobiza', true],
-  ['212605784394'],
-  ['212605784394']
+  ['212648753294,'essaouidi', true],
+  ['212648753294'],
+  ['212648753294]
 ];
 
-global.suittag = ['212605784394'];
-global.prems = ['212605784394'];
+global.suittag = ['212648753294'];
+global.prems = ['212648753294];
 
-global.packname = 'bobiza bot';
-global.author = 'bobiza';
-global.wm = 'bobiza';
-global.titulowm = 'bobiza';
-global.titulowm2 = `bobiza`
-global.igfg = 'bobiza';
-global.wait = '*|🏃| loading...*\n*نحاول تلبية طلبكم لا تستعجلوا* ♥\ninstagram.com/noureddine_ouafy';
+global.packname ='essaouidi bot';
+global.author = 'essaouidi';
+global.wm = 'essaouidi';
+global.titulowm = 'essaouidi';
+global.titulowm2 = `essaouidi`
+global.igfg = 'essaouidi';
+global.wait = '*|🏃| loading...*\n*نحاول تلبية طلبكم لا تستعجلوا* ♥\ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000';
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png');
@@ -46,10 +46,10 @@ global.año = d.toLocaleDateString('en', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
 global.wm2 = `${dia} ${fecha}\nBOBIZA`;
-global.gt = 'BOBIZA';
-global.mysticbot = 'The BOBIZA';
-global.md = 'https://instagram.com/noureddine_ouafy';
-global.mysticbot = 'https://instagram.com/noureddine_ouafy';
+global.gt = 'ESSAOUIDI';
+global.mysticbot = 'The ESSAOUIDI';
+global.md = 'https://instagram.com/f.b.i_ys._ess._ui_.di_man_6000';
+global.mysticbot = 'https://instagram.com/f.b.i_ys._ess._ui_.di_man_6000';
 global.waitt = '*[ ⏳ ] LOADING...*';
 global.waittt = '*[ ⏳ ] LOADING...*';
 global.waitttt = '*[ ⏳ ] LOADING...*';
