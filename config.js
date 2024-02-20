@@ -11,16 +11,16 @@ global.botnumber = ""
 global.confirmCode = ""
 
 global.owner = [
-  ['212648753294, '👑 Mystic - Creador 👑', true],
+  ['212648753294', '👑 Mystic - Creador 👑', true],
   ['212774459373', '💫 Mystic - Collaborator 1 💫', true],
-  ['212648753294, '💫 Mystic - Collaborator 2 💫', true],
+  ['212648753294', '💫 Mystic - Collaborator 2 💫', true],
   ['212618578927', '💫 Mystic - Collaborator 3 💫', true],
-  ['212618578927, '💫 Mystic - Collaborator 4 💫', true],
+  ['212618578927', '💫 Mystic - Collaborator 4 💫', true],
   ['212719596553', '💫 Mystic - Collaborator 5 💫', true],
-  ['212712263052, '💫 Mystic - Collaborator 6 💫', true],
+  ['212712263052', '💫 Mystic - Collaborator 6 💫', true],
   ['212689707732', '💫 Mystic - Rey Endymion 💫', false],
-  ['212648753294, '💫 Mystic - Collaborator 8 💫', true],
-  ['212719596553','💫 Mystic - Tester Fabri115💫', true],
+  ['212648753294', '💫 Mystic - Collaborator 8 💫', true],
+  ['212719596553', '💫 Mystic - Tester Fabri115💫', true],
   ['593968585283'],
   ['5219993404349'],
   ['5219991402134'],
