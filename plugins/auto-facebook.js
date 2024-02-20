@@ -13,7 +13,7 @@ export async function before(m) {
         const {
             video
         } = await fbdl(matches[0]);
-        let FbCap = `${spas}\nتم تحميل الفيديو بنجاح تابع صاحب البوت في حسابه\ninstagram.com/noureddine_ouafy`
+        let FbCap = `${spas}\nتم تحميل الفيديو بنجاح تابع صاحب البوت في حسابه\ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000`
         await conn.sendFile(m.chat, video || giflogo, "", FbCap, m)
     } catch (e) {
     }
