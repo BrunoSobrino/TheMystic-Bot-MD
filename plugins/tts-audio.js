@@ -2,7 +2,7 @@ import gtts from 'node-gtts'
 import { readFileSync, unlinkSync } from 'fs'
 import { join } from 'path'
 
-const defaultLang = 'ar'
+const defaultLang = 'en'
 let handler = async (m, { conn, args, usedPrefix, command }) => {
 
   let lang = args[0]
@@ -18,19 +18,19 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
   catch (e) {
     m.reply(e + '')
     text = args.join(' ')
-    if (!text) throw `تحويل نص لــأوديو لجميع اللغات \n\nمثال نكتب هكذا اذا اردنا ان نحصل على صوت عربي :\n\n ${usedPrefix}${command} ar مرحبا يا نور`
+    if (!text) throw `📌 Example : \n${usedPrefix}${command} en hello world`
     res = await tts(text, defaultLang)
   } finally {
-    if (res) await conn.sendFile(m.chat, res, '', '', m, true)
+    if (res) conn.sendFile(m.chat, res, 'tts.opus', null, m, true)
   }
 }
-handler.help = ['tts']
+handler.help = ['tts <lang> <task>']
 handler.tags = ['tools']
-handler.command = /^tts|audio$/i
+handler.command = ['tts', 'voz'] 
 
 export default handler
 
-function tts(text, lang = 'ar') {
+function tts(text, lang = 'en-en') {
   console.log(lang, text)
   return new Promise((resolve, reject) => {
     try {
@@ -42,4 +42,4 @@ function tts(text, lang = 'ar') {
       })
     } catch (e) { reject(e) }
   })
-}
+          }
