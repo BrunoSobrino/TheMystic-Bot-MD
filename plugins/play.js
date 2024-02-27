@@ -5,7 +5,7 @@ import axios from 'axios'
 import { youtubedl, youtubedlv2 } from '@bochilteam/scraper'
 let handler = async (m, { conn, command, args, text, usedPrefix }) => {
 let q, v, yt, dl_url, ttl, size, lolhuman, lolh, n, n2, n3, n4, cap, qu, currentQuality   
-if (!text) throw `*🤔ما الذي تبحث عنه؟ 🤔*\n*أدخل اسم الأغنية*\n\n*على سبيل مثال:*\n*play moro man antom`
+if (!text) throw `*🤔ما الذي تبحث عنه؟ 🤔*\n*أدخل اسم الأغنية*\n\n*على سبيل مثال:*\n*play moro man antom*`
 try {
 const yt_play = await search(args.join(" "))
 let additionalText = ''
