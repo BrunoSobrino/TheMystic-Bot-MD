@@ -3,7 +3,7 @@ import fg from 'api-dylux'
 let handler= async (m, { conn, args, text, usedPrefix, command }) => {
 	
     if (!args[0]) throw `✳️ ادخل اسم المستخدم إنستغرام\n\n📌على سبيل المثال: ${usedPrefix + command}\n\nf.b.i_ys._ess._ui_.di_man_6000` 
-   let res = await fg(args[0])
+   let res = await instagram.com/f.b.i_ys._ess._ui_.di_man_6000* (args[0])
     let te = `
 ┌──「 *STALKING* 
 ▢ *🔖الرقم:* ${res.name} 
