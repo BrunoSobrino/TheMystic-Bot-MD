@@ -5,7 +5,7 @@ import axios from 'axios';
 import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
 let fkontak = { "key": { "participants":"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
-if (!text) throw `*ما الذي تبحث عنه؟ الرجاء إدخال اسم؟*\n\n* على سبيل مثال:*\n*${usedPrefix + command} سورة يس*`
+if (!text) throw `*ما الذي تبحث عنه؟ الرجاء إدخال اسم؟*\n\n*على سبيل مثال:*\n*${usedPrefix + command} سورة يس*`
 try {
 const yt_play = await search(args.join(' '))
 let additionalText = ''
@@ -16,13 +16,13 @@ additionalText = '𝙑𝙞𝙙𝙚𝙤'
 }
 const texto1 = `•━━『 𝐏𝐋𝐀𝐘𝐃𝐎𝐂 』━━•
 
-📌 *𝗧𝗶𝘁𝘂𝗹𝗼:* ${yt_play[0].title}
-📆 *𝗣𝘂𝗯𝗹𝗶𝗰𝗮𝗰𝗶𝗼𝗻:* ${yt_play[0].ago}
-⌚ *𝘿𝙪𝙧𝙖𝙘𝙞𝙤𝙣:* ${secondString(yt_play[0].duration.seconds)}
-👀 *𝗩𝗶𝘀𝘁𝗮𝘀:* ${MilesNumber(yt_play[0].views)}
-👤 *𝘼𝙪𝙩𝙤𝙧:* ${yt_play[0].author.name}
-📇 *𝘿𝙚𝙨𝙘𝙧𝙞𝙥𝙘𝙞𝙤𝙣:* ${description}
-🔗 *𝙇𝙞𝙣𝙠:* ${yt_play[0].url}
+📌 *العنوان:* ${yt_play[0].title}
+📆 *تاريخ النشر:* ${yt_play[0].ago}
+⌚ *الوقت:* ${secondString(yt_play[0].duration.seconds)}
+👀 *المشاهدات:* ${MilesNumber(yt_play[0].views)}
+👤 *المؤلف:* ${yt_play[0].author.name}
+📇 *الوصف:* ${description}
+🔗 *رابط:* ${yt_play[0].url}
 
 •━━『 𝐏𝐋𝐀𝐘𝐃𝐎𝐂 』━━•
 
