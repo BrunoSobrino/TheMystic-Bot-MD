@@ -9,7 +9,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 				let q = m.quoted ? m.quoted : m;
 				let mime = (q.msg || q).mimetype || q.mediaType || "";
 				if (!mime)
-					throw `photo?`;
+					throw `*اين صورة الذي تريد زيادة جودتها؟*`;
 				if (!/image\/(jpe?g|png)/.test(mime))
 					throw `Mime ${mime} tidak support`;
 				else conn.enhancer[m.sender] = true;
@@ -18,7 +18,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 				let error;
 				try {
 					const This = await processing(img, "dehaze");
-					conn.sendFile(m.chat, This, "", "Nih...", m);
+					conn.sendFile(m.chat, This, "", "*الصورة جاهزة يا عزيزي تابع صاحب البوت في انستغرامn\ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000*", m);
 				} catch (er) {
 					error = true;
 				} finally {
@@ -44,7 +44,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 				let error;
 				try {
 					const This = await processing(img, "recolor");
-					conn.sendFile(m.chat, This, "", "Nih...", m);
+					conn.sendFile(m.chat, This, "", "*الصورة جاهزة ياعزيزي♥🤤*", m);
 				} catch (er) {
 					error = true;
 				} finally {
@@ -70,7 +70,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 				let error;
 				try {
 					const This = await processing(img, "enhance");
-					conn.sendFile(m.chat, This, "", "Nih...", m);
+					conn.sendFile(m.chat, This, "", "*الصورة جاهزة يا عزيزي🤤🤍*", m);
 				} catch (er) {
 					error = true;
 				} finally {
