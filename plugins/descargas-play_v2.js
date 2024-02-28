@@ -12,7 +12,7 @@ if (enviando) return;
   try {
     const apiUrls = [
       `https://api.cafirexos.com/api/ytplay?text=${text}`,
-      `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`
+      `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`      
     ];
 
     for (const url of apiUrls) {
@@ -29,30 +29,30 @@ if (enviando) return;
       enviando = false;
       throw `_*< DESCARGAS - PLAY V2 />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*`;
     } else {
-      try {
-        if (command === 'play.1') {
-              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v1/ytmp3?url=${data.resultado.url}`;
+      try {      
+        if (command === 'play.1') { // play.1 con CFROS API v1 ytmp3
+              apiUrl = `https://api.cafirexos.com/api/v1/ytmp3?url=${data.resultado.url}`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
-              buff = await conn.getFile(apiUrl);
-            } else if (command === 'play.2') {
-              apiUrl = `https://api-brunosobrino.zipponodes.xyz/api/v1/ytmp4?url=${data.resultado.url}`;
+              buff = await conn.getFile(apiUrl);          
+            } else if (command === 'play.2') { // play.2 con CFROS API v1 ytmp4
+              apiUrl = `https://api.cafirexos.com/api/v1/ytmp4?url=${data.resultado.url}`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
-              buff = await conn.getFile(apiUrl);
+              buff = await conn.getFile(apiUrl);        
         }
-      } catch {
+      } catch {        
           try {
-            if (command === 'play.1') {
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp3?url=${data.resultado.url}`;
+            if (command === 'play.1') { // play.1 con CFROS API v2 ytmp3
+              apiUrl = `https://api.cafirexos.com/api/v2/ytmp3?url=${data.resultado.url}`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
-              buff = await conn.getFile(apiUrl);
-            } else if (command === 'play.2') {
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp4?url=${data.resultado.url}`;
+              buff = await conn.getFile(apiUrl);              
+            } else if (command === 'play.2') { // play.2 con CFROS API v2 ytmp4
+              apiUrl = `https://api.cafirexos.com/api/v2/ytmp4?url=${data.resultado.url}`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
-              buff = await conn.getFile(apiUrl);
+              buff = await conn.getFile(apiUrl);              
             }
           } catch {
             enviando = false;
@@ -79,6 +79,7 @@ if (enviando) return;
 handler.command = ['play.1', 'play.2'];
 export default handler;
 
+///////////////////////////////////////
 
 /*import fetch from 'node-fetch';
 import yts from 'yt-search';

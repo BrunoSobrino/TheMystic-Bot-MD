@@ -28,7 +28,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     const fileSizeInMB = fileSizeInKB / 1024;
     const size = fileSizeInMB.toFixed(2);       
     if (size >= limit_a2) {  
-    await conn.sendMessage(m.chat, {text: `*[ ✔ ] Descargue su audio en ${audio}*`}, {quoted: m});
+    await conn.sendMessage(m.chat, {text: `*[ ℹ️ ] Descargue su audio en:* _${audio}_`}, {quoted: m});
     return;    
     }     
     if (size >= limit_a1 && size <= limit_a2) {  
@@ -50,7 +50,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     const fileSizeInMB2 = fileSizeInKB2 / 1024;
     const size2 = fileSizeInMB2.toFixed(2);       
     if (size2 >= limit2) {  
-    await conn.sendMessage(m.chat, {text: `_*< DESCARGAS - PLAY />*_\n\n*[ ✔ ] Descargue su vídeo en ${video}*`}, {quoted: m});
+    await conn.sendMessage(m.chat, {text: `_*< DESCARGAS - PLAY />*_\n\n*[ ℹ️ ] Descargue su vídeo en:* _${video}_`}, {quoted: m});
     return;    
     }     
     if (size2 >= limit1 && size2 <= limit2) {  

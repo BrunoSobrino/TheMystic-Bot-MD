@@ -8,6 +8,7 @@ import axios from 'axios';
 import moment from 'moment-timezone';
 
 global.botnumber = ""
+global.confirmCode = ""
 
 global.owner = [
   ['5492604845932', true], 
