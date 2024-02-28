@@ -24,7 +24,7 @@ let handler = async (m, {
         if (/video/g.test(mime)) {
             if ((q.msg || q).seconds > 11) return m.reply('10 ثوان كحد أقصى!')
             }
-        if (!/webp|image|video|gif|viewOnce/g.test(mime)) return m.reply(`المرجو الاشارة للصورة التي تريد ان تصنع منها ملصق ميمز  \n\nمثال :\n.smeme bobiza|bot`)
+        if (!/webp|image|video|gif|viewOnce/g.test(mime)) return m.reply(`المرجو الاشارة للصورة التي تريد ان تصنع منها ملصق ميمز  \n\nمثال :\n.smeme essaouidi|bot`)
         let img = await q.download?.()
         let meme = "https://api.memegen.link/images/custom/" + encodeURIComponent(atas ? atas : '_') + "/" + encodeURIComponent(bawah ? bawah : '_') + ".png?background="
 
