@@ -1,0 +1,19 @@
+import Presence from '@whiskeysockets/baileys';
+const handler = async (m, {conn, args, text}) => {
+  if (!text) throw `*أدخل الاسم الذي تريده أن يكون اسم المجموعة الجديد*`;
+  try {
+    const text = args.join` `;
+    if (!args || !args[0]) {
+    } else {
+      conn.groupUpdateSubject(m.chat, text);
+    }
+  } catch (e) {
+    throw '*أنا آسف، لقد ارتكبت خطأ، لا يمكن أن يزيد الاسم عن 25 حرفًا.*';
+  }
+};
+handler.help = ['setname <text>'];
+handler.tags = ['group'];
+handler.command = /^(setname)$/i;
+handler.group = true;
+handler.admin = true;
+export default handler;
