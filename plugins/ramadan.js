@@ -29,7 +29,7 @@ let handler = async (m, { conn }) => {
 `.trim()
   m.reply(caption)
 }
-handler.help = ['ayatkursi']
+handler.help = ['ramadan']
 handler.tags = ['quran']
 handler.command = /^(ramadan)$/i
 handler.limit = false
