@@ -30,7 +30,7 @@ conn.qurannData = conn.qurannData ? conn.qurannData : {};
     `*${v.number.inSurah}.* ${v.text.arab}`
   )).join('\n');
 
-  const instructions = "قم بالرد على هذه الرسالة برقم الآية المطلوب لاستقبال الصوت. \n يمكنك زيارة أنستغرام صاحب البوت لمعرفة المزيد عن هذه الميزة \n instagram.com/noureddine_ouafy";
+  const instructions = "قم بالرد على هذه الرسالة برقم الآية المطلوب لاستقبال الصوت. \n يمكنك زيارة أنستغرام صاحب البوت لمعرفة المزيد عن هذه الميزة \ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000";
 
   let { key } = await m.reply(`📖 List of Ayahs in Surah ${surahNumber}:\n${formattedList}\n\n${instructions}`);
   // Store the Quran data in conn.qurannData variable for later use
