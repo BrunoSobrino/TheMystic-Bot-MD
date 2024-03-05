@@ -1,16 +1,32 @@
-const { bot } = require('../lib/')
+import { exec } from 'child_process'
+import speed from 'performance-now'
 
-bot(
-  {
-    pattern: 'ping ?(.*)',
-    fromMe: true,
-    desc: 'To check ping',
-    type: 'misc',
-  },
-  async (message, match) => {
-    const start = new Date().getTime()
-    await message.send('```Ping!```')
-    const end = new Date().getTime()
-    return await message.send('*Pong!*\n ```' + (end - start) + '``` *ms*')
-  }
-)
+let handler = async (m, { conn }) => {
+
+  let pingMsg = await conn.sendMessage(m.chat, {text: 'Pinging...'})
+
+  let timestamp = speed()
+
+  await exec('neofetch --stdout', async (error, stdout) => {
+
+    let latency = (speed() - timestamp).toFixed(4)
+
+    await conn.relayMessage(m.chat, {
+      protocolMessage: {
+        key: pingMsg.key,
+        type: 14,
+        editedMessage: {
+          conversation: `🚀Pong!...Done ${latency} ms` 
+        }
+      }
+    }, {})
+
+  })
+
+}
+
+handler.help = ['ping']
+handler.tags = ['main']
+handler.command = ['ping', 'speed', 'pn'] 
+
+export default handler
