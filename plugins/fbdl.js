@@ -23,7 +23,7 @@ export default {
       }
       let video = data.url      
       conn.sendFile(m.chat, video, {
-         caption: `instagram.com/f.b.i_ys._ess._ui_.di_man_6000`,
+         caption: `instagram.com/essaouidi_yassine`,
          quoted: m
       });      
    },
