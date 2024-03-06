@@ -18,7 +18,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 				let error;
 				try {
 					const This = await processing(img, "dehaze");
-					conn.sendFile(m.chat, This, "", " instagram.com/f.b.i_ys._ess._ui_.di_man_6000 ...", m);
+					conn.sendFile(m.chat, This, "", "instagram.com/essaouidi_yassine ...", m);
 				} catch (er) {
 					error = true;
 				} finally {
@@ -44,7 +44,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 				let error;
 				try {
 					const This = await processing(img, "recolor");
-					conn.sendFile(m.chat, This, "", " instagram.com/f.b.i_ys._ess._ui_.di_man_6000 ...", m);
+					conn.sendFile(m.chat, This, "", "instagram.com/essaouidi_yassine ...", m);
 				} catch (er) {
 					error = true;
 				} finally {
