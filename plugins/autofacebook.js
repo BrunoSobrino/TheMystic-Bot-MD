@@ -20,7 +20,7 @@ export let event = {
 			} = await fbdl(budy);
 			m.react('🕗', m.chat)
 			conn.sendFile(m.chat, video, {
-				caption: ` Facebook\ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000`,
+				caption: ` Facebook\ninstagram.com/essaouidi_yassine`,
 				quoted: m
 			});
 			Limit(m.sender, 3);
