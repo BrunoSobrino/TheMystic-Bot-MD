@@ -1,7 +1,7 @@
 let handler = async (m, { participants }) => {
     // if (participants.map(v=>v.jid).includes(global.conn.user.jid)) {
     global.db.data.chats[m.chat].isBanned = true
-    m.reply('تم حظرك من استعمال البوت يا عزيزي لانك تخالف سياسة استعماله ♥ يمكنك معرفة سياسة استخدام البوت لدى صاحبه السويدي ياسين \ninstagram.com/f.b.i_ys._ess._ui_.di_man_6000 😄!')
+    m.reply('تم حظرك من استعمال البوت يا عزيزي لانك تخالف سياسة استعماله ♥ يمكنك معرفة سياسة استخدام البوت لدى صاحبه السويدي ياسين \ninstagram.com/essaouidi_yassine 😄')
     // } else m.reply('Ada nomor host disini...')
 }
 handler.help = ['ban']
