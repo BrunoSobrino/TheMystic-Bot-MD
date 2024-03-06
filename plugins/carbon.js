@@ -10,7 +10,7 @@ let handler = async (m, {
     command,
     args
 }) => {
-    let query = "اكتب الكود يا مبرجم 😝 :\n.carbon console.log('bobiza bot is the 1st whatsapp bot in the middle east ')"
+    let query = "اكتب الكود يا مبرجم 😝 :\n.carbon console.log('essaouidi bot is the 1st whatsapp bot in the middle east ')"
     let text
     if (args.length >= 1) {
         text = args.slice(0).join(" ")
