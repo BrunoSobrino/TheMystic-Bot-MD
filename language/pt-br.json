@@ -4,6 +4,21 @@
             "texto1": "_*< ANTI-ÁRABES />*_\n\n*[ ℹ️ ] Neste grupo não são permitidos números que começam com +212. Por isso, será excluído do grupo.*",
             "texto2": "_*< ANTI-ÁRABES />*_\n\n*[ ℹ️ ] Neste grupo não são permitidos números que começam com +265. Por isso, será excluído do grupo.*",
             "texto3": "_*< ANTI-ÁRABES />*_\n\n*[ ℹ️ ] Neste grupo não são permitidos números que começam com +92. Por isso, será excluído do grupo.*"
+        },
+        "_antilink": {
+            "texto1": "*< ANTI-LINK />*_\n\n*[ ℹ️ ] O Antilink está habilitado, mas o participante que enviou o link é um administrador.*",
+            "texto2": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] O participante @user enviou um link para um grupo de WhatsApp, portanto será removido.*",
+            "texto3": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Para que o anti-link funcione corretamente, o bot deve ser administrador do grupo.*",
+            "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Este recurso está desabilitado porque o recurso* _restrict_ *está habilitado.*"
+        },
+        "_antilink2": {
+            "texto1":"_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] O participante @user enviou um link para um grupo de WhatsApp, portanto será removido.*",
+            "texto2": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Para que o anti-link funcione corretamente, o bot deve ser administrador do grupo.*",
+            "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Este recurso está desabilitado porque o recurso* _restrict_ *está habilitado.*"
+        },
+        "menu_audios":{
+            "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
+            
         }
     }
 }
