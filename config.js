@@ -8,7 +8,7 @@ import axios from 'axios';
 import moment from 'moment-timezone';
 
 global.botnumber = ""
-global.confirmCode = "12121212"
+global.confirmCode = ""
 
 global.owner = [
   ['5219992095479', '👑 Mystic - Creador 👑', true],
