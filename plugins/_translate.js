@@ -6,7 +6,7 @@ function _language(){
     
     //Consulta ao arquivo de tradução, conforme no arquivo config
     const result = JSON.parse(fs.readFileSync(`./language/${config.language}.json`))
-    console.log(result.plugins)
+    
    return result;
    
 

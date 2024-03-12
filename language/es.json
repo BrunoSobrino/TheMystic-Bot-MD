@@ -16,6 +16,35 @@
             "texto2": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Para que el anti-link funcione correctamente es necesario que el bot sea administrador del grupo.*",
             "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Esta función está desactivada debido a que la función* _restrict_ *está habilitada.*"
         },
+        "_antiprivado": {
+            "texto1": "_*< ANTI-PRIVADO />*_\n\n*[ ℹ️ ] La función antiprivado está habilitada, por lo tanto serás bloqueado.*"
+        },
+        "_antitoxic": {
+            "texto1":"_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] ",
+            "texto1_1": " enviar la palabra ",
+            "texto1_2": " está prohibido en este grupo.\n\n▢ *Advertencia:* ",
+            "texto2": "_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] El participante ",
+            "texto2_1": "superó las 5 advertencias, por lo que será expulsado del grupo.* "
+
+        },
+        "_antitrabas": {
+            "texto1": "_*< ANTI-TRABAS />*_\n\n*[ ℹ️ ] El administrador ",
+            "texto1_1": " envio un mensaje que contiene muchos caracteres.* ",
+            "texto2": "*[ ! ] Se detecto un mensaje que contiene muchos caracteres [ ! ]*\n",
+            "texto2_1": "No soy administrador, no puedo hacer nada :/",
+            "texto3": "Marcar el chat como leido ✓ ",
+            "texto3_1" : " El número : ",
+            "texto3_2": " Alias ",
+            "texto3_3": "[ ! ] Acaba de enviar un texto que contiene muchos caracteres que puede ocasionar fallos en los dispositivos ",
+            "texto4": "[ ! ] Para realizar acciones de eliminación, mi dueño tiene que encender el modo restringido! "
+
+        },
+        "_antiviewonce":{
+            "texto1": "*- En este grupo, no se permite ocultar nada.*"
+        },
+        "_autosticker":{
+            "texto1" : "_*< FUNCIONES - AUTOSTICKER />*_\n\n*[ ℹ️ ] La duración del vídeo no puede superar los 7 segundos.*\n\n*[ 💡 ] Para desactivar la función de* _autosticker_ *envie el siguiente comando:* _/𝚍𝚒𝚜𝚊𝚋𝚕𝚎 𝚊𝚞𝚝𝚘𝚜𝚝𝚒𝚌𝚔𝚎𝚛_"
+        },
         "menu-audios":{
             "texto1": "𝙴𝚂𝙲𝚁𝙸𝙱𝙴 𝙻𝙰𝚂 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴𝚂 𝙿𝙰𝙻𝙰𝙱𝚁𝙰𝚂 𝙾 𝙵𝚁𝙰𝚂𝙴𝚂 𝚂𝙸𝙽 𝙽𝙸𝙽𝙶𝚄𝙽 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 (#, /, *, .)"
         }

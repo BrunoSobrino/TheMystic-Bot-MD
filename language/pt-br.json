@@ -12,13 +12,39 @@
             "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Este recurso está desabilitado porque o recurso* _restrict_ *está habilitado.*"
         },
         "_antilink2": {
-            "texto1":"_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] O participante @user enviou um link para um grupo de WhatsApp, portanto será removido.*",
+            "texto1": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] O participante @user enviou um link para um grupo de WhatsApp, portanto será removido.*",
             "texto2": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Para que o anti-link funcione corretamente, o bot deve ser administrador do grupo.*",
             "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Este recurso está desabilitado porque o recurso* _restrict_ *está habilitado.*"
         },
-        "menu_audios":{
+        "_antiprivado": {
+            "texto1": "_*< ANTI-PRIVADO />*_\n\n*[ ℹ️ ] A função antiprivada está habilitada, portanto você será bloqueado.*"
+        },
+        "_antitoxic": {
+            "texto1": "_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] ",
+            "texto1_1": " envie a palavra ",
+            "texto1_2": " é proibido neste grupo.\n\n▢ *Aviso:* ",
+            "texto2": "_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] O participante ",
+            "texto2_1": " ultrapassou 5 advertências, então você será expulso do grupo.* "
+        },
+        "_antitrabas": {
+            "texto1": "< ANTI-TRABAS />_\n\n*[ ℹ️ ] O administrador ",
+            "texto1_1": " enviou uma mensagem que contém muitos caracteres.* ",
+            "texto2": "[ ! ] Foi detectada uma mensagem que contém muitos caracteres [ ! ]\n",
+            "texto2_1": " Não sou administrador, não posso fazer nada :/ ",
+            "texto3": " Marcar o chat como lido ✓ ",
+            "texto3_1": " O número : ",
+            "texto3_2": " Alias ",
+            "texto3_3": "[ ! ] Acabou de enviar um texto que contém muitos caracteres, o que pode causar falhas nos dispositivos ",
+            "texto4": "[ ! ] Para realizar ações de eliminação, meu dono precisa ativar o modo restrito! "
+        },
+        "_antiviewonce":{
+            "texto1": "*- Neste grupo você não tem permissão para esconder nada.*"
+        },
+        "_autosticker":{
+            "texto1" : "_*< FUNCTIONS - AUTOSTICKER />*_\n\n*[ ℹ️ ] A duração do vídeo não pode ultrapassar 7 segundos.*\n\n*[ 💡 ] Para desativar a função* _autosticker_ *, envie o seguinte comando:* _/"
+        },
+        "menu_audios": {
             "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
-            
         }
     }
 }
