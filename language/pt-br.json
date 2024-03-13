@@ -37,11 +37,47 @@
             "texto3_3": "[ ! ] Acabou de enviar um texto que contém muitos caracteres, o que pode causar falhas nos dispositivos ",
             "texto4": "[ ! ] Para realizar ações de eliminação, meu dono precisa ativar o modo restrito! "
         },
-        "_antiviewonce":{
+        "_antiviewonce": {
             "texto1": "*- Neste grupo você não tem permissão para esconder nada.*"
         },
-        "_autosticker":{
-            "texto1" : "_*< FUNCTIONS - AUTOSTICKER />*_\n\n*[ ℹ️ ] A duração do vídeo não pode ultrapassar 7 segundos.*\n\n*[ 💡 ] Para desativar a função* _autosticker_ *, envie o seguinte comando:* _/"
+        "_autosticker": {
+            "texto1": "_*< FUNCTIONS - AUTOSTICKER />*_\n\n*[ ℹ️ ] A duração do vídeo não pode ultrapassar 7 segundos.*\n\n*[ 💡 ] Para desativar a função* _autosticker_ *, envie o seguinte comando:* _/"
+        },
+        "_detectevents": {
+            "texto1": "Recentemente, um membro foi promovido a administrador.\n\n",
+            "texto1_1": "◦ Grupo:",
+            "texto1_2": "◦ Novo admin:",
+            "texto1_3": "◦ Executado por:",
+            "texto2": "Recentemente, um administrador foi degradado a membro.\n\n",
+            "texto2_1": "◦ Grupo:",
+            "texto2_2": "◦ Foi removido:",
+            "texto2_3": "◦ Executado por:",
+            "texto3": "Recentemente, um novo membro foi adicionado ao grupo.\n\n",
+            "texto3_1": "◦ Grupo:",
+            "texto3_2": "◦ Foi adicionado: ",
+            "texto3_3": "◦ Executado por: ",
+            "texto3_4": "◦ Foi adicionado: ",
+            "texto4": "Recentemente, um membro foi removido do grupo.\n\n",
+            "texto4_1": "◦ Grupo: ",
+            "texto4_2": "◦ Foi removido: ",
+            "texto4_3": "◦ Executado por:",
+            "texto4_4": "◦ Foi removido: ",
+            "texto5": "Recentemente foi ",
+            "texto5_1": "um membro do grupo.\n\n",
+            "texto5_2": "`◦ Grupo: ",
+            "texto5_3": "◦ Foi removido: ",
+            "texto5_4": "◦ Executado por: ",
+            "texto5_5": "◦ Saiu: ",
+            "texto6": "Recentemente, os ajustes do grupo foram modificados.\n\n",
+            "texto6_1": "◦ Grupo: ",
+            "texto6_2": "◦ O grupo foi: ",
+            "texto6_3": "◦ Executado por: ",
+            "texto7": "Recentemente, o nome do grupo foi alterado.\n\n",
+            "texto7_1": "◦ Novo nome: ",
+            "texto7_2": "◦ Executado por: "
+        },
+        "_premium": {
+            "texto1": "Seu tempo como usuário premium expirou, você não é mais um usuário premium*"
         },
         "menu_audios": {
             "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
