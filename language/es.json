@@ -45,6 +45,42 @@
         "_autosticker":{
             "texto1" : "_*< FUNCIONES - AUTOSTICKER />*_\n\n*[ ℹ️ ] La duración del vídeo no puede superar los 7 segundos.*\n\n*[ 💡 ] Para desactivar la función de* _autosticker_ *envie el siguiente comando:* _/𝚍𝚒𝚜𝚊𝚋𝚕𝚎 𝚊𝚞𝚝𝚘𝚜𝚝𝚒𝚌𝚔𝚎𝚛_"
         },
+        "_detectevents": {
+            "texto1":"*Recientemente se ha promovido un miembro a administrador.*\n\n",
+            "texto1_1": "*◦  Grupo:*",
+            "texto1_2": "*◦  Nuevo admin:*",
+            "texto1_3": "*◦  Ejecutado por:*",
+            "texto2":"*Recientemente se ha degradado un administrador a miembro.*\n\n",
+            "texto2_1":"*◦  Grupo:*",
+            "texto2_2":"*◦  Se quitó a:*",
+            "texto2_3":"*◦  Ejecutado por:*",
+            "texto3": "*Recientemente se ha incorporado al grupo un nuevo miembro.*\n\n",
+            "texto3_1":"*◦  Grupo:*",
+            "texto3_2":"*◦  Se añadió a:* ",
+            "texto3_3":"*◦  Ejecutado por:* ",
+            "texto3_4":"*◦  Se añadió:* ",
+            "texto4":"*Recientemente se ha eliminado un miembro del grupo.*\n\n",
+            "texto4_1":"*◦  Grupo:* ",
+            "texto4_2":"*◦  Se eliminó a:* ",
+            "texto4_3":"*◦  Ejecutado por:*",
+            "texto4_4":"*◦  Se eliminó a:* ",
+            "texto5":"*Recientemente se ha ",
+            "texto5_1":"un miembro del grupo.*\n\n",
+            "texto5_2":"`*◦  Grupo:* ",
+            "texto5_3":"*◦  Se eliminoó a:* ",
+            "texto5_4":"*◦  Ejecutado por:* ",
+            "texto5_5": "*◦  Se salió:* ",
+            "texto6":"*Recientemente se han modificado los ajustes del grupo.*\n\n",
+            "texto6_1":"*◦  Grupo:* ",
+            "texto6_2":"*◦  El grupo se ha:* ",
+            "texto6_3":"*◦  Ejecutado por:* ",
+            "texto7":"*Recientemente se ha cambiado el nombre del grupo.*\n\n",
+            "texto7_1":"*◦  Nuevo nombre:* ",
+            "texto7_2":"*◦  Ejecutado por:* "
+        },
+        "_premium":{
+            "texto1": "𝚃𝚄 𝚃𝙸𝙴𝙼𝙿𝙾 𝙲𝙾𝙼𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼 𝙷𝙰 𝙴𝚇𝙿𝙸𝚁𝙰𝙳𝙾, 𝚈𝙰 𝙽𝙾 𝙴𝚁𝙴𝚂 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼*"
+        },
         "menu-audios":{
             "texto1": "𝙴𝚂𝙲𝚁𝙸𝙱𝙴 𝙻𝙰𝚂 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴𝚂 𝙿𝙰𝙻𝙰𝙱𝚁𝙰𝚂 𝙾 𝙵𝚁𝙰𝚂𝙴𝚂 𝚂𝙸𝙽 𝙽𝙸𝙽𝙶𝚄𝙽 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 (#, /, *, .)"
         }
