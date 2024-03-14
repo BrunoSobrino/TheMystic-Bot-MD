@@ -269,7 +269,7 @@
             "texto3": "[✔️] O TEXTO/COMANDO ASSOCIADO AO STICKER/IMAGEM FOI REMOVIDO COM SUCESSO DA BASE DE DADOS CORRECÇÕES"
         },
         "cmd_list": {
-            "texto1": "< LISTA DE COMANDOS / TEXTOS ASSOCIADOS />"
+            "texto1": "< LISTA DE COMANDOS / TEXTOS ASSOCIADOS  />"
         },
         "menu_audios": {
             "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
