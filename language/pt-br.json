@@ -203,6 +203,74 @@
                 "⛨ • Link:"
             ]
         },
+        "buscador_playstore": {
+            "texto1": "[❗] INSIRA O NOME DA APLICATIVO QUE DESEJA BUSCAR",
+            "texto2": "[❗] INSIRA O NOME DA APP QUE QUEIRA BUSCAR",
+            "texto3": [
+                "*🔍 Resultado:*",
+                "*✍️ Desenvolvedor:*",
+                "*💸 Preço:*",
+                "*📈 Classificação:*",
+                "*⛓️ Link:*"
+            ]
+        },
+        "buscador_stickersearch": {
+            "texto1": "[❗] INSIRA O NOME DO PACOTE QUE DESEJA BUSCAR",
+            "texto2": [
+                "🪴 • Resultado:",
+                "🌵 • Nome:",
+                "🍂 • Url:"
+            ],
+            "texto3": "[❗] ERRO, POR FAVOR TENTE NOVAMENTE"
+        },
+        "buscador_stickersearch2": {
+            "texto1": "[❗] INSIRA O NOME DO PACOTE QUE DESEJA BUSCAR",
+            "texto2": [
+                "🌅 • Resultado:",
+                "🥗 • Nome:",
+                "🐢 • Autor:",
+                "🍂 • Url:"
+            ],
+            "texto3": "[❗] ERRO, POR FAVOR TENTE NOVAMENTE"
+        },
+        "buscador_wikipedia": {
+            "texto1": [
+                "[❗️𝐈𝐍𝐅𝐎❗️] VOCÊ ESTÁ USANDO O COMANDO INCORRETAMENTE!!\nUSO CORRETO:\n",
+                "Palavra-chave a ser buscada\n\nEXEMPLO:\n",
+                ""
+            ],
+            "texto2": "AQUI ESTÁ A INFORMAÇÃO EXTRAÍDA:",
+            "texto3": "[❗️𝐈𝐍𝐅𝐎❗️] NENHUMA INFORMAÇÃO FOI ENCONTRADA, POR FAVOR, CERTIFIQUE-SE DE QUE VOCÊ DIGITOU APENAS UMA PALAVRA E QUE A ESCREVEU CORRETAMENTE"
+        },
+        "buscador_yts": {
+            "texto1": "O que você quer que eu busque no YouTube?",
+            "texto2": [
+                "Link :",
+                "Duração :",
+                "Postado em :",
+                "Visualizações :"
+            ]
+        },
+        "cmd_add": {
+            "texto1": "[❗️INFORMAÇÃO❗️] RESPONDA AO STICKER OU IMAGEM COM O COMANDO OU TEXTO A SER ASSOCIADO",
+            "texto2": "[❗️INFORMAÇÃO❗️] SOMENTE COMANDOS OU TEXTOS PODEM SER ASSOCIADOS A STICKERS E IMAGENS",
+            "texto3": [
+                "[❗️INFORMAÇÃO❗️] ERRO, TEXTO EM FALTA*\n\n*USO CORRETO DO COMANDO:",
+                "<texto> <responder ao sticker ou imagem>",
+                "EXEMPLO DE USO CORRETO DO COMANDO:",
+                "<responder ao sticker ou imagem>"
+            ],
+            "texto4": "[❗️INFORMAÇÃO❗️] SOMENTE O PROPRIETÁRIO PODE FAZER A MODIFICAÇÃO",
+            "texto5": "[✔️] O TEXTO/COMANDO ASSOCIADO AO STICKER/IMAGEM FOI APLICADO COM SUCESSO À BASE DE DADOS DE CORRECÇÕES"
+        },
+        "cmd_del": {
+            "texto1": "[❗INFORMAÇÃO❗] O STICKER OU IMAGEM QUE VOCÊ RESPONDEU SERÁ REMOVIDO DOS COMANDOS ASSOCIADOS A STICKERS OU IMAGENS, PARA OBTERER O CÓDIGO ASSOCIADO USE O COMANDO /CMDINFO",
+            "texto2": "[❗INFORMAÇÃO❗] O STICKER OU IMAGEM FOI REMOVIDO COM SUCESSO DA ELIMINAÇÃO",
+            "texto3": "[✔️] O TEXTO/COMANDO ASSOCIADO AO STICKER/IMAGEM FOI REMOVIDO COM SUCESSO DA BASE DE DADOS CORRECÇÕES"
+        },
+        "cmd_list": {
+            "texto1": "< LISTA DE COMANDOS / TEXTOS ASSOCIADOS />"
+        },
         "menu_audios": {
             "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
         }
