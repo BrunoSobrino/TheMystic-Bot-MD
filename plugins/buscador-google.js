@@ -1,13 +1,16 @@
 import {googleIt} from '@bochilteam/scraper';
 import google from 'google-it';
 import axios from 'axios';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.buscador_google
+
 let handler = async (m, { conn, command, args, usedPrefix }) => {
   const fetch = (await import('node-fetch')).default;
   const text = args.join` `;
-  if (!text) return conn.reply(m.chat, '*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝙾 𝚃𝙴𝙼𝙰 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁*', m);
+  if (!text) return conn.reply(m.chat, `${tradutor.texto1}`, m);
 const url = 'https://google.com/search?q=' + encodeURIComponent(text);
 google({'query': text}).then(res => {
-let teks = `*RESULTADOS DE : _${text}_*\n\n${url}\n\n`
+let teks = `*${tradutor.texto2} _${text}_*\n\n${url}\n\n`
 for (let g of res) {
 teks += `_*${g.title}*_\n_${g.link}_\n_${g.snippet}_\n\n`
 } 

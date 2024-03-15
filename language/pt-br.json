@@ -79,6 +79,198 @@
         "_premium": {
             "texto1": "Seu tempo como usuário premium expirou, você não é mais um usuário premium*"
         },
+        "adult_hentaipdf": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] OS COMANDOS +18 ESTÃO DESATIVADOS NESTE GRUPO, SE VOCÊ É ADMINISTRADOR E DESEJA ATIVÁ-LOS, USE O COMANDO #enable modohorny",
+            "texto2": "[❗] INSIRA O NOME DE ALGUMA CATEGORIA DE HENTAI, POR EXEMPLO:",
+            "texto2_1": "miku",
+            "texto3": "[❗] ERRO, TENTE NOVAMENTE E/OU TENTE COM OUTRA CATEGORIA"
+        },
+        "adult_hentaisearch": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] OS COMANDOS +18 ESTÃO DESATIVADOS NESTE GRUPO, SE VOCÊ É ADMINISTRADOR E DESEJA ATIVÁ-LOS, USE O COMANDO #enable modohorny",
+            "texto2": "[❗] INSIRA O NOME DE ALGUM HENTAI A SER BUSCADO",
+            "texto3": "[❗] NENHUM RESULTADO FOI ENCONTRADO"
+        },
+        "adult_pack_vid": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] OS COMANDOS +18 ESTÃO DESATIVADOS NESTE GRUPO, SE VOCÊ É ADMINISTRADOR E DESEJA ATIVÁ-LOS, USE O COMANDO #enable modohorny",
+            "texto2": "*APROVEITE O VÍDEO "
+        },
+        "adult_xnxxdl": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] OS COMANDOS +18 ESTÃO DESATIVADOS NESTE GRUPO, SE VOCÊ É ADMINISTRADOR E DESEJA ATIVÁ-LOS, USE O COMANDO #enable modohorny",
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] INSIRA UM LINK VÁLIDO DO XNXX, EXEMPLO:",
+            "texto3": "[❗] O VÍDEO ESTÁ SENDO PROCESSADO, POR FAVOR AGUARDE ENQUANTO É ENVIADO..\n\n- O TEMPO DE ENVIO DEPENDE DO PESO E DURAÇÃO DO VÍDEO",
+            "texto4": "[❗] NÃO FOI ENCONTRADO UM LINK PARA ESSE NÚMERO, POR FAVOR INSIRA UM NÚMERO ENTRE 1 E O ",
+            "texto5": "[❗] PARA USAR ESTE COMANDO DESTA FORMA ",
+            "texto5_1": "<número>), POR FAVOR FAÇA A BUSCA DE VÍDEOS COM O COMANDO",
+            "texto6": "[❗] PARA USAR ESTE COMANDO DESTA FORMA ",
+            "texto6_1": "<número>), POR FAVOR FAÇA A BUSCA DE VÍDEOS COM O COMANDO",
+            "texto7": "[❗𝐈𝐍𝐅𝐎❗] ERRO, POR FAVOR TENTE NOVAMENTE \n\n*- VERIFIQUE SE O LINK É SEMELHANTE  𝙰:"
+        },
+        "adult_xnxxsearch": {
+            "texto1": "[❗] Os comandos +18 estão desativados neste grupo, se você é administrador e deseja ativá-los, use",
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] INSIRA O ITEM QUE DESEJA BUSCAR ",
+            "texto3": "🔍 RESULTADOS DA BUSCA:"
+        },
+        "adult_xvideosdl": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] OS COMANDOS +18 ESTÃO DESATIVADOS NESTE GRUPO. SE VOCÊ É ADMINISTRADOR E DESEJA ATIVÁ-LOS, USE",
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] INSIRA UM LINK VÁLIDO DO XVÍDEOS, EXEMPLO:",
+            "texto3": "[❗] O VÍDEO ESTÁ SENDO PROCESSADO, POR FAVOR AGUARDE ENQUANTO É ENVIADO..\n\n- O TEMPO DE ENVIO DEPENDE DO PESO E DURAÇÃO DO VÍDEO",
+            "texto4": "[❗𝐈𝐍𝐅𝐎❗] ERRO, POR FAVOR TENTE NOVAMENTE \n*- VERIFIQUE SE O LINK É SEMELHANTE A:*"
+        },
+        "afk__afk": {
+            "texto1": [
+                "[❗] NENHUM ETIQUETADO [❗]",
+                "O USUÁRIO QUE USOU ETIQUETA ESTÁ INATIVO (AFK)",
+                "MOTIVO DE INATIVIDADE (AFK): ",
+                "MOTIVO DE INATIVIDADE (AFK): O USUÁRIO NÃO ESPECIFICOU UM MOTIVO EM SUA ATIVAÇÃO",
+                "TEMPO TRANS-CORRIDO DE INATIVIDADE (AFK):"
+            ],
+            "texto2": [
+                "*[❗INFORMAÇÃO❗] DESEJA DESATIVAR INATIVIDADE (AFK)",
+                "DESEJA DESATIVAR INATIVIDADE (AFK) POR ESTE MOTIVO:",
+                "—◉ TEMPO DE INATIVIDADE (AFK):"
+            ]
+        },
+        "afk_afk": {
+            "texto1": [
+                "[❗INFORMAÇÃO❗] O USUÁRIO ",
+                "ESTÁ INATIVO (AFK), POR FAVOR NÃO O ETIQUETE\n\n*—◉ MOTIVO DE LA INATIVIDADE (AFK)"
+            ]
+        },
+        "anonymous_chat": {
+            "texto1": "*[❗INFORMAÇÃO❗]* NÃO ESTÁ EM UM CHAT ANÔNIMO\n\nQUER INICIAR UM CHAT ANÔNIMO?\nESCREVA",
+            "texto2": "*[ ✔ ]* SAIO COM ÊXITO DO CHAT ANONIMO",
+            "texto3": "*[❗INFORMAÇÃO❗]* O OUTRO USUÁRIO ABANDONOU O CHAT ANÔNIMO\n\nQUER SAIR DO CHAT ANÔNIMO?\nESCREVA",
+            "texto4": "*[❗INFORMAÇÃO❗]* TODOS ESTÃO EM UM CHAT ANÔNIMO, PEDINDO PARA QUE OUTRO USUÁRIO SE UNA PARA INICIAR UM CHAT ANÔNIMO\n\nQUER SAIR DO DEL CHAT ANÔNIMO?\nESCREVA",
+            "texto5": "*[ ✔ ]* UNIU-SE PERFEITAMENTE AO CHAT ANÔNIMO, PEDIDO INICIADO AO OUTRO USUÁRIO",
+            "texto6": "*[ ✔ ]* UNIU-SE PERFEITAMENTE AO CHAT ANÔNIMO, PEDIDO INICIADO AO OUTRO USUÁRIO\n\nA OUTRO CHAT É CRIADO",
+            "texto7": "*[❗INFORMAÇÃO❗]* ESPERA O OUTRO USUÁRIO PARA INICIAR UM CHAT ANÔNIMO\n\nQUER SAIR DO CHAT ANÔNIMO?*\nESCREVA"
+        },
+        "audio_efectos": {
+            "texto1": "*[❗INFORMAÇÃO❗] RESPOSTA AO ÁUDIO OU NOTA DE VOZ E NÃO DE VOZ ELA É CUIDADA SERA MODIFICADA, USE O COMANDO*"
+        },
+        "buscador_animeinfo": {
+            "texto1": "*[❗INFORMAÇÃO❗]* _INSIRA O NOME DE UM ANIME PARA PROCURAR_",
+            "texto2": [
+                "*🎀 • Título",
+                "*🎋 • Formato:*",
+                "*📈 • Estado:*",
+                "*🍥 • Episódios totais:*",
+                "*🎈 • Duração:*",
+                "*✨ • Baseado em:*",
+                "*💫 • Estreia:*",
+                "*🎗 • Finalizado:*",
+                "*🎐 • Popularidade:*",
+                "*🎏 • Favoritos:*",
+                "*🎇 • Classificação:*",
+                "*🏅 • Ranking:*",
+                "*♦ • Trailer:*",
+                "*🌐 • URL:*",
+                "*🎆 • Background:*",
+                "*❄ • Resumo:*"
+            ],
+            "texto3": "*[❗]* _ERRO, TENTE NOVAMENTE_"
+        },
+        "buscador_githubsearch": {
+            "texto1": [
+                "*🔗 URL:*",
+                "*📅 Criado em:*",
+                "*🔄 Atualizado em:*",
+                "*📥 Clone: $ git clone*",
+                "*Descrição:*"
+            ]
+        },
+        "buscador_google": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] INSIRA O TEXTO OU TEMA QUE DESEJA BUSCAR",
+            "texto2": "RESULTADOS DE :"
+        },
+        "buscador_lyrics": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] EXEMPLO DO USO CORRETO DO COMANDO",
+            "texto2": [
+                "🎤 TÍTULO:",
+                "👤 ARTISTA:",
+                "📃🎵 LETRA:",
+                "[❗𝐈𝐍𝐅𝐎❗] ERRO, POR FAVOR TENTE NOVAMENTE"
+            ]
+        },
+        "buscador_peliculas": {
+            "texto1": "[❗] INSIRA O NOME OU O LINK DO FILME QUE DESEJA BUSCAR",
+            "texto2": "[❗] NENHUMA INFORMAÇÃO PERTINENTE A FILMES ENCONTRADA",
+            "texto3": [
+                "🎬 • Nome:",
+                "🍿 • URL:",
+                "💫 • Bloqueador de anúncios recomendado:",
+                "Block This",
+                "⛨ • Link:"
+            ]
+        },
+        "buscador_playstore": {
+            "texto1": "[❗] INSIRA O NOME DA APLICATIVO QUE DESEJA BUSCAR",
+            "texto2": "[❗] INSIRA O NOME DA APP QUE QUEIRA BUSCAR",
+            "texto3": [
+                "*🔍 Resultado:*",
+                "*✍️ Desenvolvedor:*",
+                "*💸 Preço:*",
+                "*📈 Classificação:*",
+                "*⛓️ Link:*"
+            ]
+        },
+        "buscador_stickersearch": {
+            "texto1": "[❗] INSIRA O NOME DO PACOTE QUE DESEJA BUSCAR",
+            "texto2": [
+                "🪴 • Resultado:",
+                "🌵 • Nome:",
+                "🍂 • Url:"
+            ],
+            "texto3": "[❗] ERRO, POR FAVOR TENTE NOVAMENTE"
+        },
+        "buscador_stickersearch2": {
+            "texto1": "[❗] INSIRA O NOME DO PACOTE QUE DESEJA BUSCAR",
+            "texto2": [
+                "🌅 • Resultado:",
+                "🥗 • Nome:",
+                "🐢 • Autor:",
+                "🍂 • Url:"
+            ],
+            "texto3": "[❗] ERRO, POR FAVOR TENTE NOVAMENTE"
+        },
+        "buscador_wikipedia": {
+            "texto1": [
+                "[❗️𝐈𝐍𝐅𝐎❗️] VOCÊ ESTÁ USANDO O COMANDO INCORRETAMENTE!!\nUSO CORRETO:\n",
+                "Palavra-chave a ser buscada\n\nEXEMPLO:\n",
+                ""
+            ],
+            "texto2": "AQUI ESTÁ A INFORMAÇÃO EXTRAÍDA:",
+            "texto3": "[❗️𝐈𝐍𝐅𝐎❗️] NENHUMA INFORMAÇÃO FOI ENCONTRADA, POR FAVOR, CERTIFIQUE-SE DE QUE VOCÊ DIGITOU APENAS UMA PALAVRA E QUE A ESCREVEU CORRETAMENTE"
+        },
+        "buscador_yts": {
+            "texto1": "O que você quer que eu busque no YouTube?",
+            "texto2": [
+                "Link :",
+                "Duração :",
+                "Postado em :",
+                "Visualizações :"
+            ]
+        },
+        "cmd_add": {
+            "texto1": "[❗️INFORMAÇÃO❗️] RESPONDA AO STICKER OU IMAGEM COM O COMANDO OU TEXTO A SER ASSOCIADO",
+            "texto2": "[❗️INFORMAÇÃO❗️] SOMENTE COMANDOS OU TEXTOS PODEM SER ASSOCIADOS A STICKERS E IMAGENS",
+            "texto3": [
+                "[❗️INFORMAÇÃO❗️] ERRO, TEXTO EM FALTA*\n\n*USO CORRETO DO COMANDO:",
+                "<texto> <responder ao sticker ou imagem>",
+                "EXEMPLO DE USO CORRETO DO COMANDO:",
+                "<responder ao sticker ou imagem>"
+            ],
+            "texto4": "[❗️INFORMAÇÃO❗️] SOMENTE O PROPRIETÁRIO PODE FAZER A MODIFICAÇÃO",
+            "texto5": "[✔️] O TEXTO/COMANDO ASSOCIADO AO STICKER/IMAGEM FOI APLICADO COM SUCESSO À BASE DE DADOS DE CORRECÇÕES"
+        },
+        "cmd_del": {
+            "texto1": "[❗INFORMAÇÃO❗] O STICKER OU IMAGEM QUE VOCÊ RESPONDEU SERÁ REMOVIDO DOS COMANDOS ASSOCIADOS A STICKERS OU IMAGENS, PARA OBTERER O CÓDIGO ASSOCIADO USE O COMANDO /CMDINFO",
+            "texto2": "[❗INFORMAÇÃO❗] O STICKER OU IMAGEM FOI REMOVIDO COM SUCESSO DA ELIMINAÇÃO",
+            "texto3": "[✔️] O TEXTO/COMANDO ASSOCIADO AO STICKER/IMAGEM FOI REMOVIDO COM SUCESSO DA BASE DE DADOS CORRECÇÕES"
+        },
+        "cmd_list": {
+            "texto1": "< LISTA DE COMANDOS / TEXTOS ASSOCIADOS  />"
+        },
         "menu_audios": {
             "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
         }
