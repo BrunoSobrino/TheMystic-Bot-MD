@@ -152,25 +152,25 @@
             "texto1": "[❗𝐈𝐍𝐅𝐎❗] INGRESE EL NOMBRE DE ALGUN ANIME A BUSCAR",
             "texto2": [
                 "🎀 • *Título:*",
-                "🎋 • *Formato:*", 
+                "🎋 • *Formato:*",
                 "📈 • *Estado:* ",
-                "🍥 • *Episodios totales:*", 
+                "🍥 • *Episodios totales:*",
                 "🎈 • *Duración:",
                 "✨ • *Basado en:* ",
                 "💫 • *Estrenado:* ",
-                "🎗 • *Finalizado:*", 
+                "🎗 • *Finalizado:*",
                 "🎐 • *Popularidad:* ",
                 "🎏 • *Favoritos:* ",
                 "🎇 • *Clasificación:* ",
                 "🏅 • *Rango:* ",
-                "♦ • *Trailer:* ", 
+                "♦ • *Trailer:* ",
                 "🌐 • *URL:* ",
                 "🎆 • *Background:* ",
                 "❄ • *Ringkasan:* "
             ],
-            "texto3" : "*[❗] ERROR, INTENTELO DE NUEVO*"
+            "texto3": "*[❗] ERROR, INTENTELO DE NUEVO*"
         },
-        "buscador_githubsearch":{
+        "buscador_githubsearch": {
             "texto1": [
                 "🔗 *Url:*",
                 "📅 *Creado el:*",
@@ -179,12 +179,12 @@
                 "*Descripción:*"
             ]
         },
-        "buscador_google":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝙾 𝚃𝙴𝙼𝙰 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁*",
+        "buscador_google": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝙾 𝚃𝙴𝙼𝙰 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁*",
             "texto2": "RESULTADOS DE :"
         },
-        "buscador_lyrics":{
-            "texto1":"[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾:",
+        "buscador_lyrics": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾:",
             "texto2": [
                 "🎤 𝚃𝙸𝚃𝚄𝙻𝙾:",
                 "👤 𝙰𝚄𝚃𝙾𝚁:",
@@ -192,8 +192,8 @@
                 "[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾"
             ]
         },
-        "buscador_peliculas":{
-            "texto1":"[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙰 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽𝙰 𝙿𝙴𝙻𝙸𝙲𝚄𝙻𝙰 𝙰 𝙱𝚄𝚂𝙲𝙰𝚁",
+        "buscador_peliculas": {
+            "texto1": "[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙰 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽𝙰 𝙿𝙴𝙻𝙸𝙲𝚄𝙻𝙰 𝙰 𝙱𝚄𝚂𝙲𝙰𝚁",
             "texto2": "[❗] 𝙽𝙾 𝚂𝙴 𝙴𝙽𝙲𝙾𝙽𝚃𝚁𝙾 𝙽𝙸𝙽𝙶𝚄𝙽𝙰 𝙿𝙴𝙻𝙸𝙲𝚄𝙻𝙰",
             "texto3": [
                 "🎬 • Nombre:",
@@ -203,7 +203,7 @@
                 "⛨ • Link:"
             ]
         },
-        "buscador_playstore":{
+        "buscador_playstore": {
             "texto1": "[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁",
             "texto2": "[❗] 𝙸𝙽𝙶𝚁𝙴𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙰𝙿𝙺 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁",
             "texto3": [
@@ -214,17 +214,17 @@
                 "*⛓️ Link:*"
             ]
         },
-        "buscador_stickersearch":{
-            "texto1":"[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴𝙻 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁",
-            "texto2":[
+        "buscador_stickersearch": {
+            "texto1": "[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴𝙻 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁",
+            "texto2": [
                 "🪴 • Resultado:",
                 "🌵 • Nombre:",
                 "🍂 • Url:"
             ],
             "texto3": "[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾"
         },
-        "buscador_stickersearch2":{
-            "texto1":"[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴𝙻 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁",
+        "buscador_stickersearch2": {
+            "texto1": "[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴𝙻 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁",
             "texto2": [
                 "🌅 • Resultado:",
                 "🥗 • Nombre:",
@@ -233,8 +233,8 @@
             ],
             "texto3": "[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾"
         },
-        "buscador_wikipedia":{
-            "texto1":[
+        "buscador_wikipedia": {
+            "texto1": [
                 "[❗️𝐈𝐍𝐅𝐎❗️] 𝙴𝚂𝚃𝙰𝚂 𝚄𝚂𝙰𝙽𝙳𝙾 𝙼𝙰𝙻 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾!!*\n*𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾:*\n",
                 "𝙿𝚊𝚕𝚊𝚋𝚛𝚊 𝚌𝚕𝚊𝚟𝚎 𝚊 𝚋𝚞𝚜𝚌𝚊𝚛*\n\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n",
                 ""
@@ -242,34 +242,603 @@
             "texto2": "𝙰𝚀𝚄𝙸 𝚃𝙸𝙴𝙽𝙴𝚂 𝙻𝙰 𝙸𝙽𝙵𝙾𝚁𝙼𝙰𝙲𝙸𝙾𝙽 𝙴𝙽𝙲𝙾𝙽𝚃𝚁𝙰𝙳𝙰:",
             "texto3": "[❗️𝐈𝐍𝐅𝐎❗️] 𝙽𝙾 𝚂𝙴 𝙴𝙽𝙲𝙾𝙽𝚃𝚁𝙾 𝙽𝙸𝙽𝙶𝚄𝙽𝙰 𝙸𝙽𝙵𝙾𝚁𝙼𝙰𝙲𝙸𝙾𝙽, 𝙿𝚁𝚄𝙴𝙱𝙰 𝚀𝚄𝙴 𝙷𝙰𝚈𝙰𝚂 𝙴𝚂𝙲𝚁𝙸𝚃𝙾 𝚄𝙽𝙰 𝚂𝙾𝙻𝙰 𝙿𝙰𝙻𝙰𝙱𝚁𝙰 𝚈 𝙻𝙾 𝙷𝙰𝚈𝙰𝚂 𝙴𝚂𝙲𝚁𝙸𝚃𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙰𝙼𝙴𝙽𝚃𝙴"
         },
-        "buscador_yts":{
-            "texto1":"_Que quieres que busque en YouTube?_",
-            "texto2":[
+        "buscador_yts": {
+            "texto1": "_Que quieres que busque en YouTube?_",
+            "texto2": [
                 "Link :",
                 "Duración :",
                 "Subido :",
                 "Vistas :"
             ]
         },
-        "cmd_add":{
-            "texto1":"[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝙾 𝙸𝙼𝙰𝙶𝙴𝙽 𝙰𝙻 𝙲𝚄𝙰𝙻 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙾 𝚃𝙴𝚇𝚃𝙾",
+        "cmd_add": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝙾 𝙸𝙼𝙰𝙶𝙴𝙽 𝙰𝙻 𝙲𝚄𝙰𝙻 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙾 𝚃𝙴𝚇𝚃𝙾",
             "texto2": "[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙾𝙻𝙾 𝙿𝚄𝙴𝙳𝙴𝚂 𝙰𝚂𝙸𝙶𝙰𝙽𝙰𝚁 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 𝙾 𝚃𝙴𝚇𝚃𝙾𝚂 𝙰 𝚂𝚃𝙸𝙲𝙺𝙴𝚁𝚂 𝙴 𝙸𝙼𝙰𝙶𝙴𝙽𝙴𝚂",
-            "texto3":[
+            "texto3": [
                 "[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁 𝙳𝙴 𝚄𝚂𝙾, 𝚃𝙴𝚇𝚃𝙾 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴*\n\n*𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾:",
                 "<texto> <responder a sticker o imagen>",
                 "𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾:",
                 "<responder a sticker o imagen>"
             ],
-            "texto4":"[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙾𝙻𝙾 𝙴𝙻 𝙾𝚆𝙽𝙴𝚁 𝙿𝚄𝙴𝙳𝙴 𝚁𝙴𝙰𝙻𝙸𝚉𝙰𝚁 𝙻𝙰 𝙼𝙾𝙳𝙸𝙵𝙸𝙲𝙰𝙲𝙸𝙾𝙽",
+            "texto4": "[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙾𝙻𝙾 𝙴𝙻 𝙾𝚆𝙽𝙴𝚁 𝙿𝚄𝙴𝙳𝙴 𝚁𝙴𝙰𝙻𝙸𝚉𝙰𝚁 𝙻𝙰 𝙼𝙾𝙳𝙸𝙵𝙸𝙲𝙰𝙲𝙸𝙾𝙽",
             "texto5": "[ ✔ ] 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾/𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙰𝚂𝙸𝙶𝙽𝙰𝙳𝙾 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁/𝙸𝙼𝙰𝙶𝙴𝙽 𝙵𝚄𝙴 𝙰𝙶𝚁𝙴𝙶𝙰𝙳𝙾 𝙰 𝙻𝙰 𝙱𝙰𝚂𝙴 𝙳𝙴 𝙳𝙰𝚃𝙾𝚂 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙰𝙼𝙴𝙽𝚃𝙴"
         },
-        "cmd_del":{
-            "texto1":"[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙾𝙻𝙾 𝚂𝙴 𝙿𝚄𝙴𝙳𝙴𝙽 𝙰𝚂𝙸𝙶𝙽𝙰𝚁 𝚃𝙴𝚇𝚃𝙾𝚂 𝙾 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 𝙰𝚂𝙸𝙶𝙽𝙰𝙳𝙾𝚂 𝙰 𝚂𝚃𝙸𝙲𝙺𝙴𝚁𝚂 𝙾 𝙸𝙼𝙰𝙶𝙴𝙽𝙴𝚂, 𝙿𝙰𝚁𝙰 𝙾𝙱𝚃𝙴𝙽𝙴𝚁 𝙴𝙻 𝙲𝙾𝙳𝙸𝙶𝙾 𝙰𝚂𝙸𝙶𝙽𝙰𝙳𝙾 𝚄𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
-            "texto2":"[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙾𝙻𝙾 𝙴𝙻 𝙾𝚆𝙽𝙴𝚁 𝙿𝚄𝙴𝙳𝙴 𝚁𝙴𝙰𝙻𝙸𝚉𝙰𝚁 𝙻𝙰 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙲𝙸𝙾𝙽",
-            "texto3":"[ ✔ ] 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾/𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙰𝚂𝙸𝙶𝙽𝙰𝙳𝙾 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁/𝙸𝙼𝙰𝙶𝙴𝙽 𝙵𝚄𝙴 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾 𝙳𝙴 𝙻𝙰 𝙱𝙰𝚂𝙴 𝙳𝙴 𝙳𝙰𝚃𝙾𝚂 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙰𝙼𝙴𝙽𝚃𝙴"
+        "cmd_del": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙾𝙻𝙾 𝚂𝙴 𝙿𝚄𝙴𝙳𝙴𝙽 𝙰𝚂𝙸𝙶𝙽𝙰𝚁 𝚃𝙴𝚇𝚃𝙾𝚂 𝙾 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 𝙰𝚂𝙸𝙶𝙽𝙰𝙳𝙾𝚂 𝙰 𝚂𝚃𝙸𝙲𝙺𝙴𝚁𝚂 𝙾 𝙸𝙼𝙰𝙶𝙴𝙽𝙴𝚂, 𝙿𝙰𝚁𝙰 𝙾𝙱𝚃𝙴𝙽𝙴𝚁 𝙴𝙻 𝙲𝙾𝙳𝙸𝙶𝙾 𝙰𝚂𝙸𝙶𝙽𝙰𝙳𝙾 𝚄𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] 𝚂𝙾𝙻𝙾 𝙴𝙻 𝙾𝚆𝙽𝙴𝚁 𝙿𝚄𝙴𝙳𝙴 𝚁𝙴𝙰𝙻𝙸𝚉𝙰𝚁 𝙻𝙰 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙲𝙸𝙾𝙽",
+            "texto3": "[ ✔ ] 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾/𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙰𝚂𝙸𝙶𝙽𝙰𝙳𝙾 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁/𝙸𝙼𝙰𝙶𝙴𝙽 𝙵𝚄𝙴 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾 𝙳𝙴 𝙻𝙰 𝙱𝙰𝚂𝙴 𝙳𝙴 𝙳𝙰𝚃𝙾𝚂 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙰𝙼𝙴𝙽𝚃𝙴"
         },
-        "cmd_list":{
-            "texto1":"< 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 / 𝚃𝙴𝚇𝚃𝙾𝚂 𝙰𝚂𝙸𝙶𝙰𝙽𝙳𝙾𝚂 />"
+        "cmd_list": {
+            "texto1": "< 𝙻𝙸𝚂𝚃𝙰 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 / 𝚃𝙴𝚇𝚃𝙾𝚂 𝙰𝚂𝙸𝙶𝙰𝙽𝙳𝙾𝚂 />"
+        },
+        "config_funciones": {
+            "texto1": [
+                "< FUNCIONES DEL BOT />",
+                "▢ *Opción:* ✨",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva la bienvenida en el grupo."
+            ],
+            "texto2": [
+                "▢ *Opción:* 🌎",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El bot se vuelve de uso publico y/o privado.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto3": [
+                "▢ *Opción:* 🥵",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva los comandos +18 en el grupo."
+            ],
+            "texto4": [
+                "▢ *Opción:* 🔗",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva el anti-enlaces de WhatsApp.",
+                "▢ *Nota:* Se necesita tener activa la función restrict."
+            ],
+            "texto5": [
+                "▢ *Opción:* 🔗",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva el anti-enlaces que inician en HTTPS.",
+                "▢ *Nota:* Se necesita tener activa la función restrict."
+            ],
+            "texto6": [
+                "▢ *Opción:* 🔎",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desacriva las notificaciones de cambios en el grupo."
+            ],
+            "texto7": [
+                "▢ *Opción:* 🔎",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Detecta modificaciones en el grupo y mantiene una mejor gestion."
+            ],
+            "texto8": [
+                "▢ *Opción:* ❗ |",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva las restricciones del Bot, como la de sacar o agregar personas a un grupo.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto9": [
+                "▢ *Opción:* ☑️",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Marca como leido los mensajes y los estados automáticamente.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto10": [
+                "▢ *Opción:* 🔊",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva los comandos de audios sin prefijos, en el grupo."
+            ],
+            "texto11": [
+                "▢ *Opción:* 👾",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Todas las imagenes o videos enviados en el grupo se convierten en stickers. "
+            ],
+            "texto12": [
+                "▢ *Opción:* 💬",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El Bot solo responderá a los comandos si es un chat privado.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto13": [
+                "▢ *Opción:* 🏢",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El Bot solo respondera a los comandos si es un grupo. ",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto14": [
+                "▢ *Opción:* ❌",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Las imagenes enviadas para ver solo una vez, son reenviadas normal por el Bot. "
+            ],
+            "texto15": [
+                "▢ *Opción:* 📵",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El Bot bloquerá a las personas que llamen al Bot. ",
+                "▢ *Nota:* Este comando solo podra ser usado por owners del Bot."
+            ],
+            "texto16": [
+                "▢ *Opción:* 🤬",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Detecta la malas palabras y advierte al participante del grupo, antes de ser eliminado.",
+                "▢ *Nota:* Se necesita tener activa la función restrict."
+            ],
+            "texto17": [
+                "▢ *Opción:* 🕸️",
+                "▢ *Comando:* ",
+                "▢ *Descripción:* El Bot detecta textos largos que podrian ser virus y causar lag en el chat y elimina al usuario.",
+                "▢ *Nota:* Se necesita tener activa la función restrict."
+            ],
+            "texto18": [
+                "▢ *Opción:* 👎",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Si un numero árabe se uné al grupo, el Bot lo elimina automaticamente.",
+                "▢ *Nota:* Se necesita tener activo el welcome y el restrict."
+            ],
+            "texto19": [
+                "▢ *Opción:* 👎",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Si un numero árabe escribe en el grupo, el Bot lo elimina automaticamente.",
+                "▢ *Nota:* Se necesita tener activa la función restrict."
+            ],
+            "texto20": [
+                "▢ *Opción:* 👑",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El bot solo responderá a los mensajes enviados por los admins. del grupo."
+            ],
+            "texto21": [
+                "▢ *Opción:* 😃",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El bot empezará a responder a los mensajes usando la IA de SimSimi."
+            ],
+            "texto22": [
+                "▢ *Opción:* 🛡️",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El bot detecta cuando un usuario elimina un mensaje y lo reenvía."
+            ],
+            "texto23": [
+                "▢ *Opción:* 🔊",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Se desactivan los audios del Bot del menuaudios para todos los chats privados.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto24": [
+                "▢ *Opción:* 🤖",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Se activa el modo 'Inteligencia Artificial' con ChatGPT en todos los chats privados.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto25": [
+                "▢ *Opción:* ⏳",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El Bot detecta cuando un usuario hace spam de comando y lo banea por 5 segundos y lo advierte.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto26": [
+                "▢ *Opción:* 🤖",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva el uso del comando para sub bots ",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto27": [
+                "▢ *Opción:* 💬",
+                "▢ *Comando:*",
+                "▢ *Descripción:* El Bot bloquerá a las personas que escriban al privado del Bot. ",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto28": [
+                "< FUNCIONES DEL BOT />",
+                "[ ℹ️ ] La opción",
+                "exitosamente para este"
+            ]
+        },
+        "convertidor_toanime": {
+            "texto1": "[❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙾 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙴 𝙰 𝚄𝙽𝙰 𝙸𝙼𝙰𝙶𝙴𝙽",
+            "texto2": "[❗] 𝙲𝙾𝙽𝚅𝙸𝙴𝚁𝚃𝙸𝙴𝙽𝙳𝙾 𝙸𝙼𝙰𝙶𝙴𝙽 𝙰 𝙳𝙸𝚂𝙴𝙽̃𝙾 𝙰𝙽𝙸𝙼𝙴, 𝚂𝙴𝙰 𝙿𝙰𝙲𝙸𝙴𝙽𝚃𝙴 𝙴𝙽 𝙻𝙾 𝚀𝚄𝙴 𝙴𝙽𝚅𝙸𝙾 𝙴𝙻 𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾",
+            "texto3": "[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝙴𝚁𝙸𝙵𝙸𝚀𝚄𝙴 𝚀𝚄𝙴 𝙴𝙽 𝙻𝙰 𝙸𝙼𝙰𝙶𝙴𝙽 𝚂𝙴𝙰 𝚅𝙸𝚂𝙸𝙱𝙻𝙴 𝙴𝙻 𝚁𝙾𝚂𝚃𝚁𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙿𝙴𝚁𝚂𝙾𝙽𝙰"
+        },
+        "convertidor_togifaud": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙴𝙽 𝙶𝙸𝙵 𝙲𝙾𝙽 𝙰𝚄𝙳𝙸𝙾",
+            "texto2": [
+                "[❗] 𝙴𝙻 𝚃𝙸𝙿𝙾 𝙳𝙴 𝙰𝚁𝙲𝙷𝙸𝚅𝙾",
+                "𝙽𝙾 𝙴𝚂 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾, 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙴𝙽 𝙶𝙸𝙵 𝙲𝙾𝙽 𝙰𝚄𝙳𝙸𝙾"
+            ],
+            "texto3:": "ᴀϙᴜɪ ᴇsᴛᴀ sᴜ ɢɪғ ᴄᴏɴ ᴀᴜᴅɪᴏ, ᴀʟ ᴀʙʀɪʀʟᴏ sᴇ ʀᴇᴘʀᴏᴅᴜᴄᴇ ᴄᴏɴ ᴀᴜᴅɪᴏ"
+        },
+        "convertidor_toimg": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙴𝙽 𝙸𝙼𝙰𝙶𝙴𝙽 𝙲𝙾𝙽 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾"
+        },
+        "convertidor_tomp3": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰𝙻 𝚅𝙸𝙳𝙴𝙾 𝙾 𝙽𝙾𝚃𝙰 𝙳𝙴 𝚅𝙾𝚉 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙰 𝙰𝚄𝙳𝙸𝙾/𝙼𝙿𝟹",
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝙻𝙰𝙼𝙴𝙽𝚃𝙾, 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚂𝚄 𝚅𝙸𝙳𝙴𝙾, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾",
+            "texto3": "[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝙻𝙰𝙼𝙴𝙽𝚃𝙾, 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝚂𝚄 𝙽𝙾𝚃𝙰 𝙳𝙴 𝚅𝙾𝚉 𝙰 𝙰𝚄𝙳𝙸𝙾/𝙼𝙿𝟹, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾"
+        },
+        "convertidor_toptt": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰𝙻 𝚅𝙸𝙳𝙴𝙾 𝙾 𝙰𝚄𝙳𝙸𝙾 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙰 𝙽𝙾𝚃𝙰 𝙳𝙴 𝚅𝙾𝚉",
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝙻𝙰𝙼𝙴𝙽𝚃𝙾, 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚂𝚄 𝚅𝙸𝙳𝙴𝙾, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾",
+            "texto3": "[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝙻𝙰𝙼𝙴𝙽𝚃𝙾, 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝚂𝚄 𝙰𝚄𝙳𝙸𝙾, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾",
+            "texto4": "[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝙻𝙰𝙼𝙴𝙽𝚃𝙾, 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝚂𝚄 𝙰𝚄𝙳𝙸𝙾 𝙰 𝙽𝙾𝚃𝙰 𝙳𝙴 𝚅𝙾𝚉, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾",
+            "texto5": "[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝙻𝙰𝙼𝙴𝙽𝚃𝙾, 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝚂𝚄 𝚅𝙸𝙳𝙴𝙾 𝙰 𝙽𝙾𝚃𝙰 𝙳𝙴 𝚅𝙾𝚉, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾"
+        },
+        "convertidor_tourl": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝚄𝙽𝙰 𝙸𝙼𝙰𝙶𝙴𝙽 𝙾 𝚅𝙸𝙳𝙴𝙾 𝙴𝙻 𝙲𝚄𝙰𝙻 𝚂𝙴𝚁𝙰 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝙳𝙾 𝙰 𝙴𝙽𝙻𝙰𝙲𝙴",
+            "texto2": "𝙴𝙽𝙻𝙰𝙲𝙴 𝙰 𝚂𝚄 𝙰𝚁𝙲𝙷𝙸𝚅𝙾:"
+        },
+        "convertidor_tovideo": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝚄𝙽 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙴𝙽 𝚅𝙸𝙳𝙴𝙾 𝙲𝙾𝙽 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝚄𝙽 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙴𝙽 𝚅𝙸𝙳𝙴𝙾 𝙲𝙾𝙽 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾"
+        },
+        "convertidor_tts": {
+            "texto1": [
+                "[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝚀𝚄𝙴 𝚀𝚄𝙸𝙴𝚁𝙰 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙰 𝙽𝙾𝚃𝙰 𝙳𝙴 𝚅𝙾𝚉, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:",
+                "es Hola Mundo"
+            ]
+        },
+        "convertidor_tts2": {
+            "texto1": "[❗] No haz ingresado un efecto, por favor ingresa un efecto de voz.*\n\n*—◉ Elige uno de los siguientes efectos:",
+            "texto2": "tu_texto_aquí",
+            "texto3": [
+                "[❗] El efecto proporcionado no existe en la lista, utiliza",
+                "para conocer la lista de efectos."
+            ],
+            "texto4": [
+                "[❗] Ingresa el texto que quieras convertir a audio.*\n\n*—◉ Ejemplo:",
+                "Hola, este es un ejemplo de uso del comando."
+            ],
+            "texto5": "[❗] Error, no se obtuvo respuesta de la API.",
+            "texto6": "[❗] Error, no se obtuvo respuesta de la API.",
+            "texto7": "[❗] URL no encontrada en la respuesta.",
+            "texto8": "[❗] Error, no se obtuvo respuesta de la API."
+        },
+        "descargas_facebook": {
+            "texto1": [
+                "< DESCARGAS - FACEBOOK />",
+                "[ ℹ️ ] Ingrese un enlace de Facebook.",
+                "[ 💡 ] Ejemplo:"
+            ],
+            "texto2": [
+                "< DESCARGAS - FACEBOOK />",
+                "[ ℹ️ ] Ingrese un enlace de Facebook.",
+                "[ 💡 ] Ejemplo:"
+            ],
+            "texto3": "< DESCARGAS - FACEBOOK />*_\n\n*[ ℹ️ ] Se está enviando el video. espere...",
+            "texto4": "< DESCARGAS - FACEBOOK />",
+            "texto5": "< DESCARGAS - FACEBOOK />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
+        },
+        "descargas_gdrive": {
+            "texto1": "_*< DESCARGAS - GDRIVE />*_\n\n*[ ℹ️ ] Ingrese un enlace de Google Drive.*\n\n*[ 💡 ] Ejemplo:* ",
+            "texto2": "_*< DESCARGAS - GDRIVE />*_\n\n*[ ℹ️ ] Se está enviando el archivo. espere...*\n\n*[ ℹ️ ] Si no se envía, podría ser porque supera el límite de tamaño.*",
+            "texto3": "_*< DESCARGAS - GDRIVE />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*"
+        },
+        "descargas_gitclone": {
+            "texto1": "_*< DESCARGAS - GITCLONE />*_\n\n*[ ℹ️ ] Ingrese un enlace de GitHub.*\n\n*[ 💡 ] Ejemplo:*",
+            "texto2": "_*< DESCARGAS - GITCLONE />*_\n\n*[ ℹ️ ] El enlace que proporcionó es incorrecto.*",
+            "texto3": "_*< DESCARGAS - GITCLONE />*_\n\n*[ ℹ️ ] Se está enviando el archivo. espere...*\n\n*[ ℹ️ ] Si no se envía, podría ser porque supera el límite de tamaño.*"
+        },
+        "descargas_instagram": {
+            "texto1": "_*< DESCARGAS - INSTAGRAM />*_\n\n*[ ℹ️ ] Ingrese un enlace de Instagram.*\n\n*[ 💡 ] Ejemplo:*",
+            "texto2": "_*< DESCARGAS - INSTAGRAM />*_\n\n▢ *URL:*",
+            "texto3": "_*< DESCARGAS - INSTAGRAM />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*"
+        },
+        "descargas_mediafire": {
+            "texto1": [
+                "_*< DESCARGAS - MEDIAFIRE />*_",
+                "▢ *Nombre:* ",
+                "▢ *Tamaño:* ",
+                "▢ *Extensión:*",
+                "*[ ℹ️ ] Se está enviando el archivo. espere...*"
+            ],
+            "texto2": [
+                "*< DESCARGAS - MEDIAFIRE />*",
+                "▢ *Nombre:*",
+                "▢ *Tamaño:*",
+                "▢ *Extensión:*",
+                "*[ ℹ️ ] Se está enviando el archivo. espere...*"
+            ],
+            "texto3": "_*< DESCARGAS - MEDIAFIRE />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
+            "texto4": "_*< DESCARGAS - MEDIAFIRE />*_\n\n*[ ℹ️ ] Ingrese un enlace de MediaFire.*\n\n*[ 💡 ] Ejemplo:*"
+        },
+        "descargas_play_v2": {
+            "texto1": [
+                "_*< DESCARGAS - PLAY v2 />*_\n\n*[ ℹ️ ] Hace falta el título del video de YouTube.*\n\n*[ 💡 ] Ejemplo:*",
+                "Good Feeling - Flo Rida_\n\n*[ 💡 ] Ejemplo 2:*"
+            ],
+            "texto2": "_*< DESCARGAS - PLAY V2 />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
+            "texto3": "_*< DESCARGAS - PLAY V2 />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
+            "texto4": [
+                "_*< DESCARGAS - PLAY V2 />*_\n\n▢ *Título:* ",
+                "▢ *Publicado:*",
+                "▢ *Canal:*",
+                "▢ *Vídeo URL:*"
+            ],
+            "texto5": "_*< DESCARGAS - PLAY V2 />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
+            "texto6": "_*< DESCARGAS - PLAY V2 />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*"
+        },
+        "descargas_play": {
+            "texto1": [
+                "_*< DESCARGAS - PLAY />*_\n\n*[ ℹ️ ] Hace falta el título o enlace del video de YouTube.*\n\n*[ 💡 ] Ejemplo:*",
+                "Good Feeling - Flo Rida_"
+            ],
+            "texto2": [
+                "_*< DESCARGAS - PLAY />*_\n\n▢ *Título:*",
+                "▢ *Publicado:*",
+                "▢ *Duración:*",
+                "▢ *Vistas:*",
+                "▢ *Autor:*",
+                "▢ *ID:*",
+                "▢ *Tipo:*",
+                "▢ *Enlace:*",
+                "▢ *Canal:*",
+                "*[ ℹ️ ] Se está enviando el",
+                "espere...*"
+            ],
+            "texto3": "*[ ℹ️ ] Descargue su audio en:*",
+            "texto4": "_*< DESCARGAS - PLAY />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
+            "texto5": "_*< DESCARGAS - PLAY />*_\n\n*[ ℹ️ ] Descargue su vídeo en:*",
+            "texto6": "_*< DESCARGAS - PLAY />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*"
+        },
+        "descargas_spotify": {
+            "texto1": "_*< DESCARGAS - SPOTIFY />*_\n\n*[ ℹ️ ] Hace falta el título de la canción de Spotify.*\n\n*[ 💡 ] Ejemplo:*",
+            "texto2": [
+                "*< DESCARGAS - SPOTIFY />*",
+                "▢ *Título:*",
+                "▢ *Artista:*",
+                "▢ *Álbum:*",
+                "▢ *Publicado:*",
+                "*[ ℹ️ ] Se está enviando el audio. espere...*"
+            ],
+            "texto3": "_*< DESCARGAS - SPOTIFY />*_\n\n[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*"
+        },
+        "descargas_spotifypro": {
+            "texto1": "*[❗] Ingrese el link de algún track, playlist o álbum de Spotify o simplemente el nombre de una canción para buscar.*",
+            "texto2": "*[❗] Ingrese el link de algún track, playlist o álbum de spotify.*",
+            "texto3": [
+                "*• 💽 Spotify Download •*",
+                "*Album:* ",
+                "◦  *Artista:*",
+                "◦  *Publicado:*",
+                "◦  *Tracks totales:*",
+                "Los audios se están enviando, espere un momento.."
+            ],
+            "texto4": [
+                "*• 💽 Spotify Download •*",
+                "◦  *Título:*",
+                "◦  *Artista:*",
+                "◦  *Duración:*",
+                "◦  *Album:*",
+                "◦  *Publicado:*",
+                "El audio se esta enviando, espere un momento.."
+            ],
+            "texto5": [
+                "*• 💽 Spotify Download •*",
+                "◦  *Playlist:*",
+                "◦  *Tracks totales:*",
+                "Los audios de la playlist se están enviando, espere un momento.."
+            ],
+            "texto6": [
+                "*• 💽 Spotify Download •*",
+                "◦  *Título:*",
+                "◦  *Artista:*",
+                "◦  *Duración:*",
+                "◦  *Album:*",
+                "◦  *Publicado:*",
+                "El audio se esta enviando, espere un momento.."
+            ],
+            "texto7": "*[❗] Error, no se encontraron resultados.*"
+        },
+        "descargas_tiktok": {
+            "texto1": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ingrese un enlace de TikTok.*\n\n*[ 💡 ] Ejemplo:*",
+            "texto2": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ingrese un enlace de TikTok.*\n\n*[ 💡 ] Ejemplo:*",
+            "texto3": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Se está enviando el video. espere...*",
+            "texto4": [
+                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
+                "*para convertirlo en audio.*"
+            ],
+            "texto5": [
+                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
+                "*para convertirlo en audio.*"
+            ],
+            "texto6":[
+                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
+                "*para convertirlo en audio.*"
+            ],
+            "texto7":[
+                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
+                "*para convertirlo en audio.*"
+            ],
+            "texto8":[
+                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
+                "*para convertirlo en audio.*"
+            ],
+            "texto9":"_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
+            "texto10": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ingrese un enlace de TikTok.*\n\n*[ 💡 ] Ejemplo:*"
+        },
+        "downloader_igstory":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝙸𝙽𝚂𝚃𝙰𝙶𝚁𝙰𝙼*\n\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*",
+            "texto2":"*[❗] 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙸𝙽𝚅𝙰𝙻𝙸𝙳𝙾 𝙾 𝚂𝙸𝙽 𝙷𝙸𝚂𝚃𝙾𝚁𝙸𝙰𝚂*"
+        },
+        "downloader_imagen":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+            "texto2":[
+                "🔎 *𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾 𝙳𝙴:*",
+                "🔗 *𝙻𝙸𝙽𝙺*",
+                "🌎 *𝙱𝚄𝚂𝙲𝙰𝙳𝙾𝚁:* Google"
+            ]
+        },
+        "downloader_modapk":{
+            "texto1":"*[❗] Ingrese el nombre de la APK que quiera buscar.*",
+            "texto2":[
+                "📲 *Descargador de Aptoide* 📲\n\n📌 *Nombre:*",
+                "📦 *Package:*",
+                "🕒 *Última actualización:*",
+                "📥 *Tamaño:*"
+            ],
+            "texto3":"*[ ⛔ ] El archivo es demasiado pesado por lo que no se enviará.*",
+            "texto4":"*[❗] Error, no se encontrarón resultados para su búsqueda.*"
+        },
+        "downloader_pinterest":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 ",
+            "texto2":"*𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾𝚂 𝙳𝙴 𝙻𝙰 𝙱𝚄𝚂𝚀𝚄𝙴𝙳𝙰*"
+        },
+        "downloader_playdoc":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*",
+            "texto2":[
+                "*◉——⌈🔊 YOUTUBE DOC 🔊⌋——◉*",
+                "❏ 📌 *Titulo:*",
+                "❏ 📆 *Publicado:*",
+                "❏ ⌚ *Duracion:*",
+                "❏ 👀 *Vistas:*",
+                "❏ 👤 *Autor:*",
+                "❏ ⏯️ *Canal:*",
+                "❏ 🆔 *ID:*",
+                "❏ 🪬 *Tipo:*",
+                "❏ 🔗 *Link:*",
+                "❏ *_Enviando", 
+                "aguarde un momento．．．_*"
+            ],
+            "texto3":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*",
+            "texto4":[
+                "▢ 𝚃𝙸𝚃𝚄𝙻𝙾:",
+                "▢ 𝙿𝙴𝚂𝙾 𝙳𝙴𝙻 𝚅𝙸𝙳𝙴𝙾:"
+            ],
+            "texto5":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*",
+            "texto6":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*"
+        },
+        "downloader_playlist":{
+            "texto1":"*[❗] Nombre de la canción faltante, por favor ingrese el comando más el nombre/titulo de una canción*\n\n*—◉ Ejemplo:*",
+            "texto2":[
+                "*[❗] Puedes descargar el video que quieras de la siguiente forma:*",
+                "*—◉ Ejemplos:*",
+                "🫐 *_Link :_*",
+                "🕒 *_Duración :_*",
+                "📥 *_Subido :_*",
+                "👁 *_Vistas :_*"
+            ],
+            "texto3":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾 𝙲𝙾𝙽 𝙾𝚃𝚁𝙾 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*"
+        },
+        "downloader_pptiktok":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*",
+            "texto2":"*[ ✔ ] 𝙰𝚀𝚄𝙸 𝙴𝚂𝚃𝙰 𝙻𝙰 𝙵𝙾𝚃𝙾 𝙳𝙴 𝙿𝙴𝚁𝙵𝙸𝙻 𝙳𝙴"
+        },
+        "downloader_ringtone":{
+            "texto1":"*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:"
+        },
+        "downloader_soundcloud":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*",
+            "texto2":[
+                "❒═══❬ 𝐒𝐎𝐔𝐍𝐃𝐂𝐋𝐎𝐔𝐃 ❭═══╾❒\n┬\n├‣✨ *𝚃𝙸𝚃𝚄𝙻𝙾:*",
+                "├‣💚 *𝚄𝚁𝙻 𝙳𝙸𝚁𝙴𝙲𝚃𝙾:*",
+                "*- 𝙴𝚗𝚟𝚒𝚊𝚗𝚍𝚘 𝚖𝚞𝚜𝚒𝚌𝚊...*"
+            ],
+            "texto3":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙽𝙾 𝚂𝙴 𝙻𝙾𝙶𝚁𝙾 𝙱𝚄𝚂𝙲𝙰𝚁 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙾 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙿𝙰𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙴𝚂𝚃𝙰 𝙲𝙰𝙸𝙳𝙰, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*"
+        },
+        "downloader_stickerpack":{
+            "texto1":"*[❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+            "texto2": "*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*"
+        },
+        "downloader_tiktok_img":{
+            "texto1":"*[❗] Ingresa un enlace de tiktok imagenes, ejemplo: \"https://vm.tiktok.com/ZM2cqBRVS/\".*",
+            "texto2":"*[❗] No se obtuvo respuesta de la página, intente más tarde.*",
+            "texto3":"*[❗] No se encontraron imágenes en el enlace proporcionado.*",
+            "texto4":"*[❗] No se obtuvo respuesta de la página, intente más tarde.*"
+        },
+        "downloader_tiktokstalk":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*",
+            "texto2":[
+                "*𝚄𝚂𝚄𝙰𝚁𝙸𝙾:*",
+                "*𝙽𝙾𝙼𝙱𝚁𝙴:*",
+                "*𝚂𝙴𝙶𝚄𝙸𝙳𝙾𝚁𝙴𝚂:*",
+                "*𝚂𝙴𝙶𝚄𝙸𝙳𝙾𝚂:*",
+                "*𝙻𝙸𝙺𝙴𝚂:*",
+                "*𝚅𝙸𝙳𝙴𝙾𝚂:*",
+                "*𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽:*"
+            ],
+            "texto3":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙽𝙾 𝚂𝙴 𝙴𝙲𝙾𝙽𝚃𝚁𝙾 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙸𝙽𝙶𝚁𝙴𝚂𝙰𝙳𝙾*"
+        },
+        "downloader_wallpaper":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+            "texto2":"*𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾 𝙳𝙴"
+        },
+        "downloader_x_twitter":{
+            "texto1":"*[❗] Ingrese un enlace de X (twitter), ejemplo: ",
+            "texto2":"'*Aquí tiene su imagen*",
+            "texto3":"*[❗] Error, intente mas tarde.*",
+            "texto4":"There was an error getting twitter id. Make sure your twitter url is correct!",
+            "texto5":"An error occurred while sending the request."
+        },
+        "downloader_yta_2":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto2":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto3":[
+                "*◉—⌈📥 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐃𝐋 📥⌋—◉*\n❏ *𝚃𝙸𝚃𝚄𝙻𝙾:*",
+                "❏ *𝙿𝙴𝚂𝙾:*"
+            ],
+            "texto4":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*"
+        },
+        "downloader_yta":{
+            "texto1":"*[❗] No se encontro un enlace para ese numero, por favor ingrese un numero entre el 1 y el",
+            "texto2":[
+                "*[❗] Para poder hacer uso del comando de esta forma ",
+                "<numero>), por favor realiza la busqueda de videos con el comando"
+            ],
+            "texto3":[
+                "*[❗] Para poder hacer uso del comando de esta forma",
+                "<numero>), por favor realiza la busqueda de videos con el comando"
+            ],
+            "texto4":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto5":[
+                "*▢ Titulo:*",
+                "*▢ Peso Del Audio:*",
+                "*[ ✔ ] Audio descargado y enviado exitosamente.*\n\n*—◉ Se envío en formato de documento debido a que el audio pesa",
+                " MB y supera el limite establecido por WhatsApp.*\n*◉ Titulo:*",
+                "*[ ✔ ] Audio descargado y enviado exitosamente.*"
+            ],
+            "texto6":"*[ ❌ ] El audio no pudo ser descargado ni enviado, vuelva a intentarlo.*",
+            "texto7":"*[❗] Error, no fue posible descargar el audio.*",
+            "texto8":"*[❗] Uso incorrecto del comando, ingrese un enlace / link de YouTube.*"
+        },
+        "downloader_ytmeta":{
+            "texto1":"*[❗] Ingresa un enlace de YouTube.*",
+            "texto2":"🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖"
+        },
+        "downloader_ytv_2":{
+            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto2":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto3":[
+                "*◉—⌈📥 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐃𝐋 📥⌋—◉*\n❏ *𝚃𝙸𝚃𝚄𝙻𝙾:*",
+                "❏ *𝙿𝙴𝚂𝙾:* "
+            ],
+            "texto4":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*"
+        },
+        "downloader_ytv":{
+            "texto1":"*[❗] Uso incorrecto del comando, ingrese un enlace / link de YouTube.*",
+            "texto2":"*[❗] No se encontro un enlace para ese numero, por favor ingrese un numero entre el 1 y el",
+            "texto3":[
+                "*[❗] Para poder hacer uso del comando de esta forma ",
+                "<numero>), por favor realiza la busqueda de videos con el comando"
+            ],
+            "texto4":[
+                "*[❗] Para poder hacer uso del comando de esta forma",
+                "<numero>), por favor realiza la busqueda de videos con el comando"
+            ],
+            "texto5":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto6":[
+                "*▢ Titulo:*",
+                "*▢ Peso Del Video:*",
+                "*[ ✔ ] Video descargado y enviado exitosamente.*\n\n*—◉ Se envío en formato de docuemnto debido a que el video pesa",
+                " MB y supera el limite establecido por WhatsApp.*\n*◉ Titulo:*"
+            ],
+            "texto7":[
+                "`*▢ Titulo:*",
+                "*▢ Peso Del Video:*",
+                "`*[ ✔ ] Video descargado exitosamente.*"
+            ],
+            "texto8":"*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*",
+            "texto9":"*[❗] Error, no fue posible descargar el video.*"
+        },
+        "downloader_ytvideodl":{
+            "texto1":"*[❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto2":"*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝙴𝙽𝙻𝙰𝙲𝙴 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto3":"*[❗] 𝙴𝙻 𝙰𝚁𝙲𝙷𝙸𝚅𝙾 𝙴𝚂 𝚂𝚄𝙿𝙴𝚁𝙸𝙾𝚁 𝙰 𝟿𝟿𝟿 𝙼𝙱*"
         },
         "menu-audios": {
             "texto1": "𝙴𝚂𝙲𝚁𝙸𝙱𝙴 𝙻𝙰𝚂 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴𝚂 𝙿𝙰𝙻𝙰𝙱𝚁𝙰𝚂 𝙾 𝙵𝚁𝙰𝚂𝙴𝚂 𝚂𝙸𝙽 𝙽𝙸𝙽𝙶𝚄𝙽 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 (#, /, *, .)"

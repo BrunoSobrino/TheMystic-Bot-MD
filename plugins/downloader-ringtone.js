@@ -1,6 +1,9 @@
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.downloader_ringtone
+
 const handler = async (m, {conn, groupMetadata, usedPrefix, text, args, command}) => {
-  if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾: ${usedPrefix + command} Hola*`;
+  if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Hola*`;
   const anu = await ringtone(text);
   const result = anu[Math.floor(Math.random() * anu.length)];
   conn.sendMessage(m.chat, {audio: {url: result.audio}, fileName: result.title+'.mp3', mimetype: 'audio/mpeg'}, {quoted: m});
