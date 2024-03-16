@@ -1,5 +1,8 @@
 import util from 'util';
 import path from 'path';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.fun_tops
+
 const user = (a) => '@' + a.split('@')[0];
 function handler(m, {groupMetadata, command, conn, participants}) {
   const ps = groupMetadata.participants.map((v) => v.id);
@@ -16,7 +19,7 @@ function handler(m, {groupMetadata, command, conn, participants}) {
 
   if (command == 'topgays') {
     const vn = './media/gay2.mp3';
-    const top = `*🌈TOP 10 GAYS/LESBIANAS DEL GRUPO🌈*
+    const top = `${tradutor.texto1}
     
 *_1.- ${user(a)}_*
 *_2.- ${user(b)}_*
@@ -35,7 +38,7 @@ function handler(m, {groupMetadata, command, conn, participants}) {
 
   if (command == 'topotakus') {
     const vn = './media/otaku.mp3';
-    const top = `*🌸 TOP 10 OTAKUS DEL GRUPO 🌸*
+    const top = `${tradutor.texto2}
     
 *_1.- ${user(a)}_*
 *_2.- ${user(b)}_*
