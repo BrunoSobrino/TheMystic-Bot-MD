@@ -2,31 +2,33 @@ import axios from 'axios';
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 import {mediafiredl} from '@bochilteam/scraper';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.descargas_mediafire
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   if (!args[0]) throw `_*< DESCARGAS - MEDIAFIRE />*_\n\n*[ ℹ️ ] Ingrese un enlace de MediaFire.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} https://www.mediafire.com/file/r0lrc9ir5j3e2fs/DOOM_v13_UNCLONE_`;
   try {
     const resEX = await mediafiredl(args[0]);
-    const captionES = `_*< DESCARGAS - MEDIAFIRE />*_\n
-▢ *Nombre:* ${resEX.filename}
-▢ *Tamaño:* ${resEX.filesizeH}
-▢ *Extensión:* ${resEX.ext}\n\n
-*[ ℹ️ ] Se está enviando el archivo. espere...*`.trim();
+    const captionES = `${tradutor.texto1[0]}\n
+    ${tradutor.texto1[1]} ${resEX.filename}
+    ${tradutor.texto1[2]} ${resEX.filesizeH}
+    ${tradutor.texto1[3]} ${resEX.ext}\n\n
+    ${tradutor.texto1[4]}`.trim();
     m.reply(captionES);
     await conn.sendFile(m.chat, resEX.url, resEX.filename, '', m, null, {mimetype: resEX.ext, asDocument: true});
   } catch {
     try {
       const res = await mediafireDl(args[0]);
       const {name, size, date, mime, link} = res;
-      const caption = `_*< DESCARGAS - MEDIAFIRE />*_\n
-▢ *Nombre:* ${name}
-▢ *Tamaño:* ${size}
-▢ *Extensión:* ${mime}\n\n
-*[ ℹ️ ] Se está enviando el archivo. espere...*`.trim();
+      const caption = `${tradutor.texto2[0]}\n
+      ${tradutor.texto2[1]} ${name}
+      ${tradutor.texto2[2]} ${size}
+      ${tradutor.texto2[3]} ${mime}\n\n
+      ${tradutor.texto2[4]}`.trim();
       await m.reply(caption);
       await conn.sendFile(m.chat, link, name, '', m, null, {mimetype: mime, asDocument: true});
     } catch {
-      await m.reply('_*< DESCARGAS - MEDIAFIRE />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*');
+      await m.reply(tradutor.texto3);
     }
   }
 };

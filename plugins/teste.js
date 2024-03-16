@@ -1,7 +1,13 @@
 import _translate from "./_translate.js"
-const tradutor = _translate.plugins.cmd_list
+const tradutor = _translate.plugins.downloader_ytvideodl
+
+
 console.log(tradutor.texto1)
 console.log(tradutor.texto2)
 
-for(let i = 0; i <= 3; i++){
-  console.log()}
+console.log(tradutor)
+
+for(let x = 1; x <= 28; x++){
+
+ 
+}
