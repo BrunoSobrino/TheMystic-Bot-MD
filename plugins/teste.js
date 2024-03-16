@@ -1,5 +1,6 @@
 import _translate from "./_translate.js"
-const tradutor = _translate.plugins.downloader_ytvideodl
+const tradutor = _translate.plugins.fun_verdad
+
 
 
 console.log(tradutor.texto1)

@@ -637,51 +637,51 @@
                 "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
                 "*para convertirlo en audio.*"
             ],
-            "texto6":[
+            "texto6": [
                 "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
                 "*para convertirlo en audio.*"
             ],
-            "texto7":[
+            "texto7": [
                 "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
                 "*para convertirlo en audio.*"
             ],
-            "texto8":[
+            "texto8": [
                 "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responde a este vídeo con el comando*",
                 "*para convertirlo en audio.*"
             ],
-            "texto9":"_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
+            "texto9": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*",
             "texto10": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ingrese un enlace de TikTok.*\n\n*[ 💡 ] Ejemplo:*"
         },
-        "downloader_igstory":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝙸𝙽𝚂𝚃𝙰𝙶𝚁𝙰𝙼*\n\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*",
-            "texto2":"*[❗] 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙸𝙽𝚅𝙰𝙻𝙸𝙳𝙾 𝙾 𝚂𝙸𝙽 𝙷𝙸𝚂𝚃𝙾𝚁𝙸𝙰𝚂*"
+        "downloader_igstory": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝙸𝙽𝚂𝚃𝙰𝙶𝚁𝙰𝙼*\n\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*",
+            "texto2": "*[❗] 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙸𝙽𝚅𝙰𝙻𝙸𝙳𝙾 𝙾 𝚂𝙸𝙽 𝙷𝙸𝚂𝚃𝙾𝚁𝙸𝙰𝚂*"
         },
-        "downloader_imagen":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
-            "texto2":[
+        "downloader_imagen": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+            "texto2": [
                 "🔎 *𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾 𝙳𝙴:*",
                 "🔗 *𝙻𝙸𝙽𝙺*",
                 "🌎 *𝙱𝚄𝚂𝙲𝙰𝙳𝙾𝚁:* Google"
             ]
         },
-        "downloader_modapk":{
-            "texto1":"*[❗] Ingrese el nombre de la APK que quiera buscar.*",
-            "texto2":[
+        "downloader_modapk": {
+            "texto1": "*[❗] Ingrese el nombre de la APK que quiera buscar.*",
+            "texto2": [
                 "📲 *Descargador de Aptoide* 📲\n\n📌 *Nombre:*",
                 "📦 *Package:*",
                 "🕒 *Última actualización:*",
                 "📥 *Tamaño:*"
             ],
-            "texto3":"*[ ⛔ ] El archivo es demasiado pesado por lo que no se enviará.*",
-            "texto4":"*[❗] Error, no se encontrarón resultados para su búsqueda.*"
+            "texto3": "*[ ⛔ ] El archivo es demasiado pesado por lo que no se enviará.*",
+            "texto4": "*[❗] Error, no se encontrarón resultados para su búsqueda.*"
         },
-        "downloader_pinterest":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 ",
-            "texto2":"*𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾𝚂 𝙳𝙴 𝙻𝙰 𝙱𝚄𝚂𝚀𝚄𝙴𝙳𝙰*"
+        "downloader_pinterest": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 ",
+            "texto2": "*𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾𝚂 𝙳𝙴 𝙻𝙰 𝙱𝚄𝚂𝚀𝚄𝙴𝙳𝙰*"
         },
-        "downloader_playdoc":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*",
-            "texto2":[
+        "downloader_playdoc": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙵𝙰𝙻𝚃𝙰𝙽𝚃𝙴, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴/𝚃𝙸𝚃𝚄𝙻𝙾 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*",
+            "texto2": [
                 "*◉——⌈🔊 YOUTUBE DOC 🔊⌋——◉*",
                 "❏ 📌 *Titulo:*",
                 "❏ 📆 *Publicado:*",
@@ -692,20 +692,20 @@
                 "❏ 🆔 *ID:*",
                 "❏ 🪬 *Tipo:*",
                 "❏ 🔗 *Link:*",
-                "❏ *_Enviando", 
+                "❏ *_Enviando",
                 "aguarde un momento．．．_*"
             ],
-            "texto3":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*",
-            "texto4":[
+            "texto3": "*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*",
+            "texto4": [
                 "▢ 𝚃𝙸𝚃𝚄𝙻𝙾:",
                 "▢ 𝙿𝙴𝚂𝙾 𝙳𝙴𝙻 𝚅𝙸𝙳𝙴𝙾:"
             ],
-            "texto5":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*",
-            "texto6":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*"
+            "texto5": "*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*",
+            "texto6": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*"
         },
-        "downloader_playlist":{
-            "texto1":"*[❗] Nombre de la canción faltante, por favor ingrese el comando más el nombre/titulo de una canción*\n\n*—◉ Ejemplo:*",
-            "texto2":[
+        "downloader_playlist": {
+            "texto1": "*[❗] Nombre de la canción faltante, por favor ingrese el comando más el nombre/titulo de una canción*\n\n*—◉ Ejemplo:*",
+            "texto2": [
                 "*[❗] Puedes descargar el video que quieras de la siguiente forma:*",
                 "*—◉ Ejemplos:*",
                 "🫐 *_Link :_*",
@@ -713,37 +713,37 @@
                 "📥 *_Subido :_*",
                 "👁 *_Vistas :_*"
             ],
-            "texto3":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾 𝙲𝙾𝙽 𝙾𝚃𝚁𝙾 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*"
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾 𝙲𝙾𝙽 𝙾𝚃𝚁𝙾 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽*"
         },
-        "downloader_pptiktok":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*",
-            "texto2":"*[ ✔ ] 𝙰𝚀𝚄𝙸 𝙴𝚂𝚃𝙰 𝙻𝙰 𝙵𝙾𝚃𝙾 𝙳𝙴 𝙿𝙴𝚁𝙵𝙸𝙻 𝙳𝙴"
+        "downloader_pptiktok": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*",
+            "texto2": "*[ ✔ ] 𝙰𝚀𝚄𝙸 𝙴𝚂𝚃𝙰 𝙻𝙰 𝙵𝙾𝚃𝙾 𝙳𝙴 𝙿𝙴𝚁𝙵𝙸𝙻 𝙳𝙴"
         },
-        "downloader_ringtone":{
-            "texto1":"*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:"
+        "downloader_ringtone": {
+            "texto1": "*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝚃𝙴𝚇𝚃𝙾 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙱𝚄𝚂𝙲𝙰𝚁, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:"
         },
-        "downloader_soundcloud":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*",
-            "texto2":[
+        "downloader_soundcloud": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙰𝙻𝙶𝚄𝙽𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙰 𝙱𝚄𝚂𝙲𝙰𝚁*",
+            "texto2": [
                 "❒═══❬ 𝐒𝐎𝐔𝐍𝐃𝐂𝐋𝐎𝐔𝐃 ❭═══╾❒\n┬\n├‣✨ *𝚃𝙸𝚃𝚄𝙻𝙾:*",
                 "├‣💚 *𝚄𝚁𝙻 𝙳𝙸𝚁𝙴𝙲𝚃𝙾:*",
                 "*- 𝙴𝚗𝚟𝚒𝚊𝚗𝚍𝚘 𝚖𝚞𝚜𝚒𝚌𝚊...*"
             ],
-            "texto3":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙽𝙾 𝚂𝙴 𝙻𝙾𝙶𝚁𝙾 𝙱𝚄𝚂𝙲𝙰𝚁 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙾 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙿𝙰𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙴𝚂𝚃𝙰 𝙲𝙰𝙸𝙳𝙰, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*"
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙽𝙾 𝚂𝙴 𝙻𝙾𝙶𝚁𝙾 𝙱𝚄𝚂𝙲𝙰𝚁 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙾 𝙻𝙰 𝙿𝙰𝙶𝙸𝙽𝙰 𝙳𝙴 𝙰𝚈𝚄𝙳𝙰 𝙿𝙰𝚁𝙰 𝙱𝚄𝚂𝙲𝙰𝚁 𝙻𝙰 𝙲𝙰𝙽𝙲𝙸𝙾𝙽 𝙴𝚂𝚃𝙰 𝙲𝙰𝙸𝙳𝙰, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾 𝙼𝙰𝚂 𝚃𝙰𝚁𝙳𝙴*"
         },
-        "downloader_stickerpack":{
-            "texto1":"*[❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+        "downloader_stickerpack": {
+            "texto1": "*[❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
             "texto2": "*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*"
         },
-        "downloader_tiktok_img":{
-            "texto1":"*[❗] Ingresa un enlace de tiktok imagenes, ejemplo: \"https://vm.tiktok.com/ZM2cqBRVS/\".*",
-            "texto2":"*[❗] No se obtuvo respuesta de la página, intente más tarde.*",
-            "texto3":"*[❗] No se encontraron imágenes en el enlace proporcionado.*",
-            "texto4":"*[❗] No se obtuvo respuesta de la página, intente más tarde.*"
+        "downloader_tiktok_img": {
+            "texto1": "*[❗] Ingresa un enlace de tiktok imagenes, ejemplo: \"https://vm.tiktok.com/ZM2cqBRVS/\".*",
+            "texto2": "*[❗] No se obtuvo respuesta de la página, intente más tarde.*",
+            "texto3": "*[❗] No se encontraron imágenes en el enlace proporcionado.*",
+            "texto4": "*[❗] No se obtuvo respuesta de la página, intente más tarde.*"
         },
-        "downloader_tiktokstalk":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*",
-            "texto2":[
+        "downloader_tiktokstalk": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*",
+            "texto2": [
                 "*𝚄𝚂𝚄𝙰𝚁𝙸𝙾:*",
                 "*𝙽𝙾𝙼𝙱𝚁𝙴:*",
                 "*𝚂𝙴𝙶𝚄𝙸𝙳𝙾𝚁𝙴𝚂:*",
@@ -752,93 +752,727 @@
                 "*𝚅𝙸𝙳𝙴𝙾𝚂:*",
                 "*𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽:*"
             ],
-            "texto3":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙽𝙾 𝚂𝙴 𝙴𝙲𝙾𝙽𝚃𝚁𝙾 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙸𝙽𝙶𝚁𝙴𝚂𝙰𝙳𝙾*"
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙽𝙾 𝚂𝙴 𝙴𝙲𝙾𝙽𝚃𝚁𝙾 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙸𝙽𝙶𝚁𝙴𝚂𝙰𝙳𝙾*"
         },
-        "downloader_wallpaper":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
-            "texto2":"*𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾 𝙳𝙴"
+        "downloader_wallpaper": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 𝙳𝙴 𝚄𝚂𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾",
+            "texto2": "*𝚁𝙴𝚂𝚄𝙻𝚃𝙰𝙳𝙾 𝙳𝙴"
         },
-        "downloader_x_twitter":{
-            "texto1":"*[❗] Ingrese un enlace de X (twitter), ejemplo: ",
-            "texto2":"'*Aquí tiene su imagen*",
-            "texto3":"*[❗] Error, intente mas tarde.*",
-            "texto4":"There was an error getting twitter id. Make sure your twitter url is correct!",
-            "texto5":"An error occurred while sending the request."
+        "downloader_x_twitter": {
+            "texto1": "*[❗] Ingrese un enlace de X (twitter), ejemplo: ",
+            "texto2": "'*Aquí tiene su imagen*",
+            "texto3": "*[❗] Error, intente mas tarde.*",
+            "texto4": "There was an error getting twitter id. Make sure your twitter url is correct!",
+            "texto5": "An error occurred while sending the request."
         },
-        "downloader_yta_2":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
-            "texto2":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
-            "texto3":[
+        "downloader_yta_2": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto2": "*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto3": [
                 "*◉—⌈📥 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐃𝐋 📥⌋—◉*\n❏ *𝚃𝙸𝚃𝚄𝙻𝙾:*",
                 "❏ *𝙿𝙴𝚂𝙾:*"
             ],
-            "texto4":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*"
+            "texto4": "*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝙰𝚄𝙳𝙸𝙾*"
         },
-        "downloader_yta":{
-            "texto1":"*[❗] No se encontro un enlace para ese numero, por favor ingrese un numero entre el 1 y el",
-            "texto2":[
+        "downloader_yta": {
+            "texto1": "*[❗] No se encontro un enlace para ese numero, por favor ingrese un numero entre el 1 y el",
+            "texto2": [
                 "*[❗] Para poder hacer uso del comando de esta forma ",
                 "<numero>), por favor realiza la busqueda de videos con el comando"
             ],
-            "texto3":[
+            "texto3": [
                 "*[❗] Para poder hacer uso del comando de esta forma",
                 "<numero>), por favor realiza la busqueda de videos con el comando"
             ],
-            "texto4":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
-            "texto5":[
+            "texto4": "*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴀᴜᴅɪᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴀᴜᴅɪᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto5": [
                 "*▢ Titulo:*",
                 "*▢ Peso Del Audio:*",
                 "*[ ✔ ] Audio descargado y enviado exitosamente.*\n\n*—◉ Se envío en formato de documento debido a que el audio pesa",
                 " MB y supera el limite establecido por WhatsApp.*\n*◉ Titulo:*",
                 "*[ ✔ ] Audio descargado y enviado exitosamente.*"
             ],
-            "texto6":"*[ ❌ ] El audio no pudo ser descargado ni enviado, vuelva a intentarlo.*",
-            "texto7":"*[❗] Error, no fue posible descargar el audio.*",
-            "texto8":"*[❗] Uso incorrecto del comando, ingrese un enlace / link de YouTube.*"
+            "texto6": "*[ ❌ ] El audio no pudo ser descargado ni enviado, vuelva a intentarlo.*",
+            "texto7": "*[❗] Error, no fue posible descargar el audio.*",
+            "texto8": "*[❗] Uso incorrecto del comando, ingrese un enlace / link de YouTube.*"
         },
-        "downloader_ytmeta":{
-            "texto1":"*[❗] Ingresa un enlace de YouTube.*",
-            "texto2":"🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖"
+        "downloader_ytmeta": {
+            "texto1": "*[❗] Ingresa un enlace de YouTube.*",
+            "texto2": "🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖"
         },
-        "downloader_ytv_2":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
-            "texto2":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
-            "texto3":[
+        "downloader_ytv_2": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto2": "*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto3": [
                 "*◉—⌈📥 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐃𝐋 📥⌋—◉*\n❏ *𝚃𝙸𝚃𝚄𝙻𝙾:*",
                 "❏ *𝙿𝙴𝚂𝙾:* "
             ],
-            "texto4":"*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*"
+            "texto4": "*[❗] 𝙴𝚁𝚁𝙾𝚁 𝙽𝙾 𝙵𝚄𝙴 𝙿𝙾𝚂𝙸𝙱𝙻𝙴 𝙳𝙴𝚂𝙲𝙰𝚁𝙶𝙰𝚁 𝙴𝙻 𝚅𝙸𝙳𝙴𝙾*"
         },
-        "downloader_ytv":{
-            "texto1":"*[❗] Uso incorrecto del comando, ingrese un enlace / link de YouTube.*",
-            "texto2":"*[❗] No se encontro un enlace para ese numero, por favor ingrese un numero entre el 1 y el",
-            "texto3":[
+        "downloader_ytv": {
+            "texto1": "*[❗] Uso incorrecto del comando, ingrese un enlace / link de YouTube.*",
+            "texto2": "*[❗] No se encontro un enlace para ese numero, por favor ingrese un numero entre el 1 y el",
+            "texto3": [
                 "*[❗] Para poder hacer uso del comando de esta forma ",
                 "<numero>), por favor realiza la busqueda de videos con el comando"
             ],
-            "texto4":[
+            "texto4": [
                 "*[❗] Para poder hacer uso del comando de esta forma",
                 "<numero>), por favor realiza la busqueda de videos con el comando"
             ],
-            "texto5":"*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
-            "texto6":[
+            "texto5": "*_⏳Sᴇ ᴇsᴛᴀ ᴘʀᴏᴄᴇsᴀɴᴅᴏ Sᴜ ᴠɪᴅᴇᴏ...⏳_*\n\n*◉ Sɪ Sᴜ ᴠɪᴅᴇᴏ ɴᴏ ᴇs ᴇɴᴠɪᴀᴅᴏ, ᴘʀᴜᴇʙᴇ ᴄᴏɴ ᴇʟ ᴄᴏᴍᴀɴᴅᴏ #playdoc ᴏ #play.2 ᴏ #ytmp4doc ◉*",
+            "texto6": [
                 "*▢ Titulo:*",
                 "*▢ Peso Del Video:*",
                 "*[ ✔ ] Video descargado y enviado exitosamente.*\n\n*—◉ Se envío en formato de docuemnto debido a que el video pesa",
                 " MB y supera el limite establecido por WhatsApp.*\n*◉ Titulo:*"
             ],
-            "texto7":[
+            "texto7": [
                 "`*▢ Titulo:*",
                 "*▢ Peso Del Video:*",
                 "`*[ ✔ ] Video descargado exitosamente.*"
             ],
-            "texto8":"*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*",
-            "texto9":"*[❗] Error, no fue posible descargar el video.*"
+            "texto8": "*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*",
+            "texto9": "*[❗] Error, no fue posible descargar el video.*"
         },
-        "downloader_ytvideodl":{
-            "texto1":"*[❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
-            "texto2":"*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝙴𝙽𝙻𝙰𝙲𝙴 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
-            "texto3":"*[❗] 𝙴𝙻 𝙰𝚁𝙲𝙷𝙸𝚅𝙾 𝙴𝚂 𝚂𝚄𝙿𝙴𝚁𝙸𝙾𝚁 𝙰 𝟿𝟿𝟿 𝙼𝙱*"
+        "downloader_ytvideodl": {
+            "texto1": "*[❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto2": "*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝙴𝙽𝙻𝙰𝙲𝙴 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*",
+            "texto3": "*[❗] 𝙴𝙻 𝙰𝚁𝙲𝙷𝙸𝚅𝙾 𝙴𝚂 𝚂𝚄𝙿𝙴𝚁𝙸𝙾𝚁 𝙰 𝟿𝟿𝟿 𝙼𝙱*"
+        },
+        "fix_esperando_mensage": {
+            "texto1": "*[❗] Utiliza este comando directamente en el número principal del Bot*",
+            "texto2": "*[❗] No se encontró ningún archivo que incluya la ID del chat*",
+            "texto3": [
+                "*[❗] Se eliminaron",
+                "archivos de sesión*"
+            ],
+            "texto4": "Error al leer la carpeta o los archivos de sesión:",
+            "texto5": "*[❗] Ocurrió un error al eliminar los archivos de sesión*",
+            "texto6": "*👋 ¡Hola! Ahora me ves?*\n\n*[❗] Si el Bot no le responde a sus comandos por favor haga un pequeño spam*\n\n*—◉ Ejemplo:*"
+        },
+        "fix_owner_esperando_mensajes": {
+            "texto1": "*[❗] Utiliza este comando directamente en el número principal del Bot.*",
+            "texto2": "*[❗] Iniciando proceso de eliminación de todos los archivos de sesión, excepto el archivo creds.json...*",
+            "texto3": "*[❗] La carpeta MysticSession no existe o está vacía.*",
+            "texto4": "*[❗] No se encontró ningún archivo para eliminar en la carpeta MysticSession.*",
+            "texto5": [
+                "*[❗] Se eliminaron",
+                "archivos de sesión, excepto el archivo creds.json.*"
+            ],
+            "texto6": "*[❗] Ocurrió un error al eliminar los archivos de sesión.*",
+            "texto7": "*👋 ¡Hola! Ahora me ves?*\n\n*[❗] Si el Bot no le responde a sus comandos por favor haga un pequeño spam*\n\n*—◉ Ejemplo:*"
+        },
+        "frase_frases": {
+            "texto1": "*Consejo del día*",
+            "texto2": "*Frase romántica*",
+            "texto3": [
+                "Eres la luz que ilumina mi vida en la oscuridad.",
+                "Contigo, cada día es una nueva aventura llena de amor.",
+                "Tus ojos son el reflejo del cielo en el que quiero perderme.",
+                "Cada latido de mi corazón lleva tu nombre.",
+                "En tus brazos encontré el hogar que siempre busqué.",
+                "Eres el sueño que nunca quiero despertar.",
+                "El amor verdadero es estar juntos en las buenas y en las malas.",
+                "No existen distancias cuando dos corazones están unidos.",
+                "Tus besos son la melodía que acelera mi corazón.",
+                "Amar es ver en ti lo que nadie más puede ver.",
+                "En cada latido, te llevo conmigo a todas partes.",
+                "El amor que siento por ti es mi fuerza y mi inspiración.",
+                "Tus palabras dulces son mi alimento emocional diario.",
+                "Eres el regalo más preciado que la vida me ha dado.",
+                "El tiempo se detiene cuando estoy junto a ti.",
+                "En tu sonrisa encuentro la felicidad que buscaba.",
+                "Cada día a tu lado es una historia de amor sin fin.",
+                "Nuestro amor es como un cuento de hadas hecho realidad.",
+                "Tus abrazos son mi refugio en este mundo caótico.",
+                "Eres la razón por la que creo en el destino.",
+                "Amar es descubrir cada día algo nuevo que admiro en ti.",
+                "Tu amor es el lienzo en blanco donde pinto mi felicidad.",
+                "Contigo, el futuro es un camino lleno de promesas y sueños.",
+                "Eres el faro que guía mi corazón en la oscuridad.",
+                "La magia del amor se encuentra en cada gesto que compartimos.",
+                "Nuestro amor es un baile eterno de pasión y ternura.",
+                "En tus brazos, el mundo entero desaparece y solo existimos tú y yo.",
+                "El amor es el idioma en el que nuestros corazones conversan.",
+                "Eres el pedacito que me faltaba para completar mi alma.",
+                "Amar es encontrar en ti todo lo que nunca supe que necesitaba."
+            ],
+            "texto4": [
+                "Acepta que los cambios son parte natural de la vida, y aprende a adaptarte a ellos.",
+                "Nunca dejes de aprender; el conocimiento es una herramienta poderosa.",
+                "Cuida de tu salud física y mental, son fundamentales para una vida plena.",
+                "Disfruta de las pequeñas cosas, pues son ellas las que dan sentido a la vida.",
+                "Aprende a perdonar, tanto a los demás como a ti mismo, para liberar tu corazón.",
+                "Valora el tiempo que pasas con tus seres queridos, es el regalo más valioso que puedes dar y recibir.",
+                "Sé amable y compasivo con los demás, cada acto de bondad puede marcar la diferencia en sus vidas.",
+                "Aprende a decir 'no' cuando sea necesario, y establece límites saludables.",
+                "Encuentra tiempo para hacer lo que te apasiona, pues eso nutre tu alma y te hace sentir vivo.",
+                "No te compares con los demás, cada persona tiene su propio camino y ritmo en la vida.",
+                "Escucha a tu pareja con empatía y comprensión, la comunicación es la base de una relación sólida.",
+                "No tengas miedo de expresar tus sentimientos, la honestidad es esencial en el amor.",
+                "Aprende a ceder y a comprometerte, el amor requiere de sacrificio y esfuerzo mutuo.",
+                "Sorprende a tu pareja de vez en cuando, mantén viva la chispa del romance.",
+                "Respeta la individualidad de tu pareja y permítele crecer como persona.",
+                "El amor propio es igual de importante que amar a alguien más; cuídate y valórate.",
+                "Recuerda que una relación sana se basa en la confianza mutua y el respeto.",
+                "Elige a alguien que te complemente y te haga ser una mejor versión de ti mismo.",
+                "El amor verdadero no te hace sentir menos, te hace sentir más.",
+                "Amar es un verbo, es una elección diaria que se cultiva con acciones y palabras.",
+                "Encuentra un trabajo que te apasione, y nunca sentirás que estás trabajando.",
+                "Sé proactivo y toma la iniciativa en tu trabajo, eso será valorado por tus superiores.",
+                "Aprende de tus errores y fracasos, son oportunidades para crecer y mejorar.",
+                "Mantén una actitud positiva y busca soluciones ante los desafíos laborales.",
+                "Cultiva buenas relaciones con tus colegas, el trabajo en equipo es clave para el éxito.",
+                "Establece metas claras y realistas, y trabaja con determinación para alcanzarlas.",
+                "No tengas miedo de pedir ayuda o buscar mentoría, siempre hay algo nuevo que aprender.",
+                "Reconoce y valora tus logros, celebra tus éxitos por pequeños que sean.",
+                "Busca un equilibrio entre tu vida laboral y personal, ambos aspectos son importantes.",
+                "El trabajo es una parte importante de tu vida, pero no es lo único que define quién eres.",
+                "Cree en ti mismo y en tu capacidad para lograr lo que te propongas.",
+                "Visualiza tus metas y sueños, imagina cómo te sentirás al alcanzarlos.",
+                "Encuentra inspiración en aquellos que han superado obstáculos similares a los tuyos.",
+                "Acepta los fracasos como parte del proceso, son oportunidades para aprender y crecer.",
+                "Rodéate de personas positivas y que te impulsen hacia adelante.",
+                "Mantén una mentalidad abierta y dispuesta a aprender cosas nuevas.",
+                "Recuerda por qué empezaste cuando te sientas desmotivado; reconecta con tu propósito.",
+                "Divide tus metas en pequeños pasos, eso hará el camino más alcanzable y menos abrumador.",
+                "No tengas miedo de perseguir tus sueños, la vida es demasiado corta para vivir con arrepentimientos.",
+                "Confía en que, con esfuerzo y perseverancia, puedes lograr todo lo que te propongas."
+            ]
+        },
+        "frase_piropos": {
+            "texto1": [
+                "Me gustaría ser papel para poder envolver ese bombón.",
+                "Eres como wifi sin contraseña, todo el mundo te busca",
+                "Quién fuera bus para andar por las curvas de tu corazón.",
+                "Quiero volar sin alas y salir de este universo, entrar en el tuyo y amarte en silencio.",
+                "Quisiera ser mantequilla para derretirme en tu arepa.",
+                "Si la belleza fuera pecado vos ya estarías en el infierno.",
+                "Me Gustaría Ser Un Gato Para Pasar 7 Vidas A Tu Lado.",
+                "Robar Está Mal Pero Un Beso De Tu Boca Sí Me Lo Robaría.",
+                "Qué Hermoso Es El Cielo Cuando Está Claro Pero Más Hermoso Es El Amor Cuando Te Tengo A Mi Lado.",
+                "Bonita, Camina Por La Sombra, El Sol Derrite Los Chocolates.",
+                "Si Fuera Un Correo Electrónico Serías Mi Contraseña.",
+                "Quisiera que fueses monte para darte machete",
+                "Perdí mi número de teléfono ¿Me das el tuyo?",
+                "¿Cómo te llamas para pedirte de regalo a Santa Claus?",
+                "En el cielo hay muchas estrellas, pero la más brillante está en la Tierra y eres tú.",
+                "¿Acaba de salir el sol o es la sonrisa que me regalas hoy?",
+                "No es el ron ni la cerveza, eres tú quien se me ha subido a la cabeza",
+                "Si hablamos de matemáticas eres la suma de todos mis deseos.",
+                "Pareces Google porque tienes todo lo que yo busco.",
+                "Mi café favorito, es el de tus ojos.",
+                "Quiero ser photoshop para retocarte todo el cuerpo.",
+                "Quisiera que fueras cereal, para cucharearte en las mañanas.",
+                "Quien fuera hambre, para darte tres veces al día."
+            ]
+        },
+        "fun_calculador": {
+            "texto1": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Eso es bajo... ¡Tu eres Joto, no Gay! 😄*"
+            ],
+            "texto2": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ ¡Incluso más gay de lo que pensábamos! 💃*"
+            ],
+            "texto3": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Lo tuyo, lo tuyo es que eres Gay. ☠*"
+            ],
+            "texto4": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Quizás necesites más películas románticas en tu vida. 🎬*"
+            ],
+            "texto5": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ ¡Eso es un amor extremo por las chicas! 👩‍❤️‍👩*"
+            ],
+            "texto6": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Mantén el amor floreciendo! 🌸*"
+            ],
+            "texto7": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Tal vez necesites más hobbies! 🎨*"
+            ],
+            "texto8": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Eso es una resistencia admirable! 💪*"
+            ],
+            "texto9": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Mantén el buen trabajo (en solitario). 🙌*"
+            ],
+            "texto10": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ ¡Más suerte en tu próxima conquista! 💔*"
+            ],
+            "texto11": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ ¡Estás en llamas! 🚒*"
+            ],
+            "texto12": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Mantén ese encanto ardiente! 🔥*"
+            ],
+            "texto13": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ ¡No eres el único en ese club! 😅*"
+            ],
+            "texto14": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ ¡Tienes un talento muy especial! 🙈*"
+            ],
+            "texto15": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Mantén esa actitud valiente! 🤙*"
+            ],
+            "texto16": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Nada de malo en disfrutar del queso! 🧀*"
+            ],
+            "texto17": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Un auténtico ratón de lujo! 🏰*"
+            ],
+            "texto18": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Come queso con responsabilidad! 🧀*"
+            ],
+            "texto19": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ El mercado está en auge! 💼*"
+            ],
+            "texto20": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Un/a verdadero/a profesional! 💰*"
+            ],
+            "texto21": [
+                "*Los calculos han arrojado que",
+                "es",
+                "*-❥ Siempre es hora de negocios! 💼*"
+            ],
+            "texto22": "*[❗] Comando no válido.*",
+            "texto23": [
+                "El universo ha hablado.",
+                "Los científicos lo confirman.",
+                "¡Sorpresa! 🎉"
+            ],
+            "texto24": "*CALCULADOR*",
+            "texto25": "*🔄 ¡Calculando Porcentaje! 🔄*",
+            "texto26": "*[❗] Debes mencionar a alguien para el cálculo*"
+        },
+        "fun_doxeo_falso": {
+            "texto1": [
+                "*[ ✔ ] Persona doxxeada con éxito.*\n\n*—◉ Doxxeo realizado en:*",
+                "segundos.*\n*—◉ Resultados obtenidos del doxxeo:"
+            ],
+            "texto2": [
+                "*Nombre:*",
+                "*Ip:*",
+                "*N:*",
+                "*W:*",
+                "*SS NUMBER:*",
+                "*CAMARA DEL CELULAR:*",
+                "*IPV6:*",
+                "*UPNP:*",
+                "*DMZ:*",
+                "*MAC:*",
+                "*ISP:*",
+                "*DNS:*",
+                "*ALT DNS:*",
+                "*DNS SUFFIX:*",
+                "*WAN:*",
+                "*WAN TYPE:*",
+                "*GATEWAY:*",
+                "*SUBNET MASK:*",
+                "*UDP OPEN PORTS:*",
+                "*TCP OPEN PORTS:*",
+                "*ROUTER VENDEDOR:*",
+                "*DEVICE VENDEDOR:*",
+                "*CONNECTION TYPE:*",
+                "*ICMPHOPS:*",
+                "*HTTP:*",
+                "*Http:*",
+                "*Http:*",
+                "*Upd:*",
+                "*Tcp:*",
+                "*Tcp:*",
+                "*Tcp:*",
+                "*EXTERNAL MAC:*",
+                "*MODEM JUMPS:*"
+            ],
+            "texto3": "*☠ ¡¡INICIANDO DOXXEO!! ☠*"
+        },
+        "fun_formarpareja": {
+            "texto1": [
+                "𝙳𝙴𝙱𝙴𝚁𝙸𝙰𝚂 𝙲𝙰𝚂𝙰𝚁𝚃𝙴 💍 𝙲𝙾𝙽",
+                "𝙷𝙰𝙲𝙴𝙽 𝚄𝙽𝙰 𝙱𝚄𝙴𝙽𝙰 𝙿𝙰𝚁𝙴𝙹𝙰 💓*"
+            ]
+        },
+        "fun_love": {
+            "texto1": [
+                "¡Eso es un amor ardiente y apasionado! ¡Ve y díselo ahora mismo!",
+                "Parece que hay una chispa entre ustedes dos. ¡Inténtalo!",
+                "Podría haber algo especial aquí. ¡Dale una oportunidad!",
+                "Hmm, el amor está en el aire. ¡Quizás sea hora de un café juntos!",
+                "Las estrellas indican que hay un potencial romántico. ¡Haz un movimiento!",
+                "Una historia de amor increíble podría estar esperando para ser escrita por ustedes.",
+                "No subestimen el poder del tiempo y la paciencia en el amor. Grandes cosas pueden suceder.",
+                "Recuerden que el amor es un viaje, y cada paso es valioso, sin importar la distancia.",
+                "Las conexiones fuertes pueden convertirse en relaciones hermosas. ¡Sigan explorando!",
+                "El amor verdadero a menudo requiere tiempo y esfuerzo. ¡No renuncien!"
+            ],
+            "texto2": [
+                "A veces, la amistad es el comienzo de algo hermoso, pero no siempre se convierte en amor.",
+                "El amor no es todo, ¡la amistad también es genial! Mantengan su amistad especial.",
+                "Recuerda que las mejores relaciones comienzan con una buena amistad. ¡No subestimen su vínculo!",
+                "A veces, el amor puede crecer con el tiempo. ¡Sigan fortaleciendo su conexión!",
+                "La vida es una sorpresa, ¡quién sabe qué depara el futuro! No pierdan la esperanza.",
+                "Aunque el amor no florezca como esperaban, su conexión sigue siendo valiosa.",
+                "Los corazones pueden tardar en sincronizarse, pero eso no disminuye lo especial que son juntos.",
+                "A pesar de los desafíos del amor, su amistad es un regalo que merece ser celebrado.",
+                "El tiempo puede revelar cosas sorprendentes. ¡Sigamos explorando juntos!",
+                "La vida está llena de giros inesperados. ¡Permanezcan abiertos a las posibilidades!"
+            ],
+            "texto3": [
+                "tienen una conexión profunda y un amor",
+                "tienen una conexión especial, aunque en el amor su porcentaje es"
+            ],
+            "texto4": [
+                "*❥ En el universo del amor",
+                "y",
+                "del",
+                "de un 100%*"
+            ],
+            "texto5": "*💞 ¡Calculando Porcentaje! 💞*"
+        },
+        "fun_pregunta": {
+            "texto1": [
+                "*⁉️ 𝐏𝐑𝐄𝐆𝐔𝐍𝐓𝐀𝐒 ⁉️*",
+                "*𝙿𝚁𝙴𝙶𝚄𝙽𝚃𝙰:*",
+                "*𝚁𝙴𝚂𝙿𝚄𝙴𝚂𝚃𝙰:*",
+                "Si",
+                "Tal vez sí",
+                "Posiblemente",
+                "Probablemente no",
+                "No",
+                "Imposible"
+            ]
+        },
+        "fun_reto": {
+            "texto1": [
+                "Pasa el pack de una hormiga",
+                "Dile a tus amigos que te vas a vivir a EU y mándame una captura de lo que te haya dicho",
+                "Grita desde la ventana que quieres mamar y mándame el vídeo",
+                "Escribe el nombre de tu crush",
+                "Debes de poner el nombre de mi creador en tu estado de WhatsApp, sin dar contexto",
+                "Envíame una fotografía tuya",
+                "Debes de dibujar en alguna parte de tu cuerpo el nombre de algún integrante del grupo, luego realiza una foto y envíala",
+                "Hazte una foto dándole un beso a una Televisión",
+                "Mándame una fotografía en ropa interior",
+                "Escribe en tu estado de WhatsApp que te gusta comer tierra",
+                "Debes de poner la fotografía de un participante del grupo que sea del sexo opuesto al tuyo en tu perfil de WhatsApp durante 3 días 📸📸",
+                "Tienes que mandar un audio cantando la canción: Un pato que va cantando alegremente cua cua 🦆",
+                "Envía un mensaje a tu ex y dile todavía me gustas",
+                "Envía un audio diciendo amo a The Shadow Brokers - Bot",
+                "Dile a tu crush que la amas y pasa captura al grupo",
+                "Envía un audio cantando",
+                "Envía una foto en la que salgas tu sin taparte la cara ni nada",
+                "Envía un video bailando",
+                "Invita a personas que no conoces a tomarse una selfi contigo y luego envíalo al grupo",
+                "Elija algunos números aleatorios de sus contactos y envíeles un mensaje de texto con el mensaje 'Estoy embarazad@'.",
+                "¡Tome cualquier bebida que esté cerca de usted, luego mézclela con chile y beba!",
+                "Tome un número aleatorio de sus contactos, llámelo y dígale 'te amo' ",
+                "Compre la comida más barata en la cafetería (o compre una botella de agua) y diga entre sollozos a sus compañeros de clase: 'Esta ... es la comida más cara que he comprado)' ",
+                " Compre una botella de coca cola y salpique flores con ella frente a la multitud.",
+                " Párese cerca del refrigerador, cierre los ojos, elija alimentos al azar en él, incluso cuando coma, sus ojos deben estar cerrados.",
+                " De pie en medio de la cancha de baloncesto y gritando: 'TE AMO MI PRÍNCIPE / PRINCESA' ",
+                "Presenta tus respetos a alguien de la clase y luego di: 'Estoy a su servicio, Majestad' ",
+                " Caminando aplaudiendo y cantando la canción 'Feliz cumpleaños' de la clase al pasillo.",
+                " Arrodíllate sobre una rodilla y di '¿Cásate conmigo?' la primera persona en entrar a la habitación.",
+                " Haz un tocado absurdo con tejido, sea lo que sea, sigue pidiendo poses frente a la cámara, sigue subiendo",
+                "Dile 'ERES HERMOSA / MUY HERMOSA, NO MIENTES' a la chica que crees que es la más bonita de esta clase.",
+                " Dile a alguien en clase: 'Primero me dijeron que era tu gemelo, nos separamos y luego me sometí a una cirugía plástica. Y esto es lo más serio que he dicho' ",
+                " Tirar el cuaderno de alguien a la basura, frente a sus ojos, diciendo 'Este libro nadie puede entender' ",
+                " ¡Arranca el pelo de tu propia pierna 3 veces!",
+                " Chatea con tus padres, diles que los extrañas con emoticonos tristes.",
+                " Intente buscar en Google cosas aterradoras o ridículas como tripofobia, etc.",
+                " Siéntese relajado en medio de la cancha de baloncesto mientras finge que es una playa para tomar el sol.",
+                " Llena tu boca de agua y tienes que aguantar hasta dos rondas, si te ríes y derramas o bebes, entonces tienes que volver a llenar y agregar una ronda más.",
+                " Salude a la primera persona que entre en esta sala y diga '¡Bienvenido a Quién quiere ser millonario!'",
+                "Envía un mensaje de texto a tus padres '¡Hola, hermano! ¡Acabo de comprar el último número de la revista Playboy!' ",
+                "Envíales un mensaje de texto a tus padres: 'Mamá, papá, ya sé que soy un niño adoptado del orfanato. No ocultes esto más'.",
+                " Envía tres números aleatorios en tus contactos y escribe 'Me acabo de convertir en modelo de la revista Playboy' ",
+                " ¡Come una cucharada de salsa de soja dulce y salsa de soja!",
+                " Come algo pero no uses las manos.",
+                " Enojarse con sus amigos que no vienen a pesar de que tienen una cita para jugar 'Verdad o Reto' juntos",
+                "¡Rompe el huevo con la cabeza!",
+                "Coma alimentos que se hayan mezclado y tendrán un sabor extraño, pero asegúrese de que los alimentos no sean dañinos para la salud a largo o corto plazo.",
+                "Baila como Girls 'Generation para los niños frente a la clase, o baila como Super Junior para las niñas.",
+                "Izar el asta de la bandera sin la bandera.",
+                "Hablando de la persona que te gusta, de tus amigos más cercanos, del sexo opuesto que no conoces en absoluto y cosas por el estilo.",
+                "Copia los peinados de todos tus amigos.",
+                "Cantando la canción HAI TAYO frente a mucha gente mientras baila",
+                "Cante la canción Baby Shark en voz alta en el aula.",
+                "Pedir prestado algo a los vecinos",
+                "Pide la firma de uno de los profesores más feroces mientras dices 'Eres verdaderamente la persona que más admiro en el mundo' ",
+                " Pídale dinero a alguien (al azar ) en la calle diciendo 'No tengo dinero para tomar un angkot'.",
+                " Beba algo que haya sido preparado / acordado, pero asegúrese de que no sea peligroso, puede ser como beber jarabe mezclado con salsa de soja.",
+                " Hablando con el emoticono-miedo de la persona que te gusta, está bien conversar con loque quieras, a través de cualquier medio que puedas.",
+                " Canta tu película de Disney favorita fuera de casa mientras gritas.",
+                " Nombra de 1 azul a 20 azules rápidamente y no debes cometer ningún error. Si está mal, debe repetirse desde el principio.",
+                " Póngase una corona de papel de copia y diga a todos en la habitación 'HONOR AL REY' mientras señala a cada persona con una regla.",
+                " Vuelve a ponerte los pantalones hasta la mañana siguiente.",
+                " Abraza a la persona que NO te agrada en clase y di: 'Muchas gracias por ser la mejor persona para mí' ",
+                " Ve a un campo amplio, luego corre lo más rápido posible mientras dices 'Estoy loco, estoy loco' ",
+                " Elija una flor y luego conéctela a alguien que no conoce (debe ser del sexo opuesto)",
+                " Elige a una persona al azar en la calle, luego di 'No sabes que eres hermosa' (ala One Direction)",
+                " Fingir estar poseído ejm: poseído por un tigre, etc.",
+                " Pídale que silbe ya que su boca está nuevamente llena de comida.",
+                " Pide ser un mesero para que te sirva con tus amigos para el almuerzo.",
+                " Dígales que usen calcetines para hacer guantes.",
+                "Dígales que usen el sombrero más extraño / el casco más absurdo durante la próxima ronda.",
+                "Llama a tu mamá y dile 'mamá, quiero casarme lo antes posible' ",
+                "Llama a tu ex y di 'te extraño' ",
+                "Cambia de ropa con la persona más cercana hasta la siguiente ronda.",
+                "Actualice el estado en WhatsApp lo que sea con palabras que comiencen con 'S' ",
+                "Sube un video de canto a YouTube que esté cantando canciones populares.",
+                "Colorea tus uñas de las manos y de los pies de diferentes colores durante una semana.",
+                "come 2 cucharadas de arroz sin guarniciones",
+                "Envie el emoji '🦄💨' cada vez que escriba en un grupo 1 día",
+                "diga '¡Bienvenido a Quién quiere ser millonario!' a todos los grupos que tienes",
+                "canta el coro de la última canción que tocaste",
+                "Envia un audio de voz a tu ex / enamorado / novia, dile hola (nombre), quiero llamar, solo un momento. Te Extraño🥺👉🏼👈🏼 ",
+                "Dile a la gente al azar: Primero me dijeron que era tu gemelo, nos separamos y luego me sometí a una cirugía plástica. Y esto",
+                "¡Haz 1 rima para el primer jugador!",
+                "cuenta tu propia versión de cosas vergonzosas",
+                "cambiar el nombre a 'Gay' durante 24 horas",
+                "¡Menciona tu tipo de novia!",
+                "Di 'Estoy enamorado de ti, ¿quieres ser mi novio o no?' al último sexo opuesto con el que conversaste en WhatsApp, espera a que responda",
+                "Háblale a tu ex por WhatsApp y dile 'te amo, por favor vuelve'. Manda una captura de pantalla como evidencia de reto cumplido!"
+            ]
+        },
+        "fun_ruletas": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] 𝙀𝙨𝙩𝙚 𝙟𝙪𝙚𝙜𝙤𝙨 𝙚𝙨𝙩𝙖 𝙙𝙚𝙨𝙖𝙘𝙩𝙞𝙫𝙖𝙙𝙤 𝙥𝙤𝙧 𝙡𝙤𝙨 𝙖𝙙𝙢𝙞𝙣𝙨 𝙙𝙚𝙡 𝙂𝙧𝙪𝙥𝙤 𝙨𝙞 𝙩𝙪 𝙚𝙧𝙚𝙨 𝙖𝙙𝙢𝙞𝙣𝙨 𝙮 𝙦𝙪𝙞𝙚𝙧𝙚 𝙖𝙘𝙩𝙞𝙫𝙖𝙧𝙡𝙤 𝙪𝙨𝙖𝙧: #on juegos",
+            "texto2": [
+                "『⏰』𝙀𝙨𝙥𝙚𝙧𝙖 :",
+                "𝙥𝙖𝙧𝙖 𝙫𝙤𝙡𝙫𝙚𝙧 𝙖 𝙟𝙪𝙜𝙖𝙧 "
+            ],
+            "texto3": "😺 𝙌𝙐𝙀 𝘽𝙐𝙀𝙉𝘼 𝙎𝙐𝙀𝙍𝙏𝙀 🐞🍀\n*𝙊𝙗𝙩𝙞𝙚𝙣𝙚 :*",
+            "texto4": "😿 𝙉𝙊𝙊 𝙀𝙎𝙏𝘼𝙎 𝘿𝙀 𝙈𝘼𝙇𝘼 𝙎𝙐𝙀𝙍𝙏𝙀 𝘼𝘾𝘼𝘽𝘼 𝘿𝙀 𝙋𝙀𝙍𝘿𝙀𝙍 :",
+            "texto5": "😹 𝙀𝙎𝙏𝘼𝙎 𝙍𝙀 𝙈𝘼𝙇𝘼 𝙌𝙐𝙀 𝙌𝙐𝙄𝙏𝙊 𝙀𝙇 𝙋𝙊𝘿𝙀𝙍 𝘼𝙃𝙊𝙍𝘼 𝙔𝘼 𝙉𝙊 𝙀𝙍𝙀𝙎 𝘼𝘿𝙈𝙄𝙉𝙎 𝙅𝙊𝘿𝙀𝙍𝙏𝙀 😹😹😹",
+            "texto6": "😼 𝙀𝙎𝙏𝘼 𝙍𝙀 𝘽𝙐𝙀𝙉𝘼 😉, 𝘼𝙝𝙤𝙧𝙖 𝙚𝙧𝙚𝙨 𝙪𝙣 𝙖𝙙𝙢𝙞𝙣𝙞𝙨𝙩𝙧𝙖𝙙𝙤𝙧, 𝙚𝙡 𝙦𝙪𝙚 𝙦𝙪𝙞𝙩𝙖𝙧 𝙖𝙙𝙢𝙞𝙣𝙨 𝙚𝙨 𝙛𝙖𝙣 𝙙𝙚 𝙠𝙪𝙣𝙤 😂",
+            "texto7": "𝙒𝙐𝙐𝙐 𝙎𝙀𝙉̃𝙊𝙍 𝙀𝙎𝙏𝘼 𝘿𝙀 𝙎𝙐𝙀𝙍𝙏𝙀, 𝙑𝘼𝙔𝘼𝙍 𝘼 𝙅𝙐𝙂𝘼𝙍 𝘼𝙇 𝘾𝘼𝙎𝙄𝙉𝙊 🎰\n*𝙂𝘼𝙉𝘼𝙍𝙏𝙀 :* ",
+            "texto8": "👑 𝙂𝙐𝘼𝘼 𝙀𝙎𝙏𝘼𝙎 𝙍𝙀 𝘽𝙐𝙀𝙉𝘼 𝙎𝙐𝙀𝙍𝙏𝙀 𝙂𝘼𝙉𝘼𝙍𝙏𝙀 𝙎𝙀𝙍 𝙋𝙍𝙀𝙈𝙄𝙐𝙈 𝙋𝙊𝙍 : 1 𝙃𝙤𝙧𝙖 ⏰"
+        },
+        "fun_simi": {
+            "texto1": "*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃𝙾 𝙿𝙰𝚁𝙰 𝙷𝙰𝙱𝙻𝙰𝚁 𝙲𝙾𝙽 𝚂𝙸𝙼𝚂𝙸𝙼𝙸 𝙾 𝙴𝙻 𝙱𝙾𝚃*\n\n*𝙴𝙹𝙴𝙼𝙿𝙻𝙾:",
+            "texto2": "*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙴 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*",
+            "texto3:": [
+                "Hola",
+                "Hello",
+                ""
+            ]
+        },
+        "fun_top": {
+            "texto1": "Ejemplo de uso:\n.top *texto*"
+        },
+        "fun_tops": {
+            "texto1": "*🌈TOP 10 GAYS/LESBIANAS DEL GRUPO🌈*",
+            "texto2": "*🌸 TOP 10 OTAKUS DEL GRUPO 🌸*"
+        },
+        "fun_verdad":{
+            "texto3": [
+                "¿Alguna vez te ha gustado alguien? ¿Cuánto tiempo?",
+                "Si es posible o si quieres, en gc / fuera de gc, ¿con quién harás amistad? (Puede ser diferente / del mismo tipo)",
+                "¿cual es tu mas grande miedo?",
+                "¿Alguna vez te ha gustado alguien y has sentido a esa persona como tú también?",
+                "¿Cuál es el nombre del exnovio de tu amiga que una vez te gustó en secreto?",
+                "¿Alguna vez has robado el dinero de tu madre o de tu padre? ¿La razón?",
+                "lo que te hace feliz cuando estás triste",
+                "¿Alguna vez has sido amor no correspondido? ¿Si has estado con quién? ¿Cómo se siente brou?",
+                "¿Alguna vez has tenido una aventura con alguien?",
+                "lo más temido",
+                "quién es la persona más influyente en tu vida",
+                "qué orgullo tienes este año",
+                "quién es la persona que puede enfermarte",
+                "quien es la persona que alguna vez te puso cachondo",
+                "(para los musulmanes) ¿nunca has rezado en todo el día?",
+                "¿Quién es el más cercano a su tipo de pareja ideal aquí",
+                "¿Con quién te gusta jugar?",
+                "¿Alguna vez has rechazado a alguien? ¿Por qué?",
+                "Menciona el incidente que te hizo daño y que aún recuerdas",
+                "¿Qué logros has obtenido este año?",
+                "¿Cuál es tu peor hábito en la escuela?",
+                "¿Qué programa de televisión odias más? ¡Da la razón!",
+                "¿Cuál es el vestido más feo (en su opinión) que ha usado y cuándo lo usó?",
+                "¿Qué es lo peor (chisme) que has dicho sobre tu amigo?",
+                "¿Qué es lo más vergonzoso de ti?",
+                " ¿Qué es lo primero que ves cuando miras a otra persona (del sexo opuesto)?",
+                "¿Qué es lo primero que te viene a la mente cuando te miras al espejo?",
+                "¿Que es lo mas tonto que has hecho en tu vida?",
+                " ¿Cuál es el peor sueño que has tenido?",
+                " ¿Cuál es el sueño más loco que puedes recordar hasta ahora?",
+                " ¿Cuál es tu peor rasgo en tu opinión?",
+                " ¿Qué rasgo te gustaría cambiar de ti mismo?",
+                " ¿Qué rasgo te gustaría cambiar en tu amigo?",
+                " ¿Qué harías si tu novio te dijera que tienes mala nariz o dedos?",
+                " ¿En qué piensas antes de dormir? ej .: fantasear con una pareja, etc.",
+                "¿Qué crees que se destaca más de ti?",
+                " ¿Qué parte del cuerpo de tu amigo te gusta más y desearías tener?",
+                "¿Qué parte de tu cuerpo odias más?",
+                " De todas las clases de la escuela, ¿a qué clase le gustaría ingresar y qué clase le gustaría evitar?",
+                "¡Describe a tu amigo más cercano!",
+                " ¡Descríbete en una palabra!",
+                " ¿Qué películas y canciones te han hecho llorar?",
+                " ¿Qué es algo que has mantenido en secreto hasta ahora y nadie lo ha descubierto?",
+                " ¿Qué es lo más romántico que alguien (del sexo opuesto) te ha hecho o regalado?",
+                "¿Qué es lo más desagradable que has experimentado?",
+                " Si nacieras de nuevo y tuvieras que ser uno de tus amigos, ¿a quién elegirías ser?",
+                " Si tienes superpoder / superpoder, ¿qué quieres hacer?",
+                " Si el apocalipsis llega pronto, ¿qué haces?",
+                " Si te pidieran que te sometieras a una cirugía plástica con una muestra de rostro de tu compañero de clase, ¿a quién imitarías?",
+                " Alguna vez has robado algo?",
+                " ¿Tiene miedo a morir? ¿Por qué?",
+                " ¿Cuándo fue la última vez que lloraste y por qué?",
+                " ¿Cuáles son tus habilidades especiales?",
+                " ¿Cómo te puede gustar la persona que te gusta?",
+                " ¿Cuál crees que es un buen rasgo de tu amigo más cercano que él o ella no conozca?",
+                " ¿Con qué tipo de persona te gustaría casarte algún día?",
+                " En tu opinión, ¿cuál es el trabajo más atractivo para el amigo que está sentado a tu lado? ¿Y por qué?",
+                " ¿Con quién quieres intercambiar por un día? (amigos más cercanos que ambos conocen) y por qué",
+                " ¿Alguna vez has esperado en secreto que la relación de alguien con su novia se rompiera? ¿Quién?",
+                " ¿Prefiere AMIGAS o AMIGOS? ¿Por qué?",
+                " ¿Qué cita recuerdas más y te gusta?",
+                " ¿Qué secretos nunca les has contado a tus amigos hasta ahora?",
+                " ¿Quiénes son sus verdaderos modelos a seguir?",
+                " ¿Cuál de tus amigos crees que es matre?",
+                " ¿Cuál de tus amigos crees que tiene menos corte de pelo?",
+                " ¿Cuál de tus amigos es el más fotogénico? ",
+                " ¿Quién es tu mejor ex? ¡¿Y por qué rompieron ?!",
+                " ¿Cómo se llama el artista con el que hablaste en secreto?",
+                " ¿Cómo se llamaba el profesor que te gustaba?",
+                " ¿Cuál es el nombre de la exnovia de tu amigo que te ha gustado en secreto?",
+                " ¿Cuál es el nombre de la persona (del sexo opuesto) que crees que sería divertido ser novia?",
+                " ¿Cuál es el nombre de la persona que odias, pero crees que le gustas a esa persona (no necesariamente del sexo opuesto)?",
+                " ¿Cuál es el nombre de la persona a la que has estado señalando en secreto?",
+                " ¿Quién es la persona (del sexo opuesto) que más se te pasa por la cabeza?",
+                " ¿Quién es la persona más molesta entre tus amigos? ¡la razón!",
+                " ¿A quién de tus amigos crees que debería renovarse?",
+                " ¿Quién está más cerca de tu pareja ideal aquí?",
+                "Padre o madre",
+                "La parte del cuerpo que no te gusta",
+                "¿Alguna vez has hechotrampa?",
+                "¿Alguna vez te han besado?",
+                "¿Qué es lo primero que harías si te despertaras como del sexo opuesto?",
+                "¿Alguna vez has dejado que alguien más se meta en problemas por algo que hiciste?",
+                "¿Qué es lo más embarazoso que has hecho en tu vida?",
+                " ¿Cuál es la razón más ridícula por la que has roto con alguien?",
+                " ¿Cuál es el peor hábito que tienes?",
+                " ¿Cuál crees que es tu mejor característica? ¿Y que es lo peor?",
+                " ¿Cuál es la cosa más valiente que has hecho?",
+                " ¿Cuándo fue la última vez que mojaste la cama?",
+                " ¿Con qué sueñas más sobre dormir?",
+                " Si va a ganar dinero ilegalmente, ¿cómo lo hace?",
+                " ¿Qué cosas infantiles sigues haciendo?",
+                " Si fueras ciego, ¿quién sería tu perro guía?",
+                " ¿Qué es lo que más te impresiona?",
+                " Si se le permitiera usar solo 3 palabras durante el resto de la noche a partir de ahora, ¿cuál sería?",
+                " Si fueras un dictador, ¿qué ley promulgarías primero?",
+                "Si vivieras durante la era nazi, ¿quién serías?",
+                "¿Cuál fue la experiencia más vergonzosa en la escuela / tiempo de estudio / educación / el año pasado?",
+                "¿Cuál es el mayor error de tu vida?",
+                "¿Qué no harías nunca, incluso si supieras que solo te quedan 12 horas de vida?",
+                " ¿Qué delitos ha cometido?",
+                " Cuéntame un secreto de tu infancia.",
+                " ¿Cuál es su mayor representante (secreto)?",
+                " ¿Qué quieres hacer conmigo… ( x persona), si luego puedes borrar su memoria (él,…)?",
+                " ¿Qué es lo peor que le has hecho a alguien?",
+                " ¿Quién te gusta más?",
+                "¿Alguna vez te has enamorado de alguno de los presentes?",
+                " Si fueras un vampiro, ¿a cuál de nosotros morderías ahora?",
+                " ¿Ha defecado alguna vez en público?",
+                " ¿Cuál es tu fantasía más oscura?",
+                " ¿Qué es lo mejor que has tenido con alguien más?",
+                " ¿Cuál es el mayor desvío para ti?",
+                " ¿Qué es lo que más te gusta de tu cuerpo y qué es lo más feo?",
+                " ¿A quien te gustaría ver desnuda?",
+                " ¿Quién en esta ronda puede enamorarte?",
+                " ¿Alguna vez has tenido un sueño erótico donde sucedió alguien de este grupo?",
+                " Si te vas a tatuar en el área genital, ¿que habrá allí?",
+                " ¿Qué es más importante en una relación: el sexo o el amor?",
+                " ¿Crees que el sexo es genial, bueno, bueno, divertido a veces, o realmente no te importa?",
+                " ¿Qué te hace realmente amar?",
+                "¿Cuántas veces a la semana / mes tiene relaciones sexuales y con qué frecuencia desea tener relaciones sexuales?",
+                " ¿Con cuántas parejas sexuales te has acostado?",
+                " ¿Qué parte del cuerpo te hace más?",
+                " ¿Cómo, dónde y con quién estuviste primero?",
+                " ¿Qué importancia tienen para ti los juegos previos prolongados?",
+                " ¿Qué debe hacer un hombre o una mujer para seducirte?",
+                " ¿Alguna vez has tenido sexo con un buen amigo?",
+                " ¿Alguna vez ha tenido relaciones sexuales con alguno de estos grupos, excepto con su pareja?",
+                "¿Qué animal se adapta mejor a ti y por qué?",
+                " ¿Cuál es tu peor cita?",
+                " ¿A quién quieres besar ahora?",
+                " ¿Cuál es tu oscura fantasía secreta?",
+                " ¿Prefieres tatuarte el culo o perforarte la lengua?",
+                " ¿Eres siempre leal?",
+                " ¿Tienes un enamoramiento adolescente?",
+                " ¿De qué persona te enamoraste?",
+                " ¿Con qué celebridad te gustaría salir?",
+                " ¿Cuál fue el momento más embarazoso de tu vida?",
+                " ¿Qué boca te gusta más del grupo de aquí?",
+                " ¿Qué jugador tiene la mano más hermosa?",
+                " ¿Dónde fue tu primer beso?",
+                " ¿A quién del grupo te gustaría besar más?",
+                " ¿Quién en la mesa es quizás el más divertido?",
+                " ¿Cuál es el mayor error de tu vida?",
+                " ¿Te pasó algo vergonzoso en una cita?",
+                " ¿Ha estado alguna vez en contacto con drogas?",
+                " ¿A qué persona quieres besar ahora?",
+                " ¿Cuándo fue la última vez que estuvo borracho?",
+                " ¿Alguna vez has hecho trampa en un examen escolar?",
+                " ¿Has robado algo en el pasado?",
+                " ¿Roncas por la noche?",
+                " ¿Cuales tu cancion favorita?",
+                " ¿Con qué jugadores comerciará durante 1 semana y por qué?",
+                " Te mudaste a una isla desierta, ¿a quién te llevaste de aquí?",
+                " ¿A que temes más?",
+                " ¿Dónde te afeitas en todas partes?",
+                "¿Tienes un apodo?",
+                " ¿Miras en el baño antes de lavarte?",
+                "¿Quién te dio la peor angustia?",
+                " Cuantas veces te has besado",
+                "¿Qué es lo más embarazoso que te ha pasado?",
+                "¿Cuántos chicos / chicas has besado?",
+                "¿De quien estas enamorado(a) ?",
+                "Que estrella te gusta",
+                "¿Empezaste algo con XY (insertar nombre)?",
+                "Alguna vez has robado algo?"
+            ]
         },
         "menu-audios": {
             "texto1": "𝙴𝚂𝙲𝚁𝙸𝙱𝙴 𝙻𝙰𝚂 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴𝚂 𝙿𝙰𝙻𝙰𝙱𝚁𝙰𝚂 𝙾 𝙵𝚁𝙰𝚂𝙴𝚂 𝚂𝙸𝙽 𝙽𝙸𝙽𝙶𝚄𝙽 𝙿𝚁𝙴𝙵𝙸𝙹𝙾 (#, /, *, .)"

@@ -1,4 +1,7 @@
 import {performance} from 'perf_hooks';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.fun_doxeo_falso
+
 const handler = async (m, {conn, text}) => {
     
 const start = performance.now();    
@@ -50,41 +53,41 @@ fakeData.name_tag = text //`@${m.mentionedJid[0].split('@')[0]}` //conn.getName(
 fakeData.name_tag = text    
 }
     
-const doxeo = `*[ ✔ ] Persona doxxeada con éxito.*\n\n*—◉ Doxxeo realizado en:*\n*◉ ${executionTime} segundos.*\n*—◉ Resultados obtenidos del doxxeo:*
+const doxeo = `${tradutor.texto1[0]}\n*◉ ${executionTime} ${tradutor.texto1[1]}*
 
-*Nombre:* ${fakeData.name_tag}
-*Ip:* ${fakeData.ip}
-*N:* ${fakeData.n}
-*W:* ${fakeData.w}
-*SS NUMBER:* ${fakeData.ssNumber}
-*CAMARA DEL CELULAR:* ${fakeData.fakeCameraLink}
-*IPV6:* ${fakeData.ipv6}
-*UPNP:* ${fakeData.upnp}
-*DMZ:* ${fakeData.dmz}
-*MAC:* ${fakeData.mac}
-*ISP:* ${fakeData.isp}
-*DNS:* ${fakeData.dns}
-*ALT DNS:* ${fakeData.altDns}
-*DNS SUFFIX:* ${fakeData.dnsSuffix}
-*WAN:* ${fakeData.wan}
-*WAN TYPE:* ${fakeData.wanType}
-*GATEWAY:* ${fakeData.gateway}
-*SUBNET MASK:* ${fakeData.subnetMask}
-*UDP OPEN PORTS:* ${fakeData.udpOpenPorts}
-*TCP OPEN PORTS:* ${fakeData.tcpOpenPorts}
-*ROUTER VENDEDOR:* ${fakeData.routerVendor}
-*DEVICE VENDEDOR:* ${fakeData.deviceVendor}
-*CONNECTION TYPE:* ${fakeData.connectionType}
-*ICMPHOPS:* ${fakeData.icmphops}
-*HTTP:* ${fakeData.http}
-*Http:* ${fakeData.http2}
-*Http:* ${fakeData.http3}
-*Upd:* ${fakeData.udp}
-*Tcp:* ${fakeData.tcp1}
-*Tcp:* ${fakeData.tcp2}
-*Tcp:* ${fakeData.tcp3}
-*EXTERNAL MAC:* ${fakeData.externalMac}
-*MODEM JUMPS:* ${fakeData.modemJumps}`;
+${tradutor.texto2[0]} ${fakeData.name_tag}
+${tradutor.texto2[1]}  ${fakeData.ip}
+${tradutor.texto2[2]}  ${fakeData.n}
+${tradutor.texto2[3]}  ${fakeData.w}
+${tradutor.texto2[4]}  ${fakeData.ssNumber}
+${tradutor.texto2[5]}  ${fakeData.fakeCameraLink}
+${tradutor.texto2[6]}  ${fakeData.ipv6}
+${tradutor.texto2[7]}  ${fakeData.upnp}
+${tradutor.texto2[8]}  ${fakeData.dmz}
+${tradutor.texto2[9]}  ${fakeData.mac}
+${tradutor.texto2[10]}  ${fakeData.isp}
+${tradutor.texto2[11]}  ${fakeData.dns}
+${tradutor.texto2[12]}  ${fakeData.altDns}
+${tradutor.texto2[13]}  ${fakeData.dnsSuffix}
+${tradutor.texto2[14]}  ${fakeData.wan}
+${tradutor.texto2[15]}  ${fakeData.wanType}
+${tradutor.texto2[16]}  ${fakeData.gateway}
+${tradutor.texto2[17]}  ${fakeData.subnetMask}
+${tradutor.texto2[18]}  ${fakeData.udpOpenPorts}
+${tradutor.texto2[19]}  ${fakeData.tcpOpenPorts}
+${tradutor.texto2[20]}  ${fakeData.routerVendor}
+${tradutor.texto2[21]}  ${fakeData.deviceVendor}
+${tradutor.texto2[22]}  ${fakeData.connectionType}
+${tradutor.texto2[23]}  ${fakeData.icmphops}
+${tradutor.texto2[24]}  ${fakeData.http}
+${tradutor.texto2[25]}  ${fakeData.http2}
+${tradutor.texto2[26]}  ${fakeData.http3}
+${tradutor.texto2[27]}  ${fakeData.udp}
+${tradutor.texto2[28]}  ${fakeData.tcp1}
+${tradutor.texto2[29]}  ${fakeData.tcp2}
+${tradutor.texto2[30]} ${fakeData.tcp3}
+${tradutor.texto2[31]}  ${fakeData.externalMac}
+${tradutor.texto2[32]}  ${fakeData.modemJumps}`;
     
 async function loading() {
 var hawemod = [
@@ -94,7 +97,7 @@ var hawemod = [
 "《 ██████████▒▒》80%",
 "《 ████████████》100%"
 ]
-      let { key } = await conn.sendMessage(m.chat, {text: `*☠ ¡¡INICIANDO DOXXEO!! ☠*`}, {quoted: m})
+      let { key } = await conn.sendMessage(m.chat, {text: `${tradutor.texto3}`}, {quoted: m})
  for (let i = 0; i < hawemod.length; i++) {
    await new Promise(resolve => setTimeout(resolve, 1000)); 
    await conn.sendMessage(m.chat, {text: hawemod[i], edit: key}, {quoted: m}); 
