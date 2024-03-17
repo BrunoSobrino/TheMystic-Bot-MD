@@ -1,4 +1,6 @@
 /* Creditos a https://github.com/ALBERTO9883/NyanCatBot-MD */
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.gc_config_time
 
 const handler = async (m, {conn, isAdmin, isOwner, args, usedPrefix, command}) => {
   if (!(isAdmin || isOwner)) {
@@ -17,11 +19,11 @@ const handler = async (m, {conn, isAdmin, isOwner, args, usedPrefix, command}) =
   }[(args[0] || '')];
   if (isClose === undefined) {
 	  const caption = `
-*• Ejemplo:*
+${tradutor.texto1[0]}
 *${usedPrefix + command} open 1*
 *${usedPrefix + command} close 1*
-📌 *_Ejemplo de uso:_* *${usedPrefix + command} close 1* 
-*_🌿 Para que el grupo este cerrado una hora._*
+${tradutor.texto1[1]} *${usedPrefix + command} close 1* 
+${tradutor.texto1[2]}
 `;
     m.reply(caption);
 	  throw false;
@@ -33,7 +35,7 @@ const handler = async (m, {conn, isAdmin, isOwner, args, usedPrefix, command}) =
   if (args[1]) {
 	 setTimeout(async () => {
       await conn.groupSettingUpdate(m.chat, `${isClose == 'announcement' ? 'not_announcement' : 'announcement'}`).then(async (_)=>{
-		    conn.reply(m.chat, `${isClose == 'not_announcement' ? '*El grupo ha sido cerrado, ¡ahora solo los administradores pueden enviar mensajes!*' : '*El grupo se ha abierto, ¡ahora todos los miembros pueden enviar mensajes!*'}!`);
+		    conn.reply(m.chat, `${isClose == 'not_announcement' ? tradutor.texto2 : tradutor.texto3}!`);
 	    });
     }, timeoutset);
   }

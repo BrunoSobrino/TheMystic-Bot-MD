@@ -1,7 +1,5 @@
 import _translate from "./_translate.js"
-const tradutor = _translate.plugins.fun_verdad
-
-
+const tradutor = _translate.plugins.gc_demote
 
 console.log(tradutor.texto1)
 console.log(tradutor.texto2)

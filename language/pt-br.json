@@ -1469,6 +1469,547 @@
                 "Você já roubou algo?"
             ]
         },
+        "game__cancion": {
+            "texto1": "O jogo acabou",
+            "texto2": "❌ Incorreto!",
+            "texto3": "ADIVINHE O TÍTULO DA CANÇÃO"
+        },
+        "game__suitpvp": {
+            "texto1": "ROCHA, PAPEL, TESOURA, JOGO SE COMEÇA*",
+            "texto2": "🎮 JOGOS - PVP - JOGOS 🎮\n\n—◉ O JOGO COMEÇOU, AS OPÇÕES SÃO ENVIADAS AOS CHATS PRIVADOS",
+            "texto3": "◉ SELECIONE UMA OPÇÃO E ENVIE-A, RESPONDA-ME\n*◉ AGUARDE A OPÇÃO ENVIADA",
+            "texto4": [
+                "POR FAVOR SELECIONE UMA DAS SEGUINTES OPÇÕES",
+                "pedra",
+                "papel",
+                "tesoura",
+                "*GANHADOR +",
+                "XP\nPERDEDOR",
+                "XP\n*responda à mensagem com a opção desejada*",
+                "*exemplo: papel*"
+            ],
+            "texto5": [
+                "POR FAVOR SELECIONE UMA DAS SEGUINTES OPÇÕES",
+                "pedra",
+                "papel",
+                "tesoura",
+                "GANHADOR +",
+                "XP\nPERDEDOR",
+                "XP\n*responda à mensagem com a opção desejada*",
+                "*exemplo: papel*"
+            ],
+            "texto6": "[❗] NINGUÉM JOGADOR TOMOU A INICIATIVA DE EMPATAR EL JUEGO, O PVP SE AH CANCELADO",
+            "texto7": "NÃO SELECIONOU NENHUMA OPÇÃO, FIM DO PVP*"
+        },
+        "game__ttt": {
+            "texto1": [
+                "O jogo terminou",
+                "Inválido",
+                "Posição inválida",
+                "Posição inválida"
+            ],
+            "texto2": "TRÊS EM RAYA",
+            "texto3": "COMEMORAÇÃO 🥳, VOCÊ GANHOU +4999 XP",
+            "texto4": "O JOGADOR TERMINOU EM EMPATE 😐",
+            "texto5": "TURNO DE"
+        },
+        "game_acertijo_resp": {
+            "texto1": "Esse enigma já terminou!",
+            "texto2": "*Resposta correta!*",
+            "texto3": "Quase lá!",
+            "texto4": "Resposta incorreta"
+        },
+        "game_acertijo": {
+            "texto1": "Ainda há enigmas não respondidos neste chat",
+            "texto2": [
+                "*• Tempo:*",
+                "*• Bônus:*"
+            ],
+            "texto3": "O tempo acabou!\n*Resposta:*"
+        },
+        "game_akinator_ans": {
+            "texto1": "*0 - Sim*\n*1 - Não*\n*2 - Não sei*\n*3 - Provavelmente sim*\n*4 - Provavelmente não*\n*5 - Voltar à pergunta anterior*",
+            "texto2": "*[❗] RESPONDA COM OS NÚMEROS 1, 2, 3, 4 ou 5*",
+            "texto3": "*[❗] E NÃO HÁ MAIS PERGUNTAS ANTERIORES A ESTA, ESTA É A PRIMEIRA PERGUNTA*",
+            "texto4": "*[❗] A RESPOSTA DE AKINATOR JÁ FOI CADUCADA, O JOGO TERMINOU*",
+            "texto5": "🎮 *AKINATOR* 🎮\n\n*PERGUNTA DO AKINATOR É",
+            "texto6": [
+                "🎮 *AKINATOR* 🎮\n*RESPONDA:",
+                "*PERGUNTA:",
+                "*PERGUNTA:"
+            ],
+            "texto7": "*[❗] ERRO, INTERROGAÇÃO DE ERRO*"
+        },
+        "game_akinator": {
+            "texto1": "*[❗] ATUALMENTE NÃO HÁ SESSÕES EM UMA SESSÃO (PARTIDA) DE AKINATOR*",
+            "texto2": "*[❗] SE ESTÁ EM UMA CONVERSA LOCAL (PARTIDA) DE AKINATOR, SAIA DA SESSÃO*",
+            "texto3": "*[❗] TODAVIA ESTÁS EM UMA SESSÃO (PARTIDA) DE AKINATOR*",
+            "texto4": "*[❗] ERRO, INTERVALO MAIOR DE PALAVRAS*",
+            "texto5": [
+                "🎮 *AKINATOR* 🎮\n\n*PERGUNTA:",
+                "*PERGUNTA:",
+                "*0 - Sim*\n",
+                "*1 - Não*\n",
+                "*2 - Não sei*\n",
+                "*3 - Provavelmente sim*\n",
+                "*4 - Provavelmente não*\n\n",
+                "*USE O COMANDO",
+                " end PARA SAIR DA SESSÃO (PARTIDA) DE AKINATOR*"
+            ],
+            "texto6": "*[❗] ERRO, INTERVALO MAIOR DE PALAVRAS*"
+        },
+        "game_cancion": {
+            "texto1": "Ainda há músicas sem resposta neste chat.",
+            "texto2": [
+                "ADIVINHE O TÍTULO DA CANÇÃO",
+                "Tempo",
+                "segundos",
+                "Escreva",
+                "Para obter uma pista",
+                "Prêmio:",
+                "RESPONDA A ESTA MENSAGEM COM AS RESPOSTAS!"
+            ],
+            "texto3": "O tempo acabou!\nA resposta é"
+        },
+        "game_delttt": {
+            "texto1": "*[❗] NÃO ESTÁ EM ANDAMENTO UMA PARTIDA DE TRÊS EM RAIA*",
+            "texto2": "INICIAR SALA DE JOGO",
+            "texto3": "nova partida",
+            "texto4": "*[ ✔ ] SE ELIMINA A SALA DE JOGO DE TRÊS EM RAIA EM ANDAMENTO*"
+        },
+        "game_ppt": {
+            "texto1": "*🕓 Você terá que esperar",
+            "texto2": "segundos antes de poder jogar novamente*",
+            "texto3": "*Pedra 🗿, Papel 📄 ou Tesoura ✂️*\n\n*—◉ Opções disponíveis:*\n*◉",
+            "texto4": [
+                "*🔰 Empate!*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*🎁 Prêmio +500 XP*"
+            ],
+            "texto5": [
+                "*🥳 Você ganhou! 🎉*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*🎁 Prêmio +1000 XP*"
+            ],
+            "texto6": [
+                "*☠️ Você perdeu! ❌*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*❌ Prêmio -300 XP*"
+            ],
+            "texto7": [
+                "*🥳 Você ganhou! 🎉*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*🎁 Prêmio +1000 XP*"
+            ],
+            "texto8": [
+                "*☠️ Você perdeu! ❌*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*❌ Prêmio -300 XP*"
+            ],
+            "texto9": [
+                "*🥳 Você ganhou! 🎉*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*🎁 Prêmio +1000 XP*"
+            ],
+            "texto10": [
+                "*☠️ Você perdeu! ❌*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*❌ Prêmio -300 XP*"
+            ],
+            "texto11": [
+                "*🥳 Você ganhou! 🎉*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*🎁 Prêmio +1000 XP*"
+            ],
+            "texto12": [
+                "*☠️ Você perdeu! ❌*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*❌ Prêmio -300 XP*"
+            ],
+            "texto13": [
+                "*🥳 Você ganhou! 🎉*\n\n*👉🏻 Você: ",
+                "*👉🏻 O Bot: ",
+                "*🎁 Prêmio +1000 XP*"
+            ],
+            "texto14": [
+                "*☠️ Você perdeu! ❌*\n\n*👉🏻 Você:",
+                "*👉🏻 O Bot:",
+                "*❌ Prêmio -300 XP*"
+            ]
+        },
+        "game_slot": {
+            "texto1": "*[❗] INSIRA A QUANTIA QUE DESEJA APOSTAR*",
+            "texto2": "*📌 EXEMPLO:*",
+            "texto3": [
+                "*⏳ AGUARDE",
+                "PARA APOSTAR NOVAMENTE"
+            ],
+            "texto4": "*[❗] O MÍNIMO PARA APOSTAR É DE 100 XP*",
+            "texto5": "*[❗] SEU XP NÃO É SUFICIENTE PARA APOSTAR ESSA QUANTIA, JOGUE OUTROS JOGOS OU INTERAJA COM O BOT PARA GANHAR MAIS XP*",
+            "texto6": "*VOCÊ GANHOU! 🎁",
+            "texto7": "*🔮 QUASE LÁ!, CONTINUE TENTANDO*\n*AMANHÃ +10 XP*",
+            "texto8": "*❌ VOCÊ PERDEU*"
+        },
+        "game_sopa_de_letras": {
+            "texto1": "REGISTRADO NO JOGO* ✅",
+            "texto2": [
+                "ALGORITMOS",
+                "ANDROID",
+                "ANIME",
+                "ARQUITETO",
+                "ARTE",
+                "ASTRONOMIA",
+                "AVATAR",
+                "BIOLOGIA",
+                "CARTOGRAFIA",
+                "CINEMÁTICA",
+                "CIÊNCIA",
+                "CODIFICAR",
+                "PALAVRACRUZADA",
+                "PALAVRACRUZADA",
+                "QUADRO",
+                "DESIGNER",
+                "ECONOMIA",
+                "EINSTEIN",
+                "ENCICLOPÉDIA",
+                "ESTADOS",
+                "ESTÚDIOS",
+                "SUDOKU",
+                "TAICHI",
+                "TECNOLOGIA",
+                "TERMINATOR",
+                "TETRIS",
+                "LEGENDZELDA",
+                "TIKTOK",
+                "TURING",
+                "UNIVERSO",
+                "VIDEOGAMES",
+                "VÍRUS",
+                "WARCRAFT",
+                "WHATSAPP",
+                "XBOX",
+                "XENOVERSE",
+                "YOGA",
+                "YOUTUBE",
+                "ZELDA",
+                "ZENON",
+                "ANATOMIA",
+                "ATLETISMO",
+                "BACTÉRIA",
+                "BOTÂNICA",
+                "CATALOGAR",
+                "DANÇA",
+                "DETECÇÃO",
+                "DRAGONBALL",
+                "ELETRÔNICA",
+                "ESPAÇO",
+                "EVOLUÇÃO",
+                "FANTASMAS",
+                "FICÇÃO",
+                "FOTOGRAFIA",
+                "GATABOT",
+                "GEOGRAFIA",
+                "GITHUB",
+                "HIP HOP",
+                "HISTÓRIA",
+                "INOVAÇÃO",
+                "JARDINAGEM",
+                "KARATE",
+                "LINGUAGEM",
+                "LITERATURA",
+                "MAGIA",
+                "MARVEL",
+                "MATRIZES",
+                "MÚSICA",
+                "NATAÇÃO",
+                "NEUROLOGIA",
+                "NUMEROLOGIA",
+                "ORNITOLOGIA",
+                "PAINTBALL",
+                "PIZZA",
+                "POLÍTICA",
+                "QUIZAS",
+                "RELOJOARIA",
+                "ROBÓTICA",
+                "SAÚDE",
+                "FICÇÃO CIENTÍFICA",
+                "SEXOLOGIA",
+                "OS SIMPSONS",
+                "SISTEMAS",
+                "TALENTO",
+                "TAROT",
+                "TOPOGRAFIA",
+                "TRADIÇÃO",
+                "TRIVIA",
+                "URBANISMO",
+                "UTÓPICO",
+                "VETERINÁRIA",
+                "VIAGENS",
+                "ZOOLOGIA",
+                "NARUTO",
+                "DRAGONBALL",
+                "ONEPIECE",
+                "ATAQUETITAN",
+                "DEATHNOTE",
+                "BLEACH",
+                "FULLMETAL",
+                "SWORDONLINE",
+                "FAIRYTAIL",
+                "HEROACADEMIA",
+                "DEMONSLAYER",
+                "BLACKCLOVER",
+                "HUNTER",
+                "TÓQUIO",
+                "BOKUNOHERO",
+                "COWBOYBEBOP",
+                "CODEGEASS",
+                "EVANGELION",
+                "KIMETSU",
+                "STEINS",
+                "GINTAMA",
+                "YUYUHAKUSHO",
+                "GURREN",
+                "JOJOBIZARRE",
+                "ONEPUNCHMAN",
+                "KON",
+                "CLANNAD",
+                "HAIKYUU",
+                "AKIRA",
+                "GHOSTSHELL",
+                "YOURLIE",
+                "SAILORMOON",
+                "POKÉMON",
+                "DIGIMON",
+                "PRINCESA",
+                "SPIRITED",
+                "MOCASTLE",
+                "MEUTOTORO",
+                "PINTURA",
+                "DESENHAR",
+                "ESBOÇAR",
+                "AGUARELA",
+                "ESCULTURA",
+                "RETRATO",
+                "ABSTRATO",
+                "PAISAGEM",
+                "ARTESANATO",
+                "ESTAMPAR",
+                "OFICINAS",
+                "CERÂMICA",
+                "ESTAMPAR",
+                "DESENHISTA",
+                "GALERIAS",
+                "FOTÓGRAFO",
+                "ESTAMPADO",
+                "MUSEUS",
+                "ARTISTAS",
+                "QUADRINHOS",
+                "OBRAS DE ARTE",
+                "CENOGRAFIA",
+                "ACRÍLICO",
+                "GRAVURAS",
+                "HISTÓRIA",
+                "BELAS ARTES",
+                "PINTORES",
+                "RETRATOS",
+                "FIGURATIVO",
+                "IMPRESSÃO",
+                "ÓLEO",
+                "PAPERCUT",
+                "PINCEIS",
+                "ESCULTOR",
+                "ARGILA",
+                "FOTÓGRAFO",
+                "ACRÍLICOS",
+                "AERÓGRAFO",
+                "ESCULTURAS",
+                "RELEVOS",
+                "PIGMENTOS",
+                "CARVÃO",
+                "ESTAMPADO",
+                "FOTOGRAFIA",
+                "RETRATISTA",
+                "VINIL",
+                "EPOXI",
+                "FOTOGRAFIA",
+                "ARTESANAS",
+                "OFICINEIROS",
+                "ARTE NEGRA",
+                "ARTÍSTICA",
+                "PINTURA",
+                "GISELLES",
+                "ESTÁTUAS",
+                "NATUREZAS MORTAS",
+                "RETRATAR",
+                "AGUARELAS",
+                "ESCULTOR",
+                "TRIPTICOS",
+                "MURAL FOTOGRÁFICO",
+                "RETÁBULOS",
+                "NATUREZAS MORTAS",
+                "GRAVADOR",
+                "CURSO DE ARTE",
+                "ARTESANATO",
+                "DESENHISTA",
+                "LAMINADOS",
+                "ESCULTORAS",
+                "PINCÉIS",
+                "CARTONAGEM",
+                "ESTÊNCIA",
+                "HUELLISTA",
+                "IMPRESSORA",
+                "PINCELADA",
+                "PINTAS",
+                "LITOGRAFO",
+                "ÓLEO EM TELA",
+                "TECELAGE",
+                "TINTURAR",
+                "TIZIANOVA",
+                "ARTE FLORAL",
+                "BELAS ARTES",
+                "BRONZEADO",
+                "FOTÓGRAFAS",
+                "MUSEÓGRAFO",
+                "PINTURA EM",
+                "RETRATAR",
+                "TRAMPANTO",
+                "ZONA DE ARTE",
+                "ACRÍLICOS",
+                "ESCULTURAS",
+                "ESTAMPAGEM",
+                "FOTOMONTAGEM",
+                "MURALISTAS",
+                "PAISAGISMO",
+                "PINTORAS",
+                "PRÉ-HISTÓRICO",
+                "RETRATANDO",
+                "TEMPERATURAS",
+                "AGUARELISTA",
+                "AERÓGRAFOS",
+                "BARROCOS",
+                "NATUREZAS MORTAS",
+                "CARTONERAS",
+                "CURSOS DE ARTE",
+                "DESENHISTAS",
+                "ESTÊNCIAS",
+                "FOTÓGRAFOS",
+                "GRAVADORES",
+                "LAMINADORA",
+                "LITOGRAFOS",
+                "OLEOGRAFIA",
+                "PAPÉIS"
+            ],
+            "texto3": [
+                "🔠 *SOPA DE LETRAS* 🔠",
+                "*PALAVRA:*",
+                "*VOCÊ TEM 3 MINUTOS PARA ENCONTRAR A RESPOSTA CORRETA!!*",
+                "*ESCREVA O NÚMERO DA LINHA E DA COLUNA DO INÍCIO DA PRIMEIRA LETRA",
+                "DA PALAVRA",
+                "TENTATIVAS!!*",
+                "*EXEMPLO:*",
+                "LINHA 2",
+                "COLUNA 8"
+            ],
+            "texto4": "VOCÊ ESTÁ JOGANDO SOPA DE LETRAS 🔠 ATUALMENTE*",
+            "texto5": "VOCÊ TEM UM MINUTO!!* 😨",
+            "texto6": [
+                "O TEMPO ACABOU!!* 😧\n\n*A PALAVRA",
+                "ESTAVA NA DIREÇÃO",
+                "DA LINHA",
+                "E COLUNA"
+            ],
+            "texto7": [
+                "🎊 VOCÊ GANHOU",
+                "*CORRETO!! A PALAVRA",
+                "ESTAVA NA DIREÇÃO",
+                "DA LINHA",
+                "E COLUNA"
+            ],
+            "texto8": [
+                "`🫡 *VOCÊ USOU TODAS AS TENTATIVAS!! A PALAVRA",
+                "ESTAVA NA DIREÇÃO",
+                "DA LINHA",
+                "E COLUNA"
+            ],
+            "texto9": [
+                "😮‍💨 *INCORRETO. VOCÊ TEM",
+                "TENTATIVAS!!*",
+                "*PALAVRA PARA ENCONTRAR:*",
+                "💡 PISTA!!",
+                "*A PALAVRA",
+                "ESTÁ NA DIREÇÃO"
+            ]
+        },
+        "game_suitpvp": {
+            "texto1": "*[❗] TERMINE SUA PARTIDA ANTES DE INICIAR OUTRA*",
+            "texto2": "*QUERENDO DESAFIAR? CLIQUE EM UM PERSONAGEM*\n\n*—◉ EXEMPLO:*",
+            "texto3": [
+                "🎮 GAMES - PVP - GAMES 🎮\n\n—◉",
+                "DESAFIA A",
+                "A UM PVP DE PIEDRA, PAPEL O TIJERA\n◉ ESCREVA 'aceptar' PARA ACEITAR\n◉ ESCREVA 'rechazar' PARA RECUSAR\nrespondendo ao mensaje"
+            ],
+            "texto4": "*[❗] A PESSOA QUE VOCÊ QUER DESAFIAR JÁ ESTÁ JOGANDO OUTRA PARTIDA, AGUARDE ATÉ QUE ELA TERMINE DE JOGAR*",
+            "texto5": "[ ⏳ ] TEMPO DE ESPERA ESGOTADO, O PVP É CANCELADO DEVIDO À FALTA DE RESPOSTA"
+        },
+        "game_ttt": {
+            "texto1": [
+                "*[❗] SE REQUER UM NOME PARA UMA SALA DE JOGO*\n\n*—◉ INÍCIO*",
+                "nueva sala*"
+            ],
+            "texto2": "*[🕹️] INICIANDO JOGO, UM JOGADOR SE UNIU À PARTIDA*",
+            "texto3": "JOGANDO",
+            "texto4": "VEZ DE",
+            "texto5": [
+                "*🕹️ TRÊS EM LINHA 🎮*\n\n*◉ ESPERE ATÉ QUE TODOS OS JOGADORES SE UNAM À PARTIDA*\n*◉ PARA COMEÇAR OU SAIR DA PARTIDA USE O COMANDO*",
+                "◉ PARA UNIR-SE A UMA PARTIDA ESCREVA:"
+            ],
+            "texto6": "*[❗] UM JOGADOR ENTROU NA SALA E AGUARDA TODOS ENTRAREM*"
+        },
+        "gc_add": {
+            "texto1": "*[ ⚠️ ] O DONO DA CONVERSA SOLICITOU O SEU CONTATO (habilite restrito / desabilite restrito) E USOU ESTE COMANDO*",
+            "texto2": "*[❗] UM MEMBRO DO GRUPO ADICIONOU SEU NÚMERO DE TELEFONE PARA AGREGÁ-LO*",
+            "texto3": [
+                "*[❗INFORMAÇÃO❗] NÃO FUI POSSÍVEL ADICIONAR A",
+                " SUA CONTA PORQUE OCORREU UM PROBLEMA ESTEJA INFORMADO, LA PESSOA SE HA IDO DE LA GRUPO O LA PERSONA HA CANCELADO SU PRIVACIDAD DE GRUPO EN SU PRIVACIDAD DE GRUPO, SE LE ENVÍO EL INVITACIÓN AL GRUPO EN SU PRIVACIDAD DE GRUPO O LA PERSONA HA CONFIRMADO SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES LE ENVIARÁN LA INVITACIÓN AL GRUPO EN SU PRIVACIDAD DE GRUPO, TE INVITO A LA INVITACIÓN DE GRUPO EN SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES ENVIARÁN LA INVITACIÓN DE GRUPO A SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES SE ASEGURARÁN DE QUE LA INVITACIÓN AL GRUPO SE ENVÍE A SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES GARANTIZARÁN QUE LA INVITACIÓN AL GRUPO SE ENVIÉ A SU PRIVACIDAD DE GRUPO!!*"
+            ],
+            "texto4": "Oi!! Olá, me apresento, sou o The Mystic - Bot e sou um Bot para WhatsApp. Alguém do grupo usou o comando para te adicionar ao grupo, mas não consegui te adicionar, então estou te enviando o convite para que você se junte a nós. Te esperamos!!",
+            "texto5": "*[❗INFORMAÇÃO❗] NÃO FOI POSSÍVEL ADICIONAR O SEU NÚMERO PORQUE OCORREU UM PROBLEMA. SAIBA QUE A PESSOA SAIU DO GRUPO OU A PESSOA CANCELOU SUA PRIVACIDADE DE GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. O CONVITE FOI ENVIADO AO GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO OU A PESSOA CONFIRMOU SUA PRIVACIDADE DE GRUPO. OS ADMINISTRADORES ENVIARÃO O CONVITE AO GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. CONVIDO VOCÊ PARA O CONVITE DO GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. OS ADMINISTRADORES ENVIARÃO O CONVITE DO GRUPO PARA A SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. OS ADMINISTRADORES SE CERTIFICARÃO DE QUE O CONVITE DO GRUPO SEJA ENVIADO À SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. OS ADMINISTRADORES GARANTIRÃO QUE O CONVITE DO GRUPO SEJA ENVIADO À SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO!!*"
+        },
+        "gc_admins": {
+            "texto1": [
+                "*━「* CHAMADA DE ADMINISTRADORES *」━*",
+                "*ADMINISTRADORES:*",
+                "*[ ⚠️] O USUÁRIO ESTÁ COMANDANDO SUA CONTA SOLO CONTANDO SEJA TRATADA DE UMA EMERGÊNCIA!!*",
+                "*MENSAGEM:*"
+            ]
+        },
+        "gc_config_time":{
+            "texto1":[
+                "*• Exemplo:*",
+                "📌 *_Exemplo de uso:_*",
+                "*_🌿 Para que o grupo fique fechado por uma hora._*"
+            ],
+            "texto2":"*O grupo foi fechado, agora apenas os administradores podem enviar mensagens!*",
+            "texto3":"*O grupo foi aberto, agora todos os membros podem enviar mensagens!*"
+        },    
+        "gc_config": {
+            "texto1": [
+                "*[❗] FORMATAÇÃO ERRADA!!*",
+                "*┏━━━❲ ✨EXEMPLO✨ ❳━━━┓*",
+                "*[ ✔ ] GRUPO CONFIGURADO CORRETAMENTE*"
+            ]
+        },
+        "gc_delete":{
+            "texto1":"*[❗INFORMAÇÃO❗] RESPONDA À MENSAGEM QUE DESEJA QUE SEJA ELIMINADA*"
+        },
+        "gc_demote": {
+            "texto1": [
+                "*[❗] USO APROPRIADO*\n\n*┯┷*\n*┠≽",
+                "-> responda a uma mensagem*\n*┷┯*"
+            ],
+            "texto2":"*[ ⚠️ ] O número inserido está incorreto, por favor insira o número correto*",
+            "texto3":"*[ ✅ ] ORDENS RECEBIDAS*"
+        },                                   
         "menu_audios": {
             "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
         }
