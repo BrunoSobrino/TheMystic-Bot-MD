@@ -1983,15 +1983,15 @@
                 "*MENSAGEM:*"
             ]
         },
-        "gc_config_time":{
-            "texto1":[
+        "gc_config_time": {
+            "texto1": [
                 "*• Exemplo:*",
                 "📌 *_Exemplo de uso:_*",
                 "*_🌿 Para que o grupo fique fechado por uma hora._*"
             ],
-            "texto2":"*O grupo foi fechado, agora apenas os administradores podem enviar mensagens!*",
-            "texto3":"*O grupo foi aberto, agora todos os membros podem enviar mensagens!*"
-        },    
+            "texto2": "*O grupo foi fechado, agora apenas os administradores podem enviar mensagens!*",
+            "texto3": "*O grupo foi aberto, agora todos os membros podem enviar mensagens!*"
+        },
         "gc_config": {
             "texto1": [
                 "*[❗] FORMATAÇÃO ERRADA!!*",
@@ -1999,17 +1999,467 @@
                 "*[ ✔ ] GRUPO CONFIGURADO CORRETAMENTE*"
             ]
         },
-        "gc_delete":{
-            "texto1":"*[❗INFORMAÇÃO❗] RESPONDA À MENSAGEM QUE DESEJA QUE SEJA ELIMINADA*"
+        "gc_delete": {
+            "texto1": "*[❗INFORMAÇÃO❗] RESPONDA À MENSAGEM QUE DESEJA QUE SEJA ELIMINADA*"
         },
         "gc_demote": {
             "texto1": [
                 "*[❗] USO APROPRIADO*\n\n*┯┷*\n*┠≽",
                 "-> responda a uma mensagem*\n*┷┯*"
             ],
-            "texto2":"*[ ⚠️ ] O número inserido está incorreto, por favor insira o número correto*",
-            "texto3":"*[ ✅ ] ORDENS RECEBIDAS*"
-        },                                   
+            "texto2": "*[ ⚠️ ] O número inserido está incorreto, por favor insira o número correto*",
+            "texto3": "*[ ✅ ] ORDENS RECEBIDAS*"
+        },
+        "gc_destraba": {
+            "texto1": "⏰DESTRAV2.0⏰* \nli.DESTRAVip.to \n2019 🦍💨"
+        },
+        "gc_fantasmas": {
+            "texto1": "*[❗] O GRUPO ESTÁ ATIVO, NÃO HÁ FANTASMAS :D*",
+            "texto2": [
+                "*[ ⚠️ REVISÃO DE INATIVOS ⚠️]*\n\n*GRUPO:*",
+                "*MEMBROS DO GRUPO:*",
+                "*[ 👻 LISTA DE FANTASMAS 👻 ]*",
+                "*NOTA: ESTE É O PERCENTUAL DE INATIVIDADE, O BOT INICIA O CONTADOR DE MENSAGENS APÓS DETECTAR QUE SE ATIVOU EM UM NÚMERO*"
+            ]
+        },
+        "gc_infogroup": {
+            "texto1": [
+                "*「 INFORMAÇÕES DO GRUPO 」*",
+                "*IDENTIFICAÇÃO DO GRUPO:*",
+                "*NOME:*",
+                "*DESCRIÇÃO:*",
+                "*TOTAL DE PARTICIPANTES:*",
+                "Participantes",
+                "*CRIADOR DO GRUPO:*",
+                "*ADMINISTRADORES DO GRUPO:*",
+                "*OPÇÕES AUTOMÁTICAS:*",
+                "—◉ 𝚆𝙴𝙻𝙲𝙾𝙼𝙴:",
+                "—◉ 𝙳𝙴𝚃𝙴𝙲𝚃:",
+                "—◉ 𝙳𝙴𝚃𝙴𝙲𝚃 2:",
+                "—◉ 𝙰𝙽𝚃𝙸𝙻𝙸𝙽𝙺:",
+                "—◉ 𝙰𝙽𝚃𝙸𝙻𝙸𝙽𝙺 𝟸:",
+                "—◉ 𝙼𝙾𝙳𝙾 𝙷𝙾𝚁𝙽𝚈:",
+                "—◉ 𝙰𝚄𝚃𝙾𝚂𝚃𝙸𝙲𝙺𝙴𝚁:",
+                "—◉ 𝙰𝚄𝙳𝙸𝙾𝚂:",
+                "—◉ 𝙰𝙽𝚃𝙸𝚅𝙸𝙴𝚆𝙾𝙽𝙲𝙴:",
+                "—◉ 𝙰𝙽𝚃𝙸𝙳𝙴𝙻𝙴𝚃𝙴:",
+                "—◉ 𝙰𝙽𝚃𝙸𝚃𝙾𝚇𝙸𝙲:",
+                "—◉ 𝙰𝙽𝚃𝙸𝚃𝚁𝙰𝙱𝙰:",
+                "—◉ 𝙼𝙾𝙳𝙾𝙰𝙳𝙼𝙸𝙽:",
+                "SEM DESCRIÇÃO"
+            ]
+        },
+        "gc_kick2": {
+            "texto1": [
+                "*[ ⚠️ ] O MEMBRO ALVO FOI REMOVIDO",
+                " DO GRUPO POR UM ADMINISTRADOR*"
+            ],
+            "texto2": "*[❗] O MEMBRO ALVO FOI REMOVIDO COM SUCESSO DO GRUPO. POR FAVOR, ELIMINE TODAS AS MENÇÕES AO MEMBRO ALVO PARA EVITAR ERROS DE GERENCIAMENTO DE GRUPO.*\n\n*—◉ EJEMPLO:*"
+        },
+        "gc_link": {
+            "texto1": [
+                "𝙻𝙸𝙽𝙺 DO GRUPO"
+            ]
+        },
+        "gc_listanum_kicknum": {
+            "texto1": "*[❗] INFORMAÇÃO DO PERFIL DE ALGUNS PAÍSES PARA BUSCAR NÚMEROS EM ESTE GRUPO DE ESTE GRUPO QUE NÃO ESTÃO EM ESTE GRUPO, EXEMPLO:",
+            "texto2": "*[❗] INFORMAÇÃO DO PERFIL DE ALGUNS PAÍSES PARA BUSCAR NÚMEROS EM ESTE GRUPO DE ESTE GRUPO QUE NÃO ESTÃO EM ESTE GRUPO, EXEMPLO:",
+            "texto3": "*[❗] NO GRUPO NÃO HÁ NINGUÉM NUMA LISTA DE PERFIS, POR FAVOR, CONFIRA O NÚMERO DE TELEFONE QUE VOCÊ PEDIU PARA EXCLUIR*",
+            "texto4": [
+                "*LISTA DE NÚMEROS COM PERFIL DE PARTICIPANTE*",
+                "QUE ESTÃO EM ESTE GRUPO:"
+            ],
+            "texto5": [
+                "*[❗INFORMAÇÃO❗] O PERFIL DO BOT NÃO É ADMITIDO, NÃO PODE EXCLUIR A ÚLTIMA PESSOA*"
+            ],
+            "texto6": "*[❗INFORMAÇÃO❗] O BOT NÃO É ADMINISTRADOR, NÃO PODE EXECUTAR AS PERMISSÕES*",
+            "texto7": [
+                "*[❗] INFORMAÇÃO ELIMINAÇÃO DE NÚMEROS COM PERFIL DE PARTICIPANTE",
+                "CADA 10 SEGUNDOS SERÁ ENVIADO A UM USUÁRIO*"
+            ],
+            "texto8": "VOCÊ FOI REMOVIDO OU ABANDONOU O GRUPO*",
+            "texto9": "*[❗] ERRO*"
+        },
+        "gc_listwarn": {
+            "texto1": "⚠️ USUÁRIOS ADVERTIDOS",
+            "texto2": [
+                "*Total:",
+                "Usuários*"
+            ]
+        },
+        "gc_promote": {
+            "texto1": [
+                "*[❗] USO APROPRIADO*",
+                "-> responder a uma mensagem*\n*┷┯*"
+            ],
+            "texto2": "*[⚠️] O número inserido está incorreto, por favor insira o número correto*",
+            "texto3": "*[✅] ORDENS RECEBIDAS*"
+        },
+        "gc_revoke": {
+            "texto1": "🔹️ *_O link do grupo foi reativado com sucesso._*\n♾ • Novo Link:"
+        },
+        "gc_setbye": {
+            "texto1": "*[❗] O MEMBRO DE DESPEDIDA CONFIGURADO CORRETAMENTE PARA O GRUPO*",
+            "texto2": "*[❗] INGRESSOU O MEMBRO DE DESPEDIDA QUE DESEJA AGREGAR, USE:*",
+            "texto3": "(menção)*"
+        },
+        "gc_setdesc": {
+            "texto1": "*✅ A descrição do grupo foi modificada com sucesso*"
+        },
+        "gc_setname": {
+            "texto1": "*[❗INFORMAÇÃO❗] O nome que você deseja que seja colocado que seja igual ao seu número, não pode ser usado*",
+            "texto2": "*[❗INFORMAÇÃO❗] LO SENTIMOS PELO ERRO, O NOME NÃO PODE SER MAIOR QUE 25 CARACTERES*"
+        },
+        "gc_setwelcome": {
+            "texto1": "*[❗] A MENSSAGEM DE BOAS-VINDAS DO GRUPO FOI DEFINIDA COM SUCESSO*",
+            "texto2": [
+                "*[❗] O LINK DE BOAS-VINDAS QUE DESEJA AGREGAR, USE:*",
+                "*- @group (nome do grupo)*\n*- @desc (descrição do grupo)*"
+            ]
+        },
+        "gc_tagall": {
+            "texto1": [
+                "*𝙼𝙴𝙽𝚂𝙰𝙶𝙴𝙼:*",
+                "*⺀INVOCANDO O - 𝙶𝚁𝚄𝙿𝙾⺀*\n\n❏",
+                "❏ *𝙴𝚂𝚃𝙸𝚀𝚄𝙴𝚃𝙰𝚂:*"
+            ]
+        },
+        "gc_unwarn": {
+            "texto1": "*[❗] EXCLUÍDA A ÚLTIMA OU RESPEITADA A UM MEMBRO DO GRUPO*\\n\\n*—◉ EM MEMBRO:*",
+            "texto2": "*[❗] O USUÁRIO TEM 0 ADVERTÊNCIAS*",
+            "texto3": "SE LEMBRA UMA ADVERTÊNCIA\\n*ADVERTÊNCIAS*"
+        },
+        "gc_warn": {
+            "texto1": "*[❗] EXCLUÍDA A ÚLTIMA OU RESPEITADA A UM MEMBRO DO GRUPO PARA ADVERTIR ALGUÉM*\\n\\n*—◉ EM MEMBRO:*",
+            "texto2": [
+                "RECEBIU UMA ADVERTÊNCIA NO GRUPO!\nMotivo:",
+                "*ADVERTÊNCIAS"
+            ],
+            "texto3": [
+                "*[❗] O PROTAGONISTA DO BOATO NÃO TÊM HABILIDADES PARA HABILITAR AS RESTRIÇÕES",
+                "CONTATO COM ELE SE NECESSÁRIO*"
+            ],
+            "texto4": [
+                "VAMOS VARIAS ADVERTÊNCIAS VECES!!",
+                "*SUPERASTE AS *3* ADVERTÊNCIAS, AGORA SERÁ ELIMINADO/BANIDO 👽"
+            ]
+        },
+        "grupos_eliminar": {
+            "texto1": [
+                "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] O proprietário do bot ativou a função de restrição",
+                "portanto, o comando solicitado não foi executado.*"
+            ],
+            "texto2": "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] Marque ou responda a uma mensagem do participante que você deseja eliminar.*\n\n*[ 💡 ] Exemplo:*",
+            "texto3": "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] Marque ou responda a uma mensagem do participante que você deseja eliminar.",
+            "texto4": "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] O bot não pode se eliminar a si mesmo.*",
+            "texto5": [
+                "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] O participante",
+                "foi eliminado.*"
+            ],
+            "texto6": [
+                "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ]",
+                "é o proprietário do grupo, portanto, não pode ser eliminado.*"
+            ],
+            "texto7": [
+                "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ]",
+                "já foi eliminado ou saiu do grupo.*"
+            ],
+            "texto8": "_*< GRUPOS - ELIMINAR />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
+        },
+        "herramientas_acortar": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] O link ou URL que você inseriu é inválido ou não está acessível*",
+            "texto2": "*[❗] Erro, por favor, verifique se o texto inserido está em texto e é um texto de uma URL válida*",
+            "texto3": [
+                "*ATENÇÃO AO CORTE!!*\n\n*LINK ANTERIOR:*",
+                "*LINK ATUAL:*"
+            ]
+        },
+        "herramientas_ajustar_tamano": {
+            "texto1": "⚠️️ Responda a uma imagem ou vídeo.",
+            "texto2": "⚠️️ Insira o novo tamanho da imagem/vídeo.",
+            "texto3": "🔢 apenas números",
+            "texto4": "⚠️️ Formato não suportado",
+            "texto5": "Aqui está"
+        },
+        "herramientas_calc": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] Insira a operação matemática que deseja calcular*",
+            "texto2": "Ei! Você está trapaceando",
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] Formato não suportado, apenas números e os seguintes símbolos são aceitos: +, -, *, /, ×, ÷, π, e, (, )*"
+        },
+        "herramientas_chatgpt_del": {
+            "texto1": "*[❗] Você está excluído do histórico de mensagens entrantes e de conversas (IA)*\n\n*—◉ Recuerde que puede utilizar el comando /tengain en el canal para poder utilizar el comando*",
+            "texto2": "*[❗] Erro, tente novamente*"
+        },
+        "herramientas_chatgpt": {
+            "texto1": [
+                "*[❗] Você está em uma conversa ou ordem para usar a função de chatbot*\n\n*—◉ Exemplos de Petições e Ordens*\n*◉ Reflexão sobre a série Merlina 2022 da Netflix*\n*◉ Código em JS para um jogo de cartas*"
+            ],
+            "texto2": "Você vai atuar como um Bot de WhatsApp criado por BrunoSobrino, você será The Mystic - Bot.",
+            "texto3": "Você vai atuar como um Bot de WhatsApp criado por BrunoSobrino, você será The Mystic - Bot.",
+            "texto4": "*[❗] Erro, tente novamente*"
+        },
+        "herramientas_chatgptvoz": {
+            "texto1": [
+                "*[❗] Você está em uma conversa ou ordem para usar a função de chatbot*\n\n*—◉ Exemplos de Petições e Ordens*\n*◉ Reflexão sobre a série Merlina 2022 da Netflix*\n*◉ Código em JS para um jogo de cartas*"
+            ],
+            "texto2": "Você vai atuar como um Bot de WhatsApp criado por BrunoSobrino, você será The Mystic - Bot.",
+            "texto3": "*[❗] Erro, tente novamente*"
+        },
+        "herramientas_clima": {
+            "texto1": "*[❗] Digite o nome do seu país ou cidade*",
+            "texto2": [
+                "「 📍 」Localização:",
+                "「 🗺️ 」País:",
+                "「 🌤️ 」Condição do Tempo: ",
+                "「 🌡️ 」Temperatura:",
+                "「 💠 」 Temperatura Mínima:",
+                "「 📛 」 Temperatura Máxima:",
+                "「 💦 」Umidade:",
+                "「 🌬️ 」 Vento:"
+            ],
+            "texto3": "*[❗] Não há resultados correspondentes, verifique se digitou corretamente seu país ou cidade*"
+        },
+        "herramientas_dalle": {
+            "texto1": [
+                "*[❗] Insira um texto para criar uma imagem e use-a para se divertir e nos usar para uma função de Dall-E.*\n\n*—◉ Exemplos de Petições*\n*◉",
+                "gatinhos chorando*\n*◉",
+                "beijo da Hatsune Miku*"
+            ],
+            "texto2": "*[❗] Criando imagem, aguarde um momento.*",
+            "texto3": [
+                "'[❗] Erro na API número 1 do DALL-E.'",
+                "[❗] Erro na API número 2 do DALL-E.",
+                "[❗] Erro na API número 3 do DALL-E.",
+                "[❗] Erro, nenhuma API funcional.",
+                "*[❗] Erro, nenhum resultado obtido.*"
+            ]
+        },
+        "herramientas_dropmail": {
+            "texto1": [
+                "*Exemplo:*\n",
+                "create\n\n*Selecione um tipo existente*\n"
+            ],
+            "texto2": [
+                "*EMAIL:*\n'",
+                "\n\n' + '*ID:*\n",
+                "\n\n*Expirado:*\n",
+                "\n\n_Exemplo *",
+                "message* Para verificar a caixa de entrada_"
+            ],
+            "texto3": [
+                "Não há mensagens, crie um e-mail primeiro\nExemplo *",
+                " create*"
+            ],
+            "texto4": [
+                "EMAIL",
+                "*De* :",
+                "*Para* :",
+                "*Mensagem* :",
+                "*Tamanho* :",
+                "*Cabeçalho* :",
+                "*Download* :"
+            ],
+            "texto5": [
+                "*VAZIO*' + '\n\n_Exemplo *",
+                "delete* Para excluir e-mails_"
+            ],
+            "texto6": "Nenhum e-mail válido",
+            "texto7": "E-mail excluído com sucesso"
+        },
+        "herramientas_encuesta": {
+            "texto1": [
+                "*[❗𝐈𝐍𝐅𝐎❗] ғᴏʀᴍᴀᴛᴏ ᴅᴇ ᴜsᴏ",
+                "Pergunta? |Opção1|Opção2...*"
+            ],
+            "texto2": [
+                "*Enquete realizada por:*",
+                "*Pergunta:*"
+            ]
+        },
+        "herramientas_fakereply": {
+            "texto1": [
+                "*[❗𝐈𝐍𝐅𝐎❗] USO DO 𝙲𝙾𝙼𝙰𝙽𝙳𝙾*",
+                "olá"
+            ]
+        },
+        "herramientas_hd": {
+            "texto1": "*[❗] ENVIE UMA IMAGEM OU RESPONDA A UMA IMAGEM COM UM COMANDO DE IMAGEM OU VIDEO",
+            "texto2": [
+                "*[❗] O FORMATO DO ARQUIVO",
+                "NÃO É COMPATÍVEL, ENVIE OU RESPONDA A UMA FOTO*"
+            ],
+            "texto3": "*[❗] PROCESSANDO IMAGEM...*",
+            "texto4": "*[❗] ERRO, POR FAVOR VERIFIQUE O ARQUIVO DE ENTRADA*"
+        },
+        "herramientas_igstalk": {
+            "texto1": "*[❗] INFORMAÇÃO DO USUÁRIO DO INSTAGRAM, EXEMPLO:*",
+            "texto2": [
+                "< FERRAMENTAS - IGSTALK />",
+                "▢ *Nome:*",
+                "▢ *Usuário:*",
+                "▢ *Seguidores:*",
+                "▢ *Seguindo:*",
+                "▢ *Publicações:*",
+                "▢ *Link:*",
+                "▢ *Biografia:*"
+            ]
+        },
+        "herramientas_inspect": {
+            "texto1": "*[❗] Insira o link de um grupo do WhatsApp.*",
+            "texto2": [
+                "*⫹⫺ ID:*",
+                "*⫹⫺ Nome:*",
+                "*⫹⫺ Criador:*",
+                "*⫹⫺ Descrição:*"
+            ]
+        },
+        "herramientas_nowa": {
+            "texto1": "⚠️ Falta o número.",
+            "texto2": "*Exemplo de uso:*",
+            "texto3": [
+                "Registrados\n\n",
+                "• Nro:",
+                "*• Bio:*",
+                "Sem descrição",
+                "*• Data:*",
+                "\n\n*Não registrados*\n\n"
+            ]
+        },
+        "herramientas_ocr": {
+            "texto1": "*[❗] ERRO, POR FAVOR, TENTE NOVAMENTE, NÃO SE ESQUEÇA DE RESPONDER A UMA IMAGEM*"
+        },
+        "herramientas_qrcode": {
+            "texto1": "*[❗] ERRO: POR FAVOR, TENTE DIGITAR O TEXTO QUE DESEJA CONVERTER EM CÓDIGO QR*"
+        },
+        "herramientas_readqrcode": {
+            "texto1": "*[❗] RESPONDA / DIGITE UMA IMAGEM*",
+            "texto2": "*O Texto do Código QR É:*"
+        },
+        "herramientas_readviewonce": {
+            "texto1": "*[❗] RESPONDA A UMA MENSAGEM QUE TENHA SIDO ENVIADA EM UMA VISUALIZAÇÃO ÚNICA (VER SOZINHO)*",
+            "texto2": "*[❗] A MENSAGEM SELECIONADA NÃO É UMA VISUALIZAÇÃO ÚNICA (VER SOZINHO)*"
+        },
+        "herramientas_spamwa": {
+            "texto1": "*[ ⚠️ ] PARA FAVOR, NÃO FAÇA USO EXCESSIVO DE SPAM DE MENSAGENS!*\n*COMO USAR:*\n*—◉ #spamwa número|texto|quantidade*\n*EXEMPLO:*\n*—◉ #spamwa 5219999999999|responde :v|25*",
+            "texto2": "*[ ⚠️ ] PARA FAVOR, EVITE FAZER SPAM MENSAGENS PARA HACKEAR EL SPAM!*\n*COMO USAR:*\n*—◉ #spamwa número|texto|quantidade*\n*EXEMPLO:*\n*—◉ #spamwa 5219999999999|responde :v|25*",
+            "texto3": "*[ ⚠️ ] A QUANTIDADE DEVE SER MENOR!*\n*COMO USAR:*\n*—◉ #spamwa número|texto|quantidade*\n*EXEMPLO:*\n*—◉ #spamwa 5219999999999|responde :v|25*",
+            "texto4": "*[ ⚠️ ] AS MENSAGENS MENSAJES DEVEM SER MENOS DE 50 MENSAGENS*️",
+            "texto5": [
+                "*[❗] O SPAM DE MENSAGENS ESTÁ ACIMA DO LIMITE*\n*FAVOR CONSULTAR O ADMIN*\n*CONTATO EMERGENCIAL:*\n*—◉",
+                "vecês!*"
+            ]
+        },
+        "herramientas_ssweb": {
+            "texto1": "*[ 🔎 ] Envie o comando junto com a URL completa do site.*"
+        },
+        "herramientas_topdf": {
+            "texto1": "*[❗] Solicite / Etiquete uma imagem para converter em PDF*"
+        },
+        "herramientas__translate": {
+            "texto1": [
+                "*[❗] Uso Correto do Comando*",
+                "(idioma) (texto)*\n*EXEMPLO:",
+                "es Olá*\n\n*Conexões de Idiomas Aceitas :"
+            ],
+            "texto2": "*[❗] ERRO, TENTE NOVAMENTE*",
+            "texto3": "*Tradução:*"
+        },
+        "herramientas_whatmusic": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗]\n\nO arquivo que você está carregando é muito grande. Sugerimos que você corte o arquivo grande para um arquivo menor, com 10-20 segundos de dados de áudio, o que é suficiente para a identificação.",
+            "texto2": "Não encontrado",
+            "texto3": [
+                "RESULTADOS DA BUSCA",
+                "• 📌 TÍTULO:",
+                "• 👨‍🎤 ARTISTA:",
+                "• 💾 ÁLBUM:",
+                "• 🌐 GÊNERO:",
+                "• 📆 DATA DE LANÇAMENTO:"
+            ],
+            "texto4": "*[❗𝐈𝐍𝐅𝐎❗] RESPONDA A UM ÁUDIO*"
+        },
+        "ia_bard": {
+            "texto1": "_*< IA - BARD />*_\n\n*[ ℹ️ ] Fornece um texto.*\n\n*[ 💡 ] Exemplo:*",
+            "texto2": "Olá Bard, como você está?_",
+            "texto3": "_*< IA - BARD />*_\n\n*[ ℹ️ ] Não foi possível obter uma resposta válida.*",
+            "texto4": "_*< IA - BARD />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
+        },
+        "ia_character_ai": {
+            "texto1": ["_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Fornece um texto.*\n\n*[ 💡 ] Exemplo:*", "Olá, como você está?"],
+            "texto2": "_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Não foi possível obter uma resposta válida.*",
+            "texto3": "_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
+        },
+        "info_covid": {
+            "texto1": "*[❗] Información sobre el número de casos en el país, Ejemplo*",
+            "texto2": [
+                "🌏 País:",
+                "✅ Confirmados:",
+                "📉 Recuperados:",
+                "☠️ Fallecidos:",
+                "💌 Info Actualizada:"
+            ]
+        },
+        "info_creador": {
+            "texto1": [
+                "*—◉ O número do meu criador é wa.me/5219992095479*",
+                "*—◉ O número do colaborador 1 é wa.me/34642467703*",
+                "*—◉ O número do colaborador 2 é wa.me/50499698072*",
+                "*—◉ O número do colaborador 3 é wa.me/595986460945*",
+                "*—◉ O número do colaborador 4 é wa.me/51940617554*",
+                "*—◉ O número do colaborador 5 é wa.me/51995386439*",
+                "*—◉ O número do colaborador 6 é wa.me/593991398786*",
+                "*—◉ O número do colaborador 7 é wa.me/51996089079*",
+                "*—◉ O número do colaborador 8 é wa.me/573225236629*",
+                "*—◉ O número do colaborador 9 é wa.me/593959425714*",
+                "*—◉ O número do colaborador 10 é wa.me/50246028932*",
+                "*—◉ O contato do colaborador 11 é https://instagram.com/gata_dios*",
+                "*—◉ O número do colaborador 12 é wa.me/5212412377467*",
+                "*—◉ O número do colaborador 13 no Brasil é wa.me/5545998331383*"
+            ],
+            "texto2": ["「  Olá Mundo 」", "O melhor bot de WhatsApp"]
+        },
+        "info_donar": {
+            "texto1": [
+                "DOAR",
+                "OLA",
+                "👉🏻 PARA APOIAR DADOS",
+                "POR SE ACASO QUISER DOAR :3",
+                " ➤ CHAVE:",
+                "646180192175788481",
+                "➤ BANCO: STP",
+                "➤ BENEFICIÁRIO: Bruno Sobrino",
+                "➤ CONCEITO: APOIO",
+                "➤ PAYPAL: https://www.paypal.me/TheShadowBrokers133",
+                "👉🏻 ENTRE EM CONTATO CASO NECESSÁRIO",
+                "MAIS DADOS E PARA AGRADECER",
+                "wa.me/5219992095479"
+            ]
+        },
+        "info_estado": {
+            "texto1": [
+                "*< INFORMAÇÃO - ESTADO />*_",
+                "▢ *Prop.:* Bruno Sobrino",
+                "▢ *WA:* +5219992095479",
+                "▢ *PayPal:* paypal.me/TheShadowBrokers133",
+                "▢ *Ping:*",
+                "▢ *Tempo de atividade:*",
+                "▢ *Prefixo:*",
+                "▢ *Modo:* ",
+                "▢ *Usuários registrados:*",
+                "▢ *Total de usuários:*",
+                "▢ *Tipo de bot:*",
+                "▢ *Chats privados:*",
+                "▢ *Grupos:*",
+                "▢ *Total de chats:*",
+                "▢ *Autoleitura:* ",
+                "▢ *Restrição:* ",
+                "▢ *Apenas PC:* ",
+                "▢ *Apenas GP:*",
+                "▢ *Anti-privado:*",
+                "▢ *Anti-chamada:*",
+                "▢ *Modo JadiBot:*"
+            ],
+            "texto2": "Repositório - GitHub"
+        },                                                          
         "menu_audios": {
             "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
         }

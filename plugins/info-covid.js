@@ -1,17 +1,20 @@
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.info_covid
+
 const handler = async (m, {text, usedPrefix, command}) => {
-  if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝙽 𝙿𝙰𝙸𝚂, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾 ${usedPrefix + command} Mexico*`;
+  if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Mexico*`;
   const res = await fetch(global.API('https://covid19.mathdro.id', '/api/countries/'+ (text)));
   if (!res.ok) throw await res.text();
   const json = await res.json();
   if (!json.confirmed) throw 'País?';
   if (json.confirmed) {
     m.reply(`
-🌏 País : ${text}
-✅Confirmado : ${json.confirmed.value}
-📉curado : ${json.recovered.value}
-☠️Muertes : ${json.deaths.value}
-💌Info Actualizada : ${json.lastUpdate}
+${tradutor.texto2[0]} ${text}
+${tradutor.texto2[1]} ${json.confirmed.value}
+${tradutor.texto2[2]} ${json.recovered.value}
+${tradutor.texto2[3]} ${json.deaths.value}
+${tradutor.texto2[4]} ${json.lastUpdate}
 `.trim());
   } else throw json;
 };

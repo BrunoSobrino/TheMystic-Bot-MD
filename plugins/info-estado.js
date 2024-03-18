@@ -5,6 +5,9 @@ import sizeFormatter from "human-readable";
 import MessageType from "@whiskeysockets/baileys";
 import fs from "fs";
 import { performance } from "perf_hooks";
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.info_estado
+
 const handler = async (m, { conn, usedPrefix }) => {
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
@@ -23,31 +26,31 @@ const handler = async (m, { conn, usedPrefix }) => {
   const neww = performance.now();
   const rtime = (neww - old).toFixed(7);
   const wm = 'The Mystic Bot';
-  const info = ` _*< INFO - ESTADO />*_
+  const info = ` ${tradutor.texto1[0]}
 
- ▢ *Prop.:* Bruno Sobrino
- ▢ *WA:* +5219992095479
- ▢ *PayPal:* paypal.me/TheShadowBrokers133
+  ${tradutor.texto1[1]} Bruno Sobrino
+  ${tradutor.texto1[2]} +5219992095479
+  ${tradutor.texto1[3]} paypal.me/TheShadowBrokers133
 
- ▢ *Ping:* ${rtime}
- ▢ *Uptime:* ${uptime}
- ▢ *Prefijo:* ${usedPrefix}
- ▢ *Modo:* ${self ? "privado" : "público"}
- ▢ *Usuarios regs.:* ${totalusrReg}
- ▢ *Usuarios totales:* ${totalusr}
- ▢ *Tipo de bot:* ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
+  ${tradutor.texto1[4]} ${rtime}
+  ${tradutor.texto1[5]} ${uptime}
+  ${tradutor.texto1[6]} ${usedPrefix}
+  ${tradutor.texto1[7]} ${self ? "privado" : "público"}
+  ${tradutor.texto1[8]} ${totalusrReg}
+  ${tradutor.texto1[9]} ${totalusr}
+  ${tradutor.texto1[10]} ${(conn.user.jid == global.conn.user.jid ? '' : `Sub-bot de:\n ▢ +${global.conn.user.jid.split`@`[0]}`) || 'No es sub-bot'}
  
- ▢ *Chats privados:* ${chats.length - groups.length}
- ▢ *Grupos:* ${groups.length}
- ▢ *Chats totales:* ${chats.length}
+  ${tradutor.texto1[11]} ${chats.length - groups.length}
+  ${tradutor.texto1[12]} ${groups.length}
+  ${tradutor.texto1[13]} ${chats.length}
  
- ▢ *Autoread:* ${autoread ? "activo" : "desactivado"}
- ▢ *Restrict:* ${restrict ? "activo" : "desactivado"}
- ▢ *PCOnly:* ${pconly ? "activado" : "desactivado"}
- ▢ *GPOnly:* ${gconly ? "activado" : "desactivado"}
- ▢ *AntiPrivado:* ${antiprivado ? "activado" : "desactivado"}
- ▢ *AntiLlamada:* ${antiCall ? "activado" : "desactivado"}
- ▢ *ModeJadiBot:* ${modejadibot ? "activado" : "desactivado"}`.trim();
+  ${tradutor.texto1[14]} ${autoread ? "activo" : "desactivado"}
+  ${tradutor.texto1[15]} ${restrict ? "activo" : "desactivado"}
+  ${tradutor.texto1[16]} ${pconly ? "activado" : "desactivado"}
+  ${tradutor.texto1[17]} ${gconly ? "activado" : "desactivado"}
+  ${tradutor.texto1[18]} ${antiprivado ? "activado" : "desactivado"}
+  ${tradutor.texto1[19]} ${antiCall ? "activado" : "desactivado"}
+  ${tradutor.texto1[20]} ${modejadibot ? "activado" : "desactivado"}`.trim();
   const doc = [
     "pdf",
     "zip",
@@ -70,7 +73,7 @@ const handler = async (m, { conn, usedPrefix }) => {
         mediaType: 2,
         previewType: "pdf",
         title: "The Mystic - Bot",
-        body: "Repositorio - GitHub",
+        body: tradutor.texto2,
         thumbnail: imagen1,
         sourceUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
       },
