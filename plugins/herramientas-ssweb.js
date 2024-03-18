@@ -1,6 +1,9 @@
 import fetch from 'node-fetch' 
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.herramientas_ssweb
+
 const handler = async (m, {conn, text, args}) => {   
-if (!args[0]) return conn.reply(m.chat, "*[ 🔎 ] Envie el comando más la url completa del sitio web.*", m);  
+if (!args[0]) return conn.reply(m.chat, tradutor.texto1, m);  
    try {
      const ss = await (await fetch(`https://image.thum.io/get/fullpage/${args[0]}`)).buffer();
         conn.sendFile(m.chat, ss, '', '', m);

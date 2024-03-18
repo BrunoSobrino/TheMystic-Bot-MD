@@ -1,6 +1,10 @@
+
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.gc_setdesc
+
 const handler = async (m, {conn, args}) => {
   await conn.groupUpdateDescription(m.chat, `${args.join(' ')}`);
-  m.reply('*✅ La descripción del grupo se modifico correctamente*');
+  m.reply(tradutor.texto1);
 };
 handler.help = ['Setdesc <text>'];
 handler.tags = ['group'];
