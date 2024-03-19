@@ -1,23 +1,26 @@
 import {Maker} from 'imagemaker.js';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.maker_ephoto360
+
 const handler = async (m, {conn, args, command, usedPrefix}) => {
   const response = args.join(' ').split('|');
-  if (!args[0]) throw '*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃𝙾*';
+  if (!args[0]) throw tradutor.texto1;
   if (command == 'logocorazon') {
     try {
-      await conn.reply(m.chat, '*[❗] 𝙴𝙻𝙰𝙱𝙾𝚁𝙰𝙽𝙳𝙾 𝚂𝚄 𝙳𝙸𝚂𝙴𝙽̃𝙾, 𝙴𝚂𝙿𝙴𝚁𝙴 𝚄𝙽 𝙼𝙾𝙼𝙴𝙽𝚃𝙾...*', m);
+      await conn.reply(m.chat, tradutor.texto2, m);
       const res = await new Maker().Ephoto360('https://en.ephoto360.com/text-heart-flashlight-188.html', [response[0]]);
       await conn.sendFile(m.chat, res.imageUrl, 'error.jpg', null, m);
     } catch {
-      await conn.reply(m.chat, '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*', m);
+      await conn.reply(m.chat, tradutor.texto3, m);
     }
   }
   if (command == 'logochristmas') {
     try {
-      await conn.reply(m.chat, '*[❗] 𝙴𝙻𝙰𝙱𝙾𝚁𝙰𝙽𝙳𝙾 𝚂𝚄 𝙳𝙸𝚂𝙴𝙽̃𝙾, 𝙴𝚂𝙿𝙴𝚁𝙴 𝚄𝙽 𝙼𝙾𝙼𝙴𝙽𝚃𝙾...*', m);
+      await conn.reply(m.chat, tradutor.texto4, m);
       const res2 = await new Maker().Ephoto360('https://en.ephoto360.com/christmas-effect-by-name-376.html', [response[0]]);
       await conn.sendFile(m.chat, res2.imageUrl, 'error.jpg', null, m);
     } catch {
-      await conn.reply(m.chat, '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙾𝚁, 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝚁𝙻𝙾*', m);
+      await conn.reply(m.chat, tradutor.texto5, m);
     }
   }
 /* if (command == 'logoephoto360') {

@@ -1,32 +1,35 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.info_host
+
 const handler = async (m, {conn, usedPrefix}) => {
   const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
   const document = doc[Math.floor(Math.random() * doc.length)];
-  const text = `*🚀 -----[ Cafirexos]------- 🚀*
+  const text = `${tradutor.texto1[0]}
   
- *Hola a todos 👋🏻 ¡Estamos emocionados de anunciar nuestra nueva colaboración con Cafirexos  🤖 Ahora ya pueden tener su propio bot de THE-MYSTIC-BOT-MD en su plataforma en línea, permitiendo  que tus bots estén activos las 24/7. 💻*
+${tradutor.texto1[1]}
 
-_La instalación de estas versiones ha sido aprobada y ya está en pleno funcionamiento. Además, *los servidores son totalmente compatibles, lo que te permite elegir el tipo de inicio del bot según tus necesidades.* ¡Prepárate para una experiencia de usuario ininterrumpida y emocionante!_ 
+${tradutor.texto1[2]}
 
-*Página oficial:*
-https://www.cafirexos.com/
+${tradutor.texto1[3]}
+${tradutor.texto1[4]}
 
-*Dashboard:*
-https://dash.cafirexos.com
+${tradutor.texto1[5]}
+${tradutor.texto1[6]}
 
-*Panel:*
-https://panel.cafirexos.com
+${tradutor.texto1[7]}
+${tradutor.texto1[8]}
 
-*WhatsApp*
-https://wa.me/50497150165
+${tradutor.texto1[9]}
+${tradutor.texto1[10]}
 
-*Correo electrónico*
-contacto@cafirexos.com
+${tradutor.texto1[11]}
+${tradutor.texto1[12]}
 
-*Canal de WhatsApp*
-https://whatsapp.com/channel/0029VaFVSkRCMY0KFmCMDX2q
+${tradutor.texto1[13]}
+${tradutor.texto1[14]}
 
-*¿Dudas? (UNICAMENTE SOBRE EL HOST):*
-https://chat.whatsapp.com/FBtyc8Q5w2iJXVl5zGJdFJ
+${tradutor.texto1[15]}
+${tradutor.texto1[16]}
 `.trim();
   const buttonMessage= {
     'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
@@ -41,7 +44,7 @@ https://chat.whatsapp.com/FBtyc8Q5w2iJXVl5zGJdFJ
         'mediaUrl': 'https://github.com/BrunoSobrino/TheMystic-Bot-MD',
         'mediaType': 2,
         'previewType': 'pdf',
-        'title': 'El Mejor Hosting 🚀⁩',
+        'title': tradutor.texto2,
         'body': wm,
         'thumbnail': imagen1,
         'sourceUrl': 'https://whatsapp.com/channel/0029VaFVSkRCMY0KFmCMDX2q'}},
