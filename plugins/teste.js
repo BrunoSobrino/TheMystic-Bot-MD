@@ -1,6 +1,5 @@
 import _translate from "./_translate.js"
-const tradutor = _translate.plugins.info_donar
-
+const tradutor = _translate.plugins.menu_menu
 console.log(tradutor.texto1)
 console.log(tradutor.texto2)
 

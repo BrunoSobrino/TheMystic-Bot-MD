@@ -2384,7 +2384,10 @@
             "texto4": "_*< IA - BARD />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
         },
         "ia_character_ai": {
-            "texto1": ["_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Fornece um texto.*\n\n*[ 💡 ] Exemplo:*", "Olá, como você está?"],
+            "texto1": [
+                "_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Fornece um texto.*\n\n*[ 💡 ] Exemplo:*",
+                "Olá, como você está?"
+            ],
             "texto2": "_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Não foi possível obter uma resposta válida.*",
             "texto3": "_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
         },
@@ -2415,7 +2418,10 @@
                 "*—◉ O número do colaborador 12 é wa.me/5212412377467*",
                 "*—◉ O número do colaborador 13 no Brasil é wa.me/5545998331383*"
             ],
-            "texto2": ["「  Olá Mundo 」", "O melhor bot de WhatsApp"]
+            "texto2": [
+                "「  Olá Mundo 」",
+                "O melhor bot de WhatsApp"
+            ]
         },
         "info_donar": {
             "texto1": [
@@ -2459,9 +2465,240 @@
                 "▢ *Modo JadiBot:*"
             ],
             "texto2": "Repositório - GitHub"
-        },                                                          
+        },
+        "info_groupsofc": {
+            "texto1": [
+                "*𝙷𝙾𝙻𝙰 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 👋🏻, 𝙰𝚀𝚄𝙸 𝙴𝚂𝚃𝙰 𝙴𝙼 𝙰𝙻𝙶𝚄𝙽𝚂 𝙶𝚁𝚄𝙿𝙾𝚂 𝙳𝙾 𝚂𝙷𝙰𝙳𝙾𝚆 𝙱𝚁𝙾𝙺𝙴𝚁𝚂 - 𝚃𝙴𝙰𝙼 𝙿𝙰𝚁𝙰 𝙲𝙾𝙽𝚅𝙸𝚅𝙸𝚁 𝙲𝙾𝙼 𝙻𝙰 𝙲𝙾𝙼𝚄𝙽𝙸𝙳𝙰𝙳𝙴 :D*",
+                "*➤ Grupos oficiais do Bot:*",
+                "*1.-* https://chat.whatsapp.com/LjJbmdO0qSDEKgB60qivZj",
+                "*2.-* https://chat.whatsapp.com/DbXBmsydWBE1ZN3EoY0hRs",
+                "*3.-* https://chat.whatsapp.com/BW0P22xx7EGBTdH5IM851F",
+                "*4.-* https://chat.whatsapp.com/CjexkGVr37J6GuSdDVAHzC",
+                "*5.-* https://chat.whatsapp.com/DLrFJUPxEQ2IrOm7sJWJ0k"
+            ],
+            "texto2": "「  𝑯𝒆𝒍𝒍𝒐 𝑾𝒐𝒓𝒍𝒅 」",
+            "texto3": "ᴇʟ ᴍᴇᴊᴏʀ ʙᴏᴛ ᴅᴇ ᴡʜᴀᴛsᴀᴘᴘ⁩"
+        },
+        "info_host": {
+            "texto1": [
+                "*🚀 -----[ Cafirexos]------- 🚀*",
+                "*Olá a todos 👋🏻 Estamos empolgados em anunciar nossa nova colaboração com Cafirexos 🤖 Agora você pode ter seu próprio bot de THE-MYSTIC-BOT-MD em sua plataforma online, permitindo que seus bots estejam ativos 24/7. 💻*",
+                "_A instalação dessas versões foi aprovada e já está em pleno funcionamento. Além disso, *os servidores são totalmente compatíveis, permitindo que você escolha o tipo de inicialização do bot de acordo com suas necessidades.* Prepare-se para uma experiência de usuário contínua e emocionante!_ ",
+                "*Página oficial:*",
+                "https://www.cafirexos.com/",
+                "*Dashboard:*",
+                "https://dash.cafirexos.com",
+                "*Painel:*",
+                "https://panel.cafirexos.com",
+                "*WhatsApp*",
+                "https://wa.me/50497150165",
+                "*E-mail*",
+                "contacto@cafirexos.com",
+                "*Canal de WhatsApp*",
+                "https://whatsapp.com/channel/0029VaFVSkRCMY0KFmCMDX2q",
+                "*Dúvidas? (APENAS SOBRE O HOST):*",
+                "https://chat.whatsapp.com/FBtyc8Q5w2iJXVl5zGJdFJ"
+            ],
+            "texto2": "O Melhor Hospedagem 🚀"
+        },
+        "info_instalarbot": {
+            "texto1": "*—◉ INSTALAÇÃO DO BOT PRINCIPAL*\n> Tutorial: https://youtu.be/eC9TfKICpcY\n> Página Oficial: https://boxmineworld.com\n> Painel de Controle: https://dash.boxmineworld.com/home\n> Painel: https://panel.boxmineworld.com\n> Suporte: https://discord.gg/84qsr4v \n\n------------------------------------\n—◉ INSTALAÇÃO DO BOT TERCIÁRIO\n> Tutorial: https://youtu.be/yRS4m36Zwkw\n\n------------------------------------\n\n*—◉ COMANDOS DE INSTALAÇÃO*\n> Comandos:\n- cd && termux-setup-storage\n- apt-get update -y && apt-get upgrade -y\n- pkg install -y git nodejs ffmpeg imagemagick && pkg install yarn \n- git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git && cd TheMystic-Bot-MD\n- yarn install\n- npm install\n- npm update\n- npm start\n\n------------------------------------\n\n—◉ ✔️ ATIVAÇÃO EM CASO DE PARADA NO TERMUX ✔️\nDIGITE OS SEGUINTES COMANDOS UM POR UM:\n> cd TheMystic-Bot-MD\n> npm start\n\n------------------------------------\n\n—◉ 👽 OBTENHA OUTRO CÓDIGO QR NO TERMUX 👽\nDIGITE OS SEGUINTES COMANDOS UM POR UM:\n> cd TheMystic-Bot-MD\n> rm -rf MysticSession\n> npm start",
+            "texto2": "O Melhor Bot do WhatsApp"
+        },
+        "info_listprem": {
+            "texto1": [
+                "*「 INFORMAÇÕES DO USUÁRIO 」*",
+                "—◉ Usuário:",
+                "*◉ Tempo restante:*\n",
+                "*◉ Tempo restante:*\n- Você é um usuário premium por tempo ilimitado`",
+                "- Este é um usuário não premium ❌",
+                "*「 USUÁRIOS PREMIUM 」*",
+                "—◉ Usuário:",
+                "*◉ Tempo restante:*\n",
+                "- Este é um usuário não premium ❌"
+            ],
+            "texto2": [
+                "*「 INFORMAÇÕES DO USUÁRIO 」*\n\n—◉ Usuário:",
+                "*◉ Tempo restante:*\n",
+                "- Você não é um usuário premium ❌",
+                "*「 USUÁRIOS PREMIUM 」*\n\n- Não há usuários premium ❌"
+            ],
+            "texto3": [
+                "- Ano(s):",
+                "- Mês(es):",
+                "- Semana(s): ",
+                "- Dia(s): ",
+                "- Hora(s):",
+                "- Minuto(s): ",
+                "- Segundo(s):"
+            ]
+        },
+        "info_repositorio": {
+            "texto1": [
+                "_*< INFORMAÇÕES - REPOSITÓRIO />*_",
+                "▢ *Nome:*",
+                "TheMystic-Bot-MD",
+                "▢ *Visitantes:*",
+                "▢ *Tamanho:*",
+                "▢ *Última atualização:*",
+                "▢ *URL:*",
+                "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
+                "Forks ·",
+                "Stars ·",
+                "Issues\n\n",
+                "*[ ℹ️ ] Você pode baixar este repositório enviando o comando:*"
+            ]
+        },
+        "juegos_matematicas_respuestas": {
+            "texto1": "_*< JOGOS - MATEMÁTICA />*_\n\n*[ ℹ️ ] O exercício matemático já foi resolvido anteriormente.*",
+            "texto2": "`_*< JOGOS - MATEMÁTICA />*_\n\n▢ *Resposta correta!*\n\n▢ *Você ganhou:*",
+            "texto3": "_*< JOGOS - MATEMÁTICA />*_\n\n▢ *Você não tem mais oportunidades.*\n\n▢ *Resposta correta:*",
+            "texto4": "_*< JOGOS - MATEMÁTICA />*_\n\n▢ *Resposta incorreta.*\n\n▢ Você ainda tem",
+            "texto5": " chance(s)."
+        },
+        "juegos_matematicas": {
+            "texto1": "_*< JOGOS - MATEMÁTICA />*_\n\n*[ ℹ️ ] Falta indicar o nível de dificuldade com o qual deseja jogar.*\n\n*[ 💡 ] Exemplo:*",
+            "texto2": "▢ *Níveis disponíveis:*",
+            "texto3": "_*< JOGOS - MATEMÁTICA />*_\n\n*[ ℹ️ ] Ainda existem problemas matemáticos não resolvidos neste chat.*",
+            "texto4": [
+                "_*< JOGOS - MATEMÁTICA />*_\n\n▢ *Resolva:*",
+                "▢ *Tempo:*",
+                "▢ *Prêmio:*"
+            ],
+            "texto5": "_*< JOGOS - MATEMÁTICA />*_\n\n*[ ℹ️ ] O tempo acabou.*\n\n▢ *Resposta:*"
+        },
+        "maker_blur": {
+            "texto1": "*[ ✔ ] EFEITO APLICADO*"
+        },
+        "maker_gay": {
+            "texto1": "*🏳️‍🌈 TORNE-SE GAY 🏳️‍🌈*"
+        },
+        "maker_horncard": {
+            "texto1": "*VOCÊ ESTÁ QUENTE 🥵🔥*"
+        },
+        "maker_logos": {
+            "texto1": "*[❗ℹ️] VOCÊ QUER FAZER UM LOGOTIPO?*\n—◉ _#logo (efeito) (texto)_\n*EXEMPLO:*\n—◉ _#logo 3d-deep-sea-metal Mystic_\n\n*[❗] POR FAVOR, LISTE O TEXTO NO QUAL O LOGOTIPO SERÁ APLICADO:*\n—◉ _#logo (efeito) (texto1|texto2)_\n*EXEMPLO:*\n—◉ _#logo Wolf-Logo-Galaxy Mystic|Bot_\n\n*<LISTA DE EFEITOS/>*\n\n° 📝 #logo ",
+            "texto2": [
+                "*[❗ℹ️] O EFEITO",
+                "NÃO ESTÁ EM LISTA DE EFEITOS*"
+            ],
+            "texto3": "*[❗] Falta o texto ao qual o logotipo será aplicado*",
+            "texto4": [
+                "*[❗ℹ️] O EFEITO",
+                "NÃO ESTÁ EM LISTA DE EFEITOS*",
+                "*[❗ℹ️] O USO CORRETO DO COMANDO É"
+            ],
+            "texto5": "*HOJE É O DIA DA PERSONALIZAÇÃO!!*\n*EXEMPLO:"
+        },
+        "maker_pixel": {
+            "texto1": "*PIXELIZE SUA IMAGEM!!*"
+        },
+        "maker_simpcard": {
+            "texto1": "*VOCÊ RELIGOU O SIMP!!*"
+        },
+        "maker_ytcomment": {
+            "texto1": "*GRAÇAS POR COMENTAR!!*"
+        },
+        "maker_ephoto360": {
+            "texto1": "*[❗] INSIRA UM TEXTO*",
+            "texto2": "*[❗] ELABORE SEU DESIGN, ESPERE UM MOMENTO...*",
+            "texto3": "*[❗ℹ️] ERRO, POR FAVOR, VUELVA A INTENTARLO*",
+            "texto4": "*[❗] ELABORE SEU DESIGN, ESPERE UM MOMENTO...*",
+            "texto5": "*[❗ℹ️] ERRO, POR FAVOR, VUELVA A INTENTARLO*"
+        },
+        "maker_lolice": {
+            "texto1": "*🚔🚨 POLICIAIS VIERAM PARA TE PRENDER AO LADO DO CAMINHÃO 🚨🚔*"
+        },
+        "menu_anime": {
+            "texto1": [
+                "MENU-ANIME",
+                "*Olá*",
+                "*[❗ℹ️] O MENU POSSUI UM ERRO E NÃO PÔDE SER ENVIADO, POR FAVOR, INFORME AO PROPRIETÁRIO DO BOT*"
+            ]
+        },
         "menu_audios": {
-            "texto1": "Escreva algumas das frase abaixo sem nenhum prefix ex(!, #, * etc..)"
+            "texto1": "ESCREVA AS SEQUÊNCIAS DE PALAVRAS OU FRASES SEM PREFIXO (#, /, *, .)",
+            "texto2": "`*[❗ℹ️] O MENU POSSUI UM ERRO E NÃO PÔDE SER ENVIADO, POR FAVOR, INFORME AO PROPRIETÁRIO DO BOT*"
+        },
+        "menu_caja_fuerte": {
+            "texto1": [
+                "PORTA",
+                "*🗳️<CAIXA FORTE/>🔐*",
+                "- AQUI VOCÊ PODE GUARDAR MENSAGENS QUE QUEIRA TERDEMAIS PARA O FUTURO",
+                "*<REGISTRAR A LISTA/>*",
+                "*<LISTA DE COMANDOS/>*",
+                "*<VER TEXTO OU ARQUIVOS/>*",
+                "*<ELIMINAR/>*"
+            ],
+            "texto2": [
+                "*<texto/comando/palavra chave>* (responde a uma mensagem)_",
+                "*<texto/comando/palavra chave>* (responde a uma nota de voz)_",
+                "*<texto/comando/palavra chave>* (responde a um vídeo)_",
+                "*<texto/comando/palavra chave>* (responde a um áudio)_",
+                "*<texto/comando/palavra chave>* (responde a uma imagem)_",
+                "*<texto/comando/palavra chave>* (responde a um sticker)_"
+            ],
+            "texto3": [
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_"
+            ],
+            "texto4": [
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_",
+                "*<texto/comando/palavra chave>*_"
+            ]
+        },
+        "menu_labiblia": {
+            "texto1": [
+                "*[❗] Os comandos +18 estão desativados neste grupo, se você é um administrador e deseja ativá-los, use",
+                "*Olá",
+                "*< MENU+18 />*",
+                "*[❗ℹ️] O MENU POSSUI UM ERRO E NÃO PÔDE SER ENVIADO, POR FAVOR, INFORME AO PROPRIETÁRIO DO BOT*"
+            ]
+        },
+        "menu_menu": {
+            "texto1": [
+                "O MÍSTICO - BOT",
+                "▢ *Olá,*",
+                "_*< SUAS ESTATÍSTICAS />*_",
+                "▢ *Nível:* ",
+                "▢ *Experiência:* ",
+                "▢ *Classificação:* ",
+                "▢ *Diamantes:* ",
+                "▢ *Moedas Místicas:* ",
+                "▢ *Tokens:* ",
+                "▢ *Premium:* ",
+                " _*< LISTA DE MENUS />*_",
+                "_*< SOBRE O BOT />*_",
+                "_*< SUB-BOTS />*_",
+                "_*< JOGOS />*_",
+                " _*< ATIVAR/DESATIVAR FUNCIONALIDADES />*_",
+                " _*< DOWNLOADS />*_",
+                " _*< BUSCADORES />*_",
+                " _*< GRUPOS />*_",
+                "_*< CONVERSORES />*_",
+                " _*< EFEITOS E LOGOTIPOS />*_",
+                " _*< FRASES E TEXTOS />*_",
+                " _*< ALEATÓRIO />*_",
+                " _*< EFEITOS PARA ÁUDIOS />*_",
+                "*- Responde a um áudio ou nota de voz.*",
+                "_*< CHAT ANÔNIMO />*_",
+                "_*< FERRAMENTAS />*_",
+                " _*< ECONOMIA />*_",
+                " _*< STICKERS />*_",
+                "_*< PROPRIETÁRIO E MODS. />*_",
+                "*[ ℹ️ ] Este menu possui um erro interno, por isso não foi possível enviá-lo.*",
+                "*<opção> <tempo>*_",
+                "(sem prefixo)",
+                "*<nome sala>*_"
+            ]
         }
     }
 }

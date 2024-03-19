@@ -1,4 +1,8 @@
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.menu_menu
+
+
 const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, isPrems}) => {
   if (usedPrefix == 'a' || usedPrefix == 'A') return;
   try {
@@ -21,29 +25,29 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
     const taguser = '@' + m.sender.split('@s.whatsapp.net')[0];
     const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const document = doc[Math.floor(Math.random() * doc.length)];
-    const str = `𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏
+    const str = `${tradutor.texto1[0]}
 
- ▢ *Hola,* ${taguser}
+${tradutor.texto1[1]} ${taguser}
 
- _*< TUS ESTADÍSTICAS />*_
+${tradutor.texto1[2]}
 
- ▢ *Nivel:* ${level}
- ▢ *Experiencia:* ${exp}
- ▢ *Rango:* ${role}
- ▢ *Diamantes:* ${limit}
- ▢ *MysticCoins:* ${money}
- ▢ *Tokens:* ${joincount}
- ▢ *Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
+${tradutor.texto1[3]} ${level}
+${tradutor.texto1[4]} ${exp}
+${tradutor.texto1[5]} ${role}
+${tradutor.texto1[6]} ${limit}
+${tradutor.texto1[7]} ${money}
+${tradutor.texto1[8]} ${joincount}
+${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌') || ''}
  ${readMore}
 
-  _*< LISTA DE MENUS />*_
+ ${tradutor.texto1[10]}
   
   ▢ _${usedPrefix}menuaudios_
   ▢ _${usedPrefix}menuanimes_
   ▢ _${usedPrefix}labiblia_ (🔞)
 
  
- _*< SOBRE EL BOT />*_
+  ${tradutor.texto1[11]}
 
   ▢ _${usedPrefix}terminosycondiciones_
   ▢ _${usedPrefix}grupos_
@@ -59,7 +63,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _bot_ (sin prefijo)
 
 
- _*< SUB-BOTS />*_
+  ${tradutor.texto1[12]}
 
   ▢ _${usedPrefix}serbot --code_
   ▢ _${usedPrefix}serbot_
@@ -84,7 +88,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}disable antiprivado_
   
 
- _*< JUEGOS />*_
+  ${tradutor.texto1[13]}
 
   ▢ _${usedPrefix}mates *<noob / easy / medium / hard / extreme /impossible /impossible2>*_
   ▢ _${usedPrefix}fake *<txt1> <@tag> <txt2>*_
@@ -105,7 +109,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}pregunta *<txt>*_
   ▢ _${usedPrefix}suitpvp *<@tag>*_
   ▢ _${usedPrefix}slot *<apuesta>*_
-  ▢ _${usedPrefix}ttt *<nombre sala>*_
+  ▢ _${usedPrefix}ttt ${tradutor.texto1[32]}
   ▢ _${usedPrefix}delttt_
   ▢ _${usedPrefix}acertijo_
   ▢ _${usedPrefix}simi *<txt>*_
@@ -123,7 +127,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}wordfind_
 
 
- _*< ACT./DESACT. FUNC. />*_
+  ${tradutor.texto1[14]}
 
   ▢ _${usedPrefix}enable *welcome*_
   ▢ _${usedPrefix}disable *welcome*_
@@ -153,7 +157,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}disable *antidelete*_
 
 
- _*< DESCARGAS />*_
+  ${tradutor.texto1[15]}
 
  ▢ _${usedPrefix}play *<txt>*_
  ▢ _${usedPrefix}play2 *<txt>*_
@@ -189,7 +193,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
  ▢ _${usedPrefix}xvideosdl *<url>*_ (🔞)
 
 
- _*< BUSCADORES />*_
+ ${tradutor.texto1[16]}
 
   ▢ _${usedPrefix}githubsearch *<txt>*_
   ▢ _${usedPrefix}pelisplus *<txt>*_
@@ -205,7 +209,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}playstore *<txt>*_
 
 
- _*< GRUPOS />*_
+  ${tradutor.texto1[17]}
 
   ▢ _${usedPrefix}add *num>*_
   ▢ _${usedPrefix}kick *<@tag>*_
@@ -213,7 +217,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}listanum *<txt>*_
   ▢ _${usedPrefix}kicknum *<txt>*_
   ▢ _${usedPrefix}grupo *<abrir/cerrar>*_
-  ▢ _${usedPrefix}grouptime *<opcion> <tiempo>*_
+  ▢ _${usedPrefix}grouptime  ${tradutor.texto1[30]}
   ▢ _${usedPrefix}promote *<@tag>*_
   ▢ _${usedPrefix}demote *<@tag>*_
   ▢ _${usedPrefix}infogroup_
@@ -234,10 +238,10 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}fantasmas_
   ▢ _${usedPrefix}destraba_
   ▢ _${usedPrefix}setpp *<img>*_
-  ▢ _admins *<txt>*_ (sin prefijo)
+  ▢ _admins *<txt>*_ ${tradutor.texto1[31]}
 
 
- _*< CONVERTIDORES />*_
+  ${tradutor.texto1[18]}
 
   ▢ _${usedPrefix}toanime *<img>*_
   ▢ _${usedPrefix}togifaud *<video>*_
@@ -251,7 +255,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}tts *<efecto> <txt>*_
 
 
- _*< EFECTOS & LOGOS />*_
+  ${tradutor.texto1[19]}
 
   ▢ _${usedPrefix}logos *<efecto> <txt>*_
   ▢ _${usedPrefix}logochristmas *<txt>*_
@@ -265,7 +269,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}blur_
 
 
- _*< FRASES & TEXTOS />*_
+  ${tradutor.texto1[20]}
 
   ▢ _${usedPrefix}piropo_
   ▢ _${usedPrefix}consejo_
@@ -273,7 +277,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}historiaromantica_
 
 
- _*< ALEATORIO />*_
+  ${tradutor.texto1[21]}
 
   ▢ _${usedPrefix}kpop *<blackpink/exo/bts>*_
   ▢ _${usedPrefix}cristianoronaldo_
@@ -304,9 +308,9 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}randomprofile_
 
 
- _*< EFECTOS P. AUDIOS />*_
+  ${tradutor.texto1[22]}
 
-*- Responde a un audio o nota de voz.*
+  ${tradutor.texto1[23]}
 
   ▢ _${usedPrefix}bass_
   ▢ _${usedPrefix}blown_
@@ -322,14 +326,14 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}tupai_
 
 
- _*< CHAT ANÓNIMO />*_
+  ${tradutor.texto1[24]}
 
   ▢ _${usedPrefix}start_
   ▢ _${usedPrefix}next_
   ▢ _${usedPrefix}leave_
 
 
- _*< HERRAMIENTAS />*_
+  ${tradutor.texto1[25]}
  
   ▢ _${usedPrefix}inspect *<wagc_url>*_
   ▢ _${usedPrefix}chatgpt *<txt>*_
@@ -362,7 +366,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}img *<txt>*_
 
 
- _*< ECONOMÍA />*_
+  ${tradutor.texto1[26]}
 
   ▢ _${usedPrefix}adventure_
   ▢ _${usedPrefix}cazar_
@@ -386,7 +390,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}unreg *<sn>*_
 
 
- _*< STICKERS />*_
+  ${tradutor.texto1[27]}
 
   ▢ _${usedPrefix}sticker *<responder a img o video>*_
   ▢ _${usedPrefix}sticker *<url>*_
@@ -416,7 +420,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
   ▢ _${usedPrefix}stickerfilter *<efecto> <img>*_
 
 
- _*< PROPIETARIO Y MODS. />*_
+  ${tradutor.texto1[28]}
 
   ▢ _> *<funcion>*_
   ▢ _=> *<funcion>*_
@@ -495,7 +499,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
       conn.sendMessage(m.chat, {image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net')}, {quoted: fkontak2});
     }
   } catch {
-    conn.reply(m.chat, '*[ ℹ️ ] Este menu tiene un error interno, por lo cual no fue posible enviarlo.*', m);
+    conn.reply(m.chat, tradutor.texto1[29], m);
   }
 };
 handler.command = /^(menu|menú|memu|memú|help|info|comandos|allmenu|2help|menu1.2|ayuda|commands|commandos|cmd)$/i;
