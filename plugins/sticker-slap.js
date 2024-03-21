@@ -1,5 +1,11 @@
 import {sticker} from "../lib/sticker.js";
 import fetch from "node-fetch";
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.sticker_slap
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, { conn, args, usedPrefix, command }) => {
     let who;
     if (m.isGroup) {
@@ -7,7 +13,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     } else { 
       who = m.chat;
     }
-      const textquien = `*[❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙰 𝙾 𝙼𝙴𝙽𝙲𝙸𝙾𝙽𝙰 𝙰 𝙰𝙻𝙶𝚄𝙸𝙴𝙽*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n◉ ${usedPrefix + command} @${global.suittag}`;
+      const textquien = `${tradutor.texto1}\n◉ ${usedPrefix + command} @${global.suittag}`;
     if (who === m.chat && m.isGroup || !who && m.isGroup) return m.reply(textquien, m.chat, {mentions: conn.parseMention(textquien)});
   try {
     let name;
@@ -23,7 +29,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     let stiker = await sticker(null, url, `${name2} le dio una bofetada a ${name}`, null);
     conn.sendFile(m.chat, stiker, null, {asSticker: true}, m, true, {contextInfo: {forwardingScore: 200, isForwarded: true}}, {quoted: m});
   } catch {
-    throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃𝙴𝚁𝙽𝚃𝙰𝚁𝙻𝙾*`;
+    throw tradutor.texto2;
   };
 };
 handler.help = ["slap"];

@@ -1,6 +1,9 @@
 import {format} from 'util';
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.game__ttt
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const debugMode = !1;
 const winScore = 4999;

@@ -1,8 +1,14 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.rpg_minar
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, isPrems}) => {
   const hasil = Math.floor(Math.random() * 1000);
   const time = global.db.data.users[m.sender].lastmiming + 600000;
-  if (new Date - global.db.data.users[m.sender].lastmiming < 600000) throw `*[ ⏲️ ] 𝙴𝚜𝚙𝚎𝚛𝚊 ${msToTime(time - new Date())} 𝚙𝚊𝚛𝚊 𝚟𝚘𝚕𝚟𝚎𝚛 𝚊 𝚖𝚒𝚗𝚊𝚛*`;
-  m.reply(`*[ 🎉 ] 𝙶𝚎𝚗𝚒𝚊𝚕, 𝚖𝚒𝚗𝚊𝚜𝚝𝚎 ${hasil} 𝚇𝙿*`);
+  if (new Date - global.db.data.users[m.sender].lastmiming < 600000) throw `${tardutor.texto1[0]} ${msToTime(time - new Date())} ${tardutor.texto1[1]}`;
+  m.reply(`${tradutor.texto2} ${hasil} 𝚇𝙿*`);
   global.db.data.users[m.sender].lastmiming = new Date * 1;
 };
 handler.help = ['minar'];

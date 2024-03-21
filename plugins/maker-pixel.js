@@ -1,5 +1,8 @@
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.maker_pixel
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {conn, usedprefix, text}) => {
   const who = m.quoted ? m.quoted.sender : m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;

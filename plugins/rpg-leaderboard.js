@@ -1,3 +1,9 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.rpg_leaderboard
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, args, participants}) => {
   const users = Object.entries(global.db.data.users).map(([key, value]) => {
     return {...value, jid: key};
@@ -9,34 +15,25 @@ const handler = async (m, {conn, args, participants}) => {
   const usersLim = sortedLim.map(enumGetKey);
   const usersLevel = sortedLevel.map(enumGetKey);
   const len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedExp.length);
-  const adventurePhrases = [
-  "Lidera la aventura y forja tu camino hacia la cima.",
-  "¡Desafía lo desconocido y alcanza nuevas alturas!",
-  "Tu valentía te guiará a la cima de la tabla de clasificación.",
-  "En cada paso, esculpe tu leyenda en esta gran aventura.",
-  "Explora, compite y demuestra tu grandeza en esta tabla.",
-  "Cada paso cuenta en tu viaje hacia la cima del ranking.",
-  "La emoción de la competencia te impulsa hacia adelante.",
-  "Aventúrate y conquista los primeros lugares con determinación.",
-];
+  const adventurePhrases = tradutor.texto1;
   const randomAdventurePhrase = adventurePhrases[Math.floor(Math.random() * adventurePhrases.length)];
   const texto = `
-*< TABLA DE LOS AVENTUREROS MÁS DESTACADOS />*
+${tradutor.texto2[0]}
     
-—◉ *TOP ${len} EXP 🌟*
-*👤 Tú posición:* ${usersExp.indexOf(m.sender) + 1} de ${usersExp.length}
+${tradutor.texto2[1]} ${len} ${tradutor.texto2[2]}
+${tradutor.texto2[3]} ${usersExp.indexOf(m.sender) + 1} ${tradutor.texto2[4]} ${usersExp.length}
 
-${sortedExp.slice(0, len).map(({jid, exp}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp} exp*`).join`\n`}
+${sortedExp.slice(0, len).map(({jid, exp}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp}  ${tradutor.texto2[6]}`).join`\n`}
 
-—◉ *TOP ${len} DIAMANTES 💎*
-*👤 Tú posición:* ${usersLim.indexOf(m.sender) + 1} de ${usersLim.length}
+${tradutor.texto2[9]}
+${tradutor.texto2[3]} ${usersLim.indexOf(m.sender) + 1} ${tradutor.texto2[5]} ${usersLim.length}
 
-${sortedLim.slice(0, len).map(({jid, limit}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit} diamantes*`).join`\n`}
+${sortedLim.slice(0, len).map(({jid, limit}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit}  ${tradutor.texto2[7]}`).join`\n`}
 
-—◉ *TOP ${len} NIVEL 🎚️*
-*👤 Tú posición:* ${usersLevel.indexOf(m.sender) + 1} de ${usersLevel.length}
+${tradutor.texto2[10]}
+${tradutor.texto2[3]} ${usersLevel.indexOf(m.sender) + 1} ${tradutor.texto2[6]} ${usersLevel.length}
 
-${sortedLevel.slice(0, len).map(({jid, level}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *nivel ${level}*`).join`\n`}
+${sortedLevel.slice(0, len).map(({jid, level}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]}  ${tradutor.texto2[8]} ${level}*`).join`\n`}
 
 *⚔️ ${randomAdventurePhrase} ⚔️*`.trim();
   conn.sendMessage(m.chat, {text: texto, mentions: conn.parseMention(texto)}, {quoted: m})

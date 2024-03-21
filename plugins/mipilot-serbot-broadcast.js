@@ -1,18 +1,24 @@
 import ws from 'ws';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.mipilot_serbot_broadcast
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, usedPrefix, text}) => {
   if (conn.user.jid !== global.conn.user.jid) throw false;
   const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn.user.jid)])];
   const cc = text ? m : m.quoted ? await m.getQuotedObj() : false || m;
   const teks = text ? text : cc.text;
-  const content = conn.cMod(m.chat, cc, /bc|broadcast/i.test(teks) ? teks : '*〔 DIFUSION A SUB BOTS 〕*\n\n' + teks);
+  const content = conn.cMod(m.chat, cc, /bc|broadcast/i.test(teks) ? teks : tradutor.texto1 + teks);
   for (const id of users) {
     await delay(1500);
     await conn.copyNForward(id, content, true);
   }
-  conn.reply(m.chat, `*Difusión enviada con éxito a ${users.length} sub bots*
+  conn.reply(m.chat, `${tradutor.texto2[0]} ${users.length} ${tradutor.texto2[1]}
     
   ${users.map((v) => '👉🏻 wa.me/' + v.replace(/[^0-9]/g, '') + `?text=${encodeURIComponent(usedPrefix)}estado`).join('\n')}
-  \n*Se finalizo con el envió en ${users.length * 1.5} segundos aproximadamente*`.trim(), m);
+  \n${tradutor.texto3[0]} ${users.length * 1.5} ${tradutor.texto3[1]}`.trim(), m);
 };
 handler.command = /^bcbot$/i;
 handler.rowner = true;

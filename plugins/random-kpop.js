@@ -1,6 +1,12 @@
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.random_kpop
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, args, usedPrefix}) => {
-  if (args.length == 0) return conn.reply(m.chat, `Usar ${usedPrefix}kpop\nPor favor escribe: ${usedPrefix}kpop [buscar]\nEjemplo:: ${usedPrefix}kpop bts\n\nBusquedas disponibles:\nblackpink, exo, bts`, m);
+  if (args.length == 0) return conn.reply(m.chat, `${tradutor.texto1[0]} ${usedPrefix}kpop\n${tradutor.texto1[1]} ${usedPrefix}kpop ${tradutor.texto1[2]} ${usedPrefix}kpop ${tradutor.texto1[3]}`, m);
   if (args[0] == 'blackpink' || args[0] == 'exo' || args[0] == 'bts') {
     fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/kpop/' + args[0] + '.txt')
         .then((res) => res.text())
@@ -10,10 +16,10 @@ const handler = async (m, {conn, args, usedPrefix}) => {
           conn.sendFile(m.chat, randomkpopx, '', 'Dasar Kpopers', m);
         })
         .catch(() => {
-          conn.reply(m.chat, 'Ocurrio un error, vuelve a intentar, si el fallo continua avisar a mi creador', m);
+          conn.reply(m.chat, tradutor.texto2, m);
         });
   } else {
-    conn.reply(m.chat, `Lo sentimos, la busqueda no está disponible. Por favor escribe ${usedPrefix}kpop para ver la lista de busquedas disponibles`, m);
+    conn.reply(m.chat, `${tradutor.texto3[0]} ${usedPrefix}kpop ${tradutor.texto3[1]}`, m);
   }
 };
 handler.help = ['kpop'].map((v) => v + ' <query>');

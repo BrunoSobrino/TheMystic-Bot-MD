@@ -3,6 +3,12 @@ import {Sticker} from 'wa-sticker-formatter';
 import fetch from 'node-fetch';
 import got from 'got';
 import cheerio from 'cheerio';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.sticker_semoji
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {usedPrefix, conn, args, text, command}) => {
   let [tipe, emoji] = text.includes('|') ? text.split('|') : args;
   const defaultType = 'apple';
@@ -10,27 +16,27 @@ const handler = async (m, {usedPrefix, conn, args, text, command}) => {
     emoji = '😎';
     tipe = defaultType;
   }
-  const err = `*[❗] 𝙴𝙻 𝚄𝚂𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙴𝚂*
-*◉ ${usedPrefix + command} <tipo> <emoji>*
+  const err = `${tradutor.texto1[0]}
+*◉ ${usedPrefix + command} ${tradutor.texto1[1]}
 
-*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*
-*◉ ${usedPrefix + command}* fa 😎
+${tradutor.texto1[0]}
+*◉ ${usedPrefix + command}* ${tradutor.texto1[2]}
 
-*—◉ 𝚃𝙸𝙿𝙾𝚂* 
+${tradutor.texto1[3]} 
 
-*◉ wha = whatsapp* 
-*◉ ap = apple*
-*◉ fa = facebook*
-*◉ mi = microsoft*
-*◉ ht = htc*
-*◉ tw = twitter*
-*◉ go = google*
-*◉ mo = mozilla*
-*◉ op = openmoji*
-*◉ pi = pixel*
-*◉ sa = samsung*
+${tradutor.texto1[4]}
+${tradutor.texto1[5]}
+${tradutor.texto1[6]}
+${tradutor.texto1[7]}
+${tradutor.texto1[8]}
+${tradutor.texto1[9]}
+${tradutor.texto1[10]}
+${tradutor.texto1[11]}
+${tradutor.texto1[12]}
+${tradutor.texto1[13]}
+${tradutor.texto1[14]}
 
-*—◉ 𝚂𝙾𝙻𝙾 𝚄𝚂𝙰𝚁 𝚄𝙽 𝙴𝙼𝙾𝙹𝙸 𝚈 𝚁𝙴𝚂𝙿𝙴𝚃𝙴 𝙻𝙾𝚂 𝙴𝚂𝙿𝙰𝙲𝙸𝙾𝚂*`;
+${tradutor.texto1[0]}`;
   if (!emoji) throw err;
   if (tipe == 'mo') tipe = 'mozilla';
   if (tipe == 'op') tipe = 'openmoji';
@@ -63,7 +69,7 @@ const handler = async (m, {usedPrefix, conn, args, text, command}) => {
     // if (tipe == 'pi' && json || tipe == 'pixel' && json ) stiker = await conn.sendFile(m.chat, stikerPI, null, { asSticker: true }, m)
     m.reply(stiker);
   } catch {
-    throw `*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝙸𝙽𝚃𝙴𝙽𝚃𝙰 𝙽𝚄𝙴𝚅𝙰𝙼𝙴𝙽𝚃𝙴*`;
+    throw tradutor.texto2;
   }
 };
 handler.help = ['emoji <tipo> <emoji>'];

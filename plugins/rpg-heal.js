@@ -1,19 +1,25 @@
 import {join} from 'path';
 import {promises} from 'fs';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.rpg_heal
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, args, usedPrefix, __dirname}) => {
   const imgr = flaaa.getRandom();
   const _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch((_) => ({}))) || {};
   const user = global.db.data.users[m.sender];
-  if (user.health >= 100) return conn.reply(m.chat, `*𝚃𝚄 𝚂𝙰𝙻𝚄𝙳 𝙴𝚂𝚃𝙰 𝙻𝙻𝙴𝙽𝙰 ❤️*\n\nSALUD: ${user.health}`, m);
+  if (user.health >= 100) return conn.reply(m.chat, `${tradutor.texto1} ${user.health}`, m);
   /* conn.sendButton(m.chat, `𝚃𝚄 𝚂𝙰𝙻𝚄𝙳 𝙴𝚂𝚃𝙰 𝙻𝙻𝙴𝙽𝙰 ❤️`, wm, imgr + `SALUD: ${user.health}`, [
 [`🏕️ 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚁`, `${usedPrefix}adventure`]], m)*/
   const heal = 40 + (user.cat * 4);
   const count = Math.max(1, Math.min(Number.MAX_SAFE_INTEGER, (isNumber(args[0]) && parseInt(args[0]) || Math.round((90 - user.health) / heal)))) * 1;
   if (user.potion < count) {
-    return conn.reply(m.chat, `*${htki} 𝚂𝙸𝙽 𝙿𝙾𝙲𝙸𝙾𝙽𝙴𝚂 ${htka}\n\n𝙽𝙴𝙲𝙴𝚂𝙸𝚃𝙰𝚂 ${count - user.potion} 𝙿𝙾𝙲𝙸𝙾𝙽 🥤 𝙿𝙰𝚁𝙰 𝙲𝚄𝚁𝙰𝚁𝚃𝙴
-𝚂𝙰𝙻𝚄𝙳 » ${user.health} ❤️
-𝙿𝙾𝙲𝙸𝙾𝙽 » ${user.potion} 🥤
-𝙲𝙾𝙼𝙿𝚁𝙰 𝙿𝙾𝙲𝙸𝙾𝙽 𝙾 𝙿𝙸𝙳𝙴𝙻𝙴 𝙰 𝙰𝙻𝙶𝚄𝙸𝙴𝙽 𝚀𝚄𝙴 𝚃𝙴 𝚃𝚁𝙰𝙽𝚂𝙵𝙸𝙴𝚁𝙰`, m);
+    return conn.reply(m.chat, `*${htki} ${tradutor.texto2[0]} ${htka}${tradutor.texto2[1]}  ${count - user.potion} ${tradutor.texto2[2]} 
+${tradutor.texto2[3]}  ${user.health} ❤️
+${tradutor.texto2[4]}  ${user.potion} 🥤
+${tradutor.texto2[5]} `, m);
   }
   /* conn.sendButton(m.chat,`${htki} 𝚂𝙸𝙽 𝙿𝙾𝙲𝙸𝙾𝙽𝙴𝚂 ${htka}`,
 `𝙽𝙴𝙲𝙴𝚂𝙸𝚃𝙰𝚂 ${count - user.potion} 𝙿𝙾𝙲𝙸𝙾𝙽 🥤 𝙿𝙰𝚁𝙰 𝙲𝚄𝚁𝙰𝚁𝚃𝙴
@@ -26,7 +32,7 @@ const handler = async (m, {conn, args, usedPrefix, __dirname}) => {
 *${usedPrefix}transfer potion ${count - user.potion}* @${conn.getName(m.sender)}`]], m)*/
   user.potion -= count * 1; // 1 potion = count (1)
   user.health += heal * count;
-  conn.reply(m.chat, `**━┈━《 ✅ 𝚂𝙰𝙻𝚄𝙳 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙰 》━┈━*\n\n𝙴𝚇𝙸𝚃𝙾𝚂𝙰𝙼𝙴𝙽𝚃𝙴 𝚄𝚂𝙾 ${count} 𝙳𝙴 𝙿𝙾𝙲𝙸𝙾𝙽 🥤 𝙿𝙰𝚁𝙰 𝚁𝙴𝙲𝚄𝙿𝙴𝚁𝙰𝚁 𝚂𝚄 𝚂𝙰𝙻𝚄𝙳\n\𝚗𝚂𝙰𝙻𝚄𝙳 » ${user.health} ❤\n\nSALUD COMPLETADA`, m);
+  conn.reply(m.chat, `${tradutor.texto3[0]} ${count} ${tradutor.texto3[1]} ${user.health} ${tradutor.texto3[2]}`, m);
 };
 /* conn.sendButton(m.chat, `*━┈━《 ✅ 𝚂𝙰𝙻𝚄𝙳 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙰 》━┈━*`, `𝙴𝚇𝙸𝚃𝙾𝚂𝙰𝙼𝙴𝙽𝚃𝙴 𝚄𝚂𝙾 ${count} 𝙳𝙴 𝙿𝙾𝙲𝙸𝙾𝙽 🥤 𝙿𝙰𝚁𝙰 𝚁𝙴𝙲𝚄𝙿𝙴𝚁𝙰𝚁 𝚂𝚄 𝚂𝙰𝙻𝚄𝙳\n\𝚗𝚂𝙰𝙻𝚄𝙳 » ${user.health} ❤️`, imgr + 'SALUD COMPLETADA', [
 [`𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚁 🏕️`, `${usedPrefix}adventure`]], m)*/

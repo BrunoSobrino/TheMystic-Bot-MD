@@ -1,6 +1,9 @@
 import {sticker} from '../lib/sticker.js';
 import _translate from './_translate.js';
 const tradutor = _translate.plugins._autosticker
+ // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+  // To set the language, in the root of the project, modify the config.json file.
 
 const handler = (m) => m;
 

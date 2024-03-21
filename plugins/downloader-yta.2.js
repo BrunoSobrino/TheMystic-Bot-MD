@@ -2,6 +2,10 @@ import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
 import fetch from 'node-fetch';
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.downloader_yta_2
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+s
 
 const handler = async (m, {conn, args}) => {
   if (!args[0]) throw tradutor.texto1;
