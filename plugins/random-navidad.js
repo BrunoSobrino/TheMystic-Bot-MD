@@ -1,4 +1,10 @@
 import axios from 'axios';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.random_navidad
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {
   conn,
   args,
@@ -11,7 +17,7 @@ const handler = async (m, {
     image: {
       url: mystic,
     },
-    caption: `_Navidad 🧑‍🎄_`,
+    caption: tradutor.texto1,
   }, {
     quoted: m,
   });

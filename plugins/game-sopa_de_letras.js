@@ -1,6 +1,9 @@
 //CREADO POR @gata_dios
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.game_sopa_de_letras
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 let fila, columna, sopaNube, sopaPalabra, sopaDir, userSP, cambioLetra, diamante = null
 let intentos = 0

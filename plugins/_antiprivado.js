@@ -1,6 +1,9 @@
 // TheMystic-Bot-MD@BrunoSobrino - _antiprivado.js
 import _translate from "./_translate.js" // Chamando o Modulo
 const tradutor = _translate.plugins._antiprivado // Acessar somente os texto _antiprivado
+   // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+  // To set the language, in the root of the project, modify the config.json file.
 
 export async function before(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner}) {
   if (m.isBaileys && m.fromMe) return !0;

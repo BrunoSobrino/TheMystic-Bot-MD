@@ -1,6 +1,12 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.rpg_cofre
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {isPrems, conn}) => {
   const time = global.db.data.users[m.sender].lastcofre + 86400000; // 36000000 10 Horas //86400000 24 Horas
-  if (new Date - global.db.data.users[m.sender].lastcofre < 86400000) throw `[❗𝐈𝐍𝐅𝐎❗] 𝚈𝙰 𝚁𝙴𝙲𝙻𝙰𝙼𝙰𝚂𝚃𝙴 𝚃𝚄 𝙲𝙾𝙵𝚁𝙴\n𝚅𝚄𝙴𝙻𝚅𝙴 𝙴𝙽 *${msToTime(time - new Date())}* 𝙿𝙰𝚁𝙰 𝚅𝙾𝙻𝚅𝙴𝚁 𝙰 𝚁𝙴𝙲𝙻𝙰𝙼𝙰𝚁`;
+  if (new Date - global.db.data.users[m.sender].lastcofre < 86400000) throw `${tradutor.texto1[0]} *${msToTime(time - new Date())}* ${tradutor.texto1[1]}`;
 
   const img = 'https://img.freepik.com/vector-gratis/cofre-monedas-oro-piedras-preciosas-cristales-trofeo_107791-7769.jpg?w=2000';
   const dia = Math.floor(Math.random() * 30);
@@ -14,14 +20,14 @@ const handler = async (m, {isPrems, conn}) => {
   global.db.data.users[m.sender].exp += expp;
 
   const texto = `
-╔══🎉═🎉═🎉══⬣
-║🛒 𝙾𝙱𝚃𝙸𝙴𝙽𝙴𝚂 𝚄𝙽 𝙲𝙾𝙵𝚁𝙴
-║┈┈┈┈┈┈┈┈┈┈┈┈┈
-║➢ *${dia} Diamantes* 💎
-║➢ *${tok} Tokens* 🪙
-║➢ *${mystic} MysticCoins* 👾
-║➢ *${expp} Exp* ⚡
-╚═════════════════⬣`;
+${tradutor.texto2[0]}
+${tradutor.texto2[1]}
+${tradutor.texto2[2]}
+║➢ *${dia} ${tradutor.texto2[3]}
+║➢ *${tok} ${tradutor.texto2[4]}
+║➢ *${mystic} ${tradutor.texto2[5]}
+║➢ *${expp} ${tradutor.texto2[6]}
+${tradutor.texto2[7]}`;
 
   const fkontak = {
     'key': {

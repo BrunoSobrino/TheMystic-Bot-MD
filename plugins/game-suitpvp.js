@@ -4,6 +4,9 @@ const poin_lose = -100;
 const poin_bot = 200;
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.game_suitpvp
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {conn, usedPrefix, text}) => {
   conn.suit = conn.suit ? conn.suit : {};

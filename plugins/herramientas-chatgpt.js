@@ -18,6 +18,9 @@ import translate from '@vitalets/google-translate-api';
 import {Configuration, OpenAIApi} from 'openai';
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.herramientas_chatgpt
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const configuration = new Configuration({organization: global.openai_org_id, apiKey: global.openai_key});
 const openaiii = new OpenAIApi(configuration);

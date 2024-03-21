@@ -2,6 +2,9 @@ import translate from '@vitalets/google-translate-api';
 import fetch from 'node-fetch';
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.herramientas__translate
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {args, usedPrefix, command}) => {
   const msg = `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]}\n*${usedPrefix + command} ${tradutor.texto1[2]}\n*- https://cloud.google.com/translate/docs/languages*`;

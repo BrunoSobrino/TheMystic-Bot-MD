@@ -5,6 +5,10 @@ import fs from 'fs';
 import axios from 'axios';
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.descargas_spotify
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
  if (!text) throw `${tradutor.texto1} _${usedPrefix + command} Good Feeling - Flo Rida_`;

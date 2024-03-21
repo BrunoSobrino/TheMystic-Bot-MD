@@ -2699,6 +2699,845 @@
                 "(sem prefixo)",
                 "*<nome sala>*_"
             ]
+        },
+        "mipilot_serbot_broadcast": {
+            "texto1": "*〔 DIFUSIÓN A SUB BOTS 〕*\n\n",
+            "texto2": [
+                "*Difusión enviada con éxito a",
+                "sub bots*"
+            ],
+            "texto3": [
+                "*Se finalizó el envío en",
+                "segundos aproximadamente*"
+            ]
+        },
+        "mipilot_serbot_info": {
+            "texto1": "*—◉ Não há SubBots ativos no momento.*",
+            "texto2": [
+                "*—◉ Ative TIEs de SubBots (SERBOT/JADIBOT) Ativos 🤖️*",
+                "*◉ PEDIDOS CONTROLADOS PARA PEDIR QUE SE UM GRUPO, SE RESPEITE!!*",
+                "*[❗] O ROLO DO CHAT - TEM QUE SE LIGAR QUE O ROLAR É RESPONSÁVEL OU SUCESSO OCORRE O BOT OU SUBBOTS*",
+                "*—◉ SUBBOTS CONECTADOS:*"
+            ],
+            "texto3": [
+                " dias, ",
+                " horas, ",
+                " minutos, ",
+                " segundos"
+            ],
+            "texto4": [
+                "*Link:*",
+                "*Nome:*",
+                "*Tempo de atividade:*"
+            ]
+        },
+        "mipilot_serbotcode": {
+            "texto1": "O token permite que você faça login em outros bots, recomendamos não compartilhá-lo com ninguém.\n\n*Seu token é:*",
+            "texto2": [
+                "*Você não tem nenhum token ativo, use",
+                "para criar um.*"
+            ]
+        },
+        "mipilot_stopbot": {
+            "texto1": "*[❗] Você não pode desligar o Bot principal.*",
+            "texto2": "*[❗] Você deixará de ser um Sub Bot em 5 segundos...*"
+        },
+        "nv_global": {
+            "texto1": [
+                "*< CONECTE UM BOT AO SEU GRUPO />*\n\n*—◉ Olá",
+                "se você deseja solicitar um Bot para o seu grupo, use o comando #join mais o link do seu grupo.*\n\n*—◉ Exemplo:*\n*◉ #join* "
+            ]
+        },
+        "owner_actualizacion": {
+            "texto1": "*[❗] Comando ativado com sucesso, você será notificado quando houver alguma mudança no repositório oficial.*",
+            "texto2": [
+                "*[❗] O repositório foi atualizado!*\n*- Repositório:*",
+                "*- Mensagem de commit:*",
+                "*- Commit por:*"
+            ],
+            "texto3": "*[❗] Erro ao verificar o repositório*"
+        },
+        "owner_add_del_owner": {
+            "texto1": [
+                "*[❗] Uso incorreto do comando.*\n\n*—◉ Exemplo de uso válido:*\n*◉",
+                "<mensagem citada>*"
+            ],
+            "texto2": "*[❗] Novo número adicionado com sucesso à lista de proprietários.*",
+            "texto3": "*[❗] O número foi removido com sucesso da lista de proprietários.*",
+            "texto4": "*[❗] O número inserido não existe na lista de proprietários.*"
+        },
+        "owner_addmsg": {
+            "texto1": "*[❗️ℹ️❗️] Responda a uma mensagem de texto, imagem, etc. E adicione um texto para a palavra-chave*",
+            "texto2": [
+                "*[❗️ℹ️❗️] Use",
+                "até para ver a lista de mensagens"
+            ],
+            "texto3": "Foi registrado na lista de mensagens",
+            "texto4": [
+                "*[❗️ℹ️❗️] Mensagem adicionada com sucesso à lista de mensagens*",
+                "*\n*ACESSE COM"
+            ]
+        },
+        "owner_addprem": {
+            "texto1": [
+                "*[❗️ℹ️❗️] Responda ao @tag de quem deseja dar a permissão de responder a todos os membros de um grupo que desejar agregar a membros da comunidade que desejam agregar a lista de usuários premium*\n\n*—◉ Exemplo:*\n*◉",
+                "<responder a uma mensagem>"
+            ],
+            "texto2": [
+                "*[❗️] O USUÁRIO",
+                " NÃO ESTÁ EM MINHA BASE DE DADOS*"
+            ],
+            "texto3": [
+                "*🎟️ NOVO USUÁRIO PREMIUM!!!*\n\n*✨ USUÁRIO:",
+                "*\n*🕐 TEMPO:"
+            ],
+            "texto4": [
+                "hora(s)*\n*📉 RESTANTE:",
+                "dia(s)*\n*📉 RESTANTE:",
+                "semana(s)*\n*📉 RESTANTE:",
+                "mês(es)*\n*📉 RESTANTE:"
+            ],
+            "texto5": [
+                "segundos*",
+                "horas*"
+            ]
+        },
+        "owner_anadirlimit": {
+            "texto1": "*[❗️ℹ️❗️] ETIQUETE UM USUÁRIO COM @tag*",
+            "texto2": "*[❗️ℹ️❗️] INGRESE A QUANTIDADE DE DIAMANTES QUE DESEJA ADICIONAR*",
+            "texto3": "*[❗️ℹ️❗️] SIMBOLO NÃO ADMITIDO, SOLO NÚMEROS!*",
+            "texto4": "*[❗️ℹ️❗️] O NÚMERO MÍNIMO DE DIAMANTES PARA ADICIONAR É 1*",
+            "texto5": [
+                "*💎 ADICIONADO*",
+                "*Total:*"
+            ]
+        },
+        "onwer_anadirXP": {
+            "texto1": "*[❗️ℹ️❗️] ETIQUETE UM USUÁRIO COM @tag*",
+            "texto2": "*[❗️ℹ️❗️] INGRESE O VALOR DA EXPERIÊNCIA (XP) QUE DESEJA ADICIONAR*",
+            "texto3": "*[❗️ℹ️❗️] SÍMBOLO NÃO PERMITIDO, APENAS NÚMEROS!*",
+            "texto4": "*[❗️ℹ️❗️] O VALOR MÍNIMO DE EXPERIÊNCIA (XP) PARA ADICIONAR É 1*",
+            "texto5": [
+                "*XP ADICIONADA*",
+                "*Total:*"
+            ]
+        },
+        "owner_autoadmin": {
+            "texto1": "*[❗️] ATENÇÃO, QUER CRIAR UM ADMINISTRADOR DE GRUPO? RESPONDA SIM OU NÃO*",
+            "texto2": "*[❗️] ERRO, NÃO FOI POSSÍVEL DARLE DIREITOS DE ADMINISTRADOR*"
+        },
+        "owner_banchat": {
+            "texto1": "*[❗️] ESTE CHAT FOI BLOQUEADO COM EXITO*\n\n*—◉ O BOT NÃO RECEBERÁ NENHUM COMANDO HASTA QUE SEJA DESBLOQUEADO ESTE CHAT*"
+        },
+        "owner_banlist": {
+            "texto1": "〔 𝙾𝚄𝚂𝚄𝙰𝚁𝙸𝙾𝚂 𝙱𝙰𝙽𝙸𝙳𝙾𝚂 〕",
+            "texto2": "〔 𝙲𝙷𝙰𝚃𝚂 𝙱𝙰𝙽𝙸𝙳𝙾𝚂 〕"
+        },
+        "owner_banuser": {
+            "texto1": "[❗] Solicitação a uma pessoa banida com sucesso.\n\n*—◉ Exemplo:*",
+            "texto2": "*[❗INFORMAÇÃO❗] O USUÁRIO BANIDO CON EXITO, MAS NÃO ESTÁ CONECTADO*.\n*—◉ O USUÁRIO NÃO PODERÁ USAR O BOT HASTA QUE SEJA DESBLOQUEADO*"
+        },
+        "owner_bcgc": {
+            "texto1": "[❗] Insira a mensagem que deseja transmitir",
+            "texto2": [
+                "\n\nESTE É UM COMUNICADO OFICIAL",
+                "[❗COMUNICADO]\n\n"
+            ],
+            "texto3": [
+                "*[❗] MENSAGEM ENVIADA PARA",
+                "GRUPO(S)*\n\n*NOTA: PODE HAVER FALHAS NESTE COMANDO E NÃO SER ENVIADO A TODOS OS CHATS, DESCULPE PELO INCONVENIENTE*"
+            ]
+        },
+        "owner_bcgc2": {
+            "texto1": [
+                "Responda uma mensagem com o comando ",
+                "para enviar o aviso."
+            ],
+            "texto2": [
+                "*[❗] MENSAGEM ENVIADA PARA",
+                "GRUPO(S)*\n\n*NOTA: PODE HAVER FALHAS NESTE COMANDO E NÃO SER ENVIADO A TODOS OS CHATS, DESCULPE PELO INCONVENIENTE*"
+            ]
+        },
+        "owner_block_unblock": {
+            "texto1": "*[❗] USUÁRIO ERRADO, EXEMPLO:* \n*—◉",
+            "texto2": [
+                "*[❗] SE USAR COMANDO ERRADO EL COMANDO PARA EL USUARIO/A*",
+                ""
+            ]
+        },
+        "owner_blocklist": {
+            "texto1": "*≡ Lista de bloqueados*\n\n*Total:*",
+            "texto2": "Não há números bloqueados"
+        },
+        "owner_broadcast": {
+            "texto1": "*[❗] AVISO IMPORTANTE: POR FAVOR, LEIA:*\\n*—◉",
+            "texto2": [
+                "*[❗] AVISO ENVIADO A TODOS OS CHATS*\\n\\n*NOTA: ESTA É UMA MENSAGEM PARA GERENCIAR CHATS E NÃO É ENVIADA AOS CHATS, DISPONÍVEL APENAS PARA O MOMENTO*",
+                "*[❗] AVISO ENVIADO A TODOS OS CHATS DE GRUPO*\\n\\n*NOTA: ESTA É UMA MENSAGEM PARA GERENCIAR CHATS E NÃO É ENVIADA AOS CHATS, DISPONÍVEL APENAS PARA O MOMENTO*"
+            ],
+            "texto3": [
+                "*╔══❰ COMUNICADO ❱══╗*\\n\\n",
+                "*╔══❰ COMUNICADO ❱══╗*\\n\\n"
+            ],
+            "texto4": [
+                "MENSAGEM ENVIADA A:",
+                "CHAT PRIVADO >>",
+                "CHAT GRUPOS  >>",
+                "CHATS TOTAIS  >>",
+                "*TOTAL DE MENSAGENS ENVIADAS",
+                "\n*NOTA: ESTE É UM COMANDO PARA GERENCIAR ESTATÍSTICAS DE MENSAGENS EM GRUPOS, NÃO SE ENVIA AOS CHATS, DISPONÍVEL PARA O MOMENTO*"
+            ]
+        },
+        "owner_broadcastchats": {
+            "texto1": "*[❗] AVISO IMPORTANTE: POR FAVOR, LEIA:*",
+            "texto2": [
+                "[❗] COMUNICADO\n\n",
+                "\n\nESTE É UM COMUNICADO OFICIAL"
+            ],
+            "texto3": [
+                "*[❗] MENSAGEM ENVIADA A ",
+                "CHATS PRIVADOS*\n\n*NOTA: ESTE É UM COMANDO PARA GERENCIAR MENSAGENS ENVIADAS A CHATS E NÃO É ENVIADO AOS CHATS, DISPONÍVEL APENAS PARA O MOMENTO*"
+            ]
+        },
+        "owner_chatgp": {
+            "texto1": "*⚠️ • Insira um -texto- para enviar uma mensagem para todos os grupos.*",
+            "texto2": "❌ *Você não pode enviar spam com links para outros grupos.*",
+            "texto3": [
+                "*⚠️ • Você precisa esperar",
+                "para enviar outra mensagem.*"
+            ],
+            "texto4": [
+                "*🌺 • Grupo:*",
+                "🍀 • De:*",
+                "*🍁 • Número:*",
+                "*📧 • Mensagem:*",
+                ""
+            ]
+        },
+        "owner_chetar": {
+            "texto1": "agora seus recursos são ilimitados."
+        },
+        "owner_cleartmp": {
+            "texto1": "*[ ✔ ] ARQUIVOS DA CARPETA TMP ELIMINADOS COM SUCESSO!!*"
+        },
+        "owner_delmsg": {
+            "texto1": [
+                "*[❗𝐈𝐍𝐅𝐎❗] USAR",
+                "PARA VER A LISTA*"
+            ],
+            "texto2": [
+                "*[❗𝐈𝐍𝐅𝐎❗]",
+                "NÃO REGISTRADO NA LISTA DE MENSAJES*"
+            ],
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] ELIMINAR TODOS OS MENSAGENS ELIMINADOS ELIMINAR EL NOMBRE*"
+        },
+        "owner_delprem": {
+            "texto1": "*[❗] ATENÇÃO: @tag DEIXOU DE SER O RESPONSAVEL DA  MENSAGEM DE ALGUMA PESSOA QUE DESEJA REMOVER DOS USUÁRIOS PREMIUM*",
+            "texto2": "*[❗] O USUÁRIO NÃO SE ENCONTRA NA BASE DE DADOS*",
+            "texto3": "*[❗] O USUÁRIO INGRESSADO NÃO É USUÁRIO PREMIUM*",
+            "texto4": "AGORA  FAZ NÃO  PARTE DOS USUÁRIOS PREMIUM"
+        },
+        "owner_exec2": {
+            "texto1": "[❗] Executando ordem..."
+        },
+        "owner_fetch_get": {
+            "texto1": "Comece URL com http:// ou https://"
+        },
+        "owner_getplugin": {
+            "texto1": [
+                "[❗] INSERÇÃO DO NOME DO PLUGIN (ARCHIVO) EXISTENTE\n\n*—◉ EJEMPLO*\n◉",
+                "—◉ LISTA DE PLUGINS (ARCHIVOS) EXISTENTES:\n◉*"
+            ],
+            "texto2": [
+                "[❗] NENHUM PLUGIN (ARQUIVO) DE PLUG-IN (ARCHIVO) ENCONTRADO",
+                "INSERÇÃO ALGUMA EXISTENTE\n\n*==================================\n\n—◉ LISTA DE PLUG-INS (ARQUIVOS) EXISTENTES:\n◉*"
+            ]
+        },
+        "owner_grouplist": {
+            "texto1": [
+                "👤 Participante",
+                "❌ Ex-participante"
+            ],
+            "texto2": [
+                "◉ Grupo: ",
+                "➤ Nome:",
+                "➤ ID:",
+                "➤ Admin:",
+                "➤ Estado:",
+                "➤ Total de Participantes:",
+                "➤ Link:"
+            ],
+            "texto3": "Lista de grupos do Bot 🤖\n\n—◉ Total de grupos:"
+        },
+        "owner_join": {
+            "texto1": "[❗] Link errado ou ausente, por favor insira o link de um grupo do WhatsApp.\n\n*—◉ Exemplo:\n◉ #join https://chat.whatsapp.com/FwEUGxkvZD85fIIp0gKyFC*",
+            "texto2": "[ ✔️ ] O Bot entrou com sucesso no grupo.",
+            "texto3": "[❗] O link do seu grupo foi enviado ao meu proprietário/a.\n\n*—◉ Seu grupo estará em avaliação e o proprietário/a do Bot decidirá se adiciona ou não o Bot.\n\n—◉ Algumas razões pelas quais sua solicitação pode ser recusada são:\n1.- O Bot está saturado.\n2.- O Bot foi recentemente removido do grupo.\n3.- O link do grupo foi redefinido.\n4.- O Bot não é adicionado a grupos por decisão do proprietário/a.\n\n—◉ O processo de avaliação pode levar algum tempo, até mesmo dias, por favor, tenha paciência.",
+            "texto4": "[❗] NOVA SOLICITAÇÃO DE UM BOT PARA UM GRUPO [❗]\n\n—◉ Solicitante:",
+            "texto5": "[❗] Desculpe, algo deu errado. Por favor, relate ou tente novamente.*"
+        },
+        "owner_leavegc": {
+            "texto1": "Adeus a todos, o Bot se despede! (≧ω≦)ゞ"
+        },
+        "owner_listmsg": {
+            "texto1": [
+                "🔰 LISTA DE TEXTOS/MENSAGENS/PALAVRAS CHAVES SALVAS 🔰",
+                "✳️ MENSAGENS ✳️"
+            ]
+        },
+        "owner_reporte": {
+            "texto1": [
+                "[❗𝐈𝐍𝐅𝐎❗] INSIRA UM RELATÓRIO*\n\nEXEMPLO",
+                "o comando",
+                "não envia nada*"
+            ],
+            "texto2": "[❗𝐈𝐍𝐅𝐎❗] O RELATÓRIO DEVE TER NO MÍNIMO 10 CARACTERES",
+            "texto3": "[❗𝐈𝐍𝐅𝐎❗] O RELATÓRIO DEVE TER NO MÁXIMO 1000 CARACTERES",
+            "texto4": [
+                "❒═════[𝐑𝐄𝐏𝐎𝐑𝐓𝐄]═════❒\n┬\n├❧ NÚMERO:",
+                "┴\n┬\n├❧ MENSAGEM"
+            ],
+            "texto5": "[ ✔️ ] RELATÓRIO ENVIADO COM SUCESSO AO CRIADOR DO BOT, SEU RELATÓRIO SERÁ ATENDIDO O MAIS RÁPIDO POSSÍVEL, SE FOR FALSO OU BRINCADEIRA, SERÁ IGNORADO"
+        },
+        "owner_resetprefix": {
+            "texto1": "[❗𝐈𝐍𝐅𝐎❗] PREFIXO RESETADO COM SUCESSO"
+        },
+        "owner_resetuser": {
+            "texto1": "[❗] Formato de usuário não reconhecido. Responda a uma mensagem, marque um usuário ou escreva seu número de usuário.",
+            "texto2": "[❗] Formato de usuário não reconhecido. Responda a uma mensagem, marque um usuário ou escreva seu número de usuário.",
+            "texto3": [
+                "[❗] O usuário",
+                "não está na minha base de dados."
+            ],
+            "texto4": [
+                "[❗] Todos os dados do usuário",
+                "na base de dados foram apagados."
+            ]
+        },
+        "owner_restart": {
+            "texto1": "Não: node main.js\nFaça: node index.js",
+            "texto2": "[ ⚠ ] Reiniciando o Bot...\n\n*—◉ Aguarde um momento para voltar a usar o Bot, isso pode levar alguns minutos.*"
+        },
+        "owner_saveimage": {
+            "texto1": "Digite um nome para o seu arquivo de imagem e a extensão desejada (por exemplo, nome.png, nome.jpg, etc.)",
+            "texto2": "Responda com a imagem que deseja salvar.."
+        },
+        "owner_setprefix": {
+            "texto1": "*[❗] Nenhum prefixo encontrado, por favor insira o prefixo que deseja definir. Exemplo:*",
+            "texto2": "*[❗] O prefixo atual do Bot foi definido para "
+        },
+        "owner_unbanchat": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] O BATE-PAPO ESTÁ DESBLOQUEADO COM SUCESSO*"
+        },
+        "owner_unbanuser": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] O USUÁRIO @tag FOI REMOVIDO DO BANIMENTO*",
+            "texto2": "*[❗𝐈𝐍𝐅𝐎❗] O USUÁRIO @tag FOI REMOVIDO DO BANIMENTO*",
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] O USUÁRIO QUE DESEBANEAR DEVE SER EXISTENTE*",
+            "texto4": "*[❗𝐈𝐍𝐅𝐎❗] O USUÁRIO JÁ PODE USAR O BOT*"
+        },
+        "owner_viewimage": {
+            "texto1": "Digite o nome e a pasta da imagem que deseja visualizar.",
+            "texto2": "A imagem não existe na pasta raiz."
+        },
+        "random_kpop": {
+            "texto1": [
+                "Uso",
+                "Por favor, escreva:",
+                "[buscar]\nExemplo:",
+                "bts\n\nPesquisas disponíveis:\nblackpink, exo, bts"
+            ],
+            "texto2": "Ocorreu um erro, tente novamente. Se o problema persistir, avise o meu criador.",
+            "texto3": [
+                "Desculpe, a pesquisa não está disponível. Por favor, escreva",
+                "para ver a lista de pesquisas disponíveis"
+            ]
+        },
+        "random_loli": {
+            "texto1": "random loli - é fofa 🥺"
+        },
+        "random_lolivid": {
+            "texto1": "*loli é fofa 🥺*"
+        },
+        "random_navidad": {
+            "texto1": "_Natal 🧑‍🎄_"
+        },
+        "random_neko": {
+            "texto1": "Nyaww~ 🐾💗"
+        },
+        "random_ppcp": {
+            "texto1": "CHICA CUTE"
+        },
+        "random_waifu": {
+            "texto1": "ARA ARA SEMPAI~~"
+        },
+        "rpg_adventure": {
+            "texto1": [
+                "VIDA BAIXA",
+                "SUA VIDA 💔 ESTÁ ABAIXO DE *80!!* POR FAVOR, CURE-SE PRIMEIRO ANTES DE AVENTURAR NOVAMENTE"
+            ],
+            "texto2": [
+                "DESCANSANDO",
+                "VOCÊ JÁ AVENTUROU, POR FAVOR, AGUARDE ATÉ QUE O TEMPO DE DESCANSO TERMINE\n\n⏱️",
+                "🛫 VOCÊ ESTÁ AVENTURANDO EM "
+            ],
+            "texto3": [
+                "*ID:*",
+                "*CIDADE:*",
+                "*LONGITUDE:* ",
+                "*LATITUDE:* ",
+                "🏞️ AVENTURA CONCLUÍDA"
+            ],
+            "texto4": "\n\n✨ RECOMPENSAS DA AVENTURA",
+            "texto5": [
+                "AVENTURA ",
+                "*[❗️ERRO❗️] OCORREU UM ERRO, TENTE NOVAMENTE, PROVAVELMENTE A API NÃO GEROU A IMAGEM*"
+            ]
+        },
+        "rpg_balance": {
+            "texto1": [
+                "┌───⊷ 𝐁𝐀𝐋𝐀𝐍𝐂𝐄 ⊶",
+                "▢ *Nome:* ",
+                "▢ *Diamantes:*",
+                "└──────────────",
+                "*NOTA:*",
+                "*Podemos comparar diamantes 💎 usados dos comandos*",
+                "<quantidade>*"
+            ]
+        },
+        "rpg_berburu_casar": {
+            "texto1": "PARA FAVOR DESCANSE UM MOMENTO PARA SEGUIR CAÇANDO\n\n⫹⫺ TEMPO",
+            "texto2": [
+                "OBJETIVO DEFINIDO 🎯",
+                "Isca em Ação 🍫 🍇 🍖",
+                "ANIMAIS DETECTADOS!! 🐂 🐅 🐘 🐼",
+                "ANIMAIS DETECTADOS!! 🐖 🐃 🐮 🐒"
+            ],
+            "texto3": [
+                "Armas Prontas para a Caça!!",
+                "Testando Armas 🔫 💣 🪓 🏹",
+                "VEÍCULOS PARA A CAÇA!! 🚗 🏍️ 🚜",
+                "TEMPO BOM PARA A CAÇA 🧤"
+            ],
+            "texto4": [
+                "Procurando equipamentos de caça...",
+                "Preparando tudo para a caça!!",
+                "Estabelecendo Local da Caça...",
+                "PREPARANDO LOCAL DE CAÇA!!"
+            ]
+        },
+        "rpg_cofre": {
+            "texto1": [
+                "[❗𝐈𝐍𝐅𝐎❗] VOCÊ RECLAMOU O COFRE\nAGUARDE UM MOMENTO",
+                "PARA VOLVER A RECLAMAR"
+            ],
+            "texto2": [
+                "╔══🎉═🎉═🎉══⬣",
+                "║🛒 ITENS NO COFRE",
+                "║┈┈┈┈┈┈┈┈┈┈┈┈┈",
+                "Diamantes* 💎",
+                "Tokens* 🪙",
+                "MysticCoins* 👾",
+                "Exp* ⚡",
+                "╚═════════════════⬣"
+            ]
+        },
+        "rpg_crime": {
+            "texto1": "『🚓』A POLÍCIA TE PEGOU NO ATO, VOCÊ ESTÁ EM APERTO, PERDEU :",
+            "texto2": [
+                "💎 Diamantes",
+                "👾 Moedas Místicas"
+            ],
+            "texto3": [
+                "《💰》Você roubou de",
+                "uma quantidade de "
+            ],
+            "texto4": [
+                "Você roubou um Banco 🏦 e Obteve",
+                "Negociou com o chefe da máfia e Obteve :",
+                "Quase foi pego pela polícia, mas conseguiu roubar uma quantia valiosa de 💰. Cuidado da próxima vez! Você obteve:",
+                "Os mafiosos te pagaram :",
+                "Você roubou o Administrador do Grupo",
+                "Você roubou do seu presidente uma soma de :",
+                "Você roubou de uma pessoa famosa um valor de :",
+                "Você entrou furtivamente no museu e roubou uma obra de arte valiosa:",
+                "Você se infiltrou em uma joalheria e obteve um botim impressionante:",
+                "Você se tornou o ladrão mais procurado do país, obteve:",
+                "Você roubou um caminhão cheio de produtos valiosos e obteve",
+                "Você assaltou um trem e conseguiu",
+                "Você roubou um avião carregado de mercadorias e obteve",
+                "Você se passou por um milionário para roubar uma joia única, obteve",
+                "Você entrou na casa de um colecionador de arte e roubou uma peça inestimável, obteve",
+                "Você sequestrou um empresário e conseguiu um resgate importante:",
+                "Você ameaçou um político e obteve uma grande quantia em dinheiro:",
+                "Você subornou um oficial de polícia para obter informações valiosas, conseguiu"
+            ],
+            "texto5": [
+                "A POLÍCIA TE VIU 🙀👮‍♂️ VOCÊ PERDEU",
+                "Você foi roubar um banco 🏦 e seu ajudante entregou você para a polícia, você perdeu",
+                "Você não conseguiu escapar da polícia 🚔🤡, você perdeu :",
+                "Você tentou roubar um cassino, mas foi descoberto, você perdeu",
+                "Você foi pego tentando roubar uma loja, você perdeu :",
+                "O alarme disparou quando você tentava roubar um armazém, você perdeu",
+                "O dono do local te pegou em flagrante, você perdeu",
+                "Você foi descoberto tentando hackear uma conta bancária, você perdeu",
+                "Você foi pego tentando subornar um oficial, você perdeu",
+                "Seu plano de chantagear um empresário deu errado, você perdeu"
+            ]
+        },
+        "rpg_daily": {
+            "texto1": [
+                "JÁ RECLAMASTE O TEU PRESENTE 🎁\nVOLTA EM",
+                "PARA RECLAMAR NOVAMENTE"
+            ],
+            "texto3": [
+                "╭━━🎁━🎁━🎁━━⬣",
+                "┃ ✨ RECEBESTE UM PRESENTE!!",
+                "🎟️ Recompensa Premium",
+                "🆓 Recompensa Grátis",
+                "╰━━🎁━🎁━🎁━━⬣\n\n🎟️ 𝗣 𝗥 𝗘 𝗠 𝗜 𝗨 𝗠 ⇢ "
+            ]
+        },
+        "rpg_heal": {
+            "texto1": "*A SUA SAÚDE ESTÁ PLENA ❤️*\n\nSAÚDE:",
+            "texto2": [
+                "SEM POÇÕES",
+                "\n\nVOCÊ PRECISA DE ",
+                " POÇÃO 🥤 PARA SE CURAR",
+                "SAÚDE » ",
+                "POÇÃO » ",
+                "COMPRE UMA POÇÃO OU PEÇA A ALGUÉM QUE TE TRANSFIRA"
+            ],
+            "texto3": [
+                "**━┈━《 ✅ SAÚDE COMPLETA 》━┈━*\n\nVOCÊ USOU COM SUCESSO",
+                " DE POÇÃO 🥤 PARA SE RECUPERAR \nSAÚDE »",
+                "❤\n\nSAÚDE COMPLETADA"
+            ]
+        },
+        "rpg_leaderboard": {
+            "texto1": [
+                "Lidera a aventura e trace seu caminho até o topo.",
+                "Desafie o desconhecido e alcance novas alturas!",
+                "Sua coragem irá guiá-lo ao topo da tabela de classificação.",
+                "A cada passo, esculpa sua lenda nesta grande aventura.",
+                "Explore, compita e demonstre sua grandeza nesta tabela.",
+                "Cada passo conta em sua jornada para o topo do ranking.",
+                "A emoção da competição o impulsiona para frente.",
+                "Aventure-se e conquiste os primeiros lugares com determinação."
+            ],
+            "texto2": [
+                "*< TABELA DOS AVENTUREIROS MAIS DESTACADOS />*",
+                "—◉ *TOP",
+                "EXP 🌟*",
+                "*👤 Sua posição:*",
+                "de",
+                "exp*",
+                "diamantes*",
+                "*nível",
+                "—◉ *TOP ${len} DIAMANTES 💎*",
+                "—◉ *TOP ${len} NÍVEL 🎚️*"
+            ]
+        },
+        "rpg_levelup": {
+            "texto1": [
+                "🏰 *Guilda dos Aventureiros*",
+                "*Bem-vindo,",
+                "*◉ Nível atual:*",
+                "*◉ Classificação atual:*",
+                "*◉ Pontos de Experiência:*",
+                "*—◉ Para subir de nível, você precisa obter",
+                "mais pontos de experiência. Continue interagindo com o Bot!*"
+            ],
+            "texto2": [
+                "🎉 Parabéns,",
+                "Você subiu de nível para"
+            ],
+            "texto3": [
+                "🚀 *Novo Nível Alcançado*",
+                "*◉ Nível anterior:*",
+                "*◉ Novo nível:*",
+                "*◉ Classificação atual:*",
+                "*—◉ Continue explorando e realizando missões para alcançar novas alturas na Guilda dos Aventureiros. Continue interagindo com o Bot!*"
+            ]
+        },
+        "rpg_minar_mysticcoins": {
+            "texto1": [
+                "Que pro 😎 você minerou",
+                "🌟✨ Legal!! Você recebe",
+                "WOW!! você é um(a) grande minerador(a) ⛏️ Você recebe",
+                "Você minerou!!",
+                "😲 Você conseguiu minerar a quantidade de",
+                "Seus rendimentos vão subir porque você minerou",
+                "⛏️⛏️⛏️⛏️⛏️ Minerando",
+                "🤩 SIM!!! AGORA VOCÊ TEM",
+                "A mineração está do seu lado, por isso você recebe",
+                "😻 A sorte de minerar",
+                "♻️ Sua missão foi cumprida, você conseguiu minerar",
+                "⛏️ A Mineração te beneficiou com",
+                "🛣️ Você encontrou um local e por minerar esse local você recebe",
+                "👾 Graças a você ter minerado seus ganhos aumentam",
+                "Parabéns!! Agora você tem",
+                "⛏️⛏️⛏️ Você recebe"
+            ],
+            "texto2": [
+                "*⏱️ Continue em ",
+                "para continuar minerando"
+            ],
+            "texto3": [
+                "🎟️ Recompensa Premium",
+                "🆓 Recompensa Grátis",
+                "🍁 B O N U S",
+                "🎟️ P R E M I U M ⇢"
+            ]
+        },
+        "rpg_minar": {
+            "texto1": [
+                "*[ ⏲️ ] É hora",
+                "para voltar a minerar*"
+            ],
+            "texto2": "*[ 🎉 ] Parabéns, você minerou*"
+        },
+        "rpc_myns": {
+            "texto1": " *NÚMERO DE SÉRIE:*"
+        },
+        "rpg_perfil": {
+            "texto1": "O usuário mencionado não está registrado no meu banco de dados",
+            "texto2": [
+                "*NOME:*",
+                "*NÚMERO:*",
+                "*LINK:* ",
+                "*LIMITE:* ",
+                "*REGISTRADO:* ",
+                "*PREMIUM:* ",
+                "*NÚMERO DE SÉRIE:*",
+                "\n*IDADE:*",
+                "anos",
+                "USOS",
+                "Sim",
+                "Não"
+            ]
+        },
+        "rpg_rob": {
+            "texto1": [
+                "*⏱️Ei! Espera",
+                "para roubar novamente*"
+            ],
+            "texto2": "*[❗] Marque alguém para roubar.*",
+            "texto3": "*[❗] O usuário não está em meu banco de dados.*",
+            "texto4": [
+                "tem menos de",
+                "xp*\nNão roube um pobre."
+            ],
+            "texto5": [
+                "*‣ Você roubou",
+                "XP de"
+            ]
+        },
+        "rpg_shop": {
+            "texto1": [
+                "┌─「 *NOTA DE PAGAMENTO* 」",
+                "‣ *Compra nominal*",
+                "‣ *Gasto* ",
+                "└──────────────"
+            ],
+            "texto2": "❎ Desculpe, você não tem XP suficiente para comprar",
+            "texto3": [
+                "Diamantes💎",
+                "*—◉ Tienes 60 segundos para confirmar*",
+                "*—◉ Escriba:*",
+                "*◉ si = para acertar*",
+                "*◉ no = para cancelar*"
+            ]
+        },
+        "rpg_transfer": {
+            "texto1": "*[❗] Ainda há fundos em transferência, aguarde um momento.*",
+            "texto2": [
+                "*[❗] Uso do comando.*",
+                "*—◉",
+                "[tipo]",
+                "[quantidade]",
+                "*📌 Exemplo:*",
+                "exp 65",
+                "*—◉ 📍 Itens transferíveis.*",
+                "▢ *limite* = diamantes",
+                "▢ *exp* = experiência"
+            ],
+            "texto3": "*[❗] Mencione o usuário para quem deseja transferir.*",
+            "texto4": [
+                "*[❗] O usuário",
+                "não está na base de dados.*"
+            ],
+            "texto5": [
+                "*[❗] Você não possui",
+                "para transferir.*"
+            ],
+            "texto6": "*Tem certeza de que deseja transferir",
+            "texto7": "*[❗] Cancelado, a transferência não será concluída.*",
+            "texto8": "*[❗] Transferido com sucesso",
+            "texto9": "*[❗] Erro ao transferir"
+        },
+        "rpg_unreg": {
+            "texto1": "*[❗NF❗] Por favor, insira seu número de série, caso não se lembre, você pode usar o comando #myns*",
+            "texto2": "*[❗NF❗] Número de série incorreto, verifique se digitou corretamente!*\n\n*SE VOCÊ NÃO SE LEMBRA, PODE USAR O COMANDO #myns*",
+            "texto3": "*[ ✔ ] OPERAÇÃO REALIZADA COM SUCESSO, VOCÊ NÃO ESTÁ MAIS REGISTRADO NO BOT*"
+        },
+        "rpg_verificar": {
+            "texto1": [
+                "[❗INFORMAÇÃO❗] VOCÊ ESTÁ REGISTRADO\n\nQUER VER O REGISTRO?\n\n📌USE ESTE COMANDO PARA ELIMINAR SEU REGISTRO",
+                "<Número de série>"
+            ],
+            "texto2": [
+                "*[❗INFORMAÇÃO❗] FORMATO INCORRETO*\n\n*—◉ USE O COMANDO",
+                "nome.idade*\n*—◉ Exemplo:"
+            ],
+            "texto3": "*[❗INFORMAÇÃO❗] VOCÊ DEVE COLOCAR UM NÚMERO*",
+            "texto4": "*[❗INFORMAÇÃO❗] O IDADE NÃO PODE SER VAZIO*",
+            "texto5": "[❗INFORMAÇÃO❗] O NÚMERO É MUITO GRANDE",
+            "texto6": "*[❗] O queee, como você está vivo com essa idade? 👴🏻*",
+            "texto7": "*[❗] O queee, um bebê que sabe usar WhatsApp? 😲*",
+            "texto8": [
+                "┏┅ ━━━━━━━━━━━━ ┅ ━",
+                "┇「 INFORMAÇÃO 」",
+                "┣┅ ━━━━━━━━━━━━ ┅ ━",
+                "┃ *NOME:* ",
+                "┃ *IDADE:* ",
+                " anos",
+                "┃ *NÚMERO DE SÉRIE:*",
+                "┣┅ ━━━━━━━━━━━━ ┅ ━",
+                "┃ Você NÃO ESTÁ REGISTRADO. SE DESEJAR, ",
+                "┃ PARTICIPAR NO BOT!",
+                "┗┅ ━━━━━━━━━━━━ ┅ ━"
+            ]
+        },
+        "rpg_work": {
+            "texto1": [
+                "Você é um mestre alquimista, destilando poções misteriosas em busca de segredos perdidos.",
+                "Você se torna um intrépido caçador de tesouros, explorando lugares esquecidos em busca de riquezas ocultas.",
+                "Você dirige um negócio de transmutação de metais, transformando o comum em tesouros valiosos.",
+                "Você explora antigas ruínas e encontra uma relíquia valiosa que concede conhecimentos ancestrais.",
+                "Você trabalha como mercenário em uma guerra épica, enfrentando desafios com sua habilidade e coragem.",
+                "Você é um investigador do paranormal, descobrindo os segredos ocultos do mundo espiritual.",
+                "Você treina dragões para corridas, formando vínculos com essas majestosas criaturas aladas.",
+                "Você se torna o melhor ferreiro da cidade, forjando armas lendárias e artefatos poderosos.",
+                "Você descobre uma floresta encantada cheia de criaturas mágicas, estabelecendo uma conexão única com a natureza.",
+                "Você é um domador de bestas ferozes, controlando as criaturas mais selvagens com seu domínio animal.",
+                "Você viaja no tempo e resolve problemas históricos, influenciando o destino de civilizações passadas.",
+                "Você é um conselheiro real, trazendo sabedoria e conselho para governantes e líderes.",
+                "Você desenvolve tecnologia futurista, impulsionando a inovação e mudando o curso do mundo.",
+                "Você é um mestre na arte da persuasão, convencendo outros com sua eloquência e astúcia.",
+                "Você pilota um mecha gigante em batalhas épicas, defendendo a terra com sua destreza na máquina de guerra.",
+                "Você administra uma fazenda de dragões, cuidando dessas majestosas criaturas e criando dragões únicos.",
+                "Você é um espião internacional, infiltrando-se em organizações secretas e desmascarando conspirações obscuras.",
+                "Você explora o espaço e faz descobertas incríveis que lhe conferem uma visão única do universo.",
+                "Você é um mago renomado, realizando truques impressionantes e conjurando feitiços mágicos.",
+                "Você é um cientista louco, criando invenções extravagantes e experimentos incomuns.",
+                "Você defende o reino contra um exército invasor, liderando exércitos e demonstrando sua coragem na batalha.",
+                "Você é um navegador audacioso, explorando mares desconhecidos e descobrindo ilhas cheias de tesouros.",
+                "Você é um mestre na arte do sigilo, movendo-se nas sombras e realizando missões secretas.",
+                "Você é um chef renomado, criando pratos deliciosos que encantam paladares ao redor do mundo.",
+                "Você investiga crimes complexos como um detetive habilidoso, resolvendo mistérios intrigantes.",
+                "Você é um diplomata habilidoso, negociando tratados e alianças para manter a paz entre as nações.",
+                "Você é um xamã poderoso, canalizando energias espirituais para curar e proteger.",
+                "Você desenvolve aplicativos mágicos para dispositivos encantados, melhorando a vida das pessoas com suas invenções.",
+                "Você é um campeão em torneios de luta, demonstrando sua habilidade em combate corpo a corpo.",
+                "Você é um arquiteto visionário, projetando cidades futuristas e estruturas impressionantes.",
+                "Você é um psíquico com habilidades sobrenaturais, explorando mentes e prevendo o futuro.",
+                "Você é um diretor de cinema famoso, criando histórias épicas que cativam as audiências.",
+                "Você é um astrônomo e descobre um novo planeta, ampliando nosso conhecimento do cosmos.",
+                "Você é um especialista em sobrevivência, enfrentando os perigos do mundo com engenhosidade e coragem.",
+                "Você é um músico talentoso que se apresenta em concertos massivos, enchendo o ar com melodias cativantes.",
+                "Você é um explorador submarino, mergulhando nas profundezas para descobrir tesouros esquecidos.",
+                "Você é um designer de moda reconhecido, criando tendências e vestindo pessoas com seu estilo único.",
+                "Você é um líder revolucionário, lutando por um mundo melhor e guiando as massas em direção à liberdade."
+            ]
+        },
+        "sticker_emojimix": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] O USO DESTE COMANDO DEVE SER #emojimix <emoji 1>&<emoji 2>*\n*EXEMPLO:*\n*#emojimix 🤨&😣*"
+        },
+        "sticker_kiss": {
+            "texto1": "*[❗] Por favor, mencione ou marque um participante do grupo.*"
+        },
+        "sticker_pat": {
+            "texto1": [
+                "deu tapinhas em",
+                "alguém"
+            ]
+        },
+        "sticker_qc": {
+            "texto1": "*[❗️] Uso incorreto do comando, adicione um texto*",
+            "texto2": "*[❗️] Uso incorreto do comando, adicione um texto*",
+            "texto3": "*[❗️] O texto não pode ter mais de 30 caracteres*"
+        },
+        "sticker_scircle": {
+            "texto1": "*[❗️INFORMAÇÃO❗️] O seguinte erro ocorreu: verifique a intervenção, não olvide responder a uma imagem local a inserir circunferência em sticker circular*"
+        },
+        "sticker_semoji": {
+            "texto1": [
+                "*[❗] O USO CORRETO DO COMANDO É:*",
+                "<tipo> <emoji>*",
+                "*—◉ EXEMPLO:*",
+                " fa 😎",
+                "*—◉ TIPOS*",
+                "*◉ wha = whatsapp* ",
+                "*◉ ap = apple*",
+                "*◉ fa = facebook*",
+                "*◉ mi = microsoft*",
+                "*◉ ht = htc*",
+                "*◉ tw = twitter*",
+                "*◉ go = google*",
+                "*◉ mo = mozilla*",
+                "*◉ op = openmoji*",
+                "*◉ pi = pixel*",
+                "*◉ sa = samsung*",
+                "*—◉ USE APENAS UM EMOJI E RESPONDA AO ESPAÇO*"
+            ],
+            "texto2": "*[❗] ERRO, INFORME O NOVO COMANDO*"
+        },
+        "sticker_slap": {
+            "texto1": "*[❗] O USO DA MENÇÃO É OBRIGATÓRIO*\n\n*—◉ EXEMPLO:*",
+            "texto2": "*[❗] ERRO, POR FAVOR, MENCIONE UM PARTICIPANTE*"
+        },
+        "sticker_sremovebg": {
+            "texto1": "*[❗️] O USO DE MENÇÃO É OBRIGATÓRIO, VOU APLICAR UM TRATAMENTO, NÃO RESPODEREI A UMA IMAGEM LIMPA NO FUNDO*"
+        },
+        "sticker_sticker": {
+            "texto1": "*[❗️] RESPOSTA A UM VÍDEO, IMAGEM OU INSERT ELÁSTICO DE UMA IMAGEM .jpg NO CANAL DE TEXTO EMBEDDEO. DEVE RESPONDER A UM ELÁSTICO DO SER CONVERTE EN STICKER, DEVE RESPONDER OU USAR O COMANDO EL CONVERTIDOR NO SER*",
+            "texto2": "*[❗️] O ENLAÇE / URL / LINK NÃO É VÁLIDO, LA TERMINACIÓN DEL EL LINK DEBE SER .jpg, EJEMPLO*",
+            "texto3": "*[❗️] OCORREU UM ERRO, VÁLIDO A ENTRADA. RESPONDA A UM VÍDEO, IMAGEM OU USE O COMANDO EL CONVERTER NO SER*"
+        },
+        "sticker_stickerfilter": {
+            "texto1": [
+                "*_✳️ USO CORRECTO DO COMANDO ✳️_*",
+                "*👉 Use:*",
+                "(efeito)",
+                "- E responda a uma imagem",
+                "*✅ Exemplo:*",
+                "*Lista de efeitos:*"
+            ],
+            "texto2": "*_🔰 Não foi encontrada nenhuma imagem_*\n\n*_✅ Responda a uma imagem_*",
+            "texto3": "*_⚠️ Formato não suportado_*\n\n*_👉🏻 Responda a uma imagem_*",
+            "texto4": "*_⚠️ Ocorreu um erro ao converter para sticker_*\n\n*_✳️ Enviando imagem no lugar..._*"
+        },
+        "sticker_stickermarker": {
+            "texto1": [
+                "*_✳️ USO CORRECTO DO COMANDO ✳️_*",
+                "*👉 Use:*",
+                "(efeito)",
+                "- E responda a uma imagem",
+                "*✅ Exemplo:*",
+                "*Lista de Efeitos:*"
+            ],
+            "texto2": "*_🔰 Não foi encontrada nenhuma imagem_*\n\n*_✅ Responda a uma imagem_*",
+            "texto3": "*_⚠️ Formato não suportado_*\n\n*_👉🏻 Responda a uma imagem_*",
+            "texto4": "*_⚠️ Ocorreu um erro ao converter para sticker_*\n\n*_✳️ Enviando imagem no lugar..._*"
+        },
+        "sticker_ttp_attp": {
+            "texto1": "*[❗] Insira um texto*\n\n*—◉ Exemplo:*\n*◉"
+        },
+        "sticker_wm": {
+            "texto1": "*[❗️INFORMAÇÃO❗️] Responda ao adesivo que deseja adicionar a um Pacote e um Nome*",
+            "texto2": "*[❗️INFORMAÇÃO❗️] Responda ao adesivo que deseja adicionar a um Pacote e um Nome*",
+            "texto3": "*[❗️INFORMAÇÃO❗️] Responda ao adesivo que deseja adicionar a um Pacote e um Nome*",
+            "texto4": "*[❗️INFORMAÇÃO❗️] DESCULPE, FALHA RÁPIDA.. CERTIFIQUE-SE DE QUE RESPONDEU A UM ADESIVO E FORNECEU UM PACOTE, NOME DO PACOTE E NÚMERO DO PACOTE E NOME DE USUÁRIO*"
         }
     }
 }

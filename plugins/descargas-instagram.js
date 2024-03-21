@@ -7,6 +7,10 @@ import instagramDl from '@sasmeee/igdl';
 import {fileTypeFromBuffer} from 'file-type';
 import _translate from "./_translate.js"
 const tradutor = _translate.plugins.descargas_instagram
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, args, command, usedPrefix}) => {
   if (!args[0]) throw `${tradutor.texto1} _${usedPrefix + command} https://www.instagram.com/reel/Cc0NuYBg8CR/?utm_source=ig_web_copy_link_`;

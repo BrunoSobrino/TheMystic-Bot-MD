@@ -1,7 +1,13 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.random_loli
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, text, command}) => {
   const yh = global.loli;
   const url = yh[Math.floor(Math.random() * yh.length)];
-  conn.sendMessage(m.chat, {image: {url: url}, caption: 'ʀᴀɴᴅᴏᴍ ʟᴏʟɪ - ɪѕ ᴄᴜᴛᴇ 🥺'}, {quoted: m});
+  conn.sendMessage(m.chat, {image: {url: url}, caption: tradutor.texto1}, {quoted: m});
 };
 handler.command = /^(loli)$/i;
 handler.tags = ['anime'];
