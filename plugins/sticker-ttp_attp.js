@@ -1,8 +1,14 @@
 import fetch from 'node-fetch';
 import {sticker, addExif} from '../lib/sticker.js';
 import {Sticker} from 'wa-sticker-formatter';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.sticker_ttp_attp
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
-  if (!text) throw `*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃𝙾*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*◉ ${usedPrefix + command} Mystic-Bot*`;
+  if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Mystic-Bot*`;
   const teks = encodeURI(text);
 
   if (command == 'attp') {

@@ -1,26 +1,30 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.grupos_eliminar
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, participants, command, usedPrefix}) => {
-  if (!global.db.data.settings[conn.user.jid].restrict) throw '*[ ℹ️ ] El propietario del bot ha activado la función de restricción (*_restrict_*), por lo que no se ejecutó el comando solicitado.*';
-  const kicktext = `*[ ℹ️ ] Etiqueta o responde a un mensaje del participante que deseas eliminar.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} @${global.suittag}_`;
+  if (!global.db.data.settings[conn.user.jid].restrict) throw `${tradutor.texto1[0]} (*_restrict_*), ${tradutor.texto1[1]}`;
+  const kicktext = `${tradutor.texto2} _${usedPrefix + command} @${global.suittag}_`;
   if (!m.mentionedJid[0] && !m.quoted) return m.reply(kicktext, m.chat, {mentions: conn.parseMention(kicktext)});
-  if (m.message.extendedTextMessage === undefined || m.message.extendedTextMessage === null) return m.reply('*[ ℹ️ ] Etiqueta o responde a un mensaje del participante que deseas eliminar.');
+  if (m.message.extendedTextMessage === undefined || m.message.extendedTextMessage === null) return m.reply(tradutor.texto3);
   if (m.message.extendedTextMessage.contextInfo.participant !== null && m.message.extendedTextMessage.contextInfo.participant != undefined && m.message.extendedTextMessage.contextInfo.participant !== '') {
     const mentioned = m.message.extendedTextMessage.contextInfo.mentionedJid[0] ? m.message.extendedTextMessage.contextInfo.mentionedJid[0] : m.message.extendedTextMessage.contextInfo.participant;
-    if (conn.user.jid.includes(mentioned)) return m.reply('*[ ℹ️ ] No puedo eliminarme a mi mismo.*');
+    if (conn.user.jid.includes(mentioned)) return m.reply(tradutor.texto4);
     const responseb = await conn.groupParticipantsUpdate(m.chat, [mentioned], 'remove');
-    const exitoso1 = `*@${mentioned.split('@')[0]} ғᴜᴇ ᴇʟɪᴍɪɴᴀᴅᴏ ᴇxɪᴛᴏsᴀᴍᴇɴᴛᴇ ᴅᴇʟ ɢʀᴜᴘᴏ*`;
-    const error1 = `*@${mentioned.split('@')[0]} ᴇs ᴇʟ ᴄʀᴇᴀᴅᴏʀ ᴅᴇʟ ɢʀᴜᴘᴏ, ɴᴏ ᴘᴜᴇᴅᴏ ᴇʟɪᴍɪɴᴀʀ ᴀʟ ᴄʀᴇᴀᴅᴏʀ ᴅᴇʟ ɢʀᴜᴘᴏ*`;
-    const error2 = `*@${mentioned.split('@')[0]} ʏᴀ ʜᴀ sɪᴅᴏ ᴇʟɪᴍɪɴᴀᴅᴏ ᴏ ʜᴀ ᴀʙᴀɴᴅᴏɴᴀᴅᴏ ᴇʟ ɢʀᴜᴘᴏ*`;
+    const exitoso1 = `${tradutor.texto5[0]} @${mentioned.split('@')[0]} ${tradutor.texto5[1]}`;
+    const error1 = `${tradutor.texto6[0]} @${mentioned.split('@')[0]} ${tradutor.texto6[1]}`;
+    const error2 = `${tradutor.texto7[0]} @${mentioned.split('@')[0]} ${tradutor.texto7[1]}`;
     if (responseb[0].status === '200') m.reply(exitoso1, m.chat, {mentions: conn.parseMention(exitoso1)});
     else if (responseb[0].status === '406') m.reply(error1, m.chat, {mentions: conn.parseMention(error1)});
     else if (responseb[0].status === '404') m.reply(error2, m.chat, {mentions: conn.parseMention(error2)});
-    else conn.sendMessage(m.chat, {text: `*[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙸𝙽𝙴𝚂𝙿𝙴𝚁𝙰𝙳𝙾*`, mentions: [m.sender], contextInfo: {forwardingScore: 999, isForwarded: true}}, {quoted: m});
+    else conn.sendMessage(m.chat, {text: `${tradutor.texto8}`, mentions: [m.sender], contextInfo: {forwardingScore: 999, isForwarded: true}}, {quoted: m});
   } else if (m.message.extendedTextMessage.contextInfo.mentionedJid != null && m.message.extendedTextMessage.contextInfo.mentionedJid != undefined) {
     return;
   }
 };
-handler.help = ['echar'];
-handler.tags = ['group'];
-handler.command = /^(echar|hechar|sacar)$/i;
+handler.command = /^(kick|expulsar|eliminar|echar|sacar)$/i;
 handler.admin = handler.group = handler.botAdmin = true;
 export default handler;
 /* var mentioned = m.message.extendedTextMessage.contextInfo.mentionedJid

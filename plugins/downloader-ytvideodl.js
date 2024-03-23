@@ -1,18 +1,24 @@
 import ytdl from 'ytdl-core';
 import fs from 'fs';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.downloader_ytvideodl
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, args, isPrems, isOwner, command}) => {
   const getRandom = (ext) => {
     return `${Math.floor(Math.random() * 10000)}${ext}`;
   };
   if (args.length === 0) {
-    m.reply(`*[❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙴𝙽𝙻𝙰𝙲𝙴 / 𝙻𝙸𝙽𝙺 𝙳𝙴 𝚄𝙽 𝚅𝙸𝙳𝙴𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*`);
+    m.reply(`${tradutor.texto1}`);
     return;
   }
   try {
     const urlYt = args[0];
     if (!urlYt.startsWith('http')) {
-      m.reply(`*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝙴𝙽𝙻𝙰𝙲𝙴 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙾 𝙳𝙴 𝚈𝙾𝚄𝚃𝚄𝙱𝙴*`);
+      m.reply(`${tradutor.texto2}`);
       return;
     }
     const infoYt = await ytdl.getInfo(urlYt);
@@ -36,7 +42,7 @@ const handler = async (m, {conn, args, isPrems, isOwner, command}) => {
         conn.sendMessage( m.chat, {document: fs.readFileSync(`./tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: 'video/mp4'}, {quoted: m});
       }
     } else {
-      m.reply(`*[❗] 𝙴𝙻 𝙰𝚁𝙲𝙷𝙸𝚅𝙾 𝙴𝚂 𝚂𝚄𝙿𝙴𝚁𝙸𝙾𝚁 𝙰 𝟿𝟿𝟿 𝙼𝙱*`);
+      m.reply(`${tradutor.texto3}`);
     }
     fs.unlinkSync(`./tmp/${randomName}`);
   } catch (e) {

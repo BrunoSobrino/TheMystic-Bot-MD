@@ -1,6 +1,12 @@
 import {webp2png} from '../lib/webp2mp4.js';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.convertidor_toimg
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, usedPrefix, command}) => {
-  const notStickerMessage = `*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝚁 𝙴𝙽 𝙸𝙼𝙰𝙶𝙴𝙽 𝙲𝙾𝙽 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 ${usedPrefix + command}*`;
+  const notStickerMessage = `*${tradutor.texto1} ${usedPrefix + command}*`;
   if (!m.quoted) throw notStickerMessage;
   const q = m.quoted || m;
   const mime = q.mediaType || '';

@@ -1,4 +1,10 @@
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.rpg_adventure
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const cooldown = 1500000; // 25 minutos
 const handler = async (m, {usedPrefix, conn}) => {
   try {
@@ -267,28 +273,28 @@ const handler = async (m, {usedPrefix, conn}) => {
     if (user.health < 80) {
       return conn.reply(
           m.chat,
-          `_${htki} 𝙱𝙰𝙹𝙰 𝚂𝙰𝙻𝚄𝙳 ${htka}_\n\n𝚃𝚄 𝚂𝙰𝙻𝚄𝙳 💔 𝙴𝚂𝚃𝙰 𝙿𝙾𝚁 𝙳𝙴𝙱𝙰𝙹𝙾 𝙳𝙴 *80!!* 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙲𝚄𝚁𝙰𝚃𝙴 𝙿𝚁𝙸𝙼𝙴𝚁𝙾 𝙿𝙰𝚁𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚁 𝙳𝙴 𝙽𝚄𝙴𝚅𝙾`,
+          `_${htki} ${tradutor.texto1[0]} ${htka}_\n\n${tradutor.texto1[1]}`,
           m,
       );
     }
     if (new Date() - user.lastadventure <= cooldown) {
       return conn.reply(
           m.chat,
-          `${htki} 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙰𝙽𝙳𝙾 ${htka}\n\n𝚈𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝚂𝚃𝙴 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙴𝚂𝙿𝙴𝚁𝙰 𝙷𝙰𝚂𝚃𝙰 𝚀𝚄𝙴 𝚃𝙴𝚁𝙼𝙸𝙽𝙴 𝙴𝙻 𝚃𝙸𝙴𝙼𝙿𝙾 𝙳𝙴 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙾\n\n⏱️ ${timers.toTimeString()} DESCANSANDO`,
+          `${htki} ${tardutor.texto2[0]} ${htka}\n\n${tardutor.texto2[1]} ${timers.toTimeString()} ${tardutor.texto2[2]}`,
           m,
       );
     }
     const rewards = reward(user);
-    let text = `🛫 𝙴𝚂𝚃𝙰𝚂 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰𝙽𝙳𝙾 𝙴𝙽  *» ${kt[1][0].name}*
+    let text = `${tardutor.texto2[3]}  *» ${kt[1][0].name}*
 
 ${cmenut}
-${cmenub} *ID:* ${kt[1][0].id}
-${cmenub} *CIUDAD:* ${kt[1][0].capitalCity}
-${cmenub} *LONGITUD:* ${kt[1][0].longitude}
-${cmenub} *LATITUD:* ${kt[1][0].latitude}
+${cmenub} ${tradutor.texto3[0]} ${kt[1][0].id}
+${cmenub} ${tradutor.texto3[1]} ${kt[1][0].capitalCity}
+${cmenub} ${tradutor.texto3[2]} ${kt[1][0].longitude}
+${cmenub} ${tradutor.texto3[3]} ${kt[1][0].latitude}
 ${cmenuf}
 
-🏞️ 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 𝙵𝙸𝙽𝙰𝙻𝙸𝚉𝙰𝙳𝙰
+${tradutor.texto3[4]}
 ${cmenua}`;
 
     for (const lost in rewards.lost) {
@@ -298,7 +304,7 @@ ${cmenua}`;
         if (total) text += `\n${global.rpg.emoticon(lost)} ${total}`;
       }
     }
-    text += '\n\n✨ 𝚁𝙴𝙲𝙾𝙼𝙿𝙴𝚂𝙰𝚂 𝙳𝙴 𝙻𝙰 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰';
+    text += tradutor.texto4;
     for (const rewardItem in rewards.reward) {
       if (rewardItem in user) {
         const total = rewards.reward[rewardItem].getRandom();
@@ -306,12 +312,12 @@ ${cmenua}`;
         if (total) text += `\n» ${global.rpg.emoticon(rewardItem)} ${total}`;
       }
     }
-    conn.reply(m.chat, `${htki} 𝙰𝚅𝙴𝙽𝚃𝚄𝚁𝙰 ${htka}\n\n${text}`, m);
+    conn.reply(m.chat, `${htki} ${tradutor.texto5[0]} ${htka}\n\n${text}`, m);
     user.lastadventure = new Date() * 1;
   } catch {
     conn.reply(
         m.chat,
-        '*[❗𝐈𝐍𝐅𝐎❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁, 𝙸𝙽𝚃𝙴𝙽𝚃𝙰𝙻𝙾 𝙳𝙴 𝙽𝚄𝙴𝚅𝙾, 𝚂𝙴𝙶𝚄𝚁𝙾 𝙻𝙰 𝙰𝙿𝙸 𝙽𝙾 𝙶𝙴𝙽𝙴𝚁𝙾 𝙻𝙰 𝙸𝙼𝙰𝙶𝙴𝙽*',
+        `${tradutor.texto5[1]}`,
         m,
     );
   }

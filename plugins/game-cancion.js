@@ -1,27 +1,34 @@
 import fetch from 'node-fetch';
 import axios from 'axios';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.game_cancion
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
+
 const timeout = 60000;
 const poin = 1000;
 const handler = async (m, {conn, usedPrefix}) => {
   conn.tebaklagu = conn.tebaklagu ? conn.tebaklagu : {};
   const id = m.chat;
   if (id in conn.tebaklagu) {
-    conn.reply(m.chat, 'Todavía hay canciones sin respuesta en este chat.', conn.tebaklagu[id][0]);
+    conn.reply(m.chat, tradutor.texto1, conn.tebaklagu[id][0]);
     throw false;
   } // 5LTV57azwaid7dXfz5fzJu
   const res = await fetchJson(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/tebaklagu.json`);
   const json = res[Math.floor(Math.random() * res.length)];
   const caption = `
-ADIVINA EL TITULO DE LA CANCION
-Tiempo ${(timeout / 1000).toFixed(2)} segundos
-Escribe *${usedPrefix}pista* Para obtener una pista
-Premio: ${poin} XP
-RESPONDE A ESTE MENSAJE CON LAS RESPUESTAS!`.trim();
+${tradutor.texto2[0]}
+${tradutor.texto2[1]} ${(timeout / 1000).toFixed(2)} ${tradutor.texto2[2]}
+${tradutor.texto2[3]} *${usedPrefix}pista* ${tradutor.texto2[4]}
+${tradutor.texto2[5]} ${poin} XP
+${tradutor.texto2[6]}`.trim();
   conn.tebaklagu[id] = [
     await m.reply(caption),
     json, poin,
     setTimeout(() => {
-      if (conn.tebaklagu[id]) conn.reply(m.chat, `Se acabó el tiempo!\nLa respuesta es ${json.jawaban}`, conn.tebaklagu[id][0]);
+      if (conn.tebaklagu[id]) conn.reply(m.chat, `${tradutor.texto3} ${json.jawaban}`, conn.tebaklagu[id][0]);
       delete conn.tebaklagu[id];
     }, timeout),
   ];

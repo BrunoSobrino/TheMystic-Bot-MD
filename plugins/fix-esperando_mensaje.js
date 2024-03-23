@@ -2,10 +2,16 @@
 
 import { readdirSync, unlinkSync, existsSync, promises as fs, rmSync } from 'fs';
 import path from 'path';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.fix_esperando_mensage
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, { conn, usedPrefix }) => {
   if (global.conn.user.jid !== conn.user.jid) {
-    return conn.sendMessage(m.chat, {text: '*[❗] Utiliza este comando directamente en el número principal del Bot*'}, {quoted: m});
+    return conn.sendMessage(m.chat, {text: tradutor.texto1}, {quoted: m});
   }
   const chatId = m.isGroup ? [m.chat, m.sender] : [m.sender];
   const sessionPath = './MysticSession/';
@@ -22,15 +28,15 @@ const handler = async (m, { conn, usedPrefix }) => {
       }
     }
     if (filesDeleted === 0) {
-      await conn.sendMessage(m.chat, {text: '*[❗] No se encontró ningún archivo que incluya la ID del chat*'}, {quoted: m});
+      await conn.sendMessage(m.chat, {text: tradutor.texto2}, {quoted: m});
     } else {
-      await conn.sendMessage(m.chat, {text: `*[❗] Se eliminaron ${filesDeleted} archivos de sesión*`}, {quoted: m});
+      await conn.sendMessage(m.chat, {text: `${tradutor.texto3[0]} ${filesDeleted} ${tradutor.texto3[1]}`}, {quoted: m});
     }
   } catch (err) {
-    console.error('Error al leer la carpeta o los archivos de sesión:', err);
-    await conn.sendMessage(m.chat, {text: '*[❗] Ocurrió un error al eliminar los archivos de sesión*'}, {quoted: m});
+    console.error(tradutor.texto4, err);
+    await conn.sendMessage(m.chat, {text: tradutor.texto5}, {quoted: m});
   }
-  await conn.sendMessage(m.chat, {text: `*👋 ¡Hola! Ahora me ves?*\n\n*[❗] Si el Bot no le responde a sus comandos por favor haga un pequeño spam*\n\n*—◉ Ejemplo:*\n${usedPrefix}s\n${usedPrefix}s\n${usedPrefix}s`}, {quoted: m});
+  await conn.sendMessage(m.chat, {text: `${tradutor.texto6} \n${usedPrefix}s\n${usedPrefix}s\n${usedPrefix}s`}, {quoted: m});
 };
 handler.help = ['fixmsgespera'];
 handler.tags = ['fix'];

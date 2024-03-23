@@ -1,20 +1,26 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.herramientas_igstalk
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, args, usedPrefix, command}) => {
-  if (!args[0]) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝙸𝙽𝚂𝚃𝙰𝙶𝚁𝙰𝙼, 𝙴𝙹𝙴𝙼𝙿𝙻𝙾: ${usedPrefix + command} luisitocomunica*`;
+  if (!args[0]) throw `${tradutor.texto1} ${usedPrefix + command} luisitocomunica*`;
   const res = await igstalk(args[0].replace(/^@/, ''));
   const res2 = await fetch(`https://api.lolhuman.xyz/api/stalkig/${args[0].replace(/^@/, '')}?apikey=${lolkeysapi}`);
   const res3 = await res2.json();
   const json = JSON.parse(JSON.stringify(res));
-  const iggs = `_*< HERRAMENTAS - IGSTALK />*_\n
- ▢ *Nombre:* ${json.fullname}
- ▢ *Usuario:* ${json.username}
- ▢ *Seguidores:* ${json.followers}
- ▢ *Seguidos:* ${json.following}
- ▢ *Publicaciones:* ${json.post}
- ▢ *Enlace:* https://instagram.com/${json.username.replace(/^@/, '')}
- ▢ *Biografía:*\n${json.bio}`.trim();
+  const iggs = `_*${tradutor.texto2[0]}*_\n
+${tradutor.texto2[1]} ${json.fullname}
+${tradutor.texto2[2]} ${json.username}
+${tradutor.texto2[3]}:* ${json.followers}
+${tradutor.texto2[4]} ${json.following}
+${tradutor.texto2[5]} ${json.post}
+${tradutor.texto2[6]} https://instagram.com/${json.username.replace(/^@/, '')}
+${tradutor.texto2[7]}\n${json.bio}`.trim();
   const aa = `${res3.result.photo_profile || res.profile}`;
   await conn.sendFile(m.chat, aa, 'error.jpg', iggs, m);
 };

@@ -1,9 +1,14 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.herramientas_readviewonce
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const {downloadContentFromMessage} = (await import('@whiskeysockets/baileys'));
 
 const handler = async (m, {conn}) => {
-  if (!m.quoted) throw '*[❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰 𝚄𝙽 𝙼𝙴𝙽𝚂𝙰𝙹𝙴 𝚀𝚄𝙴 𝙷𝙰𝚈𝙰 𝚂𝙸𝙳𝙾 𝙴𝙽𝚅𝙸𝙰𝙳𝙾 𝙴𝙽 𝚅𝙸𝙴𝚆𝙾𝙽𝙲𝙴 (𝚅𝙴𝚁 𝚂𝙾𝙻𝙾 𝚄𝙽𝙰 𝚅𝙴𝚉)*';
-  if (m.quoted.mtype !== 'viewOnceMessageV2') throw '*[❗] 𝙴𝙻 𝙼𝙴𝙽𝚂𝙰𝙹𝙴 𝚂𝙴𝙻𝙴𝙲𝙲𝙸𝙾𝙽𝙰𝙳𝙾 𝙽𝙾 𝙴𝚂 𝚅𝙸𝙴𝚆𝙾𝙽𝙲𝙴 (𝚅𝙴𝚁 𝚂𝙾𝙻𝙾 𝚄𝙽𝙰 𝚅𝙴𝚉)*';
+  if (!m.quoted) throw tradutor.texto1;
+  if (m.quoted.mtype !== 'viewOnceMessageV2') throw tradutor.texto2;
   const msg = m.quoted.message;
   const type = Object.keys(msg)[0];
   const media = await downloadContentFromMessage(msg[type], type == 'imageMessage' ? 'image' : 'video');

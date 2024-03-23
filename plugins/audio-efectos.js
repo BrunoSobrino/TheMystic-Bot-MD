@@ -1,6 +1,11 @@
 import {unlinkSync, readFileSync} from 'fs';
 import {join} from 'path';
 import {exec} from 'child_process';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.audio_efectos
+ // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+  // To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
   try {
@@ -32,7 +37,7 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
           ptt: true,
         });
       });
-    } else throw `*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰𝙻 𝙰𝚄𝙳𝙸𝙾 𝙾 𝙽𝙾𝚃𝙰 𝙳𝙴 𝚅𝙾𝚉 𝙴𝙻 𝙲𝚄𝙰𝙻 𝚂𝙴𝚁𝙰 𝙼𝙾𝙳𝙸𝙵𝙸𝙲𝙰𝙳𝙾, 𝚄𝚂𝙰𝙳𝙾 𝙴𝙻 𝙲𝙾𝙰𝙼𝙰𝙽𝙳𝙾 ${usedPrefix + command}*`;
+    } else throw `${tradutor.texto1} ${usedPrefix + command}*`;
   } catch (e) {
     throw e;
   }

@@ -6,8 +6,15 @@
 
 import axios from 'axios';
 import cheerio from 'cheerio';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.downloader_tiktok_img
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
+
 let handler = async (m, { conn, text: tiktok, args, command, usedPrefix}) => {
-if (!tiktok) throw '*[❗] Ingresa un enlace de tiktok imagenes, ejemplo: "https://vm.tiktok.com/ZM2cqBRVS/".*';        
+if (!tiktok) throw tradutor.texto1;        
 let imagesSent
 if (imagesSent) return;
 imagesSent = true    
@@ -20,7 +27,7 @@ for (let d of result) {
 imagesSent = false
 } catch {
     imagesSent = false    
-    throw '*[❗] No se obtuvo respuesta de la página, intente más tarde.*'
+    throw tradutor.texto2
  }
 };
 handler.command = /^(ttimg|tiktokimg)$/i;
@@ -37,11 +44,11 @@ async function ttimg(link) {
             imgSrc.push($(element).attr('src'));
         });
         if (imgSrc.length === 0) {
-            return { data: '*[❗] No se encontraron imágenes en el enlace proporcionado.*' };
+            return { data: tradutor.texto3 };
         }
         return { data: imgSrc }; 
     } catch (error) {
         console.lo (error);
-        return { data: '*[❗] No se obtuvo respuesta de la página, intente más tarde.*'};
+        return { data: tradutor.texto4};
     };
 };

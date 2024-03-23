@@ -1,16 +1,22 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.rpg_balance
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {usedPrefix}) => {
   let who;
   if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
   else who = m.sender;
   const name = conn.getName(who);
   m.reply(`
-┌───⊷ 𝐁𝐀𝐋𝐀𝐍𝐂𝐄 ⊶
-▢ *𝙽𝚘𝚖𝚋𝚛𝚎:* ${name}
-▢ *𝙳𝚒𝚊𝚖𝚊𝚗𝚝𝚎𝚜:* ${global.db.data.users[who].limit}💎
-└──────────────
-*𝙽𝙾𝚃𝙰:* 
-*𝙿𝚞𝚎𝚍𝚎𝚜 𝚌𝚘𝚖𝚙𝚛𝚊𝚛 𝚍𝚒𝚊𝚖𝚊𝚗𝚝𝚎𝚜 💎 𝚞𝚜𝚊𝚗𝚍𝚘 𝚕𝚘𝚜 𝚌𝚘𝚖𝚊𝚗𝚍𝚘𝚜*
-❏ *${usedPrefix}buy <cantidad>*
+${tradutor.texto1[0]}
+${tradutor.texto1[1]} ${name}
+${tradutor.texto1[2]} ${global.db.data.users[who].limit}💎
+${tradutor.texto1[3]}
+${tradutor.texto1[4]} 
+${tradutor.texto1[5]}
+❏ *${usedPrefix}buy ${tradutor.texto1[6]}
 ❏ *${usedPrefix}buyall*`);
 };
 handler.help = ['bal'];

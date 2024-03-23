@@ -1,4 +1,9 @@
 // TheMystic-Bot-MD@BrunoSobrino - _antiprivado.js
+import _translate from "./_translate.js" // Chamando o Modulo
+const tradutor = _translate.plugins._antiprivado // Acessar somente os texto _antiprivado
+   // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+  // To set the language, in the root of the project, modify the config.json file.
 
 export async function before(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner}) {
   if (m.isBaileys && m.fromMe) return !0;
@@ -8,7 +13,7 @@ export async function before(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner}) 
   const chat = global.db.data.chats[m.chat];
   const bot = global.db.data.settings[this.user.jid] || {};
   if (bot.antiPrivate && !isOwner && !isROwner) {
-    await m.reply(`_*< ANTI-PRIVADO />*_\n\n*[ ℹ️ ] La función antiprivado está habilitada, por lo tanto serás bloqueado.*`, false, {mentions: [m.sender]});
+    await m.reply(tradutor.texto1, false, {mentions: [m.sender]});
     await this.updateBlockStatus(m.chat, 'block');
   }
   return !1;

@@ -1,3 +1,9 @@
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.gc_config
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const isClose = { // Switch Case Like :v
     'open': 'not_announcement',
@@ -9,15 +15,15 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
   }[(args[0] || '')];
   if (isClose === undefined) {
     throw `
-*[❗] 𝙵𝙾𝚁𝙼𝙰𝚃𝙾 𝙴𝚁𝚁𝙾𝙽𝙴𝙾!!*
+${tradutor.texto1[0]}
 
-*┏━━━❲ ✨𝙴𝙹𝙴𝙼𝙿𝙻𝙾✨ ❳━━━┓* 
+${tradutor.texto1[1]}
 *┠┉↯ ${usedPrefix + command} abrir*
 *┠┉↯ ${usedPrefix + command} cerrar*
 `.trim();
   }
   await conn.groupSettingUpdate(m.chat, isClose);
-  {m.reply('*[ ✔ ] 𝙶𝚁𝚄𝙿𝙾 𝙲𝙾𝙽𝙵𝙸𝙶𝚄𝚁𝙰𝙳𝙾 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙰𝙼𝙴𝙽𝚃𝙴*');}
+  {m.reply(`${tradutor.texto1[0]}`);}
 };
 handler.help = ['group open / close', 'grupo abrir / cerrar'];
 handler.tags = ['group'];

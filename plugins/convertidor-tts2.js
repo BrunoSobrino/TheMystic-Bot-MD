@@ -13,18 +13,25 @@
 
 import axios from 'axios';
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.convertidor_tts2
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
+
 const handler = async (m, { conn, usedPrefix, command, text, args }) => {
   const [efecto, ...textoArray] = text.split(" ");
   const texto = textoArray.join("");
 
   if (!efecto) {
     let voiceList = await getVoiceList();
-    let responseText = `*[❗] No haz ingresado un efecto, por favor ingresa un efecto de voz.*\n\n*—◉ Elige uno de los siguientes efectos:*\n`;
+    let responseText = `*${tradutor.texto1}*\n`;
 
     for (let i = 0, count = 0; count < 100 && i < voiceList.resultado.length; i++) {
       const entry = voiceList.resultado[i];
       if (entry.ID.length <= 20) {
-        responseText += `*◉ ${usedPrefix + command} ${entry.ID} tu_texto_aquí*\n`;
+        responseText += `*◉ ${usedPrefix + command} ${entry.ID} ${tradutor.texto2}*\n`;
         count++;
       }
     }
@@ -41,9 +48,9 @@ const handler = async (m, { conn, usedPrefix, command, text, args }) => {
     }
   }
 
-  if (!efectoValido) return conn.sendMessage(m.chat, { text: `*[❗] El efecto proporcionado no existe en la lista, utiliza ${usedPrefix + command} para conocer la lista de efectos.*` }, { quoted: m });
+  if (!efectoValido) return conn.sendMessage(m.chat, { text: `*${tradutor.texto3[0]} ${usedPrefix + command} ${tradutor.texto3[1]}*` }, { quoted: m });
 
-  if (!texto) return conn.sendMessage(m.chat, {text: `*[❗] Ingresa el texto que quieras convertir a audio.*\n\n*—◉ Ejemplo:*\n*◉ ${usedPrefix + command} ${efecto} Hola, este es un ejemplo de uso del comando.*`}, {quoted: m});
+  if (!texto) return conn.sendMessage(m.chat, {text: `*${tradutor.texto4[0]}*\n*◉ ${usedPrefix + command} ${efecto} ${tradutor.texto4[1]}*`}, {quoted: m});
 
   let masivo = await makeTTSRequest(texto, efecto);
   conn.sendMessage(m.chat, {audio: {url: masivo.resultado}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
@@ -79,10 +86,10 @@ async function getVoiceList() {
       name: entry.name,
       lenguaje: entry.language  
     }));
-    return { resultado: simplifiedList ? simplifiedList : '[❗] Error, no se obtuvo respuesta de la API.' };
+    return { resultado: simplifiedList ? simplifiedList : `${tradutor.texto5}` };
   } catch (error) {
     console.error('Error:', error);
-    return { resultado: '[❗] Error, no se obtuvo respuesta de la API.' };
+    return { resultado: `${tradutor.texto6}` };
     throw error;
   }
 }
@@ -101,7 +108,7 @@ async function makeTTSRequest(texto, efecto) {
     const eventData = events.find(event => event.includes('"stage":"complete"'));
     const urlMatch = eventData.match(/"url":"([^"]+)"/);
     const url = urlMatch ? urlMatch[1] : null;
-    return { resultado: url ? url : '[❗] URL no encontrada en la respuesta.' };
+    return { resultado: url ? url : `${tradutor.texto7}` };
   } catch (error) {
     console.error('Error:', error);
     return { resultado: '[❗] Error, no se obtuvo respuesta de la API.' };

@@ -1,8 +1,14 @@
 import fetch from 'node-fetch';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.ia_character_ai
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
   if (!text) {
-    throw `_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Proporciona un texto.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} Hola, ¿cómo estás?_`;
+    throw `${tradutor.texto1[0]} _${usedPrefix + command} ${tradutor.texto1[1]}`;
   }
 
   try {
@@ -16,10 +22,10 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
       const respuestaAPI = data.data;
       conn.reply(m.chat, respuestaAPI, m);
     } else {
-      throw '_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] No se pudo obtener una respuesta válida.*';
+      throw tradutor.texto2;
     }
   } catch (error) {
-    throw `_*< IA - CHARACTER.AI />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*`;
+    throw tradutor.texto3;
   }
 };
 

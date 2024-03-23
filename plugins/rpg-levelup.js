@@ -1,5 +1,10 @@
 import { canLevelUp, xpRange } from '../lib/levelling.js';
 import { levelup } from '../lib/canvas.js';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.rpg_levelup
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, { conn }) => {
   const name = conn.getName(m.sender);
@@ -8,28 +13,28 @@ const handler = async (m, { conn }) => {
   if (!canLevelUp(user.level, user.exp, global.multiplier)) {
     const { min, xp, max } = xpRange(user.level, global.multiplier);
     const message = `
-🏰 *Gremio de Aventureros*
-*¡Bienvenido, ${usertag}!*
+${tradutor.texto1[0]}
+${tradutor.texto1[1]} ${usertag}!*
 
-*◉ Nivel actual:* ${user.level}
-*◉ Rango actual:* ${user.role}
-*◉ Puntos de Experiencia:* ${user.exp - min}/${xp}
+${tradutor.texto1[2]} ${user.level}
+${tradutor.texto1[3]} ${user.role}
+${tradutor.texto1[4]} ${user.exp - min}/${xp}
 
-*—◉ Para ascender de nivel necesitas obtener ${max - user.exp} puntos de experiencia más. Sigue interactuando con el Bot!.*`.trim();
+${tradutor.texto1[5]} ${max - user.exp} ${tradutor.texto1[6]}`.trim();
     return conn.sendMessage(m.chat, {text: message, mentions: [m.sender]}, {quoted: m});
   }
   const before = user.level * 1;
   while (canLevelUp(user.level, user.exp, global.multiplier)) user.level++;
   if (before !== user.level) {
-    const levelUpMessage = `🎉 ¡Felicidades, ${name}! Has subido de nivel a ${user.level}`;
+    const levelUpMessage = `${tradutor.texto2[0]} ${name}! ${tradutor.texto2[1]} ${user.level}`;
     const levelUpDetails = `
-🚀 *Nuevo Nivel Alcanzado*
+${tradutor.texto3[0]}
 
-*◉ Nivel anterior:* ${before}
-*◉ Nuevo nivel:* ${user.level}
-*◉ Rango actual:* ${user.role}
+${tradutor.texto3[1]}* ${before}
+${tradutor.texto3[2]} ${user.level}
+${tradutor.texto3[3]} ${user.role}
 
-*—◉ Continúa explorando y realizando misiones para alcanzar nuevas alturas en el Gremio de Aventureros. Sigue interactuando con el Bot!.*`.trim();
+${tradutor.texto3[4]}`.trim();
     try {
       const levelUpImage = await levelup(levelUpMessage, user.level);
       conn.sendFile(m.chat, levelUpImage, 'levelup.jpg', levelUpDetails, m);

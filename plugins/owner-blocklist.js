@@ -1,8 +1,13 @@
 /* Creado por https://github.com/FG98F */
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.owner_blocklist
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {conn}) => {
   await conn.fetchBlocklist().then(async (data) => {
-    let txt = `*≡ Lista de bloqueados*\n\n*Total :* ${data.length}\n\n┌─⊷\n`;
+    let txt = `${tradutor.texto1} ${data.length}\n\n┌─⊷\n`;
     for (const i of data) {
       txt += `▢ @${i.split('@')[0]}\n`;
     }
@@ -10,7 +15,7 @@ const handler = async (m, {conn}) => {
     return conn.reply(m.chat, txt, m, {mentions: await conn.parseMention(txt)});
   }).catch((err) => {
     console.log(err);
-    throw 'No hay números bloqueados';
+    throw tradutor.texto2;
   });
 };
 handler.help = ['blocklist'];

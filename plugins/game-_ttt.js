@@ -1,4 +1,10 @@
 import {format} from 'util';
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.game__ttt
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
+
 const debugMode = !1;
 const winScore = 4999;
 const playScore = 99;
@@ -26,10 +32,10 @@ export async function before(m) {
     }
     if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
       m.reply({
-        '-3': 'El juego ha terminado',
-        '-2': 'Inválido',
-        '-1': 'Posición inválida',
-        '0': 'Posición inválida',
+        '-3': tradutor.texto1[0],
+        '-2': tradutor.texto1[1],
+        '-1': tradutor.texto1[2],
+        '0': tradutor.texto1[3],
       }[ok]);
       return !0;
     }
@@ -59,7 +65,7 @@ export async function before(m) {
     }
     const winner = isSurrender ? room.game.currentTurn : room.game.winner;
     const str = `
-🎮 𝐓𝐑𝐄𝐒 𝐄𝐍 𝐑𝐀𝐘𝐀 🎮
+🎮 ${tradutor.texto2} 🎮
 
 ❎ = @${room.game.playerX.split('@')[0]}
 ⭕ = @${room.game.playerO.split('@')[0]}
@@ -68,7 +74,7 @@ export async function before(m) {
         ${arr.slice(3, 6).join('')}
         ${arr.slice(6).join('')}
 
-${isWin ? `@${(isSurrender ? room.game.currentTurn : room.game.winner).split('@')[0]} 𝙶𝙰𝙽𝙰𝚂𝚃𝙴 🥳, 𝚃𝙴 𝙻𝙻𝙴𝚅𝙰𝚂 +4999 𝚎𝚡𝚙` : isTie ? '𝙴𝙻 𝙹𝚄𝙴𝙶𝙾 𝚃𝙴𝚁𝙼𝙸𝙽𝙾 𝙴𝙽 𝙴𝙼𝙿𝙰𝚃𝙴 😐' : `𝚃𝚄𝚁𝙽𝙾 𝙳𝙴 @${room.game.currentTurn.split('@')[0]}`}
+${isWin ? `@${(isSurrender ? room.game.currentTurn : room.game.winner).split('@')[0]} ${tradutor.texto3}` : isTie ? tradutor.texto4 : `${tradutor.texto5} @${room.game.currentTurn.split('@')[0]}`}
 `.trim();
     const users = global.db.data.users;
     if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== m.chat) {

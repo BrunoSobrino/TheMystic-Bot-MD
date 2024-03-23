@@ -1,4 +1,9 @@
 /* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
+import _translate from "./_translate.js"
+const tradutor = _translate.plugins.info_donar
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 import {generateWAMessageFromContent} from '@whiskeysockets/baileys';
 import fs from 'fs';
@@ -6,23 +11,23 @@ const handler = async (m, {conn, usedPrefix, command}) => {
   const name = await conn.getName(m.sender);
   const donar =`
 *┏ ┅ ━━━━━━━━━━━━━━━━━ ┅ ━*
-*┇          「 𝐃𝐎𝐍𝐀𝐑 」*
+*┇          「 ${tradutor.texto1[0]} 」*
 *┣ ┅ ━━━━━━━━━━━━━━━━━ ┅ ━*
-*┃ 𝙷𝙾𝙻𝙰 ${name}*
+*┃ ${tradutor.texto1[1]} ${name}*
 *┃*
-*┃ 👉🏻 𝙰𝚀𝚄𝙸 𝙰𝙻𝙶𝚄𝙽𝙾𝚂 𝙳𝙰𝚃𝙾𝚂*
-*┃ 𝙿𝙾𝚁 𝚂𝙸 𝙶𝚄𝚂𝚃𝙰𝚂 𝙰𝙿𝙾𝚈𝙰𝚁 :𝟹*
+*┃ ${tradutor.texto1[2]}*
+*┃ ${tradutor.texto1[3]}*
 *┃*
-*┃ ➤ 𝙲𝙻𝙰𝚅𝙴:* 
-*┃ 646180192175788481*
-*┃ ➤ 𝙱𝙰𝙽𝙲𝙾: STP* 
-*┃ ➤ 𝙱𝙴𝙽𝙴𝙵𝙸𝙲𝙸𝙰𝚁𝙸𝙾: Bruno Sobrino* 
-*┃ ➤ 𝙲𝙾𝙽𝙲𝙴𝙿𝚃𝙾: APOYO*  
-*┃ ➤ 𝙿𝙰𝚈𝙿𝙰𝙻: https://www.paypal.me/TheShadowBrokers133*
+*┃ ${tradutor.texto1[4]}* 
+*┃ ${tradutor.texto1[5]}*
+*┃ ${tradutor.texto1[6]}*
+*┃ ${tradutor.texto1[7]}* 
+*┃ ${tradutor.texto1[8]}*  
+*┃ ${tradutor.texto1[9]}* 
 *┃*
-*┃ 👉🏻 𝙲𝙾𝙽𝚃𝙰𝙲𝚃𝙰𝙼𝙴 𝚂𝙸 𝙽𝙴𝙲𝙴𝚂𝙸𝚃𝙰𝚂*
-*┃ 𝙼𝙰𝚂 𝙳𝙰𝚃𝙾𝚂 𝚈 𝙿𝙰𝚁𝙰 𝙰𝙶𝚁𝙰𝙳𝙴𝙲𝙴𝚁𝚃𝙴*
-*┃ wa.me/5219992095479*
+*┃ ${tradutor.texto1[10]}* 
+*┃ ${tradutor.texto1[11]}* 
+*┃ ${tradutor.texto1[12]}* 
 *┗ ┅ ━━━━━━━━━━━━━━━━━ ┅ ━*
 `.trim();
   const aa = {quoted: m, userJid: conn.user.jid};

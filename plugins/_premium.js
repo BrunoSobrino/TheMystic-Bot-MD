@@ -1,3 +1,10 @@
+import _translate from "./_translate.js";
+const tradutor = _translate.plugins._premium
+ // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+  // To set the language, in the root of the project, modify the config.json file.
+  
+
 const handler = (m) => m;
 
 export async function all(m) {
@@ -8,7 +15,7 @@ export async function all(m) {
         user.premium = false;
         const JID = Object.keys(global.db.data.users).find((key) => global.db.data.users[key] === user);
         const usuarioJid = JID.split`@`[0];
-        const textoo = `*[❗] @${usuarioJid} 𝚃𝚄 𝚃𝙸𝙴𝙼𝙿𝙾 𝙲𝙾𝙼𝙾 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼 𝙷𝙰 𝙴𝚇𝙿𝙸𝚁𝙰𝙳𝙾, 𝚈𝙰 𝙽𝙾 𝙴𝚁𝙴𝚂 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙿𝚁𝙴𝙼𝙸𝚄𝙼*`;
+        const textoo = `*[❗] @${usuarioJid} ${tradutor.texto1}`;
         await this.sendMessage(JID, {text: textoo, mentions: [JID]}, {quoted: ''});
       }
     }
