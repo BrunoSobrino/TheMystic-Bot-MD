@@ -153,6 +153,8 @@ npm start
 <a href="https://github.com/OFC-YOVANI"><img src="https://github.com/OFC-YOVANI.png" width="100" height="100" alt="OFC-YOVANI"/> </a>
 <a href="https://github.com/elrebelde21"><img src="https://github.com/elrebelde21.png" width="100" height="100" alt="elrebelde21"/> </a>
 <a href="https://github.com/Fabri115"><img src="https://github.com/Fabri115.png" width="100" height="100" alt="Fabri115"/> </a>
+<a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> </a>
+
 
 ## `▢ AGRADECIMIENTOS & CREDITOS` 
 <div><button id="boton" type="button">games-wabot-md by BochilGaming </button></div>
