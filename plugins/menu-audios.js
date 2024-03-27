@@ -176,9 +176,9 @@ import { createHash } from 'crypto'
 *㋡〄رقم المطور〄*
 *㋡◐↯ده: https://wa.me/201554824764* 
 *㋡〄جروب المطور〄*
-*㋡◐↯ده: https://chat.whatsapp.com/KoFS4bZiHXe6gr1p0ONNcJ* 
+*㋡◐↯ده: https://chat.whatsapp.com/F8vu51zUa1UD0Y2AyKjWu1* 
 *㋡〄يوتيوب المطور〄*
-*㋡◐↯ده:https: //www.youtube.com/@legendmahmoud6502*
+*㋡◐↯ده: https: //www.youtube.com/@legendmahmoud6502*
 
 *㋡ـــ͙͢♪♤♪͙͢ـــ حقوق المطور ـــ͙͢♪♤♪͙͢ـــ*
  `.trim()
