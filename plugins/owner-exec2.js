@@ -22,6 +22,6 @@ const handler = async (m, {conn, isOwner, command, text, usedPrefix, args, isROw
     if (stderr.trim()) m.reply(stderr);
   }
 };
-handler.customPrefix = /^[$]/;
+handler.customPrefix = /[$]/;
 handler.command = new RegExp;
 export default handler;

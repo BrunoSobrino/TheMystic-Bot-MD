@@ -11,12 +11,13 @@ const handler = async (m, {conn, args}) => {
     contextInfo: {externalAdReply: {mediaUrl: null, mediaType: 1, description: null,
       title: tradutor.texto1[0],
       body: '𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝',
-      previewType: 0, thumbnail: fs.readFileSync('./Menu2.jpg'),
-      sourceUrl: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`}}});
+      previewType: 0, thumbnail: fs.readFileSync('./sample_eaa5aab8e81a981182abd4a7c37f106796a2a475.jpg'),
+      sourceUrl: `https://chat.whatsapp.com/KT4Ct4CyUbGHxcRxzNu7hX`}}});
 };
 handler.help = ['linkgroup'];
 handler.tags = ['group'];
 handler.command = /^link(gro?up)?$/i;
 handler.group = true;
+handler.admin = true;
 handler.botAdmin = true;
 export default handler;
