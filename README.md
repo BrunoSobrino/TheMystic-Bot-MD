@@ -1,5 +1,9 @@
 # `𝙏𝙝𝙚 𝙢𝙚𝙜𝙤-𝙗𝙤𝙩` 
 
+<p align="center">
+<img src="https://telegra.ph/file/bda9ed97f962db2e7f154.jpg" alt="Mego-Bot-MD" width="900"/>
+</p>
+
 ------------------
 > **ملاحظة**: أنا "Mego"، تقاعدت من كل ما يتعلق بالبوت أو المواضيع المشابهة، لذا في مرحلة ما سيصبح قديمًا و/أو ستتوقف بعض الأوامر عن العمل.  أنا أقدر تفضيلك خلال الرحلة عبر عالم الروبوتات هذا.
 
@@ -47,3 +51,9 @@
 
 [![نشر في ريندر](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
+
+#### Heroku Buildpack
+| BuildPack | LINK |
+|--------|--------|
+| **FFMPEG** |[click](https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest) |
+| **IMAGEMAGICK** | [click](https://github.com/DuckyTeam/heroku-buildpack-imagemagick) |
