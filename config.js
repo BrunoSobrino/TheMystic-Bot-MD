@@ -48,7 +48,7 @@ global.gt = '☾︎ 𝙈𝙀𝙂𝙊𝘽𝙊𝙏-𝙈𝘿 ☽︎';
 global.mysticbot = '☾︎ 𝙈𝙀𝙂𝙊𝘽𝙊𝙏-𝙈𝘿 ☽︎';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
 global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
-global.waitt = '*[ ⏳ ] انتظر جاي التحميل تابع صاحب البوت...\n\ninstagram.com/mego51_51*';
+global.waitt = '*[ ⏳ ] انتظر جاي التحميل تابع صاحب البوت...\n\ninstagram.com/mego51_51*;
 global.waittt = '*[ ⏳ ] انتظر جاي التحميل تابع صاحب البوت...\n\ninstagram.com/mego51_51*;
 global.waitttt = '*[ ⏳ ] انتظر جاي التحميل تابع صاحب البوت...\n\ninstagram.com/mego51_51*;
 global.nomorown = '201025663589';
