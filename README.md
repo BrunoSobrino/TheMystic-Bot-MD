@@ -37,7 +37,21 @@
 ### `▢ المكونات الإضافية`
 - هل لديك أفكار للمكونات الإضافية أو هل ترغب في الحصول على المزيد من المكونات الإضافية؟  ثم قم [انقر هنا]([](https://github.com/theh2so4/Mystic-Plugins))
 
+### `▢ نشط في كافيركسوس (Zipponodes سابقًا)`
+<a href="https://www.cafirexos.com"><img src="https://r2.cafirexos.com/logos%2Flogo_cfros_2000x2000.png" height="125px"></a>
+- Sitio web: [www.cafirexos.com](https://www.cafirexos.com)
+- Dash: [dash.cafirexos.com](https://dash.cafirexos.com)
+- Panel: [panel.cafirexos.com](https://panel.cafirexos.com)
+- Documentación: [docs.cafirexos.com](https://docs.cafirexos.com)
+- Canal de WhatsApp: [clic aquí](https://cafirexos.com/whatsapp)
 
+### `▢ التنشيط في BOXMINHOST`
+<a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
+- Pagina Oficial: [https://boxmineworld.com](https://boxmineworld.com)
+- Dashboard: [https://dash.boxmineworld.com](https://dash.boxmineworld.com)
+- Panel: [https://panel.boxmineworld.com](https://panel.boxmineworld.com)
+- Tutorial: [https://youtu.be/eC9TfKICpcY](https://youtu.be/eC9TfKICpcY)
+- Dudas UNICAMENTE SOBRE EL HOST: [https://discord.gg/84qsr4v](https://discord.gg/84qsr4v) (Preguntar por Vicemi)
 
 ### `▢ نشر في كويب
 
