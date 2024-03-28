@@ -31,11 +31,11 @@
 
 
 ### `▢ المكونات الإضافية`
-- هل لديك أفكار للمكونات الإضافية أو هل ترغب في الحصول على المزيد من المكونات الإضافية؟  ثم قم [انقر هنا](https://github.com/theh2so4/MegoBot-MD1-Plugins)
+- هل لديك أفكار للمكونات الإضافية أو هل ترغب في الحصول على المزيد من المكونات الإضافية؟  ثم قم [انقر هنا]([](https://github.com/theh2so4/Mystic-Plugins))
 
 ### `▢ إعدادات`
 - استنساخ المستودع بالضغط هنا](https://github.com/BrunoSobrino/Mego1-Bot-MD-MD/fork)
-- ¿تريد تغيير رقم المالك? هاز [انقر هنا](https://github.com/BrunoSobrino/Mego1-Bot-MD-MD/blob/master/config.js)
+- ¿تريد تغيير رقم المالك? هاز [انقر هنا]([](https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork))
 
 ### `▢ ACTIVAR EN BOXMINEHOST`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
