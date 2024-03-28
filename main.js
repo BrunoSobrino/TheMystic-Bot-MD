@@ -203,7 +203,7 @@ rl.close()
 
 conn.isInit = false;
 conn.well = false;
-conn.logger.info(`[ ℹ️ ] Cargando...\n`);
+conn.logger.info(`[ ℹ️ ] جاري التحميل...\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -383,14 +383,14 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate);
   }
 
-  conn.welcome = '👋 ¡Bienvenido/a!\n@user';
-  conn.bye = '👋 ¡Hasta luego!\n@user';
-  conn.spromote = '*[ ℹ️ ] @user Fue promovido a administrador.*';
-  conn.sdemote = '*[ ℹ️ ] @user Fue degradado de administrador.*';
-  conn.sDesc = '*[ ℹ️ ] La descripción del grupo ha sido modificada.*';
-  conn.sSubject = '*[ ℹ️ ] El nombre del grupo ha sido modificado.*';
-  conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
-  conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
+  conn.welcome = '*⦓          ⦓🏁⦔          ⦔*\n*❤️ꪶ→ @subject*\n*🍀ꪶ→ @user*\n*💢ꪶ→مـرحـبـاً بـك فـي جـروبـنـا الـمتوضـع اتـمـنـي أن يـعـجـبـك*\n*💠ꪶ→ اقـرا الوصف\n*⦓          ⦓🏁⦔          ⦔*\n المجموعه:*\n\n@desc\n\n*⦓          ⦓🏁⦔          ⦔*';
+  conn.bye = '*⦓          ⦓🏁⦔          ⦔*\n*🔄ꪶ→ @user*\n*ꪶ→ غادر المجموعه 💯*\n*⦓          ⦓🏁⦔          ⦔**';
+  conn.spromote = '*[ 📌 ] @user تمت ترقيته إلى المسؤول.*';
+  conn.sdemote = '*[ 📌 ] @user تم تخفيض رتبته من المسؤول.*';
+  conn.sDesc = '*[ 📌 ] تم تعديل وصف المجموعه.*';
+  conn.sSubject = '*[ 📌 ] تم تغيير اسم المجموعة.*';
+  conn.sIcon = '*[ 📌 ] تم تغيير صورة الملف الشخصي للمجموعة.*';
+  conn.sRevoke = '*[ 📌 ] تمت إعادة تعيين رابط دعوة المجموعة.*';
 
   conn.handler = handler.handler.bind(global.conn);
   conn.participantsUpdate = handler.participantsUpdate.bind(global.conn);
@@ -544,7 +544,7 @@ setInterval(async () => {
   if (stopped === 'close' || !conn || !conn.user) return;
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
-  const bio = `[ ⏳ ] Uptime: ${uptime}`;
+  const bio = `[ 𝙢,𝙚,𝙜,𝙤, ❦︎ ] تم برمجه هاد البوت بواسطه ميجو: ${uptime}`;
   await conn.updateProfileStatus(bio).catch((_) => _);
 }, 60000);
 function clockString(ms) {
@@ -552,6 +552,6 @@ function clockString(ms) {
   const h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24;
   const m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60;
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
-  return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
+  return [d, ' يوم(s) ️', h, ' ساعه(s) ', m, ' دقيقه(s) ', s, ' ثانيه(s) '].map((v) => v.toString().padStart(2, 0)).join('');
 }
 _quickTest().catch(console.error);
