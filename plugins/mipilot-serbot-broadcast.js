@@ -1,11 +1,12 @@
 import ws from 'ws';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.mipilot_serbot_broadcast
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, usedPrefix, text}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.mipilot_serbot_broadcast
+
   if (conn.user.jid !== global.conn.user.jid) throw false;
   const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn.user.jid)])];
   const cc = text ? m : m.quoted ? await m.getQuotedObj() : false || m;

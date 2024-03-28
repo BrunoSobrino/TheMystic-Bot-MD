@@ -1,6 +1,5 @@
 // TheMystic-Bot-MD@BrunoSobrino - _antitoxic.js
-import _translate from "./_translate.js"; // Modulo Tradutor
-const tradutor = _translate.plugins._antitoxic // Opção de Tradução do arquivo
+
  // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
   // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
   // To set the language, in the root of the project, modify the config.json file.
@@ -9,6 +8,11 @@ const tradutor = _translate.plugins._antitoxic // Opção de Tradução do arqui
 const toxicRegex = /puto|puta|rata|estupido|imbecil|rctmre|mrd|verga|vrga|maricon/i;
 
 export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
+  const datas = global
+    const idioma = datas.db.data.users[m.sender].language
+    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const tradutor = _translate.plugins._antitoxic
+
   if (m.isBaileys && m.fromMe) {
     return !0;
   }

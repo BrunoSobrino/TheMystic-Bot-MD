@@ -899,6 +899,7 @@ export async function handler(chatUpdate) {
           wolflastfeed: 0,
           wood: 0,
           wortel: 0,
+          language: 'es',
         };
       }
       const akinator = global.db.data.users[m.sender].akinator;

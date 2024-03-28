@@ -1,12 +1,13 @@
 /* Creado por https://github.com/FG98F */
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.owner_blocklist
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn}) => {
   await conn.fetchBlocklist().then(async (data) => {
+    const datas = global
+    const idioma = datas.db.data.users[m.sender].language
+    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const tradutor = _translate.plugins.owner_blocklist
+
     let txt = `${tradutor.texto1} ${data.length}\n\n┌─⊷\n`;
     for (const i of data) {
       txt += `▢ @${i.split('@')[0]}\n`;

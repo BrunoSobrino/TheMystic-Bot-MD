@@ -1,13 +1,14 @@
 // codigo adaptado por: https://github.com/GataNina-Li & https://github.com/elrebelde21
 
 import {randomBytes} from 'crypto';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.owner_broadcast
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, command, participants, usedPrefix, text}) => {
+  const datas = global
+    const idioma = datas.db.data.users[m.sender].language
+    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const tradutor = _translate.plugins.owner_broadcast
+
   if (!text) return tradutor.texto1;
   const fkontak = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${conn.user.jid.split('@')[0]}:${conn.user.jid.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
   const cc4 = text ? m : m.quoted ? await m.getQuotedObj() : false || m;

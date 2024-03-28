@@ -16,6 +16,8 @@
 
 <a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
+<a href="" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(EM%20BREVE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
  ### `▢ BOTS OFICIALES (INACTIVOS)`

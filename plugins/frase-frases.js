@@ -1,13 +1,16 @@
 import translate from '@vitalets/google-translate-api';
 import fetch from 'node-fetch';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.frase_frases
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
+const handler = async (m, { conn, command }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.frase_frases
 
-const handler = async (m, {conn, command}) => {
+  global.frasesromanticas = tradutor.texto3;
+
+  global.consejos = tradutor.texto4;
+
   if (command === 'consejo') {
     const consejo = consejos[Math.floor(Math.random() * consejos.length)];
     const mensaje = `╭─◆────◈⚘◈─────◆─╮\n\n⠀⠀🌟 ${tradutor.texto1} 🌟\n\n❥ ${consejo}\n\n╰─◆────◈⚘◈─────◆─╯`;
@@ -23,8 +26,8 @@ const handler = async (m, {conn, command}) => {
   if (command == 'historiaromantica') {
     try {
       const cerpe = await cerpen(`cinta romantis`);
-      const storytime = await translate(cerpe.cerita, {to: 'es', autoCorrect: true}).catch((_) => null);
-      const titletime = await translate(cerpe.title, {to: 'es', autoCorrect: true}).catch((_) => null);
+      const storytime = await translate(cerpe.cerita, { to: 'es', autoCorrect: true }).catch((_) => null);
+      const titletime = await translate(cerpe.title, { to: 'es', autoCorrect: true }).catch((_) => null);
       conn.reply(m.chat, `᭥🫐᭢ Título: ${titletime.text}
 ᭥🍃᭢ Autor: ${cerpe.author}
 ────────────────
@@ -46,29 +49,27 @@ async function cerpen(category) {
     const title = category.toLowerCase().replace(/[()*]/g, '');
     const judul = title.replace(/\s/g, '-');
     const page = Math.floor(Math.random() * 5);
-    axios.get('http://cerpenmu.com/category/cerpen-'+judul+'/page/'+page)
-        .then((get) => {
-          const $ = cheerio.load(get.data);
-          const link = [];
-          $('article.post').each(function(a, b) {
-            link.push($(b).find('a').attr('href'));
-          });
-          const random = link[Math.floor(Math.random() * link.length)];
-          axios.get(random).then((res) => {
-            const $$ = cheerio.load(res.data);
-            const hasil = {
-              title: $$('#content > article > h1').text(),
-              author: $$('#content > article').text().split('Cerpen Karangan: ')[1].split('Kategori: ')[0],
-              kategori: $$('#content > article').text().split('Kategori: ')[1].split('\n')[0],
-              lolos: $$('#content > article').text().split('Lolos moderasi pada: ')[1].split('\n')[0],
-              cerita: $$('#content > article > p').text(),
-            };
-            resolve(hasil);
-          });
+    axios.get('http://cerpenmu.com/category/cerpen-' + judul + '/page/' + page)
+      .then((get) => {
+        const $ = cheerio.load(get.data);
+        const link = [];
+        $('article.post').each(function (a, b) {
+          link.push($(b).find('a').attr('href'));
         });
+        const random = link[Math.floor(Math.random() * link.length)];
+        axios.get(random).then((res) => {
+          const $$ = cheerio.load(res.data);
+          const hasil = {
+            title: $$('#content > article > h1').text(),
+            author: $$('#content > article').text().split('Cerpen Karangan: ')[1].split('Kategori: ')[0],
+            kategori: $$('#content > article').text().split('Kategori: ')[1].split('\n')[0],
+            lolos: $$('#content > article').text().split('Lolos moderasi pada: ')[1].split('\n')[0],
+            cerita: $$('#content > article > p').text(),
+          };
+          resolve(hasil);
+        });
+      });
   });
 }
 
-global.frasesromanticas = tradutor.texto3;
 
-global.consejos = tradutor.texto4 ;

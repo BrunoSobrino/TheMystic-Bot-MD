@@ -1,11 +1,11 @@
 import TicTacToe from '../lib/tictactoe.js';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.game_ttt
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {conn, usedPrefix, command, text}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.game_ttt
+
   conn.game = conn.game ? conn.game : {};
   if (Object.values(conn.game).find((room) => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))) throw tradutor.texto6;
   if (!text) throw `${tradutor.texto1[0]}\n*◉ ${usedPrefix + command} ${tradutor.texto1[1]}`;

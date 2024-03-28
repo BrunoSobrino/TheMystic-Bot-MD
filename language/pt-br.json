@@ -2698,7 +2698,8 @@
                 "*<opção> <tempo>*_",
                 "(sem prefixo)",
                 "*<nome sala>*_"
-            ]
+            ],
+            "texto2":"Opções idioma 🌎 "
         },
         "mipilot_serbot_broadcast": {
             "texto1": "*〔 DIFUSIÓN A SUB BOTS 〕*\n\n",
@@ -3538,6 +3539,12 @@
             "texto2": "*[❗️INFORMAÇÃO❗️] Responda ao adesivo que deseja adicionar a um Pacote e um Nome*",
             "texto3": "*[❗️INFORMAÇÃO❗️] Responda ao adesivo que deseja adicionar a um Pacote e um Nome*",
             "texto4": "*[❗️INFORMAÇÃO❗️] DESCULPE, FALHA RÁPIDA.. CERTIFIQUE-SE DE QUE RESPONDEU A UM ADESIVO E FORNECEU UM PACOTE, NOME DO PACOTE E NÚMERO DO PACOTE E NOME DE USUÁRIO*"
+        },
+        "_translate":{
+            "texto1":[
+                "*🗣 CONFIG IDIOMA BOT*\n\n_Para trocar de idioma, envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
+                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
+            ]
         }
     }
 }

@@ -3,13 +3,14 @@ import {Sticker} from 'wa-sticker-formatter';
 import fetch from 'node-fetch';
 import got from 'got';
 import cheerio from 'cheerio';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.sticker_semoji
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {usedPrefix, conn, args, text, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.sticker_semoji
+
   let [tipe, emoji] = text.includes('|') ? text.split('|') : args;
   const defaultType = 'apple';
   if (tipe && !emoji) {

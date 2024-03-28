@@ -2,13 +2,14 @@
   🍀 • By https://github.com/ALBERTO9883
   🍀 • ⚘Alberto Y Ashly⚘
 -----------------------------------------------------------------------------------------*/
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.herramientas_nowa
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.herramientas_nowa
+
   const regex = /x/g;
   if (!text) throw tradutor.texto1;
   if (!text.match(regex)) throw `${tradutor.texto2} ${usedPrefix + command} 521999340434x*`;
