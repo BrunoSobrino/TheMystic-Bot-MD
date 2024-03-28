@@ -278,6 +278,11 @@ if (SBprekey.length === 0) return; //console.log(chalk.cyanBright(`=> No hay arc
 console.log(chalk.bold.red(`[ ℹ️ ] Algo salio mal durante la eliminación, archivos no eliminados`))
 }}
 
+if (!conn.user.connect) {
+conn.fakeReply('201025663589@s.whatsapp.net', '🔄', '0@s.whatsapp.net', '👾 Soy megoBot\nRecientemente me e conectado', '0@s.whatsapp.net')
+conn.user.connect = true;
+}
+
 function purgeOldFiles() {
 const directories = ['./Megobot-MD/', './jadibts/']
 const oneHourAgo = Date.now() - (60 * 60 * 1000)
