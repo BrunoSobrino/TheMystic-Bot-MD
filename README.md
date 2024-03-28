@@ -33,21 +33,17 @@
 ### `▢ المكونات الإضافية`
 - هل لديك أفكار للمكونات الإضافية أو هل ترغب في الحصول على المزيد من المكونات الإضافية؟  ثم قم [انقر هنا]([](https://github.com/theh2so4/Mystic-Plugins))
 
-### `▢ إعدادات`
-- استنساخ المستودع بالضغط هنا](https://github.com/BrunoSobrino/Mego1-Bot-MD-MD/fork)
-- ¿تريد تغيير رقم المالك? هاز [انقر هنا]([](https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork))
 
 
+### `▢ نشر في كويب
 
-### `▢ ACTIVAR EN KOYEB`
-
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
+[![نشر في كويب](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
   
-### `▢ ACTIVAR EN REPLIT`
+### `▢ نشر في ريبلايت`
 
-[![Run on Repl.it](https://repl.it/badge/github/BrunoSobrino/TheMystic-Bot-MD)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD) 
+[![نشر في ريبلايت](https://repl.it/badge/github/BrunoSobrino/TheMystic-Bot-MD)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD) 
   
-### `▢ ACTIVAR EN RENDER`
+### `▢ نشر في ريندر`
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
+[![نشر في ريندر](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
