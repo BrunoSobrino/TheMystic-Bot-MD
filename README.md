@@ -6,6 +6,8 @@
 > TheMystic-Bot-MD pasa a quedar en manos de colaboradores, y como principal representante Aiden_NotLogic.
 ------------------
 
+> Opción de **Idioma** Oficialmente Implementada en The Mistic Bot - **/LANG**
+
 ### `▢ CUENTAS OFICIALES`
 
 [ 🔗 ] https://www.atom.bio/theshadowbrokers-team
@@ -19,6 +21,9 @@
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
  ### `▢ BOTS OFICIALES (INACTIVOS)`
+
+ <a href="https://api.whatsapp.com/send/?phone=5545998331383&text=Mais%20Informações" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(EM%20BREVE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+
 
 <a href="https://api.whatsapp.com/send/?phone=5219991402134&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT_OFICIAL_1_(INACTIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
