@@ -37,13 +37,7 @@
 - استنساخ المستودع بالضغط هنا](https://github.com/BrunoSobrino/Mego1-Bot-MD-MD/fork)
 - ¿تريد تغيير رقم المالك? هاز [انقر هنا]([](https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork))
 
-### `▢ ACTIVAR EN BOXMINEHOST`
-<a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
-- Pagina Oficial: [https://boxmineworld.com](https://boxmineworld.com)
-- Dashboard: [https://dash.boxmineworld.com](https://dash.boxmineworld.com)
-- Panel: [https://panel.boxmineworld.com](https://panel.boxmineworld.com)
-- Tutorial: [https://youtu.be/eC9TfKICpcY](https://youtu.be/eC9TfKICpcY)
-- Dudas UNICAMENTE SOBRE EL HOST: [https://discord.gg/84qsr4v](https://discord.gg/84qsr4v) (Preguntar por Vicemi)
+
 
 ### `▢ ACTIVAR EN KOYEB`
 
