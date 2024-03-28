@@ -1,24 +1,24 @@
 # `𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏` 
 
 ------------------
-> **AVISO**: Yo "Bruno Sobrino", me he retirado de todo lo relacionado con el bot o temas similares, por lo que en algún momento quedará obsoleto y/o algunos comandos dejarán de funcionar. Agradezco su preferencia durante el recorrido por este mundo de los bots.
+> **ملاحظة**: أنا "Mego"، تقاعدت من كل ما يتعلق بالبوت أو المواضيع المشابهة، لذا في مرحلة ما سيصبح قديمًا و/أو ستتوقف بعض الأوامر عن العمل.  أنا أقدر تفضيلك خلال الرحلة عبر عالم الروبوتات هذا.
 
-> TheMystic-Bot-MD pasa a quedar en manos de colaboradores, y como principal representante Aiden_NotLogic.
+> 𝙏𝙝𝙚𝙢𝙚𝙜𝙤-𝙗𝙤𝙩 يتم ترك الأمر في أيدي المتعاونين، وباعتباره الممثل الرئيسي 
 ------------------
 
-> Opción de **Idioma** Oficialmente Implementada en The Mistic Bot - **/LANG**
+> اللغه الرئيسيه التي اشتغل عليها المطور هي *العربيه*
 
-### `▢ CUENTAS OFICIALES`
+### `▢ الحسابات الرسمية`
 
-[ 🔗 ] https://www.atom.bio/theshadowbrokers-team
+[ 🔗 ] https://Solo.to/mego51-51
 
-### `▢ GRUPOS DE SOPORTE (NO DISPONIBLE)`
+### `▢ مجموعات الدعم (متوفرة)`
 
- <a href="https://api.whatsapp.com/send/?phone=5545998331383&text=Mais%20Informações" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(EM%20BREVE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+ <a href="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" target="blank"><img src="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" />
 
-<a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(ES)_(NO_DISPONIBLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://whatsapp.com/channel/0029VaRygQcATRSk29RI4P1x" /></a>
 
-<a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
