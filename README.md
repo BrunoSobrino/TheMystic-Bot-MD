@@ -52,7 +52,7 @@
 [![نشر في ريندر](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
 
-#### `☂️ نشر في هيروكو ☂️`
+#### `▢ نشر في هيروكو `
 لمستخدمي هيروكو
 
-[![نشر](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Botmego/MegoBot-MD1)
+[![نشر في هيروكو](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Botmego/MegoBot-MD1)
