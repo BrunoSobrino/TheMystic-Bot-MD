@@ -1,11 +1,12 @@
 import {toAudio} from '../lib/converter.js';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.convertidor_tomp3
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {conn, usedPrefix, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.convertidor_tomp3
+
+
   const q = m.quoted ? m.quoted : m;
   const mime = (q || q.msg).mimetype || q.mediaType || '';
   if (!/video|audio/.test(mime)) throw `*${tradutor.texto1}*`;

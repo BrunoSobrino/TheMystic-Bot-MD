@@ -1,12 +1,12 @@
 const items = ['limit', 'exp'];
 const confirmation = {};
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.rpg_transfer
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 async function handler(m, { conn, args, usedPrefix, command }) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_transfer
+
   if (confirmation[m.sender]) return conn.sendMessage(m.chat, {text: tradutor.texto1, mentions: [m.sender]}, {quoted: m});
   const user = global.db.data.users[m.sender];
   const item = items.filter((v) => v in user && typeof user[v] == 'number');

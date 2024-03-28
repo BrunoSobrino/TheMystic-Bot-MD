@@ -1,14 +1,14 @@
 import fetch from 'node-fetch';
-import _translate from './_translate.js';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.menu_audios
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 
 
 const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, isPrems}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.menu_audios
+
   try {
     const pp = imagen4;
     // let vn = './media/menu.mp3'

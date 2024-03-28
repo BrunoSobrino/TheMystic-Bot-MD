@@ -1,9 +1,13 @@
 // TheMystic-Bot-MD@BrunoSobrino - _antiarab.js
-import _translate from './_translate.js';
+
 
 const handler = (m) => m;
-handler.before = async function(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner} ) {
-  const  tradutor = _translate.plugins._antiarab
+handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwner }) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+
+  const tradutor = _translate.plugins._antiarab
   // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
   // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
   // To set the language, in the root of the project, modify the config.json file.

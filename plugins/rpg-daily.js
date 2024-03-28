@@ -1,11 +1,12 @@
 import fetch from 'node-fetch';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.rpg_daily
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {isPrems, conn}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_daily
+
   const fkontak = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net',
   };
   const mystic = './Menu2.jpg';

@@ -1,12 +1,12 @@
 import {sticker} from '../lib/sticker.js';
 const handler = (m) => m;
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.nv_global
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 handler.all = async function(m, {conn}) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.nv_global
+
   const chat = global.db.data.chats[m.chat];
 
   if ((m.mtype === 'groupInviteMessage' || m.text.startsWith('https://chat') || m.text.startsWith('Abre este enlace')) && !m.isBaileys && !m.isGroup && !chat.isBanned && !m.fromMe) {

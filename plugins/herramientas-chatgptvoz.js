@@ -18,19 +18,20 @@ import {join} from 'path';
 import axios from 'axios';
 import translate from '@vitalets/google-translate-api';
 import {Configuration, OpenAIApi} from 'openai';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.herramientas_chatgptvoz
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
-
 
 const configuration = new Configuration({organization: global.openai_org_id, apiKey: global.openai_key});
 const openaiii = new OpenAIApi(configuration);
 const idioma = 'es'
 //const sistema1 = await fetch(`https://raw.githubusercontent.com/Skidy89/chat-gpt-jailbreak/main/Text.txt`).then(v => v.text());
-const sistema1 = tradutor.texto2;
+
 const handler = async (m, {conn, text, usedPrefix, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.herramientas_chatgptvoz
+
+  const sistema1 = tradutor.texto2;
+
   if (usedPrefix == 'a' || usedPrefix == 'A') return;
   if (!text) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]} ${usedPrefix + command} ${tradutor.texto1[2]}`;
   try {

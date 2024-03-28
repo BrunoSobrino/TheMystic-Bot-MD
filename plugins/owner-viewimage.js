@@ -1,11 +1,12 @@
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.owner_viewimage
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 
 let handler = async (m, { text }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_viewimage
+  s
   if (!text) throw tradutor.texto1;
   let ext = text.split('.').pop();
   let path = `${text}`;

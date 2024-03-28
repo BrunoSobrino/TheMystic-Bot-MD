@@ -1,14 +1,15 @@
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.owner_restart
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
-const handler = async (m, {conn, isROwner, text}) => {
+
+const handler = async (m, { conn, isROwner, text }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_restart
+
   if (!process.send) throw tradutor.texto1;
-    // conn.readMessages([m.key])
-    await m.reply(tradutor.texto2);
-    process.send('reset');
+  // conn.readMessages([m.key])
+  await m.reply(tradutor.texto2);
+  process.send('reset');
 };
 handler.help = ['restart'];
 handler.tags = ['owner'];

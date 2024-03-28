@@ -1,13 +1,14 @@
 import similarity from 'similarity';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.game_acertijo_resp
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const threshold = 0.72;
 const handler = (m) => m;
 handler.before = async function(m) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.game_acertijo_resp
+
   const id = m.chat;
   if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !/^ⷮ/i.test(m.quoted.text)) return !0;
   this.tekateki = this.tekateki ? this.tekateki : {};

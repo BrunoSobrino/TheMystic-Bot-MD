@@ -1,11 +1,12 @@
 import fetch from 'node-fetch';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.random_waifu
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, usedPrefix, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.random_waifu
+
   const res = await fetch('https://api.waifu.pics/sfw/waifu');
   if (!res.ok) throw await res.text();
   const json = await res.json();

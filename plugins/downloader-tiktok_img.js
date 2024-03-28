@@ -6,36 +6,36 @@
 
 import axios from 'axios';
 import cheerio from 'cheerio';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.downloader_tiktok_img
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 
-let handler = async (m, { conn, text: tiktok, args, command, usedPrefix}) => {
-if (!tiktok) throw tradutor.texto1;        
-let imagesSent
-if (imagesSent) return;
-imagesSent = true    
-try {   
-let tioShadow = await ttimg(tiktok); 
-let result = tioShadow?.data;
-for (let d of result) {
-  await conn.sendMessage(m.chat, {image: {url: d}}, {quoted: m});
- };
-imagesSent = false
-} catch {
-    imagesSent = false    
-    throw tradutor.texto2
- }
+let handler = async (m, { conn, text: tiktok, args, command, usedPrefix }) => {
+    const datas = global
+    const idioma = datas.db.data.users[m.sender].language
+    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const tradutor = _translate.plugins.downloader_tiktok_img
+
+    if (!tiktok) throw tradutor.texto1;
+    let imagesSent
+    if (imagesSent) return;
+    imagesSent = true
+    try {
+        let tioShadow = await ttimg(tiktok);
+        let result = tioShadow?.data;
+        for (let d of result) {
+            await conn.sendMessage(m.chat, { image: { url: d } }, { quoted: m });
+        };
+        imagesSent = false
+    } catch {
+        imagesSent = false
+        throw tradutor.texto2
+    }
 };
 handler.command = /^(ttimg|tiktokimg)$/i;
 export default handler;
 
 async function ttimg(link) {
-    try {    
-        let url = `https://dlpanda.com/es?url=${link}&token=G7eRpMaa`;    
+    try {
+        let url = `https://dlpanda.com/es?url=${link}&token=G7eRpMaa`;
         let response = await axios.get(url);
         const html = response.data;
         const $ = cheerio.load(html);
@@ -46,9 +46,9 @@ async function ttimg(link) {
         if (imgSrc.length === 0) {
             return { data: tradutor.texto3 };
         }
-        return { data: imgSrc }; 
+        return { data: imgSrc };
     } catch (error) {
-        console.lo (error);
-        return { data: tradutor.texto4};
+        console.lo(error);
+        return { data: tradutor.texto4 };
     };
 };

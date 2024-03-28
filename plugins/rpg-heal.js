@@ -1,12 +1,13 @@
 import {join} from 'path';
 import {promises} from 'fs';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.rpg_heal
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, args, usedPrefix, __dirname}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_heal
+
   const imgr = flaaa.getRandom();
   const _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch((_) => ({}))) || {};
   const user = global.db.data.users[m.sender];

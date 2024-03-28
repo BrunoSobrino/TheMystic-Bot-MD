@@ -1,12 +1,12 @@
 import yts from 'yt-search';
 import fs from 'fs';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.buscador_yts
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {conn, text}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.buscador_yts
+
   if (!text) throw `⚠️ *${tradutor.texto1}*`;
   const results = await yts(text);
   const tes = results.all;
