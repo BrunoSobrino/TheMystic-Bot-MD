@@ -1483,7 +1483,7 @@ export async function participantsUpdate({ id, participants, action }) {
  * @param {import('@whiskeysockets/baileys').BaileysEventMap<unknown>['groups.update']} groupsUpdate
  */
 export async function groupsUpdate(groupsUpdate) {
-  console.log(groupsUpdate)
+  //console.log(groupsUpdate)
   const idioma = global.db.data.chats[groupsUpdate[0].id].language
   const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
