@@ -164,6 +164,23 @@ _🔊❏━━الـصوتـيات━━❏🔊_
 ❗ده  https://wa.me/+201012531172
 👾┙━━━حـقـوق الـمـطـور━━━┍👾
 `.trim()
+let buttonMessage = {
+image: pp,
+caption: str.trim(),
+mentions: [m.sender],
+footer: `*${wm}*`,
+headerType: 4,
+contextInfo: {
+mentionedJid: [m.sender],
+externalAdReply: {
+showAdAttribution: true,
+mediaType: 'VIDEO',
+mediaUrl: null,
+title: '𝙢,𝙚,𝙜,𝙤, ❦︎', 
+body: null,
+thumbnail: img,
+sourceUrl: `https://www.atom.bio/mego51_51`
+}}}
 conn.sendMessage(m.chat, buttonMessage, { quoted: m })
 //await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
 } catch {
