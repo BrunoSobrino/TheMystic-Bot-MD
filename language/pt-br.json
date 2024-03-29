@@ -491,33 +491,33 @@
         },
         "descargas_facebook": {
             "texto1": [
-                "< DOWNLOADS - FACEBOOK />",
-                "[ ℹ️ ] Insira um link do Facebook.",
-                "[ 💡 ] Exemplo:"
+                "< تنزيل من فيسبوك/>",
+                "[ ℹ️ ] أدخل رابط الفيسبوك.",
+                "[ 💡 ] مثال:"
             ],
             "texto2": [
-                "< DOWNLOADS - FACEBOOK />",
-                "[ ℹ️ ] Insira um link do Facebook.",
-                "[ 💡 ] Exemplo:"
+                "< تنزيل من فيسبوك />",
+                "[ ℹ️ ] أدخل رابط الفيسبوك.",
+                "[ 💡 ] مثال:"
             ],
-            "texto3": "< DOWNLOADS - FACEBOOK />*_\n\n*[ ℹ️ ] O vídeo está sendo enviado. Por favor, aguarde...",
-            "texto4": "< DOWNLOADS - FACEBOOK />",
-            "texto5": "< DOWNLOADS - FACEBOOK />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde."
+            "texto3": "< تنزيل فيسبوك />*_\n\n*[ ℹ️ ] يتم الآن تحميل الفيديو...",
+            "texto4": "< التنزيلات - الفيسبوك />",
+            "texto5": "< التنزيلات - الفيسبوك />*_\n\n*[ ℹ️ ] حدث خطأ.  الرجاء معاودة المحاولة في وقت لاحق."
         },
         "descargas_gdrive": {
-            "texto1": "_*< DOWNLOADS - GDRIVE />*_\n\n*[ ℹ️ ] Insira um link do Google Drive.*\n\n*[ 💡 ] Exemplo:* ",
-            "texto2": "_*< DOWNLOADS - GDRIVE />*_\n\n*[ ℹ️ ] O arquivo está sendo enviado. Por favor, aguarde...*\n\n*[ ℹ️ ] Se não for enviado, pode ser porque excede o limite de tamanho.*",
-            "texto3": "_*< DOWNLOADS - GDRIVE />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
+            "texto1": "_*< التنزيلات - الفيسبوك />*_\n\n*[ ℹ️ ] أدخل رابط جوجل درايف.*\n\n*[ 💡 ] مثال:* ",
+            "texto2": "_*< التنزيلات - الفيسبوك />*_\n\n*[ ℹ️ ] يتم الآن إرسال الملف.  انتظر من فضلك, aguarde...*\n\n*[ ℹ️ ] Se não for enviado, pode ser porque excede o limite de tamanho.*",
+            "texto3": "_*< التنزيلات - الفيسبوك />*_\n\n*[ ℹ️ ] حدث خطأ.  الرجاء معاودة المحاولة في وقت لاحق.*"
         },
         "descargas_gitclone": {
-            "texto1": "_*< DOWNLOADS - GITCLONE />*_\n\n*[ ℹ️ ] Insira um link do GitHub.*\n\n*[ 💡 ] Exemplo:*",
-            "texto2": "_*< DOWNLOADS - GITCLONE />*_\n\n*[ ℹ️ ] O link que você forneceu está incorreto.*",
-            "texto3": "_*< DOWNLOADS - GITCLONE />*_\n\n*[ ℹ️ ] O arquivo está sendo enviado. Por favor, aguarde...*\n\n*[ ℹ️ ] Se não for enviado, pode ser porque excede o limite de tamanho.*"
+            "texto1": "_*< التنزيلات - الفيسبوك />*_\n\n*[ ℹ️ ] أدخل رابط جيثب.*\n\n*[ 💡 ] مثال:*",
+            "texto2": "_*< التنزيلات - الفيسبوك />*_\n\n*[ ℹ️ ] الرابط الذي قدمته غير صحيح.*",
+            "texto3": "_*< التنزيلات - الفيسبوك />*_\n\n*[ ℹ️ ] يتم الآن إرسال الملف.  انتظر من فضلك...*\n\n*[ ℹ️ ] إذا لم يتم الشحن، فقد يكون ذلك بسبب تجاوزه الحد الأقصى للحجم.*"
         },
         "descargas_instagram": {
-            "texto1": "_*< DOWNLOADS - INSTAGRAM />*_\n\n*[ ℹ️ ] Insira um link do Instagram.*\n\n*[ 💡 ] Exemplo:*",
-            "texto2": "_*< DOWNLOADS - INSTAGRAM />*_\n\n▢ *URL:*",
-            "texto3": "_*< DOWNLOADS - INSTAGRAM />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
+            "texto1": "_*< تنزيل انستجرام />*_\n\n*[ ℹ️ ] ادخل رابط الانستا.*\n\n*[ 💡 ] مثال:*",
+            "texto2": "_*< التنزيلات - انستغرام />*_\n\n▢ *الرابط:*",
+            "texto3": "_*< التنزيلات - انستغرام />*_\n\n*[ ℹ️ ] حدث خطأ.  الرجاء معاودة المحاولة في وقت لاحق.*"
         },
         "descargas_mediafire": {
             "texto1": [
