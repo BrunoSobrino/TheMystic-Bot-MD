@@ -6,11 +6,11 @@ let handler = async (m, { conn, text, args, usedPrefix, command }) => {
  if (!args[0] && m.quoted && m.quoted.text) {
   args[0] = m.quoted.text;
 }
-if (!args[0] && !m.quoted) throw `Give the link of the video Tiktok or quote a tiktok link`;
- if (!args[0].match(/tiktok/gi)) throw `Verify that the link is from TikTok`;
+if (!args[0] && !m.quoted) throw `اعطني الرابط \n\nمثال: https://vm.tiktok.com/ZMMPhv9Fb/`;
+ if (!args[0].match(/tiktok/gi)) throw `تأكد من ان الرابط رابط تيك توك`;
  
  
-  let txt = 'Here your Requested video';
+  let txt = 'انا لا اتحمل ذنب اغانيك ';
 
   try {
     const { author: { nickname }, video, description } = await tiktokdl(args[0]);
@@ -31,6 +31,6 @@ if (!args[0] && !m.quoted) throw `Give the link of the video Tiktok or quote a t
 
 handler.help = ['tiktok'].map((v) => v + ' <url>');
 handler.tags = ['downloader'];
-handler.command = /^t(t|iktok(d(own(load(er)?)?|l))?|td(own(load(er)?)?|l))|تيك$/i;
+handler.command = /^t(t|iktok(d(own(load(er)?)?|l))?|td(own(load(er)?)?|l))|تيك|تيكتوك$/i;
 
 export default handler;
