@@ -1546,8 +1546,10 @@ global.dfail = (type, m, conn) => {
         unreg: '*[ لحظة !! انت مش مسجل ]*\n\n*『 سجل الامر عشان تفعله 』*\n*➣ #تسجيل*',
         restrict: '*『 الميزه دي المطور لغيها ! 』*'
     }[type]
-  eval(function(p,a,c,k,e,r){e=function(c){return c.toString(a)};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('1 2={6:m,7:3.8.9};1 0=a(m.4,{b:{c:5,d:{e:{f:\'*[ ⚠ ] معلومه مهمه*\',g:\'𝙢,𝙚,𝙜,𝙤, ❦︎\',h:i,j:\'k.l/n\'}}}},2);o(5)p 3.q(m.4,0.r,{s:0.t.u})};',31,31,'prep|const|aa|conn|chat|msg|quoted|userJid|user|jid|generateWAMessageFromContent|extendedTextMessage|text|contextInfo|externalAdReply|title|body|thumbnail|imagen1|sourceUrl|atom|bio||mego51_51|if|return|relayMessage|message|messageId|key|id'.split('|'),0,{}))
-
+  const aa = {quoted: m, userJid: conn.user.jid};
+  const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: msg, contextInfo: {externalAdReply: {title: '*[ ⚠ ] معلومه مهمه*', body: '𝙢,𝙚,𝙜,𝙤, ❦︎', thumbnail: imagen1, sourceUrl: 'atom.bio/mego51_51'}}}}, aa);
+  if (msg) return conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id});
+};
 const file = global.__filename(import.meta.url, true);
 watchFile(file, async () => {
   unwatchFile(file);
