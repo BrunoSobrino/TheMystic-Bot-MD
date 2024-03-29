@@ -18,13 +18,13 @@
 
 ### `▢ مجموعات الدعم (متوفرة)`
 
- <a href="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" target="blank"><img src="https://whatsapp.com/channel/0029VaRygQcATRSk29RI4P1x" /></a>
-
-<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://whatsapp.com/channel/0029VaRygQcATRSk29RI4P1x" /></a>
+ <a href="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 <a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-> [ ℹ️ ] لا يُسمح بالروبوتات في مجموعات الدعم.
+<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+
+> [ 📌 ] لا يُسمح بالبوتات الاخري في مجموعات الدعم.
 
  ### `▢ المطور الرسمي (نشط)`
 
