@@ -10,4 +10,5 @@ conn.sendFile(m.chat, json.url, 'error.jpg', `شايفك يالي عاوز تت�
 handler.help = ['waifu']
 handler.tags = ['anime']
 handler.command = /^(بنت)$/i
+handler.owner = true
 export default handler
