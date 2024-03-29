@@ -2699,7 +2699,8 @@
                 "(sem prefixo)",
                 "*<nome sala>*_"
             ],
-            "texto2":"Opções idioma 🌎 "
+            "texto2": "_< Opções idioma 🌎 >_ ",
+            "texto3":"_< Idioma de Grupos >_"
         },
         "mipilot_serbot_broadcast": {
             "texto1": "*〔 DIFUSIÓN A SUB BOTS 〕*\n\n",
@@ -3540,11 +3541,47 @@
             "texto3": "*[❗️INFORMAÇÃO❗️] Responda ao adesivo que deseja adicionar a um Pacote e um Nome*",
             "texto4": "*[❗️INFORMAÇÃO❗️] DESCULPE, FALHA RÁPIDA.. CERTIFIQUE-SE DE QUE RESPONDEU A UM ADESIVO E FORNECEU UM PACOTE, NOME DO PACOTE E NÚMERO DO PACOTE E NOME DE USUÁRIO*"
         },
-        "_translate":{
-            "texto1":[
+        "adult_comandos": {
+            "texto1": "[❗INFORMAÇÃO❗] Os COMANDOS +18 ESTÃO DESATIVADOS NO GRUPO, SE VOCÊ É ADMIM E DESEJA ATIVÁ-LOS USE O COMANDO #enable modohorny"
+        },
+        "_translate": {
+            "texto1": [
                 "*🗣 CONFIG IDIOMA BOT*\n\n_Para trocar de idioma, envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
                 "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
+            ],
+            "texto2": [
+                "*🗣IDIOMA GRUPO*\n\n_Envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
+                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
             ]
+        }
+    },
+    "handler": {
+        "dfail": {
+            "texto1": "[ ℹ️ ] Este comando só pode ser utilizado pelo proprietário do bot.",
+            "texto2": "[ ℹ️ ] Este comando só pode ser utilizado pelo proprietário do bot.",
+            "texto3": "[ ℹ️ ] Este comando só pode ser utilizado por moderadores e pelo proprietário do bot.",
+            "texto4": "[ ℹ️ ] Este comando só pode ser utilizado por usuários premium e pelo proprietário do bot.",
+            "texto5": "[ ℹ️ ] Este comando só pode ser utilizado em grupos.",
+            "texto6": "[ ℹ️ ] Este comando só pode ser utilizado no chat privado do bot.",
+            "texto7": "[ ℹ️ ] Este comando só pode ser usado por administradores do grupo.",
+            "texto8": "[ ℹ️ ] Para utilizar este comando, é necessário que o bot seja administrador do grupo.",
+            "texto9": "[ ℹ️ ] Para utilizar este comando, você deve estar registrado.\n\n*[ 💡 ] Use o comando:* /verificar nome.idade para se registrar.",
+            "texto10": "[ ℹ️ ] Este comando foi desativado pelo proprietário do bot.",
+            "texto11": [
+                "[ ⚠️ ] Aviso",
+                "[ ⚠️ ] Aviso",
+                "https://github.com/BrunoSobrino/TheMystic-Bot-MD"
+            ]
+        },
+        "participantsUpdate": {
+            "texto1": "👋 Bem-vindo/a!\n@user",
+            "texto2": "👋 Até logo!\n@user",
+            "texto3": "*[ ℹ️ ] @user foi promovido a administrador.*",
+            "texto4": "*[ ℹ️ ] @user foi degradado de administrador.*",
+            "texto5": "*[ ℹ️ ] A descrição do grupo foi modificada.*",
+            "texto6": "*[ ℹ️ ] O nome do grupo foi modificado.*",
+            "texto7": "*[ ℹ️ ] A foto de perfil do grupo foi alterada.*",
+            "texto8": "*[ ℹ️ ] O link de convite para o grupo foi redefinido.*"
         }
     }
 }

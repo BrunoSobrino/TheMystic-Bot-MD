@@ -2715,7 +2715,8 @@
                 "(sin prefijo)",
                 "*<nombre sala>*_"
             ],
-            "texto2": "Opciones de idioma 🌎"
+            "texto2": "Opciones de idioma 🌎",
+            "texto3":"_lenguaje grupal_"
         },
         "mipilot_serbot_broadcast": {
             "texto1": "*〔 DIFUSION A SUB BOTS 〕*\n\n",
@@ -3556,17 +3557,53 @@
         "sticker_ttp_attp": {
             "texto1": "*[❗] 𝙸𝙽𝙶𝚁𝙴𝚂𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃𝙾*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*◉"
         },
-        "sticker_wm":{
-            "texto1":"*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴*",
-            "texto2":"*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴*",
-            "texto3":"*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴*",
-            "texto4":"*[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝚂𝙸𝙴𝙽𝚃𝙾, 𝙰𝙻𝙶𝙾 𝙵𝙰𝙻𝙻𝙾.. 𝙲𝙾𝚁𝚁𝙾𝙱𝙾𝚁𝙴 𝚀𝚄𝙴 𝙷𝙰𝚈𝙰 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙸𝙳𝙾 𝙰 𝚄𝙽 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚈 𝙷𝙰𝚈𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝙳𝙾 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾*"
+        "sticker_wm": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴*",
+            "texto2": "*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴*",
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴 𝙰𝙻 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚀𝚄𝙴 𝙳𝙴𝚂𝙴𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝚁 𝚄𝙽 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴*",
+            "texto4": "*[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾 𝚂𝙸𝙴𝙽𝚃𝙾, 𝙰𝙻𝙶𝙾 𝙵𝙰𝙻𝙻𝙾.. 𝙲𝙾𝚁𝚁𝙾𝙱𝙾𝚁𝙴 𝚀𝚄𝙴 𝙷𝙰𝚈𝙰 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙸𝙳𝙾 𝙰 𝚄𝙽 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚈 𝙷𝙰𝚈𝙰 𝙰𝙶𝚁𝙴𝙶𝙰𝙳𝙾 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝙿𝙰𝚀𝚄𝙴𝚃𝙴 𝚈 𝚄𝙽 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾*"
         },
-        "_translate":{
-            "texto1":[
+        "adult_comandos": {
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙻𝙾𝚂 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 +𝟷𝟾 𝙴𝚂𝚃𝙰𝙽 𝙳𝙴𝚂𝙰𝙲𝚃𝙸𝚅𝙰𝙳𝙾𝚂 𝙴𝙽 𝙴𝚂𝚃𝙴 𝙶𝚁𝚄𝙿𝙾, 𝚂𝙸 𝙴𝚂 𝙰𝙳𝙼𝙸𝙽 𝚈 𝙳𝙴𝚂𝙴𝙰 𝙰𝙲𝚃𝙸𝚅𝙰𝚁𝙻𝙾𝚂 𝚄𝚂𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 #enable modohorny*"
+        },
+        "_translate": {
+            "texto1": [
                 "*🗣 CONFIGURACIÓN DE IDIOMA DEL BOT*\n\n_Para cambiar el idioma, envíe el comando seguido de la abreviatura del idioma deseado_\n\n*👉Ejemplo:*",
                 "*Idiomas Disponibles:*\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n\n_Traducciones en desarrollo, puede haber algunos errores_"
+            ],
+            "texto2": [
+                "🗣IDIOMA GRUPO\n\n_Envie o comando e a sigla da linguagem desejada_\n\n👉Exemplo:",
+                "Linguagens Disponíveis:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n\n_Traducciones en desarrollo, puede haber algunos errores_"
+                ]
+        }
+    },
+    "handler": {
+        "dfail": {
+            "texto1": "*[ ℹ️ ] Este comando solo puede ser utilizado por el propietario del bot.*",
+            "texto2": "*[ ℹ️ ] Este comando solo puede ser utilizado por el propietario del bot.*",
+            "texto3": "*[ ℹ️ ] Este comando solo puede ser utilizado por moderadores y el propietario del bot.*",
+            "texto4": "*[ ℹ️ ] Este comando solo puede ser utilizado por usurios premium y el propietario del bot.*",
+            "texto5": "*[ ℹ️ ] Este comando solo puede ser utilizado en grupos.*",
+            "texto6": "*[ ℹ️ ] Este comando solo puede ser utilizado en el chat privado del bot.*",
+            "texto7": "*[ ℹ️ ] Este comando solo puede ser usado por administradores del grupo.*",
+            "texto8": "*[ ℹ️ ] Para utilizar este comando es necesario que el bot sea administrador del grupo.*",
+            "texto9": "*[ ℹ️ ] Para utilizar este comando debes estar registrado.*\n\n*[ 💡 ] Utiliza el comando:* _/verificar nombre.edad_ *para registrarte.*",
+            "texto10": "*[ ℹ️ ] Este comando fue desactivado por el propietario del bot.*",
+            "texto11": [
+                "*[ ⚠ ] Advertencia*",
+                "*[ ⚠ ] Advertencia*",
+                "https://github.com/BrunoSobrino/TheMystic-Bot-MD"
             ]
+        },
+        "participantsUpdate": {
+            "texto1": "👋 ¡Bienvenido/a!\n@user",
+            "texto2": "👋 ¡Hasta luego!\n@user",
+            "texto3": "*[ ℹ️ ] @user Fue promovido a administrador.*",
+            "texto4": "*[ ℹ️ ] @user Fue degradado de administrador.*",
+            "texto5": "*[ ℹ️ ] La descripción del grupo ha sido modificada.*",
+            "texto6": "*[ ℹ️ ] El nombre del grupo ha sido modificado.*",
+            "texto7": "*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*",
+            "texto8": "*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*"
         }
     }
 }
