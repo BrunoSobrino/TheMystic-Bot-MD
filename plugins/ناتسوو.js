@@ -4,7 +4,7 @@ let handler = async (m, { conn }) => {
     let taguser = '@' + m.sender.split("@s.whatsapp.net")[0];
     let message = 🙄🙄مرحبا ماذا تريد مني;
 
-    conn.sendFile(m.chat, 'https://telegra.ph/file/9456fe895b3315ea993e4.jpg', 'image.jpg', message, m);
+    conn.sendFile(m.chat, 'https://telegra.ph/file/82e0c0e8451ec05e854f3.jpg', 'image.jpg', message, m);
 };
 
 handler.customPrefix = /^(NATSU|ناتسو|ناتسوو|natsu)$/i;
