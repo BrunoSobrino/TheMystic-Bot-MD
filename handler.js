@@ -1537,14 +1537,14 @@ global.dfail = (type, m, conn) => {
   const msg = {
         rowner: '*『 الميزه دي للمطور بس! 』*',
         owner: '*『 الميزه دي للمطور بس يحب ! 』*',
-        mods: '*『 الميزه دي لمالك البوت بس ! 』*',
+        mods: '*『 الميزه دي لمطور البوت بس ! 』*',
         premium: '*『 الميزه دي للاعضاء المميزين بس ! 』*',
         group: '*『 الميزه دي في الجروبات بس ! 』*',
         private: '*『 الميزه دي للبرايفت - الخاص بس ! 』*',
-        admin: '*『 الميزه دي للادمنز بس! 』*',
+        admin: '*『 الميزه دي للادمن بس! 』*',
         botAdmin: '*『 ارفع البوت ادمن الاول ! 』*',
-        unreg: '*[ لحظة !! انت مش مسجل ]*\n\n*『 سجل الامر عشان تفعله 』*\n*➣ #تفعيل*',
-        restrict: '*『 الميزه دي المالك لغيها ! 』*'
+        unreg: '*[ لحظة !! انت مش مسجل ]*\n\n*『 سجل الامر عشان تفعله 』*\n*➣ #تسجيل*',
+        restrict: '*『 الميزه دي المطور لغيها ! 』*'
     }[type]
   const aa = {quoted: m, userJid: conn.user.jid};
   const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: msg, contextInfo: {externalAdReply: {title: '*[ ⚠ ] Advertencia*', body: 'ᴛʜᴇ ᴍʏsᴛɪᴄ - ʙᴏᴛ', thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}}}}, aa);
