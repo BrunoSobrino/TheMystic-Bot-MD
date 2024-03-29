@@ -9,6 +9,7 @@ conn.sendFile(m.chat, neko, 'error.jpg', ` 🐾💗`, m)
 handler.command = /^(نيكو)$/i
 handler.tags = ['anime']
 handler.help = ['neko']
+handler.owner = true
 export default handler
 function pickRandom(list) {
 return list[Math.floor(Math.random() * list.length)]
