@@ -29,9 +29,10 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
   }
 };
 
-handler.command = /^bard$/i;
+handler.command = /^(bard)$/i;
+
 // Este Código pertenece a Azami.js Editado Por By @Alba070503
-import fetch from 'node-fetch'
+/*import fetch from 'node-fetch'
 
 var handler = async (m, { text,  usedPrefix, command }) => {
 
@@ -52,7 +53,7 @@ throw '*[❗] 𝙴𝚁𝚁𝙾𝚁, 𝚅𝚄𝙴𝙻𝚅𝙰 𝙰 𝙸𝙽𝚃�
 
 }
 handler.command = ['bard']
-handler.help = ['bard']
+handler.help = ['bard']*/
 handler.tags = ['ai']
 
 handler.premium = false
