@@ -1547,7 +1547,7 @@ global.dfail = (type, m, conn) => {
         restrict: '*『 الميزه دي المطور لغيها ! 』*'
     }[type]
   const aa = {quoted: m, userJid: conn.user.jid};
-  const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: msg, contextInfo: {externalAdReply: {title: '*[ ⚠ ] معلومه مهمه*', body: '𝙢,𝙚,𝙜,𝙤, ❦︎', thumbnail: imagen1, sourceUrl: 'atom.bio/mego51_51'}}}}, aa);
+  const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: msg, contextInfo: {externalAdReply: {title: '*[ ⚠ ] معلومه مهمه*', body: '𝙢,𝙚,𝙜,𝙤, ❦︎', thumbnail: imagen1, sourceUrl: 'https://www.atom.bio/mego51_51'}}}}, aa);
   if (msg) return conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id});
 };
 const file = global.__filename(import.meta.url, true);
