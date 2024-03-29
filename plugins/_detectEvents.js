@@ -20,7 +20,7 @@ export async function before(m, {conn, participants}) {
   if (!m.messageStubType || !m.isGroup) return !0;
   const groupName = (await conn.groupMetadata(m.chat)).subject;
   const groupAdmins = participants.filter((p) => p.admin);
-  const pp = await conn.profilePictureUrl(m.chat, 'image').catch((_) => null) || './src/avatar_contact.png';
+  const pp = await conn.profilePictureUrl(m.chat, 'image').catch((_) => null) || 'https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/avatar_contact.png';
   const img = await (await fetch(pp)).buffer();
   const chat = global.db.data.chats[m.chat];
   const mentionsString = [m.sender, m.messageStubParameters[0], ...groupAdmins.map((v) => v.id)];
