@@ -7,7 +7,7 @@ let handler = async (m, { conn }) => {
     conn.sendFile(m.chat, 'https://telegra.ph/file/9456fe895b3315ea993e4.jpg', 'image.jpg', message, m);
 };
 
-handler.customPrefix = /^(bot|بوت|بووت|بوت)$/i;
+handler.customPrefix = /^(natsu|ناتسوو|ناتسو|ناتسووو|NATSU)$/i;
 handler.command = new RegExp;
 
 export default handler;
