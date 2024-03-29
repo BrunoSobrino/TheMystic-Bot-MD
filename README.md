@@ -18,7 +18,7 @@
 
 ### `▢ مجموعات الدعم (متوفرة)`
 
- <a href="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" target="blank"><img src="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" />
+ <a href="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" target="blank"><img src="https://whatsapp.com/channel/0029VaRygQcATRSk29RI4P1x" /></a>
 
 <a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://whatsapp.com/channel/0029VaRygQcATRSk29RI4P1x" /></a>
 
