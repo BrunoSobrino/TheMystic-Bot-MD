@@ -22,9 +22,9 @@ let { exp, limit, level, role } = global.db.data.users[m.sender]
 let { min, xp, max } = xpRange(level, global.multiplier)
 let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered == true).length 
 let more = String.fromCharCode(8206)
+m.react('✅')
 let readMore = more.repeat(850)   
 let taguser = '@' + m.sender.split("@s.whatsapp.net")[0]
-m.react('✅')
 let str = `
 *▫️📆تاريخ:* ${date}
 *▫️🕛وقت نشط:* ${uptime}
