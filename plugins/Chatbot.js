@@ -7,7 +7,7 @@ let handler = m => m;
  responses = [ 
  'تحت امرك حبي'
  ]; 
- } else if (/^|بوووت|بموووووووووت|بوت$/i.test(m.text)) { 
+ } else if (/^بوووت|بموووووووووت|بوت$/i.test(m.text)) { 
      responses = [ 
 'تحت امرك يا حبي'
      ]; 
