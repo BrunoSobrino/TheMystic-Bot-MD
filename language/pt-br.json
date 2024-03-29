@@ -626,31 +626,31 @@
             "texto7": "*[❗] Erro, nenhum resultado encontrado.*"
         },
         "descargas_tiktok": {
-            "texto1": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Insira um link do TikTok.*\n\n*[ 💡 ] Exemplo:*",
-            "texto2": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Insira um link do TikTok.*\n\n*[ 💡 ] Exemplo:*",
-            "texto3": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] O vídeo está sendo enviado. Aguarde...*",
+            "texto1": "_*< التنزيلات - تيكتوك />*_\n\n*[ ℹ️ ] أدخل رابط التيك توك.*\n\n*[ 💡 ] مثال:*",
+            "texto2": "_*< التنزيلات - تيكتوك />*_\n\n*[ ℹ️ ] أدخل رابط التيك توك.*\n\n*[ 💡 ] مثال:*",
+            "texto3": "_*< التنزيلات - تيكتوك />*_\n\n*[ ℹ️ ] الفيديو يجري...*",
             "texto4": [
-                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responda a este vídeo com o comando*",
-                "*para convertê-lo em áudio.*"
+                "_*< التنزيلات - تيكتوك />*_\n\n*[ 💡 ] الرد على هذا الفيديو ب*",
+                "*لتحويله إلى صوت.*"
             ],
             "texto5": [
-                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responda a este vídeo com o comando*",
-                "*para convertê-lo em áudio.*"
+                "_*< التنزيلات - تيكتوك />*_\n\n*[ 💡 ] الرد على هذا الفيديو مع الأمر*",
+                "*لتحويله إلى صوت.*"
             ],
             "texto6": [
-                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responda a este vídeo com o comando*",
-                "*para convertê-lo em áudio.*"
+                "_*< التنزيلات - تيكتوك />*_\n\n*[ 💡 ] الرد على هذا الفيديو ب*",
+                "*لتحويله إلى صوت.*"
             ],
             "texto7": [
-                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responda a este vídeo com o comando*",
-                "*para convertê-lo em áudio.*"
+                "_*< التنزيلات - تيكتوك />*_\n\n*[ 💡 ] الرد على هذا الفيديو مع الأمر*",
+                "*لتحويله إلى صوت.*"
             ],
             "texto8": [
-                "_*< DESCARGAS - TIKTOK />*_\n\n*[ 💡 ] Responda a este vídeo com o comando*",
-                "*para convertê-lo em áudio.*"
+                "_*< التنزيلات - تيكتوك />*_\n\n*[ 💡 ] الرد على هذا الفيديو مع الأمر*",
+                "*لتحويله إلى صوت.*"
             ],
-            "texto9": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*",
-            "texto10": "_*< DESCARGAS - TIKTOK />*_\n\n*[ ℹ️ ] Insira um link do TikTok.*\n\n*[ 💡 ] Exemplo:*"
+            "texto9": "_*< التنزيلات - تيكتوك />*_\n\n*[ ℹ️ ] حدث خطأ.  الرجاء معاودة المحاولة في وقت لاحق.*",
+            "texto10": "_*< التنزيلات - تيكتوك />*_\n\n*[ ℹ️ ] أدخل رابط التيك توك.*\n\n*[ 💡 ] مثال:*"
         },
         "downloader_igstory": {
             "texto1": "*[❗️INFORMAÇÃO❗️] Insira o nome de usuário do Instagram*\n\n*EXEMPLO:*",
