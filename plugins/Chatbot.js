@@ -15,6 +15,10 @@ let handler = m => m;
      responses = [ 
        '*لا تنسى ال .*',  
      ];
+ }else if (/^تست$/i.test(m.text)) { 
+     responses = [ 
+       'شغال شغال تست',  
+     ];
  }
  if (responses) { 
  let randomIndex = Math.floor(Math.random() * responses.length); 
