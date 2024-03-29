@@ -14,7 +14,7 @@ var handler = async (m, { conn, command, text, usedPrefix }) => {
   let vid = search.videos[Math.floor(Math.random() * search.videos.length)];
   if (!search) throw 'Video Not Found, Try Another Title';
   let { title, thumbnail, timestamp, views, ago, url } = vid;
-  let wm = ' 💝 venom BOT💝'; //حط اسم بوتك
+  let wm = ' 💝 mego BOT💝'; //حط اسم بوتك
 
   let captvid = `💝 جاري التحميل ♥`;
 
