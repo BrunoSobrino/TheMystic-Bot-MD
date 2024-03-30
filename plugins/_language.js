@@ -18,10 +18,10 @@ const handler = async (m, { args, usedPrefix, command, isAdmin}) => {
         if (sigla === 'pt-br' || sigla === 'pt' || sigla === 'br') {
             //global.imagen4 = global.imagen7
             global.db.data.users[m.sender].language = 'pt-br'
-            m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*_Idioma definido em Português 🇧🇷_*`)
+            m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*_—◉ Idioma definido em Português 🇧🇷_*`)
         } else if (sigla === 'es') {
             global.db.data.users[m.sender].language = 'es';
-            m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*_Idioma definido a Español 🇪🇸_*`)
+            m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*_—◉ Idioma definido a Español 🇪🇸_*`)
         } else {
             m.reply(`${tradutor.texto1[0]}\n*${usedPrefix}lang* es\n\n${tradutor.texto1[1]}`)
         }
@@ -36,10 +36,10 @@ const handler = async (m, { args, usedPrefix, command, isAdmin}) => {
        delete global.db.data.chats[m.chat].language;
         if (sigla === 'pt-br' || sigla === 'pt' || sigla === 'br') {
             global.db.data.chats[m.chat].language = 'pt-br';
-            m.reply(`*[ ✅ ] Configuración del grupo*\n\n*_Idioma definido em Português 🇧🇷_*`)
+            m.reply(`*[ ✅ ] Configuración del grupo*\n\n*_—◉ Idioma definido em Português 🇧🇷_*`)
         } else if (sigla === 'es') {
             global.db.data.chats[m.chat].language = 'es';
-             m.reply(`*[ ✅ ] Configuración del grupo*\n\n*_Idioma definido a Español 🇪🇸_*`)
+             m.reply(`*[ ✅ ] Configuración del grupo*\n\n*_—◉ Idioma definido a Español 🇪🇸_*`)
         } else {
             m.reply(`${tradutor.texto2[0]}\n*${usedPrefix}langgroup* es\n\n${tradutor.texto2[1]}`)
         }
