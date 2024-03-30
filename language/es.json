@@ -2716,7 +2716,7 @@
                 "*<nombre sala>*_"
             ],
             "texto2": "Opciones de idioma 🌎",
-            "texto3":"_lenguaje grupal_"
+            "texto3": "_lenguaje grupal_"
         },
         "mipilot_serbot_broadcast": {
             "texto1": "*〔 DIFUSION A SUB BOTS 〕*\n\n",
@@ -3325,7 +3325,7 @@
             ],
             "texto2": "*[ 🎉 ] 𝙶𝚎𝚗𝚒𝚊𝚕, 𝚖𝚒𝚗𝚊𝚜𝚝𝚎"
         },
-        "rpc_myns": {
+        "rpg_myns": {
             "texto1": " *𝙽𝚄𝙼𝙴𝚁𝙾 𝙳𝙴 𝚂𝙴𝚁𝙸𝙴:*"
         },
         "rpg_perfil": {
@@ -3393,7 +3393,13 @@
                 "*[❗] No tienes suficientes",
                 "para transferir.*"
             ],
-            "texto6": "*¿Está seguro de que desea transferir",
+            "texto6": [
+                "*¿Está seguro de que desea transferir",
+                "*—◉ Tienes 60 segundos para confirmar*",
+                "Tienes  *60* s",
+                "Escriba: (si) para acertar",
+                "Escriba: (no) para cancelar"
+            ],
             "texto7": "*[❗] Cancelado, la transferencia no se realizará.*",
             "texto8": "*[❗] Se transfirierón correctamente",
             "texto9": "*[❗] Error al transferir"
@@ -3574,12 +3580,32 @@
             "texto2": [
                 "🗣IDIOMA GRUPO\n\n_Envie o comando e a sigla da linguagem desejada_\n\n👉Exemplo:",
                 "Linguagens Disponíveis:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n\n_Traducciones en desarrollo, puede haber algunos errores_"
-                ],
-            "texto3":"*[ ! ]* _Este comando sólo se puede utilizar en grupos_",
-            "texto4":"*[ ! ]* _Este comando solo puede ser utilizado por *Administradores*_"
+            ],
+            "texto3": "*[ ! ]* _Este comando sólo se puede utilizar en grupos_",
+            "texto4": "*[ ! ]* _Este comando solo puede ser utilizado por *Administradores*_"
         }
     },
     "handler": {
+        "handler": {
+            "texto1": [
+                "_*< USUARIO SUSPENDIDO />*_\n",
+                "▢ *Aviso:*",
+                "\n▢ *Motivo:*",
+                "▢ *Motivo:* Sin especificar",
+                "*[ ℹ️ ] Si consideras que esto es un error y cuentas con pruebas, puedes comunicarte con el propietario(a) del bot para apelar la suspensión.*"
+            ],
+            "texto2": "*[ ℹ️ ] Sus diamantes se han agotado, puede adquirir más con el comando:*",
+            "texto3": [
+                "*[ ℹ️ ] Se require tener el nivel",
+                "para poder utilizar el comando. Tú nivel actual es",
+                "usa el comando",
+                "para subir tu nivel con XP.*"
+            ],
+            "texto4":[
+                "*[ ℹ️ ] Se utilizaron",
+                "diamante(s) (limites).*"
+            ]
+        },
         "dfail": {
             "texto1": "*[ ℹ️ ] Este comando solo puede ser utilizado por el propietario del bot.*",
             "texto2": "*[ ℹ️ ] Este comando solo puede ser utilizado por el propietario del bot.*",
@@ -3606,6 +3632,16 @@
             "texto6": "*[ ℹ️ ] El nombre del grupo ha sido modificado.*",
             "texto7": "*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*",
             "texto8": "*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*"
+        },
+        "deleteUpdate": {
+            "texto1": [
+                "_*< ANTI-DELETE />*_\n",
+                " ▢ *Usuario:*",
+                " ▢ *Hora:*",
+                "▢ *Fecha:*",
+                "▢ *Enviando el mensaje eliminado...*\n",
+                "*[ ℹ️ ] Para desactivar la función* _antidelete_*, envia el siguiente comando:* _/disable antidelete_"
+            ]
         }
     }
 }

@@ -2700,7 +2700,7 @@
                 "*<nome sala>*_"
             ],
             "texto2": "_< Opções idioma 🌎 >_ ",
-            "texto3":"_< Idioma de Grupos >_"
+            "texto3": "_< Idioma de Grupos >_"
         },
         "mipilot_serbot_broadcast": {
             "texto1": "*〔 DIFUSIÓN A SUB BOTS 〕*\n\n",
@@ -3372,7 +3372,13 @@
                 "*[❗] Você não possui",
                 "para transferir.*"
             ],
-            "texto6": "*Tem certeza de que deseja transferir",
+            "texto6": [
+                "*Tem certeza de que deseja transferir",
+                "*—◉ Você tem 60 segundos para confirmar*",
+                "Você tem  *60* s",
+                "Digite: (si) para confirmar",
+                "Digite: (no) para cancelar"
+            ],
             "texto7": "*[❗] Cancelado, a transferência não será concluída.*",
             "texto8": "*[❗] Transferido com sucesso",
             "texto9": "*[❗] Erro ao transferir"
@@ -3553,11 +3559,31 @@
                 "*🗣IDIOMA GRUPO*\n\n_Envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
                 "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
             ],
-            "texto3":"*[ ! ]* _Este comando só pode ser usado em grupos_",
-            "texto4":"*[ ! ]* _Este comando só pode ser usado por *Administradores*_"
+            "texto3": "*[ ! ]* _Este comando só pode ser usado em grupos_",
+            "texto4": "*[ ! ]* _Este comando só pode ser usado por *Administradores*_"
         }
     },
     "handler": {
+        "handler": {
+            "texto1": [
+                "_*< USUÁRIO SUSPENSO />*_\n",
+                "▢ *Aviso:*",
+                "\n▢ *Motivo:*",
+                "▢ *Motivo:* Não especificado",
+                "*[ ℹ️ ] Se você acredita que isso é um erro e possui evidências, pode entrar em contato com o proprietário(a) do bot para apelar a suspensão.*"
+            ],
+            "texto2": "*[ ℹ️ ] Seus diamantes acabaram, você pode adquirir mais com o comando:*",
+            "texto3": [
+                "*[ ℹ️ ] É necessário ter o nível",
+                "para poder usar o comando. Seu nível atual é",
+                "use o comando",
+                "para aumentar seu nível com XP.*"
+            ],
+            "texto4": [
+                "*[ ℹ️ ] Foram usados",
+                "diamante(s) (limites).*"
+            ]
+        },
         "dfail": {
             "texto1": "[ ℹ️ ] Este comando só pode ser utilizado pelo proprietário do bot.",
             "texto2": "[ ℹ️ ] Este comando só pode ser utilizado pelo proprietário do bot.",
@@ -3584,6 +3610,16 @@
             "texto6": "*[ ℹ️ ] O nome do grupo foi modificado.*",
             "texto7": "*[ ℹ️ ] A foto de perfil do grupo foi alterada.*",
             "texto8": "*[ ℹ️ ] O link de convite para o grupo foi redefinido.*"
+        },
+        "deleteUpdate": {
+            "texto1": [
+                "< ANTI-DELETE />\n",
+                " ▢ Usuário:",
+                " ▢ Hora:",
+                "▢ Data:",
+                "▢ Enviando a mensagem excluída...\n",
+                "[ ℹ️ ] Para desativar a função antidelete, envie o seguinte comando: /disable antidelete"
+            ]
         }
     }
 }
