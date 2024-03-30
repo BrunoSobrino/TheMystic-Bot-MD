@@ -10,7 +10,7 @@ let handler = async (m, { conn, usedPrefix }) => {
         conn.reply(m.chat, '❐┃لم يتم الاجابة علي السؤال بعد┃❌ ❯', conn.tekateki[id][0])
         throw false
     }
-    let tekateki = JSON.parse(fs.readFileSync(`https://github.com/Kyutaka101/Kkk/blob/ec728908e5dbe33510648ba9b2fa61b0763bd43e/src/game/%D8%A7%D9%86%D9%85%D9%8A.json`))
+    let tekateki = JSON.parse(fs.readFileSync(`src/game/اسءلتي.js`))
     let json = tekateki[Math.floor(Math.random() * tekateki.length)]
     let _clue = json.response
     let clue = _clue.replace(/[A-Za-z]/g, '_')
