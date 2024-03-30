@@ -25,17 +25,22 @@ async function handler(m, { conn, args, usedPrefix, command }) {
   if (!who) return conn.sendMessage(m.chat, {text: tradutor.texto3, mentions: [m.sender]}, {quoted: m});
   if (!(who in global.db.data.users)) return conn.sendMessage(m.chat, {text: `${tradutor.texto4[0]} ${who} ${tradutor.texto4[1]}`, mentions: [m.sender]}, {quoted: m});
   if (user[type] * 1 < count) return conn.sendMessage(m.chat, {text: `${tradutor.texto5[0]} ${type} ${tradutor.texto5[1]}`, mentions: [m.sender]}, {quoted: m});
-const confirm = `${tardutor.texto6[0]} ${count} ${type} a @${(who || '').replace(/@s\.whatsapp\.net/g, '')}?* 
-${tardutor.texto6[1]}
+const confirm = `${tradutor.texto6[0]} ${count} ${type} a @${(who || '').replace(/@s\.whatsapp\.net/g, '')}?* 
+${tradutor.texto6[1]}
 
-${tardutor.texto6[2]}* 
-${tardutor.texto6[3]}
-${tardutor.texto6[4]}`.trim();
+${tradutor.texto6[2]}* 
+${tradutor.texto6[3]}
+${tradutor.texto6[4]}`.trim();
   await conn.sendMessage(m.chat, {text: confirm, mentions: [who]}, {quoted: m});
   confirmation[m.sender] = { sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: '*[❗] Se acabó el tiempo, no se obtuvo respuesta. Transferencia cancelada.*', mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
 }
 
 handler.before = async (m) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_transfer
+  
   if (m.isBaileys) return;
   if (!(m.sender in confirmation)) return;
   if (!m.text) return;
