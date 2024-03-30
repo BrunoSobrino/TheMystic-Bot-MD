@@ -1,10 +1,10 @@
 
 
-const handler = async (m, { args, usedPrefix, command }) => {
+const handler = async (m, { args, usedPrefix, command, isAdmin}) => {
     const data = global
     const idioma = data.db.data.users[m.sender].language
     const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
-    const tradutor = _translate.plugins._translate
+    const tradutor = _translate.plugins._language
 
     data.db.data.users[m.sender].language
     let sigla // Args user
@@ -25,6 +25,7 @@ const handler = async (m, { args, usedPrefix, command }) => {
             m.reply(`*✅The Mistic - Bot*\n\n_Definido para_ *🇪🇸 Español*`)
 
         } else {
+            
             m.reply(`
 ${tradutor.texto1[0]}
 *${usedPrefix}lang* es
@@ -35,9 +36,17 @@ ${tradutor.texto1[1]}
         }
 
     }
-
+    
     // - Traduções Grupos
     if (command === 'langgroup') {
+        if(m.isGroup === false){
+           return  m.reply(tradutor.texto3)
+        }
+        
+        if(m.isGroup === true && isAdmin === false){
+            return  m.reply(tradutor.texto4)
+        }
+
         if (sigla === 'pt-br' || sigla === 'pt' || sigla === 'br') {
             global.db.data.chats[m.chat].language = 'pt-br';
 
