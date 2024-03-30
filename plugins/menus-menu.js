@@ -15,6 +15,8 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
     const tradutor = _translate.plugins.menu_menu
 
+    console.log(idioma)
+
     // const pp = imagen7;
 
     // let vn = './media/menu.mp3'

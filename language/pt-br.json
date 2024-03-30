@@ -3544,7 +3544,7 @@
         "adult_comandos": {
             "texto1": "[❗INFORMAÇÃO❗] Os COMANDOS +18 ESTÃO DESATIVADOS NO GRUPO, SE VOCÊ É ADMIM E DESEJA ATIVÁ-LOS USE O COMANDO #enable modohorny"
         },
-        "_translate": {
+        "_language": {
             "texto1": [
                 "*🗣 CONFIG IDIOMA BOT*\n\n_Para trocar de idioma, envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
                 "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
@@ -3552,7 +3552,9 @@
             "texto2": [
                 "*🗣IDIOMA GRUPO*\n\n_Envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
                 "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
-            ]
+            ],
+            "texto3":"*[ ! ]* _Este comando só pode ser usado em grupos_",
+            "texto4":"*[ ! ]* _Este comando só pode ser usado por *Administradores*_"
         }
     },
     "handler": {
