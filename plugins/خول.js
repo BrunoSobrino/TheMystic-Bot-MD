@@ -5,7 +5,7 @@ if (!db.data.chats[m.chat].stickers && m.isGroup) throw 0
 let nombre = '𝑁𝐴𝑇𝑺𝑈'
 let nombre2 = 'بس يخول👿' 
 const s = [
-'https://file.io/rBkkuMtD1ghd',
+'https://telegra.ph/file/c70487e20f95a2c744c30.jpg',
 ];  
 
 let stiker = await sticker(null, s[Math.floor(Math.random() * s.length)], nombre, nombre2)
