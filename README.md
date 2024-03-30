@@ -6,7 +6,7 @@
 > TheMystic-Bot-MD pasa a quedar en manos de colaboradores, y como principal representante Aiden_NotLogic.
 ------------------
 
-> Opción de **Idioma** Oficialmente Implementada en The Mistic Bot - **/LANG**
+> Función de **idioma** oficialmente implementada en TheMystic-Bot-MD: **/lang**
 
 ### `▢ CUENTAS OFICIALES`
 
