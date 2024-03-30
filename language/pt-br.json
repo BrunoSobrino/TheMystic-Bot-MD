@@ -1525,7 +1525,225 @@
                 "*• Tempo:*",
                 "*• Bônus:*"
             ],
-            "texto3": "O tempo acabou!\n*Resposta:*"
+            "texto3": "O tempo acabou!\n*Resposta:*",
+            "texto4": [
+                {
+                    "question": "O que um pinguim diz para outro pinguim?",
+                    "response": "Eu te amo como nenhum outro"
+                },
+                {
+                    "question": "O que um cego diz para outro cego?",
+                    "response": "Nos vemos depois"
+                },
+                {
+                    "question": "Em que um alfinete se parece com um policial?",
+                    "response": "Ambos prendem"
+                },
+                {
+                    "question": "O que congela quando é aquecido?",
+                    "response": "O computador"
+                },
+                {
+                    "question": "Que fruta tem muitos olhos, mas não pode ver?",
+                    "response": "O abacaxi"
+                },
+                {
+                    "question": "Em que idioma as tartarugas se comunicam?",
+                    "response": "Em tartarugês"
+                },
+                {
+                    "question": "Como um policial de Sevilha chama sua arma?",
+                    "response": "Minha arma"
+                },
+                {
+                    "question": "O que é tudo para um e nada para os outros?",
+                    "response": "A mente"
+                },
+                {
+                    "question": "Qual é o colmo de um aspirador de pó?",
+                    "response": "Ser alérgico à poeira"
+                },
+                {
+                    "question": "O que desaparece quando você o menciona?",
+                    "response": "O silêncio"
+                },
+                {
+                    "question": "O que precisamos para escrever dormindo?",
+                    "response": "Estar acordado"
+                },
+                {
+                    "question": "Que objeto pode ter uma cara sem ter um corpo?",
+                    "response": "Uma moeda"
+                },
+                {
+                    "question": "Alimenta a casa, Gabinete com gelo",
+                    "response": "A geladeira"
+                },
+                {
+                    "question": "O que as mulheres têm entre as pernas?",
+                    "response": "Os joelhos"
+                },
+                {
+                    "question": "Entra duro e seco e sai macio e molhado. O que é?",
+                    "response": "Um chiclete"
+                },
+                {
+                    "question": "Estou em tudo e estou em nada. O que sou?",
+                    "response": "A letra d"
+                },
+                {
+                    "question": "Continuo vermelho, mas paro no verde. O que sou?",
+                    "response": "Uma melancia"
+                },
+                {
+                    "question": "O que é preto quando você o compra, vermelho quando o usa e cinza quando o joga fora?",
+                    "response": "O carvão"
+                },
+                {
+                    "question": "O que está sempre à sua frente, mas você não pode ver?",
+                    "response": "O futuro"
+                },
+                {
+                    "question": "Qual mês tem 28 dias?",
+                    "response": "Todos"
+                },
+                {
+                    "question": "Como alguém pode ficar acordado por dez dias e não ter sono?",
+                    "response": "Dormindo à noite"
+                },
+                {
+                    "question": "Como você encheria um barril para que pesasse o menos possível?",
+                    "response": "Com buracos"
+                },
+                {
+                    "question": "Se durante uma corrida você ultrapassa quem está em segundo lugar, em que posição você está?",
+                    "response": "Segundo"
+                },
+                {
+                    "question": "Onde a quinta-feira está antes da quarta-feira?",
+                    "response": "No dicionário"
+                },
+                {
+                    "question": "O que sobe e desce, mas sempre permanece no mesmo lugar?",
+                    "response": "As escadas"
+                },
+                {
+                    "question": "Como eles chamam um elevador na China?",
+                    "response": "Apertando o botão"
+                },
+                {
+                    "question": "O que um elefante faz ao nascer do sol?",
+                    "response": "Sombra"
+                },
+                {
+                    "question": "Por que um Tiranosaurus Rex não pode aplaudir?",
+                    "response": "Porque está extinto"
+                },
+                {
+                    "question": "Qual animal está sempre cheio?",
+                    "response": "A baleia"
+                },
+                {
+                    "question": "O que todos fazemos assim que acordamos?",
+                    "response": "Abrimos os olhos"
+                },
+                {
+                    "question": "Qual é o número que, se você dividir pela metade, será zero?",
+                    "response": "Oito"
+                },
+                {
+                    "question": "O que você precisa fazer para acender uma vela?",
+                    "response": "Que ela esteja apagada"
+                },
+                {
+                    "question": "Qual é o país onde tudo termina?",
+                    "response": "Finlândia"
+                },
+                {
+                    "question": "A resposta para esta pergunta é #######",
+                    "response": "#######"
+                },
+                {
+                    "question": "Qual é o fim de tudo?",
+                    "response": "A letra o"
+                },
+                {
+                    "question": "Onde você encontra uma parede com outra parede?",
+                    "response": "No canto"
+                },
+                {
+                    "question": "O que tem muitas palavras, mas nunca fala?",
+                    "response": "Um livro"
+                },
+                {
+                    "question": "O que é seu, mas os outros usam mais do que você?",
+                    "response": "Seu nome"
+                },
+                {
+                    "question": "Em que momento uma pessoa se torna fruta?",
+                    "response": "Quando espera"
+                },
+                {
+                    "question": "Os pais de José têm três filhos: Luis, Raúl e..., como se chama o terceiro?",
+                    "response": "José"
+                },
+                {
+                    "question": "Que palavra do dicionário é escrita incorretamente?",
+                    "response": "Incorretamente"
+                },
+                {
+                    "question": "Úmido por dentro, com cabelos por fora. Começa com C. Do que se trata?",
+                    "response": "Um coco"
+                },
+                {
+                    "question": "David e Fabián estão jogando xadrez. Eles jogaram 5 partidas, mas ambos ganharam 3. Como é possível?",
+                    "response": "Porque jogam com mais pessoas"
+                },
+                {
+                    "question": "Quantos 9 existem entre 1 e 100?",
+                    "response": "Vinte"
+                },
+                {
+                    "question": "São dois ventiladores que funcionam o dia todo, mas quando você dormir, eles param e ficam parados",
+                    "response": "Os cílios"
+                },
+                {
+                    "question": "Ouro parece, prata não é, e quem não adivinhar é um tolo",
+                    "response": "Uma banana"
+                },
+                {
+                    "question": "Círculo bem redondo que, se você bater, dá um salto de susto",
+                    "response": "Um tambor"
+                },
+                {
+                    "question": "Um cavalo branco entra no Mar Negro. Como ele sai?",
+                    "response": "Sai molhado"
+                },
+                {
+                    "question": "Se um trem elétrico vai do Norte ao Sul, para que lado o vapor vai?",
+                    "response": "É elétrico, não emite vapor"
+                },
+                {
+                    "question": "Tem 4 letras, começa com C e termina com O e está na parte de trás",
+                    "response": "O cotovelo"
+                },
+                {
+                    "question": "Um avião cai e todos morrem, exatamente na fronteira entre Espanha e Portugal. A que hospital devem levar os sobreviventes?",
+                    "response": "Não há sobreviventes"
+                },
+                {
+                    "question": "Este banco é ocupado por um pai e um filho, o pai se chama Juan e o filho já te disse",
+                    "response": "Esteban"
+                },
+                {
+                    "question": "Alguns meses têm 31 dias, outros apenas 30. Quantos têm 28 dias?",
+                    "response": "Todos"
+                },
+                {
+                    "question": "Você não pode ver, mas não pode viver sem. O que é?",
+                    "response": "O ar"
+                }
+            ]
         },
         "game_akinator_ans": {
             "texto1": "*0 - Sim*\n*1 - Não*\n*2 - Não sei*\n*3 - Provavelmente sim*\n*4 - Provavelmente não*\n*5 - Voltar à pergunta anterior*",
@@ -3552,8 +3770,10 @@
         },
         "_language": {
             "texto1": [
-                "*🗣 CONFIG IDIOMA BOT*\n\n_Para trocar de idioma, envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
-                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
+                "\n\n_Para trocar de idioma, envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
+                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n\n_Traduções em desenvolvimento, podera haver alguns erros_",
+                "*🗣 CONFIG IDIOMA BOT*\n",
+                "_[!] Seu idioma atual é:_"
             ],
             "texto2": [
                 "*🗣IDIOMA GRUPO*\n\n_Envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",

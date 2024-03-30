@@ -1,0 +1,1500 @@
+{
+    "plugins": {
+        "antiarab": {
+            "texto1": "_*< ANTI-ARABS />*_\n\n*[ ℹ️ ] In this group, numbers starting with +212 are not allowed. Therefore, you will be removed from the group.*",
+            "texto2": "_*< ANTI-ARABS />*_\n\n*[ ℹ️ ] In this group, numbers starting with +265 are not allowed. Therefore, you will be removed from the group.*",
+            "texto3": "_*< ANTI-ARABS />*_\n\n*[ ℹ️ ] In this group, numbers starting with +92 are not allowed. Therefore, you will be removed from the group.*"
+        },
+        "_antilink": {
+            "texto1": "*< ANTI-LINK />*_\n\n*[ ℹ️ ] Antilink is enabled, but the participant who sent the link is an administrator.*",
+            "texto2": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Participant @user sent a link to a WhatsApp group, so they will be removed.*",
+            "texto3": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] For antilink to work correctly, the bot must be an administrator of the group.*",
+            "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] This feature is disabled because the* _restrict_ *feature is enabled.*"
+        },
+        "_antilink2": {
+            "texto1": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Participant @user sent a link to a WhatsApp group, so they will be removed.*",
+            "texto2": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] For antilink to work correctly, the bot must be an administrator of the group.*",
+            "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] This feature is disabled because the* _restrict_ *feature is enabled.*"
+        },
+        "_antiprivado": {
+            "texto1": "_*< ANTI-PRIVATE />*_\n\n*[ ℹ️ ] The antiprivate function is enabled, so you will be blocked.*"
+        },
+        "_antitoxic": {
+            "texto1": "_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] ",
+            "texto1_1": " send the word ",
+            "texto1_2": " is prohibited in this group.\n\n▢ *Warning:* ",
+            "texto2": "_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] Participant ",
+            "texto2_1": " has exceeded 5 warnings, so you will be expelled from the group.*"
+        }
+    },
+    "_antitrabas": {
+        "texto1": "< ANTI-BARRIERS />_\n\n*[ ℹ️ ] Administrator ",
+        "texto1_1": " sent a message that contains too many characters.* ",
+        "texto2": "[ ! ] A message containing too many characters was detected [ ! ]\n",
+        "texto2_1": " I'm not an administrator, I can't do anything :/ ",
+        "texto3": " Mark the chat as read ✓ ",
+        "texto3_1": " The number: ",
+        "texto3_2": " Alias ",
+        "texto3_3": "[ ! ] Just sent a text containing too many characters, which may cause device failures ",
+        "texto4": "[ ! ] To perform deletion actions, my owner needs to activate restricted mode! "
+    },
+    "_antiviewonce": {
+        "texto1": "*- In this group, you do not have permission to hide anything.*"
+    },
+    "_autosticker": {
+        "texto1": "_*< FUNCTIONS - AUTOSTICKER />*_\n\n*[ ℹ️ ] The duration of the video cannot exceed 7 seconds.*\n\n*[ 💡 ] To disable the* _autosticker_ *function, send the following command:* _/"
+    },
+    "_detectevents": {
+        "texto1": "Recently, a member was promoted to administrator.\n\n",
+        "texto1_1": "◦ Group:",
+        "texto1_2": "◦ New admin:",
+        "texto1_3": "◦ Performed by:",
+        "texto2": "Recently, an administrator was demoted to member.\n\n",
+        "texto2_1": "◦ Group:",
+        "texto2_2": "◦ Was removed:",
+        "texto2_3": "◦ Performed by:",
+        "texto3": "Recently, a new member was added to the group.\n\n",
+        "texto3_1": "◦ Group:",
+        "texto3_2": "◦ Added by: ",
+        "texto3_3": "◦ Performed by: ",
+        "texto3_4": "◦ Added by: ",
+        "texto4": "Recently, a member was removed from the group.\n\n",
+        "texto4_1": "◦ Group: ",
+        "texto4_2": "◦ Was removed: ",
+        "texto4_3": "◦ Performed by:",
+        "texto4_4": "◦ Was removed: ",
+        "texto5": "Recently, a member left the group.\n\n",
+        "texto5_1": "◦ Group: ",
+        "texto5_2": "◦ Was removed: ",
+        "texto5_3": "◦ Performed by: ",
+        "texto5_4": "◦ Left: ",
+        "texto6": "Recently, group settings were modified.\n\n",
+        "texto6_1": "◦ Group: ",
+        "texto6_2": "◦ The group was: ",
+        "texto6_3": "◦ Performed by: ",
+        "texto7": "Recently, the group name was changed.\n\n",
+        "texto7_1": "◦ New name: ",
+        "texto7_2": "◦ Performed by: "
+    },
+    "_premium": {
+        "texto1": "Your time as a premium user has expired, you are no longer a premium user*"
+    },
+    "adult_hentaipdf": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] COMMANDS +18 ARE DISABLED IN THIS GROUP, IF YOU ARE AN ADMINISTRATOR AND WANT TO ACTIVATE THEM, USE THE COMMAND #enable modohorny",
+        "texto2": "[❗] INSERT THE NAME OF A HENTAI CATEGORY, FOR EXAMPLE:",
+        "texto2_1": "miku",
+        "texto3": "[❗] ERROR, TRY AGAIN AND/OR TRY WITH ANOTHER CATEGORY"
+    },
+    "adult_hentaisearch": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] +18 COMMANDS ARE DISABLED IN THIS GROUP, IF YOU ARE AN ADMINISTRATOR AND WANT TO ACTIVATE THEM, USE THE COMMAND #enable modohorny",
+        "texto2": "[❗] INSERT THE NAME OF A HENTAI TO BE SEARCHED",
+        "texto3": "[❗] NO RESULTS WERE FOUND"
+    },
+    "adult_pack_vid": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] +18 COMMANDS ARE DISABLED IN THIS GROUP, IF YOU ARE AN ADMINISTRATOR AND WANT TO ACTIVATE THEM, USE THE COMMAND #enable modohorny",
+        "texto2": "*ENJOY THE VIDEO "
+    },
+    "adult_xnxxdl": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] +18 COMMANDS ARE DISABLED IN THIS GROUP, IF YOU ARE AN ADMINISTRATOR AND WANT TO ACTIVATE THEM, USE THE COMMAND #enable modohorny",
+        "texto2": "[❗𝐈𝐍𝐅𝐎❗] INSERT A VALID XNXX LINK, EXAMPLE:",
+        "texto3": "[❗] THE VIDEO IS BEING PROCESSED, PLEASE WAIT WHILE IT IS SENT..\n\n- THE SENDING TIME DEPENDS ON THE WEIGHT AND DURATION OF THE VIDEO",
+        "texto4": "[❗] NO LINK WAS FOUND FOR THIS NUMBER, PLEASE INSERT A NUMBER BETWEEN 1 AND THE ",
+        "texto5": "[❗] TO USE THIS COMMAND IN THIS WAY ",
+        "texto5_1": "<number>), PLEASE SEARCH FOR VIDEOS WITH THE COMMAND",
+        "texto6": "[❗] TO USE THIS COMMAND IN THIS WAY ",
+        "texto6_1": "<number>), PLEASE SEARCH FOR VIDEOS WITH THE COMMAND",
+        "texto7": "[❗𝐈𝐍𝐅𝐎❗] ERROR, PLEASE TRY AGAIN \n\n*- CHECK IF THE LINK IS SIMILAR TO:*"
+    },
+    "adult_xnxxsearch": {
+        "texto1": "[❗] +18 COMMANDS ARE DISABLED IN THIS GROUP, IF YOU ARE AN ADMINISTRATOR AND WANT TO ACTIVATE THEM, USE",
+        "texto2": "[❗𝐈𝐍𝐅𝐎❗] INSERT THE ITEM YOU WANT TO SEARCH FOR ",
+        "texto3": "🔍 SEARCH RESULTS:"
+    },
+    "adult_xvideosdl": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] +18 COMMANDS ARE DISABLED IN THIS GROUP. IF YOU ARE AN ADMINISTRATOR AND WANT TO ACTIVATE THEM, USE",
+        "texto2": "[❗𝐈𝐍𝐅𝐎❗] INSERT A VALID XVÍDEOS LINK, EXAMPLE:",
+        "texto3": "[❗] THE VIDEO IS BEING PROCESSED, PLEASE WAIT WHILE IT IS SENT..\n\n- THE SENDING TIME DEPENDS ON THE WEIGHT AND DURATION OF THE VIDEO",
+        "texto4": "[❗𝐈𝐍𝐅𝐎❗] ERROR, PLEASE TRY AGAIN \n*- CHECK IF THE LINK IS SIMILAR TO:*"
+    },
+    "afk__afk": {
+        "texto1": [
+            "[❗] NO ONE TAGGED [❗]",
+            "THE USER WHO USED TAG IS INACTIVE (AFK)",
+            "REASON FOR INACTIVITY (AFK): ",
+            "REASON FOR INACTIVITY (AFK): THE USER DID NOT SPECIFY A REASON IN THEIR ACTIVATION",
+            "TIME ELAPSED FROM INACTIVITY (AFK):"
+        ],
+        "texto2": [
+            "*[❗INFORMATION❗] WANT TO DISABLE INACTIVITY (AFK)",
+            "WANT TO DISABLE INACTIVITY (AFK) FOR THIS REASON:",
+            "—◉ INACTIVITY TIME (AFK):"
+        ]
+    },
+    "afk_afk": {
+        "texto1": [
+            "[❗INFORMATION❗] USER ",
+            "IS INACTIVE (AFK), PLEASE DO NOT TAG THEM\n\n*—◉ REASON FOR INACTIVITY (AFK)"
+        ]
+    },
+    "anonymous_chat": {
+        "texto1": "*[❗INFORMATION❗]* NOT IN AN ANONYMOUS CHAT\n\nWANT TO START AN ANONYMOUS CHAT?\nWRITE",
+        "texto2": "*[ ✔ ]* SUCCESSFULLY EXITED ANONYMOUS CHAT",
+        "texto3": "*[❗INFORMATION❗]* THE OTHER USER LEFT THE ANONYMOUS CHAT\n\nWANT TO LEAVE THE ANONYMOUS CHAT?\nWRITE",
+        "texto4": "*[❗INFORMATION❗]* EVERYONE IS IN AN ANONYMOUS CHAT, REQUESTING ANOTHER USER TO JOIN TO START AN ANONYMOUS CHAT\n\nWANT TO LEAVE THE ANONYMOUS CHAT?\nWRITE",
+        "texto5": "*[ ✔ ]* SUCCESSFULLY JOINED THE ANONYMOUS CHAT, REQUEST SENT TO THE OTHER USER",
+        "texto6": "*[ ✔ ]* SUCCESSFULLY JOINED THE ANONYMOUS CHAT, REQUEST SENT TO THE OTHER USER\n\nANOTHER CHAT IS CREATED",
+        "texto7": "*[❗INFORMATION❗]* WAITING FOR THE OTHER USER TO START AN ANONYMOUS CHAT\n\nWANT TO LEAVE THE ANONYMOUS CHAT?*\nWRITE"
+    },
+    "audio_efectos": {
+        "texto1": "*[❗INFORMATION❗] RESPONSE TO THE AUDIO OR VOICE NOTE AND NOT TO VOICE IT WILL BE MODIFIED, USE THE COMMAND*"
+    },
+    "buscador_animeinfo": {
+        "texto1": "*[❗INFORMATION❗]* _INSERT THE NAME OF AN ANIME TO SEARCH FOR_",
+        "texto2": [
+            "*🎀 • Title",
+            "*🎋 • Format:*",
+            "*📈 • Status:*",
+            "*🍥 • Total Episodes:*",
+            "*🎈 • Duration:*",
+            "*✨ • Based on:*",
+            "*💫 • Premiere:*",
+            "*🎗 • Finished:*",
+            "*🎐 • Popularity:*",
+            "*🎏 • Favorites:*",
+            "*🎇 • Rating:*",
+            "*🏅 • Ranking:*",
+            "*♦ • Trailer:*",
+            "*🌐 • URL:*",
+            "*🎆 • Background:*",
+            "*❄ • Summary:*"
+        ],
+        "texto3": "*[❗]* _ERROR, PLEASE TRY AGAIN_"
+    },
+    "buscador_githubsearch": {
+        "texto1": [
+            "*🔗 URL:*",
+            "*📅 Created at:*",
+            "*🔄 Updated at:*",
+            "*📥 Clone: $ git clone*",
+            "*Description:*"
+        ]
+    },
+    "buscador_google": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] INSERT THE TEXT OR TOPIC YOU WANT TO SEARCH FOR",
+        "texto2": "SEARCH RESULTS:"
+    },
+    "buscador_lyrics": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] EXAMPLE OF THE CORRECT USE OF THE COMMAND",
+        "texto2": [
+            "🎤 TITLE:",
+            "👤 ARTIST:",
+            "📃🎵 LYRICS:",
+            "[❗𝐈𝐍𝐅𝐎❗] ERROR, PLEASE TRY AGAIN"
+        ]
+    },
+    "buscador_peliculas": {
+        "texto1": "[❗] INSERT THE NAME OR LINK OF THE MOVIE YOU WANT TO SEARCH FOR",
+        "texto2": "[❗] NO RELEVANT MOVIE INFORMATION FOUND",
+        "texto3": [
+            "🎬 • Name:",
+            "🍿 • URL:",
+            "💫 • Ad blocker recommended:",
+            "Block This",
+            "⛨ • Link:"
+        ]
+    },
+    "buscador_playstore": {
+        "texto1": "[❗] INSERT THE NAME OF THE APP YOU WANT TO SEARCH FOR",
+        "texto2": "[❗] INSERT THE NAME OF THE APP YOU WANT TO SEARCH FOR",
+        "texto3": [
+            "*🔍 Result:*",
+            "*✍️ Developer:*",
+            "*💸 Price:*",
+            "*📈 Rating:*",
+            "*⛓️ Link:*"
+        ]
+    },
+    "buscador_stickersearch": {
+        "texto1": "[❗] INSERT THE NAME OF THE PACK YOU WANT TO SEARCH FOR",
+        "texto2": [
+            "🪴 • Result:",
+            "🌵 • Name:",
+            "🍂 • Url:"
+        ],
+        "texto3": "[❗] ERROR, PLEASE TRY AGAIN"
+    },
+    "buscador_stickersearch2": {
+        "texto1": "[❗] INSERT THE NAME OF THE PACK YOU WANT TO SEARCH FOR",
+        "texto2": [
+            "🌅 • Result:",
+            "🥗 • Name:",
+            "🐢 • Author:",
+            "🍂 • Url:"
+        ],
+        "texto3": "[❗] ERROR, PLEASE TRY AGAIN"
+    },
+    "buscador_wikipedia": {
+        "texto1": [
+            "[❗️𝐈𝐍𝐅𝐎❗️] YOU ARE USING THE COMMAND INCORRECTLY!!\nCORRECT USAGE:\n",
+            "Keyword to be searched\n\nEXAMPLE:\n",
+            ""
+        ],
+        "texto2": "HERE IS THE EXTRACTED INFORMATION:",
+        "texto3": "[❗️𝐈𝐍𝐅𝐎❗️] NO INFORMATION FOUND, PLEASE MAKE SURE YOU ENTERED ONLY ONE WORD AND THAT YOU SPELL IT CORRECTLY"
+    },
+    "buscador_yts": {
+        "texto1": "What do you want me to search for on YouTube?",
+        "texto2": [
+            "Link :",
+            "Duration :",
+            "Posted on :",
+            "Views :"
+        ]
+    },
+    "cmd_add": {
+        "texto1": "[❗️INFORMATION❗️] REPLY TO THE STICKER OR IMAGE WITH THE COMMAND OR TEXT TO BE ASSOCIATED",
+        "texto2": "[❗️INFORMATION❗️] ONLY COMMANDS OR TEXTS CAN BE ASSOCIATED WITH STICKERS AND IMAGES",
+        "texto3": [
+            "[❗️INFORMATION❗️] ERROR, MISSING TEXT*\n\n*CORRECT USAGE OF THE COMMAND:",
+            "<text> <reply to sticker or image>",
+            "CORRECT USAGE EXAMPLE OF THE COMMAND:",
+            "<reply to sticker or image>"
+        ],
+        "texto4": "[❗️INFORMATION❗️] ONLY THE OWNER CAN MAKE THE MODIFICATION",
+        "texto5": "[✔️] THE TEXT/COMMAND ASSOCIATED WITH THE STICKER/IMAGE WAS SUCCESSFULLY APPLIED TO THE CORRECTIONS DATABASE"
+    },
+    "cmd_del": {
+        "texto1": "[❗INFORMATION❗] THE STICKER OR IMAGE YOU REPLIED TO WILL BE REMOVED FROM THE COMMANDS ASSOCIATED WITH STICKERS OR IMAGES, TO GET THE ASSOCIATED CODE USE THE COMMAND /CMDINFO",
+        "texto2": "[❗INFORMATION❗] THE STICKER OR IMAGE HAS BEEN SUCCESSFULLY REMOVED FROM THE ELIMINATION",
+        "texto3": "[✔️] THE TEXT/COMMAND ASSOCIATED WITH THE STICKER/IMAGE WAS SUCCESSFULLY REMOVED FROM THE CORRECTIONS DATABASE"
+    },
+    "cmd_list": {
+        "texto1": "< LIST OF ASSOCIATED COMMANDS / TEXTS />"
+    },
+    "config_funciones": {
+        "texto1": [
+            "< BOT FUNCTIONS />",
+            "▢ *Option:* ✨",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates welcome messages in the group."
+        ],
+        "texto2": [
+            "▢ *Option:* 🌎",
+            "▢ *Command:*",
+            "▢ *Description:* The bot becomes public and/or private.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto3": [
+            "▢ *Option:* 🥵",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates NSFW commands in the group."
+        ],
+        "texto4": [
+            "▢ *Option:* 🔗",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates WhatsApp link anti-spam.",
+            "▢ *Note:* Restricted function must be enabled."
+        ],
+        "texto5": [
+            "▢ *Option:* 🔗",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates HTTPS link anti-spam.",
+            "▢ *Note:* Restricted function must be enabled."
+        ],
+        "texto6": [
+            "▢ *Option:* 🔎",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates group change notifications."
+        ],
+        "texto7": [
+            "▢ *Option:* 🔎",
+            "▢ *Command:*",
+            "▢ *Description:* Detects group modifications and provides better management."
+        ],
+        "texto8": [
+            "▢ *Option:* ❗ |",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates Bot restrictions, such as removing or adding people to a group.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto9": [
+            "▢ *Option:* ☑️",
+            "▢ *Command:*",
+            "▢ *Description:* Automatically marks messages and statuses as read.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto10": [
+            "▢ *Option:* 🔊",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates prefixless audio commands in the group."
+        ],
+        "texto11": [
+            "▢ *Option:* 👾",
+            "▢ *Command:*",
+            "▢ *Description:* All images or videos sent in the group are converted to stickers."
+        ],
+        "texto12": [
+            "▢ *Option:* 💬",
+            "▢ *Command:*",
+            "▢ *Description:* The Bot will only respond to commands if it's a private chat.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto13": [
+            "▢ *Option:* 🏢",
+            "▢ *Command:*",
+            "▢ *Description:* The Bot will only respond to commands if it's a group.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto14": [
+            "▢ *Option:* ❌",
+            "▢ *Command:*",
+            "▢ *Description:* Images sent for one-time viewing are forwarded normally by the Bot."
+        ],
+        "texto15": [
+            "▢ *Option:* 📵",
+            "▢ *Command:*",
+            "▢ *Description:* The Bot will block people who call the Bot.",
+            "▢ *Note:* This command can only be used by the Bot owners."
+        ],
+        "texto16": [
+            "▢ *Option:* 🤬",
+            "▢ *Command:*",
+            "▢ *Description:* Detects swear words and warns the group participant before being removed.",
+            "▢ *Note:* Restricted function must be enabled."
+        ],
+        "texto17": [
+            "▢ *Option:* 🕸️",
+            "▢ *Command:* ",
+            "▢ *Description:* The Bot detects long texts that could be viruses and cause chat lag and eliminates the user.",
+            "▢ *Note:* Restricted function must be enabled."
+        ],
+        "texto18": [
+            "▢ *Option:* 👎",
+            "▢ *Command:*",
+            "▢ *Description:* If an Arabic number joins the group, the Bot removes it automatically.",
+            "▢ *Note:* Welcome and restricted functions must be enabled."
+        ],
+        "texto19": [
+            "▢ *Option:* 👎",
+            "▢ *Command:*",
+            "▢ *Description:* If an Arabic number writes in the group, the Bot removes it automatically.",
+            "▢ *Note:* Restricted function must be enabled."
+        ],
+        "texto20": [
+            "▢ *Option:* 👑",
+            "▢ *Command:*",
+            "▢ *Description:* The bot will only respond to messages sent by the group admins."
+        ],
+        "texto21": [
+            "▢ *Option:* 😃",
+            "▢ *Command:*",
+            "▢ *Description:* The bot will start responding to messages using SimSimi AI."
+        ],
+        "texto22": [
+            "▢ *Option:* 🛡️",
+            "▢ *Command:*",
+            "▢ *Description:* The bot detects when a user deletes a message and resends it."
+        ],
+        "texto23": [
+            "▢ *Option:* 🔊",
+            "▢ *Command:*",
+            "▢ *Description:* Bot's audio commands from the audio menu are disabled for all private chats.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto24": [
+            "▢ *Option:* 🤖",
+            "▢ *Command:*",
+            "▢ *Description:* 'Artificial Intelligence' mode with ChatGPT is activated in all private chats.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto25": [
+            "▢ *Option:* ⏳",
+            "▢ *Command:*",
+            "▢ *Description:* The Bot detects when a user spams commands and bans them for 5 seconds and warns them.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto26": [
+            "▢ *Option:* 🤖",
+            "▢ *Command:*",
+            "▢ *Description:* Activates or deactivates the command usage for sub-bots.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto27": [
+            "▢ *Option:* 💬",
+            "▢ *Command:*",
+            "▢ *Description:* The Bot will block people who write in the Bot's private chat.",
+            "▢ *Note:* This command can only be used by the bot owner(s)."
+        ],
+        "texto28": [
+            "< BOT FUNCTIONS />",
+            "[ ℹ️ ] The option",
+            "has been successfully applied to this"
+        ]
+    },
+    "convertidor_toanime": {
+        "texto1": "[❗] REPLY OR SEND AN IMAGE",
+        "texto2": "[❗] CONVERT IMAGE TO ANIME, SELECT AN IMAGE AND SEND THE RESULT",
+        "texto3": "[❗] ERROR, PLEASE VERIFY IF A PERSON'S FACE IS VISIBLE IN THE IMAGE"
+    },
+    "convertidor_togifaud": {
+        "texto1": "[❗️INFORMATION❗️] REPLY TO A VIDEO YOU WANT TO CONVERT TO GIF WITH AUDIO",
+        "texto2": [
+            "[❗] FILE TYPE",
+            "IS NOT ACCEPTED, REPLY TO A VIDEO YOU WANT TO CONVERT WITH AUDIO"
+        ],
+        "texto3": "HERE IS YOUR GIF WITH AUDIO, WHEN OPENED IT WILL BE PLAYED WITH AUDIO"
+    },
+    "convertidor_toimg": {
+        "texto1": "[❗️INFORMATION❗️] REPLY TO THE FIGURE YOU WANT TO CONVERT TO IMAGE WITH AUDIO"
+    },
+    "convertidor_tomp3": {
+        "texto1": "[❗️INFORMATION❗️] REPLY TO THE VIDEO OR AUDIO YOU WANT TO CONVERT TO AUDIO/MP3",
+        "texto2": "[❗️INFORMATION❗️] SORRY, AN ERROR OCCURRED WHILE DOWNLOADING YOUR VIDEO, PLEASE TRY AGAIN",
+        "texto3": "[❗️INFORMATION❗️] SORRY, AN ERROR OCCURRED WHILE CONVERTING YOUR VIDEO TO AUDIO/MP3, PLEASE TRY AGAIN"
+    },
+    "convertidor_toptt": {
+        "texto1": "[❗️INFORMATION❗️] REPLY TO THE VIDEO OR AUDIO YOU WANT TO CONVERT TO AUDIO/VOICE NOTE",
+        "texto2": "[❗️INFORMATION❗️] SORRY, AN ERROR OCCURRED WHILE SAVING YOUR VIDEO, PLEASE TRY AGAIN",
+        "texto3": "[❗️INFORMATION❗️] SORRY, AN ERROR OCCURRED WHILE CONVERTING YOUR VIDEO TO AUDIO/VOICE NOTE, PLEASE TRY AGAIN",
+        "texto4": "[❗️INFORMATION❗️] SORRY, AN ERROR OCCURRED WHILE CONVERTING YOUR AUDIO TO AUDIO/VOICE NOTE, PLEASE TRY AGAIN",
+        "texto5": "[❗️INFORMATION❗️] SORRY, AN ERROR OCCURRED WHILE CONVERTING YOUR AUDIO TO AUDIO/VOICE NOTE, PLEASE TRY AGAIN"
+    },
+    "convertidor_tourl": {
+        "texto1": "[❗️INFORMATION❗️] REPLY TO AN IMAGE OR VIDEO YOU WANT TO GET THE DOWNLOAD LINK FOR",
+        "texto2": "AFTER PROCESSING:"
+    },
+    "convertidor_tovideo": {
+        "texto1": "[❗️INFORMATION❗️] REPLY TO AN IMAGE OR GIF YOU WANT TO CONVERT TO VIDEO WITH COMMAND EFFECT",
+        "texto2": "[❗️INFORMATION❗️] REPLY TO A STICKER YOU WANT TO CONVERT TO VIDEO WITH COMMAND EFFECT"
+    },
+    "convertidor_tts": {
+        "texto1": [
+            "[❗️INFORMATION❗️] ENTER THE TEXT YOU WANT TO CONVERT TO AUDIO WITH COMMAND EFFECT BELOW:",
+            "pt Hello World"
+        ]
+    },
+    "convertidor_tts2": {
+        "texto1": "[❗️] You did not input an effect, please input a voice effect.*\n\n*—◉ Choose one of the following effects:",
+        "texto2": "your_text_here",
+        "texto3": [
+            "[❗️] The provided effect does not exist in the list, use",
+            "to see the list of available effects."
+        ],
+        "texto4": [
+            "[❗️] Enter the text you want to convert to audio.*\n\n*—◉ Example:",
+            "Hello, this is an example of using the command."
+        ],
+        "texto5": "[❗️] Error, no response from the API.",
+        "texto6": "[❗️] Error, no response from the API.",
+        "texto7": "[❗️] URL not found in the response.",
+        "texto8": "[❗️] Error, no response from the API."
+    },
+    "descargas_facebook": {
+        "texto1": [
+            "< DOWNLOADS - FACEBOOK />",
+            "[ ℹ️ ] Enter a Facebook link.",
+            "[ 💡 ] Example:"
+        ],
+        "texto2": [
+            "< DOWNLOADS - FACEBOOK />",
+            "[ ℹ️ ] Enter a Facebook link.",
+            "[ 💡 ] Example:"
+        ],
+        "texto3": "< DOWNLOADS - FACEBOOK />*_\n\n*[ ℹ️ ] The video is being sent. Please wait...",
+        "texto4": "< DOWNLOADS - FACEBOOK />",
+        "texto5": "< DOWNLOADS - FACEBOOK />*_\n\n*[ ℹ️ ] An error occurred. Please try again later."
+    },
+    "descargas_gdrive": {
+        "texto1": "_*< DOWNLOADS - GDRIVE />*_\n\n*[ ℹ️ ] Enter a Google Drive link.*\n\n*[ 💡 ] Example:* ",
+        "texto2": "_*< DOWNLOADS - GDRIVE />*_\n\n*[ ℹ️ ] The file is being sent. Please wait...*\n\n*[ ℹ️ ] If not sent, it may be because it exceeds the size limit.*",
+        "texto3": "_*< DOWNLOADS - GDRIVE />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*"
+    },
+    "descargas_gitclone": {
+        "texto1": "_*< DOWNLOADS - GITCLONE />*_\n\n*[ ℹ️ ] Enter a GitHub link.*\n\n*[ 💡 ] Example:*",
+        "texto2": "_*< DOWNLOADS - GITCLONE />*_\n\n*[ ℹ️ ] The link you provided is incorrect.*",
+        "texto3": "_*< DOWNLOADS - GITCLONE />*_\n\n*[ ℹ️ ] The file is being sent. Please wait...*\n\n*[ ℹ️ ] If not sent, it may be because it exceeds the size limit.*"
+    },
+    "descargas_instagram": {
+        "texto1": "_*< DOWNLOADS - INSTAGRAM />*_\n\n*[ ℹ️ ] Enter an Instagram link.*\n\n*[ 💡 ] Example:*",
+        "texto2": "_*< DOWNLOADS - INSTAGRAM />*_\n\n▢ *URL:*",
+        "texto3": "_*< DOWNLOADS - INSTAGRAM />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*"
+    },
+    "descargas_mediafire": {
+        "texto1": [
+            "_*< DOWNLOADS - MEDIAFIRE />*_",
+            "▢ *Name:* ",
+            "▢ *Size:* ",
+            "▢ *Extension:*",
+            "*[ ℹ️ ] The file is being sent. Please wait...*"
+        ],
+        "texto2": [
+            "*< DOWNLOADS - MEDIAFIRE />*",
+            "▢ *Name:*",
+            "▢ *Size:*",
+            "▢ *Extension:*",
+            "*[ ℹ️ ] The file is being sent. Please wait...*"
+        ],
+        "texto3": "_*< DOWNLOADS - MEDIAFIRE />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*",
+        "texto4": "_*< DOWNLOADS - MEDIAFIRE />*_\n\n*[ ℹ️ ] Enter a MediaFire link.*\n\n*[ 💡 ] Example:*"
+    },
+    "descargas_play_v2": {
+        "texto1": [
+            "_*< DOWNLOADS - PLAY v2 />*_\n\n*[ ℹ️ ] The YouTube video title is missing.*\n\n*[ 💡 ] Example:*",
+            "Good Feeling - Flo Rida_\n\n*[ 💡 ] Example 2:*"
+        ],
+        "texto2": "_*< DOWNLOADS - PLAY V2 />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*",
+        "texto3": "_*< DOWNLOADS - PLAY V2 />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*",
+        "texto4": [
+            "_*< DOWNLOADS - PLAY V2 />*_\n\n▢ *Title:* ",
+            "▢ *Published:*",
+            "▢ *Channel:*",
+            "▢ *Video URL:*"
+        ],
+        "texto5": "_*< DOWNLOADS - PLAY V2 />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*",
+        "texto6": "_*< DOWNLOADS - PLAY V2 />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*"
+    },
+    "descargas_play": {
+        "texto1": [
+            "_*< DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] The YouTube video title or link is missing.*\n\n*[ 💡 ] Example:*",
+            "Good Feeling - Flo Rida_"
+        ],
+        "texto2": [
+            "_*< DOWNLOADS - PLAY />*_\n\n▢ *Title:*",
+            "▢ *Published:*",
+            "▢ *Duration:*",
+            "▢ *Views:*",
+            "▢ *Author:*",
+            "▢ *ID:*",
+            "▢ *Type:*",
+            "▢ *Link:*",
+            "*[ ℹ️ ] The file is being sent, please wait...*"
+        ],
+        "texto3": "*[ ℹ️ ] Download your audio at:*",
+        "texto4": "_*< DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*",
+        "texto5": "*_ < DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] Download your video at:*",
+        "texto6": "_*< DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*"
+    },
+    "descargas_spotify": {
+        "texto1": "_*< DOWNLOADS - SPOTIFY />*_\n\n*[ ℹ️ ] The Spotify song title is missing.*\n\n*[ 💡 ] Example:*",
+        "texto2": [
+            "*< DOWNLOADS - SPOTIFY />*",
+            "▢ *Title:*",
+            "▢ *Artist:*",
+            "▢ *Album:*",
+            "▢ *Published:*",
+            "*[ ℹ️ ] The audio is being sent, please wait...*"
+        ],
+        "texto3": "_*< DOWNLOADS - SPOTIFY />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*"
+    },
+    "descargas_spotifypro": {
+        "texto1": "*[❗] Enter the link of a track, playlist, or album from Spotify or simply the name of a song to search.*",
+        "texto2": "*[❗] Enter the link of a track, playlist, or album from Spotify.*",
+        "texto3": [
+            "*• 💽 Spotify Download •*",
+            "*Album:* ",
+            "◦  *Artist:*",
+            "◦  *Published:*",
+            "◦  *Total tracks:*",
+            "Audios are being sent, please wait a moment.."
+        ],
+        "texto4": [
+            "*• 💽 Spotify Download •*",
+            "◦  *Title:*",
+            "◦  *Artist:*",
+            "◦  *Duration:*",
+            "◦  *Album:*",
+            "◦  *Published:*",
+            "The audio is being sent, please wait a moment.."
+        ],
+        "texto5": [
+            "*• 💽 Spotify Download •*",
+            "◦  *Playlist:*",
+            "◦  *Total tracks:*",
+            "Playlist audios are being sent, please wait a moment.."
+        ],
+        "texto6": [
+            "*• 💽 Spotify Download •*",
+            "◦  *Title:*",
+            "◦  *Artist:*",
+            "◦  *Duration:*",
+            "◦  *Album:*",
+            "◦  *Published:*",
+            "The audio is being sent, please wait a moment.."
+        ],
+        "texto7": "*[❗] Error, no results found.*"
+    },
+    "descargas_tiktok": {
+        "texto1": "_*< DOWNLOADS - TIKTOK />*_\n\n*[ ℹ️ ] Enter a TikTok link.*\n\n*[ 💡 ] Example:*",
+        "texto2": "_*< DOWNLOADS - TIKTOK />*_\n\n*[ ℹ️ ] Enter a TikTok link.*\n\n*[ 💡 ] Example:*",
+        "texto3": "_*< DOWNLOADS - TIKTOK />*_\n\n*[ ℹ️ ] The video is being sent. Please wait...*",
+        "texto4": [
+            "_*< DOWNLOADS - TIKTOK />*_\n\n*[ 💡 ] Reply to this video with the command*",
+            "*to convert it to audio.*"
+        ],
+        "texto5": [
+            "_*< DOWNLOADS - TIKTOK />*_\n\n*[ 💡 ] Reply to this video with the command*",
+            "*to convert it to audio.*"
+        ],
+        "texto6": [
+            "_*< DOWNLOADS - TIKTOK />*_\n\n*[ 💡 ] Reply to this video with the command*",
+            "*to convert it to audio.*"
+        ],
+        "texto7": [
+            "_*< DOWNLOADS - TIKTOK />*_\n\n*[ 💡 ] Reply to this video with the command*",
+            "*to convert it to audio.*"
+        ],
+        "texto8": [
+            "_*< DOWNLOADS - TIKTOK />*_\n\n*[ 💡 ] Reply to this video with the command*",
+            "*to convert it to audio.*"
+        ],
+        "texto9": "_*< DOWNLOADS - TIKTOK />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*",
+        "texto10": "_*< DOWNLOADS - TIKTOK />*_\n\n*[ ℹ️ ] Enter a TikTok link.*\n\n*[ 💡 ] Example:*"
+    },
+    "downloader_igstory": {
+        "texto1": "*[❗️INFORMATION❗️] Enter the Instagram username*\n\n*EXAMPLE:*",
+        "texto2": "*[❗️] INVALID USER OR NO STORIES*"
+    },
+    "downloader_imagen": {
+        "texto1": "*[❗️INFORMATION❗️] COMMAND USAGE EXAMPLE*",
+        "texto2": [
+            "🔎 *RESULT FOR:*",
+            "🔗 *LINK*",
+            "🌎 *SEARCH ENGINE:* Google"
+        ]
+    },
+    "downloader_modapk": {
+        "texto1": "*[❗️] Enter the name of the APK you want to search.*",
+        "texto2": [
+            "📲 *Aptoide Downloader* 📲\n\n📌 *Name:*",
+            "📦 *Package:*",
+            "🕒 *Last updated:*",
+            "📥 *Size:*"
+        ],
+        "texto3": "*[⛔️] The file is too large and will not be sent.*",
+        "texto4": "*[❗️] Error, no results found for your search.*"
+    },
+    "downloader_pinterest": {
+        "texto1": "*[❗️] Provide the URL of the content you want to download.*",
+        "texto2": "*Search Results*"
+    },
+    "downloader_playdoc": {
+        "texto1": "*[❗️] Provide the name or URL of the Google Drive document. Please enter a valid link or the ID of a folder/file.*\n\n*—◉ Example:*",
+        "texto2": [
+            "*◉——⌈🔊 YOUTUBE DOC 🔊⌋——◉*",
+            "❏ 📌 *Title:*",
+            "❏ 📆 *Published:*",
+            "❏ ⌚ *Duration:*",
+            "❏ 👀 *Views:*",
+            "❏ 👤 *Author:*",
+            "❏ ⏯️ *Channel:*",
+            "❏ 🆔 *ID:*",
+            "❏ 🪬 *Type:*",
+            "❏ 🔗 *Link:*",
+            "❏ *_Sending, please wait..._*"
+        ],
+        "texto3": "*[❗️] ERROR COULD NOT DOWNLOAD AUDIO*",
+        "texto4": [
+            "▢ *TITLE:*",
+            "▢ *DOWNLOAD LINK:*"
+        ],
+        "texto5": "*[❗️] ERROR COULD NOT DOWNLOAD VIDEO*",
+        "texto6": "*[❗️] Please provide a valid video to convert.*"
+    },
+    "downloader_playlist": {
+        "texto1": "*[❗] The song name is missing, please enter the command followed by the name/title of a song*\n\n*—◉ Example:*",
+        "texto2": [
+            "*[❗] You can download the desired video as follows:*",
+            "*—◉ Examples:*",
+            "🫐 *_Link:_*",
+            "🕒 *_Duration:_*",
+            "📥 *_Published:_*",
+            "👁 *_Views:_*"
+        ],
+        "texto3": "*[❗️] ERROR, PLEASE PROVIDE A VALID VIDEO OR SONG NAME*"
+    },
+    "downloader_pptiktok": {
+        "texto1": "*[❗️] Please enter the TikTok username you want to use for download*",
+        "texto2": "*[✔️] Here's the profile picture of"
+    },
+    "downloader_ringtone": {
+        "texto1": "*[❗️] Enter the text you want to use as a ringtone, for example:"
+    },
+    "downloader_soundcloud": {
+        "texto1": "*[❗️] Enter the name of the song or album you want to search for*",
+        "texto2": [
+            "❒═══❬ 𝐒𝐎𝐔𝐍𝐃𝐂𝐋𝐎𝐔𝐃 ❭═══╾❒\n┬\n├‣✨ *TITLE:*",
+            "├‣💚 *DIRECT URL:*",
+            "*- Waiting for music...*"
+        ],
+        "texto3": "*[❗️] ERROR, NO SONGS HAVE BEEN SEARCHED YET, PLEASE CHECK IF YOU SUCCESSFULLY SEARCHED THE SONG AND TRY AGAIN LATER*"
+    },
+    "downloader_stickerpack": {
+        "texto1": "*[❗️] Enter the name of the sticker pack you want to download*",
+        "texto2": "*[❗️] ERROR, PLEASE CHECK THE NAME OF THE STICKER PACK AND TRY AGAIN*"
+    },
+    "downloader_tiktok_img": {
+        "texto1": "*[❗️] Enter a TikTok link to download images, for example: \"https://vm.tiktok.com/ZM2cqBRVS/\".*",
+        "texto2": "*[❗️] No response from the page, please try again later.*",
+        "texto3": "*[❗️] No images found in the provided link.*",
+        "texto4": "*[❗️] No response from the page, please try again later.*"
+    },
+    "downloader_tiktokstalk": {
+        "texto1": "*[❗️] Enter the TikTok username you want to view.*",
+        "texto2": [
+            "*USER:*",
+            "*NAME:*",
+            "*FOLLOWERS:*",
+            "*FOLLOWING:*",
+            "*LIKES:*",
+            "*VIDEOS:*",
+            "*DESCRIPTION:*"
+        ],
+        "texto3": "*[❗️] Error, could not find the provided Instagram user.*"
+    },
+    "downloader_wallpaper": {
+        "texto1": "*[❗️] Provide the usage command for wallpaper downloader.*",
+        "texto2": "*Result for"
+    },
+    "downloader_x_twitter": {
+        "texto1": "*[❗] Enter an X (Twitter) link, for example: ",
+        "texto2": "'Here's your image'",
+        "texto3": "*[❗] Error, please try again later.*",
+        "texto4": "There was an error getting the Twitter ID. Please check if the Twitter URL is correct!",
+        "texto5": "An error occurred while sending the request."
+    },
+    "downloader_yta_2": {
+        "texto1": "[❗] Enter the command followed by a YouTube video link",
+        "texto2": "⏳Your audio is being processed...⏳\n\n◉ If your audio is not sent, try using the command #playdoc or #play.2 or #ytmp4doc ◉",
+        "texto3": [
+            "◉—⌈📥 YOUTUBE DOWNLOAD 📥⌋—◉",
+            "❏ TITLE:",
+            "❏ SIZE:"
+        ],
+        "texto4": "[❗] ERROR COULD NOT DOWNLOAD AUDIO"
+    },
+    "downloader_yta": {
+        "texto1": "[❗] No link found for that number, please enter a number between 1 and",
+        "texto2": [
+            "[❗] To use the command in this way ",
+            "<number>), please search for videos using the command"
+        ],
+        "texto3": [
+            "[❗] To use the command in this way ",
+            "<number>), please search for videos using the command"
+        ],
+        "texto4": "⏳Your audio is being processed...⏳\n\n◉ If your audio is not sent, try using the command #playdoc or #play.2 or #ytmp4doc ◉*",
+        "texto5": [
+            "▢ Title:",
+            "▢ Audio Size:",
+            "[ ✔ ] Audio downloaded and sent successfully.\n\n*—◉ It was sent as a document because the audio weighs",
+            " MB and exceeds the limit established by WhatsApp.\n◉ Title:",
+            "[ ✔ ] Audio downloaded and sent successfully."
+        ],
+        "texto6": "[ ❌ ] The audio could not be downloaded or sent, please try again.",
+        "texto7": "[❗] Error, could not download the audio.",
+        "texto8": "[❗] Incorrect usage of the command, enter a YouTube link."
+    },
+    "downloader_ytmeta": {
+        "texto1": "[❗] Enter a YouTube link.",
+        "texto2": "🤴🏻 Download by BrunoSobrino & TheMystic-Bot-MD 🤖"
+    },
+    "downloader_ytv_2": {
+        "texto1": "[❗𝐈𝐍𝐅𝐎❗] Enter the command followed by the YouTube video link*",
+        "texto2": "⏳Processing your video...⏳\n\n◉ If your video is not sent, try using the command #playdoc or #play.2 or #ytmp4doc ◉",
+        "texto3": [
+            "◉—⌈📥 YOUTUBE DOWNLOAD 📥⌋—◉",
+            "❏ Title:",
+            "❏ Size: "
+        ],
+        "texto4": "[❗] ERROR COULD NOT DOWNLOAD VIDEO"
+    },
+    "downloader_ytv": {
+        "texto1": "[❗] Incorrect usage of the command, enter a YouTube link.",
+        "texto2": "[❗] No link found for that number, please enter a number between 1 and",
+        "texto3": [
+            "[❗] To use the command in this way ",
+            "<number>), please search for videos using the command"
+        ],
+        "texto4": [
+            "[❗] To use the command in this way",
+            "<number>), please search for videos using the command"
+        ],
+        "texto5": "⏳Processing your video...⏳\n\n◉ If your video is not sent, try using the command #playdoc or #play.2 or #ytmp4doc ◉*",
+        "texto6": [
+            "▢ Title:",
+            "▢ Video Size:",
+            "[ ✔ ] Video downloaded and sent successfully.\n\n*—◉ It was sent as a document because the video is",
+            " MB and exceeds the limit established by WhatsApp.\n◉ Title:"
+        ],
+        "texto7": [
+            "*▢ Title:*",
+            "*▢ Video Size:*",
+            "[ ✔ ] Video downloaded successfully."
+        ],
+        "texto8": "[ ❌ ] The video could not be downloaded or sent, please try again.",
+        "texto9": "[❗] Error, could not download the video."
+    },
+    "downloader_ytvideodl": {
+        "texto1": "[❗] Enter the command followed by the YouTube video link*",
+        "texto2": "[❗] Enter a valid YouTube video link",
+        "texto3": "[❗] File is only supported up to 999 MB"
+    },
+    "fix_esperando_mensaje": {
+        "texto1": "[❗] Use this command directly in the main Bot number",
+        "texto2": "[❗] No file including the chat ID was found",
+        "texto3": [
+            "[❗]",
+            "session files were deleted"
+        ],
+        "texto4": "Error reading folder or session files:",
+        "texto5": "[❗] An error occurred while deleting session files",
+        "texto6": "👋 Hello! Can you see me now?\n\n*[❗] If the Bot is not responding to your commands, please spam it a little*\n\n*—◉ Example:"
+    },
+    "fix_owner_esperando_mensajes": {
+        "texto1": "[❗] Use this command directly in the main Bot number.",
+        "texto2": "[❗] Starting the process of deleting all session files, except for creds.json...",
+        "texto3": "[❗] The MysticSession folder does not exist or is empty.",
+        "texto4": "[❗] No files to delete were found in the MysticSession folder.",
+        "texto5": [
+            "[❗]",
+            "session files were deleted, except for creds.json."
+        ],
+        "texto6": "[❗] An error occurred while deleting session files.",
+        "texto7": "👋 Hello! Can you see me now?\n\n[❗] If the Bot is not responding to your commands, please spam it a little*\n\n*—◉ Example:*"
+    },
+    "frase_frases": {
+        "texto1": "Tip of the day",
+        "texto2": "Romantic phrase",
+        "texto3": [
+            "You are the light that brightens my life in the darkness.",
+            "With you, every day is a new adventure full of love.",
+            "Your eyes are the reflection of the sky where I want to lose myself.",
+            "Every beat of my heart carries your name.",
+            "In your arms, I found the home I always sought.",
+            "You are the dream I never want to wake up from.",
+            "True love is being together in good and bad times.",
+            "There are no distances when two hearts are united.",
+            "Your kisses are the melody that accelerates my heart.",
+            "To love is to see in you what no one else can see.",
+            "In every beat, I carry you with me wherever I go.",
+            "The love I feel for you is my strength and inspiration.",
+            "Your sweet words are my daily emotional nourishment.",
+            "You are the most precious gift life has given me.",
+            "Time stands still when I'm by your side.",
+            "In your laughter, I find the happiness I was looking for.",
+            "Every day by your side is a never-ending love story.",
+            "Our love is like a fairy tale that has come true.",
+            "Your hugs are my refuge in this chaotic world.",
+            "You are the reason I believe in destiny.",
+            "To love is to discover something new to admire in you every day.",
+            "Your love is the blank canvas where I paint my happiness.",
+            "With you, the future is a path full of promises and dreams.",
+            "You are the lighthouse that guides my heart in the darkness.",
+            "The magic of love is in every gesture we share.",
+            "In your arms, the whole world disappears and only you and I exist.",
+            "Love is the language in which our hearts converse.",
+            "You are the piece that was missing to complete my soul.",
+            "To love is to find in you everything I never knew I needed."
+        ],
+        "texto4": [
+            "Accept that changes are a natural part of life and learn to adapt to them.",
+            "Never stop learning; knowledge is a powerful tool.",
+            "Take care of your physical and mental health, they are fundamental for a fulfilling life.",
+            "Enjoy the little things, for they are what give meaning to life.",
+            "Learn to forgive, both others and yourself, to free your heart.",
+            "Value the time you spend with your loved ones, it is the most valuable gift you can give and receive.",
+            "Be kind and compassionate to others, every act of kindness can make a difference in their lives.",
+            "Learn to say 'no' when necessary and establish healthy boundaries.",
+            "Find time to do what you love, as it nourishes your soul and makes you feel alive.",
+            "Do not compare yourself to others, each person has their own path and pace in life.",
+            "Listen to your partner with empathy and understanding, communication is the foundation of a solid relationship.",
+            "Do not be afraid to express your feelings, honesty is essential in love.",
+            "Learn to compromise and sacrifice, love requires mutual sacrifice and effort.",
+            "Surprise your partner from time to time, keep the flame of romance alive.",
+            "Respect your partner's individuality and allow them to grow as a person.",
+            "Self-love is as important as loving someone else; take care of yourself and value yourself.",
+            "Remember that a healthy relationship is based on mutual trust and respect.",
+            "Choose someone who complements you and makes you a better version of yourself.",
+            "True love does not make you feel smaller, it makes you feel bigger.",
+            "Love is a verb, it is a daily choice that is cultivated with actions and words.",
+            "Find a job that you are passionate about and you will never feel like you are working.",
+            "Be proactive and take initiative in your work, it will be appreciated by your superiors.",
+            "Learn from your mistakes and failures, they are opportunities to grow and improve.",
+            "Maintain a positive attitude and seek solutions to challenges at work.",
+            "Cultivate good relationships with your colleagues, teamwork is essential for success.",
+            "Set clear and realistic goals and work with determination to achieve them.",
+            "Do not be afraid to ask for help or seek guidance, there is always something new to learn.",
+            "Recognize and value your achievements, celebrate your successes, no matter how small.",
+            "Strive for a balance between your professional and personal life, both aspects are important.",
+            "Work is an important part of your life, but it is not everything that defines who you are.",
+            "Believe in yourself and in your ability to achieve what you set out to do.",
+            "Visualize your goals and dreams, imagine how you will feel when you achieve them.",
+            "Find inspiration in those who have overcome similar obstacles to yours.",
+            "Accept failures as part of the process, they are opportunities to learn and grow.",
+            "Surround yourself with positive people who push you forward.",
+            "Maintain an open mind and be willing to learn new things.",
+            "Remember why you started when you feel demotivated; reconnect with your purpose.",
+            "Break down your goals into small steps, this will make the path more achievable and less overwhelming.",
+            "Do not be afraid to pursue your dreams, life is too short to live with regrets.",
+            "Trust that, with effort and perseverance, you can achieve everything you set out to do."
+        ]
+    },
+    "frase_piropos": {
+        "texto1": [
+            "I would like to be paper so I could wrap that candy.",
+            "You're like wifi without a password, everyone looks for you.",
+            "I wish I were a bus to travel the curves of your heart.",
+            "I want to fly without wings and leave this universe, enter yours, and love you in silence.",
+            "I wish I were butter to melt on your arepa.",
+            "If beauty were a sin, you'd already be in hell.",
+            "I wish I were a cat to spend 7 lives by your side.",
+            "Stealing is wrong, but I would steal a kiss from your lips.",
+            "As beautiful as the sky is when it's clear, but more beautiful is love when I have you by my side.",
+            "Pretty, walk in the shade, the sun melts chocolates.",
+            "If I were an email, you would be my password.",
+            "I wish you were a mountain so I could give you ax strokes.",
+            "I lost my phone number. Can I have yours?",
+            "What's your name so I can ask for you as a gift from Santa Claus?",
+            "In the sky, there are many stars, but the brightest one is on Earth and it's you.",
+            "Did the sun just come out or is it the smile you gave me today?",
+            "It's not the rum or the beer, it's you who got to my head.",
+            "If we talk about math, you are the sum of all my desires.",
+            "You look like Google because you have everything I'm looking for.",
+            "My favorite coffee is the one in your eyes.",
+            "I want to be Photoshop to retouch your whole body.",
+            "I wish you were cereal, so I could harvest you every morning.",
+            "I wish I were hunger, so I could have you three times a day."
+        ]
+    },
+    "fun_calculador": {
+        "texto1": [
+            "The calculations showed that",
+            "is",
+            "-❥ That's low... You're fabulous, not just gay! 😄*"
+        ],
+        "texto2": [
+            "The calculations showed that",
+            "is",
+            "-❥ Even gayer than we thought! 💃*"
+        ],
+        "texto3": [
+            "The calculations showed that",
+            "is",
+            "-❥ Looks like you're gay. ☠*"
+        ],
+        "texto4": [
+            "The calculations showed that",
+            "is",
+            "-❥ Maybe you need to watch more romantic movies! 🎬*"
+        ],
+        "texto5": [
+            "The calculations showed that",
+            "is",
+            "-❥ That's extreme girl love! 👩‍❤️‍👩*"
+        ],
+        "texto6": [
+            "The calculations showed that",
+            "is",
+            "-❥ Keep the love blooming! 🌸*"
+        ],
+        "texto7": [
+            "The calculations showed that",
+            "is",
+            "-❥ Maybe you need more hobbies! 🎨*"
+        ],
+        "texto8": [
+            "The calculations showed that",
+            "is",
+            "-❥ That's admirable resilience! 💪*"
+        ],
+        "texto9": [
+            "The calculations showed that",
+            "is",
+            "-❥ Keep up the good (lonely) work! 🙌*"
+        ],
+        "texto10": [
+            "The calculations showed that",
+            "is",
+            "-❥ Good luck on your next conquest! 💔*"
+        ],
+        "texto11": [
+            "The calculations showed that",
+            "is",
+            "-❥ You're on fire! 🚒*"
+        ],
+        "texto12": [
+            "The calculations showed that",
+            "is",
+            "-❥ Keep that fiery charm up! 🔥*"
+        ],
+        "texto13": [
+            "The calculations showed that",
+            "is",
+            "-❥ You're not alone in this club! 😅*"
+        ],
+        "texto14": [
+            "The calculations showed that",
+            "is",
+            "-❥ You have a very special talent! 🙈*"
+        ],
+        "texto15": [
+            "The calculations showed that",
+            "is",
+            "-❥ Keep up that courageous attitude! 🤙*"
+        ],
+        "texto16": [
+            "The calculations showed that",
+            "is",
+            "-❥ There's nothing wrong with liking cheese! 🧀*"
+        ],
+        "texto17": [
+            "The calculations showed that",
+            "is",
+            "-❥ A true luxury rat! 🏰*"
+        ],
+        "texto18": [
+            "The calculations showed that",
+            "is",
+            "-❥ Eat cheese responsibly! 🧀*"
+        ],
+        "texto19": [
+            "The calculations showed that",
+            "is",
+            "-❥ The market is on the rise! 💼*"
+        ],
+        "texto20": [
+            "The calculations showed that",
+            "is",
+            "-❥ A true professional! 💰*"
+        ],
+        "texto21": [
+            "The calculations showed that",
+            "is",
+            "-❥ It's always business time! 💼*"
+        ],
+        "texto22": "[❗] Invalid command.",
+        "texto23": [
+            "The universe has spoken.",
+            "Scientists confirm.",
+            "Surprise! 🎉"
+        ],
+        "texto24": "CALCULATOR",
+        "texto25": "🔄 Calculating Percentage! 🔄",
+        "texto26": "[❗] You must mention someone for the calculation."
+    },
+    "fun_doxeo_falso": {
+        "texto1": [
+            "[ ✔ ] Successful doxxing.\n\n*—◉ Doxxing performed in:",
+            "seconds.\n*—◉ Doxxing results obtained:"
+        ],
+        "texto2": [
+            "Name:",
+            "IP:",
+            "N:",
+            "W:",
+            "SS NUMBER:",
+            "CELLPHONE CAMERA:",
+            "IPV6:",
+            "UPNP:",
+            "DMZ:",
+            "MAC:",
+            "ISP:",
+            "DNS:",
+            "ALT DNS:",
+            "DNS SUFFIX:",
+            "WAN:",
+            "WAN TYPE:",
+            "GATEWAY:",
+            "SUBNET MASK:",
+            "OPEN UDP PORTS:",
+            "OPEN TCP PORTS:",
+            "ROUTER VENDOR:",
+            "DEVICE VENDOR:",
+            "CONNECTION TYPE:",
+            "ICMPHOPS:",
+            "HTTP:",
+            "Http:",
+            "Http:",
+            "Upd:",
+            "Tcp:",
+            "Tcp:",
+            "Tcp:",
+            "EXTERNAL MAC:",
+            "MODEM HOPS:"
+        ],
+        "texto3": "☠ INITIATING DOXXING!! ☠"
+    },
+    "fun_formarpareja": {
+        "texto1": [
+            "MARRIAGE CONFIRMATION 💍 WITH",
+            "FIND A SOULMATE 💓*"
+        ]
+    },
+    "fun_love": {
+        "texto1": [
+            "This is fiery and passionate love! Go and say it right now!",
+            "Looks like there's a spark between you two. Give it a chance!",
+            "There might be something special here. Give it a shot!",
+            "Hmm, love is in the air. Maybe it's time for a coffee together!",
+            "The stars indicate there's romantic potential. Make a move!",
+            "An amazing love story might be waiting to be written by you two.",
+            "Don't underestimate the power of time and patience in love. Great things can happen.",
+            "Remember that love is a journey, and every step is valuable, no matter the distance.",
+            "Strong connections can turn into beautiful relationships. Keep exploring!",
+            "True love often takes time and effort. Don't give up!"
+        ],
+        "texto2": [
+            "Sometimes, friendship is the beginning of something beautiful, but it doesn't always turn into love.",
+            "Love isn't everything, friendship is also great! Cherish your special friendship.",
+            "Remember that the best relationships start with a good friendship. Don't underestimate your bond!",
+            "Sometimes, love can grow over time. Keep strengthening your connection!",
+            "Life is a surprise, who knows what the future holds! Don't lose hope.",
+            "Although love may not blossom as you hoped, your connection is still valuable.",
+            "Hearts may take time to synchronize, but that doesn't diminish how special you are together.",
+            "Despite the challenges of love, your friendship is a gift that deserves to be celebrated.",
+            "Time may reveal surprising things. Let's keep exploring together!",
+            "Life is full of unexpected twists. Stay open to possibilities!"
+        ],
+        "texto3": [
+            "have a deep connection and a love",
+            "have a special connection, although in love their percentage is"
+        ],
+        "texto4": [
+            "❥ In the love universe",
+            "and",
+            "of a 100%"
+        ],
+        "texto5": "💞 Calculating Percentage! 💞"
+    },
+    "fun_pregunta": {
+        "texto1": [
+            "⁉️ QUESTIONS ⁉️",
+            "QUESTION:",
+            "ANSWER:",
+            "Yes",
+            "Maybe yes",
+            "Possibly",
+            "Probably not",
+            "No",
+            "Impossible"
+        ]
+    },
+    "fun_reto": {
+        "texto1": [
+            "Pass the salt shaker with your mouth",
+            "Tell your friends that you're moving to the USA and send me a screenshot of what they say",
+            "Shout out the window that you want milk and cookies and send me the video",
+            "Write the name of your crush",
+            "Put my creator's name in your WhatsApp status without giving context",
+            "Send a photo of yourself",
+            "Draw on some part of your body the name of a group member, then take a photo and send it",
+            "Take a photo kissing a television",
+            "Send me a photo of your underwear",
+            "Write in your WhatsApp status that you like to eat dirt",
+            "Put a group member of the opposite sex as your WhatsApp profile picture for 3 days 📸📸",
+            "You have to send an audio singing the song: A duck that goes singing happily quack quack 🦆",
+            "Send a message to your ex saying you still like them",
+            "Send an audio saying you love The Shadow Brokers - Bot",
+            "Tell your crush you love them and send a screenshot to the group",
+            "Send an audio singing",
+            "Send a photo of yourself without covering your face or anything",
+            "Send a video dancing",
+            "Invite people you don't know to take a selfie with you and then send it to the group",
+            "Pick random numbers from your contacts and send them a text message saying 'I'm pregnant'",
+            "Take whatever drink is near you, then mix it with pepper and drink it!",
+            "Pick a random number from your contacts, call them, and say 'I love you'",
+            "Buy the cheapest food in the canteen (or buy a bottle of water) and tell your classmates with sobs: 'This... is the most expensive food I've ever bought)'",
+            "Buy a bottle of cola and sprinkle flowers with it in front of the crowd.",
+            "Stand near the refrigerator, close your eyes, pick random foods in it, even when eating, your eyes must be closed.",
+            "Stand in the middle of the basketball court and shout: 'I LOVE YOU MY PRINCE / PRINCESS'",
+            "Bow to someone in the class and then say: 'I'm at your service, Your Majesty'",
+            "Walk applauding and singing the class's 'Happy Birthday' song in the hallway.",
+            "Kneel on one knee and say 'Will you marry me?' to the first person who enters the room.",
+            "Make an absurd prop with fabric, whatever, keep asking for poses in front of the camera, keep rising.",
+            "Say 'YOU'RE BEAUTIFUL / VERY BEAUTIFUL, DON'T LIE' to the girl you find most beautiful in this class.",
+            "Tell someone in the class: 'First I was told you were your twin, we separated and then I underwent plastic surgery. And that's the most serious thing I've ever said.'",
+            "Throw someone's notebook in the trash, in front of their eyes, saying 'This book no one can understand'",
+            "Pluck the hair from your leg 3 times!",
+            "Talk to your parents, tell them you miss them with sad emojis.",
+            "Try to search on Google for scary or ridiculous things like trypophobia, etc.",
+            "Sit relaxed in the middle of the basketball court pretending it's a beach for sunbathing.",
+            "Fill your mouth with water and you have to hold on for two rounds, if you laugh and spill or drink, then you have to fill it again and add one more round.",
+            "Greet the first person who enters this room and say 'Welcome to Who Wants to Be a Millionaire!'",
+            "Send a text message to your parents 'Hi, bro! I just bought the latest edition of Playboy magazine!'",
+            "Send them a text message: 'Mom, dad, I know I'm an adopted child from the orphanage. Don't hide it anymore'.",
+            "Send three random numbers in your contacts and write 'I just became a Playboy magazine model'",
+            "Eat a spoonful of sweet soy sauce and soy sauce!",
+            "Eat something but don't use your hands.",
+            "Get mad at your friends who don't come even though they have a date to play 'Truth or Dare' together",
+            "Break an egg with your head!",
+            "Eat foods that have been mixed and will have a weird taste, but make sure the foods are not harmful to health in the long or short term.",
+            "Dance like Girls' Generation for the boys in front of the class, or dance like Super Junior for the girls.",
+            "Raise the flagpole without the flag.",
+            "Talking about the person you like, your closest friends, the opposite sex you don't know at all, and so on.",
+            "Copy the hairstyles of all your friends.",
+            "Singing the song HAI TAYO in front of a lot of people while dancing",
+            "Sing the Baby Shark song loudly in the classroom.",
+            "Borrow something from your neighbors",
+            "Ask for the signature of one of the strictest teachers while saying 'You are truly the person I admire the most in the world'",
+            "Ask for money from someone (random) on the street saying 'I don't have money to catch an angkot'.",
+            "Drink something that has been prepared / agreed upon, but make sure it's not dangerous, it could be like drinking syrup mixed with soy sauce.",
+            "Chat with the scared emoji of the person you like, it's okay to chat about whatever you want, through any means you can.",
+            "Sing your favorite Disney movie outside the house while screaming.",
+            "Name from 1 to 20 blue quickly and must not make any mistakes. If wrong, it must be repeated from the beginning.",
+            "Put on a paper crown and say to everyone in the room 'HONOR TO THE KING' while pointing to each person with a ruler.",
+            "Put your pants back on until the next morning.",
+            "Hug the person you DON'T like in the class and say: 'Thank you very much for being the best person to me'",
+            "Go to a wide field, then run as fast as you can while saying 'I'm crazy, I'm crazy'",
+            "Choose a flower and then attach it to someone you don't know (must be of the opposite sex)",
+            "Choose a random person on the street, then say 'You don't know you're beautiful' (à la One Direction)",
+            "Pretend to be possessed eg: possessed by a tiger, etc.",
+            "Ask them to whistle as your mouth is again full of food.",
+            "Ask to be a waiter to serve you and your friends at lunch.",
+            "Tell them to wear socks as gloves.",
+            "Tell them to wear the weirdest hat / the most absurd helmet in the next round.",
+            "Call your mom and say 'mom, I want to get married as soon as possible'",
+            "Call your ex and say 'miss you'",
+            "Swap clothes with the closest person until the next round.",
+            "Update your WhatsApp status with whatever you want with words that start with 'S'",
+            "Upload a video singing on YouTube singing popular songs.",
+            "Paint your nails hands and feet different colors for a week.",
+            "Eat 2 tablespoons of rice without any side dishes",
+            "Send the emoji '🦄💨' whenever you write in a group for 1 day",
+            "Say 'Welcome to Who Wants to Be a Millionaire!' to all the groups you have",
+            "Sing the chorus of the last song that played",
+            "Send a voice audio to your ex / crush / boyfriend, say hi (name), I want to call, just a moment. I miss you🥺👉🏼👈🏼",
+            "Tell random people: 'First I was told you were your twin, we separated and then I underwent plastic surgery. And that's'",
+            "Make a rhyme for the first player!",
+            "Tell your own version of embarrassing things",
+            "Change your name to 'Gay' for 24 hours",
+            "Mention your girlfriend type!",
+            "Say 'I'm in love with you, want to be my girlfriend or not?' to the last opposite sex you chatted with on WhatsApp, wait for the response",
+            "Chat with your ex on WhatsApp and say 'I love you, please come back'. Send a screenshot as evidence of the challenge completed!"
+        ]
+    },
+    "fun_ruletas": {
+        "texto1": "[❗INFORMATION❗] This game is highly interactive and fun for all group members if you are addicted to the game activate: #on games",
+        "texto2": [
+            "『⏰』Wait:",
+            "to play again"
+        ],
+        "texto3": "😺 GOOD LUCK 🐞🍀\nGet:",
+        "texto4": "😿 YOU ARE NOT IN BAD LUCK JUST LOST:",
+        "texto5": "😹 YOU'RE SO BAD LUCKY I QUIT THE POWER NOW AND YOU'RE NOT ADMIN DAMN 😹😹😹",
+        "texto6": "😼 YOU'RE SO GOOD 😉, Now you're an addict, the one who quits addicts is a fan of kuno 😂",
+        "texto7": "WUUU LUCK IS ON YOUR SIDE, GO PLAY AT THE CASINO 🎰\nWIN:",
+        "texto8": "👑 WOW YOU'RE REALLY LUCKY WIN LUCK WIN FOR: 1 Hour ⏰"
+    },
+    "fun_simi": {
+        "texto1": "*[❗] INSERT A TEXT TO TALK WITH SIMSIMI OR THE BOT*\n\n*EXAMPLE:",
+        "texto2": "*[❗] ERROR, TRY AGAIN*",
+        "texto3": [
+            "Hello",
+            "Hello"
+        ]
+    },
+    "fun_top": {
+        "texto1": "Example of use:\n.top *text*"
+    },
+    "fun_verdad": {
+        "texto3": [
+            "Have you ever liked someone? For how long?",
+            "If possible or if you want, in a conversation group / outside the conversation group, with whom will you make friends? (It can be different / of the same type)",
+            "What is your biggest fear?",
+            "Have you ever liked someone and felt that person also liked you?",
+            "What is the name of your friend's ex-boyfriend that you secretly liked once?",
+            "Have you ever stolen money from your mom or dad? What is the reason?",
+            "What makes you happy when you are sad?",
+            "Have you ever experienced unrequited love? If yes, with whom? How do you feel, bro?",
+            "Have you ever had an affair with someone?",
+            "Most feared thing",
+            "Who is the most influential person in your life?",
+            "What are you proud of this year?",
+            "Who is the person who can make you sick?",
+            "Who is the person who once made you excited?",
+            "(for Muslims) Have you ever missed praying all day?",
+            "Who is closest to your ideal partner type here?",
+            "Who do you like to play with?",
+            "Have you ever rejected someone? Why?",
+            "Mention the incident that hurt you and that you still remember",
+            "What achievements have you accomplished this year?",
+            "What is your worst habit in school?",
+            "What TV show do you hate the most? Give the reason.",
+            "What is the ugliest dress (in your opinion) that you have ever worn and when did you wear it?",
+            "What is the worst gossip you have ever said about your friend?",
+            "What is most embarrassing to you?",
+            "What is the first thing you notice when you look at someone (of the opposite sex)?",
+            "What comes to mind when you look at yourself in the mirror?",
+            "What is the stupidest thing you have ever done in life?",
+            "What is the worst dream you have ever had?",
+            "What is the craziest dream you can remember so far?",
+            "What is your worst trait, in your opinion?",
+            "What trait would you like to change about yourself?",
+            "What trait would you like to change about your friend?",
+            "What would you do if your boyfriend said you have an ugly nose or fingers?",
+            "What do you think about before going to sleep? For example: fantasizing about a partner, etc.",
+            "What do you think stands out most about you?",
+            "Which part of your friend's body do you like the most and would like to have?",
+            "Which part of your body do you dislike the most?",
+            "Of all the classes in school, which one would you like to enter and which one would you like to avoid?",
+            "Describe your closest friend!",
+            "Describe yourself in one word!",
+            "Which movies and songs made you cry?",
+            "What is something you have kept secret until now and no one has found out?",
+            "What is the most romantic thing someone (of the opposite sex) has ever done or given to you?",
+            "What is the most unpleasant experience you have ever had?",
+            "If you were to be reborn and had to be one of your friends, who would you choose to be?",
+            "If you had superpowers, what would you like to do?",
+            "If the apocalypse were to happen soon, what would you do?",
+            "If you were asked to undergo plastic surgery based on a classmate's face, whose face would you mimic?",
+            "Have you ever stolen anything?",
+            "Are you afraid of dying? Why?",
+            "When was the last time you cried and why?",
+            "What are your special skills?",
+            "How can you like the person you like?",
+            "What do you think is a good quality of your closest friend that he or she does not know?",
+            "With what kind of person would you like to get married one day?",
+            "In your opinion, what is the most attractive job for the friend next to you? And why?",
+            "With whom would you like to switch places for a day? (closest friends that both know) and why",
+            "Have you ever secretly hoped that someone's relationship with your girlfriend would end? Who?",
+            "Prefer FRIENDS or GIRLS? Why?",
+            "What quote do you remember the most and like?",
+            "What secrets have you never told your friends until now?",
+            "Who are your true role models?",
+            "Which of your friends do you think is mature?",
+            "Which of your friends do you think has the least hair?",
+            "Which of your friends is the most photogenic?",
+            "Who is your best ex? And why did you break up?",
+            "What is the name of the artist you secretly talked to?",
+            "What was the name of the teacher you liked?",
+            "What is the name of your friend's ex-girlfriend that you secretly liked?",
+            "What is the name of the person (of the opposite sex) that you think would be fun to date?",
+            "What is the name of the person you hate, but you think that person likes you (not necessarily of the opposite sex)?",
+            "What is the name of the person you have secretly pointed at?",
+            "Who is the person (of the opposite sex) who comes to your mind the most?",
+            "Who is the most annoying person among your friends? What is the reason?",
+            "Who among your friends do you think needs a makeover?",
+            "Who is closest to your ideal partner type here?",
+            "Father or mother",
+            "Which part of your body do you dislike?",
+            "Have you ever cheated?",
+            "Have you ever been kissed?",
+            "What would you do first if you woke up as the opposite sex?",
+            "Have you ever let someone else take the blame for something you did?",
+            "What is the most embarrassing thing you have ever done in life?",
+            "What is your worst habit?",
+            "Which do you think is your best feature? And which is the worst?",
+            "What is the bravest thing you have ever done?",
+            "When was the last time you wet the bed?",
+            "What do you dream most about while sleeping?",
+            "If you were to earn money illegally, how would you do it?",
+            "What childish things do you still do?",
+            "If you were blind, who would be your guide dog?",
+            "What impresses you the most?",
+            "If you could only use 3 words for the rest of the night starting now, what would they be?",
+            "If you were a dictator, what law would you enact first?",
+            "If you lived during the Nazi era, who would you be?",
+            "What was the most embarrassing experience in school / study / education / last year?",
+            "What is the biggest mistake of your life?",
+            "What would you never do, even if you knew you only had 12 hours left to live?",
+            "What crimes have you committed?",
+            "Tell a childhood secret.",
+            "What is your biggest representation (secret)?",
+            "What would you like to do with me... (x person), if afterward you could erase their memory,...?",
+            "What is the worst thing you have ever done to someone?",
+            "Whom do you like more?",
+            "Have you ever fallen in love with someone present?",
+            "If you were a vampire, whom would you bite now?",
+            "Have you ever defecated in public?",
+            "What is your darkest fantasy?",
+            "What is the best thing you have ever had with another person?",
+            "What is your biggest deviation?",
+            "What do you like most about your body and what is the ugliest?",
+            "Whom would you like to see naked?",
+            "Who in this group can make you fall in love?",
+            "Have you ever had an erotic dream involving someone from this group?",
+            "If you were to tattoo a genital area, what would it be?",
+            "What is more important in a relationship: sex or love?",
+            "Do you think sex is great, good, okay, fun sometimes, or really don't care?",
+            "What really makes you love?",
+            "How often do you have sex per week / month and how often would you like to have?",
+            "How many sexual partners have you slept with?",
+            "Which part of the body excites you the most?",
+            "How, where, and with whom did you first?",
+            "What is the importance to you of prolonged foreplay games?",
+            "What should a man or a woman do to seduce you?",
+            "Have you ever had sex with a good friend?",
+            "Have you ever had sex with someone from this group, except your partner?",
+            "Which animal suits you best and why?",
+            "What is your worst date?",
+            "Whom would you like to kiss now?",
+            "What is your darkest secret fantasy?",
+            "Would you rather tattoo your butt or pierce your tongue?",
+            "Are you always loyal?",
+            "Do you have a teenage crush?",
+            "Whom have you fallen for?",
+            "Which celebrity would you like to go out with?",
+            "What was the most embarrassing moment of your life?",
+            "Which mouth do you like the most from the group here?",
+            "Which player has the most beautiful hand?",
+            "Where was your first kiss?",
+            "Whom from the group would you like to kiss the most?",
+            "Who at the table is maybe the most fun?",
+            "What is the biggest mistake of your life?",
+            "Have you ever experienced an embarrassing situation on a date?",
+            "Have you ever come into contact with drugs?",
+            "Whom would you like to kiss now?",
+            "When was the last time you got drunk?",
+            "Have you ever cheated on a school test?",
+            "Have you ever stolen something in the past?",
+            "Do you snore at night?",
+            "What is your favorite song?",
+            "With which players would you trade for a week and why?",
+            "If you were to move to a deserted island, who would you take from here?",
+            "What are you most afraid of?",
+            "Where do you shave?",
+            "Do you have a nickname?",
+            "Do you look in the mirror before washing up?",
+            "Who gave you the worst anguish?",
+            "How many times have you been kissed?",
+            "What is the most embarrassing thing that has ever happened to you?",
+            "How many guys/girls have you kissed?",
+            "Whom are you in love with?",
+            "Which star do you like?",
+            "Have you started something with XY (insert name)?",
+            "Have you ever stolen something?"
+        ]
+    },
+    "game__cancion": {
+        "texto1": "The game is over",
+        "texto2": "❌ Incorrect!",
+        "texto3": "GUESS THE SONG TITLE"
+    },
+    "game__suitpvp": {
+        "texto1": "ROCK, PAPER, SCISSORS, GAME STARTS*",
+        "texto2": "🎮 GAMES - PVP - GAMES 🎮\n\n—◉ THE GAME HAS STARTED, OPTIONS ARE SENT TO PRIVATE CHATS",
+        "texto3": "◉ SELECT AN OPTION AND SEND IT, REPLY TO ME\n*◉ WAIT FOR THE OPTION SENT",
+        "texto4": [
+            "PLEASE SELECT ONE OF THE FOLLOWING OPTIONS",
+            "rock",
+            "paper",
+            "scissors",
+            "*WINNER +",
+            "XP\nLOSER",
+            "XP\n*reply to the message with the desired option*",
+            "*example: paper*"
+        ],
+        "texto5": [
+            "PLEASE SELECT ONE OF THE FOLLOWING OPTIONS",
+            "rock",
+            "paper",
+            "scissors",
+            "WINNER +",
+            "XP\nLOSER",
+            "XP\n*reply to the message with the desired option*",
+            "*example: paper*"
+        ],
+        "texto6": "[❗] NO PLAYER TOOK THE INITIATIVE TO DRAW THE GAME, THE PVP HAS BEEN CANCELED",
+        "texto7": "YOU DID NOT SELECT ANY OPTION, PVP END*"
+    }
+}
