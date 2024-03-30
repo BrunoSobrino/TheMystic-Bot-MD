@@ -45,7 +45,7 @@ const handler = async (m, { args, usedPrefix, command, isAdmin}) => {
         }
     }
   } catch (error) {
-      data.db.data.users[m.sender].language = 'es'
+      global.db.data.users[m.sender].language = 'es'
           global.db.data.chats[m.chat].language = 'es'
               m.reply(`*[ERROR]* -  _Por defecto el idioma estaba configurado en español._
               \`\`\`contacta a los creadores del bot\`\`\` `)
