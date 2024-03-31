@@ -1910,7 +1910,7 @@ def shell():
                         raise
         sys.exit(0)
 
-    printer('_*< INFO - SPEEDTEST />*_\n\n', quiet)
+    printer('_*< INFO - SPEEDTEST />*_\n', quiet)
 
 
     if not args.mini:
