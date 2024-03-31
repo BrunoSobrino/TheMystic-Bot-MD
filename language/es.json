@@ -3793,13 +3793,13 @@
         "_language": {
             "texto1": [
                 "\n\n_Para cambiar de idioma, envía el comando seguido de la sigla del idioma deseado_\n\n👉Ejemplo:",
-                "Idiomas Disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n\n_Traducciones en desarrollo, puede haber algunos errores",
+                "Idiomas Disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglês\n\n_Traducciones en desarrollo, puede haber algunos errores",
                 "🗣 CONFIGURACIÓN DE IDIOMA DEL BOT\n",
                 "[!] Tu idioma actual es:"
                 ],
             "texto2": [
                 "🗣IDIOMA GRUPO\n\n_Envie o comando e a sigla da linguagem desejada_\n\n👉Exemplo:",
-                "Linguagens Disponíveis:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n\n_Traducciones en desarrollo, puede haber algunos errores_"
+                "Linguagens Disponíveis:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglês\n\n_Traducciones en desarrollo, puede haber algunos errores_"
             ],
             "texto3": "*[ ! ]* _Este comando sólo se puede utilizar en grupos_",
             "texto4": "*[ ! ]* _Este comando solo puede ser utilizado por *Administradores*_"
