@@ -14,7 +14,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   try {
     const img = await conn.getFile(image);  
     const tuanime = await jadianime(img.data);
-    await conn.sendFile(m.chat, 'https://www.drawever.com' + tuanime.urls[1] ? tuanime.urls[1] : tuanime.urls[0], 'error.jpg', null, m);
+    await conn.sendFile(m.chat, 'https://www.drawever.com' + tuanime.urls[1], 'error.jpg', null, m);
   } catch {
   try {
     const anime = `https://api.lolhuman.xyz/api/imagetoanime?apikey=${lolkeysapi}&img=${image}`;
