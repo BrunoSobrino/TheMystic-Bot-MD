@@ -1,5 +1,6 @@
 # `𝙏𝙝𝙚 𝙢𝙚𝙜𝙤-𝙗𝙤𝙩` 
 
+# `حقوقك في config.js وتعامل البوت حقك من الان` 
 <p align="center">
 <img src="https://telegra.ph/file/bda9ed97f962db2e7f154.jpg" alt="Mego-Bot-MD" width="900"/>
 </p>
@@ -18,20 +19,31 @@
 
 ### `▢ مجموعات الدعم (متوفرة)`
 
- <a href="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+ <a href="https://chat.whatsapp.com/KSmyQMnG5kxF3bRJGgXVvW" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(نشط)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(نشط)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://chat.whatsapp.com/GbsFSHXkLoUJ9JH7t8djAn" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(نشط)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 > [ 📌 ] لا يُسمح بالبوتات الاخري في مجموعات الدعم.
 
- ### `▢ المطور الرسمي (نشط)`
+ ### `▢رقم المطور الرسمي (نشط)`
 
 
-<a href="https://api.whatsapp.com/send/?phone=201012531172&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT_OFICIAL_1_(INACTIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+<a href="https://api.whatsapp.com/send/?phone=201012531172&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT_OFICIAL_1_(نشط)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
-<a href="https://api.whatsapp.com/send/?phone=201025663589&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="[https://img.shields.io/badge/BOT_OFICIAL_2_(INACTIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white](https://telegra.ph/file/bda9ed97f962db2e7f154.jpg)" />
+<a href="https://api.whatsapp.com/send/?phone=201025663589&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="[https://img.shields.io/badge/BOT_OFICIAL_2_(نشط)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white](https://telegra.ph/file/bda9ed97f962db2e7f154.jpg)" />
+
+### `▢يوتيوب المطور الرسمي (نشط)`
+
+<a href="https://www.youtube.com/@mego51_51">
+<img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube">
+</a>
+
+### `▢انستا المطور الرسمي (نشط)`
+<a href="https://instagram.com/mego51_51">
+<img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white">
+</a>
 
 
 ### `▢ المكونات الإضافية`
