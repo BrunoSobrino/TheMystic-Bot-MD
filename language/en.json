@@ -3723,7 +3723,7 @@
         "sticker_sticker": {
             "texto1": "*[❗️] RESPOND TO A VIDEO, IMAGE, OR INSERT A STRETCHED IMAGE INTO THE EMBEDDED TEXT CHANNEL. YOU MUST RESPOND TO A STRETCHED IMAGE TO CONVERT TO STICKER, YOU MUST RESPOND OR USE THE CONVERTER COMMAND IN THE SERVER*",
             "texto2": "*[❗️] THE LINK / URL / LINK IS NOT VALID, THE LINK END MUST BE .jpg, EXAMPLE*",
-            "texto3": "*[❗️] AN ERROR OCCURRED, VALID THE INPUT. RESPOND TO A VIDEO, IMAGE, OR USE THE CONVERT COMMAND IN THE SERVER*"
+            "texto3": "*[❗] MISSING MULTIMEDIA FILE*\n\n*—◉ Respond to a video or image that will be converted into a sticker, you must respond to the multimedia file or send it using the command:*\n*◉"
         },
         "sticker_stickerfilter": {
             "texto1": [
