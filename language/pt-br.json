@@ -3728,7 +3728,7 @@
         "sticker_sticker": {
             "texto1": "*[❗️] RESPOSTA A UM VÍDEO, IMAGEM OU INSERT ELÁSTICO DE UMA IMAGEM .jpg NO CANAL DE TEXTO EMBEDDEO. DEVE RESPONDER A UM ELÁSTICO DO SER CONVERTE EN STICKER, DEVE RESPONDER OU USAR O COMANDO EL CONVERTIDOR NO SER*",
             "texto2": "*[❗️] O ENLAÇE / URL / LINK NÃO É VÁLIDO, LA TERMINACIÓN DEL EL LINK DEBE SER .jpg, EJEMPLO*",
-            "texto3": "*[❗️] OCORREU UM ERRO, VÁLIDO A ENTRADA. RESPONDA A UM VÍDEO, IMAGEM OU USE O COMANDO EL CONVERTER NO SER*"
+            "texto3": "*[❗] ARQUIVO MULTIMÍDIA AUSENTE*\n\n*—◉ Responda a um vídeo ou imagem que será convertido em adesivo, você deve responder ao arquivo de mídia ou enviá-lo usando o comando:*\n*◉"
         },
         "sticker_stickerfilter": {
             "texto1": [
