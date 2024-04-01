@@ -1,4 +1,8 @@
 {
+    "___creditos":{
+        "___Contribuidor":"https://github.com/jeffersonalionco",
+        "___Criador":"https://github.com/BrunoSobrino"
+    },
     "plugins": {
         "_antiarab": {
             "texto1": "_*< ANTI-ÁRABES />*_\n\n*[ ℹ️ ] En este grupo no se permiten números que comiencen con +212. Por lo tanto, serás eliminado del grupo.*",
