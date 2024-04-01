@@ -13,6 +13,7 @@
 > - pt-br - Portugués
 > - en - Inglés
 > - ru - Ruso
+> - fr - Francés
 
 ### `▢ CUENTAS OFICIALES`
 
