@@ -6,7 +6,13 @@
 > TheMystic-Bot-MD pasa a quedar en manos de colaboradores, y como principal representante Aiden_NotLogic.
 ------------------
 
+<!-- Por colaborador: https://github.com/jeffersonalionco -->
 > Función de **idioma** oficialmente implementada en TheMystic-Bot-MD: **/lang**
+> ##### **𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏 - Idiomas Disponibles**
+> - es - Español
+> - pt-br - Portugués
+> - en - Inglés
+> - ru - Ruso
 
 ### `▢ CUENTAS OFICIALES`
 
