@@ -25,7 +25,7 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
             if (sigla === 'pt-br' || sigla === 'pt' || sigla === 'br') {
                 data.db.data.users[m.sender].language = 'pt-br'
 
-                global.imagen4 = global.imagen7 // Imagen (MENU) - Para cambiar esta imagen, vaya a src/menu_pt.png
+                //global.imagen4 = global.imagen7 // Imagen (MENU) - Para cambiar esta imagen, vaya a src/menu_pt.png
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Idioma definido em Português 🇧🇷_*`)
 
             } else if (sigla === 'es') {
