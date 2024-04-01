@@ -3775,13 +3775,13 @@
         "_language": {
             "texto1": [
                 "\n\n_Para trocar de idioma, envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
-                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n\n_Traduções em desenvolvimento, podera haver alguns erros_",
+                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n🇷🇺 ru - Rússia\n\n_Traduções em desenvolvimento, podera haver alguns erros_",
                 "*🗣 CONFIG IDIOMA BOT*\n",
                 "_[!] Seu idioma atual é:_"
             ],
             "texto2": [
                 "*🗣IDIOMA GRUPO*\n\n_Envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
-                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
+                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n🇷🇺 ru - Rússia\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
             ],
             "texto3": "*[ ! ]* _Este comando só pode ser usado em grupos_",
             "texto4": "*[ ! ]* _Este comando só pode ser usado por *Administradores*_"

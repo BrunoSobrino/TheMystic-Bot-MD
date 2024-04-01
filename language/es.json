@@ -1,7 +1,7 @@
 {
-    "___creditos":{
-        "___Contribuidor":"https://github.com/jeffersonalionco",
-        "___Criador":"https://github.com/BrunoSobrino"
+    "___creditos": {
+        "___Contribuidor": "https://github.com/jeffersonalionco",
+        "___Criador": "https://github.com/BrunoSobrino"
     },
     "plugins": {
         "_antiarab": {
@@ -1535,7 +1535,7 @@
                 "*• Bono:*"
             ],
             "texto3": "Se acabó el tiempo!\n*Respuesta:*",
-            "texto4":[
+            "texto4": [
                 {
                     "question": "¿Qué le dice un pingüino a otro pingüino?",
                     "response": "Te quiero como a ningüino"
@@ -1733,25 +1733,25 @@
                     "response": "Es eléctrico, no echa humo"
                 },
                 {
-                   "question": "Tiene 4 letras, empieza por C y termina por O y esta en la parte trasera",
+                    "question": "Tiene 4 letras, empieza por C y termina por O y esta en la parte trasera",
                     "response": "El codo"
                 },
                 {
-                   "question": "Se estrella un avión y mueren todos, justo en la frontera entre España y Portugal ¿A que Hospital tienen que llevar a los supervivientes? ",
+                    "question": "Se estrella un avión y mueren todos, justo en la frontera entre España y Portugal ¿A que Hospital tienen que llevar a los supervivientes? ",
                     "response": "No hay supervivientes"
                 },
                 {
-                   "question": "Este banco está ocupado por un padre y por un hijo, el padre se llama Juan y el hijo ya te lo he dicho",
+                    "question": "Este banco está ocupado por un padre y por un hijo, el padre se llama Juan y el hijo ya te lo he dicho",
                     "response": "Esteban"
                 },
                 {
-                   "question": "Algunos meses tienen 31 días, otros solo 30.¿Cuantos tienen 28 días?",
+                    "question": "Algunos meses tienen 31 días, otros solo 30.¿Cuantos tienen 28 días?",
                     "response": "Todos"
                 },
                 {
-                   "question": "No lo puedes ver, pero no puedes vivir sin él. ¿Qué es?",
-                   "response": "El aire"
-            }
+                    "question": "No lo puedes ver, pero no puedes vivir sin él. ¿Qué es?",
+                    "response": "El aire"
+                }
             ]
         },
         "game_akinator_ans": {
@@ -3796,14 +3796,14 @@
         },
         "_language": {
             "texto1": [
-                "\n\n_Para cambiar de idioma, envía el comando seguido de la sigla del idioma deseado_\n\n👉Ejemplo:",
-                "Idiomas Disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglês\n\n_Traducciones en desarrollo, puede haber algunos errores",
-                "🗣 CONFIGURACIÓN DE IDIOMA DEL BOT\n",
+                "\n\n_Para cambiar de idioma, envía el comando y el código del idioma deseado_\n\n👉Ejemplo:",
+                "Idiomas Disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglés\n🇷🇺 ru - Ruso\n\n_Traducciones en desarrollo, puede haber algunos errores_",
+                "🗣 CONFIG IDIOMA BOT\n",
                 "[!] Tu idioma actual es:"
-                ],
+            ],
             "texto2": [
-                "🗣IDIOMA GRUPO\n\n_Envie o comando e a sigla da linguagem desejada_\n\n👉Exemplo:",
-                "Linguagens Disponíveis:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglês\n\n_Traducciones en desarrollo, puede haber algunos errores_"
+                "🗣IDIOMA GRUPO\n\n_Envía el comando y el código del idioma deseado_\n\n👉Ejemplo:",
+                "Idiomas Disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglés\n🇷🇺 ru - Ruso\n\n_Traducciones en desarrollo, puede haber algunos errores_"
             ],
             "texto3": "*[ ! ]* _Este comando sólo se puede utilizar en grupos_",
             "texto4": "*[ ! ]* _Este comando solo puede ser utilizado por *Administradores*_"
@@ -3825,7 +3825,7 @@
                 "usa el comando",
                 "para subir tu nivel con XP.*"
             ],
-            "texto4":[
+            "texto4": [
                 "*[ ℹ️ ] Se utilizaron",
                 "diamante(s) (limites).*"
             ]
