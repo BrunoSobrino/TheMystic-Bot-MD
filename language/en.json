@@ -3767,7 +3767,7 @@
         "adult_comandos": {
             "texto1": "[❗INFORMATION❗] THE +18 COMMANDS ARE DISABLED IN THE GROUP, IF YOU ARE AN ADMIN AND WANT TO ACTIVATE THEM USE THE #enable modohorny COMMAND"
         },
-        "language": {
+        "_language": {
             "texto1": [
                 "\n\n_To change language, send the command followed by the language code\n\n👉Example:",
                 "Available Languages:\n🇪🇸 es - Spanish\n🇧🇷 pt-br - Portuguese\n🇬🇧 en - English\n🇷🇺 ru - Russian\n🇫🇷 fr - French\n\n_Translations in progress, there may be some errors_",

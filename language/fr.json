@@ -3460,7 +3460,7 @@
         "adult_comandos": {
             "texto1": "[❗INFORMATION❗] LES COMMANDES +18 SONT DÉSACTIVÉES DANS LE GROUPE, SI VOUS ÊTES ADMINISTRATEUR ET QUE VOUS SOUHAITEZ LES ACTIVER, UTILISEZ LA COMMANDE #enable modohorny"
         },
-        "language": {
+        "_language": {
             "texto1": [
                 "\n\n_Pour changer de langue, envoyez la commande suivie du code de langue\n\n👉Exemple :",
                 "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n\n_Traductions en cours, il peut y avoir quelques erreurs_",
