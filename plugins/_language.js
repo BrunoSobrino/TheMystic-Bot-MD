@@ -42,7 +42,12 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
 
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Язык установлен на русский 🇷🇺_*`)
 
-            } else {
+            }else if (sigla === 'fr') {
+                global.db.data.users[m.sender].language = 'fr'
+
+                m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Langue définie en Français 🇫🇷_*`)
+
+            }else {
 
                 m.reply(`
 ${tradutor.texto1[2]}
@@ -87,6 +92,10 @@ ${tradutor.texto1[1]}
                 global.db.data.chats[m.chat].language = 'ru';
 
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Язык установлен на русский 🇷🇺*`)
+            }else if (sigla === 'fr') {
+                global.db.data.chats[m.chat].language = 'fr';
+
+                m.reply(`*[ ✅ ] Configuration du groupe*\n\n*—◉* *_Langue définie en Français 🇫🇷_*`)
             } else {
                 m.reply(`
 ${tradutor.texto2[0]}

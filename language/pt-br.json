@@ -2188,14 +2188,14 @@
             "texto6": "*[❗] UM JOGADOR ENTROU NA SALA E AGUARDA TODOS ENTRAREM*"
         },
         "gc_add": {
-            "texto1": "*[ ⚠️ ] O DONO DA CONVERSA SOLICITOU O SEU CONTATO (habilite restrito / desabilite restrito) E USOU ESTE COMANDO*",
-            "texto2": "*[❗] UM MEMBRO DO GRUPO ADICIONOU SEU NÚMERO DE TELEFONE PARA AGREGÁ-LO*",
+            "texto1": "*[ ⚠️ ] LE PROPRIÉTAIRE DE LA CONVERSATION A DEMANDÉ VOTRE CONTACT (activez les contacts restreints / désactivez les contacts restreints) ET A UTILISÉ CETTE COMMANDE*",
+            "texto2": "*[❗] UN MEMBRE DU GROUPE A AJOUTÉ VOTRE NUMÉRO DE TÉLÉPHONE POUR VOUS AJOUTER*",
             "texto3": [
-                "*[❗INFORMAÇÃO❗] NÃO FUI POSSÍVEL ADICIONAR A",
-                " SUA CONTA PORQUE OCORREU UM PROBLEMA ESTEJA INFORMADO, LA PESSOA SE HA IDO DE LA GRUPO O LA PERSONA HA CANCELADO SU PRIVACIDAD DE GRUPO EN SU PRIVACIDAD DE GRUPO, SE LE ENVÍO EL INVITACIÓN AL GRUPO EN SU PRIVACIDAD DE GRUPO O LA PERSONA HA CONFIRMADO SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES LE ENVIARÁN LA INVITACIÓN AL GRUPO EN SU PRIVACIDAD DE GRUPO, TE INVITO A LA INVITACIÓN DE GRUPO EN SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES ENVIARÁN LA INVITACIÓN DE GRUPO A SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES SE ASEGURARÁN DE QUE LA INVITACIÓN AL GRUPO SE ENVÍE A SU PRIVACIDAD DE GRUPO, LOS ADMINISTRADORES GARANTIZARÁN QUE LA INVITACIÓN AL GRUPO SE ENVIÉ A SU PRIVACIDAD DE GRUPO!!*"
+                "*[❗INFORMATION❗] IMPOSSIBLE D'AJOUTER",
+                "À VOTRE COMPTE CAR UN PROBLÈME EST SURVENU. VEUILLEZ NOTER QUE LA PERSONNE A QUITTÉ LE GROUPE OU A ANNULÉ SA CONFIDENTIALITÉ DE GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE. L'INVITATION A ÉTÉ ENVOYÉE AU GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE OU LA PERSONNE A CONFIRMÉ SA CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS ENVOIERONT L'INVITATION AU GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE. JE VOUS INVITE À L'INVITATION DU GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS ENVOIERONT L'INVITATION DU GROUPE À VOTRE PARAMÈTRE DE CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS S'ASSURERONT QUE L'INVITATION AU GROUPE SOIT ENVOYÉE À VOTRE PARAMÈTRE DE CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS GARANTIRONT QUE L'INVITATION AU GROUPE SOIT ENVOYÉE À VOTRE PARAMÈTRE DE CONFIDENTIALITÉ DE GROUPE !!*"
             ],
-            "texto4": "Oi!! Olá, me apresento, sou o The Mystic - Bot e sou um Bot para WhatsApp. Alguém do grupo usou o comando para te adicionar ao grupo, mas não consegui te adicionar, então estou te enviando o convite para que você se junte a nós. Te esperamos!!",
-            "texto5": "*[❗INFORMAÇÃO❗] NÃO FOI POSSÍVEL ADICIONAR O SEU NÚMERO PORQUE OCORREU UM PROBLEMA. SAIBA QUE A PESSOA SAIU DO GRUPO OU A PESSOA CANCELOU SUA PRIVACIDADE DE GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. O CONVITE FOI ENVIADO AO GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO OU A PESSOA CONFIRMOU SUA PRIVACIDADE DE GRUPO. OS ADMINISTRADORES ENVIARÃO O CONVITE AO GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. CONVIDO VOCÊ PARA O CONVITE DO GRUPO EM SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. OS ADMINISTRADORES ENVIARÃO O CONVITE DO GRUPO PARA A SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. OS ADMINISTRADORES SE CERTIFICARÃO DE QUE O CONVITE DO GRUPO SEJA ENVIADO À SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO. OS ADMINISTRADORES GARANTIRÃO QUE O CONVITE DO GRUPO SEJA ENVIADO À SUA CONFIGURAÇÃO DE PRIVACIDADE DE GRUPO!!*"
+            "texto4": "Salut !! Bonjour, je me présente, je suis The Mystic - Bot et je suis un Bot pour WhatsApp. Quelqu'un du groupe a utilisé la commande pour vous ajouter au groupe, mais je n'ai pas pu vous ajouter, donc je vous envoie l'invitation pour que vous nous rejoigniez. Nous vous attendons !!",
+            "texto5": "*[❗INFORMATION❗] IMPOSSIBLE D'AJOUTER VOTRE NUMÉRO CAR UN PROBLÈME EST SURVENU. VEUILLEZ NOTER QUE LA PERSONNE A QUITTÉ LE GROUPE OU A ANNULÉ SA CONFIDENTIALITÉ DE GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE. L'INVITATION A ÉTÉ ENVOYÉE AU GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE OU LA PERSONNE A CONFIRMÉ SA CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS ENVOIERONT L'INVITATION AU GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE. JE VOUS INVITE À L'INVITATION DU GROUPE DANS SES PARAMÈTRES DE CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS ENVOIERONT L'INVITATION DU GROUPE À VOTRE PARAMÈTRE DE CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS S'ASSURERONT QUE L'INVITATION AU GROUPE SOIT ENVOYÉE À VOTRE PARAMÈTRE DE CONFIDENTIALITÉ DE GROUPE. LES ADMINISTRATEURS GARANTIRONT QUE L'INVITATION AU GROUPE SOIT ENVOYÉE À VOTRE PARAMÈTRE DE CONFIDENTIALITÉ DE GROUPE !!*"
         },
         "gc_admins": {
             "texto1": [
@@ -3775,13 +3775,13 @@
         "_language": {
             "texto1": [
                 "\n\n_Para trocar de idioma, envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
-                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n🇷🇺 ru - Rússia\n\n_Traduções em desenvolvimento, podera haver alguns erros_",
+                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n🇷🇺 ru - Rússia\n🇫🇷 fr - Français\n\n_Traduções em desenvolvimento, podera haver alguns erros_",
                 "*🗣 CONFIG IDIOMA BOT*\n",
                 "_[!] Seu idioma atual é:_"
             ],
             "texto2": [
                 "*🗣IDIOMA GRUPO*\n\n_Envie o comando e a sigla da linguagem desejada_\n\n*👉Exemplo:*",
-                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n🇷🇺 ru - Rússia\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
+                "*Linguagens Disponíveis:*\n🇪🇸 es - Espanhol\n🇧🇷 pt-br - Português\n🇬🇧 en - Inglês\n🇷🇺 ru - Rússia\n🇫🇷 fr - Français\n\n_Traduções em desenvolvimento, podera haver alguns erros_"
             ],
             "texto3": "*[ ! ]* _Este comando só pode ser usado em grupos_",
             "texto4": "*[ ! ]* _Este comando só pode ser usado por *Administradores*_"
