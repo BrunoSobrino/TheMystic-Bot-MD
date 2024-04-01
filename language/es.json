@@ -3796,17 +3796,17 @@
         },
         "_language": {
             "texto1": [
-                "\n\n_Para cambiar de idioma, envía el comando y el código del idioma deseado_\n\n👉Ejemplo:",
-                "Idiomas Disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglés\n🇷🇺 ru - Ruso\n\n_Traducciones en desarrollo, puede haber algunos errores_",
-                "🗣 CONFIG IDIOMA BOT\n",
+                "\n\n_Para cambiar el idioma, envía el comando seguido del código de idioma\n\n👉Ejemplo:",
+                "Idiomas disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglés\n🇷🇺 ru - Ruso\n🇫🇷 fr - Francés\n\n_Translationes en progreso, pueden haber algunos errores_",
+                "🗣 CONFIGURACIÓN DE IDIOMA DEL BOT\n",
                 "[!] Tu idioma actual es:"
             ],
             "texto2": [
-                "🗣IDIOMA GRUPO\n\n_Envía el comando y el código del idioma deseado_\n\n👉Ejemplo:",
-                "Idiomas Disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglés\n🇷🇺 ru - Ruso\n\n_Traducciones en desarrollo, puede haber algunos errores_"
+                "🗣 IDIOMA DEL GRUPO\n\n_Envía el comando seguido del código de idioma_\n\n👉Ejemplo:",
+                "Idiomas disponibles:\n🇪🇸 es - Español\n🇧🇷 pt-br - Portugués\n🇬🇧 en - Inglés\n🇷🇺 ru - Ruso\n🇫🇷 fr - Francés\n\n_Translationes en progreso, pueden haber algunos errores_"
             ],
-            "texto3": "*[ ! ]* _Este comando sólo se puede utilizar en grupos_",
-            "texto4": "*[ ! ]* _Este comando solo puede ser utilizado por *Administradores*_"
+            "texto3": "[ ! ] Este comando solo se puede usar en grupos",
+            "texto4": "[ ! ] Este comando solo se puede usar por Administradores"
         }
     },
     "handler": {

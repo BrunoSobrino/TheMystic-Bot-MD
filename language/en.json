@@ -3769,17 +3769,17 @@
         },
         "_language": {
             "texto1": [
-                "\n\n_To change the language, send the command and the desired language code_\n\n👉Example:",
-                "Available Languages:\n🇪🇸 es - Spanish\n🇧🇷 pt-br - Portuguese\n🇬🇧 en - English\n🇷🇺 ru - Russian\n\n_Translations in progress, there may be some errors_",
-                "🗣 BOT LANGUAGE CONFIG\n",
+                "\n\n_To change language, send the command followed by the language code\n\n👉Example:",
+                "Available Languages:\n🇪🇸 es - Spanish\n🇧🇷 pt-br - Portuguese\n🇬🇧 en - English\n🇷🇺 ru - Russian\n🇫🇷 fr - French\n\n_Translations in progress, there may be some errors_",
+                "🗣 BOT LANGUAGE CONFIGURATION\n",
                 "[!] Your current language is:"
             ],
             "texto2": [
-                "🗣 GROUP LANGUAGE\n\n_Send the command and the desired language code_\n\n👉Example:",
-                "Available Languages:\n🇪🇸 es - Spanish\n🇧🇷 pt-br - Portuguese\n🇬🇧 en - English\n🇷🇺 ru - Russian\n\n_Translations in progress, there may be some errors_"
+                "🗣 GROUP LANGUAGE\n\n_Send the command followed by the language code_\n\n👉Example:",
+                "Available Languages:\n🇪🇸 es - Spanish\n🇧🇷 pt-br - Portuguese\n🇬🇧 en - English\n🇷🇺 ru - Russian\n🇫🇷 fr - French\n\n_Translations in progress, there may be some errors_"
             ],
-            "texto3": "*[ ! ]* _This command can only be used in groups_",
-            "texto4": "*[ ! ]* _This command can only be used by *Administrators*_"
+            "texto3": "[ ! ] This command can only be used in groups",
+            "texto4": "[ ! ] This command can only be used by Administrators"
         }
     },
     "handler": {
