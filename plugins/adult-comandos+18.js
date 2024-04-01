@@ -33,10 +33,8 @@ const handler = async (m, {command, conn}) => {
   }
 
   if (command == 'nsfwcum') {
-    const res = await fetch(`https://api.cafirexos.com/api/nsfw/nsfwcum`);
-    const apij = await res.json();
-    const haha = await conn.getFile(apij);
-    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `_${command}_`.trim()}, {quoted: m});
+    const res = `https://api.cafirexos.com/api/nsfw/nsfwcum`;
+    conn.sendMessage(m.chat, {image: {url: res}, caption: `_${command}_`.trim()}, {quoted: m});
   }
 
   if (command == 'nsfwero') {
