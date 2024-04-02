@@ -21,7 +21,7 @@
 
 ### `▢ GRUPOS DE SOPORTE (NO DISPONIBLE)`
 
- <a href="https://api.whatsapp.com/send/?phone=5545998331383&text=Mais%20Informações" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(EM%20BREVE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+ <a href="[https://api.whatsapp.com/send/?phone=5545998331383&text=Mais%20Informações](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(ATIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 <a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(ES)_(NO_DISPONIBLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
