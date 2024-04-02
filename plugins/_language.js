@@ -11,6 +11,8 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
         const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
         const tradutor = _translate.plugins._language
 
+        
+
 
         data.db.data.users[m.sender].language
         let sigla // Args user
@@ -24,8 +26,6 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
             // ----- Opciones de lenguaje
             if (sigla === 'pt-br' || sigla === 'pt' || sigla === 'br') {
                 global.db.data.users[m.sender].language = 'pt-br'
-
-                //global.imagen4 = global.imagen7 // Imagen (MENU) - Para cambiar esta imagen, vaya a src/menu_pt.png
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Idioma definido em Português 🇧🇷_*`)
 
             } else if (sigla === 'es') {
@@ -34,17 +34,14 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
 
             } else if (sigla === 'en') {
                 global.db.data.users[m.sender].language = 'en'
-
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Idioma definido a Inglês 🇬🇧_*`)
 
             } else if (sigla === 'ru') {
                 global.db.data.users[m.sender].language = 'ru'
-
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Язык установлен на русский 🇷🇺_*`)
 
             }else if (sigla === 'fr') {
                 global.db.data.users[m.sender].language = 'fr'
-
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Langue définie en Français 🇫🇷_*`)
 
             }else {
