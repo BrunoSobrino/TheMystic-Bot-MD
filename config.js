@@ -8,16 +8,16 @@ import axios from 'axios';
 import moment from 'moment-timezone';
 
 global.owner = [
-  ['201554824764', '𝑁𝐴𝑇𝑺𝑈', true],
+  ['201203199429', '💚هانكوك👑', true],
   ['201554824764', '🔥 𝑁𝐴𝑇𝑺𝑈 🧿', true],
 ];
 
 global.veeeee = 'محمود +201554824764';
 global.xaxa = '𝑁𝐴𝑇𝑺𝑈'
 global.suittag = ['201554824764'];
-global.prems = ['201554824764'];
+global.prems = ['201554824764','201203199429'];
 
-global.packname = '𝑁𝐴𝑇𝑺𝑈 ';
+global.packname = '𝑁𝐴𝑇𝑺𝑈';
 global.author = '𝑁𝐴𝑇𝑺𝑈 𝐵𝛩𝑇★';
 global.wm = '𝑁𝐴𝑇𝑺𝑈 𝐵𝛩𝑇★';
 global.titulowm = '🤖 𝑁𝐴𝑇𝑺𝑈 𝐵𝛩𝑇 🤖';
