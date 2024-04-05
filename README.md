@@ -18,7 +18,7 @@
  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/wiki/%E2%98%B0-Comandos-de-bot" target="blank"><img src="https://img.shields.io/badge/Documentaci%C3%B3n%20-%20Usuarios-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 ---
-https://github.com/BrunoSobrino/TheMystic-Bot-MD/wiki/%E2%98%B0-Comandos-de-bot 
+ 
 ### `▢ CUENTAS OFICIALES`
 
 [ 🔗 ] https://www.atom.bio/theshadowbrokers-team
