@@ -9,7 +9,6 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const idioma = datas.db.data.users[m.sender].language;
     const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
     const tradutor = _translate.plugins.buscador_lyrics;
-
     const teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : '';
     if (!teks) throw `*${tradutor.texto1} ${usedPrefix + command} beret ojala*`;
     try {
@@ -18,9 +17,12 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         if (result) {
             lyrics = await searchLyrics(`${result[0]?.artist} ${result[0]?.title}`);
         } else {
-            lyrics = await searchLyrics(`teks`);
+            lyrics = await searchLyrics(`${teks}`);
         }
-        const res = await fetch(global.API('https://some-random-api.com', '/lyrics', { title: result[0].artist + result[0].title }));
+        console.log(lyrics)
+        const tituloL = result[0].title ? result[0].title : lyrics.title
+        const artistaL = result[0].artist ? result[0].artist : lyrics.artist
+        const res = await fetch(global.API('https://some-random-api.com', '/lyrics', { title: artistaL + tituloL }));
         const json = await res.json();
         let img;
         try {
@@ -29,16 +31,19 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
             try {
                 img = json.thumbnail.genius;
             } catch {
-                const bochil = await googleImage(`${result[0].artist} ${result[0].title}`);
-                img = await bochil.getRandom();
+                try {
+                  const bochil = await googleImage(`${artistaL} ${tituloL}`);
+                  img = await bochil.getRandom();
+                } catch {    
+                 img = lyrics.image;   
+                }
             }
         }
-        const tituloL = result[0].title ? result[0].title : lyrics.title
-        const artistaL = result[0].artist ? result[0].artist : lyrics.artist
-        const textoLetra = `${tradutor.texto2[0]} *${tituloL || ''}*\n${tradutor.texto2[1]}  *${artistaL || ''}*\n\n${tradutor.texto2[2]} \n${lyrics.lyrics || ''}`;
+        const textoLetra = `${tradutor.texto2[0]} *${tituloL || ''}*\n${tradutor.texto2[1]}  *${artistaL || ''}*\n\n${tradutor.texto2[2]} \n${lyrics.lyrics || 'Lyrics not found.'}`;
         await conn.sendMessage(m.chat, { image: { url: img }, caption: textoLetra }, { quoted: m });
         await conn.sendMessage(m.chat, { audio: { url: result[0]?.preview }, fileName: `${artistaL || '-'} - ${tituloL || '-'}.mp3`, mimetype: 'audio/mp4' }, { quoted: m });
-    } catch {
+    } catch (e) {
+        console.log(`Error: ${e.message}`)
         throw `*${tradutor.texto2[3]}*`;
     }
 };
@@ -72,7 +77,7 @@ async function searchLyrics(term) {
     };
     return result;
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     return {
       creador: "Sareth",
       status: "error",
