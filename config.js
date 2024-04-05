@@ -14,8 +14,8 @@ global.owner = [
 
 global.veeeee = 'محمود +201554824764';
 global.xaxa = '𝑁𝐴𝑇𝑺𝑈'
-global.suittag = ['201554824764'];
-global.prems = ['201554824764','201203199429'];
+global.suittag = ['201203199429','201554824764'];
+global.prems = ['201203199429','201554824764'];
 
 global.packname = '𝑁𝐴𝑇𝑺𝑈';
 global.author = '𝑁𝐴𝑇𝑺𝑈 𝐵𝛩𝑇★';
