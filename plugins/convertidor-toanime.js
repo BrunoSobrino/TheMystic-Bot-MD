@@ -1,4 +1,5 @@
 import uploadImage from '../lib/uploadImage.js';
+import fetch from 'node-fetch';
 
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   const datas = global
@@ -17,22 +18,28 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     await conn.sendFile(m.chat, 'https://www.drawever.com' + tuanime.urls[1], 'error.jpg', null, m);
   } catch {
   try {
+    const anime = await fetch(`https://delirius-api-oficial.vercel.app/api/toanime?url=${image}`);
+    const json = await anime.json();  
+    await conn.sendFile(m.chat, json.data.convert, 'error.jpg', null, m);
+  } catch {      
+  try {
     const anime = `https://api.lolhuman.xyz/api/imagetoanime?apikey=${lolkeysapi}&img=${image}`;
     await conn.sendFile(m.chat, anime, 'error.jpg', null, m);
-  } catch (i) {
+  } catch {
     try {
       const anime2 = `https://api.zahwazein.xyz/photoeditor/jadianime?url=${image}&apikey=${keysxxx}`;
       await conn.sendFile(m.chat, anime2, 'error.jpg', null, m);
-    } catch (a) {
+    } catch {
       try {
         const anime3 = `https://api.caliph.biz.id/api/animeai?img=${image}&apikey=caliphkey`;
         await conn.sendFile(m.chat, anime3, 'error.jpg', null, m);
-      } catch (e) {
+      } catch {
         throw `*${tradutor.texto3}*`;
+       }
       }
      }
-    }
-  }
+   }
+ }
 };
 handler.help = ['toanime'];
 handler.tags = ['tools'];
