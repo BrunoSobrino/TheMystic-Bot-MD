@@ -14,7 +14,12 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     if (!teks) throw `*${tradutor.texto1} ${usedPrefix + command} beret ojala*`;
     try {
         const result = await getTracks(teks);
-        let lyrics = await searchLyrics(`${result[0].artist} ${result[0].title}`);
+        let lyrics;
+        if (result) {
+            lyrics = await searchLyrics(`${result[0]?.artist} ${result[0]?.title}`);
+        } else {
+            lyrics = await searchLyrics(`teks`);
+        }
         const res = await fetch(global.API('https://some-random-api.com', '/lyrics', { title: result[0].artist + result[0].title }));
         const json = await res.json();
         let img;
@@ -28,9 +33,11 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
                 img = await bochil.getRandom();
             }
         }
-        const textoLetra = `${tradutor.texto2[0]} *${result[0].title || ''}*\n${tradutor.texto2[1]}  *${result[0].artist || ''}*\n\n${tradutor.texto2[2]} \n${lyrics.lyrics || ''}`;
+        const tituloL = result[0].title ? result[0].title : lyrics.title
+        const artistaL = result[0].artist ? result[0].artist : lyrics.artist
+        const textoLetra = `${tradutor.texto2[0]} *${tituloL || ''}*\n${tradutor.texto2[1]}  *${artistaL || ''}*\n\n${tradutor.texto2[2]} \n${lyrics.lyrics || ''}`;
         await conn.sendMessage(m.chat, { image: { url: img }, caption: textoLetra }, { quoted: m });
-        await conn.sendMessage(m.chat, { audio: { url: result[0].preview }, fileName: `${result[0].artist} ${result[0].title}.mp3`, mimetype: 'audio/mp4' }, { quoted: m });
+        await conn.sendMessage(m.chat, { audio: { url: result[0]?.preview }, fileName: `${artistaL || '-'} - ${tituloL || '-'}.mp3`, mimetype: 'audio/mp4' }, { quoted: m });
     } catch {
         throw `*${tradutor.texto2[3]}*`;
     }
