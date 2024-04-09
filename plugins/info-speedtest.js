@@ -5,7 +5,7 @@ const handler = async (m) => {
   await conn.reply(m.chat, global.wait, m);
   let o;
   try {
-    o = await exec('python3 ookla-speedtest.py --secure --share');
+    o = await exec('python3 speedtest.py --secure --share');
   } catch (e) {
     o = e;
   } finally {
