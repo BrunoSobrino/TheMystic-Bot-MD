@@ -3,8 +3,6 @@ import fetch from 'node-fetch';
 import yts from 'yt-search';
 import ytdl from 'ytdl-core';
 import axios from 'axios';
-import {bestFormat, getUrlDl} from '../lib/y2dl.js';
-
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
@@ -43,7 +41,6 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
   }
   const { key } = await m.reply(tradutor.texto5);
   try {
-    const formats = await bestFormat(youtubeLink, 'video');
     const buff = await getBuffer(formats.url);
     const yt_1 = await youtubedl(youtubeLink).catch(async (_) => await youtubedlv2(youtubeLink));
     const ttl_1 = `${yt_1?.title ? yt_1.title : 'Tu_video_descargado'}`;

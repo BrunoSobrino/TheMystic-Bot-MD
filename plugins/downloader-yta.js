@@ -3,7 +3,6 @@ import fetch from 'node-fetch';
 import yts from 'yt-search';
 import ytdl from 'ytdl-core';
 import axios from 'axios'
-import {bestFormat, getUrlDl} from '../lib/y2dl.js';
 
 const handler = async (m, {text, conn, args, usedPrefix, command}) => {
   const datas = global
@@ -39,8 +38,6 @@ const handler = async (m, {text, conn, args, usedPrefix, command}) => {
   }
   const { key } = await conn.sendMessage(m.chat, {text: tradutor.texto4}, {quoted: m});
   try {
-    const formats = await bestFormat(youtubeLink, 'audio');
-    const dl_url = await getUrlDl(formats.url);
     const buff = await getBuffer(dl_url.download);    
     const yt_1 = await youtubedl(youtubeLink).catch(async (_) => await youtubedlv2(youtubeLink));
     const ttl_1 = `${yt_1?.title ? yt_1.title : 'Tu_audio_descargado'}`;
