@@ -3,8 +3,7 @@ import { promisify } from 'util';
 const exec = promisify(cp.exec).bind(cp);
 
 const handler = async (m) => {
-  const quotedMsg = m.quoted ? m.quoted : m;
-  await conn.reply(quotedMsg.chat, global.wait, quotedMsg);
+  await conn.reply(m.chat, global.wait, m);
   let o;
   try {
     o = await exec('python3 speedtest.py --secure --share');
@@ -14,21 +13,21 @@ const handler = async (m) => {
       const match = result.match(/https?:\/\/\S+/);
       if (match) {
         const imageLink = match[0];
-        await conn.sendFile(quotedMsg.chat, imageLink, 'speedtest.png', `${result}`, quotedMsg.id);
+        await conn.sendFile(m.chat, imageLink, 'speedtest.png', `${result}`, m.id);
       } else {
-        await conn.reply(quotedMsg.chat, result, quotedMsg.id);
+        await conn.reply(m.chat, result, m.id);
       }
     }
     if (stderr.trim()) {
-      await conn.reply(quotedMsg.chat, stderr, quotedMsg.id);
+      await conn.reply(m.chat, stderr, m.id);
     }
   } catch (e) {
-    await conn.reply(quotedMsg.chat, e.message, quotedMsg.id);
+    await conn.reply(m.chat, e.message, m.id);
   }
 };
 
 handler.help = ['speedtest'];
 handler.tags = ['info'];
-handler.command = /^(speedtest)$/i;
+handler.command = /^(speedtest?|test?speed)$/i;
 
 export default handler;
