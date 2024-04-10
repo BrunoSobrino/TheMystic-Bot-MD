@@ -13,21 +13,21 @@ const handler = async (m) => {
       const match = result.match(/https?:\/\/\S+/);
       if (match) {
         const imageLink = match[0];
-        await conn.sendFile(m.chat, imageLink, 'speedtest.png', `${result}`, m.id);
+        await conn.sendFile(m.chat, imageLink, 'speedtest.png', `${result}`);
       } else {
-        await conn.reply(m.chat, result, m.id);
+        await conn.reply(m.chat, result, m);
       }
     }
     if (stderr.trim()) {
-      await conn.reply(m.chat, stderr, m.id);
+      await conn.reply(m.chat, stderr, m);
     }
   } catch (e) {
-    await conn.reply(m.chat, e.message, m.id);
+    await conn.reply(m.chat, e.message, m);
   }
 };
 
 handler.help = ['speedtest'];
 handler.tags = ['info'];
-handler.command = /^(speedtest?|test?speed)$/i;
+handler.command = /^(speedtest)$/i;
 
 export default handler;
