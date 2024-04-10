@@ -10,13 +10,10 @@ const handler = async (m) => {
     const { stdout, stderr } = o;
     if (stdout.trim()) {
       const result = stdout.trim();
-
       const match = result.match(/https?:\/\/\S+/);
       if (match) {
         const imageLink = match[0];
-
-        await conn.sendFile(m.chat, imageLink, 'speedtest.png', 'Resultado del speedtest:');
-        await conn.reply(m.chat, result.replace(imageLink, ''), m);
+        await conn.sendFile(m.chat, imageLink, 'speedtest.png', `${result}`);
       } else {
         await conn.reply(m.chat, result, m);
       }
