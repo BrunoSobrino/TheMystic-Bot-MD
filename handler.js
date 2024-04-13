@@ -69,7 +69,7 @@ export async function handler(chatUpdate) {
         if (!isNumber(user.joincount)) user.joincount = 2;
         if (!isNumber(user.limit)) user.limit = 20;
         if (!isNumber(user.money)) user.money = 15;
-        if (!isNumber(user.language)) user.language = 'es';
+        if (!('language' in user)) user.language = 'es';
         if (!('registered' in user)) user.registered = false;
         if (!user.registered) {
           if (!('name' in user)) user.name = m.name;
@@ -935,7 +935,7 @@ export async function handler(chatUpdate) {
         global.db.data.chats[m.chat] = {};
       }
       if (chat) {
-        if (!('language' in chat)) chat.language = 'es';
+        //if (!('language' in chat)) chat.language = 'es';
         if (!('isBanned' in chat)) chat.isBanned = false;
         if (!('welcome' in chat)) chat.welcome = true;
         if (!('detect' in chat)) chat.detect = true;
@@ -1019,6 +1019,11 @@ export async function handler(chatUpdate) {
     } catch (e) {
       console.error(e);
     }
+
+    const idioma = global.db.data.users[m.sender].language
+    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const tradutor = _translate.handler.handler
+
     if (opts['nyimak']) {
       return;
     }
@@ -1186,10 +1191,10 @@ export async function handler(chatUpdate) {
 
             if (user.bannedMessageCount < 3) {
               const messageNumber = user.bannedMessageCount + 1;
-              const messageText = `_*< USUARIO SUSPENDIDO />*_\n
- ▢ *Aviso:* ${messageNumber}/3
- ${user.bannedReason ? `\n▢ *Motivo:* ${user.bannedReason}` : ' ▢ *Motivo:* Sin especificar'}
- *[ ℹ️ ] Si consideras que esto es un error y cuentas con pruebas, puedes comunicarte con el propietario(a) del bot para apelar la suspensión.*`.trim();
+              const messageText = `${tradutor.texto1[0]}
+${tradutor.texto1[1]} ${messageNumber}/3
+ ${user.bannedReason ? `${tradutor.texto1[2]} ${user.bannedReason}` : `${tradutor.texto1[3]}`}
+ ${tradutor.texto1[4]}`.trim();
               m.reply(messageText);
               user.bannedMessageCount++;
             } else if (user.bannedMessageCount === 3) {
@@ -1270,11 +1275,11 @@ export async function handler(chatUpdate) {
           m.exp += xp;
         }
         if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-          mconn.conn.reply(m.chat, `*[ ℹ️ ] Sus diamantes se han agotado, puede adquirir más con el comando:* _${usedPrefix}buyall_`, m);
+          mconn.conn.reply(m.chat, `${tradutor.texto2} _${usedPrefix}buyall_`, m);
           continue;
         }
         if (plugin.level > _user.level) {
-          mconn.conn.reply(m.chat, `*[ ℹ️ ] Se require tener el nivel ${plugin.level} para poder utilizar el comando. Tú nivel actual es ${_user.level}, usa el comando ${usedPrefix}lvl para subir tu nivel con XP.*`, m);
+          mconn.conn.reply(m.chat, `${tradutor.texto3[0]} ${plugin.level} ${tradutor.texto3[1]} ${_user.level}, ${tradutor.texto3[2]} ${usedPrefix}lvl ${tradutor.texto3[3]}`, m);
           continue;
         }
         const extra = {
@@ -1343,7 +1348,7 @@ export async function handler(chatUpdate) {
             }
           }
           if (m.limit) {
-            m.reply('*[ ℹ️ ] Se utilizaron ' + +m.limit + ' diamante(s) (limites).*');
+            m.reply(`${tradutor.texto4[0]} ` + +m.limit + ` ${tradutor.texto4[1]}`);
           }
         }
         break;
@@ -1436,7 +1441,7 @@ export async function participantsUpdate({ id, participants, action }) {
       if (chat.welcome && !chat?.isBanned) {
         const groupMetadata = await m.conn.groupMetadata(id) || (conn.chats[id] || {}).metadata;
         for (const user of participants) {
-          let pp = './src/avatar_contact.png';
+          let pp = 'https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/avatar_contact.png';
           try {
             pp = await m.conn.profilePictureUrl(user, 'image');
           } catch (e) {
@@ -1525,6 +1530,13 @@ export async function callUpdate(callUpdate) {
 }
 
 export async function deleteUpdate(message) {
+  const datas = global
+  const id = message.participant // Obtenga la identificación del usuario, solo dentro de esta función "deleteUpdate"
+  const idioma = datas.db.data.users[id].language || 'es';
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.handler.deleteUpdate
+
+
   let d = new Date(new Date + 3600000)
   let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })
   let time = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
@@ -1536,12 +1548,12 @@ export async function deleteUpdate(message) {
     if (!chat?.antidelete) return
     if (!msg) return
     if (!msg?.isGroup) return
-    const antideleteMessage = `_*< ANTI-DELETE />*_\n
- ▢ *Usuario:* @${participant.split`@`[0]}
- ▢ *Hora:* ${time}
- ▢ *Fecha:* ${date}\n
- ▢ *Enviando el mensaje eliminado...*\n
- *[ ℹ️ ] Para desactivar la función* _antidelete_*, envia el siguiente comando:* _/disable antidelete_`.trim();
+    const antideleteMessage = `${tradutor.texto1[0]}
+${tradutor.texto1[1]} @${participant.split`@`[0]}
+${tradutor.texto1[2]} ${time}
+${tradutor.texto1[3]} ${date}\n
+${tradutor.texto1[4]}
+${tradutor.texto1[5]}`.trim();
     await mconn.conn.sendMessage(msg.chat, { text: antideleteMessage, mentions: [participant] }, { quoted: msg })
     mconn.conn.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
   } catch (e) {

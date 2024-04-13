@@ -16,7 +16,10 @@ const handler = async (m, {conn, usedPrefix}) => {
     conn.reply(m.chat, tradutor.texto1, conn.tekateki[id][0]);
     throw false;
   }
-  const tekateki = JSON.parse(fs.readFileSync(`./src/game/acertijo.json`));
+  const tekateki = tradutor.texto4;
+  /*Para agregar más preguntas vaya a la carpeta de language en el archivo json de su 
+  idioma preferido, busque "acertijo" justo después del texto4 puede agregar sus preguntas*/
+  
   const json = tekateki[Math.floor(Math.random() * tekateki.length)];
   const _clue = json.response;
   const clue = _clue.replace(/[A-Za-z]/g, '_');
