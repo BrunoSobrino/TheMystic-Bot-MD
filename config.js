@@ -55,6 +55,9 @@ global.imagen4 = fs.readFileSync('./Menu.png');
 global.imagen5 = fs.readFileSync('./src/+18.jpg');
 global.imagen6 = fs.readFileSync('./Menu3.png');
 global.imagen7 = fs.readFileSync('./src/menu_pt.png');
+global.imagen8 = fs.readFileSync('./src/menu_fr.png');
+global.imagen9 = fs.readFileSync('./src/menu_en.png');
+global.imagen10 = fs.readFileSync('./src/menu_ru.png');
 
 global.multiplier = 99;
 
