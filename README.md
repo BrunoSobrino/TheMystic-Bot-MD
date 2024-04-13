@@ -14,6 +14,7 @@
 > - en - Inglés
 > - ru - Ruso
 > - fr - Francés
+> - ar - Árabe
 
 ### `▢ CUENTAS OFICIALES`
 
@@ -168,6 +169,7 @@ npm start
 <a href="https://github.com/elrebelde21"><img src="https://github.com/elrebelde21.png" width="100" height="100" alt="elrebelde21"/> </a>
 <a href="https://github.com/Fabri115"><img src="https://github.com/Fabri115.png" width="100" height="100" alt="Fabri115"/> </a>
 <a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> </a>
+<a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a>
 
 
 ## `▢ AGRADECIMIENTOS & CREDITOS` 
