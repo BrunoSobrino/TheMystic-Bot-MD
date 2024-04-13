@@ -14,9 +14,6 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     const idioma = datas.db.data.users[m.sender].language
     const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
     const tradutor = _translate.plugins.menu_menu
-
-    // const pp = imagen7;
-
     // let vn = './media/menu.mp3'
     const img = './Menu2.jpg';
     const d = new Date(new Date + 3600000);
@@ -501,15 +498,28 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ▢ _${usedPrefix}delcmd_
   ▢ _${usedPrefix}saveimage_
   ▢ _${usedPrefix}viewimage_`.trim();
-    if (m.isGroup) {
-      let pp = imagen4;
-     
 
+    let pp
+    // Nouvelles images de menu disponibles 
+    if (idioma == 'es') {
+      pp = global.imagen4
+    } else if (idioma == 'pt-br') {
+      pp = global.imagen7
+    } else if (idioma == 'fr') {
+      pp = global.imagen8
+    }else if (idioma == 'en') {
+      pp = global.imagen9
+    } else if (idioma == 'ru') {
+      pp = global.imagen10
+    } else {
+      pp = global.imagen4 
+    }
+
+    if (m.isGroup) {     
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
       const fkontak2 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
       conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: m });
     } else {
-      let pp = imagen4;
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
       const fkontak2 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
       conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: fkontak2 });
@@ -519,7 +529,6 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
     const idioma = datas.db.data.users[m.sender].language
     const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
     const tradutor = _translate.plugins.menu_menu
-    
     conn.reply(m.chat, tradutor.texto1[29], m);
   }
 };
