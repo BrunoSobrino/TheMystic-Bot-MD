@@ -68,7 +68,7 @@ if (enviando) return;
        }
     }
 
-    const dataMessage = `${tradutor.texto4[0]} ${data.resultado.title}\n\n${tradutor.texto4[0]} ${data.resultado.publicDate}\n\n${tradutor.texto4[0]} ${data.resultado.channel}\n\n${tradutor.texto4[0]} ${data.resultado.url}`;
+    const dataMessage = `${tradutor.texto4[0]} ${data.resultado.title}\n${tradutor.texto4[1]} ${data.resultado.publicDate}\n${tradutor.texto4[2]} ${data.resultado.channel}\n${tradutor.texto4[3]} ${data.resultado.url}`;
     await conn.sendMessage(m.chat, { text: dataMessage }, { quoted: m });
 
     if (buff) {
