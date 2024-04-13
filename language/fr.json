@@ -3462,18 +3462,18 @@
         },
         "_language": {
             "texto1": [
-                "\n\n_Pour changer de langue, envoyez la commande suivie du code de langue\n\n👉Exemple :",
-                "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n\n_Traductions en cours, il peut y avoir quelques erreurs_",
-                "🗣 CONFIGURATION DE LA LANGUE DU BOT\n",
-                "[!] Votre langue actuelle est :"
+            "\n\n_Pour changer de langue, envoyez la commande avec l'abréviation de la langue souhaitée\n\n👉Exemple :",
+            "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n🇸🇦 ar - Arabe\n\n_Les traductions sont en cours de développement, il peut y avoir quelques erreurs_",
+            "🗣 CONFIGURATION DE LA LANGUE DU BOT\n",
+            "[!] Votre langue actuelle est :"
             ],
             "texto2": [
-                "🗣 LANGUE DU GROUPE\n\n_Envoyez la commande suivie du code de langue_\n\n👉Exemple :",
-                "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n\n_Traductions en cours, il peut y avoir quelques erreurs_"
+            "🗣 LANGUE DU GROUPE\n\n_Envoyez la commande avec l'abréviation de la langue souhaitée_\n\n👉Exemple :",
+            "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n🇸🇦 ar - Arabe\n\n_Les traductions sont en cours de développement, il peut y avoir quelques erreurs_"
             ],
             "texto3": "[ ! ] Cette commande ne peut être utilisée que dans les groupes",
-            "texto4": "[ ! ] Cette commande ne peut être utilisée que par les administrateurs"
-        }
+            "texto4": "[ ! ] Cette commande ne peut être utilisée que par les Administrateurs"
+            }
     },
     "handler": {
         "handler": {

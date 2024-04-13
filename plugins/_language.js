@@ -44,6 +44,10 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
                 global.db.data.users[m.sender].language = 'fr'
                 m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Langue définie en Français 🇫🇷_*`)
 
+            }else if (sigla === 'ar') {
+                global.db.data.users[m.sender].language = 'ar'
+                m.reply("[ ✅ ] ذا ميستيك - بوت\n\n*—◉* اللغة مضبوطة على العربية 🇸🇦")
+
             }else {
 
                 m.reply(`
@@ -93,7 +97,11 @@ ${tradutor.texto1[1]}
                 global.db.data.chats[m.chat].language = 'fr';
 
                 m.reply(`*[ ✅ ] Configuration du groupe*\n\n*—◉* *_Langue définie en Français 🇫🇷_*`)
-            } else {
+            } else if (sigla === 'ar') {
+                global.db.data.chats[m.chat].language = 'ar';
+
+                m.reply("[ ✅ ] تكوين المجموعة\n\n*—◉* اللغة مضبوطة على العربية 🇸🇦")
+            } else  {
                 m.reply(`
 ${tradutor.texto2[0]}
 *${usedPrefix}langgroup* es
