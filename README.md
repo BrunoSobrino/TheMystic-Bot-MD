@@ -6,7 +6,14 @@
 > TheMystic-Bot-MD pasa a quedar en manos de colaboradores, y como principal representante Aiden_NotLogic.
 ------------------
 
+<!-- Por colaborador: https://github.com/jeffersonalionco -->
 > Función de **idioma** oficialmente implementada en TheMystic-Bot-MD: **/lang**
+> ##### **𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏 - Idiomas Disponibles**
+> - es - Español
+> - pt-br - Portugués
+> - en - Inglés
+> - ru - Ruso
+> - fr - Francés
 
 ### `▢ CUENTAS OFICIALES`
 
@@ -14,7 +21,7 @@
 
 ### `▢ GRUPOS DE SOPORTE (NO DISPONIBLE)`
 
- <a href="https://api.whatsapp.com/send/?phone=5545998331383&text=Mais%20Informações" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(EM%20BREVE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+ <a href="https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(ATIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 <a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(ES)_(NO_DISPONIBLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 

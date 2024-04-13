@@ -21,7 +21,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     const anime = await fetch(`https://delirius-api-oficial.vercel.app/api/toanime?url=${image}`);
     const json = await anime.json();  
     await conn.sendFile(m.chat, json.data.convert, 'error.jpg', null, m);
-  } catch (i) {      
+  } catch {      
   try {
     const anime = `https://api.lolhuman.xyz/api/imagetoanime?apikey=${lolkeysapi}&img=${image}`;
     await conn.sendFile(m.chat, anime, 'error.jpg', null, m);
