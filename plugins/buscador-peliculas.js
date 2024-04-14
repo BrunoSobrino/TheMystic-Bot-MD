@@ -17,8 +17,8 @@ const handler = async (m, {text, usedPrefix, command, conn}) => {
     } catch {
         img = 'https://www.poresto.net/u/fotografias/m/2023/7/5/f1280x720-305066_436741_5050.png';
     }    
-  if (aaaa == '') throw `*${tradutor.texto2}*`;
-  const res = await aaaa.map((v) => `*${tradutor.texto3[0]}* ${v.title}\n*${tradutor.texto3[1]}* https://wwv.cuevana8.com${v.link}`).join`\n\n─────────────────\n\n`;
+  if (aaaa == '') throw `*${tradutor.texto2}*`;                                        /* https://wwv.cuevana8.com */
+  const res = await aaaa.map((v) => `*${tradutor.texto3[0]}* ${v.title}\n*${tradutor.texto3[1]}* ${v.link}`).join`\n\n─────────────────\n\n`;
   const ads = `*${tradutor.texto3[2]}* ${tradutor.texto3[3]}\n*${tradutor.texto3[4]}* https://block-this.com/block-this-latest.apk\n\n≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣≣\n\n`;
   conn.sendMessage(m.chat, {image: {url: img}, caption: ads + res}, {quoted: m});
  } catch {
