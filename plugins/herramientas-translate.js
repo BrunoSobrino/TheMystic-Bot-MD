@@ -26,7 +26,7 @@ const handler = async (m, {args, usedPrefix, command}) => {
       const lol = await fetch(`https://api.lolhuman.xyz/api/translate/auto/${lang}?apikey=${lolkeysapi}&text=${text}`);
       const loll = await lol.json();
       const result2 = loll.result.translated;
-      await m.reply(tradutor.texto3 + result2);
+      await m.reply(`${tradutor.texto3 }` + result2);
     } catch {
       await m.reply(tradutor.texto2);
     }
