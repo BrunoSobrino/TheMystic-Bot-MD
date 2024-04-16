@@ -5,7 +5,7 @@ handler.all = async function (m) {
     global.db.data.users[m.sender].exp += 50
 
     const audioResponses = [
-        { trigger: /^ايتاتشي$/i, file: './media/animevoice (1).mp3' },
+        { trigger: /^ايتاتشي$/i, file: './media/Ara.mp3' },
         { trigger: /لايت/gi, file: './media/animevoice (2).mp3' },
         { trigger: /ليفاي/gi, file: './media/animevoice (3).mp3' },
         { trigger: /اوهايو|صباح الخير|صباحو|ثباحو/gi, file: './media/Ara.mp3 (4).mp3' },
