@@ -8,7 +8,7 @@ handler.all = async function (m) {
         { trigger: /^ايتاتشي$/i, file: './media/animevoice (1).mp3' },
         { trigger: /لايت/gi, file: './media/animevoice (2).mp3' },
         { trigger: /ليفاي/gi, file: './media/animevoice (3).mp3' },
-        { trigger: /اوهايو|صباح الخير|صباحو|ثباحو/gi, file: './media/animevoice (4).mp3' },
+        { trigger: /اوهايو|صباح الخير|صباحو|ثباحو/gi, file: './media/Ara.mp3 (4).mp3' },
         { trigger: /ناروتو|داتي بايو|اوزوماكي|اوزوماكي ناروتو/gi, file: './media/animevoice (5).mp3' },
         { trigger: /اهرب|اهربو|ليش اهرب|حديقة الظلام/gi, file: './media/animevoice (6).mp3' },
         { trigger: /ساسكي/gi, file: './media/animevoice (7).mp3' },
