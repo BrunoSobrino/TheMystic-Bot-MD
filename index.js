@@ -42,6 +42,7 @@ function start(file) {
     args: args.slice(1)});
   const p = fork();
   p.on('message', (data) => {
+    
     console.log('[RECIBIDO]', data);
     switch (data) {
       case 'reset':

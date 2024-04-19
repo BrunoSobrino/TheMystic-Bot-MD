@@ -901,6 +901,7 @@ export async function handler(chatUpdate) {
           wood: 0,
           wortel: 0,
           language: 'es',
+          gameglx: {},
         };
       }
       const akinator = global.db.data.users[m.sender].akinator;
@@ -930,6 +931,65 @@ export async function handler(chatUpdate) {
           soal: null,
         };
       }
+      const gameglx = global.db.data.users[m.sender].gameglx
+      if (typeof gameglx !== 'object') {
+        gameglx = global.db.data.users[m.sender].gameglx = {}
+      }
+      if (gameglx) {
+        
+        if (!('status' in gameglx)) gameglx.status = false;
+        // Perfil
+        if (!('perfil' in gameglx)) gameglx.perfil = {};
+        if (!('nome' in gameglx.perfil)) gameglx.perfil.nome = null;
+        if (!('id' in gameglx.perfil)) gameglx.perfil.id = null;
+        // Carteira Dinheiro
+        if (!('carteira' in gameglx.perfil)) gameglx.perfil.carteira = {};
+        if (!('saldo' in gameglx.perfil.carteira)) gameglx.perfil.carteira.saldo = 1500;
+        // localizacao
+        if (!('localizacao' in gameglx.perfil)) gameglx.perfil.localizacao = {};
+        if (!('status' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.status = false;
+        if (!('nomeplaneta' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.nomeplaneta = null;
+        if (!('idpelonome' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.idpelonome = null;
+        if (!('id' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.id = null;
+        // nave
+        if (!('nave' in gameglx.perfil)) gameglx.perfil.nave = {};
+        if (!('nome' in gameglx.perfil.nave)) gameglx.perfil.nave.status = false;
+        if (!('id' in gameglx.perfil.nave)) gameglx.perfil.nave.id = null;
+        if (!('nome' in gameglx.perfil.nave)) gameglx.perfil.nave.nome = null;
+        if (!('velocidade' in gameglx.perfil.nave)) gameglx.perfil.nave.velocidade = null;
+        if (!('poder' in gameglx.perfil.nave)) gameglx.perfil.nave.poder = null;
+        if (!('valor' in gameglx.perfil.nave)) gameglx.perfil.nave.valor = null;
+
+      
+      } else {
+        global.db.data.users[m.sender].gameglx = {
+          status: false,
+          perfil: {
+            nome: null,
+            id: null,
+            carteira:{
+              saldo: 1500,
+            },
+            localizacao: {
+              status: false,
+              nomeplaneta: null,  // id do grupo...
+              id: null,
+              idpelonome: null,
+            },
+            nave: {
+              status: false,
+              id: null,
+              nome: null,
+              velocidade: null,
+              poder: null,
+              valor: null,
+
+            },
+          }
+        };
+      }
+
+
       const chat = global.db.data.chats[m.chat];
       if (typeof chat !== 'object') {
         global.db.data.chats[m.chat] = {};
