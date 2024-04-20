@@ -1,42 +1,55 @@
-import fs from 'fs';
-import acrcloud from 'acrcloud';
-
-
-const acr = new acrcloud({
-  host: 'identify-eu-west-1.acrcloud.com',
-  access_key: 'c33c767d683f78bd17d4bd4991955d81',
-  access_secret: 'bvgaIAEtADBTbLwiPGYlxupWqkNGIjT7J9Ag2vIu',
-});
+import { Shazam } from 'node-shazam';
+import fetch from 'node-fetch';
+const shazam = new Shazam();
 
 const handler = async (m) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
-  const tradutor = _translate.plugins.herramientas_whatmusic
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language;
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
+  const traductor = _translate.plugins.herramientas_whatmusic;
 
   const q = m.quoted ? m.quoted : m;
   const mime = (q.msg || q).mimetype || '';
   if (/audio|video/.test(mime)) {
-    if ((q.msg || q).seconds > 20) return m.reply(tradutor.texto1);
+    //if ((q.msg || q).seconds > 20) return m.reply(traductor.texto1);
     const media = await q.download();
     const ext = mime.split('/')[1];
     fs.writeFileSync(`./tmp/${m.sender}.${ext}`, media);
-    const res = await acr.identify(fs.readFileSync(`./tmp/${m.sender}.${ext}`));
-    const {code, msg} = res.status;
-    if (code !== 0) throw msg;
-    const {title, artists, album, genres, release_date} = res.metadata.music[0];
-    const txt = `
-${tradutor.texto3[0]}
 
-${tradutor.texto3[1]} ${title}
-${tradutor.texto3[2]} ${artists !== undefined ? artists.map((v) => v.name).join(', ') : tradutor.texto2}
-${tradutor.texto3[3]} ${album.name || tradutor.texto2}
-${tradutor.texto3[4]} ${genres !== undefined ? genres.map((v) => v.name).join(', ') : tradutor.texto2}
-${tradutor.texto3[5]} ${release_date || tradutor.texto2}
-`.trim();
+    let recognise;
+    if (/audio/.test(mime)) {
+      recognise = await shazam.fromFilePath(`./tmp/${m.sender}.${ext}`, false, 'en');
+    } else if (/video/.test(mime)) {
+      recognise = await shazam.fromVideoFile(`./tmp/${m.sender}.${ext}`, false, 'en');
+    }
+      
+    const { title, subtitle, artists, genres, images } = recognise.track;
+    const imagen = await (await fetch(`${images.coverart}`)).buffer();    
+    const texto = `${traductor.texto3[0]}\n\n${traductor.texto3[1]} ${title || traductor.texto2}\n${traductor.texto3[2]} ${subtitle || traductor.texto2}\n${traductor.texto3[4]} ${genres.primary || traductor.texto2}`;
+
+    const apiTitle = `${title} - ${subtitle || ''}`;
+
+    let url = 'https://github.com/BrunoSobrino'; 
+    try {
+      const response = await fetch(`https://api-for-canvas-brunosobrino.koyeb.app/api/ytplay?text=${apiTitle}`);
+      const data = await response.json();
+      url = data.resultado.url;
+    } catch (error) {
+      console.error('Error al obtener la URL del video:', error);
+    }
+    
+    const audiolink = `https://api.cafirexos.com/api/v1/ytmp3?url=${url}`;  
+    const audiobuff = await conn.getFile(audiolink)  
+
+    await conn.sendMessage(m.chat, { text: texto.trim(), contextInfo: { forwardingScore: 9999999, isForwarded: true, "externalAdReply": { "showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": apiTitle, "containsAutoReply": true, "mediaType": 1, "thumbnail": imagen, "thumbnailUrl": imagen, "mediaUrl": url, "sourceUrl": url } } }, { quoted: m });
+
+    await conn.sendMessage(m.chat, { audio: audiobuff.data, fileName: `${title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
+
     fs.unlinkSync(`./tmp/${m.sender}.${ext}`);
-    m.reply(txt);
-  } else throw tradutor.texto4;
+  } else {
+    throw traductor.texto4;
+  }
 };
-handler.command = /^quemusica|quemusicaes|whatmusic$/i;
+
+handler.command = /^(quemusica|quemusicaes|whatmusic|shazam)$/i;
 export default handler;
