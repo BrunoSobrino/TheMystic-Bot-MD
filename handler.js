@@ -936,20 +936,34 @@ export async function handler(chatUpdate) {
         gameglx = global.db.data.users[m.sender].gameglx = {}
       }
       if (gameglx) {
-        
+
         if (!('status' in gameglx)) gameglx.status = false;
         // Perfil
         if (!('perfil' in gameglx)) gameglx.perfil = {};
         if (!('nome' in gameglx.perfil)) gameglx.perfil.nome = null;
+        if (!('idioma' in gameglx.perfil)) gameglx.perfil.idioma = 'pt-br'; // Definindo padrão 
+        if (!('minerando' in gameglx.perfil)) gameglx.perfil.minerando = false;
         if (!('id' in gameglx.perfil)) gameglx.perfil.id = null;
+        if (!('username' in gameglx.perfil)) gameglx.perfil.username = null;
+        // Casa
+        if (!('casa' in gameglx.perfil)) gameglx.perfil.casa = {};
+        if (!('id' in gameglx.perfil.casa)) gameglx.perfil.casa.id = null;
+        if (!('planeta' in gameglx.perfil.casa)) gameglx.perfil.casa.planeta = null;
+        if (!('colonia' in gameglx.perfil.casa)) gameglx.perfil.casa.colonia = null; // Definir como null em vez de objeto vazio
+        if (gameglx.perfil.casa.colonia === null) gameglx.perfil.casa.colonia = {}; // Verificar se é null antes de definir como objeto vazio
+        if (!('nome' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.nome = null;
+        if (!('habitante' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.habitante = false;
+
         // Carteira Dinheiro
         if (!('carteira' in gameglx.perfil)) gameglx.perfil.carteira = {};
+        if (!('currency' in gameglx.perfil.carteira)) gameglx.perfil.carteira.currency = 'BRL'; // Definindo padrão 
         if (!('saldo' in gameglx.perfil.carteira)) gameglx.perfil.carteira.saldo = 1500;
         // localizacao
         if (!('localizacao' in gameglx.perfil)) gameglx.perfil.localizacao = {};
         if (!('status' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.status = false;
         if (!('nomeplaneta' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.nomeplaneta = null;
         if (!('idpelonome' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.idpelonome = null;
+        if (!('viajando' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.idpelonome = false;
         if (!('id' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.id = null;
         // nave
         if (!('nave' in gameglx.perfil)) gameglx.perfil.nave = {};
@@ -959,15 +973,39 @@ export async function handler(chatUpdate) {
         if (!('velocidade' in gameglx.perfil.nave)) gameglx.perfil.nave.velocidade = null;
         if (!('poder' in gameglx.perfil.nave)) gameglx.perfil.nave.poder = null;
         if (!('valor' in gameglx.perfil.nave)) gameglx.perfil.nave.valor = null;
+        // Bolsa
+        if (!('bolsa' in gameglx.perfil)) gameglx.perfil.bolsa = {};
+        if (!('itens' in gameglx.perfil.bolsa)) gameglx.perfil.bolsa.itens = {};
+        if (!('madeira' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.madeira =1
+        if (!('ferro' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.ferro = 1
+        if (!('diamante' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.diamante = 1
+        if (!('esmeralda' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.esmeralda = 1
+        if (!('carvao' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.carvao = 1
+        if (!('ouro' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.ouro = 1
+        if (!('quartzo' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.quartzo = 1
 
-      
+
+
       } else {
         global.db.data.users[m.sender].gameglx = {
           status: false,
           perfil: {
+            minerando: false,
             nome: null,
+            username: null,
             id: null,
-            carteira:{
+            idioma: 'pt-br',
+            casa: {
+              id: null, // id do grupo ou seja do planeta casa
+              planeta: null,
+              colonia: {
+                nome: null,
+                habitante: false
+              },
+
+            },
+            carteira: {
+              currency: 'BRL',
               saldo: 1500,
             },
             localizacao: {
@@ -975,6 +1013,7 @@ export async function handler(chatUpdate) {
               nomeplaneta: null,  // id do grupo...
               id: null,
               idpelonome: null,
+              viajando: false,
             },
             nave: {
               status: false,
@@ -985,6 +1024,17 @@ export async function handler(chatUpdate) {
               valor: null,
 
             },
+            bolsa: {
+              itens: {
+                madeira: 1,
+                ferro: 1,
+                diamante: 1,
+                esmeralda: 2,
+                carvao: 1,
+                ouro: 1,
+                quartzo: 1
+              }
+            }
           }
         };
       }
