@@ -189,7 +189,6 @@ npm start
 <a href="https://whatsapp.com/channel/0029VaUpcIqJuyA4hiyNYR1K" target="blank"><img src="https://img.shields.io/badge/Arena_update-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 - `نبذة عني ↢`
 ```bash
--
 
 ❒ السلام عليكم ورحمة الله وبركاته انا هيرو سعد مطور بوت `Miku` و المسؤول على النسخة او الفرع العربي لبوت `TheMystic-Bot-MD`. 
 ❒ اذا حاب تتعرف على بوت ميكو اضغط على الزر اسفله :
