@@ -197,12 +197,10 @@ npm start
 <a href="https://whatsapp.com/channel/0029VaYquUD6WaKiS2lnnH16" target="blank"><img src="https://img.shields.io/badge/Miku_OFG_GROUPS-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 - `بعض الملاحظات ↢`
 ```bash
--
 
 ❒ فور تنصيب البوت غير لغته إلى اللغة العربية
 ```
 ```bash
--
 
 ❒ اذا في اي غلط تواصل معي عن طريق الضغط على الازرار اعلاه
 ```
