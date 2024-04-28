@@ -190,7 +190,9 @@ npm start
 - `نبذة عني ↢`
 ```bash
 
-❒ السلام عليكم ورحمة الله وبركاته انا هيرو سعد مطور بوت `Miku` و المسؤول على النسخة او الفرع العربي لبوت `TheMystic-Bot-MD`. 
+❒ السلام عليكم ورحمة الله وبركاته انا هيرو سعد :
+- مطور بوت `Miku`
+- المسؤول على النسخة او الفرع العربي لبوت `TheMystic-Bot-MD`. 
 ❒ اذا حاب تتعرف على بوت ميكو اضغط على الزر اسفله :
 ```
 <a href="https://whatsapp.com/channel/0029VaYquUD6WaKiS2lnnH16" target="blank"><img src="https://img.shields.io/badge/Miku_OFG_GROUPS-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
