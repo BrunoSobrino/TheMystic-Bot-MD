@@ -53,7 +53,6 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   
   ▢ _${usedPrefix}menuaudios_
   ▢ _${usedPrefix}menuanimes_
-  ▢ _${usedPrefix}labiblia_ (🔞)
   ▢ _${usedPrefix}lang_ ${tradutor.texto2}
   ▢ _${usedPrefix}langgroup_ ${tradutor.texto3}
 
@@ -200,9 +199,6 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
  ▢ _${usedPrefix}stickerpack *<url>*_
  ▢ _${usedPrefix}wallpaper *<txt>*_ 
  ▢ _${usedPrefix}dapk2 *<url>*_
- ▢ _${usedPrefix}xnxxdl *<url>*_ (🔞)
- ▢ _${usedPrefix}xvideosdl *<url>*_ (🔞)
-
 
  ${tradutor.texto1[16]}
 
@@ -499,7 +495,8 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ▢ _${usedPrefix}addcmd *<txt>*_
   ▢ _${usedPrefix}delcmd_
   ▢ _${usedPrefix}saveimage_
-  ▢ _${usedPrefix}viewimage_`.trim();
+  ▢ _${usedPrefix}viewimage_`.trim()
+      BOT BY IBRAHIM;
 
 
     let pp
