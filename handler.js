@@ -941,6 +941,12 @@ export async function handler(chatUpdate) {
         // Perfil
         if (!('perfil' in gameglx)) gameglx.perfil = {};
         if (!('nome' in gameglx.perfil)) gameglx.perfil.nome = null;
+        if (!('poder' in gameglx.perfil)) gameglx.perfil.poder = 500;
+        if (!('nivel' in gameglx.perfil)) gameglx.perfil.nivel = {};
+        if (!('nome' in gameglx.perfil.nivel)) gameglx.perfil.nivel.nome = 'Iniciante';
+        if (!('id' in gameglx.perfil.nivel)) gameglx.perfil.nivel.id = 0;
+        if (!('proximoNivel' in gameglx.perfil.nivel)) gameglx.perfil.nivel.proximoNivel = 1;
+        if (!('xp' in gameglx.perfil)) gameglx.perfil.xp = 112;
         if (!('idioma' in gameglx.perfil)) gameglx.perfil.idioma = 'pt-br'; // Definindo padrão 
         if (!('minerando' in gameglx.perfil)) gameglx.perfil.minerando = false;
         if (!('id' in gameglx.perfil)) gameglx.perfil.id = null;
@@ -948,10 +954,12 @@ export async function handler(chatUpdate) {
         // Casa
         if (!('casa' in gameglx.perfil)) gameglx.perfil.casa = {};
         if (!('id' in gameglx.perfil.casa)) gameglx.perfil.casa.id = null;
+        if (!('idpelonome' in gameglx.perfil.casa)) gameglx.perfil.casa.idpelonome = 'terra';
         if (!('planeta' in gameglx.perfil.casa)) gameglx.perfil.casa.planeta = null;
         if (!('colonia' in gameglx.perfil.casa)) gameglx.perfil.casa.colonia = null; // Definir como null em vez de objeto vazio
         if (gameglx.perfil.casa.colonia === null) gameglx.perfil.casa.colonia = {}; // Verificar se é null antes de definir como objeto vazio
         if (!('nome' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.nome = null;
+        if (!('id' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.id = 1;
         if (!('habitante' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.habitante = false;
 
         // Carteira Dinheiro
@@ -976,13 +984,17 @@ export async function handler(chatUpdate) {
         // Bolsa
         if (!('bolsa' in gameglx.perfil)) gameglx.perfil.bolsa = {};
         if (!('itens' in gameglx.perfil.bolsa)) gameglx.perfil.bolsa.itens = {};
-        if (!('madeira' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.madeira =1
+        if (!('madeira' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.madeira = 1
         if (!('ferro' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.ferro = 1
         if (!('diamante' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.diamante = 1
         if (!('esmeralda' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.esmeralda = 1
         if (!('carvao' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.carvao = 1
         if (!('ouro' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.ouro = 1
         if (!('quartzo' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.quartzo = 1
+        // Bolsa - naves
+        if (!('naves' in gameglx.perfil.bolsa)) gameglx.perfil.bolsa.naves = {};
+        if (!('compradas' in gameglx.perfil.bolsa.naves)) gameglx.perfil.bolsa.naves.compradas = [];
+        if (!('status' in gameglx.perfil.bolsa.naves)) gameglx.perfil.bolsa.naves.status = false;
 
 
 
@@ -990,15 +1002,24 @@ export async function handler(chatUpdate) {
         global.db.data.users[m.sender].gameglx = {
           status: false,
           perfil: {
+            xp: 112,
+            nivel: {
+              nome: 'Iniciante',
+              id: 0,
+              proximoNivel: 1
+            },
+            poder: 500,
             minerando: false,
             nome: null,
             username: null,
-            id: null,
+            id: null, // Id do Jogador
             idioma: 'pt-br',
             casa: {
               id: null, // id do grupo ou seja do planeta casa
               planeta: null,
+              idpelonome: 'terra',
               colonia: {
+                id: 1,
                 nome: null,
                 habitante: false
               },
@@ -1033,6 +1054,10 @@ export async function handler(chatUpdate) {
                 carvao: 1,
                 ouro: 1,
                 quartzo: 1
+              },
+              naves: {
+                status: false,
+                compradas: []
               }
             }
           }
