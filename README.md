@@ -14,7 +14,7 @@
 > - en - Inglés
 > - ru - Ruso
 > - fr - Francés
-> - ar - Árabe
+> - ar - Árabe (انزل لآخر الصفحة للتعرف على المزيد) 
 
 ### `▢ CUENTAS OFICIALES`
 
@@ -137,8 +137,6 @@ npm start
  
  ### `▢ ¿DUDAS SOBRE EL BOT?, CONTACTANOS`
 <a href="http://wa.me/5219992095479" target="blank"><img src="https://img.shields.io/badge/BRUNO_SOBRINO_CREADOR-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
-<a href="http://wa.me/34642467703" target="blank"><img src="https://img.shields.io/badge/UNPTOADHIH15_COLAB.1-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
-<a href="http://wa.me/50499698072" target="blank"><img src="https://img.shields.io/badge/ALBERTO_ACOSTA_COLAB.2-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/595986460945" target="blank"><img src="https://img.shields.io/badge/AIDEN_NOTLOGIC_COLAB.3-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/51940617554" target="blank"><img src="https://img.shields.io/badge/GATITO_COLAB.4-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/593991398786" target="blank"><img src="https://img.shields.io/badge/CARLOSTWT_COLAB.5-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
@@ -149,6 +147,7 @@ npm start
 <a href="http://wa.me/5212411719888" target="blank"><img src="https://img.shields.io/badge/YOVANI_COLAB.10-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/5218442114446" target="blank"><img src="https://img.shields.io/badge/skid_COLAB.11-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/393755775755" target="blank"><img src="https://img.shields.io/badge/Fabri115_COLAB.12-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+<a href="http://wa.me/212609395104" target="blank"><img src="https://img.shields.io/badge/Saad_COLAB.13-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 ## `▢ COLABORADORES DEL BOT` 
 <a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="100" height="100" alt="unptoadrih15"/></a>
@@ -170,6 +169,7 @@ npm start
 <a href="https://github.com/Fabri115"><img src="https://github.com/Fabri115.png" width="100" height="100" alt="Fabri115"/> </a>
 <a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> </a>
 <a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a>
+<a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
 
 
 ## `▢ AGRADECIMIENTOS & CREDITOS` 
@@ -182,3 +182,27 @@ npm start
 <a href="https://github.com/BrunoSobrino"><img src="https://github.com/BrunoSobrino.png" width="250" height="250" alt="BrunoSobrino"/></a>
   
 `TheMystic-Bot-MD by Bruno Sobrino`
+## `▢ TheMystic-Bot-MD - Arabic version` 
+<a href="https://whatsapp.com/channel/0029VaUpcIqJuyA4hiyNYR1K"><img src="https://telegra.ph/file/103ac7d8efe38d503fa75.jpg" width="250" height="250" alt="Just testing"/></a> <br>
+<a href="https://wa.me/212609395104" target="blank"><img src="https://img.shields.io/badge/Dev_Saad-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /> 
+<a href="https://instagram.com/nm9h" target="_blank"><img src="https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white" target="_blank"/>
+<a href="https://whatsapp.com/channel/0029VaUpcIqJuyA4hiyNYR1K" target="blank"><img src="https://img.shields.io/badge/Arena_update-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+- `نبذة عني ↢`
+```bash
+
+❒ السلام عليكم ورحمة الله وبركاته انا هيرو سعد :
+- مطور بوت `Miku`
+- المسؤول على النسخة او الفرع العربي لبوت `TheMystic-Bot-MD`. 
+❒ اذا حاب تتعرف على بوت ميكو اضغط على الزر اسفله :
+```
+<a href="https://whatsapp.com/channel/0029VaYquUD6WaKiS2lnnH16" target="blank"><img src="https://img.shields.io/badge/Miku_OFG_GROUPS-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+- `بعض الملاحظات ↢`
+```bash
+
+❒ فور تنصيب البوت غير لغته إلى اللغة العربية
+```
+```bash
+
+❒ اذا في اي غلط تواصل معي عن طريق الضغط على الازرار اعلاه
+```
+`By Glosaryck - Saad`
