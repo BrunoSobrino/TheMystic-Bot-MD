@@ -13,9 +13,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
   const voice = voices.voices.find(voice => voice.name.toLowerCase() === voiceName.toLowerCase());
   if (!voice) {
     const voiceNames = voices.voices.map(voice => voice.name).join('\n◉ ');
-    return m.reply(
-      `[❗] No se encontró ninguna voz con el nombre "${voiceName}".\n\n—◉ Lista de voces disponibles:\n◉ ${voiceNames}`
-    );
+    return m.reply(`[❗] No se encontró ninguna voz con el nombre "${voiceName}".\n\n—◉ Lista de voces disponibles:\n◉ ${voiceNames}`);
   }
   const audio = await convertTextToSpeech(inputText, voice.voice_id);
   if (audio) {
