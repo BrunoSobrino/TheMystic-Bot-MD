@@ -29,7 +29,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     if (argumento2 != null && argumento2 != undefined) { argumento2.toLowerCase() }
 
     try {
-        
+
         let data = global.db.data.users[m.sender].gameglx
         let db = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
 
@@ -39,8 +39,8 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         let notificacao = 350
         let contador = 0
         setInterval(() => {
-            
-             // Verifica se os grupos ja estão criados
+
+            // Verifica se os grupos ja estão criados
             verificacaoXp() // Fica verificando se o  xp do jogador
             if (contador === notificacao) {
 
@@ -77,6 +77,9 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   *🌠 ${usedPrefix}glx _carteira_*
   _Acesso sua carteira financeira._
 
+  *🌠 ${usedPrefix}glx _mapa_*
+  _Mapa das colonias!_
+
   *🌠 ${usedPrefix}glx _loja_*
   _Conheça nossa loja da galáxia_
   
@@ -104,10 +107,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
 
         } else {
-            
 
+            criarGrupo() /// verifica grupos do jogo
             if (data.status === false) {
-                criarGrupo() /// verifica grupos do jogo
+
                 switch (argumento.toLowerCase()) {
                     case "cadastrar":
                         data.perfil.nome = m.pushName // Salva o nome padrão do whatsapp no game
@@ -140,6 +143,13 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
                         let status = data.status === true ? 'Ativo' : 'Desativado'
                         let nave = data.perfil.bolsa.naves.status === true ? 'Sim' : 'Não'
                         let username = data.perfil.username === null ? 'Sem username' : `@${data.perfil.username}`
+
+                        let maxX = db.planetas.terra.colonias.colonia1.localizacao.x + 150
+                        let minX = db.planetas.terra.colonias.colonia1.localizacao.x - 1
+                        let maxY = db.planetas.terra.colonias.colonia1.localizacao.y + 150
+                        let minY = db.planetas.terra.colonias.colonia1.localizacao.y - 1
+
+                        cadastrarPosicaoNoMapa(maxX, minX, maxY, minY, 'terra', 'colonia1')
 
                         enviar(`*_⚔️ VOCÊ AGORA É UM MEMBRO ESTELAR 🪐_*
 
@@ -259,6 +269,9 @@ _caso sua nave estrague, use este comando para voltar_
 _ℹ️ Suas Informações:_
 *🏧Saldo:* ${valorFormatado(data.perfil.carteira.saldo)}
 
+_Quer Ganhar Dinheiro?_
+Use ${usedPrefix}glx vender
+
 
                         `
 
@@ -268,7 +281,8 @@ _ℹ️ Suas Informações:_
                     case 'planeta':
                         switch (argumento1) {
                             case 'act':
-                                const colônias = db.planetas[data.perfil.casa.planeta.toLowerCase()].colonias
+                                const colônias = db.planetas[data.perfil.casa.idpelonome].colonias
+                                console.log(db.planetas[data.perfil.casa.idpelonome])
                                 let dadoscolonias = ``
                                 let Moradores1 = []
                                 let Moradores2 = []
@@ -279,7 +293,7 @@ _ℹ️ Suas Informações:_
                                 let str = `*Dados do planeta ${data.perfil.casa.planeta}*
 
 *🏠Colonias em crescimento:*
-${listarNomesColônias(db.planetas[data.perfil.casa.planeta.toLowerCase()])}
+${listarNomesColônias(data.perfil.casa.idpelonome)}
 
 ${dadoscolonias1()}
 
@@ -318,7 +332,8 @@ ${Moradores}
                                     return dadoscolonias
                                 }
                                 function listarNomesColônias(planeta) {
-                                    const colônias = planeta.colonias;
+
+                                    const colônias = db.planetas[planeta].colonias;
                                     const nomesColônias = Object.keys(colônias).map(nome => colônias[nome].nome);
                                     return nomesColônias.join("\n");
                                 }
@@ -336,7 +351,8 @@ ${Moradores}
                                     conn.sendMessage(m.sender, { text: `_Bem vindo na sua casa!_` })
                                 }
                                 break;
-                            default:
+                            default: ''
+                                let strr = `Opções:\n\nACT\nSAIR `
                                 m.reply(`Isso não existe na colonia`)
                                 break;
                         }
@@ -482,11 +498,18 @@ _Minério de alto valor para comercio_
                     case 'mapa':
                         mapa()
                         setTimeout(() => {
-                            enviar(`MAPA MUNDO`, './src/glx/mapa_com_posicoes.png')
+                            enviar(`*>>>>>>>>>>> MAPA <<<<<<<<<<<*\n\n _- SEU PLANETA: *${data.perfil.casa.planeta}*_ \n\nPara saber dados das colonias \n> Use: ${usedPrefix}glx planeta act`, './src/glx/mapa_com_posicoes.png')
                         }, 2000)
 
                         break;
                     case 'teste':
+
+                        console.log(db.planetas.terra.colonias.colonia1.posicaoOcupadas)
+
+
+
+
+
 
 
                         break;
@@ -710,10 +733,22 @@ _Delete automatico em 20s_
             data.perfil.bolsa.itens[argumento1] = valorDescontado
             data.perfil.carteira.saldo += valorDeVenda // Adicionando novo saldo a carteira.
 
-            enviar(`*_🤝 Parabéns, Venda realizada com sucesso!_*\n\n*Você Vendeu: ${argumento2} ${argumento1}*\n*Valor por Unidade: ${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}*\n*Você recebeu: ${valorFormatado(valorDeVenda)}*\n\n Para ver seu *Saldo* use:\n> ${usedPrefix}glx carteira`, "./src/glx/transacao.jpg")
+            // Bonus XP
+            const numeroAleatorio = Math.floor(Math.random() * (20 - 5 + 1)) + 5;
+            data.perfil.xp += numeroAleatorio
+
+            enviar(`*_🤝 Parabéns, Venda realizada com sucesso!_*\n\n*Você Vendeu: ${argumento2} ${argumento1}*\n*Valor por Unidade: ${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}*\n*Você recebeu: ${valorFormatado(valorDeVenda)}*\n\n*🎉XP Bônus: ${numeroAleatorio} XP* \n\nPara ver seu *Saldo* use:\n> ${usedPrefix}glx carteira`, "./src/glx/transacao.jpg")
         }
 
         async function verificacaoXp() {
+            /** Esta Função quando chamada, altera o nivel do usuario
+             *  1) Se o usuario atingir o XP de cada nivel
+             * 
+             * O que ele faz se atingir o xp do nivel?
+             * 1) Ele defini a nova meta a ser alcançada ( EX:  data.perfil.nivel.proximoNivel += 1 )
+             * 2) Altera o Nome do seu nivel anterior para o nivel atual ( EX: data.perfil.nivel.nome = db.api.niveis.nivel1.nome )
+             * 3) Envia uma mensagem Personalizado, chamando a função msg() e passando os 3 parametros necessarios. Nome nivel atual, XP Atual, e Nome do proximo nivel
+             */
             function msg(nomeNivel, xpAtual, proximoNivel) {
                 let str = `
 _🚀🎉 Parabéns, Capitão ${data.perfil.nome}! 🎉🚀_
@@ -808,6 +843,10 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
         }
 
         async function mapa() {
+            /*Esta função cria uma imagem de um mapa com os dados especificado de cada planeta
+            1) A marcação no mapa de cada planeta ficara no X E Y de cada planeta no database
+            2) 
+            */
             let planeta = db.planetas[data.perfil.casa.idpelonome]
             let colonias = Object.keys(planeta.colonias)
 
@@ -878,6 +917,27 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
                     context.fillText(titulo.nome, titulo.x - larguraTexto / 2, titulo.y);
                 });
 
+                // Adicione o novo nome com formatação diferente
+                const novoNome = data.perfil.nome;
+                const novoX = data.perfil.casa.colonia.posicao.x; // Substitua com o valor correto
+                const novoY = data.perfil.casa.colonia.posicao.y; // Substitua com o valor correto
+
+
+                const corOriginal = context.fillStyle;
+
+                // Desenhar o novo nome sem borda ou fundo formatados, apenas a cor do texto
+                context.fillStyle = 'yellow'; // Definindo a cor do texto como amarelo
+                context.fillText(novoNome, novoX - 50, novoY - 10);
+                
+                // Restaurar a cor original do contexto
+                context.fillStyle = corOriginal;
+                
+                // Desenhar uma marcação
+                context.beginPath();
+                context.arc(novoX, novoY, 10, 0, Math.PI * 2); // Desenha um círculo de raio 5 nas coordenadas do novo nome
+                context.fillStyle = 'blue'; // Cor da marcação
+                context.fill();
+
                 // Salvar o mapa como uma imagem
                 const buffer = canvas.toBuffer('image/png');
                 return fs.writeFileSync('./src/glx/mapa_com_posicoes.png', buffer);
@@ -890,31 +950,157 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
         }
 
         async function criarGrupo() {
+            /*Esta Função Cria um grupo para cada planeta cadastrado no database do glx. Para realizar esta opeção tem algumas condições para ser seguidas
+            1) Só ira criar o grupo se a consulta ao id no database retornar null
+            2) Caso o grupo que esteja cadastrado no database, não tenha permisão de adm para o bot, ele criara outro grupo, e adicionara os habitantes
+
+            Depois de Criar um grupo, sera alterado:
+            1) o id do planeta de NUll para o novo id do grupo criado no database
+            2) Ira adicinar o id do novo grupo ao perfil de cada habitante SE a casa dele for o planeta(Grupo) novo criado.
+            3) Ira setar que só adm pode editar conf do grupo
+            4) Desativa o welcome dos grupos criados
+            
+            */
+            let erroAdmin = false // So sera usado se o bot não for administrado do grupo planeta
+            let idGrupoAntigo  // So sera usado se o bot não for administrado do grupo planeta
+
             let planetas = Object.keys(db.planetas)
             let nomePlaneta
             let idPlaneta
             let habitantesPlaneta
 
-            for (let i = 0; i <= planetas.length; i++) {
-                console.log(`OK - Grupos Criados Corretamente`)
+            for (let i = 0; i < planetas.length; i++) {
+                let idd = db.planetas[planetas[i]].id
+                if (idd === null) {
+
+                } else {
+                    if (await verificacaoAdmin(idd) === false) {
+                        erroAdmin = true
+                        idGrupoAntigo = db.planetas[planetas[i]].id
+
+                        db.planetas[planetas[i]].id = null
+                        fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db))
+                    }
+
+                }
 
                 nomePlaneta = db.planetas[planetas[i]].nomeplaneta
                 idPlaneta = db.planetas[planetas[i]].id
                 habitantesPlaneta = db.planetas[planetas[i]].habitantes
 
                 if (db.planetas[planetas[i]].id === null) {
-                    const group = await conn.groupCreate(nomePlaneta, habitantesPlaneta)
-                    await conn.groupUpdateSubject(group.id, `Bem vindo! ao planeta ${nomePlaneta}`) // Alterar o nome 
-                    await conn.groupSettingUpdate(group.id, 'locked') // Só administrador pode alterar os dados do grupos
-                    await conn.updateProfilePicture(group.id, { url: `${db.planetas[planetas[i]].imgPerfil}`}) // Alterar a imagem do gruppoS
 
+                    const group = await conn.groupCreate(nomePlaneta, habitantesPlaneta)
+                    await conn.groupUpdateSubject(group.id, `[GAME] Planeta ${nomePlaneta}`) // Alterar o nome 
+                    await conn.groupSettingUpdate(group.id, 'locked') // Só administrador pode alterar os dados do grupos
+                    await conn.updateProfilePicture(group.id, { url: `${db.planetas[planetas[i]].imgPerfil}` }) // Alterar a imagem do gruppoS
+
+                    global.db.data.chats[group.id].welcome = false; // Desativando Welcome dos grupos
                     db.planetas[planetas[i]].id = group.id // Define o id do planeta como o id do grupo recem criado.
                     fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db)) // Grava os dados
                     conn.sendMessage(group.id, { text: `hello there ${group.id}` }) //  Envia uma mensagem ao grupoSS
+
+                    if (erroAdmin === true) {
+                        // Mensagem para o novo grupo, caso houver erro de admin nos grupos antigos
+                        conn.sendMessage(group.id, { text: `_Devido o *[bot]* não ser mais Administrador no grupo antigo, nosso game será continuado aqui!_` })
+                    }
+                    for (let i = 0; i < habitantesPlaneta.length; i++) {
+
+                        let dataUser = global.db.data.users[habitantesPlaneta[i]].gameglx
+                        if (dataUser.perfil.casa.idpelonome === db.planetas[planetas[i]].idpelonome) {
+                            //Altera o id do planeta de cada jogador cadastrado naquele Grupo(Planeta)
+                            dataUser.perfil.casa.id = group.id
+                        }
+                    }
+
                 }
             }
 
-            
+            async function verificacaoAdmin(idgrupo) {
+                let result = await checkAdmin(idgrupo)
+                let resultado
+                async function checkAdmin(idd) {
+                    const groupMetadata = ((conn.chats[idd] || {}).metadata || await this.groupMetadata(idd).catch((_) => null))
+                    for (let i = 0; i <= groupMetadata.participants.length; i++) {
+                        if (groupMetadata.participants[i].id === conn.user.jid) {
+                            return groupMetadata.participants[i].admin
+                        }
+                    }
+                }
+                if (result === 'admin') {
+                    resultado = true
+                } else if (result === 'superadmin') {
+                    resultado = true
+                } else if (result === null) {
+                    resultado = false
+                }
+                return resultado
+            }
+        }
+
+        async function cadastrarPosicaoNoMapa(maxX, minX, maxY, minY, planeta, colonia) {
+
+            // Corpo do Object que vai para a lista de posição no db da colonia
+            let dados = {
+                id: data.perfil.id,
+                x: 0,
+                y: 0
+            }
+            let ax = await fNumeroAleatorio(maxX, minX) // sorteando Numero x
+            let ay = await fNumeroAleatorio(maxY, minY) // sorteando Numero y
+
+            console.log(ax, ay)
+            // Verficando se a posição sorteada esta disponivel ou ja tem alguem usando
+            let verificaposicao = await verificarPosicaoDb(ax, ay, planeta, colonia)
+
+            if (verificaposicao[0] === false) {
+                // Colocando a posição do usuario como utilizadas
+                dados.x = ax
+                dados.y = ay
+                db.planetas[planeta].colonias[colonia].posicaoOcupadas.push(dados)
+                fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db))
+
+                // Definindo a posição do usuario na colonia.
+                data.perfil.localizacao.posicao.x = ax
+                data.perfil.localizacao.posicao.y = ay
+                data.perfil.casa.colonia.posicao.x = ax
+                data.perfil.casa.colonia.posicao.y = ay
+
+
+            }
+
+
+        }
+
+        async function fNumeroAleatorio(max, min) {
+            const numeroAleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+            return numeroAleatorio
+        }
+
+        async function verificarPosicaoDb(xx, yy, planeta, colonia) {
+            let result
+            let isCadastrado = false
+            for (let i = 0; i < db.planetas[planeta].colonias[colonia].posicaoOcupadas.length; i++) {
+                let x = false
+                let y = false
+
+                if (db.planetas[planeta].colonias[colonia].posicaoOcupadas[i].x === xx) {
+                    x = true
+                    if (db.planetas[planeta].colonias[colonia].posicaoOcupadas[i].y === yy) {
+                        y = true
+                    }
+                }
+
+                if (x === false && y === false) {
+                    result = false
+                }
+
+                if (data.perfil.id === db.planetas[planeta].colonias[colonia].posicaoOcupadas[i].id) {
+                    isCadastrado = true
+                }
+            }
+            console.log(result)
+            return [result, isCadastrado]
         }
         // --------------------------- FIM DAS FUNÇÕES --------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------

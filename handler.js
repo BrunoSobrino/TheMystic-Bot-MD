@@ -973,6 +973,15 @@ export async function handler(chatUpdate) {
         if (!('idpelonome' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.idpelonome = null;
         if (!('viajando' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.idpelonome = false;
         if (!('id' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.id = null;
+        //Posição  na casa Colonia
+        if (!('posicao' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.posicao = {};
+        if (!('x' in gameglx.perfil.casa.colonia.posicao)) gameglx.perfil.casa.colonia.posicao.x = 0;
+        if (!('y' in gameglx.perfil.casa.colonia.posicao)) gameglx.perfil.casa.colonia.posicao.y = 0;
+        
+        //Posição  em viagens se necessario
+        if (!('posicao' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.posicao = {};
+        if (!('x' in gameglx.perfil.localizacao.posicao)) gameglx.perfil.localizacao.posicao.x = 0;
+        if (!('y' in gameglx.perfil.localizacao.posicao)) gameglx.perfil.localizacao.posicao.y = 0;
         // nave
         if (!('nave' in gameglx.perfil)) gameglx.perfil.nave = {};
         if (!('nome' in gameglx.perfil.nave)) gameglx.perfil.nave.status = false;
@@ -1021,7 +1030,11 @@ export async function handler(chatUpdate) {
               colonia: {
                 id: 1,
                 nome: null,
-                habitante: false
+                habitante: false,
+                posicao: {
+                  x: 0,
+                  y: 0,
+                }
               },
 
             },
@@ -1035,6 +1048,10 @@ export async function handler(chatUpdate) {
               id: null,
               idpelonome: null,
               viajando: false,
+              posicao: {
+                x: 0,
+                y: 0,
+              }
             },
             nave: {
               status: false,
