@@ -10,7 +10,7 @@ const handler = async (m, {conn, usedPrefix}) => {
 handler.command = /^(:c|c)$/i;
 handler.fail = null;
 handler.exp = 100;
-export default handler;
+export default handler; 
 
 
 /* import util from 'util'

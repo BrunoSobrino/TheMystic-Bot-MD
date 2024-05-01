@@ -1,10 +1,11 @@
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.game_ppt
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, text, command, usedPrefix, args}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.game_ppt
+
 // let pp = 'https://www.bighero6challenge.com/images/thumbs/Piedra,-papel-o-tijera-0003318_1584.jpeg'
   const pp = 'https://telegra.ph/file/c7924bf0e0d839290cc51.jpg';
 

@@ -1,10 +1,11 @@
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.rpg_minar
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, isPrems}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_minar
+
   const hasil = Math.floor(Math.random() * 1000);
   const time = global.db.data.users[m.sender].lastmiming + 600000;
   if (new Date - global.db.data.users[m.sender].lastmiming < 600000) throw `${tardutor.texto1[0]} ${msToTime(time - new Date())} ${tardutor.texto1[1]}`;

@@ -1,11 +1,13 @@
 import fs from 'fs';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.owner_broadcastchats
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
-const handler = async (m, {conn, text} ) => {
+
+const handler = async (m, { conn, text }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_broadcastchats
+
+  s
   const delay = (time) => new Promise((res) => setTimeout(res, time));
   const chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map((v) => v[0]);
   if (!text) throw tradutor.texto1;
@@ -14,7 +16,8 @@ const handler = async (m, {conn, text} ) => {
   for (const i of chats) {
     await delay(500);
     conn.relayMessage(i,
-        {liveLocationMessage: {
+      {
+        liveLocationMessage: {
           degreesLatitude: 35.685506276233525,
           degreesLongitude: 139.75270667105852,
           accuracyInMeters: 0,
@@ -23,7 +26,8 @@ const handler = async (m, {conn, text} ) => {
           sequenceNumber: 2,
           timeOffset: 3,
           contextInfo: m,
-        }}, {}).catch((_) => _);
+        }
+      }, {}).catch((_) => _);
   }
   m.reply(`${tradutor.texto3[0]} ${chats.length} ${tradutor.texto3[1]}`);
 };

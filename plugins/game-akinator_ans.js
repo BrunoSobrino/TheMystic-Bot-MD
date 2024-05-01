@@ -1,13 +1,16 @@
 import fetch from 'node-fetch';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.game_akinator_ans
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 import translate from '@vitalets/google-translate-api';
-const teks = tradutor.texto1;
+
 export async function before(m) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.game_akinator_ans
+  const teks = tradutor.texto1;
+
+
   if (global.db.data.users[m.sender].banned) return;
   if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !m.text) return !0;
   const aki = global.db.data.users[m.sender].akinator;

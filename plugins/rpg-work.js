@@ -1,17 +1,21 @@
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.rpg_work
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
-const handler = async (m, {conn, isPrems}) => {
+
+const handler = async (m, { conn, isPrems }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_work
+
+  global.work = tradutor.texto1;
+
+
   let enviando;
   if (enviando) return
   enviando = true
   const hasil = Math.floor(Math.random() * 5000);
   const time = global.db.data.users[m.sender].lastwork + 600000;
   if (new Date - global.db.data.users[m.sender].lastwork < 600000) throw `⚔️ *¡Espera un momento pequeño aventurero!* ⚔️\n\n*—◉ Regresa a la travesía en ${msToTime(time - new Date())} ⏳*`;
-  conn.sendMessage(m.chat, {text: `🏞️ *Te embarcas en una emocionante aventura:*\n\n🛠️ *${pickRandom(global.work)}*\n\n*¡Ganaste ${hasil} exp por tu valentía!*`}, {quoted: m});
+  conn.sendMessage(m.chat, { text: `🏞️ *Te embarcas en una emocionante aventura:*\n\n🛠️ *${pickRandom(global.work)}*\n\n*¡Ganaste ${hasil} exp por tu valentía!*` }, { quoted: m });
   global.db.data.users[m.sender].exp += hasil;
   global.db.data.users[m.sender].lastwork = new Date() * 1;
   enviando = false
@@ -37,4 +41,4 @@ function pickRandom(list) {
   return list[Math.floor(list.length * Math.random())];
 }
 
-global.work = tradutor.texto1;
+

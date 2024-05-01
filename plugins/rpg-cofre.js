@@ -1,10 +1,10 @@
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.rpg_cofre
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {isPrems, conn}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_cofre
+
   const time = global.db.data.users[m.sender].lastcofre + 86400000; // 36000000 10 Horas //86400000 24 Horas
   if (new Date - global.db.data.users[m.sender].lastcofre < 86400000) throw `${tradutor.texto1[0]} *${msToTime(time - new Date())}* ${tradutor.texto1[1]}`;
 

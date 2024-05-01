@@ -2,14 +2,15 @@ import axios from 'axios';
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 import {mediafiredl} from '@bochilteam/scraper';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.descargas_mediafire
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.descargas_mediafire
+
   if (!args[0]) throw `_*< DESCARGAS - MEDIAFIRE />*_\n\n*[ ℹ️ ] Ingrese un enlace de MediaFire.*\n\n*[ 💡 ] Ejemplo:* _${usedPrefix + command} https://www.mediafire.com/file/r0lrc9ir5j3e2fs/DOOM_v13_UNCLONE_`;
   try {
     const resEX = await mediafiredl(args[0]);

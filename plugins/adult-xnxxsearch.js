@@ -1,11 +1,12 @@
 import fetch from 'node-fetch';
-import _translate from './_translate.js';
-const tradutor = _translate.plugins.adult_xnxxsearch
- // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-  // To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {text, usedPrefix, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.adult_xnxxsearch
+
+
 if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `${tradutor.texto1} ${usedPrefix}enable modohorny*`;   
   if (!text) throw `${tradutor.texto2} ${usedPrefix + command} Con mi prima*`;
   try {

@@ -1,14 +1,15 @@
 import {format} from 'util';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.game__ttt
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const debugMode = !1;
 const winScore = 4999;
 const playScore = 99;
 export async function before(m) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.game__ttt
+
   let ok;
   let isWin = !1;
   let isTie = !1;

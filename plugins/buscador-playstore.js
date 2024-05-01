@@ -1,13 +1,11 @@
 import gplay from "google-play-scraper";
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.buscador_playstore
- // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-  // To set the language, in the root of the project, modify the config.json file.
-
-  
 
 let handler = async (m, { conn, text }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.buscador_playstore
+  
   if (!text) throw `*${tradutor.texto1}*`;
   let res = await gplay.search({ term: text });
   if (!res.length) throw `*${tradutor.texto2}*`;

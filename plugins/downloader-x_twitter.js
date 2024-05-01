@@ -1,13 +1,13 @@
 import axios from 'axios';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.downloader_x_twitter
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
-
 
 let enviando = false;
 const handler = async (m, {conn, text, usedPrefix, command}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_x_twitter
+
+
 if (!text) throw `${tradutor.texto1} ${usedPrefix + command}* https://twitter.com/auronplay/status/1586487664274206720?s=20&t=3snvkvwGUIez5iWYQAehpw`;
 if (enviando) return;
     enviando = true;

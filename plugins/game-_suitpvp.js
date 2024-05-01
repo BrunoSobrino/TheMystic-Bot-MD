@@ -1,11 +1,12 @@
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.game__suitpvp
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = (m) => m;
 handler.before = async function(m) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.game__suitpvp
+
   this.suit = this.suit ? this.suit : {};
   if (db.data.users[m.sender].suit < 0) db.data.users[m.sender].suit = 0;
   const room = Object.values(this.suit).find((room) => room.id && room.status && [room.p, room.p2].includes(m.sender));

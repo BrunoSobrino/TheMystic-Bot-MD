@@ -5,13 +5,13 @@ import sizeFormatter from "human-readable";
 import MessageType from "@whiskeysockets/baileys";
 import fs from "fs";
 import { performance } from "perf_hooks";
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.info_estado
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, { conn, usedPrefix }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.info_estado
+
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
   const totalusrReg = Object.values(global.db.data.users).filter((user) => user.registered == true).length;
@@ -88,7 +88,7 @@ const handler = async (m, { conn, usedPrefix }) => {
   conn.sendMessage(m.chat, Message, { quoted: m });
 };
 
-handler.command = /^(ping|info|status|estado)$/i;
+handler.command = /^(ping|info|status|estado|infobot)$/i;
 export default handler;
 
 function clockString(ms) {

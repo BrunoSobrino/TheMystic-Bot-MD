@@ -1,10 +1,11 @@
-import _translate from "./_translate.js";
-const tradutor = _translate.plugins.anonymous_chat
- // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-  // To set the language, in the root of the project, modify the config.json file.
+
 
 async function handler(m, {usedPrefix, command}) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.anonymous_chat
+
   command = command.toLowerCase();
   this.anonymous = this.anonymous ? this.anonymous : {};
   switch (command) {

@@ -1,13 +1,14 @@
 import {createHash} from 'crypto';
 import PhoneNumber from 'awesome-phonenumber';
 import fetch from 'node-fetch';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.rpg_perfil
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
+
 
 const handler = async (m, {conn, usedPrefix, participants, isPrems}) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.rpg_perfil
+
   let pp = 'https://telegra.ph/file/06cc652844ea19e8aed1c.jpg';
   const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;
   if (!(who in global.db.data.users)) throw tradutor.texto1;

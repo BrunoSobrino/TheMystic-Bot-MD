@@ -2,13 +2,13 @@ import axios from 'axios';
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.buscador_wikipedia
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 async function wikipedia(querry) {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.buscador_wikipedia
+
   try {
     const link = await axios.get(`https://es.wikipedia.org/wiki/${querry}`);
     const $ = cheerio.load(link.data);

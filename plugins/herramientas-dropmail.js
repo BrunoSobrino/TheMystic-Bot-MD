@@ -1,9 +1,4 @@
 import fetch from 'node-fetch';
-import _translate from "./_translate.js"
-const tradutor = _translate.plugins.herramientas_dropmail
-// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-// To set the language, in the root of the project, modify the config.json file.
 
 const handler = async (m, {
   conn,
@@ -12,6 +7,11 @@ const handler = async (m, {
   command,
   text,
 }) => {
+  const datas = global
+  const idioma = datas.db.data.users[m.sender].language
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const tradutor = _translate.plugins.herramientas_dropmail
+  
   conn.dropmail = conn.dropmail ? conn.dropmail : {};
   const id = 'dropmail';
 
@@ -27,6 +27,7 @@ const handler = async (m, {
   if (lister.includes(feature)) {
     if (feature == 'create') {
       try {
+
         const eml = await random_mail();
         const timeDiff = new Date(eml[2]) - new Date();
         conn.dropmail[id] = [
