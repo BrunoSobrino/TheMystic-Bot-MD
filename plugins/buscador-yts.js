@@ -1,12 +1,15 @@
 /*
 
 - Agradecimiento a la comunidad de "WSApp • Developers"
+ * https://chat.whatsapp.com/FaQunmlp9BmDRk6lEEc9FJ
 - Agradecimiento especial a Carlos (PT) por los codigos de interactiveMessage (botones)
-- Agradecimiento a Darlyn por la estructura de uso en este codigo
-- Adaptacion y funcionamiento por BrunoSobrino
+- Agradecimiento a Darlyn1234 por la estructura de uso en este codigo y quoted
+ * https://github.com/darlyn1234
+- Adaptacion de imagen en tipo lista, codigo y funcionamiento por BrunoSobrino
+ * https://github.com/BrunoSobrino
 
 */
-import { getDevice } from '@whiskeysockets/baileys'
+import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys'
 import yts from 'yt-search';
 import fs from 'fs';
 
@@ -19,16 +22,22 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
     
   if (!text) throw `⚠️ *${traductor.texto1}*`;
     
-  if (device !== 'desktop') {      
+  if (device !== 'desktop' || device !== 'web') {      
     
   const results = await yts(text);
   const videos = results.videos.slice(0, 20);
   const randomIndex = Math.floor(Math.random() * videos.length);
   const randomVideo = videos[randomIndex];
 
+  var messa = await prepareWAMessageMedia({ image: {url: randomVideo.thumbnail}}, { upload: conn.waUploadToServer })
   const interactiveMessage = {
-    header: { title: `*</ YouTube Search >*\n` },
-    body: { text: `*—◉ Resultados obtenidos:* ${results.videos.length}\n*—◉ Video aleatorio:*\n*-› Title:* ${randomVideo.title}\n*-› Author:* ${randomVideo.author.name}\n*-› Views:* ${randomVideo.views}\n*-› Url:* ${randomVideo.url}\n*-› Imagen:* ${randomVideo.thumbnail}` },
+    body: { text: `*—◉ Resultados obtenidos:* ${results.videos.length}\n*—◉ Video aleatorio:*\n*-› Title:* ${randomVideo.title}\n*-› Author:* ${randomVideo.author.name}\n*-› Views:* ${randomVideo.views}\n*-› ${traductor.texto2[0]}:* ${randomVideo.url}\n*-› Imagen:* ${randomVideo.thumbnail}`.trim() },
+    footer: { text: `${global.wm}`.trim() },  
+      header: {
+          title: `*< YouTube Search />*\n`,
+          hasMediaAttachment: true,
+          imageMessage: messa.imageMessage,
+      },
     nativeFlowMessage: {
       buttons: [
         {
@@ -57,12 +66,17 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
       ],
       messageParamsJson: ''
     }
-  };
+  };        
+            
+        let msg = generateWAMessageFromContent(m.chat, {
+            viewOnceMessage: {
+                message: {
+                    interactiveMessage,
+                },
+            },
+        }, { userJid: conn.user.jid, quoted: m })
+      conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id});
 
-  function _0x3fa5(_0x2e160d,_0x502356){const _0x296218=_0x2962();return _0x3fa5=function(_0x3fa59a,_0x2037f3){_0x3fa59a=_0x3fa59a-0xef;let _0x236f8b=_0x296218[_0x3fa59a];return _0x236f8b;},_0x3fa5(_0x2e160d,_0x502356);}(function(_0x3e2c76,_0x314c31){const _0x50a59a=_0x3fa5,_0x50d890=_0x3e2c76();while(!![]){try{const _0x3630b5=-parseInt(_0x50a59a(0xf1))/0x1+parseInt(_0x50a59a(0xf5))/0x2+-parseInt(_0x50a59a(0xf6))/0x3+-parseInt(_0x50a59a(0xf3))/0x4+parseInt(_0x50a59a(0xf4))/0x5+parseInt(_0x50a59a(0xef))/0x6*(-parseInt(_0x50a59a(0xf0))/0x7)+parseInt(_0x50a59a(0xf2))/0x8;if(_0x3630b5===_0x314c31)break;else _0x50d890['push'](_0x50d890['shift']());}catch(_0x56a982){_0x50d890['push'](_0x50d890['shift']());}}}(_0x2962,0x651e4));const message={'interactiveMessage':interactiveMessage};function _0x2962(){const _0x2b05b8=['2008908ezDpVV','2187460dHvVJY','657348rniUfn','1556004iNKQTN','4632XAajPd','1561vMaQgD','477100lUeqAa','10545320WyDJIZ'];_0x2962=function(){return _0x2b05b8;};return _0x2962();}
-
-  conn.relayMessage(m.chat, { viewOnceMessage: { message } }, {});
-      
   } else {
   const datas = global;
   const idioma = datas.db.data.users[m.sender].language;
@@ -80,39 +94,10 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
 ↳ 👁 *_${traductor.texto2[3]}_* ${v.views}`;
     }
   }).filter((v) => v).join('\n\n◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦\n\n');
-  conn.sendFile(m.chat, tes[0].thumbnail, 'yts.jpeg', teks, m);      
+  conn.sendFile(m.chat, tes[0].thumbnail, 'error.jpg', teks.trim(), m);      
   }    
 };
 handler.help = ['ytsearch <texto>'];
 handler.tags = ['search'];
-handler.command = /^(ytsearch|yts|searchyt|buscaryt|videosearch)$/i;
+handler.command = /^(ytsearch|yts|searchyt|buscaryt|videosearch|audiosearch)$/i;
 export default handler;
-
-/*import yts from 'yt-search';
-import fs from 'fs';
-
-const handler = async (m, {conn, text}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
-  const tradutor = _translate.plugins.buscador_yts
-
-  if (!text) throw `⚠️ *${tradutor.texto1}*`;
-  const results = await yts(text);
-  const tes = results.all;
-  const teks = results.all.map((v) => {
-    switch (v.type) {
-      case 'video': return `
-° *_${v.title}_*
-↳ 🫐 *_${tradutor.texto2[0]}_* ${v.url}
-↳ 🕒 *_${tradutor.texto2[1]}_* ${v.timestamp}
-↳ 📥 *_${tradutor.texto2[2]}_* ${v.ago}
-↳ 👁 *_${tradutor.texto2[3]}_* ${v.views}`;
-    }
-  }).filter((v) => v).join('\n\n◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦\n\n');
-  conn.sendFile(m.chat, tes[0].thumbnail, 'yts.jpeg', teks, m);
-};
-handler.help = ['ytsearch *<texto>*'];
-handler.tags = ['search'];
-handler.command = ['ytsearch', 'yts'];
-export default handler;*/
