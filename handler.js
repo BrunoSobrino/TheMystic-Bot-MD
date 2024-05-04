@@ -1004,7 +1004,18 @@ export async function handler(chatUpdate) {
         if (!('naves' in gameglx.perfil.bolsa)) gameglx.perfil.bolsa.naves = {};
         if (!('compradas' in gameglx.perfil.bolsa.naves)) gameglx.perfil.bolsa.naves.compradas = [];
         if (!('status' in gameglx.perfil.bolsa.naves)) gameglx.perfil.bolsa.naves.status = false;
-
+        // Função de ataque 
+        if(!('ataque' in gameglx.perfil)) gameglx.perfil.ataque = null
+        if (gameglx.perfil.ataque === null) gameglx.perfil.ataque = {};
+        if (!('sendoAtacado' in gameglx.perfil.ataque)) gameglx.perfil.ataque.sendoAtacado = {};
+        if (!('status' in gameglx.perfil.ataque.sendoAtacado)) gameglx.perfil.ataque.sendoAtacado.status = false;
+        if (!('atacante' in gameglx.perfil.ataque.sendoAtacado)) gameglx.perfil.ataque.sendoAtacado.atacante = null;
+        if (!('forcaAtaque' in gameglx.perfil.ataque)) gameglx.perfil.ataque.forcaAtaque = {};
+        if (!('ataque' in gameglx.perfil.ataque.forcaAtaque)) gameglx.perfil.ataque.forcaAtaque.ataque = 10;
+        // Defesa
+        if(!('defesa' in gameglx.perfil)) gameglx.perfil.defesa = {};
+        if(!('forca' in gameglx.perfil.defesa)) gameglx.perfil.defesa.forca = 100;
+        if(!('ataque' in gameglx.perfil.defesa)) gameglx.perfil.defesa.ataque = 40 ;
 
 
       } else {
@@ -1076,6 +1087,19 @@ export async function handler(chatUpdate) {
                 status: false,
                 compradas: []
               }
+            },
+            ataque: {
+              sendoAtacado: {
+                status: false,
+                atacante: null,
+              },
+              forcaAtaque : {
+                ataque: 10
+              }
+            },
+            defesa : {
+              forca: 100,
+              ataque: 40
             }
           }
         };

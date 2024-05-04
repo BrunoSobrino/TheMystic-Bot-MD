@@ -12,6 +12,7 @@ let tes = `
 
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
+    createDataBase() // Criar arquivo DataBase se caso não existir 
 
     let infoDataHora = new Date()
     let horasEminutosAtual = `${infoDataHora.getHours()}:${infoDataHora.getMinutes()}`
@@ -30,34 +31,19 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
     try {
 
+        // Lendo banco de dados do Bot e do GAME
         let data = global.db.data.users[m.sender].gameglx
         let db = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
 
-
-
-
-        let notificacao = 350
-        let contador = 0
         setInterval(() => {
-
-            // Verifica se os grupos ja estão criados
             verificacaoXp() // Fica verificando se o  xp do jogador
-            if (contador === notificacao) {
 
-
-                conn.sendMessage(db.planetas.terra.id, { text: `Vamos Minerar a *${db.planetas.terra.nomeplaneta}* precisa de Dinheiro para crescer \n\nHora da notificação: ${horasEminutosAtual}` })
-
-
-                notificacao += 350
-
-            }
-            contador += 3
-        }, 3000)
+        }, 5000)
 
 
 
         if (args[0] === null || args[0] === undefined) {
-            criarGrupo() /// verifica grupos do jogo
+            criarGrupo() // Verifica se os grupos para o jogo funcionar foi criado, se nao for ele cria automaticamente.
 
 
 
@@ -70,6 +56,9 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
   *🌠 ${usedPrefix}glx _cadastrar_*
   _Para se cadastrar no GLX_
+  
+  *🌠 ${usedPrefix}glx _perfil_*
+  _Veja seus dados, e sua evolução._
 
   *🌠 ${usedPrefix}glx _viajar_*
   _Você quer visitar outro Planeta? Bora!_
@@ -93,7 +82,6 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   _Quer ganhar Dinheiro? Vamos minerar._
 
   
-
 *╘═══════════════════╛*
   🌞🌕🌠🌟⭐🌎🪐
 `
@@ -113,43 +101,58 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
                 switch (argumento.toLowerCase()) {
                     case "cadastrar":
+                        // Dados essenciais para o jogo rodar corretamente.
+                        data.status = true; // Ativa o cadastro dos jogadores
                         data.perfil.nome = m.pushName // Salva o nome padrão do whatsapp no game
                         data.perfil.id = m.sender // salva o id do whatsapp do gamer
-                        data.status = true; // Ativa o cadastro dos jogadores
 
                         // Defindo a casa como padrão
                         data.perfil.casa.id = db.planetas.terra.id // Id Planeta Padrão para novos Jogadores
                         data.perfil.casa.planeta = db.planetas.terra.nomeplaneta // Nome Planeta Padrão para novos Jogadores
                         data.perfil.casa.colonia.nome = db.planetas.terra.colonias.colonia1.nome // Colonia Padrão para novos Jogadores
-                        data.perfil.casa.colonia.id = db.planetas.terra.colonias.colonia1.id
-                        data.perfil.casa.idpelonome = db.planetas.terra.idpelonome
-                        db.planetas.terra.habitantes.push(m.sender)
+                        data.perfil.casa.colonia.id = db.planetas.terra.colonias.colonia1.id //  Definir o id do grupo padrão
+                        data.perfil.casa.idpelonome = db.planetas.terra.idpelonome // Defini o id pelo nome padrao do sistema
+                        db.planetas.terra.habitantes.push(m.sender) // Adiciona o usuario como habitante do planeta terra
 
-                        // Alterando a Localização do usuario
+                        // Alterando a Localização do usuario ndentro de Global
                         data.perfil.localizacao.status = true;
                         data.perfil.localizacao.nomeplaneta = db.planetas.terra.nomeplaneta;
                         data.perfil.localizacao.id = db.planetas.terra.id;
                         data.perfil.localizacao.idpelonome = db.planetas.terra.idpelonome;
 
+                        // Cadastrar Username e salvar no db, e data
+                        let numb = await fNumeroAleatorio(3000, 1)
+                        data.perfil.username = `user${numb}`
+                        if (!db.user_cadastrado.username.includes(data.perfil.username)) {
+                            let dados = {
+                                id: data.perfil.id,
+                                username: data.perfil.username
+                            }
+                            db.user_cadastrado.username.push(dados)
+                        }
 
 
+                        // Adiciona o usuario na lista de cadastrado no jogo, e como habitante da colonia na terra
+                        // Somente se o usuario não estiver na lista. ele retorna false
                         if (!db.user_cadastrado.lista.includes(m.sender)) {
                             db.planetas.terra.colonias.colonia1.habitantes.push(m.sender)
                             db.user_cadastrado.lista.push(m.sender)
 
-                            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db))
+                            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db)) // Escreve os dados no arquivo
                         }
 
                         let status = data.status === true ? 'Ativo' : 'Desativado'
-                        let nave = data.perfil.bolsa.naves.status === true ? 'Sim' : 'Não'
-                        let username = data.perfil.username === null ? 'Sem username' : `@${data.perfil.username}`
+                        let nave = data.perfil.bolsa.naves.status === true ? 'Sim' : 'Não' // Se o usuario ja tem alguma nave ou não
+                        let username = data.perfil.username === null ? 'Sem username' : `@${data.perfil.username}` // se o usuario ja tem username
 
-                        let maxX = db.planetas.terra.colonias.colonia1.localizacao.x + 150
-                        let minX = db.planetas.terra.colonias.colonia1.localizacao.x - 1
-                        let maxY = db.planetas.terra.colonias.colonia1.localizacao.y + 150
-                        let minY = db.planetas.terra.colonias.colonia1.localizacao.y - 1
+                        let maxX = db.planetas.terra.colonias.colonia1.localizacao.x + 150 // Define a area da colonia
+                        let minX = db.planetas.terra.colonias.colonia1.localizacao.x - 1   // Define a area da colonia
+                        let maxY = db.planetas.terra.colonias.colonia1.localizacao.y + 150 // Define a area da colonia
+                        let minY = db.planetas.terra.colonias.colonia1.localizacao.y - 1   // Define a area da colonia
 
-                        cadastrarPosicaoNoMapa(maxX, minX, maxY, minY, 'terra', 'colonia1')
+                        cadastrarPosicaoNoMapa(maxX, minX, maxY, minY, 'terra', 'colonia1') // Sortea uma posição para o usuario no mapa e cadastra
+                        conn.groupParticipantsUpdate(db.planetas.terra.id, [m.sender], "add") // Adiciona o usuario no grupo terra pela primeira vez
+
 
                         enviar(`*_⚔️ VOCÊ AGORA É UM MEMBRO ESTELAR 🪐_*
 
@@ -171,47 +174,68 @@ Comandos de Configurações:
 Comandos Glx nos Grupos(planeta):
 *${usedPrefix}glx planeta act* - Atualizar dados da colonia.
 
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
+
 `)
                         break;
                     default:
-                        enviar10s(`_Você precisa se alistar no comando_ \n\n Use *${usedPrefix}glx cadastrar* - Para se cadastrar.`)
+                        enviar10s(`_😢Você precisa se cadastrar no jogo_ \n\n > Use *${usedPrefix}glx cadastrar* - Para se cadastrar.\n\n😁 *Cadastre-se logo, não perca tempo.*`)
                         break;
                 }
 
             } else if (data.status === true) {
                 switch (argumento.toLowerCase()) {
                     case 'cadastrar':
-                        enviar10s(`Olá *${m.pushName}*, você já tem cadastro.`)
+                        enviar10s(`_😁 Oi *${m.pushName}*, você já tem cadastro._`)
                         break
                     case "viajar":
-                        if (data.perfil.bolsa.naves.status === false) return enviar10s(`*( ❌ ) Você não tem nave* \n\n Utilize *${usedPrefix}glx comprar nave n1* - Para comprar sua primeira nave\n\n_Para ver toda a 🏪loja utilize_ *${usedPrefix}glx comprar*`)
+                        if (data.perfil.bolsa.naves.status === false) return enviar10s(`*( ❌ ) Você não tem nave* \n\n Utilize *${usedPrefix}glx comprar nave n1* - Para comprar sua primeira nave!\n\n_Ou Para ver outros modelos da 🏪loja utilize_ *${usedPrefix}glx loja*`)
                         switch (argumento1) {
                             case "terra":
-                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`*${data.perfil.casa.planeta}* _Este planeta é sua casa, e você ja esta nele_`)
+                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`*${data.perfil.casa.planeta}* _⚠️ Este planeta é sua casa, e você ja esta nele_`)
                                 entrarplaneta('terra') // Não troque o nome
                                 break;
                             case "megatron":
-                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`*${data.perfil.casa.planeta}* _Este planeta é sua casa, e você ja esta nele_`)
+                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`*${data.perfil.casa.planeta}* _⚠️ Este planeta é sua casa, e você ja esta nele_`)
                                 entrarplaneta(argumento1.toLowerCase())
                                 break;
                             case 'casa':
                                 conn.groupParticipantsUpdate(data.perfil.casa.id, [m.sender], "add")
-                                enviar(`Oi de volta ${m.pushName}`, null, data.perfil.casa.id)
+                                enviar(` 😉 *Oi!!!* de volta ${m.pushName}`, null, data.perfil.casa.id)
                                 break;
                             default: // Padrão ao enviar entrar 
                                 let str = `*LUGARES PARA VOCÊ VIAJAR*
 
 > --- PLANETAS    
-
 *✈️ ${usedPrefix}glx viajar terra*
 _Um planeta belo e bonito!_
 
 *✈️ ${usedPrefix}glx viajar megatron*
 _Um planeta hostil com caracteristica agressiva!_
 
+
+
+
 > --- COMANDOS UTIL
 *⚙️ ${usedPrefix}glx viajar casa*
-_caso sua nave estrague, use este comando para voltar_   
+_Caso sua nave estrague, use este comando para voltar_
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
                             `
                                 enviar(str)
                                 break;
@@ -248,14 +272,48 @@ _caso sua nave estrague, use este comando para voltar_
  💸Valor da nave: *${valorFormatado(db.naves.n2.valor)}*
 
 
- Exemplo de uso: *${usedPrefix}glx comprar nave n1*`)
+ Exemplo de uso: *${usedPrefix}glx comprar nave n1*
+
+
+ ╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
+
+ `)
 
                                         break;
                                 }
                                 break;
 
                             default:
-                                m.reply(`*--- 🏪 LOJA DA GALÁXIA ---*\n\n_Categorias:_\n ↳ nave\n ↳ carro \n\nEx: Para ver as naves:\n *${usedPrefix}glx loja nave*\nEx: Se quiser Comprar uma nave:\n*${usedPrefix}glx comprar nave n1*`)
+                                m.reply(`*--- 🏪 LOJA DA GALÁXIA ---*
+                                
+_Categorias:_
+↳ nave
+↳ carro
+
+Ex: Para ver as naves:
+*${usedPrefix}glx loja nave*
+
+Ex: Comprar uma nave:
+*${usedPrefix}glx comprar nave n1*
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
+
+`)
                                 break;
 
 
@@ -272,6 +330,15 @@ _ℹ️ Suas Informações:_
 _Quer Ganhar Dinheiro?_
 Use ${usedPrefix}glx vender
 
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
 
                         `
 
@@ -296,6 +363,16 @@ Use ${usedPrefix}glx vender
 ${listarNomesColônias(data.perfil.casa.idpelonome)}
 
 ${dadoscolonias1()}
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
 
 `
 
@@ -372,6 +449,14 @@ ${Moradores}
  - Quer vender seus itens?
  Use *${usedPrefix}glx vender ouro 10*                    
 
+
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+
+*_🛸  GAME GALAXIA 🛸_*
+
   ╚═════════👜═════════╝`
                         enviar(texto, "./src/glx/bau.jpg")
 
@@ -384,7 +469,6 @@ ${Moradores}
                                 break
                             case 'ferro':
                                 vender(argumento1, argumento2)
-
                                 break
                             case 'diamante':
                                 vender(argumento1, argumento2)
@@ -431,6 +515,18 @@ _Confira os itens que podem ser vendidos_
 - Valor Unitario: ${valorFormatado(db.itens.mineracao['quartzo'].valorVenda)}
  
 ▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
+
+
                                 `
                                 enviar(str, './src/glx/transacao.jpg')
                                 break;
@@ -491,28 +587,95 @@ _Minério de alto valor para comercio_
  *⚪${usedPrefix}glx miner quartzo*
  _Minério de alto valor para comercio_
                            `
-                                enviar(`⛏️ *Opções para Mineração* ⚒️\n\n> ⚙️ *Configurações*\n${funcoes}\n\n> ⛏️ *Minérios*${itens}`, "./src/glx/miner.jpg")
+                                enviar(`⛏️ *Opções para Mineração* ⚒️
+                                
+> ⚙️ *Configurações*
+${funcoes}
+
+> ⛏️ *Minérios*${itens}
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
+
+`, "./src/glx/miner.jpg")
                                 break;
                         }
                         break;
                     case 'mapa':
                         mapa()
                         setTimeout(() => {
-                            enviar(`*>>>>>>>>>>> MAPA <<<<<<<<<<<*\n\n _- SEU PLANETA: *${data.perfil.casa.planeta}*_ \n\nPara saber dados das colonias \n> Use: ${usedPrefix}glx planeta act`, './src/glx/mapa_com_posicoes.png')
+                            enviar(`*>>>>>>>>>>> MAPA <<<<<<<<<<<*
+                            
+_- SEU PLANETA: *${data.perfil.casa.planeta}*_ 
+
+Para saber dados das colonias 
+> Use: ${usedPrefix}glx planeta act
+
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
+
+`, `./src/glx/temp/${data.perfil.username}.png`)
                         }, 2000)
 
                         break;
-                    case 'teste':
+                    case 'perfil':
+                        let nave = data.perfil.nave.nome ? data.perfil.nave.nome : 'Não tem Nave'
+                        let strr = `*_🤖 ${data.perfil.nome} Seu Perfil!_*
 
-                        console.log(db.planetas.terra.colonias.colonia1.posicaoOcupadas)
+Essas são as suas informações do jogo \`\`\`GALÁXIA\`\`\`.
+
+_💡Não esquese de minerar, *${usedPrefix}glx miner* isso aumenta seu XP e sua Força._
+
+*🆙 XP:* _${data.perfil.xp} XP_
+    *Proximo Nivel:* _${db.api.niveis[`nivel${data.perfil.nivel.proximoNivel}`].totalXp} XP_
+
+*📈 Nivel:* _${data.perfil.nivel.nome}_
+*💪 Poder [Força]:* _${data.perfil.poder}_
+*🌀 Username:* _${data.perfil.username}_
+
+*🗣️ Idioma:* _${data.perfil.idioma}_
+*💰 Moeda:* _${data.perfil.carteira.currency}_
+
+*🌏 Planeta:* _${data.perfil.casa.planeta}_
+*🏠 Colonia:* _${data.perfil.casa.colonia.nome}_
+
+*🛸 Sua nave Atual:* _${nave}_
 
 
 
+*_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+`
 
 
-
+                        imagemPerfil() // Função para gerar a imgem do perfil após 3s apaga automaticamente
+                        setTimeout(() => {
+                            enviar(strr, `./src/glx/temp/${data.perfil.username}.png`)
+                        }, 1000)
 
                         break;
+                    case 'atacar':
+
+                        atacar(argumento1)
+
+
+                        break
                     default:
                         m.reply(`*[!]* Opção *${args[0]}* não existe!`)
                         break
@@ -567,7 +730,18 @@ _Minério de alto valor para comercio_
                 
 _Você foi adicionado, ao grupo do planeta_
                 
-\`\`\`Se estiver no privado saia e va para o planeta terra\`\`\` `
+\`\`\`Se estiver no privado saia e va para o planeta terra\`\`\`
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
+`
 
                 let img = "./src/glx/base_terra.webp"
 
@@ -622,7 +796,7 @@ _Você foi adicionado, ao grupo do planeta_
             if (data.perfil.bolsa.naves.compradas.includes(modelo)) return m.reply(`_😊 Uau, você já tem esta nave! Use *${usedPrefix}glx comprar nave* para ver outros modelos!_`)
             if ((data.perfil.carteira.saldo - db.naves[modelo.toLowerCase()].valor) <= 0) return m.reply(`_😪 ${data.perfil.nome}! Você não tem saldo._ \n\n*Seu Saldo:* ${valorFormatado(data.perfil.carteira.saldo)}\n*Valor da nave ${modelo}:* ${valorFormatado(db.naves[modelo].valor)}\n\nVenda seus minerios para ganhar dinheiro. Use Ex: *${usedPrefix}glx vender ouro 2*`)
 
-
+            let poderantigo = db.naves[modelo.toLowerCase()].poder // Variavel pegando o poder antes de ser alterado para a soma com o poder da nave
             let saldo = data.perfil.carteira.saldo - db.naves[modelo.toLowerCase()].valor // Descontando o valor da nave
             data.perfil.carteira.saldo = saldo // Alternado o saldo na carteira
 
@@ -635,9 +809,9 @@ _Você foi adicionado, ao grupo do planeta_
             data.perfil.nave.velocidade = db.naves[modelo.toLowerCase()].velocidade
             data.perfil.nave.poder = db.naves[modelo.toLowerCase()].poder
             data.perfil.nave.valor = db.naves[modelo.toLowerCase()].valor
+            data.perfil.poder += db.naves[modelo.toLowerCase()].poder // Somando o poder da nave ao poder do usuario
 
-            // Somando o Poder da nave, ao poder total do usuario
-            data.perfil.poder += db.naves[modelo.toLowerCase()].poder
+
 
 
 
@@ -649,6 +823,18 @@ _Você comprou a nave_ *${data.perfil.nave.nome}*
 ⚡ Poder de Comabate: *${db.naves[modelo.toLowerCase()].poder}*
 💸Valor da nave: *${db.naves[modelo.toLowerCase()].valor}*
 
+*⚡-👑 Seu Poder aumentou:*
+_De_ *${poderantigo}* _Para_ *${data.perfil.poder}*
+
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
 
 _Delete automatico em 20s_
 `
@@ -705,14 +891,26 @@ _Delete automatico em 20s_
                 }
             }
             let carregando = setInterval(rep, 1000)
+            const gerarPoder = await fNumeroAleatorio(10, 5) // Gerar um numero de 5 a 10 
 
             setTimeout(() => {
                 clearInterval(carregando)
                 data.perfil.bolsa.itens[item] += db.itens.mineracao[item].quantidadeMinerado // adiciona os itens minerados
                 data.perfil.minerando = false // Desativa status minerando..
-                const numeroAleatorio = Math.floor(Math.random() * (40 - 10 + 1)) + 10;
-                data.perfil.xp += numeroAleatorio
-                conn.sendMessage(id, { text: `*⚒️Mineração Concluida [${tempoedit} _Segundos_]* \n\n_🥳Ganhou um Bônus:_ *${numeroAleatorio} [XP]*\n> Você minerou ${db.itens.mineracao[item].quantidadeMinerado} ${item} \n\n*Total de ${item}:* [ ${data.perfil.bolsa.itens[item]} ]`, edit: messageId.key })
+                const numeroAleatorio = Math.floor(Math.random() * (40 - 10 + 1)) + 10; // Gerar um numero de 10 a 50
+                data.perfil.xp += numeroAleatorio // Adicionando um valor aleatorio de Xp no novel do usuario 
+                data.perfil.poder += gerarPoder // Adicionando um novo valor de poder gerado para o usuario
+                conn.sendMessage(id, {
+                    text: `*⚒️Mineração Concluida [${tempoedit} _Segundos_]*
+> Você minerou ${db.itens.mineracao[item].quantidadeMinerado} ${item} 
+
+_🥳Ganhou um Bônus:_ *${numeroAleatorio} [XP]*
+_👑 Seu Poder:_ ${data.perfil.poder}
+
+*Total de ${item}:* [ ${data.perfil.bolsa.itens[item]} ]
+
+*_${usedPrefix}glx bau_* - Para ver seus itens minerados.`, edit: messageId.key
+                })
 
 
 
@@ -735,9 +933,12 @@ _Delete automatico em 20s_
 
             // Bonus XP
             const numeroAleatorio = Math.floor(Math.random() * (20 - 5 + 1)) + 5;
-            data.perfil.xp += numeroAleatorio
+            const gerarPoder = await fNumeroAleatorio(10, 5)
 
-            enviar(`*_🤝 Parabéns, Venda realizada com sucesso!_*\n\n*Você Vendeu: ${argumento2} ${argumento1}*\n*Valor por Unidade: ${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}*\n*Você recebeu: ${valorFormatado(valorDeVenda)}*\n\n*🎉XP Bônus: ${numeroAleatorio} XP* \n\nPara ver seu *Saldo* use:\n> ${usedPrefix}glx carteira`, "./src/glx/transacao.jpg")
+            data.perfil.xp += numeroAleatorio
+            data.perfil.poder += gerarPoder * argumento2
+
+            enviar(`*_🤝 Parabéns, Venda realizada com sucesso!_*\n\n*Você Vendeu: ${argumento2} ${argumento1}*\n*Valor por Unidade: ${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}*\n*Você recebeu: ${valorFormatado(valorDeVenda)}*\n\n*🎉XP Bônus: ${numeroAleatorio} XP*\n_👑 Seu Poder:_ ${data.perfil.poder} \n\nPara ver seu *Saldo* use:\n> ${usedPrefix}glx carteira`, "./src/glx/transacao.jpg")
         }
 
         async function verificacaoXp() {
@@ -762,7 +963,16 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
 💥 Recompensas:
 - Novas habilidades desbloqueadas
 - Acesso a áreas secretas no espaço
-- Novos aliados intergalácticos            
+- Novos aliados intergalácticos 
+
+╔════════════════════╗
+
+ *_⚙️ TODOS OS COMANDOS_*
+Use: ${usedPrefix}glx
+
+╚════════════════════╝
+
+*_🛸  GAME GALAXIA 🛸_*
 `
                 enviar(str, './src/glx/parabens.jpg', data.perfil.id) // Envia para o particular do jogador
                 enviar(str, './src/glx/parabens.jpg', data.perfil.casa.id) // Envia para o planeta casa do jogador
@@ -841,6 +1051,72 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
 
             }
         }
+        async function imagemPerfil() {
+            const largura = 1000;
+            const altura = 600;
+
+            const canvas = createCanvas(largura, altura);
+            const context = canvas.getContext('2d');
+
+            loadImage('./src/glx/perfil.png').then((imagemMapa) => {
+
+                context.drawImage(imagemMapa, 0, 0, largura, altura);
+
+                const novoPlaneta = data.perfil.casa.planeta;
+                const novoX = 70;
+                const novoY = 520;
+
+                context.font = 'bold 50px Arial';
+                context.fillStyle = 'yellow'; // Definindo a cor do texto como amarelo
+                context.fillText(novoPlaneta, novoX, novoY);
+
+                //-----INICIO NOME
+                const novoNome = data.perfil.nome;
+                const novoX1 = 330;
+                const novoY1 = 350;
+
+                context.font = 'bold 30px Arial';
+                context.fillStyle = '#ffffff'; // Definindo a cor do texto como branco
+                context.fillText(novoNome, novoX1, novoY1);
+                //-----FIM NOME
+
+                //-----INICIO INFORMAÇÕES
+                const novoX2 = 70;
+                const novoY2 = 75;
+                let corLetra = 'yellow'; // Corrigindo o nome da variável
+                let xp = `🆙 XP: ${data.perfil.xp} XP`
+                let nivel = `📈 Nivel: ${data.perfil.nivel.nome}`
+                let Poder = `💪 Poder [Força]: ${data.perfil.poder}`
+                let username = `🌀 Username: ${data.perfil.username}`
+                let idioma = `🗣️ Idioma: ${data.perfil.idioma}`
+                let moeda = `💰 Moeda: ${data.perfil.carteira.currency}`
+                let str = `         
+🏠 Colonia: _${data.perfil.casa.colonia.nome}      
+🛸 Sua nave Atual: ${data.perfil.nave.nome}
+
+`;
+                // Definindo os nomes na imagem 
+                context.font = 'bold 20px Arial';
+                context.fillStyle = 'yellow'; // Definindo a cor do texto como branco
+                context.fillText(nivel, 250, 160); // Nivel
+                context.fillText(idioma, 530, 160);
+                context.fillText(Poder, 250, 190);
+                context.fillText(moeda, 530, 190);
+                context.fillText(username, 250, 220);
+                context.fillText(xp, 250, 245);
+                //----FIM INFORMAÇÕES
+
+                // Salvar o mapa como uma imagem
+                const buffer = canvas.toBuffer('image/png');
+                return fs.writeFileSync(`./src/glx/temp/${data.perfil.username}.png`, buffer), setTimeout(() => { fs.unlinkSync(`./src/glx/temp/${data.perfil.username}.png`); }, 3000);
+
+
+            }).catch((error) => {
+                console.error('Erro ao carregar imagem do mapa:', error);
+            });
+
+
+        }
 
         async function mapa() {
             /*Esta função cria uma imagem de um mapa com os dados especificado de cada planeta
@@ -917,30 +1193,43 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
                     context.fillText(titulo.nome, titulo.x - larguraTexto / 2, titulo.y);
                 });
 
-                // Adicione o novo nome com formatação diferente
-                const novoNome = data.perfil.nome;
-                const novoX = data.perfil.casa.colonia.posicao.x; // Substitua com o valor correto
-                const novoY = data.perfil.casa.colonia.posicao.y; // Substitua com o valor correto
+                // -------------- Faz uma busca no db e busca as posições ocupadas no planeta do usuario que mandou a mensagem
+
+                let planetaa = data.perfil.casa.idpelonome
+                let coloniaa = data.perfil.casa.colonia.id //
+                for (let i = 0; i < db.planetas[planetaa].colonias[`colonia${coloniaa}`].posicaoOcupadas.length; i++) {
+
+                    // Posição dos usuarios no planeta TODOS
+                    let posicoes = db.planetas[planetaa].colonias[`colonia${coloniaa}`].posicaoOcupadas
+                    // Pega o data de apenas um usuario por vez e utiliza para marcar no mapa
+                    let dataa = global.db.data.users[posicoes[i].id].gameglx
 
 
-                const corOriginal = context.fillStyle;
+                    //Posição e nome do usuario que sera marcado no mapa
+                    const novoNome = dataa.perfil.nome;
+                    const novoX = posicoes[i].x;
+                    const novoY = posicoes[i].y
 
-                // Desenhar o novo nome sem borda ou fundo formatados, apenas a cor do texto
-                context.fillStyle = 'yellow'; // Definindo a cor do texto como amarelo
-                context.fillText(novoNome, novoX - 50, novoY - 10);
-                
-                // Restaurar a cor original do contexto
-                context.fillStyle = corOriginal;
-                
-                // Desenhar uma marcação
-                context.beginPath();
-                context.arc(novoX, novoY, 10, 0, Math.PI * 2); // Desenha um círculo de raio 5 nas coordenadas do novo nome
-                context.fillStyle = 'blue'; // Cor da marcação
-                context.fill();
+                    const corOriginal = context.fillStyle;
+
+                    // Desenhar o novo nome sem borda ou fundo formatados, apenas a cor do texto
+                    context.fillStyle = 'yellow'; // Definindo a cor do texto como amarelo
+                    context.fillText(novoNome, novoX - 50, novoY - 10);
+
+                    // Restaurar a cor original do contexto
+                    context.fillStyle = corOriginal;
+
+                    // Desenhar uma marcação
+                    context.beginPath();
+                    context.arc(novoX, novoY, 10, 0, Math.PI * 2); // Desenha um círculo de raio 5 nas coordenadas do novo nome
+                    context.fillStyle = 'blue'; // Cor da marcação
+                    context.fill();
+                }
+
 
                 // Salvar o mapa como uma imagem
                 const buffer = canvas.toBuffer('image/png');
-                return fs.writeFileSync('./src/glx/mapa_com_posicoes.png', buffer);
+                return fs.writeFileSync(`./src/glx/temp/${data.perfil.username}.png`, buffer), setTimeout(() => {fs.unlinkSync(`./src/glx/temp/${data.perfil.username}.png`)}, 5000);
 
 
             }).catch((error) => {
@@ -948,6 +1237,8 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
             });
 
         }
+
+
 
         async function criarGrupo() {
             /*Esta Função Cria um grupo para cada planeta cadastrado no database do glx. Para realizar esta opeção tem algumas condições para ser seguidas
@@ -1003,6 +1294,7 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
                     if (erroAdmin === true) {
                         // Mensagem para o novo grupo, caso houver erro de admin nos grupos antigos
                         conn.sendMessage(group.id, { text: `_Devido o *[bot]* não ser mais Administrador no grupo antigo, nosso game será continuado aqui!_` })
+
                     }
                     for (let i = 0; i < habitantesPlaneta.length; i++) {
 
@@ -1017,11 +1309,12 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
             }
 
             async function verificacaoAdmin(idgrupo) {
+                // Faz verificação em um grupo pelo ID se o bot é administrador
                 let result = await checkAdmin(idgrupo)
                 let resultado
                 async function checkAdmin(idd) {
                     const groupMetadata = ((conn.chats[idd] || {}).metadata || await this.groupMetadata(idd).catch((_) => null))
-                    for (let i = 0; i <= groupMetadata.participants.length; i++) {
+                    for (let i = 0; i < groupMetadata.participants.length; i++) {
                         if (groupMetadata.participants[i].id === conn.user.jid) {
                             return groupMetadata.participants[i].admin
                         }
@@ -1039,6 +1332,7 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
         }
 
         async function cadastrarPosicaoNoMapa(maxX, minX, maxY, minY, planeta, colonia) {
+            /** Para usar essa função você precisa passar todos os dados corretos que pedem */
 
             // Corpo do Object que vai para a lista de posição no db da colonia
             let dados = {
@@ -1052,13 +1346,15 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
             console.log(ax, ay)
             // Verficando se a posição sorteada esta disponivel ou ja tem alguem usando
             let verificaposicao = await verificarPosicaoDb(ax, ay, planeta, colonia)
-
-            if (verificaposicao[0] === false) {
+            console.log(verificaposicao)
+            if (verificaposicao[0] === false || verificaposicao[0] === undefined || verificaposicao[0] === null) {
+                console.log('usuario cadastrado')
                 // Colocando a posição do usuario como utilizadas
                 dados.x = ax
                 dados.y = ay
-                db.planetas[planeta].colonias[colonia].posicaoOcupadas.push(dados)
-                fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db))
+                db.planetas[planeta].colonias[colonia].posicaoOcupadas.push(dados) // Cadastra a posição do usuario, dentro da colonia
+
+                fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db)) // Cdastrar a posicão do usuario, no planeta que esta.
 
                 // Definindo a posição do usuario na colonia.
                 data.perfil.localizacao.posicao.x = ax
@@ -1071,6 +1367,8 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
 
 
         }
+
+
 
         async function fNumeroAleatorio(max, min) {
             const numeroAleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1092,6 +1390,7 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
                 }
 
                 if (x === false && y === false) {
+                    // Se x e y for diferente da posição sorteado, ele restorna que pode cadastrar
                     result = false
                 }
 
@@ -1099,9 +1398,100 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
                     isCadastrado = true
                 }
             }
-            console.log(result)
             return [result, isCadastrado]
         }
+
+        async function atacar(alvo) {
+            let isUsername = false
+            
+            for (let i = 0; i < db.user_cadastrado.username.length; i++) {
+                if(db.user_cadastrado.username[i].id === data.perfil.id) return enviar(`🤯 _Você não poder atacar a si mesmo!_`)
+
+                
+                if (db.user_cadastrado.username[i].username === alvo.toLowerCase()) {
+                    let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx // Dados do usuario sendo atacado
+                    let number = db.user_cadastrado.username[i].id.replace(/\D/g, '') // Pegar o Numero do atacado 
+                    isUsername = true //  se o Usuario esta tem username cadastrado, retorna true
+
+                    // DEFESA: Antes de qualquer outra coisa a defesa entra em ação
+                    if (db1.perfil.defesa.forca >= data.perfil.ataque.forcaAtaque.ataque) {
+
+                        // DANOS AO ATACADO
+                        db1.perfil.defesa.forca = data.perfil.defesa.forca - data.perfil.ataque.forcaAtaque.ataque
+
+                        // DANOS AO ATACANTE
+                        if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque){
+                            data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
+                        }
+
+                        let str = `_*🛡️ A defesa de @${number}, bloqueou seu ataque!*_ 
+
+
+
+👥 Danos a *Você*:
+  Perdeu: ${db1.perfil.ataque.forcaAtaque.ataque} Pontos
+
+
+
+😈 Danos a *@${number}*:
+  Defesa perdeu: ${db1.perfil.defesa.ataque} Pontos
+
+                        `
+
+                        conn.sendMessage(m.sender, {text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id]})
+                        break;
+                    }
+
+                    
+
+
+                    // Mensagens enviadas c
+                    let str = `⚠️ *Atenção @${number} !*\n\n_Você esta sendo 🔫 atacado por:_ \n\n*Nome:* ${data.perfil.nome}\n*Username:* *${data.perfil.username}*`
+                    let xpAleatorio = await fNumeroAleatorio(40, 15)
+                    conn.sendMessage(db.user_cadastrado.username[i].id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
+
+
+                    setTimeout(() => {
+                        // INIMIGO: Diminui o poder do inimigo coforme a força de ataque
+                        db1.perfil.poder = db1.perfil.poder - data.perfil.ataque.forcaAtaque.ataque
+                        let valorDeDesconto = ((2 * db1.perfil.carteira.saldo) / 100)
+                        let subTotal = db1.perfil.carteira.saldo - valorDeDesconto
+                        db1.perfil.carteira.saldo = subTotal
+
+                        // ATACANTE
+                        data.perfil.xp += xpAleatorio // Por atacar e vencer o atacante ganhar xp
+                        data.perfil.carteira.saldo += valorDeDesconto
+
+                        conn.sendMessage(id, { text:`> 🗡️ Ataque concluido!
+                        
+😈 *@${number}* perdeu ${data.perfil.ataque.forcaAtaque.ataque } Pontos
+
+Você ganhou: 
+*🆙XP:* ${xpAleatorio}xp | *Total XP:* ${data.perfil.xp}xp
+*💸Dinheiro:* ${valorFormatado(valorDeDesconto)}
+
+
+`, mentions:[db.user_cadastrado.username[i].id ]} )
+
+                       
+                        conn.sendMessage(db.user_cadastrado.username[i].id, { text: `@${number} que triste! 😭\n\n*⚔️ SUA DEFESA FALHOU ⚔️* \n\n> _Danos a sua instalação._`, mentions: [db.user_cadastrado.username[i].id] })
+                    }, 10000)
+
+
+                    m.reply(`> 🔫 Viajando até *${alvo}*`)
+
+                    if (m.isGroup) { // Se o atacante enviar uma mensagem em um grupo! o bot avisa o atacado tambem no grupo
+                        conn.sendMessage(id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
+                    }
+
+                }
+            }
+            if (isUsername === false) {
+                m.reply(`*${alvo}* _não existe, ou não está cadastrado!_`)
+            }
+        }
+
+
         // --------------------------- FIM DAS FUNÇÕES --------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -1110,6 +1500,31 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
 
     } catch (err) {
         console.log(err)
+    }
+    async function createDataBase() {
+        // Função para criar o arquivo database.json pela primeira vez
+
+        const databasePath = `./src/glx/db/database.json`;
+
+        try {
+            // Tenta ler o arquivo, se o arquivo existir! não faz nada
+            fs.readFileSync(databasePath, 'utf8');
+            // Se a leitura foi bem-sucedida, o arquivo já existe
+
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                // Se o arquivo não existe, cria-o com a estrutura predefinida
+                const databaseStructure = JSON.parse(fs.readFileSync('./src/glx/db/template.json'))
+                fs.writeFileSync(databasePath, JSON.stringify(databaseStructure, null, 2));
+                console.log('Arquivo database.json criado com sucesso.');
+            } else {
+                // Se ocorrer outro erro, imprime-o
+                console.error('Erro ao tentar acessar o arquivo database.json: do GAME GLX', error);
+            }
+        }
+
+
+
     }
 };
 handler.command = /^(gameglx|glx)$/i;
