@@ -81,6 +81,11 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   *🌠 ${usedPrefix}glx _miner_*
   _Quer ganhar Dinheiro? Vamos minerar._
 
+
+  *🌟 ${usedPrefix}glx _criador_*
+  _Informações do criador do jogo.._
+
+
   
 *╘═══════════════════╛*
   🌞🌕🌠🌟⭐🌎🪐
@@ -669,6 +674,10 @@ Use: ${usedPrefix}glx
                             enviar(strr, `./src/glx/temp/${data.perfil.username}.png`)
                         }, 1000)
 
+                        break;
+                    case 'criador':
+                        let msgcriador = `🛈 *INFORMAÇÕES SOBRE CRIADOR:*\n\n👨 *_Criador do jogo Galáxia:_*\nhttps://github.com/jeffersonalionco\n\n👨 *_Criador do BOT:_*\nhttps://github.com/BrunoSobrino`
+                        enviar(msgcriador)
                         break;
                     case 'atacar':
 
