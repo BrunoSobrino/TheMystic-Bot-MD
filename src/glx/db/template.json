@@ -1,7 +1,9 @@
 {
-    "user_cadastrado": {
-        "lista": [],
-        "username": []
+    "notificacao": {
+        "status": false,
+        "msg": [
+            "*NOTIFICACIÓN DE CAMBIOS*\n\n1) Correcciones en el comando glx viajar\n\n2) Se creó un proceso de Notificación para usuarios del juego\n\n3) Corrección en el archivo Template, para nuevas funciones"
+        ]
     },
     "planetas": {
         "terra": {
@@ -56,15 +58,17 @@
             "poder": 13000,
             "habitantes": [],
             "posicaoOcupadas": [],
-            "colonia1": {
-                "id": 1,
-                "nome": "Colonia Capital",
-                "posicaoOcupadas": [],
-                "habitantes": [],
-                "visitantes": [],
-                "localizacao": {
-                    "x": 700,
-                    "y": 190
+            "colonias": {
+                "colonia1": {
+                    "id": 1,
+                    "nome": "Colonia Capital",
+                    "posicaoOcupadas": [],
+                    "habitantes": [],
+                    "visitantes": [],
+                    "localizacao": {
+                        "x": 700,
+                        "y": 190
+                    }
                 }
             }
         }
