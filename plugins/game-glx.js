@@ -12,7 +12,8 @@ let tes = `
 
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
-    createDataBase() // Criar arquivo DataBase se caso não existir 
+    createDataBase() // Criar arquivo DataBase se caso não existir
+    notificacao() // Notificações de alterações no codigo.
 
     let infoDataHora = new Date()
     let horasEminutosAtual = `${infoDataHora.getHours()}:${infoDataHora.getMinutes()}`
@@ -44,7 +45,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         if (args[0] === null || args[0] === undefined) {
             criarGrupo() // Verifica se os grupos para o jogo funcionar foi criado, se nao for ele cria automaticamente.
-
+            notificacao() // Notificões de Alterações.
 
 
             const str = `*╔═ 🪐GAME DA GALAXIA🪐 ═╗*
@@ -212,8 +213,10 @@ Use: ${usedPrefix}glx
                                 entrarplaneta(argumento1.toLowerCase())
                                 break;
                             case 'casa':
+                                data.perfil.localizacao.viajando = false;
                                 conn.groupParticipantsUpdate(data.perfil.casa.id, [m.sender], "add")
                                 enviar(` 😉 *Oi!!!* de volta ${m.pushName}`, null, data.perfil.casa.id)
+                                enviar(`${m.pushName} _Você esta na terra Novamente 😉!_ `, null, id)
                                 break;
                             default: // Padrão ao enviar entrar 
                                 let str = `*LUGARES PARA VOCÊ VIAJAR*
@@ -685,6 +688,9 @@ Use: ${usedPrefix}glx
 
 
                         break
+                    case 'teste':
+                        notificacao()
+                        break
                     default:
                         m.reply(`*[!]* Opção *${args[0]}* não existe!`)
                         break
@@ -699,7 +705,7 @@ Use: ${usedPrefix}glx
         //-----------------------------------------------------------------------------------------------------------------
 
         async function entrarplaneta(nomeplaneta) {
-            if (data.perfil.localizacao.viajando === true) return m.reply(`Ué, você ja esta viajando. aguarda seu tempo acabar, ou envie ${usedPrefix}glx viajar sair`)
+            if (data.perfil.localizacao.viajando === true) return m.reply(`_Ué, você ja esta viajando. aguarda seu tempo acabar, ou envie_ *${usedPrefix}glx viajar casa*`)
 
             // Status para viajando
             data.perfil.localizacao.viajando = true;
@@ -1060,6 +1066,7 @@ Use: ${usedPrefix}glx
 
             }
         }
+
         async function imagemPerfil() {
             const largura = 1000;
             const altura = 600;
@@ -1238,7 +1245,7 @@ Use: ${usedPrefix}glx
 
                 // Salvar o mapa como uma imagem
                 const buffer = canvas.toBuffer('image/png');
-                return fs.writeFileSync(`./src/glx/temp/${data.perfil.username}.png`, buffer), setTimeout(() => {fs.unlinkSync(`./src/glx/temp/${data.perfil.username}.png`)}, 5000);
+                return fs.writeFileSync(`./src/glx/temp/${data.perfil.username}.png`, buffer), setTimeout(() => { fs.unlinkSync(`./src/glx/temp/${data.perfil.username}.png`) }, 5000);
 
 
             }).catch((error) => {
@@ -1412,11 +1419,11 @@ Use: ${usedPrefix}glx
 
         async function atacar(alvo) {
             let isUsername = false
-            
-            for (let i = 0; i < db.user_cadastrado.username.length; i++) {
-                if(db.user_cadastrado.username[i].id === data.perfil.id) return enviar(`🤯 _Você não poder atacar a si mesmo!_`)
 
-                
+            for (let i = 0; i < db.user_cadastrado.username.length; i++) {
+                if (db.user_cadastrado.username[i].id === data.perfil.id) return enviar(`🤯 _Você não poder atacar a si mesmo!_`)
+
+
                 if (db.user_cadastrado.username[i].username === alvo.toLowerCase()) {
                     let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx // Dados do usuario sendo atacado
                     let number = db.user_cadastrado.username[i].id.replace(/\D/g, '') // Pegar o Numero do atacado 
@@ -1429,7 +1436,7 @@ Use: ${usedPrefix}glx
                         db1.perfil.defesa.forca = data.perfil.defesa.forca - data.perfil.ataque.forcaAtaque.ataque
 
                         // DANOS AO ATACANTE
-                        if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque){
+                        if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque) {
                             data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
                         }
 
@@ -1447,11 +1454,11 @@ Use: ${usedPrefix}glx
 
                         `
 
-                        conn.sendMessage(m.sender, {text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id]})
+                        conn.sendMessage(m.sender, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
                         break;
                     }
 
-                    
+
 
 
                     // Mensagens enviadas c
@@ -1471,18 +1478,20 @@ Use: ${usedPrefix}glx
                         data.perfil.xp += xpAleatorio // Por atacar e vencer o atacante ganhar xp
                         data.perfil.carteira.saldo += valorDeDesconto
 
-                        conn.sendMessage(id, { text:`> 🗡️ Ataque concluido!
+                        conn.sendMessage(id, {
+                            text: `> 🗡️ Ataque concluido!
                         
-😈 *@${number}* perdeu ${data.perfil.ataque.forcaAtaque.ataque } Pontos
+😈 *@${number}* perdeu ${data.perfil.ataque.forcaAtaque.ataque} Pontos
 
 Você ganhou: 
 *🆙XP:* ${xpAleatorio}xp | *Total XP:* ${data.perfil.xp}xp
 *💸Dinheiro:* ${valorFormatado(valorDeDesconto)}
 
 
-`, mentions:[db.user_cadastrado.username[i].id ]} )
+`, mentions: [db.user_cadastrado.username[i].id]
+                        })
 
-                       
+
                         conn.sendMessage(db.user_cadastrado.username[i].id, { text: `@${number} que triste! 😭\n\n*⚔️ SUA DEFESA FALHOU ⚔️* \n\n> _Danos a sua instalação._`, mentions: [db.user_cadastrado.username[i].id] })
                     }, 10000)
 
@@ -1534,6 +1543,18 @@ Você ganhou:
 
 
 
+    }
+
+    async function notificacao() {
+        let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+        if (db1.notificacao.status === true) {
+            // Notificando Grupos
+            conn.sendMessage(db1.planetas.terra.id, { text: db1.notificacao.msg[0] })
+            conn.sendMessage(db1.planetas.megatron.id, { text: db1.notificacao.msg[0] })
+            db1.notificacao.status = false
+
+            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+        }
     }
 };
 handler.command = /^(gameglx|glx)$/i;
