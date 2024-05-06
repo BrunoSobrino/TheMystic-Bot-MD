@@ -3,6 +3,9 @@
         "lista": [],
         "username": []
     },
+    "repositorio":{
+        "atualizado": []
+    },
     "notificacao": {
         "status": false,
         "msg": [

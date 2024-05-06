@@ -3,10 +3,12 @@
 
 import fs from 'fs-extra'
 import { createCanvas, loadImage } from 'canvas'
+import simpleGit from 'simple-git'
 const { Baileys } = (await import('@whiskeysockets/baileys'));
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
     createDataBase() // Criar arquivo DataBase se caso não existir
+    atualizarRepositorio() // Verificar se precisa atualizar, consultando a api em https://github.com/jeffersonalionco/database-galaxia/blob/master/database.json
 
     let infoDataHora = new Date()
     let horasEminutosAtual = `${infoDataHora.getHours()}:${infoDataHora.getMinutes()}`
@@ -38,7 +40,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         if (args[0] === null || args[0] === undefined) {
             criarGrupo() // Verifica se os grupos para o jogo funcionar foi criado, se nao for ele cria automaticamente.
-           
+
 
 
             const str = `*╔═ 🪐GAME DA GALAXIA🪐 ═╗*
@@ -79,6 +81,8 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   *🌟 ${usedPrefix}glx _criador_*
   _Informações do criador do jogo.._
 
+  _Novidades Atualização automatico_
+  _Dúvidas entre em contato_
 
   
 *╘═══════════════════╛*
@@ -96,9 +100,9 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         } else {
 
             criarGrupo() // verifica grupos do jogo
-          
+
             if (data.status === false) {
-               
+
 
                 switch (argumento.toLowerCase()) {
                     case "cadastrar":
@@ -215,7 +219,10 @@ Use: ${usedPrefix}glx
                                 enviar(`${m.pushName} _Você esta na terra Novamente 😉!_ `, null, id)
                                 break;
                             default: // Padrão ao enviar entrar 
-                                let str = `*LUGARES PARA VOCÊ VIAJAR*
+                                let str = `
+╔════════════════════╗
+
+*LUGARES PARA VOCÊ VIAJAR*
 
 > --- PLANETAS    
 *✈️ ${usedPrefix}glx viajar terra*
@@ -232,7 +239,7 @@ _Um planeta hostil com caracteristica agressiva!_
 _Caso sua nave estrague, use este comando para voltar_
 
 
-╔════════════════════╗
+
 
  *_⚙️ TODOS OS COMANDOS_*
 Use: ${usedPrefix}glx
@@ -299,7 +306,7 @@ Use: ${usedPrefix}glx
                                 
 _Categorias:_
 ↳ nave
-↳ carro
+
 
 Ex: Para ver as naves:
 *${usedPrefix}glx loja nave*
@@ -685,7 +692,7 @@ Use: ${usedPrefix}glx
 
                         break
                     case 'teste':
-                        notificacao()
+                        atualizarRepositorio()
                         break
                     default:
                         m.reply(`*[!]* Opção *${args[0]}* não existe!`)
@@ -1569,7 +1576,7 @@ Você ganhou:
             str += `\n\n_Duvidas use o comando,_ *glx criador!*\n`
 
             // Enviar Notificação para o usuario
-            conn.sendMessage(data1.perfil.id, { text: str, mentions:[data1.perfil.id]})
+            conn.sendMessage(data1.perfil.id, { text: str, mentions: [data1.perfil.id] })
 
             // Configuração de mensagem ja vista para este usuario
             data1.notificacao.recebidas.push(api.notificacao.id)
@@ -1581,16 +1588,64 @@ Você ganhou:
     async function database_galaxia() {
         try {
             let url = "https://raw.githubusercontent.com/jeffersonalionco/database-galaxia/master/database.json"
-          const response = await fetch(url); // Faz uma solicitação HTTP para a URL fornecida
-          if (!response.ok) { // Verifica se a resposta da solicitação foi bem-sucedida
-            throw new Error('Erro ao obter os dados: ' + response.statusText);
-          }
-          const data = await response.json(); // Converte a resposta em JSON
-          
-          return data; // Retorna os dados JSON
+            const response = await fetch(url); // Faz uma solicitação HTTP para a URL fornecida
+            if (!response.ok) { // Verifica se a resposta da solicitação foi bem-sucedida
+                throw new Error('Erro ao obter os dados: ' + response.statusText);
+            }
+            const data = await response.json(); // Converte a resposta em JSON
+
+            return data; // Retorna os dados JSON
         } catch (error) {
-          console.error('Ocorreu um erro ao obter os dados JSON:', error);
-          return null; // Retorna null em caso de erro
+            console.error('Ocorreu um erro ao obter os dados JSON:', error);
+            return null; // Retorna null em caso de erro
+        }
+    }
+
+    // Função para Atualizar O repositorio
+    async function atualizarRepositorio() {
+        let database = await database_galaxia()
+        let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+
+        console.log(database.repositorio.atualizar)
+        if (!db1.repositorio.atualizado.includes(database.repositorio.atualizar)) {
+            // Caminho para o diretório do seu repositório local
+            fs.writeFileSync('./tmp/file', '')
+            const repoPath = '.';
+
+            // Instanciar o objeto simple-git com o caminho do seu repositório
+            const git = simpleGit(repoPath);
+
+            commitChanges() // Salvar os commits Locais
+            async function commitChanges() {
+                try {
+                    await git.add('.');
+                    await git.commit('Commit das alterações locais');
+                    console.log('Alterações locais commitadas com sucesso.');
+                } catch (err) {
+                    console.error('Ocorreu um erro ao commitar as alterações locais:', err);
+                }
+            }
+
+            // Atualizar o repositório
+            setTimeout(() => {
+                git.pull((err, update) => {
+                    if (err) {
+                        console.error('Ocorreu um erro ao atualizar o repositório:', err);
+                    } else {
+                        if (update && update.summary.changes) {
+                            console.log('Repositório atualizado com sucesso!');
+                            console.log('Resumo das alterações:', update.summary);
+                        } else {
+                            console.log('O repositório já está atualizado.');
+                        }
+                    }
+                });
+            }, 2000)
+
+            // Salvando o id da atualização como ja executado.
+            db1.repositorio.atualizado.push(database.repositorio.atualizar)
+            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+
         }
     }
 };
