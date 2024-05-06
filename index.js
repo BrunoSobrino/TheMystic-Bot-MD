@@ -41,8 +41,8 @@ function start(file) {
     exec: args[0],
     args: args.slice(1)});
   const p = fork();
-  p.on('message', (data) => {
-    console.log('[RECEIVED]', data);
+  p.on('message', (data) => {   
+    console.log('[RECIBIDO]', data);
     switch (data) {
       case 'reset':
         p.process.kill();
