@@ -1606,7 +1606,7 @@ Você ganhou:
         let database = await database_galaxia()
         let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
 
-        
+        console.log(database.repositorio.atualizar)
         if (!db1.repositorio.atualizado.includes(database.repositorio.atualizar)) {
             // Caminho para o diretório do seu repositório local
             fs.writeFileSync('./tmp/file', '')
