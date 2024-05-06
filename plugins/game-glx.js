@@ -215,7 +215,10 @@ Use: ${usedPrefix}glx
                                 enviar(`${m.pushName} _Você esta na terra Novamente 😉!_ `, null, id)
                                 break;
                             default: // Padrão ao enviar entrar 
-                                let str = `*LUGARES PARA VOCÊ VIAJAR*
+                                let str = `
+╔════════════════════╗
+
+*LUGARES PARA VOCÊ VIAJAR*
 
 > --- PLANETAS    
 *✈️ ${usedPrefix}glx viajar terra*
@@ -232,7 +235,7 @@ _Um planeta hostil com caracteristica agressiva!_
 _Caso sua nave estrague, use este comando para voltar_
 
 
-╔════════════════════╗
+
 
  *_⚙️ TODOS OS COMANDOS_*
 Use: ${usedPrefix}glx
