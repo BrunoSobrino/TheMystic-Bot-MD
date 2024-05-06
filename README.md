@@ -179,10 +179,4 @@ npm start
 
 ## `▢ PROPIETARIO DEL BOT` 
 <a href="https://github.com/BrunoSobrino"><img src="https://github.com/BrunoSobrino.png" width="250" height="250" alt="BrunoSobrino"/></a>
-  
-`TheMystic-Bot-MD by Bruno Sobrino`
-## `▢ TheMystic-Bot-MD - Arabic version` 
-<a href="https://whatsapp.com/channel/0029VaUpcIqJuyA4hiyNYR1K"><img src="https://telegra.ph/file/103ac7d8efe38d503fa75.jpg" width="250" height="250" alt="Just testing"/></a> <br>
-<a href="https://wa.me/212609395104" target="blank"><img src="https://img.shields.io/badge/Dev_Saad-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /> 
-<a href="https://instagram.com/nm9h" target="_blank"><img src="https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white" target="_blank"/>
-<a href="https://whatsapp.com/channel/0029VaUpcIqJuyA4hiyNYR1K" target="blank"><img src="https://img.shields.io/badge/Arena_update-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+ 
