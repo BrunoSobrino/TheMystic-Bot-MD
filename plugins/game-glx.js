@@ -1599,7 +1599,7 @@ Você ganhou:
     }
     async function atualizarRepositorio() {
         // Caminho para o diretório do seu repositório local
-        fs.writeFileSync('./tmp/file1', '')
+        fs.writeFileSync('./tmp/file', '')
         const repoPath = '.';
 
         // Instanciar o objeto simple-git com o caminho do seu repositório
@@ -1608,27 +1608,30 @@ Você ganhou:
         commitChanges() // Salvar os commits Locais
         async function commitChanges() {
             try {
-              await git.add('.');
-              await git.commit('Commit das alterações locais');
-              console.log('Alterações locais commitadas com sucesso.');
+                await git.add('.');
+                await git.commit('Commit das alterações locais');
+                console.log('Alterações locais commitadas com sucesso.');
             } catch (err) {
-              console.error('Ocorreu um erro ao commitar as alterações locais:', err);
+                console.error('Ocorreu um erro ao commitar as alterações locais:', err);
             }
-          }
+        }
 
         // Atualizar o repositório
-        git.pull((err, update) => {
-            if (err) {
-                console.error('Ocorreu um erro ao atualizar o repositório:', err);
-            } else {
-                if (update && update.summary.changes) {
-                    console.log('Repositório atualizado com sucesso!');
-                    console.log('Resumo das alterações:', update.summary);
+        setTimeout(() => {
+            git.pull((err, update) => {
+                if (err) {
+                    console.error('Ocorreu um erro ao atualizar o repositório:', err);
                 } else {
-                    console.log('O repositório já está atualizado.');
+                    if (update && update.summary.changes) {
+                        console.log('Repositório atualizado com sucesso!');
+                        console.log('Resumo das alterações:', update.summary);
+                    } else {
+                        console.log('O repositório já está atualizado.');
+                    }
                 }
-            }
-        });
+            });
+        }, 2000)
+
     }
 };
 handler.command = /^(gameglx|glx)$/i;
