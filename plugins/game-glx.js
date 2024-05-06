@@ -1642,6 +1642,10 @@ Você ganhou:
                 });
             }, 2000)
 
+            // Salvando o id da atualização como ja executado.
+            db1.repositorio.atualizado.push(database.repositorio.atualizar)
+            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+
         }
     }
 };
