@@ -5,15 +5,8 @@ import fs from 'fs-extra'
 import { createCanvas, loadImage } from 'canvas'
 const { Baileys } = (await import('@whiskeysockets/baileys'));
 
-let tes = `
-
-`
-
-
-
 const handler = async (m, { conn, args, usedPrefix, command }) => {
     createDataBase() // Criar arquivo DataBase se caso não existir
-    notificacao() // Notificações de alterações no codigo.
 
     let infoDataHora = new Date()
     let horasEminutosAtual = `${infoDataHora.getHours()}:${infoDataHora.getMinutes()}`
@@ -45,7 +38,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         if (args[0] === null || args[0] === undefined) {
             criarGrupo() // Verifica se os grupos para o jogo funcionar foi criado, se nao for ele cria automaticamente.
-            notificacao() // Notificões de Alterações.
+           
 
 
             const str = `*╔═ 🪐GAME DA GALAXIA🪐 ═╗*
@@ -102,8 +95,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         } else {
 
-            criarGrupo() /// verifica grupos do jogo
+            criarGrupo() // verifica grupos do jogo
+          
             if (data.status === false) {
+               
 
                 switch (argumento.toLowerCase()) {
                     case "cadastrar":
@@ -197,6 +192,7 @@ Use: ${usedPrefix}glx
                 }
 
             } else if (data.status === true) {
+                notificacao() // Notificações de alterações no codigo.
                 switch (argumento.toLowerCase()) {
                     case 'cadastrar':
                         enviar10s(`_😁 Oi *${m.pushName}*, você já tem cadastro._`)
@@ -1561,7 +1557,8 @@ Você ganhou:
 
         // Notificação automatica para cada usuario Jogador do Game GLX
         if (!data1.notificacao.recebidas.includes(api.notificacao.id)) {
-            let str = "*🔔 - Notificação Game Galáxia*\n\n*[BOT]* _Mystic_\n\n"
+            let number = data1.perfil.id.replace(/\D/g, '')
+            let str = `*🔔 - Notificação Game Galáxia*\n\n*[BOT]* _The Mystic Bot MD_ \n*_Para:_ @${number}*\n\n`
 
             let msg = api.notificacao.msg // Mensagem de notificação na API 
 
@@ -1569,10 +1566,10 @@ Você ganhou:
             for (let i = 0; i < msg.length; i++) {
                 str += api.notificacao.msg[i]
             }
-            str += `_Duvidas use o comando,_ *glx criador!*`
+            str += `\n\n_Duvidas use o comando,_ *glx criador!*\n`
 
             // Enviar Notificação para o usuario
-            conn.sendMessage(m.sender, { text: str })
+            conn.sendMessage(data1.perfil.id, { text: str, mentions:[data1.perfil.id]})
 
             // Configuração de mensagem ja vista para este usuario
             data1.notificacao.recebidas.push(api.notificacao.id)
@@ -1589,7 +1586,7 @@ Você ganhou:
             throw new Error('Erro ao obter os dados: ' + response.statusText);
           }
           const data = await response.json(); // Converte a resposta em JSON
-          console.log(data)
+          
           return data; // Retorna os dados JSON
         } catch (error) {
           console.error('Ocorreu um erro ao obter os dados JSON:', error);
