@@ -8,6 +8,7 @@ const { Baileys } = (await import('@whiskeysockets/baileys'));
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
     createDataBase() // Criar arquivo DataBase se caso não existir
+    atualizarRepositorio() // Verificar se precisa atualizar, consultando a api em https://github.com/jeffersonalionco/database-galaxia/blob/master/database.json
 
     let infoDataHora = new Date()
     let horasEminutosAtual = `${infoDataHora.getHours()}:${infoDataHora.getMinutes()}`
@@ -1599,41 +1600,47 @@ Você ganhou:
             return null; // Retorna null em caso de erro
         }
     }
+
+    // Função para Atualizar O repositorio
     async function atualizarRepositorio() {
-        // Caminho para o diretório do seu repositório local
-        fs.writeFileSync('./tmp/file', '')
-        const repoPath = '.';
+        let database = await database_galaxia()
+        console.log(database.repositorio.atualizar)
+        if (database.repositorio.atualizar === true) {
+            // Caminho para o diretório do seu repositório local
+            fs.writeFileSync('./tmp/file', '')
+            const repoPath = '.';
 
-        // Instanciar o objeto simple-git com o caminho do seu repositório
-        const git = simpleGit(repoPath);
+            // Instanciar o objeto simple-git com o caminho do seu repositório
+            const git = simpleGit(repoPath);
 
-        commitChanges() // Salvar os commits Locais
-        async function commitChanges() {
-            try {
-                await git.add('.');
-                await git.commit('Commit das alterações locais');
-                console.log('Alterações locais commitadas com sucesso.');
-            } catch (err) {
-                console.error('Ocorreu um erro ao commitar as alterações locais:', err);
-            }
-        }
-
-        // Atualizar o repositório
-        setTimeout(() => {
-            git.pull((err, update) => {
-                if (err) {
-                    console.error('Ocorreu um erro ao atualizar o repositório:', err);
-                } else {
-                    if (update && update.summary.changes) {
-                        console.log('Repositório atualizado com sucesso!');
-                        console.log('Resumo das alterações:', update.summary);
-                    } else {
-                        console.log('O repositório já está atualizado.');
-                    }
+            commitChanges() // Salvar os commits Locais
+            async function commitChanges() {
+                try {
+                    await git.add('.');
+                    await git.commit('Commit das alterações locais');
+                    console.log('Alterações locais commitadas com sucesso.');
+                } catch (err) {
+                    console.error('Ocorreu um erro ao commitar as alterações locais:', err);
                 }
-            });
-        }, 2000)
+            }
 
+            // Atualizar o repositório
+            setTimeout(() => {
+                git.pull((err, update) => {
+                    if (err) {
+                        console.error('Ocorreu um erro ao atualizar o repositório:', err);
+                    } else {
+                        if (update && update.summary.changes) {
+                            console.log('Repositório atualizado com sucesso!');
+                            console.log('Resumo das alterações:', update.summary);
+                        } else {
+                            console.log('O repositório já está atualizado.');
+                        }
+                    }
+                });
+            }, 2000)
+
+        }
     }
 };
 handler.command = /^(gameglx|glx)$/i;
