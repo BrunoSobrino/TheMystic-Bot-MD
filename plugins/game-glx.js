@@ -1547,13 +1547,53 @@ Você ganhou:
 
     async function notificacao() {
         let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+        let data1 = global.db.data.users[m.sender].gameglx
+        let api = await database_galaxia()
+
         if (db1.notificacao.status === true) {
-            // Notificando Grupos
+            // Notificando os Grupos 
             conn.sendMessage(db1.planetas.terra.id, { text: db1.notificacao.msg[0] })
             conn.sendMessage(db1.planetas.megatron.id, { text: db1.notificacao.msg[0] })
             db1.notificacao.status = false
 
             fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+        }
+
+        // Notificação automatica para cada usuario Jogador do Game GLX
+        if (!data1.notificacao.recebidas.includes(api.notificacao.id)) {
+            let str = "*🔔 - Notificação Game Galáxia*\n\n*[BOT]* _Mystic_\n\n"
+
+            let msg = api.notificacao.msg // Mensagem de notificação na API 
+
+            // Lendo as mensagens no repositorio API 
+            for (let i = 0; i < msg.length; i++) {
+                str += api.notificacao.msg[i]
+            }
+            str += `_Duvidas use o comando,_ *glx criador!*`
+
+            // Enviar Notificação para o usuario
+            conn.sendMessage(m.sender, { text: str })
+
+            // Configuração de mensagem ja vista para este usuario
+            data1.notificacao.recebidas.push(api.notificacao.id)
+            fs.writeFileSync(`./database.json`, JSON.stringify(data1))
+
+        }
+    }
+
+    async function database_galaxia() {
+        try {
+            url = "https://raw.githubusercontent.com/jeffersonalionco/database-galaxia/master/database.json"
+          const response = await fetch(url); // Faz uma solicitação HTTP para a URL fornecida
+          if (!response.ok) { // Verifica se a resposta da solicitação foi bem-sucedida
+            throw new Error('Erro ao obter os dados: ' + response.statusText);
+          }
+          const data = await response.json(); // Converte a resposta em JSON
+          console.log(data)
+          return data; // Retorna os dados JSON
+        } catch (error) {
+          console.error('Ocorreu um erro ao obter os dados JSON:', error);
+          return null; // Retorna null em caso de erro
         }
     }
 };
