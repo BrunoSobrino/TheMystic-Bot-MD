@@ -3,6 +3,7 @@
 
 import fs from 'fs-extra'
 import { createCanvas, loadImage } from 'canvas'
+import simpleGit from 'simple-git'
 const { Baileys } = (await import('@whiskeysockets/baileys'));
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
@@ -38,7 +39,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         if (args[0] === null || args[0] === undefined) {
             criarGrupo() // Verifica se os grupos para o jogo funcionar foi criado, se nao for ele cria automaticamente.
-           
+
 
 
             const str = `*╔═ 🪐GAME DA GALAXIA🪐 ═╗*
@@ -96,9 +97,9 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         } else {
 
             criarGrupo() // verifica grupos do jogo
-          
+
             if (data.status === false) {
-               
+
 
                 switch (argumento.toLowerCase()) {
                     case "cadastrar":
@@ -685,7 +686,7 @@ Use: ${usedPrefix}glx
 
                         break
                     case 'teste':
-                        notificacao()
+                        atualizarRepositorio()
                         break
                     default:
                         m.reply(`*[!]* Opção *${args[0]}* não existe!`)
@@ -1569,7 +1570,7 @@ Você ganhou:
             str += `\n\n_Duvidas use o comando,_ *glx criador!*\n`
 
             // Enviar Notificação para o usuario
-            conn.sendMessage(data1.perfil.id, { text: str, mentions:[data1.perfil.id]})
+            conn.sendMessage(data1.perfil.id, { text: str, mentions: [data1.perfil.id] })
 
             // Configuração de mensagem ja vista para este usuario
             data1.notificacao.recebidas.push(api.notificacao.id)
@@ -1581,17 +1582,38 @@ Você ganhou:
     async function database_galaxia() {
         try {
             let url = "https://raw.githubusercontent.com/jeffersonalionco/database-galaxia/master/database.json"
-          const response = await fetch(url); // Faz uma solicitação HTTP para a URL fornecida
-          if (!response.ok) { // Verifica se a resposta da solicitação foi bem-sucedida
-            throw new Error('Erro ao obter os dados: ' + response.statusText);
-          }
-          const data = await response.json(); // Converte a resposta em JSON
-          
-          return data; // Retorna os dados JSON
+            const response = await fetch(url); // Faz uma solicitação HTTP para a URL fornecida
+            if (!response.ok) { // Verifica se a resposta da solicitação foi bem-sucedida
+                throw new Error('Erro ao obter os dados: ' + response.statusText);
+            }
+            const data = await response.json(); // Converte a resposta em JSON
+
+            return data; // Retorna os dados JSON
         } catch (error) {
-          console.error('Ocorreu um erro ao obter os dados JSON:', error);
-          return null; // Retorna null em caso de erro
+            console.error('Ocorreu um erro ao obter os dados JSON:', error);
+            return null; // Retorna null em caso de erro
         }
+    }
+    async function atualizarRepositorio() {
+        // Caminho para o diretório do seu repositório local
+        const repoPath = '.';
+
+        // Instanciar o objeto simple-git com o caminho do seu repositório
+        const git = simpleGit(repoPath);
+
+        // Atualizar o repositório
+        git.pull((err, update) => {
+            if (err) {
+                console.error('Ocorreu um erro ao atualizar o repositório:', err);
+            } else {
+                if (update && update.summary.changes) {
+                    console.log('Repositório atualizado com sucesso!');
+                    console.log('Resumo das alterações:', update.summary);
+                } else {
+                    console.log('O repositório já está atualizado.');
+                }
+            }
+        });
     }
 };
 handler.command = /^(gameglx|glx)$/i;
