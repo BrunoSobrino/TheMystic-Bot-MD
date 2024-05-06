@@ -918,12 +918,15 @@ _Delete automatico em 20s_
                 const numeroAleatorio = Math.floor(Math.random() * (40 - 10 + 1)) + 10; // Gerar um numero de 10 a 50
                 data.perfil.xp += numeroAleatorio // Adicionando um valor aleatorio de Xp no novel do usuario 
                 data.perfil.poder += gerarPoder // Adicionando um novo valor de poder gerado para o usuario
+                data.perfil.poder += db.itens.mineracao[item].poder // Bonus de poder por mineração
+
                 conn.sendMessage(id, {
                     text: `*⚒️Mineração Concluida [${tempoedit} _Segundos_]*
 > Você minerou ${db.itens.mineracao[item].quantidadeMinerado} ${item} 
 
 _🥳Ganhou um Bônus:_ *${numeroAleatorio} [XP]*
-_👑 Seu Poder:_ ${data.perfil.poder}
+_👑Seu Poder:_ ${data.perfil.poder}
+_⚡Você ganhou:_  ${db.itens.mineracao[item].poder} Pontos(poder)
 
 *Total de ${item}:* [ ${data.perfil.bolsa.itens[item]} ]
 
@@ -1421,13 +1424,15 @@ Use: ${usedPrefix}glx
         }
 
         async function atacar(alvo) {
-            let isUsername = false
+            let isUsername = false  // Variavel usada para definir se o usuario esta cadastrado ou não
 
             for (let i = 0; i < db.user_cadastrado.username.length; i++) {
+                // Cancelar ataque se o username foi igual do atacante 
                 if (db.user_cadastrado.username[i].id === data.perfil.id) return enviar(`🤯 _Você não poder atacar a si mesmo!_`)
 
-
+                // Se o username, estiver na lista de jogadores cadastrado, entra na definições de ataque
                 if (db.user_cadastrado.username[i].username === alvo.toLowerCase()) {
+
                     let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx // Dados do usuario sendo atacado
                     let number = db.user_cadastrado.username[i].id.replace(/\D/g, '') // Pegar o Numero do atacado 
                     isUsername = true //  se o Usuario esta tem username cadastrado, retorna true
@@ -1436,16 +1441,16 @@ Use: ${usedPrefix}glx
                     if (db1.perfil.defesa.forca >= data.perfil.ataque.forcaAtaque.ataque) {
 
                         // DANOS AO ATACADO
+                        // Defini o tanto de dano que que ira ser dado no inimigo... 
                         db1.perfil.defesa.forca = data.perfil.defesa.forca - data.perfil.ataque.forcaAtaque.ataque
 
                         // DANOS AO ATACANTE
                         if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque) {
+                         // Quando o atacante, faz seu ataque, ele tambem leva dano e aqui a gente faz o desconto do poder
                             data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
                         }
-
+                        // Mensagem quando a defesa ainda esta defendendo
                         let str = `_*🛡️ A defesa de @${number}, bloqueou seu ataque!*_ 
-
-
 
 👥 Danos a *Você*:
   Perdeu: ${db1.perfil.ataque.forcaAtaque.ataque} Pontos
@@ -1464,9 +1469,9 @@ Use: ${usedPrefix}glx
 
 
 
-                    // Mensagens enviadas c
+                    // Quando a defesa não aguenta o ataque, esta mensage que sera definido.
                     let str = `⚠️ *Atenção @${number} !*\n\n_Você esta sendo 🔫 atacado por:_ \n\n*Nome:* ${data.perfil.nome}\n*Username:* *${data.perfil.username}*`
-                    let xpAleatorio = await fNumeroAleatorio(40, 15)
+                    let xpAleatorio = await fNumeroAleatorio(40, 15) // Gera um numero aleatorio para o XP de bonus
                     conn.sendMessage(db.user_cadastrado.username[i].id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
 
 
@@ -1481,6 +1486,7 @@ Use: ${usedPrefix}glx
                         data.perfil.xp += xpAleatorio // Por atacar e vencer o atacante ganhar xp
                         data.perfil.carteira.saldo += valorDeDesconto
 
+                        // Mensagem que sera enviada, para quem fez o ataque, informando o que aconteceu na batalha
                         conn.sendMessage(id, {
                             text: `> 🗡️ Ataque concluido!
                         
@@ -1494,21 +1500,24 @@ Você ganhou:
 `, mentions: [db.user_cadastrado.username[i].id]
                         })
 
-
+                        // Envia uma mensagem avisando quem sofreu o ataque de suas perdas.
                         conn.sendMessage(db.user_cadastrado.username[i].id, { text: `@${number} que triste! 😭\n\n*⚔️ SUA DEFESA FALHOU ⚔️* \n\n> _Danos a sua instalação._`, mentions: [db.user_cadastrado.username[i].id] })
                     }, 10000)
 
 
+                    // Envia uma mensagem informando que que logo o usuario sera atacado.
                     m.reply(`> 🔫 Viajando até *${alvo}*`)
 
-                    if (m.isGroup) { // Se o atacante enviar uma mensagem em um grupo! o bot avisa o atacado tambem no grupo
+                    // Se o atacante enviar uma mensagem em um grupo! o bot avisa quem sera atacado no grupo tambem
+                    if (m.isGroup) { 
                         conn.sendMessage(id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
                     }
 
                 }
             }
             if (isUsername === false) {
-                m.reply(`*${alvo}* _não existe, ou não está cadastrado!_`)
+                //Envia uma mensagem se o username não existir na lista de cadastrados no game
+                m.reply(`*${alvo}* _Não tem um username, cadastrado com este nome!_`)
             }
         }
 
@@ -1606,7 +1615,7 @@ Você ganhou:
         let database = await database_galaxia()
         let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
 
-       
+
         if (!db1.repositorio.atualizado.includes(database.repositorio.atualizar)) {
             // Caminho para o diretório do seu repositório local
             fs.writeFileSync('./tmp/file', '')
