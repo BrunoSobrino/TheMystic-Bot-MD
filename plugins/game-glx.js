@@ -1583,7 +1583,7 @@ Você ganhou:
 
     async function database_galaxia() {
         try {
-            url = "https://raw.githubusercontent.com/jeffersonalionco/database-galaxia/master/database.json"
+            let url = "https://raw.githubusercontent.com/jeffersonalionco/database-galaxia/master/database.json"
           const response = await fetch(url); // Faz uma solicitação HTTP para a URL fornecida
           if (!response.ok) { // Verifica se a resposta da solicitação foi bem-sucedida
             throw new Error('Erro ao obter os dados: ' + response.statusText);

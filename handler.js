@@ -938,6 +938,8 @@ export async function handler(chatUpdate) {
       if (gameglx) {
 
         if (!('status' in gameglx)) gameglx.status = false;
+        if (!('notificacao' in gameglx)) gameglx.notificacao = {};
+        if (!('recebidas' in gameglx.notificacao)) gameglx.notificacao.recebidas = [];
         // Perfil
         if (!('perfil' in gameglx)) gameglx.perfil = {};
         if (!('nome' in gameglx.perfil)) gameglx.perfil.nome = null;
@@ -1021,6 +1023,9 @@ export async function handler(chatUpdate) {
       } else {
         global.db.data.users[m.sender].gameglx = {
           status: false,
+          notificacao: {
+            recebidas:[]
+          },
           perfil: {
             xp: 112,
             nivel: {
