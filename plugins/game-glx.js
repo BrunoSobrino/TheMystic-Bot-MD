@@ -80,6 +80,8 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   *🌟 ${usedPrefix}glx _criador_*
   _Informações do criador do jogo.._
 
+  _Novidades Atualização automatico_
+
 
   
 *╘═══════════════════╛*
