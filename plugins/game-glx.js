@@ -1599,10 +1599,22 @@ Você ganhou:
     }
     async function atualizarRepositorio() {
         // Caminho para o diretório do seu repositório local
+        fs.writeFileSync('./tmp/file1', '')
         const repoPath = '.';
 
         // Instanciar o objeto simple-git com o caminho do seu repositório
         const git = simpleGit(repoPath);
+
+        commitChanges() // Salvar os commits Locais
+        async function commitChanges() {
+            try {
+              await git.add('.');
+              await git.commit('Commit das alterações locais');
+              console.log('Alterações locais commitadas com sucesso.');
+            } catch (err) {
+              console.error('Ocorreu um erro ao commitar as alterações locais:', err);
+            }
+          }
 
         // Atualizar o repositório
         git.pull((err, update) => {
