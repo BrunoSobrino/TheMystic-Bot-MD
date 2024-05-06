@@ -81,7 +81,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   _Informações do criador do jogo.._
 
   _Novidades Atualização automatico_
-
+  _Dúvidas entre em contato_
 
   
 *╘═══════════════════╛*
