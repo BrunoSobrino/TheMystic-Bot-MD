@@ -303,7 +303,7 @@ Use: ${usedPrefix}glx
                                 
 _Categorias:_
 ↳ nave
-↳ carro
+
 
 Ex: Para ver as naves:
 *${usedPrefix}glx loja nave*
