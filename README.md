@@ -171,7 +171,6 @@ npm start
 <a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a>
 <a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
 
-
 ## `▢ AGRADECIMIENTOS & CREDITOS` 
 <div><button id="boton" type="button">games-wabot-md by BochilGaming </button></div>
 <a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device"><img src="https://github.com/BochilGaming.png" width="150" height="150" alt="BochilGaming"/></a>
@@ -180,29 +179,4 @@ npm start
 
 ## `▢ PROPIETARIO DEL BOT` 
 <a href="https://github.com/BrunoSobrino"><img src="https://github.com/BrunoSobrino.png" width="250" height="250" alt="BrunoSobrino"/></a>
-  
-`TheMystic-Bot-MD by Bruno Sobrino`
-## `▢ TheMystic-Bot-MD - Arabic version` 
-<a href="https://whatsapp.com/channel/0029VaUpcIqJuyA4hiyNYR1K"><img src="https://telegra.ph/file/103ac7d8efe38d503fa75.jpg" width="250" height="250" alt="Just testing"/></a> <br>
-<a href="https://wa.me/212609395104" target="blank"><img src="https://img.shields.io/badge/Dev_Saad-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /> 
-<a href="https://instagram.com/nm9h" target="_blank"><img src="https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white" target="_blank"/>
-<a href="https://whatsapp.com/channel/0029VaUpcIqJuyA4hiyNYR1K" target="blank"><img src="https://img.shields.io/badge/Arena_update-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
-- `نبذة عني ↢`
-```bash
-
-❒ السلام عليكم ورحمة الله وبركاته انا هيرو سعد :
-- مطور بوت `Miku`
-- المسؤول على النسخة او الفرع العربي لبوت `TheMystic-Bot-MD`. 
-❒ اذا حاب تتعرف على بوت ميكو اضغط على الزر اسفله :
-```
-<a href="https://whatsapp.com/channel/0029VaYquUD6WaKiS2lnnH16" target="blank"><img src="https://img.shields.io/badge/Miku_OFG_GROUPS-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
-- `بعض الملاحظات ↢`
-```bash
-
-❒ فور تنصيب البوت غير لغته إلى اللغة العربية
-```
-```bash
-
-❒ اذا في اي غلط تواصل معي عن طريق الضغط على الازرار اعلاه
-```
-`By Glosaryck - Saad`
+ 
