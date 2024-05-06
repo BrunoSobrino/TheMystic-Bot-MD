@@ -15,7 +15,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     const res = await fetch(global.API('CFROSAPI', '/api/spotifysearch?text=' + text))
     const data = await res.json()
-    const linkDL = data.spty.resultado[0].link;
+    const linkDL = data.spty.resultado[0].url;
     const musics = await fetch(global.API('CFROSAPI', '/api/spotifydl?text=' + linkDL))
     const music = await conn.getFile(musics.url)
     const infos = await fetch(global.API('CFROSAPI', '/api/spotifyinfo?text=' + linkDL))
