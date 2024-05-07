@@ -60,9 +60,6 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   *🌠 ${usedPrefix}glx _carteira_*
   _Acesso sua carteira financeira._
 
-  *🌠 ${usedPrefix}glx _mapa_*
-  _Mapa das colonias!_
-
   *🌠 ${usedPrefix}glx _loja_*
   _Conheça nossa loja da galáxia_
   
@@ -618,7 +615,7 @@ Use: ${usedPrefix}glx
                         }
                         break;
                     case 'mapa': 
-                        enviar(`Mapa foi desativado fo jogo, Devido um erro no Debiam`)
+                        enviar(`*Mapa* _foi desativado fo jogo, Devido um erro no Debiam_`)
                         break;
                     case 'perfil':
                         let nave = data.perfil.nave.nome ? data.perfil.nave.nome : 'Não tem Nave'
