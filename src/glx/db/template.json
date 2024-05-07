@@ -3,7 +3,7 @@
         "lista": [],
         "username": []
     },
-    "repositorio":{
+    "repositorio": {
         "atualizado": []
     },
     "notificacao": {
@@ -103,37 +103,44 @@
             "madeira": {
                 "tempoMineracao": 11000,
                 "quantidadeMinerado": 4,
-                "valorVenda": 7.2
+                "valorVenda": 7.2,
+                "poder": 5
             },
             "ferro": {
                 "tempoMineracao": 13000,
                 "quantidadeMinerado": 2,
-                "valorVenda": 9.78
+                "valorVenda": 9.78,
+                "poder": 6
             },
             "diamante": {
                 "tempoMineracao": 17000,
                 "quantidadeMinerado": 1,
-                "valorVenda": 15.67
+                "valorVenda": 15.67,
+                "poder": 8
             },
             "esmeralda": {
                 "tempoMineracao": 19000,
                 "quantidadeMinerado": 2,
-                "valorVenda": 14.5
+                "valorVenda": 14.5,
+                "poder": 10
             },
             "carvao": {
                 "tempoMineracao": 10000,
                 "quantidadeMinerado": 6,
-                "valorVenda": 5.56
+                "valorVenda": 5.56,
+                "poder": 4
             },
             "ouro": {
                 "tempoMineracao": 19000,
                 "quantidadeMinerado": 1,
-                "valorVenda": 17.9
+                "valorVenda": 17.9,
+                "poder": 14
             },
             "quartzo": {
                 "tempoMineracao": 15000,
                 "quantidadeMinerado": 1,
-                "valorVenda": 14.32
+                "valorVenda": 14.32,
+                "poder": 14
             }
         }
     },

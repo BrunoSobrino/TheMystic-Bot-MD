@@ -1104,7 +1104,7 @@ export async function handler(chatUpdate) {
             },
             defesa : {
               forca: 100,
-              ataque: 40
+              ataque: 30
             }
           }
         };
