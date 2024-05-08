@@ -53,24 +53,42 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   
   *🌠 ${usedPrefix}glx _perfil_*
   _Veja seus dados, e sua evolução._
+  
+
+
+> 🧾 Ataques / Defesa / Viajar
+
+  *🌠 ${usedPrefix}glx _atacar list_*
+  _Para Listar todos os jogadores do game!_
+
+  *🌠 ${usedPrefix}glx _atacar <username_do_usuario>_*
+  _Ataque um usuario informando seu username!_
+
+  *🌠 ${usedPrefix}glx _planeta_*
+  _Atualizar dados Planeta e Colonia_
 
   *🌠 ${usedPrefix}glx _viajar_*
   _Você quer visitar outro Planeta? Bora!_
+
+> 🧾 Opções de Mineração
+
+*🌠 ${usedPrefix}glx _miner_*
+_Quer ganhar Dinheiro? Vamos minerar._
+
+
+
+> 🧾 Sua informações Particular
 
   *🌠 ${usedPrefix}glx _carteira_*
   _Acesso sua carteira financeira._
 
   *🌠 ${usedPrefix}glx _loja_*
   _Conheça nossa loja da galáxia_
-  
-  *🌠 ${usedPrefix}glx _planeta_*
-  _Atualizar dados Planeta e Colonia_
 
   *🌠 ${usedPrefix}glx _bau_*
   _Veja seus itens guardados_
 
-  *🌠 ${usedPrefix}glx _miner_*
-  _Quer ganhar Dinheiro? Vamos minerar._
+ 
 
 
   *🌟 ${usedPrefix}glx _criador_*
@@ -614,7 +632,7 @@ Use: ${usedPrefix}glx
                                 break;
                         }
                         break;
-                    case 'mapa': 
+                    case 'mapa':
                         enviar(`*Mapa* _foi desativado fo jogo, Devido um erro no Debiam_`)
                         break;
                     case 'perfil':
@@ -629,7 +647,9 @@ _💡Não esquese de minerar, *${usedPrefix}glx miner* isso aumenta seu XP e sua
     *Proximo Nivel:* _${db.api.niveis[`nivel${data.perfil.nivel.proximoNivel}`].totalXp} XP_
 
 *📈 Nivel:* _${data.perfil.nivel.nome}_
-*💪 Poder [Força]:* _${data.perfil.poder}_
+*💪 Poder [Força]:* _${data.perfil.poder}_ P
+*⚔️ Poder Ataque:* _${data.perfil.ataque.forcaAtaque.ataque}_ P
+*🛡️ Poder Defesa:* _${data.perfil.defesa.forca}_ P
 *🌀 Username:* _${data.perfil.username}_
 
 *🗣️ Idioma:* _${data.perfil.idioma}_
@@ -659,8 +679,25 @@ Use: ${usedPrefix}glx
                         enviar(msgcriador)
                         break;
                     case 'atacar':
+                        switch (argumento1) {
+                            case 'list':
+                                let strr = `*_📚--- LISTA DE USUARIOS ---📚_*\n\n*Utilize:*\n${usedPrefix}glx atacar *<USERNAME>* - _Para atacar um jogador!_\n\n`
+                                let mentionss = []
+                                for (let i = 0; i < db.user_cadastrado.username.length; i++) {
+                                    let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx
+                                    let number = db.user_cadastrado.username[i].id.replace(/\D/g, '')
 
-                        atacar(argumento1)
+                                    strr += `👨‍🚀 *Nome:* ${db1.perfil.nome} \n*🔎 Username:* ${db.user_cadastrado.username[i].username}\n*✍ Usuario:* @${number}\n______________________\n\n`
+                                    mentionss.push(db.user_cadastrado.username[i].id)
+                                }
+                                conn.sendMessage(data.perfil.id, { text: strr, mentions: mentionss })
+                                break;
+                            default:
+
+                                atacar(argumento1)
+
+                                break
+                        }
 
 
                         break
@@ -955,6 +992,8 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
 *🎖️ Próximo Nível:* ${proximoNivel}
 
 💥 Recompensas:
+- Você ganhou *${db.api.niveis[`nivel${data.perfil.nivel.id}`].defesa}* Pontos de *_Defesa_*.
+- Você ganhou *${db.api.niveis[`nivel${data.perfil.nivel.id}`].ataque}* Pontos de *_Ataque_*.
 - Novas habilidades desbloqueadas
 - Acesso a áreas secretas no espaço
 - Novos aliados intergalácticos 
@@ -978,6 +1017,9 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel1.id // Defininfo o id atual do nivel
                 data.perfil.nivel.nome = db.api.niveis.nivel1.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel1.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel1.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel1.nome, data.perfil.xp, db.api.niveis.nivel2.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel2.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel2.id) {
@@ -985,6 +1027,9 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel2.id
                 data.perfil.nivel.nome = db.api.niveis.nivel2.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel2.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel2.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel2.nome, data.perfil.xp, db.api.niveis.nivel3.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel3.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel3.id) {
@@ -992,41 +1037,62 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel3.id
                 data.perfil.nivel.nome = db.api.niveis.nivel3.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel3.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel3.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel3.nome, data.perfil.xp, db.api.niveis.nivel4.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel4.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel4.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel4.id
-                msg(db.api.niveis.nivel4.nome, data.perfil.xp, db.api.niveis.nivel5.nome)
+                data.perfil.defesa.forca += db.api.niveis.nivel4.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel4.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel4.nome
+
+                msg(db.api.niveis.nivel4.nome, data.perfil.xp, db.api.niveis.nivel5.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel5.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel5.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel5.id
-                msg(db.api.niveis.nivel5.nome, data.perfil.xp, db.api.niveis.nivel6.nome)
+                data.perfil.defesa.forca += db.api.niveis.nivel5.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel5.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel5.nome
+
+                msg(db.api.niveis.nivel5.nome, data.perfil.xp, db.api.niveis.nivel6.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel6.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel6.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel6.id
                 data.perfil.nivel.nome = db.api.niveis.nivel6.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel6.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel6.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel6.nome, data.perfil.xp, db.api.niveis.nivel7.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel7.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel7.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel7.id
-                msg(db.api.niveis.nivel7.nome, data.perfil.xp, db.api.niveis.nivel8.nome)
+                data.perfil.defesa.forca += db.api.niveis.nivel7.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel7.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel7.nome
+                msg(db.api.niveis.nivel7.nome, data.perfil.xp, db.api.niveis.nivel8.nome)
+
 
             } else if (data.perfil.xp >= db.api.niveis.nivel8.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel8.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel8.id
                 data.perfil.nivel.nome = db.api.niveis.nivel8.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel8.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel8.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel8.nome, data.perfil.xp, db.api.niveis.nivel9.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel9.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel9.id) {
@@ -1034,14 +1100,21 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel9.id
                 data.perfil.nivel.nome = db.api.niveis.nivel9.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel9.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel9.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel9.nome, data.perfil.xp, db.api.niveis.nivel10.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel10.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel10.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel10.id
-                msg(db.api.niveis.nivel10.nome, data.perfil.xp, "Sem Nivel")
+                data.perfil.defesa.forca += db.api.niveis.nivel10.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel10.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel10.nome
+                msg(db.api.niveis.nivel10.nome, data.perfil.xp, "REI DOS NIVEL")
+
 
             }
         }
@@ -1208,45 +1281,77 @@ Use: ${usedPrefix}glx
         }
 
         async function atacar(alvo) {
+            let isNull
+            let date = new Date()
+
             let isUsername = false  // Variavel usada para definir se o usuario esta cadastrado ou não
 
             for (let i = 0; i < db.user_cadastrado.username.length; i++) {
+                if (alvo === data.perfil.username) return m.reply(`🤯 _Você não poder atacar a si mesmo!_`)
+                    
+                if (data.perfil.ataque.data.contagem === 4 && (data.perfil.ataque.data.hora === date.getHours() || data.perfil.ataque.data.hora === date.getHours() + 1)) {
+
+                    return m.reply(`_📛 Você atingiu o limite de ${data.perfil.ataque.data.contagem} ataques!_\n*Aguarde no minimo 2 Horas para poder atacar novamente.*`)
+                } else {
+                    if (data.perfil.ataque.data.hora != date.getHours()) {
+                        data.perfil.ataque.data.contagem = 0
+                        data.perfil.ataque.data.hora = 0
+                    }
+                }
+
                 // Cancelar ataque se o username foi igual do atacante 
-                if (db.user_cadastrado.username[i].id === data.perfil.id) return enviar(`🤯 _Você não poder atacar a si mesmo!_`)
+                
 
                 // Se o username, estiver na lista de jogadores cadastrado, entra na definições de ataque
-                if (db.user_cadastrado.username[i].username === alvo.toLowerCase()) {
+                if (db.user_cadastrado.username[i].username === alvo) {
+                    // Adiciona uma contagem de ataque ao cronometro de ataque do usuario
 
                     let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx // Dados do usuario sendo atacado
-                    let number = db.user_cadastrado.username[i].id.replace(/\D/g, '') // Pegar o Numero do atacado 
+                    let number = db.user_cadastrado.username[i].id.replace(/\D/g, '') // Pegar o Numero do atacado
+                    let number2 = data.perfil.id.replace(/\D/g, '')
                     isUsername = true //  se o Usuario esta tem username cadastrado, retorna true
 
                     // DEFESA: Antes de qualquer outra coisa a defesa entra em ação
                     if (db1.perfil.defesa.forca >= data.perfil.ataque.forcaAtaque.ataque) {
+                        data.perfil.ataque.data.contagem += 1
+                        if (data.perfil.ataque.data.hora === 0) { data.perfil.ataque.data.hora = date.getHours() }
 
-                        // DANOS AO ATACADO
-                        // Defini o tanto de dano que que ira ser dado no inimigo... 
-                        db1.perfil.defesa.forca = data.perfil.defesa.forca - data.perfil.ataque.forcaAtaque.ataque
+                        conn.sendMessage(db1.perfil.id, { text: `_Prepare sua defesa🛡️, em 10 segundos, você sera atacado(a) por *@${number2}!*_`, mentions: [data.perfil.id] })
+                        m.reply(`_⚔️ Seu ataque esta em andamento_ \n\n*_🏰 Cuidado! Seu inimigo esta Vigilante_*`)
 
-                        // DANOS AO ATACANTE
-                        if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque) {
-                         // Quando o atacante, faz seu ataque, ele tambem leva dano e aqui a gente faz o desconto do poder
-                            data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
-                        }
-                        // Mensagem quando a defesa ainda esta defendendo
-                        let str = `_*🛡️ A defesa de @${number}, bloqueou seu ataque!*_ 
+                        setTimeout(() => {
+                            // DANOS AO ATACADO
+                            // Defini o tanto de dano que que ira ser dado no inimigo... 
+                            db1.perfil.defesa.forca = data.perfil.defesa.forca - data.perfil.ataque.forcaAtaque.ataque
+
+                            // DANOS AO ATACANTE
+                            if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque) {
+                                // Quando o atacante, faz seu ataque, ele tambem leva dano e aqui a gente faz o desconto do poder
+                                data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
+                            }
+                            let stra = `
+*🛡️Sua Defesa perdeu: ${db1.perfil.defesa.ataque} Pontos*\n\n *_Cuidado com sua Casa!_*                            
+`
+
+                            // Mensagem quando a defesa ainda esta defendendo
+                            let str = `_*🛡️ A defesa de @${number}, bloqueou seu ataque!*_
+
+_A defesa deste astronauta, é forte, e consegue o impossivel. Cuidado._
 
 👥 Danos a *Você*:
   Perdeu: ${db1.perfil.ataque.forcaAtaque.ataque} Pontos
-
-
-
+_________________________
 😈 Danos a *@${number}*:
-  Defesa perdeu: ${db1.perfil.defesa.ataque} Pontos
+Perdeu: ${db1.perfil.defesa.ataque} Pontos
+
+
+  *💡 DICA:* _Se sua defesa esta perdendo muito pontos, compre mais armas *(glx comprar)* ou minere mais minerios *(glx miner)* para aumentar seua força._
 
                         `
 
-                        conn.sendMessage(m.sender, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
+                            conn.sendMessage(m.sender, { text: str })
+                            conn.sendMessage(db1.perfil.id, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
+                        }, 5000)
                         break;
                     }
 
@@ -1260,6 +1365,9 @@ Use: ${usedPrefix}glx
 
 
                     setTimeout(() => {
+                        data.perfil.ataque.data.contagem += 1 // Adiciona uma contagem de ataque ao cronometro de ataque do usuario
+                        if (data.perfil.ataque.data.hora === 0) { data.perfil.ataque.data.hora = date.getHours() }
+
                         // INIMIGO: Diminui o poder do inimigo coforme a força de ataque
                         db1.perfil.poder = db1.perfil.poder - data.perfil.ataque.forcaAtaque.ataque
                         let valorDeDesconto = ((2 * db1.perfil.carteira.saldo) / 100)
@@ -1293,15 +1401,20 @@ Você ganhou:
                     m.reply(`> 🔫 Viajando até *${alvo}*`)
 
                     // Se o atacante enviar uma mensagem em um grupo! o bot avisa quem sera atacado no grupo tambem
-                    if (m.isGroup) { 
+                    if (m.isGroup) {
                         conn.sendMessage(id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
                     }
 
                 }
             }
-            if (isUsername === false) {
-                //Envia uma mensagem se o username não existir na lista de cadastrados no game
-                m.reply(`*${alvo}* _Não tem um username, cadastrado com este nome!_`)
+            if (isUsername === false || alvo === null || alvo === undefined) {
+                if (alvo === undefined || alvo === null) {
+                    m.reply(`_💡 Você precisa informar o *UserName* do jogador que deseja atacar!_ \n*Ex: ${usedPrefix}glx atacar userExemplo* \n\n*Dica:* Use *${usedPrefix}glx atacar list* - _Para listar os usuarios_\n\n`)
+                } else {
+                    //Envia uma mensagem se o username não existir na lista de cadastrados no game
+                    m.reply(`*${alvo}* _Não tem cadastrado com este username!_\n\n _💡 Você precisa informar o *UserName* do jogador que deseja atacar!_ \n*Ex: ${usedPrefix}glx atacar userExemplo* \n\n*Dica:* Use *${usedPrefix}glx atacar list* - _Para listar os usuarios_\n\n`)
+                }
+
             }
         }
 
