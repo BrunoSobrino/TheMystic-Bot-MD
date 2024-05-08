@@ -1014,6 +1014,10 @@ export async function handler(chatUpdate) {
         if (!('atacante' in gameglx.perfil.ataque.sendoAtacado)) gameglx.perfil.ataque.sendoAtacado.atacante = null;
         if (!('forcaAtaque' in gameglx.perfil.ataque)) gameglx.perfil.ataque.forcaAtaque = {};
         if (!('ataque' in gameglx.perfil.ataque.forcaAtaque)) gameglx.perfil.ataque.forcaAtaque.ataque = 10;
+        if (!('data' in gameglx.perfil.ataque)) gameglx.perfil.ataque.data = {};
+        if (!('dia' in gameglx.perfil.ataque.data)) gameglx.perfil.ataque.data.dia = 0;
+        if (!('hora' in gameglx.perfil.ataque.data)) gameglx.perfil.ataque.data.hora = 0;
+        if (!('contagem' in gameglx.perfil.ataque.data)) gameglx.perfil.ataque.data.contagem = 0;
         // Defesa
         if(!('defesa' in gameglx.perfil)) gameglx.perfil.defesa = {};
         if(!('forca' in gameglx.perfil.defesa)) gameglx.perfil.defesa.forca = 100;
@@ -1094,6 +1098,10 @@ export async function handler(chatUpdate) {
               }
             },
             ataque: {
+              data: {
+                hora: 0,
+                contagem: 0 
+              },
               sendoAtacado: {
                 status: false,
                 atacante: null,
@@ -1103,7 +1111,7 @@ export async function handler(chatUpdate) {
               }
             },
             defesa : {
-              forca: 100,
+              forca: 200,
               ataque: 30
             }
           }
