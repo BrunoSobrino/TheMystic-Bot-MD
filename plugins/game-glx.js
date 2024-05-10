@@ -2,18 +2,11 @@
 // By https://github.com/jeffersonalionco
 
 import fs from 'fs-extra'
-import { createCanvas, loadImage } from 'canvas'
-const { Baileys } = (await import('@whiskeysockets/baileys'));
-
-let tes = `
-
-`
-
-
+import simpleGit from 'simple-git'
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
     createDataBase() // Criar arquivo DataBase se caso não existir
-    notificacao() // Notificações de alterações no codigo.
+    atualizarRepositorio() // Verificar se precisa atualizar, consultando a api em https://github.com/jeffersonalionco/database-galaxia/blob/master/database.json
 
     let infoDataHora = new Date()
     let horasEminutosAtual = `${infoDataHora.getHours()}:${infoDataHora.getMinutes()}`
@@ -45,7 +38,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         if (args[0] === null || args[0] === undefined) {
             criarGrupo() // Verifica se os grupos para o jogo funcionar foi criado, se nao for ele cria automaticamente.
-            notificacao() // Notificões de Alterações.
+
 
 
             const str = `*╔═ 🪐GAME DA GALAXIA🪐 ═╗*
@@ -60,32 +53,49 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   
   *🌠 ${usedPrefix}glx _perfil_*
   _Veja seus dados, e sua evolução._
+  
+
+
+> 🧾 Ataques / Defesa / Viajar
+
+  *🌠 ${usedPrefix}glx _atacar list_*
+  _Para Listar todos os jogadores do game!_
+
+  *🌠 ${usedPrefix}glx _atacar <username_do_usuario>_*
+  _Ataque um usuario informando seu username!_
+
+  *🌠 ${usedPrefix}glx _planeta_*
+  _Atualizar dados Planeta e Colonia_
 
   *🌠 ${usedPrefix}glx _viajar_*
   _Você quer visitar outro Planeta? Bora!_
 
+> 🧾 Opções de Mineração
+
+*🌠 ${usedPrefix}glx _miner_*
+_Quer ganhar Dinheiro? Vamos minerar._
+
+
+
+> 🧾 Sua informações Particular
+
   *🌠 ${usedPrefix}glx _carteira_*
   _Acesso sua carteira financeira._
 
-  *🌠 ${usedPrefix}glx _mapa_*
-  _Mapa das colonias!_
-
   *🌠 ${usedPrefix}glx _loja_*
   _Conheça nossa loja da galáxia_
-  
-  *🌠 ${usedPrefix}glx _planeta_*
-  _Atualizar dados Planeta e Colonia_
 
   *🌠 ${usedPrefix}glx _bau_*
   _Veja seus itens guardados_
 
-  *🌠 ${usedPrefix}glx _miner_*
-  _Quer ganhar Dinheiro? Vamos minerar._
+ 
 
 
   *🌟 ${usedPrefix}glx _criador_*
   _Informações do criador do jogo.._
 
+  _Novidades Atualização automatico_
+  _Dúvidas entre em contato_
 
   
 *╘═══════════════════╛*
@@ -102,8 +112,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         } else {
 
-            criarGrupo() /// verifica grupos do jogo
+            criarGrupo() // verifica grupos do jogo
+
             if (data.status === false) {
+
 
                 switch (argumento.toLowerCase()) {
                     case "cadastrar":
@@ -197,6 +209,7 @@ Use: ${usedPrefix}glx
                 }
 
             } else if (data.status === true) {
+                notificacao() // Notificações de alterações no codigo.
                 switch (argumento.toLowerCase()) {
                     case 'cadastrar':
                         enviar10s(`_😁 Oi *${m.pushName}*, você já tem cadastro._`)
@@ -219,7 +232,10 @@ Use: ${usedPrefix}glx
                                 enviar(`${m.pushName} _Você esta na terra Novamente 😉!_ `, null, id)
                                 break;
                             default: // Padrão ao enviar entrar 
-                                let str = `*LUGARES PARA VOCÊ VIAJAR*
+                                let str = `
+╔════════════════════╗
+
+*LUGARES PARA VOCÊ VIAJAR*
 
 > --- PLANETAS    
 *✈️ ${usedPrefix}glx viajar terra*
@@ -236,7 +252,7 @@ _Um planeta hostil com caracteristica agressiva!_
 _Caso sua nave estrague, use este comando para voltar_
 
 
-╔════════════════════╗
+
 
  *_⚙️ TODOS OS COMANDOS_*
 Use: ${usedPrefix}glx
@@ -303,7 +319,7 @@ Use: ${usedPrefix}glx
                                 
 _Categorias:_
 ↳ nave
-↳ carro
+
 
 Ex: Para ver as naves:
 *${usedPrefix}glx loja nave*
@@ -617,29 +633,7 @@ Use: ${usedPrefix}glx
                         }
                         break;
                     case 'mapa':
-                        mapa()
-                        setTimeout(() => {
-                            enviar(`*>>>>>>>>>>> MAPA <<<<<<<<<<<*
-                            
-_- SEU PLANETA: *${data.perfil.casa.planeta}*_ 
-
-Para saber dados das colonias 
-> Use: ${usedPrefix}glx planeta act
-
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS OS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  GAME GALAXIA 🛸_*
-
-`, `./src/glx/temp/${data.perfil.username}.png`)
-                        }, 2000)
-
+                        enviar(`*Mapa* _foi desativado fo jogo, Devido um erro no Debiam_`)
                         break;
                     case 'perfil':
                         let nave = data.perfil.nave.nome ? data.perfil.nave.nome : 'Não tem Nave'
@@ -653,7 +647,9 @@ _💡Não esquese de minerar, *${usedPrefix}glx miner* isso aumenta seu XP e sua
     *Proximo Nivel:* _${db.api.niveis[`nivel${data.perfil.nivel.proximoNivel}`].totalXp} XP_
 
 *📈 Nivel:* _${data.perfil.nivel.nome}_
-*💪 Poder [Força]:* _${data.perfil.poder}_
+*💪 Poder [Força]:* _${data.perfil.poder}_ P
+*⚔️ Poder Ataque:* _${data.perfil.ataque.forcaAtaque.ataque}_ P
+*🛡️ Poder Defesa:* _${data.perfil.defesa.forca}_ P
 *🌀 Username:* _${data.perfil.username}_
 
 *🗣️ Idioma:* _${data.perfil.idioma}_
@@ -672,9 +668,9 @@ Use: ${usedPrefix}glx
 `
 
 
-                        imagemPerfil() // Função para gerar a imgem do perfil após 3s apaga automaticamente
+                        // Função para gerar a imgem do perfil após 3s apaga automaticamente
                         setTimeout(() => {
-                            enviar(strr, `./src/glx/temp/${data.perfil.username}.png`)
+                            enviar(strr, `./src/glx/perfil.png`)
                         }, 1000)
 
                         break;
@@ -683,13 +679,30 @@ Use: ${usedPrefix}glx
                         enviar(msgcriador)
                         break;
                     case 'atacar':
+                        switch (argumento1) {
+                            case 'list':
+                                let strr = `*_📚--- LISTA DE USUARIOS ---📚_*\n\n*Utilize:*\n${usedPrefix}glx atacar *<USERNAME>* - _Para atacar um jogador!_\n\n`
+                                let mentionss = []
+                                for (let i = 0; i < db.user_cadastrado.username.length; i++) {
+                                    let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx
+                                    let number = db.user_cadastrado.username[i].id.replace(/\D/g, '')
 
-                        atacar(argumento1)
+                                    strr += `👨‍🚀 *Nome:* ${db1.perfil.nome} \n*🔎 Username:* ${db.user_cadastrado.username[i].username}\n*✍ Usuario:* @${number}\n______________________\n\n`
+                                    mentionss.push(db.user_cadastrado.username[i].id)
+                                }
+                                conn.sendMessage(data.perfil.id, { text: strr, mentions: mentionss })
+                                break;
+                            default:
+
+                                atacar(argumento1)
+
+                                break
+                        }
 
 
                         break
                     case 'teste':
-                        notificacao()
+                        atualizarRepositorio()
                         break
                     default:
                         m.reply(`*[!]* Opção *${args[0]}* não existe!`)
@@ -915,12 +928,15 @@ _Delete automatico em 20s_
                 const numeroAleatorio = Math.floor(Math.random() * (40 - 10 + 1)) + 10; // Gerar um numero de 10 a 50
                 data.perfil.xp += numeroAleatorio // Adicionando um valor aleatorio de Xp no novel do usuario 
                 data.perfil.poder += gerarPoder // Adicionando um novo valor de poder gerado para o usuario
+                data.perfil.poder += db.itens.mineracao[item].poder // Bonus de poder por mineração
+
                 conn.sendMessage(id, {
                     text: `*⚒️Mineração Concluida [${tempoedit} _Segundos_]*
 > Você minerou ${db.itens.mineracao[item].quantidadeMinerado} ${item} 
 
 _🥳Ganhou um Bônus:_ *${numeroAleatorio} [XP]*
-_👑 Seu Poder:_ ${data.perfil.poder}
+_👑Seu Poder:_ ${data.perfil.poder}
+_⚡Você ganhou:_  ${db.itens.mineracao[item].poder} Pontos(poder)
 
 *Total de ${item}:* [ ${data.perfil.bolsa.itens[item]} ]
 
@@ -976,6 +992,8 @@ Você alcançou o limite de XP e avançou para o próximo nível em nossa aventu
 *🎖️ Próximo Nível:* ${proximoNivel}
 
 💥 Recompensas:
+- Você ganhou *${db.api.niveis[`nivel${data.perfil.nivel.id}`].defesa}* Pontos de *_Defesa_*.
+- Você ganhou *${db.api.niveis[`nivel${data.perfil.nivel.id}`].ataque}* Pontos de *_Ataque_*.
 - Novas habilidades desbloqueadas
 - Acesso a áreas secretas no espaço
 - Novos aliados intergalácticos 
@@ -999,6 +1017,9 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel1.id // Defininfo o id atual do nivel
                 data.perfil.nivel.nome = db.api.niveis.nivel1.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel1.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel1.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel1.nome, data.perfil.xp, db.api.niveis.nivel2.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel2.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel2.id) {
@@ -1006,6 +1027,9 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel2.id
                 data.perfil.nivel.nome = db.api.niveis.nivel2.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel2.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel2.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel2.nome, data.perfil.xp, db.api.niveis.nivel3.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel3.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel3.id) {
@@ -1013,41 +1037,62 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel3.id
                 data.perfil.nivel.nome = db.api.niveis.nivel3.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel3.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel3.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel3.nome, data.perfil.xp, db.api.niveis.nivel4.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel4.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel4.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel4.id
-                msg(db.api.niveis.nivel4.nome, data.perfil.xp, db.api.niveis.nivel5.nome)
+                data.perfil.defesa.forca += db.api.niveis.nivel4.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel4.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel4.nome
+
+                msg(db.api.niveis.nivel4.nome, data.perfil.xp, db.api.niveis.nivel5.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel5.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel5.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel5.id
-                msg(db.api.niveis.nivel5.nome, data.perfil.xp, db.api.niveis.nivel6.nome)
+                data.perfil.defesa.forca += db.api.niveis.nivel5.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel5.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel5.nome
+
+                msg(db.api.niveis.nivel5.nome, data.perfil.xp, db.api.niveis.nivel6.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel6.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel6.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel6.id
                 data.perfil.nivel.nome = db.api.niveis.nivel6.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel6.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel6.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel6.nome, data.perfil.xp, db.api.niveis.nivel7.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel7.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel7.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel7.id
-                msg(db.api.niveis.nivel7.nome, data.perfil.xp, db.api.niveis.nivel8.nome)
+                data.perfil.defesa.forca += db.api.niveis.nivel7.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel7.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel7.nome
+                msg(db.api.niveis.nivel7.nome, data.perfil.xp, db.api.niveis.nivel8.nome)
+
 
             } else if (data.perfil.xp >= db.api.niveis.nivel8.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel8.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel8.id
                 data.perfil.nivel.nome = db.api.niveis.nivel8.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel8.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel8.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel8.nome, data.perfil.xp, db.api.niveis.nivel9.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel9.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel9.id) {
@@ -1055,206 +1100,24 @@ Use: ${usedPrefix}glx
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel9.id
                 data.perfil.nivel.nome = db.api.niveis.nivel9.nome
+                data.perfil.defesa.forca += db.api.niveis.nivel9.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel9.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 msg(db.api.niveis.nivel9.nome, data.perfil.xp, db.api.niveis.nivel10.nome)
 
             } else if (data.perfil.xp >= db.api.niveis.nivel10.totalXp && data.perfil.nivel.proximoNivel === db.api.niveis.nivel10.id) {
 
                 data.perfil.nivel.proximoNivel += 1 // definido id do proximo nivel
                 data.perfil.nivel.id = db.api.niveis.nivel10.id
-                msg(db.api.niveis.nivel10.nome, data.perfil.xp, "Sem Nivel")
+                data.perfil.defesa.forca += db.api.niveis.nivel10.defesa
+                data.perfil.defesa.ataque += db.api.niveis.nivel10.ataque
+                data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel10.nome
+                msg(db.api.niveis.nivel10.nome, data.perfil.xp, "REI DOS NIVEL")
+
 
             }
         }
-
-        async function imagemPerfil() {
-            const largura = 1000;
-            const altura = 600;
-
-            const canvas = createCanvas(largura, altura);
-            const context = canvas.getContext('2d');
-
-            loadImage('./src/glx/perfil.png').then((imagemMapa) => {
-
-                context.drawImage(imagemMapa, 0, 0, largura, altura);
-
-                const novoPlaneta = data.perfil.casa.planeta;
-                const novoX = 70;
-                const novoY = 520;
-
-                context.font = 'bold 50px Arial';
-                context.fillStyle = 'yellow'; // Definindo a cor do texto como amarelo
-                context.fillText(novoPlaneta, novoX, novoY);
-
-                //-----INICIO NOME
-                const novoNome = data.perfil.nome;
-                const novoX1 = 330;
-                const novoY1 = 350;
-
-                context.font = 'bold 30px Arial';
-                context.fillStyle = '#ffffff'; // Definindo a cor do texto como branco
-                context.fillText(novoNome, novoX1, novoY1);
-                //-----FIM NOME
-
-                //-----INICIO INFORMAÇÕES
-                const novoX2 = 70;
-                const novoY2 = 75;
-                let corLetra = 'yellow'; // Corrigindo o nome da variável
-                let xp = `🆙 XP: ${data.perfil.xp} XP`
-                let nivel = `📈 Nivel: ${data.perfil.nivel.nome}`
-                let Poder = `💪 Poder [Força]: ${data.perfil.poder}`
-                let username = `🌀 Username: ${data.perfil.username}`
-                let idioma = `🗣️ Idioma: ${data.perfil.idioma}`
-                let moeda = `💰 Moeda: ${data.perfil.carteira.currency}`
-                let str = `         
-🏠 Colonia: _${data.perfil.casa.colonia.nome}      
-🛸 Sua nave Atual: ${data.perfil.nave.nome}
-
-`;
-                // Definindo os nomes na imagem 
-                context.font = 'bold 20px Arial';
-                context.fillStyle = 'yellow'; // Definindo a cor do texto como branco
-                context.fillText(nivel, 250, 160); // Nivel
-                context.fillText(idioma, 530, 160);
-                context.fillText(Poder, 250, 190);
-                context.fillText(moeda, 530, 190);
-                context.fillText(username, 250, 220);
-                context.fillText(xp, 250, 245);
-                //----FIM INFORMAÇÕES
-
-                // Salvar o mapa como uma imagem
-                const buffer = canvas.toBuffer('image/png');
-                return fs.writeFileSync(`./src/glx/temp/${data.perfil.username}.png`, buffer), setTimeout(() => { fs.unlinkSync(`./src/glx/temp/${data.perfil.username}.png`); }, 3000);
-
-
-            }).catch((error) => {
-                console.error('Erro ao carregar imagem do mapa:', error);
-            });
-
-
-        }
-
-        async function mapa() {
-            /*Esta função cria uma imagem de um mapa com os dados especificado de cada planeta
-            1) A marcação no mapa de cada planeta ficara no X E Y de cada planeta no database
-            2) 
-            */
-            let planeta = db.planetas[data.perfil.casa.idpelonome]
-            let colonias = Object.keys(planeta.colonias)
-
-
-            // Configurações do mapa
-            const largura = 1000;
-            const altura = 600;
-
-            // Criar um canvas com as dimensões do mapa
-            const canvas = createCanvas(largura, altura);
-            const context = canvas.getContext('2d');
-
-            // Carregar a imagem de fundo do mapa
-            loadImage('./src/glx/fundomapa.jpg').then((imagemMapa) => {
-                // Desenhar a imagem de fundo do mapa
-                context.drawImage(imagemMapa, 0, 0, largura, altura);
-
-                /* COLONIA 1
-               const xInicio =  300; // Inicio da linha Horizontal da esquerda para direita
-               const xFim = 400; // Inicio da linha Horizontal da esquerda para direita
-               const yInicio = 160; // inicio da linha vertical de cima para baixo 
-               const yFim = 260; // Fim da linha vertical de cima para baixo 
-               const larguraBorda = 3;
-               context.strokeStyle = 'red'; // Cor da borda
-               context.lineWidth = larguraBorda;
-               context.strokeRect(xInicio, yInicio, xFim - xInicio, yFim - yInicio);*/
-
-
-                // Função para desenhar uma caixa de texto com cantos arredondados
-                async function drawRoundRect(x, y, largura, altura, raio, corFundo, corBorda, opacidade) {
-                    context.beginPath();
-                    context.moveTo(x + raio, y);
-                    context.arcTo(x + largura, y, x + largura, y + altura, raio);
-                    context.arcTo(x + largura, y + altura, x, y + altura, raio);
-                    context.arcTo(x, y + altura, x, y, raio);
-                    context.arcTo(x, y, x + largura, y, raio);
-                    context.closePath();
-                    context.fillStyle = `rgba(255, 255, 255, ${opacidade})`; // Fundo branco quase transparente
-                    context.strokeStyle = corBorda;
-                    context.lineWidth = 1;
-                    context.fill();
-                    context.stroke();
-                }
-
-                let titulos2 = []
-                for (let i = 1; i <= Object.keys(planeta.colonias).length; i++) {
-                    let template = { nome: 'teste', x: 0, y: 0 }
-                    template.nome = planeta.colonias[`colonia${i}`].nome
-                    template.x = planeta.colonias[`colonia${i}`].localizacao.x
-                    template.y = planeta.colonias[`colonia${i}`].localizacao.y
-                    titulos2.push(template)
-                }
-                // Títulos das cidades
-                const titulosCidades = titulos2
-
-                // Desenhar os títulos das cidades
-                context.fillStyle = 'white'; // Cor das letras
-                context.font = 'bold 20px Arial'; // Estilo da fonte
-                titulosCidades.forEach(titulo => {
-                    // Determinar a largura do texto para centralizá-lo na caixa
-                    const larguraTexto = context.measureText(titulo.nome).width;
-                    // Desenhar a caixa de texto com cantos arredondados
-                    drawRoundRect(titulo.x - larguraTexto / 2 - 5, titulo.y - 20, larguraTexto + 10, 30, 5, 'white', 'white', 0.3); // Opacidade de 70%
-                    // Definir a cor do texto como marrom
-                    context.fillStyle = 'white';
-                    context.arc(titulosCidades.x, titulosCidades.y, 5, 0, Math.PI * 3);
-                    // Escrever o texto dentro da caixa
-                    context.fillText(titulo.nome, titulo.x - larguraTexto / 2, titulo.y);
-                });
-
-                // -------------- Faz uma busca no db e busca as posições ocupadas no planeta do usuario que mandou a mensagem
-
-                let planetaa = data.perfil.casa.idpelonome
-                let coloniaa = data.perfil.casa.colonia.id //
-                for (let i = 0; i < db.planetas[planetaa].colonias[`colonia${coloniaa}`].posicaoOcupadas.length; i++) {
-
-                    // Posição dos usuarios no planeta TODOS
-                    let posicoes = db.planetas[planetaa].colonias[`colonia${coloniaa}`].posicaoOcupadas
-                    // Pega o data de apenas um usuario por vez e utiliza para marcar no mapa
-                    let dataa = global.db.data.users[posicoes[i].id].gameglx
-
-
-                    //Posição e nome do usuario que sera marcado no mapa
-                    const novoNome = dataa.perfil.nome;
-                    const novoX = posicoes[i].x;
-                    const novoY = posicoes[i].y
-
-                    const corOriginal = context.fillStyle;
-
-                    // Desenhar o novo nome sem borda ou fundo formatados, apenas a cor do texto
-                    context.fillStyle = 'yellow'; // Definindo a cor do texto como amarelo
-                    context.fillText(novoNome, novoX - 50, novoY - 10);
-
-                    // Restaurar a cor original do contexto
-                    context.fillStyle = corOriginal;
-
-                    // Desenhar uma marcação
-                    context.beginPath();
-                    context.arc(novoX, novoY, 10, 0, Math.PI * 2); // Desenha um círculo de raio 5 nas coordenadas do novo nome
-                    context.fillStyle = 'blue'; // Cor da marcação
-                    context.fill();
-                }
-
-
-                // Salvar o mapa como uma imagem
-                const buffer = canvas.toBuffer('image/png');
-                return fs.writeFileSync(`./src/glx/temp/${data.perfil.username}.png`, buffer), setTimeout(() => { fs.unlinkSync(`./src/glx/temp/${data.perfil.username}.png`) }, 5000);
-
-
-            }).catch((error) => {
-                console.error('Erro ao carregar imagem do mapa:', error);
-            });
-
-        }
-
-
 
         async function criarGrupo() {
             /*Esta Função Cria um grupo para cada planeta cadastrado no database do glx. Para realizar esta opeção tem algumas condições para ser seguidas
@@ -1418,56 +1281,93 @@ Use: ${usedPrefix}glx
         }
 
         async function atacar(alvo) {
-            let isUsername = false
+            let isNull
+            let date = new Date()
+
+            let isUsername = false  // Variavel usada para definir se o usuario esta cadastrado ou não
 
             for (let i = 0; i < db.user_cadastrado.username.length; i++) {
-                if (db.user_cadastrado.username[i].id === data.perfil.id) return enviar(`🤯 _Você não poder atacar a si mesmo!_`)
+                if (alvo === data.perfil.username) return m.reply(`🤯 _Você não poder atacar a si mesmo!_`)
+                    
+                if (data.perfil.ataque.data.contagem === 4 && (data.perfil.ataque.data.hora === date.getHours() || data.perfil.ataque.data.hora === date.getHours() + 1)) {
 
+                    return m.reply(`_📛 Você atingiu o limite de ${data.perfil.ataque.data.contagem} ataques!_\n*Aguarde no minimo 2 Horas para poder atacar novamente.*`)
+                } else {
+                    if (data.perfil.ataque.data.hora != date.getHours()) {
+                        data.perfil.ataque.data.contagem = 0
+                        data.perfil.ataque.data.hora = 0
+                    }
+                }
 
-                if (db.user_cadastrado.username[i].username === alvo.toLowerCase()) {
+                // Cancelar ataque se o username foi igual do atacante 
+                
+
+                // Se o username, estiver na lista de jogadores cadastrado, entra na definições de ataque
+                if (db.user_cadastrado.username[i].username === alvo) {
+                    // Adiciona uma contagem de ataque ao cronometro de ataque do usuario
+
                     let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx // Dados do usuario sendo atacado
-                    let number = db.user_cadastrado.username[i].id.replace(/\D/g, '') // Pegar o Numero do atacado 
+                    let number = db.user_cadastrado.username[i].id.replace(/\D/g, '') // Pegar o Numero do atacado
+                    let number2 = data.perfil.id.replace(/\D/g, '')
                     isUsername = true //  se o Usuario esta tem username cadastrado, retorna true
 
                     // DEFESA: Antes de qualquer outra coisa a defesa entra em ação
                     if (db1.perfil.defesa.forca >= data.perfil.ataque.forcaAtaque.ataque) {
+                        data.perfil.ataque.data.contagem += 1
+                        if (data.perfil.ataque.data.hora === 0) { data.perfil.ataque.data.hora = date.getHours() }
 
-                        // DANOS AO ATACADO
-                        db1.perfil.defesa.forca = data.perfil.defesa.forca - data.perfil.ataque.forcaAtaque.ataque
+                        conn.sendMessage(db1.perfil.id, { text: `_Prepare sua defesa🛡️, em 10 segundos, você sera atacado(a) por *@${number2}!*_`, mentions: [data.perfil.id] })
+                        m.reply(`_⚔️ Seu ataque esta em andamento_ \n\n*_🏰 Cuidado! Seu inimigo esta Vigilante_*`)
 
-                        // DANOS AO ATACANTE
-                        if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque) {
-                            data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
-                        }
+                        setTimeout(() => {
+                            // DANOS AO ATACADO
+                            // Defini o tanto de dano que que ira ser dado no inimigo... 
+                            db1.perfil.defesa.forca = data.perfil.defesa.forca - data.perfil.ataque.forcaAtaque.ataque
 
-                        let str = `_*🛡️ A defesa de @${number}, bloqueou seu ataque!*_ 
+                            // DANOS AO ATACANTE
+                            if (data.perfil.defesa.forca >= db1.perfil.ataque.forcaAtaque.ataque) {
+                                // Quando o atacante, faz seu ataque, ele tambem leva dano e aqui a gente faz o desconto do poder
+                                data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
+                            }
+                            let stra = `
+*🛡️Sua Defesa perdeu: ${db1.perfil.defesa.ataque} Pontos*\n\n *_Cuidado com sua Casa!_*                            
+`
 
+                            // Mensagem quando a defesa ainda esta defendendo
+                            let str = `_*🛡️ A defesa de @${number}, bloqueou seu ataque!*_
 
+_A defesa deste astronauta, é forte, e consegue o impossivel. Cuidado._
 
 👥 Danos a *Você*:
   Perdeu: ${db1.perfil.ataque.forcaAtaque.ataque} Pontos
-
-
-
+_________________________
 😈 Danos a *@${number}*:
-  Defesa perdeu: ${db1.perfil.defesa.ataque} Pontos
+Perdeu: ${db1.perfil.defesa.ataque} Pontos
+
+
+  *💡 DICA:* _Se sua defesa esta perdendo muito pontos, compre mais armas *(glx comprar)* ou minere mais minerios *(glx miner)* para aumentar seua força._
 
                         `
 
-                        conn.sendMessage(m.sender, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
+                            conn.sendMessage(m.sender, { text: str })
+                            conn.sendMessage(db1.perfil.id, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
+                        }, 5000)
                         break;
                     }
 
 
 
 
-                    // Mensagens enviadas c
+                    // Quando a defesa não aguenta o ataque, esta mensage que sera definido.
                     let str = `⚠️ *Atenção @${number} !*\n\n_Você esta sendo 🔫 atacado por:_ \n\n*Nome:* ${data.perfil.nome}\n*Username:* *${data.perfil.username}*`
-                    let xpAleatorio = await fNumeroAleatorio(40, 15)
+                    let xpAleatorio = await fNumeroAleatorio(40, 15) // Gera um numero aleatorio para o XP de bonus
                     conn.sendMessage(db.user_cadastrado.username[i].id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
 
 
                     setTimeout(() => {
+                        data.perfil.ataque.data.contagem += 1 // Adiciona uma contagem de ataque ao cronometro de ataque do usuario
+                        if (data.perfil.ataque.data.hora === 0) { data.perfil.ataque.data.hora = date.getHours() }
+
                         // INIMIGO: Diminui o poder do inimigo coforme a força de ataque
                         db1.perfil.poder = db1.perfil.poder - data.perfil.ataque.forcaAtaque.ataque
                         let valorDeDesconto = ((2 * db1.perfil.carteira.saldo) / 100)
@@ -1478,6 +1378,7 @@ Use: ${usedPrefix}glx
                         data.perfil.xp += xpAleatorio // Por atacar e vencer o atacante ganhar xp
                         data.perfil.carteira.saldo += valorDeDesconto
 
+                        // Mensagem que sera enviada, para quem fez o ataque, informando o que aconteceu na batalha
                         conn.sendMessage(id, {
                             text: `> 🗡️ Ataque concluido!
                         
@@ -1491,21 +1392,29 @@ Você ganhou:
 `, mentions: [db.user_cadastrado.username[i].id]
                         })
 
-
+                        // Envia uma mensagem avisando quem sofreu o ataque de suas perdas.
                         conn.sendMessage(db.user_cadastrado.username[i].id, { text: `@${number} que triste! 😭\n\n*⚔️ SUA DEFESA FALHOU ⚔️* \n\n> _Danos a sua instalação._`, mentions: [db.user_cadastrado.username[i].id] })
                     }, 10000)
 
 
+                    // Envia uma mensagem informando que que logo o usuario sera atacado.
                     m.reply(`> 🔫 Viajando até *${alvo}*`)
 
-                    if (m.isGroup) { // Se o atacante enviar uma mensagem em um grupo! o bot avisa o atacado tambem no grupo
+                    // Se o atacante enviar uma mensagem em um grupo! o bot avisa quem sera atacado no grupo tambem
+                    if (m.isGroup) {
                         conn.sendMessage(id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
                     }
 
                 }
             }
-            if (isUsername === false) {
-                m.reply(`*${alvo}* _não existe, ou não está cadastrado!_`)
+            if (isUsername === false || alvo === null || alvo === undefined) {
+                if (alvo === undefined || alvo === null) {
+                    m.reply(`_💡 Você precisa informar o *UserName* do jogador que deseja atacar!_ \n*Ex: ${usedPrefix}glx atacar userExemplo* \n\n*Dica:* Use *${usedPrefix}glx atacar list* - _Para listar os usuarios_\n\n`)
+                } else {
+                    //Envia uma mensagem se o username não existir na lista de cadastrados no game
+                    m.reply(`*${alvo}* _Não tem cadastrado com este username!_\n\n _💡 Você precisa informar o *UserName* do jogador que deseja atacar!_ \n*Ex: ${usedPrefix}glx atacar userExemplo* \n\n*Dica:* Use *${usedPrefix}glx atacar list* - _Para listar os usuarios_\n\n`)
+                }
+
             }
         }
 
@@ -1547,13 +1456,102 @@ Você ganhou:
 
     async function notificacao() {
         let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+        let data1 = global.db.data.users[m.sender].gameglx
+        let api = await database_galaxia()
+
         if (db1.notificacao.status === true) {
-            // Notificando Grupos
+            // Notificando os Grupos 
             conn.sendMessage(db1.planetas.terra.id, { text: db1.notificacao.msg[0] })
             conn.sendMessage(db1.planetas.megatron.id, { text: db1.notificacao.msg[0] })
             db1.notificacao.status = false
 
             fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+        }
+
+        // Notificação automatica para cada usuario Jogador do Game GLX
+        if (!data1.notificacao.recebidas.includes(api.notificacao.id)) {
+            let number = data1.perfil.id.replace(/\D/g, '')
+            let str = `*🔔 - Notificação Game Galáxia*\n\n*[BOT]* _The Mystic Bot MD_ \n*_Para:_ @${number}*\n\n`
+
+            let msg = api.notificacao.msg // Mensagem de notificação na API 
+
+            // Lendo as mensagens no repositorio API 
+            for (let i = 0; i < msg.length; i++) {
+                str += api.notificacao.msg[i]
+            }
+            str += `\n\n_Duvidas use o comando,_ *glx criador!*\n`
+
+            // Enviar Notificação para o usuario
+            conn.sendMessage(data1.perfil.id, { text: str, mentions: [data1.perfil.id] })
+
+            // Configuração de mensagem ja vista para este usuario
+            data1.notificacao.recebidas.push(api.notificacao.id)
+            fs.writeFileSync(`./database.json`, JSON.stringify(data1))
+
+        }
+    }
+
+    async function database_galaxia() {
+        try {
+            let url = "https://raw.githubusercontent.com/jeffersonalionco/database-galaxia/master/database.json"
+            const response = await fetch(url); // Faz uma solicitação HTTP para a URL fornecida
+            if (!response.ok) { // Verifica se a resposta da solicitação foi bem-sucedida
+                throw new Error('Erro ao obter os dados: ' + response.statusText);
+            }
+            const data = await response.json(); // Converte a resposta em JSON
+
+            return data; // Retorna os dados JSON
+        } catch (error) {
+            console.error('Ocorreu um erro ao obter os dados JSON:', error);
+            return null; // Retorna null em caso de erro
+        }
+    }
+
+    // Função para Atualizar O repositorio
+    async function atualizarRepositorio() {
+        let database = await database_galaxia()
+        let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+
+
+        if (!db1.repositorio.atualizado.includes(database.repositorio.atualizar)) {
+            // Caminho para o diretório do seu repositório local
+            fs.writeFileSync('./tmp/file', '')
+            const repoPath = '.';
+
+            // Instanciar o objeto simple-git com o caminho do seu repositório
+            const git = simpleGit(repoPath);
+
+            commitChanges() // Salvar os commits Locais
+            async function commitChanges() {
+                try {
+                    await git.add('.');
+                    await git.commit('Commit das alterações locais');
+                    console.log('Alterações locais commitadas com sucesso.');
+                } catch (err) {
+                    console.error('Ocorreu um erro ao commitar as alterações locais:', err);
+                }
+            }
+
+            // Atualizar o repositório
+            setTimeout(() => {
+                git.pull((err, update) => {
+                    if (err) {
+                        console.error('Ocorreu um erro ao atualizar o repositório:', err);
+                    } else {
+                        if (update && update.summary.changes) {
+                            console.log('Repositório atualizado com sucesso!');
+                            console.log('Resumo das alterações:', update.summary);
+                        } else {
+                            console.log('O repositório já está atualizado.');
+                        }
+                    }
+                });
+            }, 2000)
+
+            // Salvando o id da atualização como ja executado.
+            db1.repositorio.atualizado.push(database.repositorio.atualizar)
+            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+
         }
     }
 };

@@ -34,7 +34,7 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
       
     const apiUrls = [
       `https://api.cafirexos.com/api/ytplay?text=${text}`,
-      `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}`,
+      `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}&apikey=BrunoSobrino`,
       `https://api-for-canvas-brunosobrino.koyeb.app/api/ytplay?text=${text}`,  
     ];
 
@@ -133,12 +133,12 @@ return;
           } catch {
               try {
          if (command === 'play.1') { 
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp3?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp3?url=${data.resultado.url}&apikey=BrunoSobrino`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
               buff = await conn.getFile(apiUrl);          
             } else if (command === 'play.2') { 
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp4?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.onrender.com/api/v1/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
               buff = await conn.getFile(apiUrl);        
@@ -146,12 +146,12 @@ return;
       } catch { 
               try {
          if (command === 'play.1') { 
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v2/ytmp3?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.onrender.com/api/v2/ytmp3?url=${data.resultado.url}&apikey=BrunoSobrino`;
               mimeType = 'audio/mpeg';
               fileName = 'error.mp3';
               buff = await conn.getFile(apiUrl);          
             } else if (command === 'play.2') { 
-              apiUrl = `https://api-brunosobrino.onrender.com/api/v2/ytmp4?url=${data.resultado.url}`;
+              apiUrl = `https://api-brunosobrino.onrender.com/api/v2/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino`;
               mimeType = 'video/mp4';
               fileName = 'error.mp4';
               buff = await conn.getFile(apiUrl);        
