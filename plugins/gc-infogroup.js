@@ -49,6 +49,6 @@ ${tradutor.texto1[21]}  ${modoadmin ? '✅' : '❌'}
 };
 handler.help = ['infogrup'];
 handler.tags = ['group'];
-handler.command = /^(infogrupo|gro?upinfo|info(gro?up|gc))$/i;
+handler.command = /^(infogrupo|تحديد|gro?upinfo|info(gro?up|gc))$/i;
 handler.group = true;
 export default handler;
