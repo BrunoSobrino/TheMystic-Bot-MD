@@ -17,6 +17,7 @@ let buff;
 let mimeType;
 let fileName;
 let apiUrl;
+let apiUrl2;
 let enviando = false;
 let device;
 const handler = async (m, { command, usedPrefix, conn, text }) => {
@@ -33,7 +34,6 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
 
   try {
     const apiUrls = [
-      https://api.cafirexos.com/api/ytplay?text=${text},
       https://api-brunosobrino.onrender.com/api/ytplay?text=${text}&apikey=BrunoSobrino,
       https://api-for-canvas-brunosobrino.koyeb.app/api/ytplay?text=${text},
     ];
@@ -98,54 +98,50 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
 
     try {
       if (command === 'play.1') {
-        let apiUrls = [
-          https://api.cafirexos.com/api/v1/ytmp3?url=${data.resultado.url},
-          https://api.cafirexos.com/api/v2/ytmp3?url=${data.resultado.url},
+        let apiUrls2 = [
           https://api-brunosobrino.onrender.com/api/v1/ytmp3?url=${data.resultado.url}&apikey=BrunoSobrino,
           https://api-brunosobrino.onrender.com/api/v2/ytmp3?url=${data.resultado.url}&apikey=BrunoSobrino,
           https://api-for-canvas-brunosobrino.koyeb.app/api/v1/ytmp3?url=${data.resultado.url},
           https://api-for-canvas-brunosobrino.koyeb.app/api/v2/ytmp3?url=${data.resultado.url},
         ];
 
-        let success = false;
-        for (const url of apiUrls) {
+        let success2 = false;
+        for (const urll of apiUrls2) {
           try {
-            apiUrl = url;
+            apiUrl2 = urll;
             mimeType = 'audio/mpeg';
             fileName = 'error.mp3';
-            buff = await conn.getFile(apiUrl);
-            success = true;
+            buff = await conn.getFile(apiUrl2);
+            success2 = true;
             break;
           } catch {}
         }
 
-        if (!success) {
+        if (!success2) {
           enviando = false;
           throw ${tradutor.texto3};
         }
       } else if (command === 'play.2') {
         let apiUrls = [
-          https://api.cafirexos.com/api/v1/ytmp4?url=${data.resultado.url},
-          https://api.cafirexos.com/api/v2/ytmp4?url=${data.resultado.url},
           https://api-brunosobrino.onrender.com/api/v1/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino,
           https://api-brunosobrino.onrender.com/api/v2/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino,
           https://api-for-canvas-brunosobrino.koyeb.app/api/v1/ytmp4?url=${data.resultado.url},
           https://api-for-canvas-brunosobrino.koyeb.app/api/v2/ytmp4?url=${data.resultado.url},
         ];
 
-        let success = false;
-        for (const url of apiUrls) {
+        let success2 = false;
+        for (const urlll of apiUrls2) {
           try {
-            apiUrl = url;
+            apiUrl2 = urlll;
             mimeType = 'video/mp4';
             fileName = 'error.mp4';
-            buff = await conn.getFile(apiUrl);
-            success = true;
+            buff = await conn.getFile(apiUrl2);
+            success2 = true;
             break;
           } catch {}
         }
 
-        if (!success) {
+        if (!success2) {
           enviando = false;
           throw ${tradutor.texto3};
         }
