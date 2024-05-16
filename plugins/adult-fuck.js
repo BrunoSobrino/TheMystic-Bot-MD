@@ -1,5 +1,6 @@
 /* Créditos a Soffi-Neko, Darlyn1234 BrunoSobrino */
-const handler = async (m, {conn, command, args, text, usedPrefix}) => {
+
+/*const handler = async (m, {conn, command, args, text, usedPrefix}) => {
 const who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : false;
 
 if (!who) throw '[❗] Etiqueta a alguien.'      
@@ -12,4 +13,4 @@ conn.sendMessage(m.chat, {video: sexo.data, gifPlayback: true, caption: cap, men
 };
 handler.command = /^(fuck)$/i;
 handler.group = true;
-export default handler;
+export default handler;*/
