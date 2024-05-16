@@ -23,7 +23,7 @@ const handler = async (m, {conn, args}) => {
             viewOnceMessage: {
                 message: {
                     interactiveMessage: {
-                        body: { text: 'null' },
+                        body: { text: 'Toca el boton de abajo para copiar el link del grupo!' },
                         footer: { text: `${global.wm}`.trim() },
                         header: {
                             hasMediaAttachment: true,
