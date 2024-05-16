@@ -122,7 +122,7 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
           throw ${tradutor.texto3};
         }
       } else if (command === 'play.2') {
-        let apiUrls = [
+        let apiUrls22 = [
           https://api-brunosobrino.onrender.com/api/v1/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino,
           https://api-brunosobrino.onrender.com/api/v2/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino,
           https://api-for-canvas-brunosobrino.koyeb.app/api/v1/ytmp4?url=${data.resultado.url},
@@ -130,7 +130,7 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
         ];
 
         let success2 = false;
-        for (const urlll of apiUrls2) {
+        for (const urlll of apiUrls22) {
           try {
             apiUrl2 = urlll;
             mimeType = 'video/mp4';
@@ -138,7 +138,9 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
             buff = await conn.getFile(apiUrl2);
             success2 = true;
             break;
-          } catch {}
+          } catch (e) {
+             console.log(e.message) 
+          }
         }
 
         if (!success2) {
@@ -146,7 +148,8 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
           throw ${tradutor.texto3};
         }
       }
-    } catch {
+    } catch (ee) {
+      console.log(ee.message)  
       enviando = false;
       throw ${tradutor.texto3};
     }
