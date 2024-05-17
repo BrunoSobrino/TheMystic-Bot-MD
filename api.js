@@ -15,6 +15,8 @@ global.openai_key = 'sk-0';
 global.openai_org_id = 'org-3';
 /* Obtén tu ID de organización en este enlace: https://platform.openai.com/account/org-settings */
 
+global.MyApiRestBaseUrl = 'https://api-brunosobrino.onrender.com';
+global.MyApiRestApikey = 'BrunoSobrino';
 
 global.keysZens = ['LuOlangNgentot', 'c2459db922', '37CC845916', '6fb0eff124', 'hdiiofficial', 'fiktod', 'BF39D349845E', '675e34de8a', '0b917b905e6f'];
 global.keysxxx = keysZens[Math.floor(keysZens.length * Math.random())];
