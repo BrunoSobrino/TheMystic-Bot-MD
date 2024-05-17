@@ -4,7 +4,6 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import axios from 'axios';
 
-
 const handler = async (m, { conn, text, usedPrefix, command }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
@@ -13,12 +12,12 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
  if (!text) throw `${tradutor.texto1} _${usedPrefix + command} Good Feeling - Flo Rida_`;
   try {
-    const res = await fetch(global.API('CFROSAPI', '/api/spotifysearch?text=' + text))
+    const res = await fetch(`${global.MyApiRestBaseUrl}/api/spotifysearch?text=${text}&apikey=${global.MyApiRestApikey}`);
     const data = await res.json()
     const linkDL = data.spty.resultado[0].url;
-    const musics = await fetch(global.API('CFROSAPI', '/api/spotifydl?text=' + linkDL))
+    const musics = await fetch(`${global.MyApiRestBaseUrl}/api/spotifydl?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
     const music = await conn.getFile(musics.url)
-    const infos = await fetch(global.API('CFROSAPI', '/api/spotifyinfo?text=' + linkDL))
+    const infos = await fetch(`${global.MyApiRestBaseUrl}/api/spotifyinfo?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
     const info = await infos.json()
     const spty = info.spty.resultado
     const img = await (await fetch(`${spty.thumbnail}`)).buffer()  
