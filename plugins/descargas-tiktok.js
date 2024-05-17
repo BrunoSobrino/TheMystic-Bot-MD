@@ -5,9 +5,6 @@ import {tiktok} from '@xct007/frieren-scraper';
 import {generateWAMessageFromContent} from '@whiskeysockets/baileys';
 import {tiktokdl} from '@bochilteam/scraper';
 
-
-
-const CFROSAPI = global.APIs.CFROSAPI;
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
@@ -23,7 +20,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     const aa = {quoted: m, userJid: conn.user.jid};
     const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: texto, contextInfo: {externalAdReply: {title: 'ᴛʜᴇ ᴍʏsᴛɪᴄ - ʙᴏᴛ', body: null, thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}, mentionedJid: [m.sender]}}}, aa);
     await conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id, mentions: [m.sender]});
-    const dataFn = await conn.getFile(`${CFROSAPI}/api/tiktokv2?url=${args[0]}`);
+    const dataFn = await conn.getFile(`${global.MyApiRestBaseUrl}/api/tiktokv2?url=${args[0]}&apikey=${global.MyApiRestApikey}`);
     const desc1n = `${tradutor.texto4[0]} _${usedPrefix}tomp3_ ${tradutor.texto4[1]}`;
     await conn.sendMessage(m.chat, {video: dataFn.data, caption: desc1n}, {quoted: m});
   } catch (ee1) {
