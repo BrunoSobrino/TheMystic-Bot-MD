@@ -38,13 +38,13 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
     apiUrlsz = [
       `https://api.cafirexos.com/api/ytplay?text=${text}`,
       `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}&apikey=BrunoSobrino`,
-      `https://api-for-canvas-brunosobrino.koyeb.app/api/ytplay?text=${text}`
+      `https://api-brunosobrino-dcaf9040.koyeb.app/api/ytplay?text=${text}`
     ];
     const linkyt = await isValidYouTubeLink(text);
     if (linkyt) apiUrlsz = [
         `https://api.cafirexos.com/api/ytinfo?url=${text}`,
         `https://api-brunosobrino-koiy.onrender.com/api/ytinfo?url=${text}&apikey=BrunoSobrino`,
-        `https://api-for-canvas-brunosobrino.koyeb.app/api/ytinfo?url=${text}`
+        `https://api-brunosobrino-dcaf9040.koyeb.app/api/ytinfo?url=${text}`
     ];
     let success = false;
     for (const url of apiUrlsz) {
@@ -101,7 +101,7 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
               },
           }
       }, { userJid: conn.user.jid, quoted: m});
-      conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id});
+      await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id});
       enviando = false;    
       return;
     }    
@@ -113,8 +113,8 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
           `https://api.cafirexos.com/api/v2/ytmp3?url=${data.resultado.url}`,
           `https://api-brunosobrino.onrender.com/api/v1/ytmp3?url=${data.resultado.url}&apikey=BrunoSobrino`,
           `https://api-brunosobrino.onrender.com/api/v2/ytmp3?url=${data.resultado.url}&apikey=BrunoSobrino`,
-          `https://api-for-canvas-brunosobrino.koyeb.app/api/v1/ytmp3?url=${data.resultado.url}`,
-          `https://api-for-canvas-brunosobrino.koyeb.app/api/v2/ytmp3?url=${data.resultado.url}`,
+          `https://api-brunosobrino-dcaf9040.koyeb.app/api/v1/ytmp3?url=${data.resultado.url}`,
+          `https://api-brunosobrino-dcaf9040.koyeb.app/api/v2/ytmp3?url=${data.resultado.url}`,
         ];
 
         let success2 = false;
@@ -139,8 +139,8 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
           `https://api.cafirexos.com/api/v2/ytmp4?url=${data.resultado.url}`,            
           `https://api-brunosobrino.onrender.com/api/v1/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino`,
           `https://api-brunosobrino.onrender.com/api/v2/ytmp4?url=${data.resultado.url}&apikey=BrunoSobrino`,
-          `https://api-for-canvas-brunosobrino.koyeb.app/api/v1/ytmp4?url=${data.resultado.url}`,
-          `https://api-for-canvas-brunosobrino.koyeb.app/api/v2/ytmp4?url=${data.resultado.url}`,
+          `https://api-brunosobrino-dcaf9040.koyeb.app/api/v1/ytmp4?url=${data.resultado.url}`,
+          `https://api-brunosobrino-dcaf9040.koyeb.app/api/v2/ytmp4?url=${data.resultado.url}`,
         ];
 
         let success2 = false;
@@ -167,9 +167,6 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
       enviando = false;
       throw `${tradutor.texto3}`;
     }
-
-    //const dataMessage = `${tradutor.texto4[0]} ${data.resultado.title}\n${tradutor.texto4[1]} ${data.resultado.publicDate}\n${tradutor.texto4[2]} ${data.resultado.channel}\n${tradutor.texto4[3]} ${data.resultado.url}`;
-    //if (!text.includes('SN@')) await conn.sendMessage(m.chat, { text: dataMessage }, { quoted: m });
 
     if (buff) {
       await conn.sendMessage(m.chat, {[mimeType.startsWith('audio') ? 'audio' : 'video']: buff.data, mimetype: mimeType, fileName: fileName}, {quoted: m});
