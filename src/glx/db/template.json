@@ -96,6 +96,14 @@
             "xp": 360,
             "poder": 1856,
             "valor": 2321
+        },
+        "n3": {
+            "id": "n3",
+            "nome": "N3 - Flexx",
+            "velocidade": 10,
+            "xp": 600,
+            "poder": 1856,
+            "valor": 1900
         }
     },
     "itens": {
