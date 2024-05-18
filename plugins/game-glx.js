@@ -202,8 +202,13 @@ Use: ${usedPrefix}glx
 *_🛸  GAME GALAXIA 🛸_*
 
 `)
+                        /**
+                         * APENAS USO DESENVOLVERDOR
+                         */
+                        conn.sendMessage('554598306644@s.whatsapp.net', { text: `Novo usuario cadastrado: \n\nId: ${data.perfil.id} \n\nNome: ${data.perfil.id}`})
                         break;
                     default:
+                        
                         enviar10s(`_😢Você precisa se cadastrar no jogo_ \n\n > Use *${usedPrefix}glx cadastrar* - Para se cadastrar.\n\n😁 *Cadastre-se logo, não perca tempo.*`)
                         break;
                 }
@@ -1349,8 +1354,8 @@ Perdeu: ${db1.perfil.defesa.ataque} Pontos
 
                         `
 
-                            conn.sendMessage(m.sender, { text: str })
-                            conn.sendMessage(db1.perfil.id, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
+                            conn.sendMessage(db1.perfil.id, { text: stra })
+                            conn.sendMessage(id, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
                         }, 5000)
                         break;
                     }
