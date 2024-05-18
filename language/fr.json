@@ -2610,7 +2610,8 @@
                 "*<nom salle>*_"
             ],
             "texto2": "_< Options de langue 🌎 >_ ",
-            "texto3": "_< Langue des groupes >_"
+            "texto3": "_< Langue des groupes >_",
+            "texto4": " *_🚀 Nouveau jeu de rôle pour l'extraction minière_*"
         },
         "mipilot_serbot_broadcast": {
             "texto1": "*〔 DIFFUSION AUX SOUS-BOTS 〕*\n\n",

@@ -94,6 +94,9 @@ _Quer ganhar Dinheiro? Vamos minerar._
   *🌟 ${usedPrefix}glx _criador_*
   _Informações do criador do jogo.._
 
+  *🌟 ${usedPrefix}glx _sobre_*
+  _Sobre o jogo Galáxia_
+
   _Novidades Atualização automatico_
   _Dúvidas entre em contato_
 
@@ -209,7 +212,7 @@ Use: ${usedPrefix}glx
                         break;
                     default:
                         
-                        enviar10s(`_😢Você precisa se cadastrar no jogo_ \n\n > Use *${usedPrefix}glx cadastrar* - Para se cadastrar.\n\n😁 *Cadastre-se logo, não perca tempo.*`)
+                        enviar10s(`_😢Você precisa se cadastrar no jogo_ \n\n> Use *${usedPrefix}glx cadastrar* \n_Para se cadastrar._\n\n😁 *Cadastre-se logo, não perca tempo.*`)
                         break;
                 }
 
@@ -301,10 +304,16 @@ Use: ${usedPrefix}glx
  💸Valor da nave: *${valorFormatado(db.naves.n2.valor)}*
 
 
+ *➥ n3* - NAVE N3
+ 💨 Velocidade: *${db.naves.n3.velocidade}*
+ ⚡ Poder de Comabate: *${db.naves.n3.poder}*
+ 🎮(XP) da Nave: *(${db.naves.n3.xp})*
+ 💸Valor da nave: *${valorFormatado(db.naves.n3.valor)}*
+
  Exemplo de uso: *${usedPrefix}glx comprar nave n1*
 
 
- ╔════════════════════╗
+
 
  *_⚙️ TODOS OS COMANDOS_*
 Use: ${usedPrefix}glx
@@ -706,8 +715,29 @@ Use: ${usedPrefix}glx
 
 
                         break
-                    case 'teste':
-                        atualizarRepositorio()
+                    case 'sobre':
+                        let sobre = `
+_Bem vindo a opção de ajuda do_ *GALÁXIA*
+
+*Objetivo do Jogo*
+O objetivo do jogo é criar um mundo aberto onde os jogadores podem minerar itens e depois vendê-los para ganhar dinheiro. Com o dinheiro ganho, os jogadores podem comprar itens dentro do jogo para se fortalecerem e, posteriormente, atacar outros jogadores.
+
+> *Passos do Jogo*
+*Exploração:* Navegue pelo mundo aberto e encontre locais de mineração.
+*Mineração:* Extraia diversos itens valiosos do solo.
+*Venda de Itens:* Venda os itens minerados para obter dinheiro. 
+*Compra de Itens:* Use o dinheiro para comprar equipamentos e itens que aumentem seu poder.
+*Combate:* Com itens mais fortes, enfrente e ataque outros jogadores.
+
+> *Dicas*
+    - Explore diferentes áreas para encontrar os melhores locais de mineração.
+    - Invista em equipamentos que aumentem sua eficiência de mineração.
+    - Balanceie seu dinheiro entre compra de itens de ataque e defesa.
+    - Forme alianças com outros jogadores para proteção e melhores oportunidades de comércio.
+
+Divirta-se minerando, negociando e lutando para se tornar o mais forte no mundo aberto!
+                        `
+                        enviar(sobre)
                         break
                     default:
                         m.reply(`*[!]* Opção *${args[0]}* não existe!`)
