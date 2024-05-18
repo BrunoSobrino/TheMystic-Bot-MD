@@ -33,7 +33,7 @@ const handler = async (m, {command, conn}) => {
   }
 
   if (command == 'nsfwcum') {
-    const res = `https://api.cafirexos.com/api/nsfw/nsfwcum`;
+    const res = `${global.MyApiRestBaseUrl}/api/nsfw/nsfwcum&apikey=${global.MyApiRestApikey}`;
     conn.sendMessage(m.chat, {image: {url: res}, caption: `_${command}_`.trim()}, {quoted: m});
   }
 

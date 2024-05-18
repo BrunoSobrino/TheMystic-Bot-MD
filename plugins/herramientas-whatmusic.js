@@ -31,14 +31,14 @@ const handler = async (m) => {
 
     let url = 'https://github.com/BrunoSobrino'; 
     try {
-      const response = await fetch(`https://api-for-canvas-brunosobrino.koyeb.app/api/ytplay?text=${apiTitle}`);
+      const response = await fetch(`${global.MyApiRestBaseUrl}/api/ytplay?text=${apiTitle}&apikey=${global.MyApiRestApikey}`);
       const data = await response.json();
       url = data.resultado.url;
     } catch (error) {
       console.error('Error al obtener la URL del video:', error);
     }
     
-    const audiolink = `https://api.cafirexos.com/api/v1/ytmp3?url=${url}`;  
+    const audiolink = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${url}&apikey=${global.MyApiRestApikey}`;  
     const audiobuff = await conn.getFile(audiolink)  
 
     await conn.sendMessage(m.chat, { text: texto.trim(), contextInfo: { forwardingScore: 9999999, isForwarded: true, "externalAdReply": { "showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": apiTitle, "containsAutoReply": true, "mediaType": 1, "thumbnail": imagen, "thumbnailUrl": imagen, "mediaUrl": url, "sourceUrl": url } } }, { quoted: m });

@@ -26,7 +26,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     conn.sendMessage(m.chat, {image: {url: yt_play[0].thumbnail}, caption: texto1}, {quoted: m});
     if (command == 'play') {
     try {   
-    const audio = global.API('CFROSAPI', `/api/v1/ytmp3?url=${yt_play[0].url}`)
+    const audio = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
     const ttl = await yt_play[0].title
     const buff_aud = await getBuffer(audio);
     const fileSizeInBytes = buff_aud.byteLength;
@@ -48,7 +48,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     }}
     if (command == 'play2') {
     try {   
-    const video = global.API('CFROSAPI', `/api/v1/ytmp4?url=${yt_play[0].url}`)
+    const video = `${global.MyApiRestBaseUrl}/api/v1/ytmp4?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
     const ttl2 = await yt_play[0].title
     const buff_vid = await getBuffer(video);
     const fileSizeInBytes2 = buff_vid.byteLength;

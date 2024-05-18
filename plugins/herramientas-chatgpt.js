@@ -57,7 +57,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
       try {
         conn.sendPresenceUpdate('composing', m.chat);
         const syms1 = tradutor.texto3;
-        const Empireapi1 = await fetch(`https://api.cafirexos.com/api/chatgpt?text=${text}&name=${m.name}&prompt=${syms1}`);
+        const Empireapi1 = await fetch(`${global.MyApiRestBaseUrl}/api/chatgpt?text=${text}&name=${m.name}&prompt=${syms1}&apikey=${global.MyApiRestApikey}`);
         const empireApijson1 = await Empireapi1.json();
         if (empireApijson1.resultado == 'error' || empireApijson1.resultado == '' || !empireApijson1.resultado) return XD; // causar error undefined para lanzar msg de error
         m.reply(`${empireApijson1.resultado}`.trim());
