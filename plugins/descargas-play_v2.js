@@ -18,8 +18,10 @@ let mimeType;
 let fileName;
 let apiUrl;
 let apiUrl2;
-let enviando = false;
+let apiUrlsz;
 let device;
+let dataMessage;
+let enviando = false;
 const handler = async (m, { command, usedPrefix, conn, text }) => {
   const datas = global;
   const idioma = datas.db.data.users[m.sender].language;
@@ -33,14 +35,19 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
   enviando = true;
 
   try {
-    const apiUrls = [
+    apiUrlsz = [
       `https://api.cafirexos.com/api/ytplay?text=${text}`,
       `https://api-brunosobrino.onrender.com/api/ytplay?text=${text}&apikey=BrunoSobrino`,
       `https://api-for-canvas-brunosobrino.koyeb.app/api/ytplay?text=${text}`
     ];
-
+    const linkyt = await isValidYouTubeLink(text);
+    if (linkyt) apiUrlsz = [
+        `https://api.cafirexos.com/api/ytinfo?url=${text}`,
+        `https://api-brunosobrino-koiy.onrender.com/api/ytinfo?url=${text}&apikey=BrunoSobrino`,
+        `https://api-for-canvas-brunosobrino.koyeb.app/api/ytinfo?url=${text}`
+    ];
     let success = false;
-    for (const url of apiUrls) {
+    for (const url of apiUrlsz) {
       try {
         const res = await fetch(url);
         data = await res.json();
@@ -56,14 +63,16 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
       throw `${tradutor.texto2}`;
     }
 
+    const dataMessage = `${tradutor.texto4[0]} ${data.resultado.title}\n${tradutor.texto4[1]} ${data.resultado.publicDate}\n${tradutor.texto4[2]} ${data.resultado.channel}\n${tradutor.texto4[3]} ${data.resultado.url}`.trim();  
+    if (!text.includes('SN@') && command !== 'playyt') await conn.sendMessage(m.chat, { text: dataMessage }, { quoted: m });      
+      
     if (command === 'playyt') {
-      const dataMessagee = `${tradutor.texto4[0]} ${data.resultado.title}\n${tradutor.texto4[1]} ${data.resultado.publicDate}\n${tradutor.texto4[2]} ${data.resultado.channel}\n${tradutor.texto4[3]} ${data.resultado.url}`.trim();
       var messa = await prepareWAMessageMedia({ image: {url: data.resultado.image}}, { upload: conn.waUploadToServer });
       let msg = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: {
               message: {
                   interactiveMessage: {
-                      body: { text: dataMessagee },
+                      body: { text: dataMessage },
                       footer: { text: `${global.wm}`.trim() },
                       header: {
                           hasMediaAttachment: true,
@@ -159,8 +168,8 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
       throw `${tradutor.texto3}`;
     }
 
-    const dataMessage = `${tradutor.texto4[0]} ${data.resultado.title}\n${tradutor.texto4[1]} ${data.resultado.publicDate}\n${tradutor.texto4[2]} ${data.resultado.channel}\n${tradutor.texto4[3]} ${data.resultado.url}`;
-    if (!text.includes('SN@')) await conn.sendMessage(m.chat, { text: dataMessage }, { quoted: m });
+    //const dataMessage = `${tradutor.texto4[0]} ${data.resultado.title}\n${tradutor.texto4[1]} ${data.resultado.publicDate}\n${tradutor.texto4[2]} ${data.resultado.channel}\n${tradutor.texto4[3]} ${data.resultado.url}`;
+    //if (!text.includes('SN@')) await conn.sendMessage(m.chat, { text: dataMessage }, { quoted: m });
 
     if (buff) {
       await conn.sendMessage(m.chat, {[mimeType.startsWith('audio') ? 'audio' : 'video']: buff.data, mimetype: mimeType, fileName: fileName}, {quoted: m});
@@ -178,3 +187,8 @@ const handler = async (m, { command, usedPrefix, conn, text }) => {
 
 handler.command = /^(play.1|play.2|playyt)$/i;
 export default handler;
+
+async function isValidYouTubeLink(link) {
+    const validPatterns = [/youtube\.com\/watch\?v=/i, /youtube\.com\/shorts\//i, /youtu\.be\//i, /youtube\.com\/embed\//i, /youtube\.com\/v\//i, /youtube\.com\/attribution_link\?a=/i, /yt\.be\//i, /googlevideo\.com\//i, /youtube\.com\.br\//i, /youtube-nocookie\.com\//i, /youtubeeducation\.com\//i, /m\.youtube\.com\//i, /youtubei\.googleapis\.com\//i];
+    return validPatterns.some(pattern => pattern.test(link));
+}
