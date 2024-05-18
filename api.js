@@ -18,7 +18,7 @@ global.openai_org_id = 'org-3';
 global.MyApiRestBaseUrl = 'https://api.cafirexos.com'; // Bloqueo de IP -> usar esta para no ser bloqueado: 'https://api-brunosobrino.onrender.com';
 global.MyApiRestApikey = 'BrunoSobrino';
 
-global.MyApiRestBaseUrl2 = 'https://api-for-canvas-brunosobrino.koyeb.app';
+global.MyApiRestBaseUrl2 = 'https://api-brunosobrino-dcaf9040.koyeb.app';
 
 global.MyApiRestBaseUrl3 = 'https://api-brunosobrino.onrender.com'; 
 
