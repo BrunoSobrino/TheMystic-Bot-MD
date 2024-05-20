@@ -10,9 +10,9 @@ import moment from 'moment-timezone';
 global.botnumber = ""
 
 global.owner = [
-  ['212658594530', 'bobiza', true],
+  ['212658594530', 'المطور', true],
 
-  ['212658594530','bobiza', true],
+  ['212658594530','المطور', true],
   ['212658594530'],
   ['212658594530']
 ];
