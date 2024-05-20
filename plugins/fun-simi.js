@@ -2,7 +2,7 @@ import translate from '@vitalets/google-translate-api';
 import axios from 'axios';
 import fetch from 'node-fetch';
 
-const handler = async (m, {text, command, args, usedPrefix}) => {
+const handler = async (m, {conn, text, command, args, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
   const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
