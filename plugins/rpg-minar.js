@@ -8,7 +8,7 @@ const handler = async (m, {conn, isPrems}) => {
 
   const hasil = Math.floor(Math.random() * 1000);
   const time = global.db.data.users[m.sender].lastmiming + 600000;
-  if (new Date - global.db.data.users[m.sender].lastmiming < 600000) throw `${tardutor.texto1[0]} ${msToTime(time - new Date())} ${tardutor.texto1[1]}`;
+  if (new Date - global.db.data.users[m.sender].lastmiming < 600000) throw `${tradutor.texto1[0]} ${msToTime(time - new Date())} ${tradutor.texto1[1]}`;
   m.reply(`${tradutor.texto2} ${hasil} 𝚇𝙿*`);
   global.db.data.users[m.sender].lastmiming = new Date * 1;
 };
