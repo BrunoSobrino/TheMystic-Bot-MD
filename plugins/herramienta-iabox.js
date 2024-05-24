@@ -5,7 +5,7 @@ var handler = async (m, { text, usedPrefix, command }) => {
 
   try {
  
-    var apii = await fetch(`https://zoro-apis2-0a5bc82f5275.herokuapp.com/api/ai/blackbox?text=${text}&apikey=Zoro3mk`);
+    var apii = await fetch(`https://zoro-api-zoro-bot-5b28aebf.koyeb.app/api/blackbox?text=${encodeURIComponent(text)}`);
     var res = await apii.json();
 
     if (res.result && text.trim().length > 0) {

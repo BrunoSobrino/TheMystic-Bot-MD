@@ -56,6 +56,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ▢ _${usedPrefix}labiblia_ (🔞)
   ▢ _${usedPrefix}lang_ ${tradutor.texto2}
   ▢ _${usedPrefix}langgroup_ ${tradutor.texto3}
+  ▢ _${usedPrefix}glx_ ${tradutor.texto4 /** Este menú permanecerá aquí por un corto tiempo, hasta que la gente sepa */}
 
  
   ${tradutor.texto1[11]}
@@ -136,6 +137,8 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ▢ _${usedPrefix}ruleta
   ▢ _${usedPrefix}suerte
   ▢ _${usedPrefix}wordfind_
+  ▢ _${usedPrefix}glx_ (RPG Mundo)
+
 
 
   ${tradutor.texto1[14]}
