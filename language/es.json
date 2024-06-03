@@ -3849,8 +3849,8 @@
             ]
         },
         "participantsUpdate": {
-            "texto1": "👋 ¡Bienvenido/a!\n@user",
-            "texto2": "👋 ¡Hasta luego!\n@user",
+            "texto1": "👋 ¡نورررت/a!\n@user",
+            "texto2": "👋 ¡هلووو luego!\n@user",
             "texto3": "*[ ℹ️ ] @user Fue promovido a administrador.*",
             "texto4": "*[ ℹ️ ] @user Fue degradado de administrador.*",
             "texto5": "*[ ℹ️ ] La descripción del grupo ha sido modificada.*",
