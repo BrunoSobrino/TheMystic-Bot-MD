@@ -8,16 +8,19 @@ export default handler
 
 global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ★ Futanari
-★ Trapos/Femboy's (Packs tambien, ser mayor de edad +18)
+★ Trapos/Femboy's
 ★ Hentai/Furry
 ★ Transexual
 ★ Porno normal
+★ Lolis (solo estilo de dibujo/animado)
 
 *_❌|CONTENIDO PROHIBIDO_*
 ✦ Earfuck
 ✦ Scat
+✦ Necrofilia 
+✦ Zoofilia
 ✦ Gore
 ✦ Vore
-✦ CP/Lolis (Child Porn)
+✦ CP (Child Porn)
 
 ⭐| Recuerda que la temática tiene que ser más de Futanari.`
