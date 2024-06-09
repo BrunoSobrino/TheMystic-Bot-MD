@@ -249,7 +249,7 @@ function clearTmp() {
 // Función para eliminar archivos core.<numero>
 const dirToWatchccc = path.join(__dirname, './');
 function deleteCoreFiles(filePath) {
-  const coreFilePattern = /^core\.\d+$/;
+  const coreFilePattern = /^core\.\d+$/i;
   const filename = path.basename(filePath);
   if (coreFilePattern.test(filename)) {
     fs.unlink(filePath, (err) => {
