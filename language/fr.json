@@ -3534,5 +3534,18 @@
                 "[ ℹ️ ] Pour désactiver la fonction anti-suppression, envoyez la commande suivante : /disable antidelete"
             ]
         }
-    }
+    },
+    "BK9": {
+        "BK9": {
+            "bk9dalletext": "Veuillez entrer du texte, par exemple\n .bk9img Une maison bleue dans une nature pittoresque",
+            "bk9dallewait": "chargement ...",
+            "bk9dalleerr": "Échec de la création de l'image. Veuillez réessayer plus tard.",
+            "bk9text": "Veuillez entrer du texte, exemple : \n.bk9 Bonjour, comment ça va?",
+            "bk9err": "Une erreur s'est produite lors du traitement de votre demande.",
+            "bk9imgtext": "Répondez à une image et écrivez votre question\n\nExemple : .bk9img qui est-ce (n'oubliez pas de répondre à une image)",
+            "bk9LText_T": "Si vous le voulez sans personnalisation :\n.bk9short et mettez un lien\nExemple :\n.bk9short https://bk9.site/\nSi vous voulez qu'il soit personnalisé :\n.Short, mettez un lien + le mot\nExemple :\n.bk9short https://bk9.site/ + Suii",
+            "bk9LTaked_T": "Cette personnalisation a été prise, essayez une autre."
+        }
+
+        }
 }

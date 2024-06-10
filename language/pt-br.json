@@ -3846,5 +3846,18 @@
                 "[ ℹ️ ] Para desativar a função antidelete, envie o seguinte comando: /disable antidelete"
             ]
         }
-    }
+    },
+    "BK9": {
+        "BK9": {
+            "bk9dalletext": "Por favor, insira o texto, por exemplo\n .bk9img Uma casa azul em uma natureza pitoresca",
+            "bk9dallewait": "carregando ...",
+            "bk9dalleerr": "Falha ao criar a imagem. Por favor, tente novamente mais tarde.",
+            "bk9text": "Por favor, insira o texto, exemplo: \n.bk9 Olá, como você está?",
+            "bk9err": "Ocorreu um erro ao processar sua solicitação.",
+            "bk9imgtext": "Responda a uma imagem e escreva sua pergunta\n\nExemplo: .bk9img quem é este (não se esqueça de responder a uma imagem)",
+            "bk9LText_T": "Se você quiser sem personalização:\n.bk9short e coloque um link\nExemplo:\n.bk9short https://bk9.site/\nSe você quiser que seja personalizado:\n.Short, coloque um link + a palavra\nExemplo:\n.bk9short https://bk9.site/ + Suii",
+            "bk9LTaked_T": "Essa personalização já foi usada, tente outra."
+        }
+
+        }
 }

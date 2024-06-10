@@ -3868,5 +3868,18 @@
                 "*[ ℹ️ ] Para desactivar la función* _antidelete_*, envia el siguiente comando:* _/disable antidelete_"
             ]
         }
-    }
+    },
+    "BK9": {
+        "BK9": {
+            "bk9dalletext": "Por favor ingrese texto, por ejemplo\n .bk9img Una casa azul en una naturaleza pintoresca",
+            "bk9dallewait": "cargando ...",
+            "bk9dalleerr": "No se pudo crear la imagen. Por favor, inténtelo de nuevo más tarde.",
+            "bk9text": "Por favor ingrese texto, ejemplo: \n.bk9 Hola, ¿cómo estás?",
+            "bk9err": "Se produjo un error al procesar su solicitud.",
+            "bk9imgtext": "Responde a una imagen y escribe tu pregunta\n\nEjemplo: .bk9img quién es (no olvides responder a una imagen)",
+            "bk9LText_T": "Si lo quieres sin personalización,:\n.bk9short y ponle un enlace\nEjemplo:\n.bk9short https://bk9.site/\nSi lo quieres personalizado:\n.Short, ponle un enlace + el word\nEjemplo:\n.bk9short https://bk9.site/ + Suii",
+            "bk9LTaked_T": "Esta personalización ha sido realizada, pruebe con otra."
+        }
+
+        }
 }

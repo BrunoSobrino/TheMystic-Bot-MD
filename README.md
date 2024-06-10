@@ -148,6 +148,7 @@ npm start
 <a href="http://wa.me/5218442114446" target="blank"><img src="https://img.shields.io/badge/skid_COLAB.11-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/393755775755" target="blank"><img src="https://img.shields.io/badge/Fabri115_COLAB.12-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="http://wa.me/212609395104" target="blank"><img src="https://img.shields.io/badge/Saad_COLAB.13-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+<a href="https://www.whatsapp.com/channel/0029VadrnO9InlqNslAErY3D" target="blank"><img src="https://img.shields.io/badge/BK9_COLAB.0-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 ## `▢ COLABORADORES DEL BOT` 
 <a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="100" height="100" alt="unptoadrih15"/></a>
@@ -170,6 +171,7 @@ npm start
 <a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> </a>
 <a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a>
 <a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
+<a href="https://github.com/BK9dev"><img src="https://i.imgur.com/NAVoDeW.jpeg" width="100" height="100" alt="BK9"/> </a>
 
 ## `▢ AGRADECIMIENTOS & CREDITOS` 
 <div><button id="boton" type="button">games-wabot-md by BochilGaming </button></div>
