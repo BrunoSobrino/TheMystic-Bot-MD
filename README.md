@@ -63,6 +63,20 @@
 - Tutorial: [https://youtu.be/eC9TfKICpcY](https://youtu.be/eC9TfKICpcY)
 - Dudas UNICAMENTE SOBRE EL HOST: [https://discord.gg/84qsr4v](https://discord.gg/84qsr4v) (Preguntar por Vicemi)
 
+### `□ ACTIVAR EN INFINITY-HOST`
+[![blog](https://img.shields.io/badge/Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
+](https://youtu.be/c9RCnOV418E?si=kNWog_fSi8wCWX3A)
+
+<a href="https://dashboard.infinitywa.xyz"><img src="https://qu.ax/TPhh.jpg" height="125px"></a>
+
+- Página: [`Click aqui`](https://dashboard.infinitywa.xyz)
+- Dashboard: [`Aquí`](https://dashboard.infinitywa.xyz)
+- Panel: [`Aquí`](https://live.panel-infinitywa.store)
+- Grupo de WhatsApp: [`Aquí`](https://chat.whatsapp.com/GQ82mPnSYnm0XL2hLPk7FV)
+- Canal de WhatsApp: [`Aquí`](https://whatsapp.com/channel/0029Va4QjH7DeON0ePwzjS1A)
+
+- Discord: [`Aqui`](https://discord.com/invite/vgfpe4Nwd8)
+
 ### `▢ ACTIVAR EN KOYEB`
 
 [![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
