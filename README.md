@@ -130,7 +130,7 @@ npm start
 - THE SHADOW BROKERS - TEAM NO SE HACE RESPONSABLE DEL USO, NUMEROS, PRIVACIDAD Y CONTENIDO MANDADO, USADO O GESTIONADO POR USTEDES O EL BOT
  
  ### `▢ ¿DUDAS SOBRE EL BOT?, CONTACTANOS`
-<a href="http://wa.me/51985018729" target="blank"><img src="https://img.shields.io/badge/BRUNO_SOBRINO_CREADOR-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+<a href="http://wa.me/51985018729" target="blank"><img src="https://img.shields.io/badge/ARABE_JB_CREADOR-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 <a href="https://whatsapp.com/channel/0029VabXstPJUM2UZYBkVi3E" target="blank"><img src="https://img.shields.io/badge/BK9_COLAB.0-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 ## `▢ COLABORADORES DEL BOT` 
