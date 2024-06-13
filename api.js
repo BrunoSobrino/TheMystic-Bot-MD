@@ -16,11 +16,11 @@ global.openai_org_id = 'org-3';
 /* Obtén tu ID de organización en este enlace: https://platform.openai.com/account/org-settings */
 
 global.MyApiRestBaseUrl = 'https://api.cafirexos.com'; // Bloqueo de IP -> usar esta para no ser bloqueado: 'https://api-brunosobrino.onrender.com';
-global.MyApiRestApikey = 'BrunoSobrino';
+global.MyApiRestApikey = 'ArabiaJB';
 
-global.MyApiRestBaseUrl2 = 'https://api-brunosobrino-dcaf9040.koyeb.app';
+global.MyApiRestBaseUrl2 = 'https://api-ArabiaJB-dcaf9040.koyeb.app';
 
-global.MyApiRestBaseUrl3 = 'https://api-brunosobrino.onrender.com'; 
+global.MyApiRestBaseUrl3 = 'https://api-ArabiaJB.onrender.com'; 
 
 global.keysZens = ['LuOlangNgentot', 'c2459db922', '37CC845916', '6fb0eff124', 'hdiiofficial', 'fiktod', 'BF39D349845E', '675e34de8a', '0b917b905e6f'];
 global.keysxxx = keysZens[Math.floor(keysZens.length * Math.random())];
@@ -80,6 +80,7 @@ global.rpg = {
       limit: '💎 Diamante',
       exp: '⚡ Experiencia',
       bank: '🏦 Banco',
+      steal: '👤 robar',
       diamond: '💎 Diamante',
       health: '❤️ Salud',
       kyubi: '🌀 Magia',
@@ -173,6 +174,7 @@ global.rpgg = { // Solo emojis
       limit: '💎',
       exp: '⚡',
       bank: '🏦',
+      steal: '👤',
       diamond: '💎+',
       health: '❤️',
       kyubi: '🌀',
