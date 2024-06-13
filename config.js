@@ -7,30 +7,26 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 import moment from 'moment-timezone';
 
-global.botnumber = ""
+global.botnumber = "56958857721"
 global.confirmCode = ""
 
 global.owner = [
-  ['51985018729', '👑 ARABE - Creador 👑', true],
-  ['51983938228', '💫 ZEXX - Collaborator 2 💫', true],
-  ['51985018729', '💫 ARABE - Collaborator 3 💫', true],
-  ['51985018729', '💫 ARABE - Collaborator 4 💫', true],
-  ['51985018729', '💫 ARABE - Collaborator 5 💫', true],
-  ['51985018729', '💫 ARABE - Collaborator 6 💫', true],
-  ['51985018729', '💫 ARABE - Rey Endymion 💫', false],
-  ['51985018729', '💫 ARABE - Collaborator 8 💫', true],
-  ['51985018729', '💫 ARABE - By Alba070503 💫', true],
-  ['51985018729','💫 ARABE - Tester Fabri115💫', true],
+  ['51985018729', '👑 𝐀𝐑𝐀𝐁𝐄 𝐁𝐎𝐓 - Creador 👑', true],
+  ['51983938228', '💫 𝐙𝐄𝐗𝐗 - Collaborator 2 💫', true],
+  ['51985018729', '💫 𝐀𝐑𝐀𝐁𝐄 𝐁𝐎𝐓 - Collaborator 3 💫', true],
+  ['51985018729', '💫 𝐀𝐑𝐀𝐁𝐄 𝐁𝐎𝐓 - Collaborator 4 💫', true],
+  ['51985018729', '💫 𝐀𝐑𝐀𝐁𝐄 𝐁𝐎𝐓 - Collaborator 5 💫', true],
+  ['51985018729', '💫 𝐀𝐑𝐀𝐁𝐄 𝐁𝐎𝐓 - Collaborator 6 💫', true],
 
 global.suittag = ['51985018729'];
 global.prems = ['51985018729'];
 
 global.packname = 'Sticker';
-global.author = 'ARABIA - Bot';
-global.wm = 'ARABE - Bot';
-global.titulowm = 'ARABE - Bot';
-global.titulowm2 = `ARABE - Bot`
-global.igfg = 'ARABD - Bot';
+global.author = '𝐀𝐑𝐀𝐁𝐈𝐀 - 𝐁𝐎𝐓;
+global.wm = '𝐀𝐑𝐀𝐁𝐈𝐀 - 𝐁𝐎𝐓;
+global.titulowm = '𝐀𝐑𝐀𝐁𝐈𝐀 - 𝐁𝐎𝐓;
+global.titulowm2 = `𝐀𝐑𝐀𝐁𝐈𝐀 - 𝐁𝐎𝐓`
+global.igfg = '𝐀𝐑𝐀𝐁𝐈𝐀 - 𝐁𝐎𝐓;
 global.wait = '*[ ⏳ ] Cargando...*';
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
@@ -56,8 +52,8 @@ global.año = d.toLocaleDateString('es', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
 global.wm2 = `${dia} ${fecha}\nARABE JB - Bot`;
-global.gt = 'ARABE JB - Bot';
-global.arabiabot = 'ARABE JB - Bot';
+global.gt = '𝐀𝐑𝐀𝐁𝐈𝐀 - 𝐁𝐎𝐓;
+global.arabiabot = '𝐀𝐑𝐀𝐁𝐈𝐀 - 𝐁𝐎𝐓;
 global.md = 'https://github.com/Arabia-JB-Bot';
 global.mysticbot = 'https://github.com/Arabia-JB-Bot';
 global.waitt = '*[ ⏳ ] Cargando...*';
