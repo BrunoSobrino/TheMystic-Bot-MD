@@ -18,10 +18,6 @@
 
 [ 🔗 ] https://www.atom.bio/theshadowbrokers-team
 
-### `▢ GRUPOS DE SOPORTE (NO DISPONIBLE)`
-
- <a href="https://chat.whatsapp.com/KQ5bUK2uazR4npa6iyvCue" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_PRUEBA_(ES)_(ATIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" " target="blank"><img
-
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
  ### `▢ OFICIALES (ACTIVO)`
