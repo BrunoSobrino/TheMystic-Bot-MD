@@ -1,21 +1,16 @@
-import {pinterest} from '@bochilteam/scraper';
-
-
-const handler = async (m, {conn, text, usedPrefix, command}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
-  const tradutor = _translate.plugins.downloader_pinterest
-
-
-  if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Minecraft*`;
-  const json = await pinterest(text);
-  conn.sendFile(m.chat, json.getRandom(), 'error.jpg', `
-${tradutor.texto2}
-${text}
-`.trim(), m);
-};
-handler.help = ['pinterest <keyword>'];
-handler.tags = ['internet'];
-handler.command = /^(pinterest)$/i;
-export default handler;
+import Scraper from "@SumiFX/Scraper"
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+if (!text) return m.reply('👑 Ingresa un texto para realizar la búsqueda.')
+try {
+//m.react(rwait)
+let { dl_url } = await Scraper.pinterest(text)
+await conn.sendFile(m.chat, dl_url, 'thumbnail.jpg', null, m)
+m.react(done)
+} catch {
+}}
+handler.help = ['pinterest <texto>']
+handler.tags = ['internet']
+handler.command = ['pinterest']
+handler.limit = 1
+handler.register = true
+export default handler

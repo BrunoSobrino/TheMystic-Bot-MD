@@ -49,7 +49,8 @@ global.APIs = {
   vihangayt: 'https://vihangayt.me',
   erdwpe: 'https://api.erdwpe.com',
   xyroinee: 'https://api.xyroinee.xyz',
-  nekobot: 'https://nekobot.xyz'
+  nekobot: 'https://nekobot.xyz',
+  BK9: 'https://api.bk9.site'
 },
 global.APIKeys = {
   'https://api.xteam.xyz': `${keysxteam}`,
