@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 let enviando = false;
 const handler = async (m, {conn, args, command, usedPrefix}) => {
   const idioma = global.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./language/ar.json`))
   const tradutor = _translate.plugins.descargas_facebook
   if (!args[0]) throw `_*${tradutor.texto1[0]}*_\n\n*${tradutor.texto1[1]}*\n\n*${tradutor.texto1[2]}* _${usedPrefix + command} https://fb.watch/fOTpgn6UFQ/_`;
   const linkface = await isValidFacebookLink(args[0])  
