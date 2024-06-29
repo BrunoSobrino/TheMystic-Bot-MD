@@ -8,7 +8,7 @@ import {tiktokdl} from '@bochilteam/scraper';
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./language/ar.json`))
   const tradutor = _translate.plugins.descargas_tiktok
 
 
