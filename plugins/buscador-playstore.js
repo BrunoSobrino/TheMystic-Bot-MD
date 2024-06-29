@@ -3,7 +3,7 @@ import gplay from "google-play-scraper";
 let handler = async (m, { conn, text }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./language/ar.json`))
   const tradutor = _translate.plugins.buscador_playstore
   
   if (!text) throw `*${tradutor.texto1}*`;
