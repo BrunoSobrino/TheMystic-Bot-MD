@@ -16,7 +16,7 @@ import fs from 'fs';
 const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
     const datas = global;
     const idioma = datas.db.data.users[m.sender].language;
-    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
+    const _translate = JSON.parse(fs.readFileSync(`./language/ar.json`));
     const traductor = _translate.plugins.buscador_yts;
     const device = await getDevice(m.key.id);
     
