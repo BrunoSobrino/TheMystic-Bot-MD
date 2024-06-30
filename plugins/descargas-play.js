@@ -19,7 +19,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     let additionalText = '';
     if (command === 'play') {
       additionalText = 'audio';
-    } else if (command === 'play2') {
+    } else if (command === 'اغاني') {
       additionalText = 'vídeo';
     }
     const texto1 = `${tradutor.texto2[0]} ${yt_play[0].title}\n\n${tradutor.texto2[1]} ${yt_play[0].ago}\n\n${tradutor.texto2[2]} ${secondString(yt_play[0].duration.seconds)}\n\n${tradutor.texto2[3]} ${`${MilesNumber(yt_play[0].views)}`}\n\n${tradutor.texto2[4]} ${yt_play[0].author.name}\n\n${tradutor.texto2[5]} ${yt_play[0].videoId}\n\n${tradutor.texto2[6]} ${yt_play[0].type}\n\n${tradutor.texto2[7]} ${yt_play[0].url}\n\n${tradutor.texto2[8]} ${yt_play[0].author.url}\n\n${tradutor.texto2[9]} ${additionalText}. ${tradutor.texto2[10]}`.trim();
