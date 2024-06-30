@@ -1,7 +1,7 @@
 import * as googleTTS from '@sefinek/google-tts-api'
 import {readFileSync, unlinkSync} from 'fs';
 import {join} from 'path';
-const defaultLang = 'es';
+const defaultLang = 'ar';
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
@@ -18,7 +18,7 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
   if (!text && m.quoted?.text) text = m.quoted.text;
   let res;
   try {
-    res = googleTTS.getAudioUrl(text, { lang: lang || 'es', slow: false, host: 'https://translate.google.com' });
+    res = googleTTS.getAudioUrl(text, { lang: lang || 'ar', slow: false, host: 'https://translate.google.com' });
   } catch (e) {
     m.reply(e + '');
     text = args.join(' ');
@@ -36,7 +36,7 @@ handler.tags = ['tools'];
 handler.command = /^g?tts$/i;
 export default handler;
 
-function tts(text, lang = 'es') {
+function tts(text, lang = 'ar') {
   return new Promise((resolve, reject) => {
     try {
       const tts = gtts(lang);
