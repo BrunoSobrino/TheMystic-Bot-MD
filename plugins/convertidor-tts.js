@@ -36,7 +36,7 @@ handler.tags = ['tools'];
 handler.command = /^g?tts$/i;
 export default handler;
 
-function tts(text, lang = 'ar') {
+function tts(text, lang = 'es') {
   return new Promise((resolve, reject) => {
     try {
       const tts = gtts(lang);
