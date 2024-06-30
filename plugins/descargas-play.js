@@ -46,7 +46,7 @@ const handler = async (m, {conn, command, args, text, usedPrefix}) => {
     }} catch {
     throw tradutor.texto4;    
     }}
-    if (command == 'play2') {
+    if (command == 'اغاني') {
     try {   
     const video = `${global.MyApiRestBaseUrl}/api/v1/ytmp4?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
     const ttl2 = await yt_play[0].title
