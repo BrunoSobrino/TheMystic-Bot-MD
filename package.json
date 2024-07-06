@@ -17,6 +17,7 @@
     "test2": "nodemon index.js",
     "eslint": "eslint .",
     "eslintfix": "eslint --fix ."
+   "install-python-dep": "python3 pip install -U openai-whisper"
   },
   "homepage": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
   "author": {
