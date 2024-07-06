@@ -11,15 +11,21 @@ const handler = async (m, {conn, usedPrefix}) => {
   const text = `${tradutor.texto1[0]}
 
 ${tradutor.texto1[1]}
-${tradutor.texto1[2]}
+1.- https://chat.whatsapp.com/LjJbmdO0qSDEKgB60qivZj
 
-${tradutor.texto1[3]}
+2.- https://chat.whatsapp.com/DbXBmsydWBE1ZN3EoY0hRs
 
-${tradutor.texto1[4]}
+3.- https://chat.whatsapp.com/BW0P22xx7EGBTdH5IM851F
 
-${tradutor.texto1[5]}
+4.- https://chat.whatsapp.com/CjexkGVr37J6GuSdDVAHzC
 
-${tradutor.texto1[6]}`.trim();
+5.- https://chat.whatsapp.com/DLrFJUPxEQ2IrOm7sJWJ0k 
+
+> Comunidad conjunta de Bots:
+
+1.- https://whatsapp.com/channel/0029Vablj8M05MUnustq3q1S
+
+2.- https://chat.whatsapp.com/DFpCyH1mOJM9TxbCdYTwvv`.trim();
   const buttonMessage= {
     'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
     'mimetype': `application/${document}`,
