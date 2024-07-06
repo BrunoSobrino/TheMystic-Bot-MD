@@ -54,7 +54,8 @@
 - Área de Pagos: https://billing.flarex.cloud
 - Game Panel: https://gamepanel.flarex.cloud
 - Contacto: hi@flarex.cloud / support@flarex.cloud / partnerships@flarex.cloud
-- Discord: https://discord.flarex.cloud 
+- Discord: https://discord.flarex.cloud
+- WhatsApp: https://whatsapp.flarex.cloud
 
 ### `▢ ACTIVAR EN CAFIREXOS (ANTES ZIPPONODES)`
 <a href="https://cafirexos.com"><img src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png" height="125px"></a>
