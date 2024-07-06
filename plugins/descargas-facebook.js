@@ -12,10 +12,10 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
     throw `_*${tradutor.texto1[0]}*_\n\n*${tradutor.texto1[1]}*\n\n*${tradutor.texto1[2]}* _${usedPrefix + command} https://fb.watch/fOTpgn6UFQ/_`;
   }
 
-  const linkface = await isValidFacebookLink(args[0]);
+  /*const linkface = await isValidFacebookLink(args[0]);
   if (!linkface) {
     throw `_*${tradutor.texto2[0]}*_\n\n*${tradutor.texto2[1]}*\n\n*${tradutor.texto2[2]}* _${usedPrefix + command} https://fb.watch/fOTpgn6UFQ/_`;
-  }
+  }*/
 
   if (!enviando) enviando = true;
   try {
@@ -46,7 +46,7 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
 handler.command = /^(facebook|fb|facebookdl|fbdl|facebook2|fb2|facebookdl2|fbdl2|facebook3|fb3|facebookdl3|fbdl3|facebook4|fb4|facebookdl4|fbdl4|facebook5|fb5|facebookdl5|fbdl5)$/i;
 export default handler;
 
-async function isValidFacebookLink(link) {
+/*async function isValidFacebookLink(link) {
   const validPatterns = [
     /facebook\.com\/[^/]+\/videos\//i, 
     /fb\.watch\//i, 
@@ -58,10 +58,11 @@ async function isValidFacebookLink(link) {
     /fb\.com\/share\/v\//i, 
     /fb\.com\/share\/r\//i, 
     /facebook\.com\/[^/]+\/posts\/[^/]+\//i, 
-    /facebook\.com\/reel\/[^/]+\//i
+    /facebook\.com\/reel\/[^/]+\//i,
+    /facebook\.com\/watch\/[^/]+\//i  
   ];
   return validPatterns.some(pattern => pattern.test(link));
-}
+}*/
 
 const getBuffer = async (url, options = {}) => {
   const res = await axios({
