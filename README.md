@@ -47,6 +47,15 @@
 - Clona el repositorio haciendo [clic aquí](https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork)
 - ¿Quieres cambiar el número del propietario? haz [clic aquí](https://github.com/BrunoSobrino/TheMystic-Bot-MD/blob/master/config.js)
 
+### `▢ ACTIVAR EN FLAREXCLOUD`
+<a href="https://www.flarex.cloud"><img src="https://cdn.flarex.cloud/deploy.png" height="60px"></a>
+- Pagina Web: https://www.flarex.cloud
+- Tutorial: en proceso
+- Área de Pagos: https://billing.flarex.cloud
+- Game Panel: https://gamepanel.flarex.cloud
+- Contacto: hi@flarex.cloud / support@flarex.cloud / partnerships@flarex.cloud
+- Discord: https://discord.flarex.cloud 
+
 ### `▢ ACTIVAR EN CAFIREXOS (ANTES ZIPPONODES)`
 <a href="https://cafirexos.com"><img src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png" height="125px"></a>
 - Sitio web: [cafirexos.com](https://cafirexos.com)
