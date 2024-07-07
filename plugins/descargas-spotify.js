@@ -14,7 +14,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     const res = await fetch(`${global.MyApiRestBaseUrl}/api/spotifysearch?text=${text}&apikey=${global.MyApiRestApikey}`);
     const data = await res.json()
-    const linkDL = data?.spty?.resultado[0]?.url;
+    const linkDL = data?.spty?.resultado[0]?.url || data?.spty?.resultado[0]?.link;
     const musics = await fetch(`${global.MyApiRestBaseUrl}/api/spotifydl?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
     const music = await conn.getFile(musics?.url)
     const infos = await fetch(`${global.MyApiRestBaseUrl}/api/spotifyinfo?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
