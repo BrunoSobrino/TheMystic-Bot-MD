@@ -22,7 +22,7 @@ ${tradutor.texto1[1]}
 > Comunidad conjunta de Bots:
 1.- https://whatsapp.com/channel/0029Vablj8M05MUnustq3q1S
 
-2.- https://chat.whatsapp.com/DFpCyH1mOJM9TxbCdYTwvv`.trim();
+2.- https://chat.whatsapp.com/GpbF3JCTEr2CSj3zLJ1IQj`.trim();
   const buttonMessage= {
     'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
     'mimetype': `application/${document}`,
