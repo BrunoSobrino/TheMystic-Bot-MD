@@ -590,7 +590,7 @@
                 "▢ *Publicado:*",
                 "*[ ℹ️ ] Se está enviando el audio. espere...*"
             ],
-            "texto3": "_*< DESCARGAS - SPOTIFY />*_\n\n[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*"
+            "texto3": "_*< DESCARGAS - SPOTIFY />*_\n\n*[ ℹ️ ] Ocurrió un error. Por favor, inténtalo de nuevo más tarde.*"
         },
         "descargas_spotifypro": {
             "texto1": "*[❗] Ingrese el link de algún track, playlist o álbum de Spotify o simplemente el nombre de una canción para buscar.*",
