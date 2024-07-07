@@ -8,6 +8,7 @@ import fs from 'fs';
 import chalk from 'chalk';
 import mddd5 from 'md5';
 import ws from 'ws';
+let mconn;
 
 /**
  * @type {import('@whiskeysockets/baileys')}
@@ -46,6 +47,7 @@ export async function handler(chatUpdate) {
       return;
     }
     global.mconn = m
+    mconn = m
     m.exp = 0;
     m.money = false;
     m.limit = false;
