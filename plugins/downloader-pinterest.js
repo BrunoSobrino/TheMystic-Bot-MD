@@ -1,16 +1,21 @@
-import Scraper from "@SumiFX/Scraper"
+import axios from 'axios'
+
 let handler = async (m, { conn, text, usedPrefix, command }) => {
-if (!text) return m.reply('👑 Ingresa un texto para realizar la búsqueda.')
 try {
-//m.react(rwait)
-let { dl_url } = await Scraper.pinterest(text)
-await conn.sendFile(m.chat, dl_url, 'thumbnail.jpg', null, m)
-m.react(done)
-} catch {
+if (!text) throw m.reply(`🍭 Ingresa el enlace del *Vídeo* o *Imagen* de Pinterest que deseas descargar.`)
+let res = await axios.get(`https://api-starlights-team.koyeb.app/api/pindl?url=${text}`)
+let { type, url: sms } = res.data
+if (type === 'image') {
+ await conn.sendMessage(m.chat, { image: { url: sms }, quoted: m })
+} else if (type === 'video') {
+await conn.sendMessage(m.chat, { video: { url: sms }, quoted: m })
+} else {
+throw m.reply(`Error`)
+}} catch (error) {
 }}
-handler.help = ['pinterest <texto>']
-handler.tags = ['internet']
-handler.command = ['pinterest']
+handler.tags = ['downloader']
+handler.help = ['pindl <pin url>']
+handler.command = /^(pindl)$/i
+handler.register = true 
 handler.limit = 1
-handler.register = true
 export default handler
