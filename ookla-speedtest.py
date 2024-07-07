@@ -1,4 +1,4 @@
-#!/usr/bin/env pythong
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright 2012 Matt Martz
 # All Rights Reserved.
