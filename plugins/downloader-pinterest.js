@@ -11,6 +11,4 @@ m.react(done)
 handler.help = ['pinterest <texto>']
 handler.tags = ['internet']
 handler.command = ['pinterest']
-handler.limit = 1
-handler.register = true
 export default handler
