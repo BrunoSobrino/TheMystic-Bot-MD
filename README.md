@@ -1,4 +1,4 @@
-# `𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏` 
+# `𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏`
 
 ------------------
 > **AVISO**: Yo "Bruno Sobrino", me he retirado de todo lo relacionado con el bot o temas similares, por lo que en algún momento quedará obsoleto y/o algunos comandos dejarán de funcionar. Agradezco su preferencia durante el recorrido por este mundo de los bots.
@@ -100,60 +100,12 @@
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
 ### `▢ ACTIVAR EN TERMUX` 
-- Escribe los siguientes comandos en Termux:
-```bash
-cd && termux-setup-storage
-```
+- El Bot no es compartible con termux debido a que es un Bot de consumo alto de recursos. 
 
-```bash
-apt-get update -y && apt-get upgrade -y
-```
-
-```bash
-pkg install -y git nodejs ffmpeg imagemagick && pkg install yarn 
-```
-
-```bash
-git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git && cd TheMystic-Bot-MD
-```
-
-```bash
-yarn install
-```
-
-```bash
-npm install
-```
-
-```bash
-npm update
-```
-
-```bash
-npm start
-```
-
-### `▢ ACTIVAR EN CASO DE DETENERSE (TERMUX)`
-- Escribe los siguientes comandos en Termux:
-```bash
-> cd 
-> cd Mystic-termux
-> npm start
-```
-
-### `▢ OBTENER OTRO CODIGO QR (TERMUX)`
-- DETEN EL BOT, HAZ CLICK EN EL SIMBOLO CTRL DE TERMUX MAS Z EN SU TECLADO MOVIL HASTA QUE SALGA ALGO EN VERDE SIMILAR A TheMystic-Bot-MD $
-- Escribe los siguientes comandos en Termux:
-```bash
-> cd 
-> cd TheMystic-Bot-MD
-> rm -rf MysticSession
-> npm start
-```
 ### `▢ NOTAS`
 - ES POSIBLE QUE EL BOT TENGA ALGUNAS FALLAS, SE IRAN SOLUCIONANDO CONFORME SE VAYAN DETECTANDO
 - SI VAS A EDITAR POR COMPLETO DEJA LOS CREDITOS DEL BOT 
-- EL BOT ES COMPARTIBLE CON WHATSAPP NORMAL O BUSINESS
+- EL BOT ES COMPARTIBLE CON WHATSAPP NORMAL, BUSINESS NO SE ACONSEJA POR LA DETECCION DE SPAM
 - ATENTO A LAS ACTUALIZACIONES QUE SE HAGAN EN ESTE REPOSITORIO
 - PUEDES USAR #actualizacion PARA VER SI ALGUN COMANDO FUE ACTUALIZADO
 - EL ADD Y EL KICK PUEDEN OCASIONAR QUE EL NUMERO SE VAYA A SOPORTE POR ELLO SE ACTIVA CON #enable restrict 
