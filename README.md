@@ -6,16 +6,6 @@
 > TheMystic-Bot-MD pasa a quedar en manos de colaboradores, y como principal representante Aiden_NotLogic.
 ------------------
 
-<!-- Por colaborador: https://github.com/jeffersonalionco -->
-> Función de **idioma** oficialmente implementada en TheMystic-Bot-MD: **/lang**
-> ##### **𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏 - Idiomas Disponibles**
-> - es - Español
-> - pt-br - Portugués
-> - en - Inglés
-> - ru - Ruso
-> - fr - Francés
-> - ar - Árabe (انزل لآخر الصفحة للتعرف على المزيد) 
-
 ### `▢ CUENTAS OFICIALES`
 
 [ 🔗 ] https://www.atom.bio/theshadowbrokers-team
@@ -103,6 +93,7 @@
 - El Bot no es compartible con termux debido a que es un Bot de consumo alto de recursos. 
 
 ### `▢ NOTAS`
+- SE AGREGÓ LA FUNCION DE MULTIIDIOMAS, USA EL COMANDO #lang PARA CONOCER MAS INFO Y LOS IDIOMAS DISPOSIBLES
 - ES POSIBLE QUE EL BOT TENGA ALGUNAS FALLAS, SE IRAN SOLUCIONANDO CONFORME SE VAYAN DETECTANDO
 - SI VAS A EDITAR POR COMPLETO DEJA LOS CREDITOS DEL BOT 
 - EL BOT ES COMPARTIBLE CON WHATSAPP NORMAL, BUSINESS NO SE ACONSEJA POR LA DETECCION DE SPAM
