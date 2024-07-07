@@ -834,7 +834,7 @@
             "texto7": [
                 "*▢ Titulo:*",
                 "*▢ Peso Del Video:*",
-                "`*[ ✔ ] Video descargado exitosamente.*"
+                "*[ ✔ ] Video descargado exitosamente.*"
             ],
             "texto8": "*[ ❌ ] El video no pudo ser descargado ni enviado, vuelva a intentarlo.*",
             "texto9": "*[❗] Error, no fue posible descargar el video.*"
