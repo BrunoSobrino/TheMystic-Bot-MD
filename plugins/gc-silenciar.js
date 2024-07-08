@@ -25,18 +25,19 @@ const handler = async (message, { conn, command, text, isAdmin }) => {
     if (command === 'mute' || command === 'silenciar') {
         if (!isAdmin) throw '*[ ℹ️ ] Este comando solo puede ser usado por administradores del grupo.*';
 
-        const ownerJid = global['owner'][0][0] + '@s.whatsapp.net';
-        if (message['mentionedJid'][0] === ownerJid) throw '*[❗]* No puedes silenciar al propietario del bot.';
+        const ownerJid = global.owner[0][0] + '@s.whatsapp.net';
+        if (message.mentionedJid[0] === ownerJid) throw '*[❗]* No puedes silenciar al propietario del bot.';
 
-        let targetJid = message['mentionedJid'][0] ? message['mentionedJid'][0] : text;
-        if (targetJid === conn['user']['jid']) throw '*[❗]* No puedes silenciar al bot.';
+        let targetJid = message.mentionedJid[0] ? message.mentionedJid[0] : text;
+        if (targetJid === conn.user.jid) throw '*[❗]* No puedes silenciar al bot.';
 
-        const groupMetadata = await conn['groupMetadata'](message['chat']);
-        const groupOwnerJid = groupMetadata['owner'] || message['chat'].split('-')[0] + '@s.whatsapp.net';
-        if (message['mentionedJid'][0] === groupOwnerJid) throw '*[❗]* No puedes silenciar al propietario de este grupo.';
+        const groupMetadata = await conn.groupMetadata(message.chat);
+        const groupOwnerJid = groupMetadata.owner || message.chat.split('-')[0] + '@s.whatsapp.net';
+        if (message.mentionedJid[0] === groupOwnerJid) throw '*[❗]* No puedes silenciar al propietario de este grupo.';
 
-        let userData = global['db']['data']['users'][targetJid];
-        if (userData['muto'] === true) throw '*[❗] Este usuario ya ha sido silenciado.*';
+        console.log(global.db.data.users[targetJid].mute)
+        let userData = global.db.data.users[targetJid];
+        if (userData.mute === true) throw '*[❗] Este usuario ya ha sido silenciado.*';
 
         conn['reply'](message['chat'], '*[❗] Tus mensajes serán eliminados*', {
             'key': { 'participants': '0@s.whatsapp.net', 'fromMe': false, 'id': 'Halo' },
@@ -49,7 +50,7 @@ const handler = async (message, { conn, command, text, isAdmin }) => {
             'participant': '0@s.whatsapp.net'
         });
 
-        global['db']['data']['users'][targetJid]['muto'] = true;
+        global.db.data.users[targetJid].mute = true;
     } else if (command === 'unmute' || command === 'desilenciar') {
         if (!isAdmin) throw '*[ ℹ️ ] Este comando solo puede ser usado por administradores del grupo.*';
 
@@ -57,7 +58,7 @@ const handler = async (message, { conn, command, text, isAdmin }) => {
         let userData = global['db']['data']['users'][targetJid];
         if (userData['mute'] === false) throw '*[❗] Este usuario no ha sido silenciado.*';
 
-        global['db']['data']['users'][targetJid]['muto'] = false;
+         global.db.data.users[targetJid].mute = false;
         conn['reply'](message['chat'], '*[❗] Tus mensajes no serán eliminados*', {
             'key': { 'participants': '0@s.whatsapp.net', 'fromMe': false, 'id': 'Halo' },
             'message': {
