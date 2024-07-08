@@ -38,7 +38,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
 
 ${tradutor.texto1[1]} ${taguser}
 
-> En el Team de MoonLight - Team
+> En comunidad de MoonLight - Team
 
 ${tradutor.texto1[2]}
 
@@ -521,7 +521,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├ _${usedPrefix}delcmd_
   ├ _${usedPrefix}saveimage_
   ├ _${usedPrefix}viewimage_`.trim();
-  ╰───── • ◆ • ─────╯
+  ╰───── • ◆ • ─────╯`
 
     let pp
     // Nouvelles images de menu disponibles 
