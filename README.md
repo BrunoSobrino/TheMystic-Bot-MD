@@ -1,21 +1,10 @@
 # `𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏`
 
-
 ------------------
 > **AVISO**: Yo "Bruno Sobrino", me he retirado de todo lo relacionado con el bot o temas similares, por lo que en algún momento quedará obsoleto y/o algunos comandos dejarán de funcionar. Agradezco su preferencia durante el recorrido por este mundo de los bots.
 
 > TheMystic-Bot-MD pasa a quedar en manos de colaboradores, y como principal representante Aiden_NotLogic.
 ------------------
-
-<!-- Por colaborador: https://github.com/jeffersonalionco -->
-> Función de **idioma** oficialmente implementada en TheMystic-Bot-MD: **/lang**
-> ##### **𝙏𝙃𝙀 𝙈𝙔𝙎𝙏𝙄𝘾 - 𝘽𝙊𝙏 - Idiomas Disponibles**
-> - es - Español
-> - pt-br - Portugués
-> - en - Inglés
-> - ru - Ruso
-> - fr - Francés
-> - ar - Árabe (انزل لآخر الصفحة للتعرف على المزيد) 
 
 ### `▢ CUENTAS OFICIALES`
 
@@ -47,6 +36,16 @@
 ### `▢ AJUSTES`
 - Clona el repositorio haciendo [clic aquí](https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork)
 - ¿Quieres cambiar el número del propietario? haz [clic aquí](https://github.com/BrunoSobrino/TheMystic-Bot-MD/blob/master/config.js)
+
+### `▢ ACTIVAR EN FLAREXCLOUD`
+<a href="https://www.flarex.cloud"><img src="https://cdn.flarex.cloud/deploy.png" height="60px"></a>
+- Pagina Web: https://www.flarex.cloud
+- Tutorial: en proceso
+- Área de Pagos: https://billing.flarex.cloud
+- Game Panel: https://gamepanel.flarex.cloud
+- Contacto: hi@flarex.cloud / support@flarex.cloud / partnerships@flarex.cloud
+- Discord: https://discord.flarex.cloud
+- WhatsApp: https://whatsapp.flarex.cloud
 
 ### `▢ ACTIVAR EN CAFIREXOS (ANTES ZIPPONODES)`
 <a href="https://cafirexos.com"><img src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png" height="125px"></a>
@@ -91,60 +90,13 @@
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
 ### `▢ ACTIVAR EN TERMUX` 
-- Escribe los siguientes comandos en Termux:
-```bash
-cd && termux-setup-storage
-```
+- El Bot no es compartible con termux debido a que es un Bot de consumo alto de recursos. 
 
-```bash
-apt-get update -y && apt-get upgrade -y
-```
-
-```bash
-pkg install -y git nodejs ffmpeg imagemagick && pkg install yarn 
-```
-
-```bash
-git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git && cd TheMystic-Bot-MD
-```
-
-```bash
-yarn install
-```
-
-```bash
-npm install
-```
-
-```bash
-npm update
-```
-
-```bash
-npm start
-```
-
-### `▢ ACTIVAR EN CASO DE DETENERSE (TERMUX)`
-- Escribe los siguientes comandos en Termux:
-```bash
-> cd 
-> cd Mystic-termux
-> npm start
-```
-
-### `▢ OBTENER OTRO CODIGO QR (TERMUX)`
-- DETEN EL BOT, HAZ CLICK EN EL SIMBOLO CTRL DE TERMUX MAS Z EN SU TECLADO MOVIL HASTA QUE SALGA ALGO EN VERDE SIMILAR A TheMystic-Bot-MD $
-- Escribe los siguientes comandos en Termux:
-```bash
-> cd 
-> cd TheMystic-Bot-MD
-> rm -rf MysticSession
-> npm start
-```
 ### `▢ NOTAS`
+- SE AGREGÓ LA FUNCION DE MULTIIDIOMAS, USA EL COMANDO #lang PARA CONOCER MAS INFO Y LOS IDIOMAS DISPOSIBLES
 - ES POSIBLE QUE EL BOT TENGA ALGUNAS FALLAS, SE IRAN SOLUCIONANDO CONFORME SE VAYAN DETECTANDO
 - SI VAS A EDITAR POR COMPLETO DEJA LOS CREDITOS DEL BOT 
-- EL BOT ES COMPARTIBLE CON WHATSAPP NORMAL O BUSINESS
+- EL BOT ES COMPARTIBLE CON WHATSAPP NORMAL, BUSINESS NO SE ACONSEJA POR LA DETECCION DE SPAM
 - ATENTO A LAS ACTUALIZACIONES QUE SE HAGAN EN ESTE REPOSITORIO
 - PUEDES USAR #actualizacion PARA VER SI ALGUN COMANDO FUE ACTUALIZADO
 - EL ADD Y EL KICK PUEDEN OCASIONAR QUE EL NUMERO SE VAYA A SOPORTE POR ELLO SE ACTIVA CON #enable restrict 
@@ -166,6 +118,8 @@ npm start
 <a href="https://www.whatsapp.com/channel/0029VadrnO9InlqNslAErY3D" target="blank"><img src="https://img.shields.io/badge/BK9_COLAB.0-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
 ## `▢ COLABORADORES DEL BOT` 
+
+<a href="https://github.com/matias-crypto"><img src="https://github.com/matias-crypto.png" width="100" height="100" alt="unptoadrih15"/></a>
 <a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="100" height="100" alt="unptoadrih15"/></a>
 <a href="https://github.com/ALBERTO9883"><img src="https://github.com/ALBERTO9883.png" width="100" height="100" alt="ALBERTO9883"/></a>
 <a href="https://github.com/ferhacks"><img src="https://github.com/ferhacks.png" width="100" height="100" alt="ferhacks"/></a>

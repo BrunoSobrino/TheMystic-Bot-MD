@@ -14,7 +14,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     const res = await fetch(`${global.MyApiRestBaseUrl}/api/spotifysearch?text=${text}&apikey=${global.MyApiRestApikey}`);
     const data = await res.json()
-    const linkDL = data?.spty?.resultado[0]?.url;
+    const linkDL = data?.spty?.resultado[0]?.url || data?.spty?.resultado[0]?.link;
     const musics = await fetch(`${global.MyApiRestBaseUrl}/api/spotifydl?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
     const music = await conn.getFile(musics?.url)
     const infos = await fetch(`${global.MyApiRestBaseUrl}/api/spotifyinfo?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
@@ -22,11 +22,11 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const spty = info?.spty?.resultado
     const img = await (await fetch(`${spty.thumbnail}`)).buffer()  
     let spotifyi = ` _${tradutor.texto2[0]}_\n\n`
-        spotifyi += ` ${tradutor.texto2[1]} ${spty.title}\n\n`
-        spotifyi += ` ${tradutor.texto2[2]} ${spty.artist}\n\n`
-        spotifyi += ` ${tradutor.texto2[3]} ${spty.album}\n\n`                 
+        spotifyi += ` ${tradutor.texto2[1]} ${spty.title}\n`
+        spotifyi += ` ${tradutor.texto2[2]} ${spty.artist}\n`
+        spotifyi += ` ${tradutor.texto2[3]} ${spty.album}\n`                 
         spotifyi += ` ${tradutor.texto2[4]} ${spty.year}\n\n`   
-        spotifyi += `${tradutor.texto2[5]}*`
+        spotifyi += `> ${tradutor.texto2[5]}`
     await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": img, "thumbnailUrl": img, "mediaUrl": linkDL, "sourceUrl": linkDL}}}, {quoted: m});
     await conn.sendMessage(m.chat, {audio: music.data, fileName: `${spty.name}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
   } catch (error) {

@@ -3,8 +3,6 @@ import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 import {mediafiredl} from '@bochilteam/scraper';
 
-
-
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language

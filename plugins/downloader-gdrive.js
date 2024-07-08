@@ -1,8 +1,6 @@
 import fetch from 'node-fetch';
 import {sizeFormatter} from 'human-readable';
 
-
-
 const formatSize = sizeFormatter({
   std: 'JEDEC', decimalPlaces: 2, keepTrailingZeroes: false, render: (literal, symbol) => `${literal} ${symbol}B`});
 
