@@ -523,7 +523,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├❧ _${usedPrefix}addcmd *<txt>*_
   ├❧ _${usedPrefix}delcmd_
   ├❧ _${usedPrefix}saveimage_
-  ├❧ _${usedPrefix}viewimage_.trim();
+  ├❧ _${usedPrefix}viewimage_
   ╰───── • ◆ • ─────╯`
 
     let pp
