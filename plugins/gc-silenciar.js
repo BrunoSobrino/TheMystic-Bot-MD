@@ -20,8 +20,8 @@ const getStringFromCode = (index) => {
 
 // Handler para procesar comandos de mensajes
 const handler = async (message, { conn, command, text, isAdmin }) => {
-    const muteCommand = getStringFromCode(316);
-    const unmuteCommand = getStringFromCode(331);
+    const muteCommand = 'mute';
+    const unmuteCommand = 'unmute';
 
     if (command === muteCommand) {
         if (!isAdmin) throw getStringFromCode(367);
