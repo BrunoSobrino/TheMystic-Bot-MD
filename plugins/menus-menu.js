@@ -1,6 +1,4 @@
-Necesito q sigas añadiendo ❧
 
-Al menu
 
 import fetch from 'node-fetch';
 
