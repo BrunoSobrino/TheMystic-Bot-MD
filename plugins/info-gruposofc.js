@@ -19,7 +19,7 @@ ${tradutor.texto1[1]}
 
 4.- https://chat.whatsapp.com/CjexkGVr37J6GuSdDVAHzC
 
-> MoonLight Team OFC:
+> MoonLight Team OFC :
 
 1.- https://whatsapp.com/channel/0029Vablj8M05MUnustq3q1S
 
