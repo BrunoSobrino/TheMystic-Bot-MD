@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs';c
 import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys';
 
 const handler = async (m, {conn, args}) => {
