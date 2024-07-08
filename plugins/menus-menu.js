@@ -56,12 +56,12 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
  ${tradutor.texto1[10]}
  
   ╭───── • ◆ • ─────╮ 
-  ├❧❧ _${usedPrefix}menuaudios_
-  ├❧❧ _${usedPrefix}menuanimes_
-  ├❧❧ _${usedPrefix}labiblia_
-  ├❧❧ _${usedPrefix}lang_ 
-  ├❧❧ _${usedPrefix}langgroup_ 
-  ├❧❧ _${usedPrefix}glx_
+  ├❧ _${usedPrefix}menuaudios_
+  ├❧_${usedPrefix}menuanimes_
+  ├❧ _${usedPrefix}labiblia_
+  ├❧ _${usedPrefix}lang_ 
+  ├❧ _${usedPrefix}langgroup_ 
+  ├❧ _${usedPrefix}glx_
   ╰───── • ◆ • ─────╯
  
   ${tradutor.texto1[11]}
