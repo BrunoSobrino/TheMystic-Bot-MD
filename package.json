@@ -99,7 +99,7 @@
     "wa-sticker-formatter": "^4.3.2",
     "yargs": "^17.3.1",
     "yt-search": "^2.10.3",
-    "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2"
+    "ytdl-core": "github:soya-daizu/ytdl-core#sig-patch"
   },
   "devDependencies": {
     "eslint": "^8.45.0",
