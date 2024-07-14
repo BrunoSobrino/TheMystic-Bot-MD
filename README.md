@@ -10,6 +10,10 @@
 
 [ 🔗 ] https://www.atom.bio/theshadowbrokers-team
 
+### `▢ Canal Oficial` 
+
+ <a href="https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN" target="blank"><img src="https://img.shields.io/badge/Canal_de_Noticias_y_Actualizaciones-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+ 
 ### `▢ GRUPOS DE SOPORTE (NO DISPONIBLE)`
 
  <a href="https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(ATIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
