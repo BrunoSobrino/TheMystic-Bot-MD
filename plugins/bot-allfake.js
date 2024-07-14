@@ -37,7 +37,7 @@ global.mysticicon = [
 ''
 ].getRandom()
 
-global.rcanal = {
+global.fake = {
 contextInfo: {
 isForwarded: true,
 forwardedNewsletterMessageInfo: {
