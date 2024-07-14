@@ -118,8 +118,8 @@
 
 ## `▢ COLABORADORES DEL BOT` 
 
-<a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=BrunoSobrino/TheMystic-Bot-MD" /> 
+<a href="https://github.com/BrunoSobrino/The-MysticBot-MD/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=BrunoSobrino/The-MysticBot-MD" /> 
 </a>
 
 ## `▢ AGRADECIMIENTOS & CREDITOS` 
