@@ -10,13 +10,13 @@
 
 [ 🔗 ] https://www.atom.bio/theshadowbrokers-team
 
-### <img src="https://i.pinimg.com/originals/19/80/6e/19806e91932e6054965fc83b85241270.gif" alt="Canal Ofc De MysticBot" width="42" height="42"> Canal Oficial
+### `▢ Canal Oficial` 
 
-- [![Click Aquí](https://img.shields.io/badge/Channel-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
+[![Click Aquí](https://img.shields.io/badge/Channel-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
+ 
+### `▢ GRUPO DE SOPORTE`
 
-### <img src="https://i.pinimg.com/originals/19/80/6e/19806e91932e6054965fc83b85241270.gif" alt="Grupo De Soporte" width="42" height="42"> Grupo De Soporte
-
-- [![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
+[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
 
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
