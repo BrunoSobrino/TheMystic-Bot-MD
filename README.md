@@ -14,13 +14,9 @@
 
 [![Click Aquí](https://img.shields.io/badge/Channel-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
  
-### `▢ GRUPOS DE SOPORTE (NO DISPONIBLE)`
+### `▢ GRUPO DE SOPORTE (NO DISPONIBLE)`
 
-[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte1-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
-
-[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte2-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/IkUzsnEJ7za8J9P49JdTJ9)
-
-[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte3-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs)
+[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
 
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
