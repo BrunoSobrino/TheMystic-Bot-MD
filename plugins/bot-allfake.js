@@ -46,7 +46,7 @@ serverMessageId: 100,
 newsletterName: 'The Shadow Brokers - Channel ℹ️',
 },
 externalAdReply: { 
-showAdAttribution: true,                                       title: packname,
+showAdAttribution: true,                                       title: wm,
 body: 'The Shadow Brokers - TEAM',
 mediaUrl: null,
 description: null,
