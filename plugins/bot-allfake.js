@@ -39,7 +39,7 @@ global.mysticredes = [canalmystic, gituser, mysticyt, githubmystic].getRandom()
 //Fakes
 global.fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
 
-global.mysticicon = 'https://qu.ax/GOer.jpg'
+global.mysticicon = 'https://qu.ax/nBBN.jpg'
 
 global.fakechannel = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363316342878334@newsletter", serverMessageId: 100, newsletterName: 'The Shadow Brokers - Channel ℹ️', }, externalAdReply: { showAdAttribution: true, title: wm, body: 'The Shadow Brokers - TEAM', mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: mysticicon, sourceUrl: mysticredes, mediaType: 1, renderLargerThumbnail: false
 }, }, }}
