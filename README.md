@@ -118,9 +118,29 @@
 
 ## `▢ COLABORADORES DEL BOT` 
 
-<a href="https://github.com/BrunoSobrino/The-MysticBot-MD/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=BrunoSobrino/The-MysticBot-MD" /> 
-</a>
+<a href="https://github.com/matias-crypto"><img src="https://github.com/matias-crypto.png" width="100" height="100" alt="unptoadrih15"/></a>
+<a href="https://github.com/unptoadrih15"><img src="https://github.com/unptoadrih15.png" width="100" height="100" alt="unptoadrih15"/></a>
+<a href="https://github.com/ALBERTO9883"><img src="https://github.com/ALBERTO9883.png" width="100" height="100" alt="ALBERTO9883"/></a>
+<a href="https://github.com/ferhacks"><img src="https://github.com/ferhacks.png" width="100" height="100" alt="ferhacks"/></a>
+<a href="https://github.com/G4tito"><img src="https://github.com/G4tito.png" width="100" height="100" alt="G4tito"/></a>
+<a href="https://github.com/GataNina-Li"><img src="https://github.com/GataNina-Li.png" width="100" height="100" alt="GataNina-Li"/></a>
+<a href="https://github.com/OsExar"><img src="https://github.com/OsExar.png" width="100" height="100" alt="OsExar"/></a>
+<a href="https://github.com/CarlosTwT"><img src="https://github.com/CarlosTwT.png" width="100" height="100" alt="CarlosTwT"/></a>
+<a href="https://github.com/anxo2077"><img src="https://github.com/anxo2077.png" width="100" height="100" alt="anxo2077"/></a>
+<a href="https://github.com/GeneradorVIP"><img src="https://github.com/GeneradorVIP.png" width="100" height="100" alt="GeneradorVIP"/></a>
+<a href="https://github.com/DIEGO-OFC"><img src="https://github.com/DIEGO-OFC.png" width="100" height="100" alt="DIEGO-OFC"/></a>
+<a href="https://github.com/SinNombre999"><img src="https://github.com/SinNombre999.png" width="100" height="100" alt="SinNombre999"/></a>
+<a href="https://github.com/ReyEndymion"><img src="https://github.com/ReyEndymion.png" width="100" height="100" alt="ReyEndymion"/></a>
+<a href="https://github.com/theh2so4"><img src="https://github.com/theh2so4.png" width="100" height="100" alt="theh2so4"/></a>
+<a href="https://github.com/skidy89"><img src="https://github.com/skidy89.png" width="100" height="100" alt="skidy89"/></a>
+<a href="https://github.com/OFC-YOVANI"><img src="https://github.com/OFC-YOVANI.png" width="100" height="100" alt="OFC-YOVANI"/> </a>
+<a href="https://github.com/elrebelde21"><img src="https://github.com/elrebelde21.png" width="100" height="100" alt="elrebelde21"/> </a>
+<a href="https://github.com/Fabri115"><img src="https://github.com/Fabri115.png" width="100" height="100" alt="Fabri115"/> </a>
+<a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> </a>
+<a href="https://github.com/OfcDiego"><img src="https://github.com/OfcDiego.png" width="100" height="100" alt="Diego"/> </a>
+<a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a>
+<a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
+<a href="https://github.com/BK9dev"><img src="https://i.imgur.com/NAVoDeW.jpeg" width="100" height="100" alt="BK9"/> </a>
 
 ## `▢ AGRADECIMIENTOS & CREDITOS` 
 <div><button id="boton" type="button">games-wabot-md by BochilGaming </button></div>
