@@ -12,24 +12,23 @@
 
 ### `▢ Canal Oficial` 
 
- <a href="https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN" target="blank"><img src="https://img.shields.io/badge/Canal_de_Noticias_y_Actualizaciones-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+[![Click Aquí](https://img.shields.io/badge/Channel-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
  
 ### `▢ GRUPOS DE SOPORTE (NO DISPONIBLE)`
 
- <a href="https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(PORTUGU%C3%8AS)_(ATIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+[![Click Aquí](https://img.shields.io/badge/Grupo De Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
 
-<a href="https://chat.whatsapp.com/IkUzsnEJ7za8J9P49JdTJ9" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE_(ES)_(DISPONIBLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+[![Click Aquí](https://img.shields.io/badge/Grupo-De-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/IkUzsnEJ7za8J9P49JdTJ9)
 
-<a href="https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs" target="blank"><img src="https://img.shields.io/badge/SUPPORT_GROUP_(EN)_(NOT AVAILABLE)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/FRkr7jJHSJA5OjVtE64dDs)
 
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
  ### `▢ BOTS OFICIALES (INACTIVOS)`
 
+[![Click Aquí](https://img.shields.io/badge/Bot-Oficial-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://api.whatsapp.com/send/?phone=5219991402134&text=/estado&type=phone_number&app_absent=0)
 
-<a href="https://api.whatsapp.com/send/?phone=5219991402134&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT_OFICIAL_1_(INACTIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
-
-<a href="https://api.whatsapp.com/send/?phone=5219993404349&text=/estado&type=phone_number&app_absent=0" target="blank"><img src="https://img.shields.io/badge/BOT_OFICIAL_2_(INACTIVO)-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
+[![Click Aquí](https://img.shields.io/badge/Bot-Oficial2-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://api.whatsapp.com/send/?phone=5219993404349&text=/estado&type=phone_number&app_absent=0)
 
 ### `▢ DONAR`
 - Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/TheShadowBrokers133)
