@@ -7,7 +7,7 @@ const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
   const tradutor = _translate.plugins.downloader_modapk
 
 
- if (!text) throw `${tradutor.texto1}`;
+ if (!text) conn.reply(m.chat, `${tradutor.texto1}`, m, fakechannel);
   try {    
     const searchA = await search(text);
     const data5 = await download(searchA[0].id);
