@@ -16,6 +16,8 @@
  
 ### `▢ GRUPO DE SOPORTE`
 
+### <img src="https://i.pinimg.com/originals/19/80/6e/19806e91932e6054965fc83b85241270.gif" alt="Grupo De Soporte" width="42" height="42"> Grupo Soporte
+
 [![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
 
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
