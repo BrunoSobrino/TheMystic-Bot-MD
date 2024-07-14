@@ -20,11 +20,9 @@
 
 > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
-## <img src="https://static.wikia.nocookie.net/nyancat/images/d/d3/Nyan-cat.gif/revision/latest/scale-to-width-down/400?cb=20131231222500&path-prefix=es" alt="Grupo" width="45" height="43"> Bot Oficial 
+ ### `▢ BOTS OFICIALES (INACTIVOS)`
 
 <a href="https://wa.me5219991402134?text=!menu"><img alt="Bot Oficial" src="https://img.shields.io/badge/Bot - Oficial-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
-
-## <img src="https://static.wikia.nocookie.net/nyancat/images/d/d3/Nyan-cat.gif/revision/latest/scale-to-width-down/400?cb=20131231222500&path-prefix=es" alt="Grupo" width="45" height="43"> Bot Oficial 2
 
 <a href="https://wa.me/5219993404349?text=!menu"><img alt="Bot Oficial2" src="https://img.shields.io/badge/Bot - Oficial2-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
 
