@@ -41,7 +41,7 @@ global.fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@
 
 global.mysticicon = 'https://qu.ax/nBBN.jpg'
 
-global.fakechannel = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363316342878334@newsletter", serverMessageId: 100, newsletterName: '✰ The Shadow Brokers - Channel ✰', }, externalAdReply: { showAdAttribution: true, title: wm, body: '✩ 𝐓𝐡𝐞-𝐌𝐲𝐬𝐭𝐢𝐜-𝐁𝐨𝐭-𝐌𝐃 ✩', mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: mysticicon, sourceUrl: mysticredes, mediaType: 1, renderLargerThumbnail: false
+global.fake = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363316342878334@newsletter", serverMessageId: 100, newsletterName: '✰ The Shadow Brokers - Channel ✰', }, externalAdReply: { showAdAttribution: true, title: wm, body: '✩ 𝐓𝐡𝐞-𝐌𝐲𝐬𝐭𝐢𝐜-𝐁𝐨𝐭-𝐌𝐃 ✩', mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: mysticicon, sourceUrl: mysticredes, mediaType: 1, renderLargerThumbnail: false
 }, }, }}
 
 export default handler
