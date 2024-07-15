@@ -8,6 +8,7 @@ handler.before = async (m) => {
   if (chat.simi) {
     if (/^.*false|disnable|(turn)?off|0/i.test(m.text)) return;
     let textodem = m.text;
+    if (m.text.includes('serbot') || m.text.includes('bots')|| m.text.includes('jadibot')|| m.text.includes('menu')|| m.text.includes('play')|| m.text.includes('play2') || m.text.includes('playdoc') || m.text.includes('tiktok') || m.text.includes('facebook') || m.text.includes('menu2') ||  m.text.includes('infobot') || m.text.includes('estado') ||  m.text.includes('ping') ||  m.text.includes('instalarbot') ||  m.text.includes('sc') ||  m.text.includes('sticker') ||  m.text.includes('s') || m.text.includes('wm') ||  m.text.includes('qc')) return
     try {
       const ressimi = await simitalk(textodem);
       await m.conn.sendMessage(m.chat, { text: ressimi.resultado.simsimi }, { quoted: m });
