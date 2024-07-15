@@ -8,23 +8,19 @@
 
 ### `▢ CUENTAS OFICIALES`
 
-[ 🔗 ] https://www.atom.bio/theshadowbrokers-team
+> [ 🔗 ] [atom.bio](https://www.atom.bio/theshadowbrokers-team)
 
-### `▢ Canal Oficial` 
-
-[![Click Aquí](https://img.shields.io/badge/Channel-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
- 
-### `▢ GRUPO DE SOPORTE`
+[![Click Aquí](https://img.shields.io/badge/Canal-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
 
 [![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
 
-> [ ℹ️ ] En los grupos de soporte no se permiten bots.
+<!-- > [ ℹ️ ] En los grupos de soporte no se permiten bots.
 
- ### `▢ BOTS OFICIALES (INACTIVOS)`
+### `▢ BOTS OFICIALES (INACTIVOS)`
 
 <a href="https://wa.me5219991402134?text=!menu"><img alt="Bot Oficial" src="https://img.shields.io/badge/Bot - Oficial-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
 
-<a href="https://wa.me/5219993404349?text=!menu"><img alt="Bot Oficial2" src="https://img.shields.io/badge/Bot - Oficial2-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
+<a href="https://wa.me/5219993404349?text=!menu"><img alt="Bot Oficial2" src="https://img.shields.io/badge/Bot - Oficial2-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a> -->
 
 ### `▢ DONAR`
 - Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/TheShadowBrokers133)
@@ -46,13 +42,16 @@
 - Discord: https://discord.flarex.cloud
 - WhatsApp: https://whatsapp.flarex.cloud
 
-### `▢ ACTIVAR EN CAFIREXOS (ANTES ZIPPONODES)`
+### `▢ ACTIVAR EN CAFIREXOS`
 <a href="https://cafirexos.com"><img src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png" height="125px"></a>
 - Sitio web: [cafirexos.com](https://cafirexos.com)
-- Dash: [dash.cafirexos.com](https://dash.cafirexos.com)
+- Área de clientes: [clientes.cafirexos.com](https://clientes.cafirexos.com)
 - Panel: [panel.cafirexos.com](https://panel.cafirexos.com)
 - Documentación: [docs.cafirexos.com](https://docs.cafirexos.com)
 - Canal de WhatsApp: [clic aquí](https://cafirexos.com/whatsapp)
+- Comunidad: [clic aquí](https://cafirexos.com/comunidad)
+
+[![Click Aquí](https://img.shields.io/badge/Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/50497150165)
 
 ### `▢ ACTIVAR EN BOXMINEHOST`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
