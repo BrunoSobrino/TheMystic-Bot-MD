@@ -1,4 +1,3 @@
-
 import fetch from 'node-fetch';
 
 // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
@@ -35,7 +34,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     const document = doc[Math.floor(Math.random() * doc.length)];
     const str = `${tradutor.texto1[0]}
 
-${tradutor.texto1[1]} ${taguser}
+${tradutor.texto1[1]} ${nombre}
 
 > ★ Moonlight Team ★
 
