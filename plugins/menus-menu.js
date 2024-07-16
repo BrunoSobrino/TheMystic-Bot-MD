@@ -138,10 +138,8 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├❧ _${usedPrefix}cancion_
   ├❧ _${usedPrefix}pista_
   ├❧ _${usedPrefix}akinator_
-  ├❧ _${usedPrefix}ruleta
-  ├❧ _${usedPrefix}suerte
   ├❧ _${usedPrefix}wordfind_
-  ├❧ _${usedPrefix}glx_ (RPG Mundo)
+  ├❧ _${usedPrefix}glx (RPG Mundo)_
   ╰───── • ◆ • ─────╯
 
   ${tradutor.texto1[14]}
@@ -365,7 +363,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ╭───── • ◆ • ─────╮
   ├❧ _${usedPrefix}inspect *<wagc_url>*_
   ├❧ _${usedPrefix}chatgpt *<txt>*_
-  ├❧ _${usedPrefix}delchatgpt
+  ├❧ _${usedPrefix}delchatgpt_
   ├❧ _${usedPrefix}gptvoz *<txt>*_
   ├❧ _${usedPrefix}dall-e *<txt>*_
   ├❧ _${usedPrefix}spamwa *num|txt|cant>*_
@@ -554,7 +552,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
     const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
     const tradutor = _translate.plugins.menu_menu
 
-    conn.reply(m.chat, tradutor.texto1[29], m, fakechannel);
+    conn.reply(m.chat, tradutor.texto1[29], m, fake);
   }
 };
 handler.command = /^(menu|menú|memu|memú|help|info|comandos|allmenu|2help|menu1.2|ayuda|commands|commandos|cmd)$/i;
