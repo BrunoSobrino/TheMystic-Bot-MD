@@ -34,7 +34,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     const document = doc[Math.floor(Math.random() * doc.length)];
     const str = `${tradutor.texto1[0]}
 
-${tradutor.texto1[1]} ${nombre}
+${tradutor.texto1[1]} ${taguser}
 
 > ★ Moonlight Team ★
 
