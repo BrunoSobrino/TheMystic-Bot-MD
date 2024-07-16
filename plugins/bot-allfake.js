@@ -27,6 +27,9 @@ return res.data
 console.log(`Error : ${e}`)
 }}
 
+//nombre (perfil)
+global.nombre = conn.getName(m.sender)
+
 // Enlaces Mystic - (Random) 
 var canalmystic = 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y'  
 var gituser = 'https://github.com/BrunoSobrino' 
