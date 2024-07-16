@@ -1,4 +1,4 @@
-import pkg from '@whiskeysockets/baileys' // IMPORTAR LA LIBRERÍA "BAILEYS"
+import pkg from '@whiskeysockets/baileys'
 import fs from 'fs'
 import fetch from 'node-fetch'
 import axios from 'axios'
@@ -35,13 +35,30 @@ var githubmystic = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
 
 global.mysticredes = [canalmystic, gituser, mysticyt, githubmystic].getRandom()
 
+global.iconmystic = 'https://qu.ax/nBBN.jpg'
 
-// Fakes - Fkontak
+// Fakes
 global.fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
 
-global.mysticicon = 'https://qu.ax/nBBN.jpg'
-
-global.fake = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: "120363316342878334@newsletter", serverMessageId: 100, newsletterName: '✰ The Shadow Brokers - Channel ✰', }, externalAdReply: { showAdAttribution: true, title: wm, body: '✩ 𝐓𝐡𝐞-𝐌𝐲𝐬𝐭𝐢𝐜-𝐁𝐨𝐭-𝐌𝐃 ✩', mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: mysticicon, sourceUrl: mysticredes, mediaType: 1, renderLargerThumbnail: false
-}, }, }}
+global.fakechannel = { contextInfo: { 
+isForwarded: true, forwardedNewsletterMessageInfo: { 
+newsletterJid: "120363316342878334@newsletter", 
+serverMessageId: 100, 
+newsletterName: '✰ The Shadow Brokers - Channel ✰', }, 
+externalAdReply: { 
+showAdAttribution: true, 
+title: '✰ 𝗧𝗵𝗲 𝗠𝘆𝘀𝘁𝗶𝗰 - 𝗕𝗼𝘁 ✰', 
+body: '✩ 𝐓𝐡𝐞 𝐒𝐡𝐚𝐝𝐨𝐰 𝐁𝐫𝐨𝐤𝐞𝐫𝐬 ✩',
+mediaUrl: null, 
+description: null, 
+previewType: "PHOTO", 
+thumbnailUrl: iconmystic, 
+sourceUrl: mysticredes, 
+mediaType: 1, 
+renderLargerThumbnail: false
+}, 
+}, 
+}
+}
 
 export default handler
