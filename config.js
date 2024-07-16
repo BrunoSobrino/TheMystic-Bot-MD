@@ -21,6 +21,7 @@ global.owner = [
   ['59895555511', '💫 Mystic - Collaborator 8 💫', true],
   ['573012482597', '💫 Mystic - OfcDiego', true],
   ['59175655964', '💫 Mystic - By Alba070503 💫', true],
+  ['5493794297363', '💫 Mystic - Gabriel Øfc', true], 
   ['393518398856','💫 Mystic - Tester Fabri115💫', true],
   ['593968585283'],
   ['5492266466080'],
@@ -39,7 +40,6 @@ global.owner = [
   ['573147616444'], 
   ['5219991402134'],
   ['5219996125657'],
-  ['5493794297363'], 
   ['5492215034412']
 ];
 
@@ -52,7 +52,7 @@ global.wm = 'The Mystic - Bot';
 global.titulowm = 'The Mystic - Bot';
 global.titulowm2 = `The Mystic - Bot`
 global.igfg = 'The Mystic - Bot';
-global.wait = '*[ ⏳ ] Cargando...*';
+global.wait = '*_[ ⏳ ] Cargando..._*';
 
 global.imagen1 = fs.readFileSync('./Menu2.jpg');
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
@@ -81,9 +81,9 @@ global.gt = 'The Mystic - Bot';
 global.mysticbot = 'The Mystic - Bot';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
 global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
-global.waitt = '*[ ⏳ ] Cargando...*';
-global.waittt = '*[ ⏳ ] Cargando...*';
-global.waitttt = '*[ ⏳ ] Cargando...*';
+global.waitt = '*_[ ⏳ ] Cargando..._*';
+global.waittt = '*_[ ⏳ ] Cargando..._*';
+global.waitttt = '*_[ ⏳ ] Cargando..._*';
 global.nomorown = '5219993404349';
 global.pdoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/msword', 'application/pdf', 'text/rtf'];
 global.cmenut = '❖––––––『';
