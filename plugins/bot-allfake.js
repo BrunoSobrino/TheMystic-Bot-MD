@@ -40,7 +40,7 @@ global.mysticredes = [canalmystic, gituser, mysticyt, githubmystic].getRandom()
 
 global.iconmystic = [
 'https://qu.ax/xhLt.jpg',
-'https://qu.ax/xhLt.jpg'
+'https://qu.ax/Vnmv.jpg'
 ].getRandom()
 
 // Fakes
