@@ -552,7 +552,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
     const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
     const tradutor = _translate.plugins.menu_menu
 
-    conn.reply(m.chat, tradutor.texto1[29], m, fake);
+    conn.reply(m.chat, tradutor.texto1[29], m);
   }
 };
 handler.command = /^(menu|menú|memu|memú|help|info|comandos|allmenu|2help|menu1.2|ayuda|commands|commandos|cmd)$/i;
