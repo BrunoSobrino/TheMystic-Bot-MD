@@ -67,12 +67,12 @@ return text;
 let handler = async (m, { conn, text, usedPrefix, command }) => {
 if (!text) throw `*DEBE DE USAR EL COMANDO COMO EN ESTE EJEMPLO:*\n${usedPrefix + command} *tu foto*`
 try {
-conn.reply(m.chat, '🍟  *Enviando su música de Spotify*', m, {
+/*conn.reply(m.chat, '🍟  *Enviando su música de Spotify*', m, {
 contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, showAdAttribution: true,
 title: packname,
 body: wm,
 previewType: 0, thumbnail: imagen1,
-sourceUrl: channel }}})
+sourceUrl: channel }}})*/
 //m.react(rwait)
 let songInfo = await spotifyxv(text)
 if (!songInfo.length) throw `*No se encontró la canción*`
