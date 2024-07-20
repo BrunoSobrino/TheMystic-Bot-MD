@@ -2669,6 +2669,7 @@
                 "*- Commit par :*"
             ],
             "texto3": "*[❗] Erreur lors de la vérification du référentiel*"
+            "texto4": "*[❗️] A mistake occurred. Please try it again later.*"
         },
         "owner_add_del_owner": {
             "texto1": [
