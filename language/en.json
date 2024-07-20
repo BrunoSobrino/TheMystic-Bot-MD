@@ -2969,13 +2969,14 @@
             ]
         },
         "owner_actualizacion": {
-            "texto1": "*[❗] Command successfully activated, you will be notified when there is any change in the official repository.*",
+            "texto1": "**_< OWNER - UPDATE />_*\n\n[❗] Command successfully activated, you will be notified when there is any change in the official repository.*",
             "texto2": [
-                "*[❗] The repository has been updated!*\n*- Repository:*",
+                "**_< OWNER - UPDATE />_*\n\n[❗] The repository has been updated!*\n*- Repository:*",
                 "*- Commit message:*",
                 "*- Committed by:*"
             ],
-            "texto3": "*[❗] Error while checking the repository*"
+       "texto3": "*_< OWNER - UPDATE />_*\n\n*[ℹ️] local changes have been made in bot files that conflict with the updates of the repository. To update, reinstall the bot or perform the updates manually.*\n\n*conflict files:*",
+       "texto4": "*_< OWNER - UPDATE />_*\n\n*[ℹ️] A mistake occurred. Please try it again later.*"
         },
         "owner_add_del_owner": {
             "texto1": [
