@@ -3259,6 +3259,12 @@
             "texto1": "Enter the name and folder of the image you want to view.",
             "texto2": "The image does not exist in the root folder."
         },
+        "owner_actualizar": {
+ "texto1": "*_< OWNER - UPDATE />_*\n\n*[✅] There are no pending updates.*",
+ "texto2": "*_< OWNER - UPDATE />_*\n\n*[ℹ️] Update completed successfully.*\n\n",
+ "texto3": "*_< OWNER - UPDATE />_*\n\n*[ℹ️] local changes have been made in bot files that conflict with the updates of the repository. To update, reinstall the bot or perform the updates manually.*\n\n*conflict files:*",
+ "texto4": "*_< OWNER - UPDATE />_*\n\n*[ℹ️] A mistake occurred. Please try it again later.*"
+ },
         "random_kpop": {
             "texto1": [
                 "Usage",
