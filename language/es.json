@@ -2997,8 +2997,7 @@
                 "*- Commit por:*"
             ],
             "texto3": "*[❗] Error al verificar el repositorio*",
-            "texto4": "*[❗️] ocurrió un error. Inténtelo nuevamente más tarde.*"
-        },
+            },
         "owner_add_del_owner": {
             "texto1": [
                 "*[❗] Uso incorrecto del comando.*\n\n*—◉ Ejemplo de uso válido:*\n*◉",
