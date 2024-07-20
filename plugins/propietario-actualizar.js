@@ -35,7 +35,7 @@ const handler = async (m, { conn, text }) => {
       }
   } catch (error) {
     console.error(error);
-    let errorMessage2 = tradutor.texto4;
+    let errorMessage2 = tradutor.texto3;
     if (error.message) {
       errorMessage2 += '\n*- Mensaje de error:* ' + error.message;
     }
