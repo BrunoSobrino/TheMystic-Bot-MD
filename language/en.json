@@ -2975,7 +2975,7 @@
                 "*- Commit message:*",
                 "*- Committed by:*"
             ],
-       "texto3": "*[❗️] local changes have been made in bot files that conflict with the updates of the repository. To update, reinstall the bot or perform the updates manually.*\n\n*conflict files:*",
+       "texto3": "*[❗️] local changes have been made in bot files that conflict with the updates of the repository. To update, reinstall the bot or perform the updates manually.*\n\n*conflict files:*"
         },
         "owner_add_del_owner": {
             "texto1": [
