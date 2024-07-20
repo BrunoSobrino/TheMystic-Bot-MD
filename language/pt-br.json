@@ -2981,6 +2981,7 @@
                 "*- Commit por:*"
             ],
             "texto3": "*[❗] Erro ao verificar o repositório*"
+            "Texto4": "*[❗️] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
         },
         "owner_add_del_owner": {
             "texto1": [
