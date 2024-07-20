@@ -1,4 +1,4 @@
-/*import fs from "fs"
+import fs from "fs"
 
 
 async function handler(m, {conn, usedPrefix}) {
@@ -16,18 +16,4 @@ async function handler(m, {conn, usedPrefix}) {
 handler.command = handler.help = ['stop', 'byebot'];
 handler.tags = ['jadibot'];
 handler.owner = true
-export default handler; */
-
-let handler = async (m, { conn }) => {
-if (global.conn.user.jid === conn.user.jid) {
-} else {
-await conn.reply(m.chat, `🍟 Bot Desactivado`, m, )
-conn.ws.close()
-}}
-
-handler.help = ['stop']
-handler.tags = ['jadibot']
-handler.command = ['stop', 'stopbot', 'stopbebot']
-handler.owner = true
-
-export default handler
+export default handler; 
