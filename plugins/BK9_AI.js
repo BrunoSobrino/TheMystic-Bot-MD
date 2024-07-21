@@ -14,7 +14,7 @@ const handler = async (m, {conn, text, command}) => {
     await conn.sendMessage(m.chat, {text: tradutor.bk9dallewait}, {quoted: m});
 
     try {
-      const BK9 = `https://apii.bk9.site/ai/photoleap?q=${encodeURIComponent(text)}`;
+      const BK9 = `https://bk9.fun/ai/photoleap?q=${encodeURIComponent(text)}`;
       const response = await fetch(BK9);
       const result = await response.json();
 
@@ -29,7 +29,7 @@ const handler = async (m, {conn, text, command}) => {
 
     try {
       conn.sendPresenceUpdate('composing', m.chat);
-      const BK9api = `https://apii.bk9.site/ai/gpt4?q=${encodeURIComponent(text)}`;
+      const BK9api = `https://bk9.fun/ai/gpt4?q=${encodeURIComponent(text)}`;
       const BK99 = await fetch(BK9api);
       const BK8 = await BK99.json();
       if (BK8.status && BK8.BK9) {
@@ -47,7 +47,7 @@ const handler = async (m, {conn, text, command}) => {
     if (/image/g.test(BK8) && !/webp/g.test(BK8)) {
       let BK0 = await BK7.download();
       let BK9img = await uploader(BK0);
-      let BK9api = await (await fetch(`https://apii.bk9.site/ai/geminiimg?url=${BK9img}&q=${text}`)).json();
+      let BK9api = await (await fetch(`https://bk9.fun/ai/geminiimg?url=${BK9img}&q=${text}`)).json();
       conn.sendMessage(m.chat, { text: BK9api.BK9 }, { quoted: m });
     } else {
       throw `${tradutor.bk9imgtext}`;
