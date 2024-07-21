@@ -16,7 +16,7 @@ let handler = async (_0x3585f0, {
   command: _0x3f9b74
 }) => {
   if (!_0x2f2134) {
-    return _0x1a6b0c.reply(_0x3585f0.chat, "[❗️] *¿QUE BUSQUEDA DESEA REALIZAR EN TIKTOK?*", _0x3585f0, rcanal);
+    return _0x1a6b0c.reply(_0x3585f0.chat, "[❗️] *¿QUE BUSQUEDA DESEA REALIZAR EN TIKTOK?*", _0x3585f0, canal);
   }
   async function _0x438e4e(_0x2effca) {
     const {
