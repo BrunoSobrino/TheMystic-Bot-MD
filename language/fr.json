@@ -2952,12 +2952,6 @@
             "texto1": "Entrez le nom et le dossier de l'image que vous souhaitez visualiser.",
             "texto2": "L'image n'existe pas dans le dossier racine."
         },
-        "owner_actualizar": {
- "texto1": "*_< PROPRIÉTAIRE - MISS Á JOUR />_*\n\n*[✅] Il n'y a pas de mises à jour en attente.*",
- "texto2": "*_< PROPRIÉTAIRE - MISS Á JOUR />_*\n\n*[ℹ️] Mise à jour terminée avec succès.*\n\n",
- "texto3": "*_< PROPRIÉTAIRE - MISS Á JOUR />_*\n\n*[ℹ️] Les modifications locales ont été apportées dans des fichiers bot qui entrent en conflit avec les mises à jour du référentiel. Pour mettre à jour, réinstaller le bot ou effectuer les mises à jour manuellement.*\n\n*fichiers de conflit:*",
- "texto4": "*_< PROPRIÉTAIRE - MISS Á JOUR />_*\n\n*[ℹ️] Une erreur s'est produite. Veuillez réessayer plus tard.*"
- },
         "random_kpop": {
             "texto1": [
                 "Usage",
