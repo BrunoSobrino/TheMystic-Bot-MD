@@ -95,11 +95,11 @@ ${tradutor.texto2[32]}  ${fakeData.modemJumps}`;
     
 async function loading() {
 var hawemod = [
-"《 █▒▒▒▒▒▒▒▒▒▒▒》10%",
-"《 ████▒▒▒▒▒▒▒▒》30%",
-"《 ███████▒▒▒▒▒》50%",
-"《 ██████████▒▒》80%",
-"《 ████████████》100%"
+"_《 █▒▒▒▒▒▒▒▒▒▒▒》10%_",
+"_《 ████▒▒▒▒▒▒▒▒》30%_",
+"_《 ███████▒▒▒▒▒》50%_",
+"_《 ██████████▒▒》80%_",
+"_《 ████████████》100%_"
 ]
       let { key } = await conn.sendMessage(m.chat, {text: `${tradutor.texto3}`}, {quoted: m})
  for (let i = 0; i < hawemod.length; i++) {
