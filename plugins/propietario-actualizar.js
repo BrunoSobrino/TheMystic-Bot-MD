@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 const handler = async (m, { conn, text }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/es.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
   const tradutor = _translate.plugins.propietario_actualizar
 
   try {
@@ -35,7 +35,7 @@ const handler = async (m, { conn, text }) => {
       }
   } catch (error) {
     console.error(error);
-    let errorMessage2 = tradutor.texto3;
+    let errorMessage2 = tradutor.texto4;
     if (error.message) {
       errorMessage2 += '\n*- Mensaje de error:* ' + error.message;
     }
