@@ -1,3 +1,53 @@
-// By Gabriel Øfc : (https://github.com/glytglobal)
+import axios from 'axios'
+const {proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice} = (await import("@whiskeysockets/baileys")).default
 
-const _0x507dd3=_0x240a;(function(_0x39b987,_0x57061){const _0x4dc95b=_0x240a,_0x58e4eb=_0x39b987();while(!![]){try{const _0x4fc854=-parseInt(_0x4dc95b(0x1bc))/0x1*(-parseInt(_0x4dc95b(0x1b8))/0x2)+-parseInt(_0x4dc95b(0x19e))/0x3*(-parseInt(_0x4dc95b(0x19a))/0x4)+parseInt(_0x4dc95b(0x1bb))/0x5*(parseInt(_0x4dc95b(0x19c))/0x6)+-parseInt(_0x4dc95b(0x1b6))/0x7*(-parseInt(_0x4dc95b(0x1b9))/0x8)+parseInt(_0x4dc95b(0x1a5))/0x9*(-parseInt(_0x4dc95b(0x1ab))/0xa)+-parseInt(_0x4dc95b(0x1af))/0xb*(-parseInt(_0x4dc95b(0x1ae))/0xc)+-parseInt(_0x4dc95b(0x19d))/0xd;/* By Gabriel Øfc */if(_0x4fc854===_0x57061)break;else _0x58e4eb['push'](_0x58e4eb['shift']());}catch(_0x2100be){_0x58e4eb['push'](_0x58e4eb['shift']());}}}(_0x4b41,0x72db3));import _0x38f672 from'node-fetch';function _0x240a(_0x2bea5b,_0x5bb031){const _0x4b419c=_0x4b41();return _0x240a=function(_0x240a70,_0x10220e){_0x240a70=_0x240a70-0x19a;let _0x593736=_0x4b419c[_0x240a70];/* By Gabriel Øfc */ return _0x593736;},_0x240a(_0x2bea5b,_0x5bb031);}let handler=async(_0x504383,{conn:_0x44338f,usedPrefix:_0x486ab6,command:_0x126b6e,text:_0x4c34c0,args:_0x50055d})=>{const _0x3e4dd2=_0x240a;if(!_0x4c34c0)throw'[❗️]\x20INGRESA\x20EL\x20NOMBRE\x20PARA\x20BUSCAR\x20LOS\x20RESULTADOS\x20EN\x20TIKTOK\x0a\x0a_*DEMOSTRACION:*\x20${Prefix\x20+\x20Command}\x20*<TEXTO>*_\x0a\x0a_*EJEMPLO:*\x20${Prefix\x20+\x20Command}\x20*GL\x20YT\x20MX*_';try{let _0x30b3c1=await _0x38f672(_0x3e4dd2(0x1a9)+encodeURIComponent(_0x4c34c0)),_0x35ed73=await _0x30b3c1[_0x3e4dd2(0x1a4)]();if(_0x35ed73['status']===0xc8){let _0x2901ef=_0x35ed73[_0x3e4dd2(0x1a8)][_0x3e4dd2(0x1b4)](0x0,0x4),_0x2bf128=videos[_0x3e4dd2(0x1a6)]((_0x4bbd52,_0x46cfad)=>[''+_0x4bbd52[_0x3e4dd2(0x1a0)],'ESTOS\x20SON\x20LOS\x20RESULTADOS\x20DE:\x20'+_0x4c34c0,_0x4bbd52[_0x46cfad],[[_0x3e4dd2(0x1b3),_0x486ab6+_0x3e4dd2(0x1a2)]],[[_0x3e4dd2(0x19f),_0x4bbd52[_0x3e4dd2(0x1aa)]],[_0x3e4dd2(0x1ad),_0x3e4dd2(0x1b5)]]]);await _0x44338f['sendCarousel'](_0x504383[_0x3e4dd2(0x1b2)],_0x3e4dd2(0x1b0)+_0x4c34c0+'*',_0x3e4dd2(0x1ba),_0x3e4dd2(0x1b1),_0x2bf128,_0x504383);}else throw _0x3e4dd2(0x1a7);}catch(_0x1102a9){await _0x504383[_0x3e4dd2(0x1ac)]('ERROR\x20AL\x20EJECUTAR\x20ESTE\x20COMANDO:\x0a\x0a'+(_0x1102a9[_0x3e4dd2(0x19b)]||_0x1102a9));}};handler[_0x507dd3(0x1b7)]=[_0x507dd3(0x1a3)],handler[_0x507dd3(0x1a1)]=!![];export default handler;function _0x4b41(){const _0x260c46=['command','525324GqpnSB','142056JFryDU','三\x20ㄒ丨ҜㄒㄖҜ丂乇卂尺匚卄\x20三\x0a三\x20Ꮆ卂乃尺丨乇ㄥ\x20ㄖ千匚\x20三','290975hUoMkx','1JdZSpq','5224aBriJZ','message','12HazyRQ','4548765nplUtR','339NmKWAW','.·:*¨𝙈𝙞𝙧𝙖𝙧\x20𝙚𝙣\x20𝙏𝙞𝙠𝙩𝙤𝙠¨*:·.','title','register','menu','tiktoksearch','json','9YkgALI','map','*[❗️]\x20NO\x20SE\x20LOGRO\x20ENCONTRAR\x20LOS\x20RESULTADOS\x20DE\x20SU\x20BUSQUEDA*','meta','https://deliriusapi-official.vercel.app/search/tiktoksearch?query=','url','4146410jYvSXI','reply','.·:*¨𝙏𝙝𝙚𝙈𝙮𝙨𝙩𝙞𝙘-𝘽𝙤𝙩-𝙈𝘿¨*:·.','31308najkiD','1639RQhEph','>\x20RESULTADOS\x20ENCOBTRADOS\x20PARA:\x20*','RESULTADOS','chat','.·:*¨𝙀𝙣𝙫𝙞𝙖𝙧\x20𝙈𝙚𝙣𝙪¨*:·.','slice','https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y','126paQxjS'];_0x4b41=function()/* By Gabriel Øfc */{return _0x260c46;};return _0x4b41();}
+let handler = async (message, { conn, text, usedPrefix, command }) => {
+if (!text) return conn.reply(message.chat, '[❗️] *¿Que quieres buscar en tiktok?*', message)
+async function createVideoMessage(url) {
+const { videoMessage } = await generateWAMessageContent({ video: { url } }, { upload: conn.waUploadToServer })
+return videoMessage
+}
+async function shuffleArray(array) {
+for (let i = array.length - 1; i > 0; i--) {
+const j = Math.floor(Math.random() * (i + 1));
+[array[i], array[j]] = [array[j], array[i]]
+}
+}
+try {
+let results = []
+let { data: response } = await axios.get('https://apis-starlights-team.koyeb.app/starlight/tiktoksearch?text=' + text)
+let searchResults = response.data
+shuffleArray(searchResults)
+let selectedResults = searchResults.splice(0, 7)
+for (let result of selectedResults) {
+results.push({
+body: proto.Message.InteractiveMessage.Body.fromObject({ text: null }),
+footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: wm }),
+header: proto.Message.InteractiveMessage.Header.fromObject({
+title: '' + result.title,
+hasMediaAttachment: true,
+videoMessage: await createVideoMessage(result.nowm)
+}),
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] })})}
+const responseMessage = generateWAMessageFromContent(message.chat, {
+viewOnceMessage: {
+message: {
+messageContextInfo: {
+deviceListMetadata: {},
+deviceListMetadataVersion: 2
+},
+interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+body: proto.Message.InteractiveMessage.Body.create({ text: '[❗️] Resultado de: ' + text }),
+footer: proto.Message.InteractiveMessage.Footer.create({ text: '🔎 `T I K T O K - S E A R C H`' }),
+header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
+carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: [...results] })})}}
+}, { quoted: message })
+await conn.relayMessage(message.chat, responseMessage.message, { messageId: responseMessage.key.id })
+} catch (error) {
+await conn.reply(message.chat, error.toString(), message)
+}}
+
+handler.help = ['tiktoksearch <txt>']
+handler.tags = ['buscador']
+handler.command = ['tiktoksearch', 'tts', 'tiktoks']
+export default handler
