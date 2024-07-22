@@ -3,7 +3,7 @@
 import fetch from 'node-fetch';
 
 let handler = async (m, { conn, usedPrefix, command, text, args }) => {
-  if (!text) throw '[❗️] INGRESA EL NOMBRE PARA BUSCAR LOS RESULTADOS EN TIKTOK\n\n_*DEMOSTRACION:* ${Prefix + Command} *<TEXTO>*_\n\n_*EJEMPLO:* ${Prefix + Command} *GL YT MX*_';
+  if (!text) throw '[❗️] INGRESA EL NOMBRE PARA BUSCAR LOS RESULTADOS EN TIKTOK\n\n_*DEMOSTRACION:* ${usedPrefix +  command} *<TEXTO>*_\n\n_*EJEMPLO:* ${Prefix + Command} *BrunoSobrino*_';
 
   try {
     let response = await fetch(`https://deliriusapi-official.vercel.app/search/tiktoksearch?query=${encodeURIComponent(text)}`);
