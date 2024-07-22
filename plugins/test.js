@@ -33,7 +33,7 @@ let handler = async (m, { conn, usedPrefix, command, text, args }) => {
   }
 };
 
-handler.command = ['tiktoksearch'];
+handler.command = ['test'];
 handler.register = true;
 
 export default handler;
