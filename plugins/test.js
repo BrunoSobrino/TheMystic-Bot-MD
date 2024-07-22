@@ -14,15 +14,7 @@ let handler = async (m, { conn, usedPrefix, command, text, args }) => {
 
       let messages = videos.map((video, index) => [
         `${video.title}`,
-        `ESTOS SON LOS RESULTADOS DE: ${text}`,
-        video[index],
-        [
-          ['.·:*¨𝙀𝙣𝙫𝙞𝙖𝙧 𝙈𝙚𝙣𝙪¨*:·.', usedPrefix + 'menu']
-        ],
-        [
-          ['.·:*¨𝙈𝙞𝙧𝙖𝙧 𝙚𝙣 𝙏𝙞𝙠𝙩𝙤𝙠¨*:·.', video.url],
-          ['.·:*¨𝙏𝙝𝙚𝙈𝙮𝙨𝙩𝙞𝙘-𝘽𝙤𝙩-𝙈𝘿¨*:·.', 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y']
-        ]
+        `ESTOS SON LOS RESULTADOS DE: ${text}`
       ]);
       await conn.sendCarousel(m.chat, `> RESULTADOS ENCOBTRADOS PARA: *${text}*`, '三 ㄒ丨ҜㄒㄖҜ丂乇卂尺匚卄 三\n三 Ꮆ卂乃尺丨乇ㄥ ㄖ千匚 三', 'RESULTADOS', m);
     } else {
