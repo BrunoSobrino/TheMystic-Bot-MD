@@ -24,7 +24,7 @@ let handler = async (m, { conn, usedPrefix, command, text, args }) => {
           ['.·:*¨𝙏𝙝𝙚𝙈𝙮𝙨𝙩𝙞𝙘-𝘽𝙤𝙩-𝙈𝘿¨*:·.', 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y']
         ]
       ]);
-      await conn.sendCarousel(m.chat, `> RESULTADOS ENCOBTRADOS PARA: *${text}*`, '三 ㄒ丨ҜㄒㄖҜ丂乇卂尺匚卄 三\n三 Ꮆ卂乃尺丨乇ㄥ ㄖ千匚 三', 'RESULTADOS', messages, m);
+      await conn.sendCarousel(m.chat, `> RESULTADOS ENCOBTRADOS PARA: *${text}*`, '三 ㄒ丨ҜㄒㄖҜ丂乇卂尺匚卄 三\n三 Ꮆ卂乃尺丨乇ㄥ ㄖ千匚 三', 'RESULTADOS', m);
     } else {
       throw '*[❗️] NO SE LOGRO ENCONTRAR LOS RESULTADOS DE SU BUSQUEDA*';
     }
