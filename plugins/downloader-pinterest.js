@@ -92,7 +92,5 @@ let handler = async (_0x10bd40, {
 };
 handler.help = ["pinterest"];
 handler.tags = ["downloader"];
-handler.limit = 1;
-handler.register = true;
 handler.command = /^(pinterest)$/i;
 export default handler;
