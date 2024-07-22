@@ -1,6 +1,5 @@
 import axios from 'axios';
-import baileys from '@whiskeysockets/baileys';
-const {proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice} = baileys.default;
+const {proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice} = (await import("@whiskeysockets/baileys")).default;
 
 let handler = async (message, { conn, text, usedPrefix, command }) => {
   
