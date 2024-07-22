@@ -1,6 +1,3 @@
-// Codigo por Gabriel Øfc : (https://github.com/glytglobal)
-// Creado para: TheMystic-Bot-MD : (https://github.com/BrunoSobrino/TheMystic-Bot-MD) 
-
 import _0x453b96 from 'axios';
 const {
   proto,
@@ -16,7 +13,7 @@ let handler = async (_0x3585f0, {
   command: _0x3f9b74
 }) => {
   if (!_0x2f2134) {
-    return _0x1a6b0c.reply(_0x3585f0.chat, "[❗️] *¿QUE BUSQUEDA DESEA REALIZAR EN TIKTOK?*", _0x3585f0, canal);
+    return _0x1a6b0c.reply(_0x3585f0.chat, "[❗️] *¿Que busqueda deseas realizar en tiktok*", _0x3585f0);
   }
   async function _0x438e4e(_0x2effca) {
     const {
@@ -37,12 +34,6 @@ let handler = async (_0x3585f0, {
     }
   }
   try {
-   _0x1a6b0c.reply(_0x3585f0.chat, '[❗️] *ENVIANDO SUS RESULTADOS..*', _0x3585f0, {
-   contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, showAdAttribution: true,
-   title: packname,
-   body: wm,
-   previewType: 0, thumbnail: icons,
-   sourceUrl: channel }}});
     let _0x26b601 = [];
     let {
       data: _0xda4544
@@ -77,10 +68,10 @@ let handler = async (_0x3585f0, {
           },
           'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
             'body': proto.Message.InteractiveMessage.Body.create({
-              'text': "✨️ RESULTADO DE: " + _0x2f2134
+              'text': "🍧 Resultados De: " + _0x2f2134
             }),
             'footer': proto.Message.InteractiveMessage.Footer.create({
-              'text': "[❗️] TIKTOK SEARCH"
+              'text': "🔍 *T I K T O K - S E A R C H*"
             }),
             'header': proto.Message.InteractiveMessage.Header.create({
               'hasMediaAttachment': false
@@ -102,8 +93,8 @@ let handler = async (_0x3585f0, {
   }
 };
 handler.help = ["tiktoksearch <txt>"];
-handler.estrellas = 1;
+handler.limit = 1;
 handler.register = true;
-handler.tags = ["buscador"];
+handler.tags = ["search"];
 handler.command = ["tiktoksearch", "tts", "tiktoks"];
 export default handler;
