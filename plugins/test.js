@@ -10,7 +10,7 @@ let handler = async (m, { conn, usedPrefix, command, text, args }) => {
     let data = await response.json();
 
     if (data.status === 200) {
-      let result = data.meta.slice(0, 4);
+      let video = data.meta.slice(0, 4);
 
       let messages = videos.map((video, index) => [
         `${video.title}`,
