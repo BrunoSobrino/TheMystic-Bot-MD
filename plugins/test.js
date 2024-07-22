@@ -12,7 +12,21 @@ let handler = async (m, { conn, usedPrefix, command, text, args }) => {
     if (data.status === 200) {
       let video = data.meta.slice(0, 4);
 
-      let messages = videos.map((video, index) => m.reply(m.chat, `🍁🌟`, m));
+      let imageUrl = ['https://telegra.ph/file/f8af3e3402feec845d681.jpg'];
+       
+
+      let messages = videos.map((video, index) => [
+        `${video.title}`,
+        `ESTOS SON LOS RESULTADOS DE: ${text}`,
+        imageUrl[index],
+        [
+          ['.·:*¨𝙀𝙣𝙫𝙞𝙖𝙧 𝙈𝙚𝙣𝙪¨*:·.', usedPrefix + 'menu']
+        ],
+        [
+          ['.·:*¨𝙈𝙞𝙧𝙖𝙧 𝙚𝙣 𝙏𝙞𝙠𝙩𝙤𝙠¨*:·.', video.url],
+          ['.·:*¨𝙏𝙝𝙚𝙈𝙮𝙨𝙩𝙞𝙘-𝘽𝙤𝙩-𝙈𝘿¨*:·.', 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y']
+        ]
+      ]);
       await conn.sendCarousel(m.chat, `> RESULTADOS ENCOBTRADOS PARA: *${text}*`, '三 ㄒ丨ҜㄒㄖҜ丂乇卂尺匚卄 三\n三 Ꮆ卂乃尺丨乇ㄥ ㄖ千匚 三', 'RESULTADOS', m);
     } else {
       throw '*[❗️] NO SE LOGRO ENCONTRAR LOS RESULTADOS DE SU BUSQUEDA*';
