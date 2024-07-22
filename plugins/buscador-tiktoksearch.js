@@ -5,6 +5,11 @@ const {proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMes
 let handler = async (message, { conn, text, usedPrefix, command }) => {
   
   if (!text) return conn.reply(message.chat, "[❗️] *¿Qué búsqueda deseas realizar en TikTok?*", message);
+
+  async function createVideoMessage(url) {
+    const { videoMessage } = await generateWAMessageContent({ video: { url } }, { upload: conn.waUploadToServer });
+    return videoMessage;
+  }
   
   async function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -27,7 +32,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
         header: proto.Message.InteractiveMessage.Header.fromObject({
           title: '' + result.title,
           hasMediaAttachment: true,
-          videoMessage: await generateWAMessageContent({ video: { url: result.nowm } }, { upload: conn.waUploadToServer })
+          videoMessage: await createVideoMessage(result.nowm)
         }),
         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] })
       });
