@@ -15,7 +15,7 @@ let handler = async (m, { conn, usedPrefix, command, text, args }) => {
       let imageUrl = ['https://telegra.ph/file/f8af3e3402feec845d681.jpg'];
        
 
-      let messages = videos.map((video, index) => [
+      let messages = video.map((video, index) => [
         `${video.title}`,
         `ESTOS SON LOS RESULTADOS DE: ${text}`,
         imageUrl[index],
