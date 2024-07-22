@@ -12,7 +12,7 @@ let handler = async (m, { conn, usedPrefix, command, text, args }) => {
     if (data.status === 200) {
       let video = data.meta.slice(0, 4);
 
-      let messages = videos.map((video, index) => m.reply(m.chat, `🍁🌟`, m);
+      let messages = videos.map((video, index) => m.reply(m.chat, `🍁🌟`, m));
       await conn.sendCarousel(m.chat, `> RESULTADOS ENCOBTRADOS PARA: *${text}*`, '三 ㄒ丨ҜㄒㄖҜ丂乇卂尺匚卄 三\n三 Ꮆ卂乃尺丨乇ㄥ ㄖ千匚 三', 'RESULTADOS', m);
     } else {
       throw '*[❗️] NO SE LOGRO ENCONTRAR LOS RESULTADOS DE SU BUSQUEDA*';
