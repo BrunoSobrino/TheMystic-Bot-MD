@@ -1,7 +1,6 @@
-// adartado por Diego (Aka: un ladrón de código)
+// adaptado por Diego : TheMystic-Bot-MD
 
 import axios from 'axios';
-
 
 let previousCommitSHA = '';
 let previousUpdatedAt = '';

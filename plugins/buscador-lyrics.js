@@ -58,11 +58,11 @@ export default handler;
 async function searchLyrics(term) {
   try {
     if (!term) return "🟥 Provide the name of the song to search the lyrics";
-    const geniusResponse = await axios.get(`https://letra-lime.vercel.app/genius?query=${term}`);
+    const geniusResponse = await axios.get(`https://apilyrics.vercel.app/genius?query=${term}`);
     const geniusData = geniusResponse.data;
     if (!geniusData.length) return `🟨 Couldn't find any lyrics for "${term}"`;
     const lyricsUrl = geniusData[0].url;
-    const lyricsResponse = await axios.get(`https://letra-lime.vercel.app/lyrics?url=${lyricsUrl}`);
+    const lyricsResponse = await axios.get(`https://apilyrics.vercel.app/lyrics?url=${lyricsUrl}`);
     const result = {
       status: '200',
       creador: 'Sareth',

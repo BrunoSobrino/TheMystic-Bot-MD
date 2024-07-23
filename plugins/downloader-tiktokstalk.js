@@ -8,7 +8,7 @@ const handler = async (m, { conn, text }) => {
 
   if (!text) return conn.reply(m.chat, tradutor.texto1, m);
   try {
-    const res = await fetch(`https://api.lolhuman.xyz/api/stalktiktok/${text}?apikey=${lolkeysapi}`);
+    const res = await fetch(`https://deliriusapi-official.vercel.app/tools/tiktokstalk?q=${encodeURIComponent(text)}`);
     const res2 = `https://api.lolhuman.xyz/api/pptiktok/${text}?apikey=${lolkeysapi}`;
     const json = await res.json();
     if (res.status !== 200) throw await res.text();

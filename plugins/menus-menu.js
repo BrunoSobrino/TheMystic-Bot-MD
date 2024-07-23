@@ -1,12 +1,8 @@
-
-
 import fetch from 'node-fetch';
-
 
 // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
 // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
 // To set the language, in the root of the project, modify the config.json file.
-
 
 const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, isPrems }) => {
 
@@ -40,7 +36,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
 
 ${tradutor.texto1[1]} ${taguser}
 
-> En comunidad de MoonLight - Team
+> ★ Moonlight Team ★
 
 ${tradutor.texto1[2]}
 
@@ -57,7 +53,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
  
   ╭───── • ◆ • ─────╮ 
   ├❧ _${usedPrefix}menuaudios_
-  ├❧_${usedPrefix}menuanimes_
+  ├❧ _${usedPrefix}menuanimes_
   ├❧ _${usedPrefix}labiblia_
   ├❧ _${usedPrefix}lang_ 
   ├❧ _${usedPrefix}langgroup_ 
@@ -75,7 +71,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├❧ _${usedPrefix}donar_
   ├❧ _${usedPrefix}owner_
   ├❧ _${usedPrefix}script_
-  ├❧❧ _${usedPrefix}reporte *<txt>*_
+  ├❧ _${usedPrefix}reporte *<txt>*_
   ├❧ _${usedPrefix}join *<wagp_url>*_
   ├❧ _${usedPrefix}fixmsgespera_
   ├❧ _bot_ (sin prefijo)
@@ -142,10 +138,8 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├❧ _${usedPrefix}cancion_
   ├❧ _${usedPrefix}pista_
   ├❧ _${usedPrefix}akinator_
-  ├❧ _${usedPrefix}ruleta
-  ├❧ _${usedPrefix}suerte
   ├❧ _${usedPrefix}wordfind_
-  ├❧ _${usedPrefix}glx_ (RPG Mundo)
+  ├❧ _${usedPrefix}glx (RPG Mundo)_
   ╰───── • ◆ • ─────╯
 
   ${tradutor.texto1[14]}
@@ -181,40 +175,40 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
 
   ${tradutor.texto1[15]}
 
- ╭───── • ◆ • ─────╮
- ├❧ _${usedPrefix}play *<txt>*_
- ├❧ _${usedPrefix}play2 *<txt>*_
- ├❧ _${usedPrefix}play.1 *<txt>*_
- ├❧ _${usedPrefix}play.2 *<txt>*_
- ├❧ _${usedPrefix}playdoc *<txt>*_
- ├❧ _${usedPrefix}playdoc2 *<txt>*_
- ├❧ _${usedPrefix}playlist *<txt>*_
- ├❧ _${usedPrefix}ytshort *<url>*_
- ├❧ _${usedPrefix}ytmp3 *<url>*_
- ├❧ _${usedPrefix}ytmp3doc *<url>*_
- ├❧ _${usedPrefix}ytmp4 *<url>*_
- ├❧ _${usedPrefix}ytmp4doc *<url>*_
- ├❧ _${usedPrefix}videodoc *<url>*_
- ├❧ _${usedPrefix}spotify *<txt>*_
- ├❧ _${usedPrefix}facebook *<url>*_
- ├❧ _${usedPrefix}instagram *<url>*_
- ├❧ _${usedPrefix}igstory *<usr>*_
- ├❧ _${usedPrefix}tiktok *<url>*_
- ├❧ _${usedPrefix}tiktokimg *<url>*_
- ├❧ _${usedPrefix}pptiktok *<usr>*_
- ├❧ _${usedPrefix}mediafire *<url>*_ 
- ├❧ _${usedPrefix}pinterest *<txt>*_
- ├❧ _${usedPrefix}gitclone *<url>*_
- ├❧ _${usedPrefix}gdrive *<url>*_
- ├❧ _${usedPrefix}twitter *<url>*_
- ├❧ _${usedPrefix}ringtone *<txt>*_
- ├❧ _${usedPrefix}soundcloud *<txt>*_
- ├❧ _${usedPrefix}stickerpack *<url>*_
- ├❧ _${usedPrefix}wallpaper *<txt>*_ 
- ├❧ _${usedPrefix}dapk2 *<url>*_
- ├❧ _${usedPrefix}xnxxdl *<url>*_ (🔞)
- ├❧ _${usedPrefix}xvideosdl *<url>*_ (🔞)
- ╰───── • ◆ • ─────╯
+  ╭───── • ◆ • ─────╮
+  ├❧ _${usedPrefix}play *<txt>*_
+  ├❧ _${usedPrefix}play2 *<txt>*_
+  ├❧ _${usedPrefix}play.1 *<txt>*_
+  ├❧ _${usedPrefix}play.2 *<txt>*_
+  ├❧ _${usedPrefix}playdoc *<txt>*_
+  ├❧ _${usedPrefix}playdoc2 *<txt>*_
+  ├❧ _${usedPrefix}playlist *<txt>*_
+  ├❧ _${usedPrefix}ytshort *<url>*_
+  ├❧ _${usedPrefix}ytmp3 *<url>*_
+  ├❧ _${usedPrefix}ytmp3doc *<url>*_
+  ├❧ _${usedPrefix}ytmp4 *<url>*_
+  ├❧ _${usedPrefix}ytmp4doc *<url>*_
+  ├❧ _${usedPrefix}videodoc *<url>*_
+  ├❧ _${usedPrefix}spotify *<txt>*_
+  ├❧ _${usedPrefix}facebook *<url>*_
+  ├❧ _${usedPrefix}instagram *<url>*_
+  ├❧ _${usedPrefix}igstory *<usr>*_
+  ├❧ _${usedPrefix}tiktok *<url>*_
+  ├❧ _${usedPrefix}tiktokimg *<url>*_
+  ├❧ _${usedPrefix}pptiktok *<usr>*_
+  ├❧ _${usedPrefix}mediafire *<url>*_ 
+  ├❧ _${usedPrefix}pinterest *<txt>*_
+  ├❧ _${usedPrefix}gitclone *<url>*_
+  ├❧ _${usedPrefix}gdrive *<url>*_
+  ├❧ _${usedPrefix}twitter *<url>*_
+  ├❧ _${usedPrefix}ringtone *<txt>*_
+  ├❧ _${usedPrefix}soundcloud *<txt>*_
+  ├❧ _${usedPrefix}stickerpack *<url>*_
+  ├❧ _${usedPrefix}wallpaper *<txt>*_ 
+  ├❧ _${usedPrefix}dapk2 *<url>*_
+  ├❧ _${usedPrefix}xnxxdl *<url>*_ (🔞)
+  ├❧ _${usedPrefix}xvideosdl *<url>*_ (🔞)
+  ╰───── • ◆ • ─────╯
 
  ${tradutor.texto1[16]}
   
@@ -369,7 +363,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ╭───── • ◆ • ─────╮
   ├❧ _${usedPrefix}inspect *<wagc_url>*_
   ├❧ _${usedPrefix}chatgpt *<txt>*_
-  ├❧ _${usedPrefix}delchatgpt
+  ├❧ _${usedPrefix}delchatgpt_
   ├❧ _${usedPrefix}gptvoz *<txt>*_
   ├❧ _${usedPrefix}dall-e *<txt>*_
   ├❧ _${usedPrefix}spamwa *num|txt|cant>*_
@@ -456,7 +450,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
 
   ${tradutor.texto1[28]}
   
-╭───── • ◆ • ─────╮ 
+  ╭───── • ◆ • ─────╮ 
   ├❧ _> *<funcion>*_
   ├❧ _=> *<funcion>*_
   ├❧ _$ *<funcion>*_
@@ -546,12 +540,12 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
 
     if (m.isGroup) {
       // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
-      const fkontak2 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
-      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: m });
+const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
+     conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: fkontak });
     } else {
-      // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
-      const fkontak2 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
-      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: fkontak2 });
+      //await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
+const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
+   conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: fkontak });
     }
   } catch {
     const datas = global
@@ -571,4 +565,4 @@ function clockString(ms) {
   const m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60;
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
   return [h, m, s].map((v) => v.toString().padStart(2, 0)).join(':');
-}
+      }
