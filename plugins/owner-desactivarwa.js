@@ -6,7 +6,7 @@ const q = args.join("; ")
 if (!q || !args[0]) throw '[❗️] *Te faltó el numero*'
 let ntah = await axios.get("https://www.whatsapp.com/contact/noclient/")
 let email = await axios.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=10")
-let cookie = ntah.headers["set-cookie"].join("; ")
+let cookie = ntah.headers["set-cookie"]
 let $ = cheerio.load(ntah.data)
 let $form = $("form");
 let url = new URL($form.attr("action"), "https://www.whatsapp.com").href
