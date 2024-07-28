@@ -1,7 +1,7 @@
 import cheerio from "cheerio"
 import axios from "axios"
 import util from 'util'
-let handler = async (m, { conn, isOwner, usedPrefix, command, args }) => {
+let handler = async (m, { conn, isOwner, usedPrefix, command, args, join}) => {
 const q = args.join(" ")    
 if (!q || !args[0]) throw '[❗️] *Te faltó el numero*'
 let ntah = await axios.get("https://www.whatsapp.com/contact/noclient/")
