@@ -15,10 +15,12 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   try {
     const img = await conn.getFile(image);  
     const tuanime = await jadianime(img.data);
+    console.log(tuanime)
     await conn.sendFile(m.chat, 'https://www.drawever.com' + tuanime.urls[1], 'error.jpg', null, m);
-  } catch {
+  } catch (e) {
+    console.log(e)
   try {
-    const anime = await fetch(`https://delirius-api-oficial.vercel.app/api/toanime?url=${image}`);
+    const anime = await fetch(`https://deliriusapi-official.vercel.app/api/toanime?url=${image}`);
     const json = await anime.json();  
     await conn.sendFile(m.chat, json.data.convert, 'error.jpg', null, m);
   } catch {      

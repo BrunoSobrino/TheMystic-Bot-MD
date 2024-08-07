@@ -11,9 +11,11 @@ global.botnumber = ""
 global.confirmCode = ""
 
 global.owner = [
+
   ['5492604845932', true], 
   ['5493772406612', true],
   ['593968585383', true]];
+
 
 global.suittag = ['5492604050270', '5493772406612']
 global.prems = [] 
@@ -45,6 +47,7 @@ global.mes = d.toLocaleDateString('es', {month: 'long'});
 global.año = d.toLocaleDateString('es', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
+
 global.wm2 = `▸ ${dia} ${fecha}\n▸ ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ`;
 global.gt = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ';
 global.mysticbot = 'ᴀꜱᴀᴋᴜʀᴀ-ᴍᴀᴏ ʙᴏᴛ';

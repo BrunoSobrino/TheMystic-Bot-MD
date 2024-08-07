@@ -23,7 +23,9 @@ const handler = async (m, {conn, args}) => {
             viewOnceMessage: {
                 message: {
                     interactiveMessage: {
-                        body: { text: 'Toca el boton de abajo para copiar el link del grupo!' },
+
+                        body: { text: 'https://chat.whatsapp.com/' + await conn.groupInviteCode(m.chat) },
+
                         footer: { text: `${global.wm}`.trim() },
                         header: {
                             hasMediaAttachment: true,
@@ -62,7 +64,7 @@ const handler = async (m, {conn, args}) => {
 };
 handler.help = ['linkgroup'];
 handler.tags = ['group'];
-handler.command = /^link(gro?up)?$/i;
+handler.command = /^(link(gro?up)?)$/i;
 handler.group = true;
 handler.admin = true;
 handler.botAdmin = true;

@@ -41,7 +41,6 @@
     "@vitalets/google-translate-api": "^8.0.0",
     "@whiskeysockets/baileys": "npm:@whiskeysockets/baileys@6.7.2",
     "@xct007/frieren-scraper": "github:xct007/frieren-scraper",
-    "@SumiFX/Scraper": "github:SumiFX/SumiFX-Scraper",
     "acrcloud": "^1.4.0",
     "api-dylux": "^1.6.2",
     "aptoide-scraper": "^1.0.1",

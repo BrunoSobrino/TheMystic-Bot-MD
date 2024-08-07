@@ -21,7 +21,7 @@ let handler = async function (m, { text }) {
     if (data.BK99) {
       return m.reply(`${tradutor.bk9LTaked_T}`);
     }
-    const shortURL = data.BK9;
+    const shortURL = result.BK9;
     return m.reply(`${shortURL}`);
   } catch (error) {
     console.error(error);

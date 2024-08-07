@@ -2981,7 +2981,7 @@
                 "*- Commit por:*"
             ],
             "texto3": "*[❗] Erro ao verificar o repositório*"
-        },
+            },
         "owner_add_del_owner": {
             "texto1": [
                 "*[❗] Uso incorreto do comando.*\n\n*—◉ Exemplo de uso válido:*\n*◉",
@@ -3264,6 +3264,12 @@
             "texto1": "Digite o nome e a pasta da imagem que deseja visualizar.",
             "texto2": "A imagem não existe na pasta raiz."
         },
+        "owner_actualizar": {
+ "texto1": "*_< PROPIETÁRIO - ATUALIZAÇÃO />_*\n\n*[✅] Não há atualizações pendentes.*",
+ "texto2": "*_< PROPIETÁRIO - ATUALIZAÇÃO />_*\n\n*[ℹ️] Atualização concluída com sucesso.*\n\n",
+ "texto3": "*_< PROPIETÁRIO - ATUALIZAÇÃO />_*\n\n*[ℹ️] Alterações locais foram feitas em arquivos bot que conflitam com as atualizações do repositório. Para atualizar, reinstalar o bot ou executar as atualizações manualmente.*\n\n*arquivos de conflito:*",
+ "texto4": "*_< PROPIETÁRIO - ATUALIZAÇÃO />_*\n\n*[ℹ️] Um erro ocorreu. Por favor, tente novamente mais tarde.*"
+ },
         "random_kpop": {
             "texto1": [
                 "Uso",

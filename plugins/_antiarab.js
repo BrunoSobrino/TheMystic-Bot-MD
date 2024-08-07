@@ -36,6 +36,12 @@ handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwn
       const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }
+
+    if (m.sender.startsWith('234' || '234')) {
+      m.reply(tradutor.texto3);
+      const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+      if (responseb[0].status === '404') return;
+    }                                                       
   }
 };
 export default handler;

@@ -28,7 +28,7 @@ global.keysxteammm = ['29d4b59a4aa687ca', '5LTV57azwaid7dXfz5fzJu', 'cb15ed422c7
 global.keysxteam = keysxteammm[Math.floor(keysxteammm.length * Math.random())];
 global.keysneoxrrr = ['5VC9rvNx', 'cfALv5'];
 global.keysneoxr = keysneoxrrr[Math.floor(keysneoxrrr.length * Math.random())];
-global.lolkeysapi = ['Gata_Dios']; // ['BrunoSobrino_2']
+global.lolkeysapi = ['GataDiosV2']; // ['BrunoSobrino_2']
 global.itsrose = ['4b146102c4d500809da9d1ff'];
 
 global.APIs = {
@@ -50,7 +50,7 @@ global.APIs = {
   erdwpe: 'https://api.erdwpe.com',
   xyroinee: 'https://api.xyroinee.xyz',
   nekobot: 'https://nekobot.xyz',
-  BK9: 'https://api.bk9.site'
+  BK9: 'https://apii.bk9.site'
 },
 global.APIKeys = {
   'https://api.xteam.xyz': `${keysxteam}`,
