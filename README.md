@@ -65,15 +65,24 @@
 [![blog](https://img.shields.io/badge/Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
 ](https://youtu.be/c9RCnOV418E?si=kNWog_fSi8wCWX3A)
 
-<a href="https://dash.infinity-wa.com"><img src="https://qu.ax/TPhh.jpg" height="125px"></a>
+<a href="https://dash.infinitywa-host.com"><img src="https://qu.ax/TPhh.jpg" height="125px"></a>
 
 - Página: [`Click aqui`](https://infinity-wa.com)
-- Dashboard: [`Aquí`](https://dash.infinity-wa.com)
-- Panel: [`Aquí`](https://panel.infinity-wa.com)
+- Dashboard: [`Aquí`](https://dash.infinitywa-host.com)
+- Panel: [`Aquí`](https://panel.infinitywa-host.com)
 - Grupo de WhatsApp: [`Aquí`](https://chat.whatsapp.com/GQ82mPnSYnm0XL2hLPk7FV)
 - Canal de WhatsApp: [`Aquí`](https://whatsapp.com/channel/0029Va4QjH7DeON0ePwzjS1A)
 
 - Discord: [`Aqui`](https://discord.com/invite/vgfpe4Nwd8)
+
+### `□ ACTIVAR EN OLYMPUS-HOST`
+<a href="https://kingsvhost.asifofc.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
+### Información del Host
+
+- **Dashboard:** [`Aquí`](https://kingsvhost.asifofc.xyz)
+- **Panel:** [`Aquí`](https://host.asifofc.xyz)
+- **Canal de WhatsApp:** [`Aquí`](https://whatsapp.com/channel/0029ValCkNT2ER6gHWFRQ71J)
+- **Correo:** [`Aquí`](olympussupport@gmail.com.com)
 
 ### `▢ ACTIVAR EN KOYEB`
 
@@ -134,10 +143,8 @@
 <a href="https://github.com/OFC-YOVANI"><img src="https://github.com/OFC-YOVANI.png" width="100" height="100" alt="OFC-YOVANI"/> </a>
 <a href="https://github.com/elrebelde21"><img src="https://github.com/elrebelde21.png" width="100" height="100" alt="elrebelde21"/> </a>
 <a href="https://github.com/Fabri115"><img src="https://github.com/Fabri115.png" width="100" height="100" alt="Fabri115"/> </a>
-<a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> </a>
-<a href="https://github.com/OfcDiego"><img src="https://github.com/OfcDiego.png" width="100" height="100" alt="Diego"/> </a>
-<a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a>
-<a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
+<a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> <a/> </a>
+<a href="https://github.com/OfcDiego"><img src="https://github.com/OfcDiego.png" width="100" height="100" alt="Diego"/> </a> <a href="https://github.com/glytglobal"><img src="https://github.com/glytglobal.png" width="100" height="100" alt="Gabriel Øfc"/></a> <a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a> </a> <a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
 <a href="https://github.com/BK9dev"><img src="https://i.imgur.com/NAVoDeW.jpeg" width="100" height="100" alt="BK9"/> </a>
 <a href="https://github.com/matias-crypto"><img src="https://github.com/matias-crypto.png" width="100" height="100" alt="unptoadrih15"/></a>
 
