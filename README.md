@@ -75,6 +75,15 @@
 
 - Discord: [`Aqui`](https://discord.com/invite/vgfpe4Nwd8)
 
+### 🔵 OLYMPUS-HOST 
+<a href="https://kingsvhost.asifofc.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
+### Información del Host
+
+- **Dashboard:** [`Aquí`](https://kingsvhost.asifofc.xyz)
+- **Panel:** [`Aquí`](https://host.asifofc.xyz)
+- **Canal de WhatsApp:** [`Aquí`](https://whatsapp.com/channel/0029ValCkNT2ER6gHWFRQ71J)
+- **Correo:** [`Aquí`](olympussupport@gmail.com.com)
+
 ### `▢ ACTIVAR EN KOYEB`
 
 [![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
