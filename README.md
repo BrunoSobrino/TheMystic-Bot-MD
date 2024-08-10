@@ -75,7 +75,7 @@
 
 - Discord: [`Aqui`](https://discord.com/invite/vgfpe4Nwd8)
 
-### 🔵 OLYMPUS-HOST 
+### `□ ACTIVAR EN OLYMPUS-HOST`
 <a href="https://kingsvhost.asifofc.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
 ### Información del Host
 
