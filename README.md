@@ -76,13 +76,16 @@
 - Discord: [`Aqui`](https://discord.com/invite/vgfpe4Nwd8)
 
 ### `□ ACTIVAR EN OLYMPUS-HOST`
-<a href="https://kingsvhost.asifofc.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
+<a href="https://panel.olympus-host.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
 ### Información del Host
 
 - **Dashboard:** [`Aquí`](https://dash.olympus-host.xyz)
+
 - **Panel:** [`Aquí`](https://panel.olympus-host.xyz)
+
 - **Canal de WhatsApp:** [`Aquí`](https://whatsapp.com/channel/0029ValCkNT2ER6gHWFRQ71J)
-- **Correo:** [`Aquí`](olympussupport@gmail.com.com)
+
+- **Correo:** [`Aquí`](olympushost2@gmail.com.com)
 
 ### `▢ ACTIVAR EN KOYEB`
 
