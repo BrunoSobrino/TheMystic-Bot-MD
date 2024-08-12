@@ -419,7 +419,7 @@ export async function handler(chatUpdate) {
       if (typeof user !== 'object') {
         global.db.data.users[m.sender] = {};
       }
-      if (m.sender && !m.sender.endsWith('@lid') && !m.isGroup) {
+      if (m.sender && !m.sender.endsWith('@lid')) {
         global.db.data.users[m.sender] = userDatabase(global.db.data.users[m.sender] || {})
       }
       /* Creditos a Otosaka (https://wa.me/51993966345) */
