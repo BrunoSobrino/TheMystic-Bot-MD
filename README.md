@@ -25,6 +25,28 @@
 ### `▢ DONAR`
 - Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/TheShadowBrokers133)
 
+
+<!--> Este menú de instalación es temporal. By Jeffersonalionco -->
+### `▢ Instalación`
+
+Para configurar e iniciar el proyecto, sigue estos pasos:
+
+1. **Instala Yarn** (si aún no está instalado):
+
+   ```bash
+   npm install -g yarn
+2. **Executar o Yarn** 
+
+   ```bash
+   yarn install
+3. **Executar o npm** 
+
+   ```bash
+   npm install
+4. **INICIAR O BOT** 
+   ```bash
+   npm start
+
 ### `▢ PLUGINS`
 - Tienes ideas de plugins o ¿quieres obtener mas plugins? entonces hace [clic aquí](https://github.com/theh2so4/Mystic-Plugins)
 
