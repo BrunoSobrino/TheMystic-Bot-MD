@@ -40,7 +40,6 @@
     "@shineiichijo/marika": "^2.0.6",
     "@vitalets/google-translate-api": "^8.0.0",
     "@whiskeysockets/baileys": "npm:@whiskeysockets/baileys@6.7.2",
-    "@xct007/frieren-scraper": "github:xct007/frieren-scraper",
     "acrcloud": "^1.4.0",
     "api-dylux": "^1.6.2",
     "aptoide-scraper": "^1.0.1",
@@ -50,7 +49,7 @@
     "cfonts": "^2.10.0",
     "chalk": "^5.0.0",
     "chart.js": "^4.4.2",
-    "cheerio": "^1.0.0-rc.10",
+    "cheerio": "1.0.0-rc.12",
     "colors": "1.4.0",
     "d3-node": "^3.0.0",
     "esm": "^3.2.25",
@@ -99,6 +98,9 @@
     "yargs": "^17.3.1",
     "yt-search": "^2.10.3",
     "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2"
+  },
+  "optionalDependencies": {
+    "@xct007/frieren-scraper": "github:xct007/frieren-scraper"
   },
   "devDependencies": {
     "eslint": "^8.45.0",

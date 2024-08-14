@@ -65,7 +65,7 @@
 [![blog](https://img.shields.io/badge/Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
 ](https://youtu.be/c9RCnOV418E?si=kNWog_fSi8wCWX3A)
 
-<a href="https://dash.infinitywa-host.com"><img src="https://qu.ax/TPhh.jpg" height="125px"></a>
+<a href="https://dash.infinitywa-host.com"><img src="https://telegra.ph/file/1a1cebe11109c5d366e6d.jpg" height="125px"></a>
 
 - Página: [`Click aqui`](https://infinity-wa.com)
 - Dashboard: [`Aquí`](https://dash.infinitywa-host.com)
@@ -76,13 +76,16 @@
 - Discord: [`Aqui`](https://discord.com/invite/vgfpe4Nwd8)
 
 ### `□ ACTIVAR EN OLYMPUS-HOST`
-<a href="https://kingsvhost.asifofc.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
+<a href="https://panel.olympus-host.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
 ### Información del Host
 
-- **Dashboard:** [`Aquí`](https://kingsvhost.asifofc.xyz)
-- **Panel:** [`Aquí`](https://host.asifofc.xyz)
+- **Dashboard:** [`Aquí`](https://dash.olympus-host.xyz)
+
+- **Panel:** [`Aquí`](https://panel.olympus-host.xyz)
+
 - **Canal de WhatsApp:** [`Aquí`](https://whatsapp.com/channel/0029ValCkNT2ER6gHWFRQ71J)
-- **Correo:** [`Aquí`](olympussupport@gmail.com.com)
+
+- **Correo:** [`Aquí`](olympushost2@gmail.com.com)
 
 ### `▢ ACTIVAR EN KOYEB`
 
