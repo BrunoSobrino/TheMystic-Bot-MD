@@ -26,7 +26,7 @@
 - Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/TheShadowBrokers133)
 
 
-<!--> Este menú de instalación es temporal. By Jeffersonalionco -->
+<!-- Este menú de instalación es temporal. By Jeffersonalionco -->
 ### `▢ Instalación`
 
 Para configurar e iniciar el proyecto, sigue estos pasos:
