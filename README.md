@@ -62,20 +62,6 @@ Para configurar e iniciar el proyecto, sigue estos pasos:
 - Tutorial: [https://youtu.be/eC9TfKICpcY](https://youtu.be/eC9TfKICpcY)
 - Dudas UNICAMENTE SOBRE EL HOST: [https://discord.gg/84qsr4v](https://discord.gg/84qsr4v) (Preguntar por Vicemi)
 
-### `□ ACTIVAR EN INFINITY-HOST`
-[![blog](https://img.shields.io/badge/Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
-](https://youtu.be/c9RCnOV418E?si=kNWog_fSi8wCWX3A)
-
-<a href="https://dash.infinitywa-host.com"><img src="https://telegra.ph/file/1a1cebe11109c5d366e6d.jpg" height="125px"></a>
-
-- Página: [`Click aqui`](https://infinity-wa.com)
-- Dashboard: [`Aquí`](https://dash.infinitywa-host.com)
-- Panel: [`Aquí`](https://panel.infinitywa-host.com)
-- Grupo de WhatsApp: [`Aquí`](https://chat.whatsapp.com/GQ82mPnSYnm0XL2hLPk7FV)
-- Canal de WhatsApp: [`Aquí`](https://whatsapp.com/channel/0029Va4QjH7DeON0ePwzjS1A)
-
-- Discord: [`Aqui`](https://discord.com/invite/vgfpe4Nwd8)
-
 ### `□ ACTIVAR EN OLYMPUS-HOST`
 <a href="https://panel.olympus-host.xyz"><img src="https://qu.ax/waCu.jpg" height="125px"></a>
 ### Información del Host
