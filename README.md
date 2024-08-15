@@ -54,6 +54,18 @@ Para configurar e iniciar el proyecto, sigue estos pasos:
 - Clona el repositorio haciendo [clic aquí](https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork)
 - ¿Quieres cambiar el número del propietario? haz [clic aquí](https://github.com/BrunoSobrino/TheMystic-Bot-MD/blob/master/config.js)
 
+### `▢ ACTIVAR EN CAFIREXOS`
+<a href="https://cafirexos.com"><img src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png" height="125px"></a>
+- Sitio web: [cafirexos.com](https://cafirexos.com)
+- Área de clientes: [clientes.cafirexos.com](https://clientes.cafirexos.com)
+- Panel: [panel.cafirexos.com](https://panel.cafirexos.com)
+- Documentación: [docs.cafirexos.com](https://docs.cafirexos.com)
+- Canal de WhatsApp: [clic aquí](https://cafirexos.com/whatsapp)
+- Comunidad: [clic aquí](https://cafirexos.com/comunidad)
+
+[![Click Aquí](https://img.shields.io/badge/Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/50497150165)
+
+
 ### `▢ ACTIVAR EN BOXMINEHOST`
 <a href="https://boxmineworld.com"><img src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png" width="450" height="240" alt="JPG"/></a>
 - Pagina Oficial: [https://boxmineworld.com](https://boxmineworld.com)
@@ -73,19 +85,6 @@ Para configurar e iniciar el proyecto, sigue estos pasos:
 - **Canal de WhatsApp:** [`Aquí`](https://whatsapp.com/channel/0029ValCkNT2ER6gHWFRQ71J)
 
 - **Correo:** [`Aquí`](olympushost2@gmail.com.com)
-
-
-### `▢ ACTIVAR EN CAFIREXOS`
-<a href="https://cafirexos.com"><img src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png" height="125px"></a>
-- Sitio web: [cafirexos.com](https://cafirexos.com)
-- Área de clientes: [clientes.cafirexos.com](https://clientes.cafirexos.com)
-- Panel: [panel.cafirexos.com](https://panel.cafirexos.com)
-- Documentación: [docs.cafirexos.com](https://docs.cafirexos.com)
-- Canal de WhatsApp: [clic aquí](https://cafirexos.com/whatsapp)
-- Comunidad: [clic aquí](https://cafirexos.com/comunidad)
-
-[![Click Aquí](https://img.shields.io/badge/Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/50497150165)
-
 
 ### `▢ ACTIVAR EN KOYEB`
 
