@@ -2,6 +2,8 @@ import fetch from 'node-fetch';
 import yts from 'yt-search';
 import axios from 'axios';
 
+let enviando = false;
+
 const handler = async (m, { conn, args }) => {
   const datas = global;
   const idioma = datas.db.data.users[m.sender].language;
@@ -11,13 +13,16 @@ const handler = async (m, { conn, args }) => {
 
   if (!args[0]) return await conn.sendMessage(m.chat, { text: tradutor.texto1 }, { quoted: m });
 
+  if (enviando) return; 
+  enviando = true;  
+
   const { key } = await conn.sendMessage(m.chat, { text: tradutorrr.texto5 }, { quoted: m });
 
   const youtubeLink = args[0];
 
   try {
     const yt_search = await yts(youtubeLink);
-    const audioUrl = `${global.MyApiRestBaseUrl}/api/v1/ytmp4?url=${yt_search.all[0].url}&apikey=${global.MyApiRestApikey}`;
+    const audioUrl = `${global.MyApiRestBaseUrl}/api/v1/ytmp44?url=${yt_search.all[0].url}&apikey=${global.MyApiRestApikey}`;
     const buff_aud = await getBuffer(audioUrl);
     const fileSizeInBytes = buff_aud.byteLength;
     const fileSizeInKB = fileSizeInBytes / 1024;
@@ -25,14 +30,13 @@ const handler = async (m, { conn, args }) => {
     const size = fileSizeInMB.toFixed(2);
     const title = yt_search.all[0].title;
     const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-
+    enviando = false; 
     await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'video/mp4', fileName: `${title}.mp4` }, { quoted: m });
     await conn.sendMessage(m.chat, { text: `${tradutorrr.texto7[2]}`, edit: key }, { quoted: m });
   } catch (error) {
-    console.log('Primera API falló, intentando con la segunda...', error);
     try {
       const yt_search = await yts(youtubeLink);
-      const audioUrl = `${global.MyApiRestBaseUrl}/api/v2/ytmp4?url=${yt_search.all[0].url}&apikey=${global.MyApiRestApikey}`;
+      const audioUrl = `${global.MyApiRestBaseUrl}/api/v1/ytmp4?url=${yt_search.all[0].url}&apikey=${global.MyApiRestApikey}`;
       const buff_aud = await getBuffer(audioUrl);
       const fileSizeInBytes = buff_aud.byteLength;
       const fileSizeInKB = fileSizeInBytes / 1024;
@@ -40,13 +44,30 @@ const handler = async (m, { conn, args }) => {
       const size = fileSizeInMB.toFixed(2);
       const title = yt_search.all[0].title;
       const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-
+      enviando = false; 
       await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'video/mp4', fileName: `${title}.mp4` }, { quoted: m });
       await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
     } catch (error) {
-      console.log('Segunda API también falló', error);
-      await conn.sendMessage(m.chat, { text: `${tradutorrr.texto7[2]}`, edit: key }, { quoted: m });
+      try {
+        const yt_search = await yts(youtubeLink);
+        const audioUrl = `${global.MyApiRestBaseUrl}/api/v2/ytmp4?url=${yt_search.all[0].url}&apikey=${global.MyApiRestApikey}`;
+        const buff_aud = await getBuffer(audioUrl);
+        const fileSizeInBytes = buff_aud.byteLength;
+        const fileSizeInKB = fileSizeInBytes / 1024;
+        const fileSizeInMB = fileSizeInKB / 1024;
+        const size = fileSizeInMB.toFixed(2);
+        const title = yt_search.all[0].title;
+        const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
+        enviando = false; 
+        await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'video/mp4', fileName: `${title}.mp4` }, { quoted: m });
+        await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
+      } catch (error) {
+        enviando = false; 
+        await conn.sendMessage(m.chat, { text: `${tradutorrr.texto7[2]}`, edit: key }, { quoted: m });
+      }
     }
+  } finally {
+    enviando = false; 
   }
 };
 
@@ -66,7 +87,6 @@ const getBuffer = async (url, options) => {
       ...options,
       responseType: 'arraybuffer',
     });
-
     return res.data;
   } catch (e) {
     console.log(`Error : ${e}`);
