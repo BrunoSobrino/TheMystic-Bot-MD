@@ -58,9 +58,11 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     const title = resultados.titulo;
 
     if (fileSizeInMB > limit) {
+      enviando = false;
       await conn.sendMessage(m.chat, { document: buff_vid, caption: `${tradutor.texto6[0]} ${title}\n${tradutor.texto6[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp4', mimetype: 'video/mp4' }, { quoted: m });
       await conn.sendMessage(m.chat, { text: `${tradutor.texto6[2]} ${roundedFileSizeInMB} ${tradutor.texto6[3]} ${title}`, edit: key }, { quoted: m });
     } else {
+      enviando = false;
       await conn.sendMessage(m.chat, { video: buff_vid, caption: `${tradutor.texto7[0]} ${title}\n${tradutor.texto7[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp4', mimetype: 'video/mp4' }, { quoted: m });
       await conn.sendMessage(m.chat, { text: `${tradutor.texto7[2]}`, edit: key }, { quoted: m });
     }
@@ -76,9 +78,11 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
       const title = yt_play.all[0].title;
 
       if (fileSizeInMB > limit) {
+        enviando = false;
         await conn.sendMessage(m.chat, { document: buff_vid, caption: `${tradutor.texto6[0]} ${title}\n${tradutor.texto6[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp4', mimetype: 'video/mp4' }, { quoted: m });
         await conn.sendMessage(m.chat, { text: `${tradutor.texto6[2]} ${roundedFileSizeInMB} ${tradutor.texto6[3]} ${title}`, edit: key }, { quoted: m });
       } else {
+        enviando = false;
         await conn.sendMessage(m.chat, { video: buff_vid, caption: `${tradutor.texto7[0]} ${title}\n${tradutor.texto7[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp4', mimetype: 'video/mp4' }, { quoted: m });
         await conn.sendMessage(m.chat, { text: `${tradutor.texto7[2]}`, edit: key }, { quoted: m });
       }
@@ -94,13 +98,16 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         const title = yt_play.all[0].title;
 
         if (fileSizeInMB > limit) {
+          enviando = false;
           await conn.sendMessage(m.chat, { document: buff_vid, caption: `${tradutor.texto6[0]} ${title}\n${tradutor.texto6[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp4', mimetype: 'video/mp4' }, { quoted: m });
           await conn.sendMessage(m.chat, { text: `${tradutor.texto6[2]} ${roundedFileSizeInMB} ${tradutor.texto6[3]} ${title}`, edit: key }, { quoted: m });
         } else {
+          enviando = false;
           await conn.sendMessage(m.chat, { video: buff_vid, caption: `${tradutor.texto7[0]} ${title}\n${tradutor.texto7[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp4', mimetype: 'video/mp4' }, { quoted: m });
           await conn.sendMessage(m.chat, { text: `${tradutor.texto7[2]}`, edit: key }, { quoted: m });
         }
       } catch (error) {
+        enviando = false;
         await conn.sendMessage(m.chat, { text: tradutor.texto8, edit: key }, { quoted: m });
         throw tradutor.texto9;
       }
