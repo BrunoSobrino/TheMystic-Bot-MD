@@ -29,12 +29,15 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
           if (index < matchingItem.urls.length) {
             youtubeLink = matchingItem.urls[index];
           } else {
+            enviando = false;
             throw `${tradutor.texto1} ${matchingItem.urls.length}*`;
           }
         } else {
+          enviando = false;
           throw `${tradutor.texto2[0]} (${usedPrefix + command} ${tradutor.texto2[1]} ${usedPrefix}playlist <texto>*`;
         }
       } else {
+        enviando = false;
         throw `${tradutor.texto3[0]} (${usedPrefix + command} ${tradutor.texto3[1]} ${usedPrefix}playlist <texto>*`;
       }
     }
