@@ -10,13 +10,13 @@
 
 > [ 🔗 ] [atom.bio](https://www.atom.bio/theshadowbrokers-team)
 
-[![Click Aquí](https://img.shields.io/badge/Grupo-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
-
-[![Click Aquí](https://img.shields.io/badge/Canal-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y)
-
-[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/LVwSmQ3e6SZCB2DDgqlOHK)
-
 <a href="https://wa.me5219992843881?text=!menu"><img alt="Bot Oficial" src="https://img.shields.io/badge/Bot - Oficial-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
+
+[![Click Aquí](https://img.shields.io/badge/Grupo-MysticBot-PT-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
+
+[![Click Aquí](https://img.shields.io/badge/Grupo-MysticBot-ES-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/LVwSmQ3e6SZCB2DDgqlOHK)
+
+[![Click Aquí](https://img.shields.io/badge/Canal-MysticBot-ES-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y)
 
 ### `▢ DONAR`
 - Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/BrunoSob)
