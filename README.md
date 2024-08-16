@@ -12,15 +12,11 @@
 
 [![Click Aquí](https://img.shields.io/badge/Canal-MysticBot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
 
-[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN)
+[![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/LVwSmQ3e6SZCB2DDgqlOHK)
 
-<!-- > [ ℹ️ ] En los grupos de soporte no se permiten bots.
+### `▢ BOT OFICIAL`
 
-### `▢ BOTS OFICIALES (INACTIVOS)`
-
-<a href="https://wa.me5219991402134?text=!menu"><img alt="Bot Oficial" src="https://img.shields.io/badge/Bot - Oficial-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
-
-<a href="https://wa.me/5219993404349?text=!menu"><img alt="Bot Oficial2" src="https://img.shields.io/badge/Bot - Oficial2-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a> -->
+<a href="https://wa.me5219992843881?text=!menu"><img alt="Bot Oficial" src="https://img.shields.io/badge/Bot - Oficial-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
 
 ### `▢ DONAR`
 - Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/BrunoSob)
