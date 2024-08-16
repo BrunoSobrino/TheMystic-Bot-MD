@@ -48,8 +48,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   try {
     const yt_play = await yts(youtubeLink);
     const { status, resultados, error } = await ytmp44(yt_play.all[0].url);  
-    if (!status) throw new Error(error);
-
+    if (!status) {
+      enviando = false;
+      throw new Error(error);
+    }
     const buff_vid = await getBuffer(resultados.descargar);
     const fileSizeInBytes = buff_vid.byteLength;
     const fileSizeInKB = fileSizeInBytes / 1024;
