@@ -120,7 +120,6 @@ async function mp4ToWebp(file, stickerMetadata) {
         '--disk-cache-size=0'
       ],
       executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-      skipBrokenMethodsCheck: true,
       stickerServerEndpoint: true
     }
   };
