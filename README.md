@@ -14,8 +14,6 @@
 
 [![Click Aquí](https://img.shields.io/badge/Grupo-Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/LVwSmQ3e6SZCB2DDgqlOHK)
 
-### `▢ BOT OFICIAL`
-
 <a href="https://wa.me5219992843881?text=!menu"><img alt="Bot Oficial" src="https://img.shields.io/badge/Bot - Oficial-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
 
 ### `▢ DONAR`
