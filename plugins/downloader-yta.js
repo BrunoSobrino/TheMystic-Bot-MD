@@ -2,7 +2,9 @@ import fetch from 'node-fetch';
 import yts from 'yt-search';
 import axios from 'axios';
 import ytmp33 from '../lib/ytmp33.js';
-let limit = 50
+
+let limit = 50;
+let enviando = false;
 
 const handler = async (m, { text, conn, args, usedPrefix, command }) => {
   const datas = global;
@@ -12,7 +14,6 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
 
   if (!args[0]) throw tradutor.texto8;
 
-  let enviando;
   if (enviando) return;
   enviando = true;
 
@@ -43,8 +44,10 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
 
   try {
     const { status, resultados, error } = await ytmp33(youtubeLink);
-    if (!status) throw new Error(error);
-
+    if (!status) {
+      enviando = false;
+      throw new Error(error);
+    }
     const buff_aud = await getBuffer(resultados.descargar);
     const fileSizeInBytes = buff_aud.byteLength;
     const fileSizeInKB = fileSizeInBytes / 1024;
@@ -53,15 +56,16 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
     const title = resultados.titulo;
 
     if (fileSizeInMB > limit) {
+      enviando = false;
       await conn.sendMessage(m.chat, { document: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
     } else {
+      enviando = false;
       await conn.sendMessage(m.chat, { audio: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
     }
     await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m });
     enviando = false;
 
   } catch (error) {
-    console.log('Primera API falló, intentando con la segunda...');
     try {
       const yt_play = await yts(youtubeLink);
       const audioUrl = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${yt_play.all[0].url}&apikey=${global.MyApiRestApikey}`;
@@ -73,16 +77,39 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
       const title = yt_play.all[0].title;
 
       if (fileSizeInMB > limit) {
+        enviando = false;
         await conn.sendMessage(m.chat, { document: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
       } else {
+        enviando = false;
         await conn.sendMessage(m.chat, { audio: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
       }
       await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m });
       enviando = false;
+    } catch (error) {  
+      try {
+        const yt_play = await yts(youtubeLink);
+        const audioUrl = `${global.MyApiRestBaseUrl}/api/v2/ytmp3?url=${yt_play.all[0].url}&apikey=${global.MyApiRestApikey}`;
+        const buff_aud = await getBuffer(audioUrl);
+        const fileSizeInBytes = buff_aud.byteLength;
+        const fileSizeInKB = fileSizeInBytes / 1024;
+        const fileSizeInMB = fileSizeInKB / 1024;
+        const roundedFileSizeInMB = fileSizeInMB.toFixed(2);
+        const title = yt_play.all[0].title;
 
-    } catch (error) {
-      await conn.sendMessage(m.chat, { text: tradutor.texto6, edit: key }, { quoted: m });
-      throw tradutor.texto7;
+        if (fileSizeInMB > limit) {
+          enviando = false;
+          await conn.sendMessage(m.chat, { document: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
+        } else {
+          enviando = false;
+          await conn.sendMessage(m.chat, { audio: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
+        }
+        await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m });
+        enviando = false;
+      } catch (error) {
+        enviando = false;
+        await conn.sendMessage(m.chat, { text: tradutor.texto6, edit: key }, { quoted: m });
+        throw tradutor.texto7;
+      } 
     }
   } finally {
     enviando = false;
