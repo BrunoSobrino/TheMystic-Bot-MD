@@ -8,7 +8,7 @@
 
 ### `▢ CUENTAS OFICIALES`
 
-> [ 🔗 ] [atom.bio](https://www.atom.bio/theshadowbrokers-team)
+> [ 🔗 ] [atom.bio/theshadowbrokers-team](https://www.atom.bio/theshadowbrokers-team)
 
 <a href="https://wa.me5219992843881?text=!menu"><img alt="Bot Oficial" src="https://img.shields.io/badge/Bot - Oficial-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
 
