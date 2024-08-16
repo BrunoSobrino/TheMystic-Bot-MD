@@ -34,9 +34,9 @@ const handler = async (m, { conn, args }) => {
     const size = fileSizeInMB.toFixed(2);
     const title = resultados.titulo;
     const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-    enviando = false; 
     await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m });
     await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
+    enviando = false;
   } catch (error) {
     try {
       const yt_search = await yts(youtubeLink);
@@ -48,9 +48,9 @@ const handler = async (m, { conn, args }) => {
       const size = fileSizeInMB.toFixed(2);
       const title = yt_search.all[0].title;
       const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-      enviando = false; 
       await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m });
       await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
+      enviando = false;
     } catch (error) {
       try {
         const yt_search = await yts(youtubeLink);
@@ -62,9 +62,9 @@ const handler = async (m, { conn, args }) => {
         const size = fileSizeInMB.toFixed(2);
         const title = yt_search.all[0].title;
         const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-        enviando = false; 
         await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m });
         await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
+        enviando = false;
       } catch (error) {
         enviando = false; 
         await conn.sendMessage(m.chat, { text: tradutor.texto4, edit: key }, { quoted: m });
