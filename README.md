@@ -23,29 +23,7 @@
 <a href="https://wa.me/5219993404349?text=!menu"><img alt="Bot Oficial2" src="https://img.shields.io/badge/Bot - Oficial2-00FFFF?style=for-the-badge&logo=whatsapp&logoColor=white"/></a> -->
 
 ### `▢ DONAR`
-- Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/TheShadowBrokers133)
-
-
-<!-- Este menú de instalación es temporal. By Jeffersonalionco -->
-### `▢ Instalación`
-
-Para configurar e iniciar el proyecto, sigue estos pasos:
-
-1. **Instala Yarn** (si aún no está instalado):
-
-   ```bash
-   npm install -g yarn
-2. **Executar o Yarn** 
-
-   ```bash
-   yarn install
-3. **Executar o npm** 
-
-   ```bash
-   npm install
-4. **INICIAR O BOT** 
-   ```bash
-   npm start
+- Agradece con una donación voluntaria haciendo [clic aquí](https://www.paypal.me/BrunoSob)
 
 ### `▢ PLUGINS`
 - Tienes ideas de plugins o ¿quieres obtener mas plugins? entonces hace [clic aquí](https://github.com/theh2so4/Mystic-Plugins)
