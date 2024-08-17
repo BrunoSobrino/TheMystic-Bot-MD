@@ -12,7 +12,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     return m.reply('[❗] NO PUEDO ENVIAR ESTE CONTENIDO PORQUE ESTA PROHIBIDO BUSCAR CONTENIDO EXPLICITO');
   }*/
 
-  const apiImage = `${global.MyApiRestBaseUrl}/api/googleImage?text=Google${text}&apikey=${global.MyApiRestApikey}`;
+  const apiImage = `${global.MyApiRestBaseUrl}/api/googleImage?text=${text}&apikey=${global.MyApiRestApikey}`;
   const res = await conn.getFile(apiImage);
   const link = await res.data;
 
