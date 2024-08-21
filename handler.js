@@ -1639,7 +1639,7 @@ export async function participantsUpdate({ id, participants, action }) {
             pp = await m.conn.profilePictureUrl(user, 'image');
           } catch (e) {
           } finally {
-            const apii = await m.conn.getFile(pp);
+            const apii = await mconn?.conn?.getFile(pp);
             const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
             const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
             const botTt2 = groupMetadata.participants.find((u) => m.conn.decodeJid(u.id) == m.conn.user.jid) || {};
