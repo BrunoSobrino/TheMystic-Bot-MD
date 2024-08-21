@@ -39,10 +39,9 @@
 
 [![Click Aquí](https://img.shields.io/badge/Soporte-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/50497150165)
 
-### ☁️ CORINPLUS HOTS 
+### `▢ CORINPLUS HOST` 
 <a href="https://dash.corinplus.com"><img src="https://qu.ax/ZycD.png" height="125px"></a>
-### Información sobre CorinPlus
-
+### Información sobre CorinPlus:
 - **Dashboard:** [`Aquí`](https://dash.corinplus.com)
 - **Panel:** [`Aquí`](https://panel.corinplus.com)
 - **Estado de servicios:** [`Aquí`](https://status.corinplus.com)
