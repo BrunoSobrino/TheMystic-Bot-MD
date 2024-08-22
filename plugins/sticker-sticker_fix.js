@@ -3,7 +3,14 @@ import { addExif } from '../lib/sticker.js';
 import uploadFile from '../lib/uploadFile.js';
 import uploadImage from '../lib/uploadImage.js';
 import { webp2png } from '../lib/webp2mp4.js';
-import { Sticker } from 'wa-sticker-formatter';
+let Sticker;
+import('wa-sticker-formatter')
+  .then((module) => {
+    Sticker = module.Sticker;
+  })
+  .catch((error) => {
+    console.error('wa-sticker-formatter');
+  });
 
 async function handler(m, { conn, args, usedPrefix, command }) {
   let stiker = false;
