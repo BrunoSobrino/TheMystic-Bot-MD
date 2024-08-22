@@ -1,6 +1,13 @@
 import fetch from 'node-fetch';
 import {sticker, addExif} from '../lib/sticker.js';
-import {Sticker} from 'wa-sticker-formatter';
+let Sticker;
+import('wa-sticker-formatter')
+  .then((module) => {
+    Sticker = module.Sticker;
+  })
+  .catch((error) => {
+    console.error('wa-sticker-formatter');
+  });
 
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   const datas = global
