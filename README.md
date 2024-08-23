@@ -118,7 +118,7 @@
 <a href="https://github.com/elrebelde21"><img src="https://github.com/elrebelde21.png" width="100" height="100" alt="elrebelde21"/> </a>
 <a href="https://github.com/Fabri115"><img src="https://github.com/Fabri115.png" width="100" height="100" alt="Fabri115"/> </a>
 <a href="https://github.com/Alba070503"><img src="https://github.com/Alba070503.png" width="100" height="100" alt="Alba070503"/> <a/> </a>
-<a href="https://github.com/OfcDiego"><img src="https://github.com/OfcDiego.png" width="100" height="100" alt="Diego"/> </a> <a href="https://github.com/glytglobal"><img src="https://github.com/glytglobal.png" width="100" height="100" alt="Gabriel Øfc"/></a> <a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a> </a> <a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
+<a href="https://github.com/Dev-Diego"><img src="https://github.com/Dev-Diego.png" width="100" height="100" alt="Diego"/> </a> <a href="https://github.com/glytglobal"><img src="https://github.com/glytglobal.png" width="100" height="100" alt="Gabriel Øfc"/></a> <a href="https://github.com/jeffersonalionco"><img src="https://github.com/jeffersonalionco.png" width="100" height="100" alt="Alba070503"/> </a> </a> <a href="https://instagram.com/nm9h"><img src="https://telegra.ph/file/7580886a1d41b35b51e38.jpg" width="100" height="100" alt="Saad"/> </a>
 <a href="https://github.com/BK9dev"><img src="https://i.imgur.com/NAVoDeW.jpeg" width="100" height="100" alt="BK9"/> </a>
 <a href="https://github.com/matias-crypto"><img src="https://github.com/matias-crypto.png" width="100" height="100" alt="unptoadrih15"/></a>
 
