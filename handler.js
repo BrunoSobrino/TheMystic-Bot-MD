@@ -1617,7 +1617,7 @@ export async function participantsUpdate({ id, participants, action }) {
    * Opção de tradução de idioma
    * 
    ***********************/
-  const idioma = global.db.data.chats[id]?.language || 'es';
+  const idioma = global?.db?.data?.chats[id]?.language || 'es';
   const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
 
