@@ -511,23 +511,23 @@ async function _quickTest() {
   Object.freeze(global.support);
 }
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn.user) return;
+  if (stopped === 'close' || !conn || !conn?.user) return;
   await clearTmp();
 }, 180000);
 
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn.user) return; //intervals at the same thime tho
+  if (stopped === 'close' || !conn || !conn?.user) return; //intervals at the same thime tho
   await purgeSessionSB();
   await purgeOldFiles();
   await purgeSession();
 }, 1000 * 60 * 60);
 
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn.user) return;
+  if (stopped === 'close' || !conn || !conn?.user) return;
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
   const bio = `[ ⏳ ] Uptime: ${uptime}`;
-  await conn.updateProfileStatus(bio).catch((_) => _);
+  await conn?.updateProfileStatus(bio).catch((_) => _);
 }, 60000);
 function clockString(ms) {
   const d = isNaN(ms) ? '--' : Math.floor(ms / 86400000);
