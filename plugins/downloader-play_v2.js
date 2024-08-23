@@ -10,7 +10,7 @@
 
 */
 import fetch from 'node-fetch';
-import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys';
+import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from "baileys";
 
 let data;
 let buff;

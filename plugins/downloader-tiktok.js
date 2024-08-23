@@ -1,7 +1,7 @@
 import fg from 'api-dylux';
 import axios from 'axios';
 import cheerio from 'cheerio';
-import {generateWAMessageFromContent} from '@whiskeysockets/baileys';
+import {generateWAMessageFromContent} from "baileys";
 import {tiktokdl} from '@bochilteam/scraper';
 
 let tiktok;

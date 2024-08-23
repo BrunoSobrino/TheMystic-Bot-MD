@@ -1,12 +1,12 @@
 /**
- * @type {import('@whiskeysockets/baileys')}
+ * @type {import("baileys")}
  */
 const {
   proto,
   generateWAMessage,
   areJidsSameUser,
   decryptPollVote,
-} = (await import('@whiskeysockets/baileys')).default;
+} = (await import("baileys")).default;
 
 export async function all(m, chatUpdate) {
   /* if (m.message.pollUpdateMessage) {
@@ -123,7 +123,7 @@ export async function all(m, chatUpdate) {
   generateWAMessage,
   areJidsSameUser,
   decryptPollVote,
-} = (await import('@whiskeysockets/baileys')).default;
+} = (await import("baileys")).default;
 
 export async function all(m, chatUpdate) {
   if (m.isBaileys) {

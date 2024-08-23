@@ -1,6 +1,6 @@
 import uploadImage from '../lib/uploadImage.js';
 import {sticker} from '../lib/sticker.js';
-import MessageType from '@whiskeysockets/baileys';
+import MessageType from "baileys";
 
 const effects = ['jail', 'gay', 'glass', 'wasted', 'triggered', 'lolice', 'simpcard', 'horny'];
 

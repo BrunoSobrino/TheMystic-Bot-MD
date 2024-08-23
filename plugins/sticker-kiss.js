@@ -1,6 +1,6 @@
 import {sticker} from '../lib/sticker.js';
 import fetch from 'node-fetch';
-import MessageType from '@whiskeysockets/baileys';
+import MessageType from "baileys";
 
 
 const handler = async (m, {conn, text}) => {

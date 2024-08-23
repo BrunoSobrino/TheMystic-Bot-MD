@@ -1,5 +1,5 @@
 import {sticker} from '../lib/sticker.js';
-import MessageType from '@whiskeysockets/baileys';
+import MessageType from "baileys";
 import fetch from 'node-fetch';
 import fs from 'fs';
 

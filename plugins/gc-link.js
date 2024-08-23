@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys';
+import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from "baileys";
 
 const handler = async (m, {conn, args}) => {
   const datas = global

@@ -9,7 +9,7 @@
  * https://github.com/BrunoSobrino
 
 */
-import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys'
+import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from "baileys"
 import yts from 'yt-search';
 import fs from 'fs';
 
