@@ -39,7 +39,7 @@
 - [Soporte y Comunidad](#soporte-y-comunidad)
   - [Comunidades de Ayuda](#guía-de-uso)
   - [Colaboradores](#colaboradores)
-  - [Creditos](#creditos)
+  - [Agradecimientos](#agradecimientos)
 
 # Aviso Importante
 
@@ -89,3 +89,7 @@
 - **Área de Clientes:** [dash.boxmineworld.com](https://dash.boxmineworld.com)
 - **Panel de Control:** [panel.boxmineworld.com](https://panel.boxmineworld.com)
 - **Comunidad de Discord:** [¡Únete aquí!](https://discord.gg/84qsr4v)
+
+# Soporte y Comunidad
+
+## Comunidades de Ayuda
