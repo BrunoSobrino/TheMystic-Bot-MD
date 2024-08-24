@@ -1,7 +1,7 @@
 <p align="center">
  <img width="175px" src="https://avatars.githubusercontent.com/u/90165013?v=4" align="center" alt="GitHub Readme Stats" style="border-radius: 50%;" />
  <h2 align="center">The Mystic Bot (TMB)</h2>
- <p align="center">Es un bot automatizado de WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.</p>
+ <p align="center">Un chatbot automatizado para WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.</p>
 </p>
   <p align="center">
     <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
@@ -43,7 +43,7 @@
 
 # Aviso Importante
 
-> [!IMPORTANTE]\
+> [!IMPORTANT]\
 > Este proyecto **no está afiliado de ninguna manera** con `WhatsApp`, `Inc. WhatsApp` es una marca registrada de `WhatsApp LLC`, y este bot es un **desarrollo independiente** que **no tiene ninguna relación oficial con la compañía**.
 
 # Opciones de despliegue
