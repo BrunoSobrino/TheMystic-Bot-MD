@@ -33,9 +33,7 @@
   - [Despliegue en Cafirexos](#despliegue-en-cafirexos)
   - [Despliegue en CorinPlus](#despliegue-en-corinplus)
   - [Despliegue en BoxMineWorld](#despliegue-en-boxmineworld)
-  - [Despliegue en Koyeb](#despliegue-en-koyeb)
-  - [Despliegue en Replit](#despliegue-en-replit)
-  - [Despliegue en Render](#despliegue-en-render)
+  - [Despliegue en Otros](#despliegue-en-otros)
 - [Soporte y Comunidad](#soporte-y-comunidad)
   - [Comunidades de Ayuda](#guía-de-uso)
   - [Colaboradores](#colaboradores)
@@ -97,53 +95,12 @@
 
 </details>
 
-## Despliegue en Koyeb
+## Despliegue en Otros
 
-<a href="https://www.koyeb.com"><img width="180px" src="https://i.ibb.co/p4S5D6b/koyeb.png"/></a>
+[![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
+[![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD)
+[![Run on Repl.it](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)
 
-<details>
- <summary><b>:paperclip: Enlaces Importantes</b></summary>
-
-- **Sitio Web:** [koyeb.com](https://koyeb.com)
-- **Área de Clientes:** [app.koyeb.com](https://app.koyeb.com)
-
-</details>
-
-## Botón de Despliegue
-
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
-
-## Despliegue en Replit
-
-<a href="https://replit.com"><img width="180px" src="https://i.ibb.co/fNNwfyj/replit.png"/></a>
-
-<details>
- <summary><b>:paperclip: Enlaces Importantes</b></summary>
-
-- **Sitio Web:** [replit.com](https://replit.com)
-- **Área de Clientes:** [replit.com/login](https://replit.com/login)
-
-</details>
-
-## Botón de Despliegue
-
-[![Run on Repl.it](https://repl.it/badge/github/BrunoSobrino/TheMystic-Bot-MD)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)
-
-## Despliegue en Render
-
-<a href="https://render.com"><img width="180px" src="https://i.ibb.co/FgfvBmc/render.png"/></a>
-
-<details>
- <summary><b>:paperclip: Enlaces Importantes</b></summary>
-
-- **Sitio Web:** [render.com](https://render.com)
-- **Área de Clientes:** [dashboard.render.com](https://dashboard.render.com)
-
-</details>
-
-## Botón de Despliegue
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
 # Soporte y Comunidad
 
