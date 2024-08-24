@@ -13,8 +13,6 @@
     "start": "node index.js",
     "qr": "node index.js qr",
     "code": "node index.js code",
-    "test": "node test.js",
-    "test2": "nodemon index.js",
     "eslint": "eslint .",
     "eslintfix": "eslint --fix ."
   },
