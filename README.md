@@ -56,7 +56,8 @@
 
 <a href="https://cafirexos.com"><img width="180px" src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png"/></a>
 
-## Enlaces Importantes
+<details>
+ <summary><b>:hammer_and_wrench: Enlaces Importantes</b></summary>
 
 - **Sitio Web:** [cafirexos.com](https://cafirexos.com)
 - **Área de Clientes:** [clientes.cafirexos.com](https://clientes.cafirexos.com)
@@ -66,36 +67,47 @@
 - **Canal de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/whatsapp)
 - **Comunidad de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/comunidad)
 
+</details>
+
 ## Despliegue en CorinPlus
 
 <a href="https://dash.corinplus.com"><img width="180px" src="https://qu.ax/ZycD.png"/></a>
 
-## Enlaces Importantes
+<details>
+ <summary><b>:hammer_and_wrench: Enlaces Importantes</b></summary>
 
 - **Área de Clientes:** [dash.corinplus.com](https://dash.corinplus.com)
 - **Panel de Control:** [panel.corinplus.com](https://panel.corinplus.com)
 - **Estado de los Servicios:** [status.corinplus.com](https://status.corinplus.com)
 - **Canal de WhatsApp:** [¡Únete aquí!](https://whatsapp.com/channel/0029VakUvreFHWpyWUr4Jr0g)
 
+</details>
+
 ## Despliegue en BoxMineWorld
 
 <a href="https://boxmineworld.com"><img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/></a>
 
-## Enlaces Importantes
+<details>
+ <summary><b>:hammer_and_wrench: Enlaces Importantes</b></summary>
 
 - **Sitio Web:** [boxmineworld.com](https://boxmineworld.com)
 - **Área de Clientes:** [dash.boxmineworld.com](https://dash.boxmineworld.com)
 - **Panel de Control:** [panel.boxmineworld.com](https://panel.boxmineworld.com)
 - **Comunidad de Discord:** [¡Únete aquí!](https://discord.gg/84qsr4v)
 
+</details>
+
 ## Despliegue en Koyeb
 
 <a href="https://www.koyeb.com"><img width="180px" src="https://i.ibb.co/p4S5D6b/koyeb.png"/></a>
 
-## Enlaces Importantes
+<details>
+ <summary><b>:hammer_and_wrench: Enlaces Importantes</b></summary>
 
 - **Sitio Web:** [koyeb.com](https://koyeb.com)
 - **Área de Clientes:** [app.koyeb.com](https://app.koyeb.com)
+
+</details>
 
 ## Botón de Despliegue
 
@@ -105,10 +117,13 @@
 
 <a href="https://replit.com"><img width="180px" src="https://i.ibb.co/fNNwfyj/replit.png"/></a>
 
-## Enlaces Importantes
+<details>
+ <summary><b>:hammer_and_wrench: Enlaces Importantes</b></summary>
 
 - **Sitio Web:** [replit.com](https://replit.com)
 - **Área de Clientes:** [replit.com/login](https://replit.com/login)
+
+</details>
 
 ## Botón de Despliegue
 
@@ -118,10 +133,13 @@
 
 <a href="https://render.com"><img width="180px" src="https://i.ibb.co/FgfvBmc/render.png"/></a>
 
-## Enlaces Importantes
+<details>
+ <summary><b>:hammer_and_wrench: Enlaces Importantes</b></summary>
 
 - **Sitio Web:** [render.com](https://render.com)
 - **Área de Clientes:** [dashboard.render.com](https://dashboard.render.com)
+
+</details>
 
 ## Botón de Despliegue
 
