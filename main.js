@@ -23,6 +23,7 @@ import readline from 'readline';
 import NodeCache from 'node-cache';
 const {chain} = lodash;
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
+let stopped = 'close';  
 protoType();
 serialize();
 
@@ -318,7 +319,7 @@ async function connectionUpdate(update) {
   
 
   const {connection, lastDisconnect, isNewLogin} = update;
-  global.stopped = connection;
+  stopped = connection;
   if (isNewLogin) conn.isInit = true;
   const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode;
   if (code && code !== DisconnectReason.loggedOut && conn?.ws.socket == null) {
