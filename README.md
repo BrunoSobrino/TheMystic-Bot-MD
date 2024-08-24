@@ -46,11 +46,13 @@
 > [!IMPORTANT]\
 > Este proyecto **no está afiliado de ninguna manera** con `WhatsApp`, `Inc. WhatsApp` es una marca registrada de `WhatsApp LLC`, y este bot es un **desarrollo independiente** que **no tiene ninguna relación oficial con la compañía**.
 
+> [!WARNING]\
+> **Este proyecto no ofrece soporte oficial para su uso en Termux.** Termux es una aplicación de terminal para Android y, aunque puede ser utilizada para ejecutar diversos programas, **este proyecto no está diseñado ni probado específicamente para funcionar en Termux**. Por lo tanto, **no garantizamos compatibilidad ni soporte técnico en este entorno**.
+
+
 # Opciones de despliegue
 
 ## Despliegue en Cafirexos
-
-### :film\_projector:
 
 <a href="https://cafirexos.com"><img width="180px" src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png"/></a>
 
@@ -66,8 +68,6 @@
 
 ## Despliegue en CorinPlus
 
-### :film\_projector:
-
 <a href="https://dash.corinplus.com"><img width="180px" src="https://qu.ax/ZycD.png"/></a>
 
 ## Enlaces Importantes
@@ -79,8 +79,6 @@
 
 ## Despliegue en BoxMineWorld
 
-### :film\_projector:
-
 <a href="https://boxmineworld.com"><img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/></a>
 
 ## Enlaces Importantes
@@ -89,6 +87,45 @@
 - **Área de Clientes:** [dash.boxmineworld.com](https://dash.boxmineworld.com)
 - **Panel de Control:** [panel.boxmineworld.com](https://panel.boxmineworld.com)
 - **Comunidad de Discord:** [¡Únete aquí!](https://discord.gg/84qsr4v)
+
+## Despliegue en Koyeb
+
+<a href="https://www.koyeb.com"><img width="180px" src="https://i.ibb.co/p4S5D6b/koyeb.png"/></a>
+
+## Enlaces Importantes
+
+- **Sitio Web:** [koyeb.com](https://koyeb.com)
+- **Área de Clientes:** [app.koyeb.com](https://app.koyeb.com)
+
+## Botón de Despliegue
+
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
+
+## Despliegue en Replit
+
+<a href="https://replit.com"><img width="180px" src="https://i.ibb.co/fNNwfyj/replit.png"/></a>
+
+## Enlaces Importantes
+
+- **Sitio Web:** [replit.com](https://replit.com)
+- **Área de Clientes:** [replit.com/login](https://replit.com/login)
+
+## Botón de Despliegue
+
+[![Run on Repl.it](https://repl.it/badge/github/BrunoSobrino/TheMystic-Bot-MD)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)
+
+## Despliegue en Render
+
+<a href="https://render.com"><img width="180px" src="https://i.ibb.co/FgfvBmc/render.png"/></a>
+
+## Enlaces Importantes
+
+- **Sitio Web:** [render.com](https://render.com)
+- **Área de Clientes:** [dashboard.render.com](https://dashboard.render.com)
+
+## Botón de Despliegue
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD) 
 
 # Soporte y Comunidad
 
