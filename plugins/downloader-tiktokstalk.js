@@ -1,34 +1,29 @@
-import fetch from 'node-fetch';
+import fetch from 'node-fetch'
+let handler = async (m, { conn, text, args }) => {
 
-const handler = async (m, { conn, text }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
-  const tradutor = _translate.plugins.downloader_tiktokstalk
+  if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*`
+  const response = await axios.get("https://deliriusapi-official.vercel.app/tools/tiktokstalk", { params: { q: text } });
+    const data = response.data;
 
-  if (!text) return conn.reply(m.chat, tradutor.texto1, m);
-  try {
-    const res = await fetch(`https://deliriusapi-official.vercel.app/tools/tiktokstalk?q=${encodeURIComponent(text)}`);
-    const res2 = `https://api.lolhuman.xyz/api/pptiktok/${text}?apikey=${lolkeysapi}`;
-    const json = await res.json();
-    if (res.status !== 200) throw await res.text();
-    if (!json.status) throw json;
-    const thumb = await (await fetch(json.result.user_picture)).buffer();
-    const Mystic = `
-${tradutor.texto2[0]} ${json.result.username}
-${tradutor.texto2[1]}  ${json.result.nickname}
-${tradutor.texto2[2]}  ${json.result.followers}
-${tradutor.texto2[3]}  ${json.result.followings}
-${tradutor.texto2[4]}  ${json.result.likes}
-${tradutor.texto2[5]}  ${json.result.video}
-${tradutor.texto2[6]}  ${json.result.bio}
-`.trim();
-    conn.sendFile(m.chat, res2, 'error.jpg', Mystic, m, false);
-  } catch (e) {
-    throw tradutor.texto3;
-  }
-};
-handler.help = ['tiktokstalk'].map((v) => v + ' <username>');
-handler.tags = ['stalk'];
-handler.command = /^(tiktokstalk|ttstalk)$/i;
+    if (data.status && data.result) {
+
+      const user = data.result.users;
+      const stats = data.result.stats;
+      
+      let msg = `
+┌────「 TIKTOKSTALK 」
+│✰ *Nombre:* ${user.nickname}
+│✰ *Usuario:* ${user.username}
+│✰ *Seguidores:* ${(stats.followerCount) || stats.followerCount}
+│✰ *Siguiendo:* ${(stats.followingCount) || stats.followingCount}
+│✰ *Data:* ${user.signature}
+│✰ *Enlace:*
+│✰ https://tiktok.com/${user.nickname}
+└───────────────┈`
+  await conn.sendFile(m.chat, user.avatarLarger, 'tt.png', msg, m)
+}
+handler.help = ['tiktokstalk']
+handler.tags = ['dl']
+handler.command = /^t(tstalk|tiktokstalk|ttstalk|tiktoktalk)$/i
+
 export default handler;
