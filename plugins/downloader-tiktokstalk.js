@@ -1,34 +1,22 @@
-import fetch from 'node-fetch';
+import fg from 'api-dylux'
+let handler = async (m, { conn, text, args }) => {
 
-const handler = async (m, { conn, text }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
-  const tradutor = _translate.plugins.downloader_tiktokstalk
+  if (!text) throw `*[❗𝐈𝐍𝐅𝐎❗] 𝙸𝙽𝚂𝙴𝚁𝚃𝙴 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙼𝙰𝚂 𝙴𝙻 𝙽𝙾𝙼𝙱𝚁𝙴 𝙳𝙴 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚄𝙽 𝚄𝚂𝚄𝙰𝚁𝙸𝙾 𝙳𝙴 𝚃𝙸𝙺𝚃𝙾𝙺*`
+  let res = await fg.ttStalk(args[0])
+  let gabrieltxt = `
+┌────「 TIKTOKSTALK 」
+│✰ *Nombre:* ${res.name}
+│✰ *Usuario:* ${res.username}
+│✰ *Seguidores:* ${res.followers}
+│✰ *Siguiendo:* ${res.following}
+│✰ *Data:* ${res.desc}
+│✰ *Enlace:*
+│✰ https://tiktok.com/${res.username}
+└───────────────┈`
+  await conn.sendFile(m.chat, res.profile, 'tt.png', gabrieltxt, m)
+}
+handler.help = ['tiktokstalk']
+handler.tags = ['dl']
+handler.command = /^t(tstalk|tiktokstalk|ttstalk|tiktoktalk)$/i
 
-  if (!text) return conn.reply(m.chat, tradutor.texto1, m);
-  try {
-    const res = await fetch(`https://deliriusapi-official.vercel.app/tools/tiktokstalk?q=${encodeURIComponent(text)}`);
-    const res2 = `https://api.lolhuman.xyz/api/pptiktok/${text}?apikey=${lolkeysapi}`;
-    const json = await res.json();
-    if (res.status !== 200) throw await res.text();
-    if (!json.status) throw json;
-    const thumb = await (await fetch(json.result.user_picture)).buffer();
-    const Mystic = `
-${tradutor.texto2[0]} ${json.result.username}
-${tradutor.texto2[1]}  ${json.result.nickname}
-${tradutor.texto2[2]}  ${json.result.followers}
-${tradutor.texto2[3]}  ${json.result.followings}
-${tradutor.texto2[4]}  ${json.result.likes}
-${tradutor.texto2[5]}  ${json.result.video}
-${tradutor.texto2[6]}  ${json.result.bio}
-`.trim();
-    conn.sendFile(m.chat, res2, 'error.jpg', Mystic, m, false);
-  } catch (e) {
-    throw tradutor.texto3;
-  }
-};
-handler.help = ['tiktokstalk'].map((v) => v + ' <username>');
-handler.tags = ['stalk'];
-handler.command = /^(tiktokstalk|ttstalk)$/i;
 export default handler;
