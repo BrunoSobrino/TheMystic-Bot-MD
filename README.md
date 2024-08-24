@@ -1,5 +1,5 @@
 <p align="center">
- <img width="175px" src="https://avatars.githubusercontent.com/u/90165013?v=4" align="center" alt="GitHub Readme Stats" style="border-radius: 50%;" />
+ <img width="180px" src="https://i.ibb.co/Qn1W6cP/image.png" align="center"/>
  <h2 align="center">The Mystic Bot (TMB)</h2>
  <p align="center">Un chatbot automatizado para WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.</p>
 </p>
@@ -52,7 +52,7 @@
 
 ### :film\_projector:
 
-<a href="https://cafirexos.com"><img width="175px" src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png"/></a>
+<a href="https://cafirexos.com"><img width="180px" src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png"/></a>
 
 ## Enlaces Importantes
 
@@ -68,7 +68,7 @@
 
 ### :film\_projector:
 
-<a href="https://dash.corinplus.com"><img width="175px" src="https://qu.ax/ZycD.png"/></a>
+<a href="https://dash.corinplus.com"><img width="180px" src="https://qu.ax/ZycD.png"/></a>
 
 ## Enlaces Importantes
 
@@ -81,7 +81,7 @@
 
 ### :film\_projector:
 
-<a href="https://boxmineworld.com"><img width="450" height="240" src="https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/Pre%20Bot%20Publi.png"/></a>
+<a href="https://boxmineworld.com"><img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/></a>
 
 ## Enlaces Importantes
 
