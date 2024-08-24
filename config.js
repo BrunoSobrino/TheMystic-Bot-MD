@@ -27,6 +27,7 @@ global.owner = [
   ['5493794297363', '💫 Mystic - Gabriel Ofc', true], 
   ['393518398856', '💫 Mystic - Tester Fabri115💫', true],
   ['212781160203', '💫 Mystic - Saad 💫', true], 
+  ['5217778573223', '💫 Mystic - Sarethh 💫', true],
   ['593968585283'],
   ['5492266466080'],
   ['5218442114446'],

@@ -1,4 +1,4 @@
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1';
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1'; 
 import './config.js';
 import './api.js';
 import {createRequire} from 'module';
@@ -23,6 +23,7 @@ import readline from 'readline';
 import NodeCache from 'node-cache';
 const {chain} = lodash;
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
+let stopped = 'close';  
 protoType();
 serialize();
 
@@ -318,7 +319,7 @@ async function connectionUpdate(update) {
   
 
   const {connection, lastDisconnect, isNewLogin} = update;
-  global.stopped = connection;
+  stopped = connection;
   if (isNewLogin) conn.isInit = true;
   const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode;
   if (code && code !== DisconnectReason.loggedOut && conn?.ws.socket == null) {
@@ -511,23 +512,23 @@ async function _quickTest() {
   Object.freeze(global.support);
 }
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn.user) return;
+  if (stopped === 'close' || !conn || !conn?.user) return;
   await clearTmp();
 }, 180000);
 
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn.user) return; //intervals at the same thime tho
+  if (stopped === 'close' || !conn || !conn?.user) return; //intervals at the same thime tho
   await purgeSessionSB();
   await purgeOldFiles();
   await purgeSession();
 }, 1000 * 60 * 60);
 
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn.user) return;
+  if (stopped === 'close' || !conn || !conn?.user) return;
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
   const bio = `[ ⏳ ] Uptime: ${uptime}`;
-  await conn.updateProfileStatus(bio).catch((_) => _);
+  await conn?.updateProfileStatus(bio).catch((_) => _);
 }, 60000);
 function clockString(ms) {
   const d = isNaN(ms) ? '--' : Math.floor(ms / 86400000);
