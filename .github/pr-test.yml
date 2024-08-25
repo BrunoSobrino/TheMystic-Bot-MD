@@ -1,0 +1,35 @@
+name: test
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check-conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check for merge conflicts
+        id: merge
+        run: |
+          git fetch origin main
+          git merge --no-commit --no-ff origin/main || echo "::set-output name=conflict::true"
+
+      - name: Comment
+        if: steps.merge.outputs.conflict != 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "gracias por tu contribución!"
+            });
+
+      - name: Fail if there are conflicts
+        if: steps.merge.outputs.conflict == 'true'
+        run: exit 1
