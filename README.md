@@ -119,3 +119,11 @@ En este espacio podrás encontrar diversas **comunidades de ayuda** donde podrá
 | WhatsApp | Grupo | Português | [¡Únete aquí!](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN) |
 
 </table>
+
+## Colaboradores
+
+Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. Su apoyo ha sido clave para **mejorar** y **expandir** las funcionalidades del proyecto.
+
+## Agradecimientos
+
+<a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device"><img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/></a>
