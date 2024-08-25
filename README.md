@@ -43,7 +43,7 @@
 
 # Despliegue, Soporte y Comunidad
 
-- [Opciones de despliegue](#opciones-de-despliegue)
+- [Opciones de Despliegue](#opciones-de-despliegue)
   - [Despliegue en Cafirexos](#despliegue-en-cafirexos)
   - [Despliegue en CorinPlus](#despliegue-en-corinplus)
   - [Despliegue en BoxMineWorld](#despliegue-en-boxmineworld)
