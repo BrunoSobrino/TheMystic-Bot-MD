@@ -8,10 +8,19 @@
       <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/BrunoSobrino/TheMystic-Bot-MD" />
     </a>
     <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues">
-      <img alt="Issues" src="https://img.shields.io/github/issues/BrunoSobrino/TheMystic-Bot-MD?color=0088ff" />
+      <img alt="GitHub Issues" src="https://img.shields.io/github/issues/BrunoSobrino/TheMystic-Bot-MD?color=0088ff" />
     </a>
     <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/pulls">
-      <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/BrunoSobrino/TheMystic-Bot-MD?color=0088ff" />
+      <img alt="GitHub Pull Requests" src="https://img.shields.io/github/issues-pr/BrunoSobrino/TheMystic-Bot-MD?color=0088ff" />
+    </a>
+    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/commits">
+      <img alt="GitHub Commits" src="https://img.shields.io/github/commit-activity/m/BrunoSobrino/TheMystic-Bot-MD?color=0088ff" />
+    </a>
+    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD">
+      <img alt="GitHub Stars" src="https://img.shields.io/github/stars/BrunoSobrino/TheMystic-Bot-MD?color=0088ff" />
+    </a>
+    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork">
+      <img alt="GitHub Forks" src="https://img.shields.io/github/forks/BrunoSobrino/TheMystic-Bot-MD?color=0088ff" />
     </a>
   </p>
 
@@ -20,6 +29,7 @@
     ·
     <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml">Solicitar una Característica</a>
   </p>
+  
   <p align="center">
     <a href="/docs/readme_es.md">Português</a>
   </p>
