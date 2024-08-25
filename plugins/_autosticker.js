@@ -1,4 +1,4 @@
-import {sticker} from '../lib/sticker.js';
+import {sticker} from '../src/libraries/sticker.js';
 
 const handler = (m) => m;
 

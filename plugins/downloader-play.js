@@ -3,8 +3,8 @@ import axios from 'axios';
 import { youtubedl, youtubedlv2 } from '@bochilteam/scraper';
 import fs from "fs";
 import yts from 'yt-search';
-import ytmp33 from '../lib/ytmp33.js';
-import ytmp44 from '../lib/ytmp44.js';
+import ytmp33 from '../src/libraries/ytmp33.js';
+import ytmp44 from '../src/libraries/ytmp44.js';
 
 let limit1 = 100;
 let limit2 = 400;

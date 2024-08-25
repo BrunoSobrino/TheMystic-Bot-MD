@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import {sticker, addExif} from '../lib/sticker.js';
+import {sticker, addExif} from '../src/libraries/sticker.js';
 let Sticker;
 import('wa-sticker-formatter')
   .then((module) => {

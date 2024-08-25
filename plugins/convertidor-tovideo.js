@@ -1,5 +1,5 @@
-import {webp2mp4} from '../lib/webp2mp4.js';
-import {ffmpeg} from '../lib/converter.js';
+import {webp2mp4} from '../src/libraries/webp2mp4.js';
+import {ffmpeg} from '../src/libraries/converter.js';
 
 
 

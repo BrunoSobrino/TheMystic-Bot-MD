@@ -1,4 +1,4 @@
-import {addExif} from '../lib/sticker.js';
+import {addExif} from '../src/libraries/sticker.js';
 
 const handler = async (m, {conn, text}) => {
   const datas = global

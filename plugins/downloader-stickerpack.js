@@ -1,6 +1,6 @@
 /* By https://github.com/ALBERTO9883/NyanCatBot-MD */
 import fetch from 'node-fetch';
-import {sticker} from '../lib/sticker.js';
+import {sticker} from '../src/libraries/sticker.js';
 
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {

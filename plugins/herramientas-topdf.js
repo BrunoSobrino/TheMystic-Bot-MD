@@ -1,4 +1,4 @@
-import uploadImage from '../lib/uploadImage.js';
+import uploadImage from '../src/libraries/uploadImage.js';
 
 
 const handler = async (m, {conn, text, usedPrefix, command, isOwner}) => {

@@ -1,5 +1,5 @@
 import { generateWAMessageFromContent } from "baileys";
-import { smsg } from './lib/simple.js';
+import { smsg } from './src/libraries/simple.js';
 import { format } from 'util';
 import { fileURLToPath } from 'url';
 import path, { join } from 'path';
@@ -1598,7 +1598,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
     }
 
     try {
-      if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this);
+      if (!opts['noprint']) await (await import(`./src/libraries/print.js`)).default(m, this);
     } catch (e) {
       console.log(m, m.quoted, e);
     }

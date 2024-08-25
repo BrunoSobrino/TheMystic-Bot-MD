@@ -1,4 +1,4 @@
-import {webp2png} from '../lib/webp2mp4.js';
+import {webp2png} from '../src/libraries/webp2mp4.js';
 
 
 const handler = async (m, {conn, usedPrefix, command}) => {

@@ -1,4 +1,4 @@
-import TicTacToe from '../lib/tictactoe.js';
+import TicTacToe from '../src/libraries/tictactoe.js';
 
 const handler = async (m, {conn, usedPrefix, command, text}) => {
   const datas = global

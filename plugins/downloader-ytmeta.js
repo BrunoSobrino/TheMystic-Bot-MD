@@ -1,5 +1,5 @@
 /* creditos del código a @darlyn1234 */
-import YTDL from "../lib/ytdll.js";
+import YTDL from "../src/libraries/ytdll.js";
 import axios from "axios";
 import fs from "fs";
 import NodeID3 from "node-id3";

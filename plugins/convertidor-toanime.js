@@ -1,4 +1,4 @@
-import uploadImage from '../lib/uploadImage.js';
+import uploadImage from '../src/libraries/uploadImage.js';
 import fetch from 'node-fetch';
 
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {

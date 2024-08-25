@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import yts from 'yt-search';
 import axios from 'axios';
-import ytmp44 from '../lib/ytmp44.js';
+import ytmp44 from '../src/libraries/ytmp44.js';
 
 let enviando = false;
 

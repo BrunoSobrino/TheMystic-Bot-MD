@@ -1,4 +1,4 @@
-import {sticker, addExif} from '../lib/sticker.js';
+import {sticker, addExif} from '../src/libraries/sticker.js';
 import {Sticker} from 'wa-sticker-formatter';
 import fetch from 'node-fetch';
 import got from 'got';

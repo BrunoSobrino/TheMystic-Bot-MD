@@ -1,4 +1,4 @@
-import {toAudio} from '../lib/converter.js';
+import {toAudio} from '../src/libraries/converter.js';
 
 const handler = async (m, {conn, usedPrefix, command}) => {
   const datas = global

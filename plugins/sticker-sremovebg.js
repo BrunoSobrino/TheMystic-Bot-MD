@@ -1,5 +1,5 @@
-import uploadImage from '../lib/uploadImage.js';
-import {sticker} from '../lib/sticker.js';
+import uploadImage from '../src/libraries/uploadImage.js';
+import {sticker} from '../src/libraries/sticker.js';
 
 
 const handler = async (m, {conn, text}) => {
