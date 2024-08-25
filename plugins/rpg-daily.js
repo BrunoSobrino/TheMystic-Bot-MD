@@ -9,7 +9,7 @@ const handler = async (m, {isPrems, conn}) => {
 
   const fkontak = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net',
   };
-  const mystic = './Menu2.jpg';
+  const mystic = './src/assets/images/menu-2.jpg';
   const dos = [md];
   const user = global.db.data.users[m.sender];
   const premium = user.premium;
@@ -57,7 +57,7 @@ const handler = async (m, {isPrems, conn}) => {
 ┃ *${premium ? tradutor.texto3[2] : tradutor.texto3[3]}*
 ┃ ${texto}
 ${tradutor.texto3[4]} ${premium ? '✅' : '❌'}\n${wm}`;
-  const img = './Menu.png';
+  const img = './src/assets/images/menu-1.png';
   await conn.sendFile(m.chat, img, 'mystic.jpg', text, fkontak);
   // await conn.sendButton(m.chat, text, texto + `\n\n🎟️ 𝗣 𝗥 𝗘 𝗠 𝗜 𝗨 𝗠 ⇢ ${premium ? '✅' : '❌'}\n${wm}`, img, [['⛰️ 𝘼𝘽𝙍𝙄𝙍 𝘾𝙊𝙁𝙍𝙀 | 𝘾𝙊𝙁𝙁𝙀𝙍 ⛰️', '/cofre'], ['𝙑𝙤𝙡𝙫𝙚𝙧 𝙖𝙡 𝙈𝙚𝙣𝙪́ | 𝘽𝙖𝙘𝙠 𝙩𝙤 𝙈𝙚𝙣𝙪 ☘️', '/menu']], m, dos.getRandom())
   user.lastclaim = new Date * 1;

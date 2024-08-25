@@ -1,7 +1,7 @@
 {
-  "name": "TheMystic-Bot-MD",
+  "name": "themystic-bot-md",
   "version": "1.0.0",
-  "description": "Subs. al canal de YT The Shadow Borkers - TEAM",
+  "description": "Un chatbot automatizado para WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.",
   "main": "index.js",
   "type": "module",
   "directories": {
@@ -13,8 +13,6 @@
     "start": "node index.js",
     "qr": "node index.js qr",
     "code": "node index.js code",
-    "test": "node test.js",
-    "test2": "nodemon index.js",
     "eslint": "eslint .",
     "eslintfix": "eslint --fix ."
   },
@@ -35,12 +33,11 @@
     "@bochilteam/scraper": "^4.2.4",
     "@brandond/findthelyrics": "^2.0.5",
     "@green-code/music-track-data": "^2.0.3",
-    "@sasmeee/igdl": "npm:@sasmeee/igdl",
     "@sefinek/google-tts-api": "*",
     "@shineiichijo/marika": "^2.0.6",
     "@vitalets/google-translate-api": "^8.0.0",
-    "@whiskeysockets/baileys": "npm:@whiskeysockets/baileys@6.7.2",
-    "@xct007/frieren-scraper": "github:xct007/frieren-scraper",
+    "@whiskeysockets/baileys": "^6.7.7",
+    "baileys": "git+https://github.com/Skidy89/baileys.git#main",
     "acrcloud": "^1.4.0",
     "api-dylux": "^1.6.2",
     "aptoide-scraper": "^1.0.1",
@@ -50,7 +47,7 @@
     "cfonts": "^2.10.0",
     "chalk": "^5.0.0",
     "chart.js": "^4.4.2",
-    "cheerio": "^1.0.0-rc.10",
+    "cheerio": "1.0.0-rc.12",
     "colors": "1.4.0",
     "d3-node": "^3.0.0",
     "esm": "^3.2.25",
@@ -65,7 +62,6 @@
     "hispamemes": "^1.0.7",
     "human-readable": "^0.2.1",
     "imagemaker.js": "^2.0.4",
-    "instagram-url-direct": "^1.0.13",
     "jsdom": "^19.0.0",
     "link-preview-js": "^3.0.0",
     "lodash": "^4.17.21",
@@ -95,10 +91,13 @@
     "syntax-error": "^1.4.0",
     "terminal-image": "^2.0.0",
     "url-regex-safe": "^3.0.0",
-    "wa-sticker-formatter": "^4.3.2",
     "yargs": "^17.3.1",
     "yt-search": "^2.10.3",
     "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2"
+  },
+  "optionalDependencies": {
+    "@xct007/frieren-scraper": "github:xct007/frieren-scraper",
+    "wa-sticker-formatter": "^4.3.2"
   },
   "devDependencies": {
     "eslint": "^8.45.0",

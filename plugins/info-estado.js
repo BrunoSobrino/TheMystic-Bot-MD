@@ -1,8 +1,8 @@
-import { generateWAMessageFromContent } from "@whiskeysockets/baileys";
+import { generateWAMessageFromContent } from "baileys";
 import os from "os";
 import util from "util";
 import sizeFormatter from "human-readable";
-import MessageType from "@whiskeysockets/baileys";
+import MessageType from "baileys";
 import fs from "fs";
 import { performance } from "perf_hooks";
 

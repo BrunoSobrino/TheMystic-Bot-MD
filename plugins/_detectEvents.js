@@ -4,7 +4,7 @@
 
 /* Bot: https://github.com/Gatito-kw/nekobot-md */
 
-import {WAMessageStubType} from '@whiskeysockets/baileys';
+import {WAMessageStubType} from "baileys";
 import fetch from 'node-fetch';
 
  // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
