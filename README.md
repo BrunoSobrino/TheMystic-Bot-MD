@@ -21,7 +21,7 @@
     <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml">Solicitar una Característica</a>
   </p>
   <p align="center">
-    <a href="/docs/readme_es.md">English</a>
+    <a href="/docs/readme_es.md">Português</a>
   </p>
 </p>
 
@@ -52,7 +52,7 @@
 
 ## Despliegue en Cafirexos
 
-<a href="https://cafirexos.com"><img width="180px" src="https://cdn.cafirexos.com/logos%2Flogo_cfros_2000x2000.png"/></a>
+<a href="https://cafirexos.com"><img width="180px" src="https://cdn.cafirexos.com/logos/logo_cfros_2000x2000.png"/></a>
 
 <details>
  <summary><b>:paperclip: Enlaces Importantes</b></summary>
@@ -97,7 +97,7 @@
 
 ## Despliegue en Otros
 
-[![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=mysticbot)
+[![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=themystic-bot-md)
 [![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD)
 [![Run on Repl.it](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)
 
@@ -105,3 +105,15 @@
 # Soporte y Comunidad
 
 ## Comunidades de Ayuda
+
+<table>
+<tr><td>
+
+| RRSS | Tipo | Locale |
+| --- | --- | --- |
+| WhatsApp | Canal | Español |
+| WhatsApp | Grupo | Español |
+| WhatsApp | Grupo | Português |
+
+</td><td>
+</table>
