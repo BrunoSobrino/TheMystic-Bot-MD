@@ -36,8 +36,6 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
 
 ${tradutor.texto1[1]} ${taguser}
 
-> ✰ Moonlight - Team ✰
-
 ${tradutor.texto1[2]}
 
 ${tradutor.texto1[3]} ${level}
