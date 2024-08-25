@@ -31,9 +31,9 @@
   </p>
 
   <p align="center">
-    <a href="/docs/readme_es.md">English</a>
+    <a href="/src/docs/README_en.md">English</a>
     ·
-    <a href="/docs/readme_es.md">Português</a>
+    <a href="/src/docs/README_pr.md">Português</a>
   </p>
 </p>
 
