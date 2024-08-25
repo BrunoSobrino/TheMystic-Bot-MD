@@ -15,12 +15,8 @@ jobs:
     permissions: write-all
     steps:
       - uses: actions/checkout@v3
-
+      - uses: thomasbnt/hello-to-news-contributions@v1.0
       - uses: mshick/add-pr-comment@v2
         with:
           repo-token: ${{ secrets.PERSONAL_TOKEN}}
-          message-id: pr-test
-          message: |
-           gracias por tu contribución
-           the shadow brokers team revisaran este pull request
-           y te notificaremos cuando este listo
+          pr-message: "gracias por tu pull request!"
