@@ -39,7 +39,7 @@
   <a href="/src/docs/README_pt-br.md">Português</a>
 </p>
 
-<p align="center">¡Ayuda a mantener el proyecto activo con tu <a href="https://www.paypal.me/BrunoSob">donación</a> y contribuye a mejorar las funciones del bot para todos!</p>
+<p align="center">¡Ayuda a mantener el proyecto activo con tu <a href="https://www.paypal.me/BrunoSob">donación</a> y contribuye a mejorar las funciones del chatbot para todos!</p>
 
 # Despliegue, Soporte y Comunidad
 
