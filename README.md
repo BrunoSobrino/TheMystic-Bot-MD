@@ -33,11 +33,11 @@
   <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=Enhancement">Solicitar una Característica</a>
 </p>
 
-<p align="center">
+<!-- <p align="center">
   <a href="/src/docs/README_en.md">English</a>
   ·
   <a href="/src/docs/README_pt-br.md">Português</a>
-</p>
+</p> -->
 
 <p align="center">¡Ayuda a mantener el proyecto activo con tu <a href="https://www.paypal.me/BrunoSob">donación</a> y contribuye a mejorar las funciones del chatbot para todos!</p>
 
@@ -45,7 +45,6 @@
 
 - [Opciones de Despliegue](#opciones-de-despliegue)
   - [Despliegue en Cafirexos](#despliegue-en-cafirexos)
-  - [Despliegue en CorinPlus](#despliegue-en-corinplus)
   - [Despliegue en BoxMineWorld](#despliegue-en-boxmineworld)
   - [Despliegue en Otros](#despliegue-en-otros)
 - [Soporte y Comunidad](#soporte-y-comunidad)
@@ -80,22 +79,6 @@
 - **Documentación:** [docs.cafirexos.com](https://docs.cafirexos.com)
 - **Canal de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/whatsapp)
 - **Comunidad de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/comunidad)
-
-</details>
-
-## Despliegue en CorinPlus
-
-<a href="https://dash.corinplus.com">
-  <img width="180px" src="https://qu.ax/ZycD.png"/>
-</a>
-
-<details>
- <summary><b>:paperclip: Enlaces Importantes</b></summary>
-
-- **Área de Clientes:** [dash.corinplus.com](https://dash.corinplus.com)
-- **Panel de Control:** [panel.corinplus.com](https://panel.corinplus.com)
-- **Estado de los Servicios:** [status.corinplus.com](https://status.corinplus.com)
-- **Canal de WhatsApp:** [¡Únete aquí!](https://whatsapp.com/channel/0029VakUvreFHWpyWUr4Jr0g)
 
 </details>
 
