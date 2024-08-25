@@ -107,13 +107,11 @@
 ## Comunidades de Ayuda
 
 <table>
-<tr><td>
 
-| RRSS | Tipo | Locale |
-| --- | --- | --- |
-| WhatsApp | Canal | Español |
-| WhatsApp | Grupo | Español |
-| WhatsApp | Grupo | Português |
+| RRSS | Tipo | Idioma | Enlace |
+| --- | --- | --- |--- |
+| WhatsApp | Canal | Español | [¡Únete aquí!](https://cafirexos.com/comunidad) |
+| WhatsApp | Grupo | Español | [¡Únete aquí!](https://cafirexos.com/comunidad) |
+| WhatsApp | Grupo | Português | [¡Únete aquí!](https://cafirexos.com/comunidad) |
 
-</td><td>
 </table>
