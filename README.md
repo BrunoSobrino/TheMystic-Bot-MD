@@ -75,14 +75,14 @@
 - **Sitio Web:** [cafirexos.com](https://cafirexos.com)
 - **Área de Clientes:** [clientes.cafirexos.com](https://clientes.cafirexos.com)
 - **Panel de Control:** [panel.cafirexos.com](https://panel.cafirexos.com)
-- **Estado de los Servicios:** [cafirexos.com/estado](https://cafirexos.com/estado)
+- **Estado de los Servicios:** [estado.cafirexos.com](https://estado.cafirexos.com)
 - **Documentación:** [docs.cafirexos.com](https://docs.cafirexos.com)
 - **Canal de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/whatsapp)
 - **Comunidad de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/comunidad)
 
 </details>
 
-## Despliegue en BoxMineWorld
+## Despliegue en BoxMine World
 
 <a href="https://boxmineworld.com">
   <img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/>
@@ -94,6 +94,7 @@
 - **Sitio Web:** [boxmineworld.com](https://boxmineworld.com)
 - **Área de Clientes:** [dash.boxmineworld.com](https://dash.boxmineworld.com)
 - **Panel de Control:** [panel.boxmineworld.com](https://panel.boxmineworld.com)
+- **Documentación:** [docs.boxmineworld.com](https://docs.boxmineworld.com)
 - **Comunidad de Discord:** [¡Únete aquí!](https://discord.gg/84qsr4v)
 
 </details>
