@@ -1,0 +1,26 @@
+name: PR Comment
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - unlocked
+
+jobs:
+  pr-comment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: mshick/add-pr-comment@v2
+        with:
+          repo-token: ${{ secrets.PERSONAL_TOKEN}}
+          message-id: pr-test
+          message: |
+           gracias por tu contribución
+           the shadow brokers team revisaran este pull request
+           y te notificaremos cuando este listo
