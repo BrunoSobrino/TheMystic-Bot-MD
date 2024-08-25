@@ -82,7 +82,7 @@
 
 </details>
 
-## Despliegue en BoxMine World
+## Despliegue en BoxMineWorld
 
 <a href="https://boxmineworld.com">
   <img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/>
