@@ -3,40 +3,40 @@
  <h2 align="center">TheMystic-Bot-MD</h2>
  <p align="center">Un chatbot automatizado para WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.</p>
 </p>
-  <p align="center">
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
-      <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
-    </a>
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues">
-      <img alt="GitHub Issues" src="https://img.shields.io/github/issues/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
-    </a>
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/pulls">
-      <img alt="GitHub Pull Requests" src="https://img.shields.io/github/issues-pr/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
-    </a>
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/commits">
-      <img alt="GitHub Commits" src="https://img.shields.io/github/commit-activity/m/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
-    </a>
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD">
-      <img alt="GitHub Stars" src="https://img.shields.io/github/stars/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
-    </a>
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork">
-      <img alt="GitHub Forks" src="https://img.shields.io/github/forks/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
-    </a>
-  </p>
 
-  <p align="center">
-    <a href="https://api.whatsapp.com/send?phone=+5219992843881&text=&text=.menu">Demo</a>
-    ·
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml">Reportar un Bug</a>
-    ·
-    <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml">Solicitar una Característica</a>
-  </p>
+<p align="center">
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
+    <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues">
+    <img alt="GitHub Issues" src="https://img.shields.io/github/issues/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/pulls">
+    <img alt="GitHub Pull Requests" src="https://img.shields.io/github/issues-pr/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/commits">
+    <img alt="GitHub Commits" src="https://img.shields.io/github/commit-activity/m/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD">
+    <img alt="GitHub Stars" src="https://img.shields.io/github/stars/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/fork">
+    <img alt="GitHub Forks" src="https://img.shields.io/github/forks/BrunoSobrino/TheMystic-Bot-MD?style=for-the-badge" />
+  </a>
+</p>
 
-  <p align="center">
-    <a href="/src/docs/README_en.md">English</a>
-    ·
-    <a href="/src/docs/README_pt-br.md">Português</a>
-  </p>
+<p align="center">
+  <a href="https://api.whatsapp.com/send?phone=+5219992843881&text=&text=.menu">Demo</a>
+  ·
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml">Reportar un Bug</a>
+  ·
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml">Solicitar una Característica</a>
+</p>
+
+<p align="center">
+  <a href="/src/docs/README_en.md">English</a>
+  ·
+  <a href="/src/docs/README_pt-br.md">Português</a>
 </p>
 
 <p align="center">¡Ayuda a mantener el proyecto activo con tu <a href="https://www.paypal.me/BrunoSob">donación</a> y contribuye a mejorar las funciones del bot para todos!</p>
@@ -66,7 +66,9 @@
 
 ## Despliegue en Cafirexos
 
-<a href="https://cafirexos.com"><img width="180px" src="https://cdn.cafirexos.com/logos/logo_cfros_2000x2000.png"/></a>
+<a href="https://cafirexos.com">
+  <img width="180px" src="https://cdn.cafirexos.com/logos/logo_cfros_2000x2000.png"/>
+</a>
 
 <details>
  <summary><b>:paperclip: Enlaces Importantes</b></summary>
@@ -83,7 +85,9 @@
 
 ## Despliegue en CorinPlus
 
-<a href="https://dash.corinplus.com"><img width="180px" src="https://qu.ax/ZycD.png"/></a>
+<a href="https://dash.corinplus.com">
+  <img width="180px" src="https://qu.ax/ZycD.png"/>
+</a>
 
 <details>
  <summary><b>:paperclip: Enlaces Importantes</b></summary>
@@ -97,7 +101,9 @@
 
 ## Despliegue en BoxMineWorld
 
-<a href="https://boxmineworld.com"><img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/></a>
+<a href="https://boxmineworld.com">
+  <img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/>
+</a>
 
 <details>
  <summary><b>:paperclip: Enlaces Importantes</b></summary>
