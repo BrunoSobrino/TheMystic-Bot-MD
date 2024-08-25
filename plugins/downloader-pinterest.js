@@ -3,7 +3,7 @@ const {
   generateWAMessageContent,
   generateWAMessageFromContent,
   proto
-} = (await import("@whiskeysockets/baileys"))["default"];
+} = (await import("baileys"))["default"];
 let handler = async (_0x10bd40, {
   conn: _0x9c7141,
   text: _0x27db11,

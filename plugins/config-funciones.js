@@ -35,7 +35,7 @@ ${tradutor.texto4[3]}
 
 --------------------------------
 
-${tradutor.texto5[0]} 🔗 | ANTILINK 2
+${tradutor.texto5[0]} | ANTILINK 2
 ${tradutor.texto5[1]}  ${usedPrefix + command} antilink2
 ${tradutor.texto5[2]}
 ${tradutor.texto5[3]}

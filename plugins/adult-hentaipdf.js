@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import PDFDocument from 'pdfkit';
-import {extractImageThumb} from '@whiskeysockets/baileys';
+import {extractImageThumb} from "baileys";
 
 const handler = async (m, {conn, text, usedPrefix, command, args}) => {
   const datas = global

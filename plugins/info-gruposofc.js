@@ -1,5 +1,3 @@
-
-
 const handler = async (m, {conn, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
@@ -19,11 +17,11 @@ ${tradutor.texto1[1]}
 
 4.- https://chat.whatsapp.com/CjexkGVr37J6GuSdDVAHzC
 
-> MoonLight Team OFC :
+> Sunlight Team  :
 
-1.- https://whatsapp.com/channel/0029Vablj8M05MUnustq3q1S
+1.- https://whatsapp.com/channel/0029Vam7yUg77qVaz3sIAp0z
 
-2.- https://chat.whatsapp.com/GpbF3JCTEr2CSj3zLJ1IQj`.trim();
+2.- https://chat.whatsapp.com/Fy74b6fgE9SJJpHVi6CKJY`.trim();
   const buttonMessage= {
     'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
     'mimetype': `application/${document}`,

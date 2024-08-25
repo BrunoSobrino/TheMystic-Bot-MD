@@ -1,6 +1,10 @@
 import fetch from 'node-fetch';
 import yts from 'yt-search';
 import axios from 'axios';
+import ytmp33 from '../lib/ytmp33.js';
+
+let limit = 50;
+let enviando = false;
 
 const handler = async (m, { text, conn, args, usedPrefix, command }) => {
   const datas = global;
@@ -9,11 +13,10 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
   const tradutor = _translate.plugins.downloader_yta;
 
   if (!args[0]) throw tradutor.texto8;
-  
-  let enviando;
+
   if (enviando) return;
   enviando = true;
-  
+
   let youtubeLink = '';
   if (args[0].includes('you')) {
     youtubeLink = args[0];
@@ -26,43 +29,49 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
           if (index < matchingItem.urls.length) {
             youtubeLink = matchingItem.urls[index];
           } else {
+            enviando = false;
             throw `${tradutor.texto1} ${matchingItem.urls.length}*`;
           }
         } else {
+          enviando = false;
           throw `${tradutor.texto2[0]} (${usedPrefix + command} ${tradutor.texto2[1]} ${usedPrefix}playlist <texto>*`;
         }
       } else {
+        enviando = false;
         throw `${tradutor.texto3[0]} (${usedPrefix + command} ${tradutor.texto3[1]} ${usedPrefix}playlist <texto>*`;
       }
     }
   }
-  
+
   const { key } = await conn.sendMessage(m.chat, { text: tradutor.texto4 }, { quoted: m });
-  
+
   try {
-    const yt_play = await yts(youtubeLink);
-    const audioUrl = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${yt_play.all[0].url}&apikey=${global.MyApiRestApikey}`;
-    const buff_aud = await getBuffer(audioUrl);
+    const { status, resultados, error } = await ytmp33(youtubeLink);
+    if (!status) {
+      enviando = false;
+      throw new Error(error);
+    }
+    const buff_aud = await getBuffer(resultados.descargar);
     const fileSizeInBytes = buff_aud.byteLength;
     const fileSizeInKB = fileSizeInBytes / 1024;
     const fileSizeInMB = fileSizeInKB / 1024;
     const roundedFileSizeInMB = fileSizeInMB.toFixed(2);
-    const title = yt_play.all[0].title;
+    const title = resultados.titulo;
 
-    if (fileSizeInMB > 50) {
+    if (fileSizeInMB > limit) {
+      enviando = false;
       await conn.sendMessage(m.chat, { document: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
-      await conn.sendMessage(m.chat, { text: `${tradutor.texto5[2]} ${roundedFileSizeInMB} ${tradutor.texto5[3]} ${title}`, edit: key }, { quoted: m });
-      enviando = false;
     } else {
-      await conn.sendMessage(m.chat, { audio: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
-      await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m });
       enviando = false;
+      await conn.sendMessage(m.chat, { audio: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
     }
+    await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m });
+    enviando = false;
+
   } catch (error) {
-    console.log('Primera API falló, intentando con la segunda...');
     try {
       const yt_play = await yts(youtubeLink);
-      const audioUrl = `${global.MyApiRestBaseUrl}/api/v2/ytmp3?url=${yt_play.all[0].url}&apikey=${global.MyApiRestApikey}`;
+      const audioUrl = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${yt_play.all[0].url}&apikey=${global.MyApiRestApikey}`;
       const buff_aud = await getBuffer(audioUrl);
       const fileSizeInBytes = buff_aud.byteLength;
       const fileSizeInKB = fileSizeInBytes / 1024;
@@ -70,19 +79,43 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
       const roundedFileSizeInMB = fileSizeInMB.toFixed(2);
       const title = yt_play.all[0].title;
 
-      if (fileSizeInMB > 50) {
-        await conn.sendMessage(m.chat, { document: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
-        await conn.sendMessage(m.chat, { text: `${tradutor.texto5[2]} ${roundedFileSizeInMB} ${tradutor.texto5[3]} ${title}`, edit: key }, { quoted: m });
+      if (fileSizeInMB > limit) {
         enviando = false;
+        await conn.sendMessage(m.chat, { document: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
       } else {
+        enviando = false;
         await conn.sendMessage(m.chat, { audio: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
+      }
+      await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m });
+      enviando = false;
+    } catch (error) {  
+      try {
+        const yt_play = await yts(youtubeLink);
+        const audioUrl = `${global.MyApiRestBaseUrl}/api/v2/ytmp3?url=${yt_play.all[0].url}&apikey=${global.MyApiRestApikey}`;
+        const buff_aud = await getBuffer(audioUrl);
+        const fileSizeInBytes = buff_aud.byteLength;
+        const fileSizeInKB = fileSizeInBytes / 1024;
+        const fileSizeInMB = fileSizeInKB / 1024;
+        const roundedFileSizeInMB = fileSizeInMB.toFixed(2);
+        const title = yt_play.all[0].title;
+
+        if (fileSizeInMB > limit) {
+          enviando = false;
+          await conn.sendMessage(m.chat, { document: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
+        } else {
+          enviando = false;
+          await conn.sendMessage(m.chat, { audio: buff_aud, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m });
+        }
         await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m });
         enviando = false;
-      }
-    } catch (error) {
-      await conn.sendMessage(m.chat, { text: tradutor.texto6, edit: key }, { quoted: m });
-      throw tradutor.texto7;
+      } catch (error) {
+        enviando = false;
+        await conn.sendMessage(m.chat, { text: tradutor.texto6, edit: key }, { quoted: m });
+        throw tradutor.texto7;
+      } 
     }
+  } finally {
+    enviando = false;
   }
 };
 
@@ -102,7 +135,6 @@ const getBuffer = async (url, options) => {
       ...options,
       responseType: 'arraybuffer',
     });
-
     return res.data;
   } catch (e) {
     console.log(`Error : ${e}`);

@@ -1,7 +1,7 @@
 /* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
 
 
-import {generateWAMessageFromContent} from '@whiskeysockets/baileys';
+import {generateWAMessageFromContent} from "baileys";
 import fs from 'fs';
 const handler = async (m, {conn, usedPrefix, command}) => {
   const datas = global

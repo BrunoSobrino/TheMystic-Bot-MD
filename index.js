@@ -3,24 +3,22 @@ import {join, dirname} from 'path';
 import {createRequire} from 'module';
 import {fileURLToPath} from 'url';
 import {setupMaster, fork} from 'cluster';
-import {watchFile, unwatchFile} from 'fs';
 import cfonts from 'cfonts';
 import {createInterface} from 'readline';
 import yargs from 'yargs';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
-const {name, author} = require(join(__dirname, './package.json'));
 const {say} = cfonts;
 const rl = createInterface(process.stdin, process.stdout);
 
-say('AsakuraMao\nWhatsApp Bot MD', {
-font: 'chrome',
-align: 'center',
-gradient: ['red', 'magenta']})
-say(`Bot creado por Colapsus | Benja`, {
-font: 'console',
-align: 'center',
-gradient: ['red', 'magenta']})
+say('The Mystic\nBot', {
+  font: 'chrome',
+  align: 'center',
+  gradient: ['red', 'magenta']});
+say(`Bot creado por Bruno Sobrino`, {
+  font: 'console',
+  align: 'center',
+  gradient: ['red', 'magenta']});
 
 let isRunning = false;
 /**
@@ -41,7 +39,8 @@ function start(file) {
     exec: args[0],
     args: args.slice(1)});
   const p = fork();
-  p.on('message', (data) => {   
+  p.on('message', (data) => {
+
     console.log('[RECIBIDO]', data);
     switch (data) {
       case 'reset':
