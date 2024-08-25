@@ -29,8 +29,10 @@
     ·
     <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml">Solicitar una Característica</a>
   </p>
-  
+
   <p align="center">
+    <a href="/docs/readme_es.md">English</a>
+    ·
     <a href="/docs/readme_es.md">Português</a>
   </p>
 </p>
@@ -109,8 +111,8 @@
 
 En esta sección encontrarás **botones de despliegue** que te permitirán implementar el proyecto en distintos entornos con un solo clic. Este proceso es **automático** y no requiere configuraciones manuales adicionales. Simplemente selecciona la plataforma deseada y haz clic en el botón correspondiente para **desplegar** tu proyecto de manera rápida y sencilla.
 
-[![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master&name=themystic-bot-md)
-[![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://dashboard.render.com/blueprint/new?repo=https%3A%2F%2Fgithub.com%2FBrunoSobrino%2FTheMystic-Bot-MD)
+[![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?type=git&name=themystic-bot-md&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD&branch=master)
+[![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://dashboard.render.com/blueprint/new?repo=https://github.com/BrunoSobrino/TheMystic-Bot-MD/tree/master)
 [![Run on Repl.it](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)
 
 
@@ -126,6 +128,7 @@ En este espacio podrás encontrar diversas **comunidades de ayuda** donde podrá
 | --- | --- | --- |--- |
 | WhatsApp | Canal | Español | [¡Únete aquí!](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y) |
 | WhatsApp | Grupo | Español | [¡Únete aquí!](https://cafirexos.com/comunidad) |
+| WhatsApp | Group | English | [¡Únete aquí!](https://cafirexos.com/comunidad) |
 | WhatsApp | Grupo | Português | [¡Únete aquí!](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN) |
 
 </table>
