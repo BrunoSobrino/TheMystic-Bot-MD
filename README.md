@@ -28,9 +28,9 @@
 <p align="center">
   <a href="https://api.whatsapp.com/send?phone=+5219992843881&text=&text=.menu">Demo</a>
   ·
-  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml">Reportar un Bug</a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=Bug">Reportar un Bug</a>
   ·
-  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml">Solicitar una Característica</a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=Enhancement">Solicitar una Característica</a>
 </p>
 
 <p align="center">
@@ -125,7 +125,7 @@ En esta sección encontrarás **botones de despliegue** que te permitirán imple
 [![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?type=git&name=themystic-bot-md&repository=https://github.com/BrunoSobrino/TheMystic-Bot-MD)
 [![Run on Repl.it](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)
 [![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://dashboard.render.com/blueprint/new?repo=https://github.com/BrunoSobrino/TheMystic-Bot-MD)
-[![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/remade/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/BrunoSobrino/TheMystic-Bot-MD)
+<!-- [![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/remade/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/BrunoSobrino/TheMystic-Bot-MD) -->
 
 # Soporte y Comunidad
 
