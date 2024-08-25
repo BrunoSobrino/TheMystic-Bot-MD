@@ -106,12 +106,14 @@
 
 ## Comunidades de Ayuda
 
+En este espacio podrás encontrar diversas **comunidades de ayuda** donde podrás resolver tus dudas, compartir experiencias y colaborar con otros usuarios. Únete a la comunidad que mejor se adapte a tus necesidades y forma parte de un entorno de apoyo mutuo.
+
 <table>
 
 | RRSS | Tipo | Idioma | Enlace |
 | --- | --- | --- |--- |
-| WhatsApp | Canal | Español | [¡Únete aquí!](https://cafirexos.com/comunidad) |
+| WhatsApp | Canal | Español | [¡Únete aquí!](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y) |
 | WhatsApp | Grupo | Español | [¡Únete aquí!](https://cafirexos.com/comunidad) |
-| WhatsApp | Grupo | Português | [¡Únete aquí!](https://cafirexos.com/comunidad) |
+| WhatsApp | Grupo | Português | [¡Únete aquí!](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN) |
 
 </table>
