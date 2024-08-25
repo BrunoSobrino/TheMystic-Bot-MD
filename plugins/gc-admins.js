@@ -7,7 +7,7 @@ const handler = async (m, {conn, participants, groupMetadata, args}) => {
   const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
   const tradutor = _translate.plugins.gc_admins
 
-  const pp = await conn.profilePictureUrl(m.chat, 'image').catch((_) => null) || './src/admins.jpg';
+  const pp = await conn.profilePictureUrl(m.chat, 'image').catch((_) => null) || './src/assets/images/admins.jpg';
   const groupAdmins = participants.filter((p) => p.admin);
   const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n');
   const owner = groupMetadata.owner || groupAdmins.find((p) => p.admin === 'superadmin')?.id || m.chat.split`-`[0] + '@s.whatsapp.net';
