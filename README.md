@@ -131,8 +131,8 @@ En este espacio podrás encontrar diversas **comunidades de ayuda** donde podrá
 | --- | --- | --- |--- |
 | WhatsApp | Canal | Español | [¡Únete aquí!](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y) |
 | WhatsApp | Grupo | Español | [¡Únete aquí!](https://cafirexos.com/comunidad) |
-| WhatsApp | Group | English | [¡Únete aquí!](https://cafirexos.com/comunidad) |
-| WhatsApp | Grupo | Português | [¡Únete aquí!](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN) |
+| WhatsApp | Group | English | [¡Join here!](https://cafirexos.com/comunidad) |
+| WhatsApp | Grupo | Português | [¡Junte-se aqui!](https://chat.whatsapp.com/J8tFq87Ia0jEnx20NvCQxN) |
 
 </table>
 
