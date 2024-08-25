@@ -140,6 +140,12 @@ En este espacio podrás encontrar diversas **comunidades de ayuda** donde podrá
 
 Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. Su apoyo ha sido clave para **mejorar** y **expandir** las funcionalidades del proyecto.
 
+<a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=BrunoSobrino/TheMystic-Bot-MD" /> 
+</a>
+
 ## Agradecimientos
 
-<a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device"><img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/></a>
+<a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device">
+  <img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/>
+</a>
