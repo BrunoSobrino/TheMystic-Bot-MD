@@ -20,7 +20,7 @@ const handler = async (m, {conn, usedPrefix: _p, __dirname, args}) => {
 
   conn.reply(m.chat, tradutor.texto1, m);
 
-  const tmp = [tmpdir(), join(__dirname, '../tmp')];
+  const tmp = [tmpdir(), join(__dirname, '../src/tmp')];
   const filename = [];
   tmp.forEach((dirname) => readdirSync(dirname).forEach((file) => filename.push(join(dirname, file))));
   return filename.map((file) => {

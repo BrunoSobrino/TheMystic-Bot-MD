@@ -1550,7 +1550,7 @@ Tu ganaste:
 
         if (!db1.repositorio.atualizado.includes(database.repositorio.atualizar)) {
             // Caminho para o diretório do seu repositório local
-            fs.writeFileSync('./tmp/file', '')
+            fs.writeFileSync('./src/tmp/file', '')
             const repoPath = '.';
 
             // Instanciar o objeto simple-git com o caminho do seu repositório

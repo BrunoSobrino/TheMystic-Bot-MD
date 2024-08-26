@@ -27,7 +27,7 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
     if (/tupai|squirrel|chipmunk/.test(command)) set = '-filter:a "atempo=0.5,asetrate=65100"';
     if (/audio/.test(mime)) {
       const ran = getRandom('.mp3');
-      const filename = join(__dirname, '../tmp/' + ran);
+      const filename = join(__dirname, '../src/tmp/' + ran);
       const media = await q.download(true);
       exec(`ffmpeg -i ${media} ${set} ${filename}`, async (err, stderr, stdout) => {
         await unlinkSync(media);

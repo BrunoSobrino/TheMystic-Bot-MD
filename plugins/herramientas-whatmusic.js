@@ -14,13 +14,13 @@ const handler = async (m) => {
     //if ((q.msg || q).seconds > 20) return m.reply(traductor.texto1);
     const media = await q.download();
     const ext = mime.split('/')[1];
-    fs.writeFileSync(`./tmp/${m.sender}.${ext}`, media);
+    fs.writeFileSync(`./src/tmp/${m.sender}.${ext}`, media);
 
     let recognise;
     if (/audio/.test(mime)) {
-      recognise = await shazam.fromFilePath(`./tmp/${m.sender}.${ext}`, false, 'en');
+      recognise = await shazam.fromFilePath(`./src/tmp/${m.sender}.${ext}`, false, 'en');
     } else if (/video/.test(mime)) {
-      recognise = await shazam.fromVideoFile(`./tmp/${m.sender}.${ext}`, false, 'en');
+      recognise = await shazam.fromVideoFile(`./src/tmp/${m.sender}.${ext}`, false, 'en');
     }
       
     const { title, subtitle, artists, genres, images } = recognise.track;
@@ -45,7 +45,7 @@ const handler = async (m) => {
 
     await conn.sendMessage(m.chat, { audio: audiobuff.data, fileName: `${title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
 
-    fs.unlinkSync(`./tmp/${m.sender}.${ext}`);
+    fs.unlinkSync(`./src/tmp/${m.sender}.${ext}`);
   } else {
     throw traductor.texto4;
   }
