@@ -17,7 +17,7 @@ handler.all = async function(m, {conn}) {
   if (/^hola$/i.test(m.text) && !chat.isBanned) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/Hola.mp3';
+    const vn = '01J673CQ9ZE93TRQKCKN9Q8Z0M.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -41,7 +41,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(araara|ara ara)/gi)) { 
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = '01J672TYT2TFVG5NT5QVPJ8XHX.mp3';
+    const vn = './src/assets/audio/01J672TYT2TFVG5NT5QVPJ8XHX.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -57,7 +57,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(baÃ±ate|BaÃ±ate)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = '01J672VZBZ488TCVYA7KBB3TFG.mp3';
+    const vn = './src/assets/audio/01J672VZBZ488TCVYA7KBB3TFG.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -65,7 +65,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(baneado|Baneado)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = '01J672WYXHW6JM3T8PCNQHH6MN.mp3';
+    const vn = './src/assets/audio/01J672WYXHW6JM3T8PCNQHH6MN.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -73,7 +73,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(bebito fiu fiu|bff|Bebito Fiu Fiu|Bff)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = '01J672XP5MW9J5APRSDFYRTTE9.mp3';
+    const vn = './src/assets/audio/01J672XP5MW9J5APRSDFYRTTE9.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -137,7 +137,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(Fiesta del admin|fiesta del admin)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = '01J672T4VQFK8ZSSD1G0MXMPD3.mp3';
+    const vn = './src/assets/audio/01J672T4VQFK8ZSSD1G0MXMPD3.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
