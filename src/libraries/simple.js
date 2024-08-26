@@ -294,8 +294,8 @@ END:VCARD
           forwardingScore: 1,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363160031023229@newsletter',
-            newsletterName: 'INFINITY-WA 💫', 
+            newsletterJid: '120363236795889672@newsletter',
+            newsletterName: 'اضغط هنا 『🇵🇸⤥Anime⊰❄️⊱World⤦🇯🇵』', 
             serverMessageId: '' }, 
                 ...options
                 }
@@ -454,8 +454,8 @@ async value(jid, text = '', quoted, options) {
 if (Buffer.isBuffer(text)) {
 return conn.sendFile(jid, text, 'file', '', quoted, false, options)
 } else {
-let canalId = ["120363160031023229@newsletter", "120363169294281316@newsletter", "120363203805910750@newsletter", "120363302472386010@newsletter", "120363301598733462@newsletter"]
-let canalNombre = ["𝗔𝗡𝗢𝗧𝗛𝗘𝗥 𝗖𝗛𝗔𝗡𝗡𝗘𝗟 ⟡ INFINITY-WA 💫", "GB - UPDATE 🐈", "Tips sobre GataBot 🤩", "𝗡𝗘𝗪 𝗣𝗥𝗢𝗝𝗘𝗖𝗧 ⟡ YartexBot-MD ✨", "CorinPlus-Host ☁️"]
+let canalId = ["120363236795889672@newsletter", "120363236795889672@newsletter", "120363236795889672@newsletter", "120363236795889672@newsletter", "120363236795889672@newsletter"]
+let canalNombre = ["『🇵🇸⤥Anime⊰❄️⊱World⤦🇯🇵』قناتشي", "『🇵🇸⤥Anime⊰❄️⊱World⤦🇯🇵』click", "『🇵🇸⤥Anime⊰❄️⊱World⤦🇯🇵』", "تعالي 『🇵🇸⤥Anime⊰❄️⊱World⤦🇯🇵』", "『🇵🇸⤥Anime⊰❄️⊱World⤦🇯🇵』"]
 
 async function getRandomChannel() {
 let randomIndex = Math.floor(Math.random() * canalId.length)
