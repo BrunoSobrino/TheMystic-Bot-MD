@@ -2,7 +2,7 @@
 import { Image, createCanvas, loadImage, PDFDocument } from 'canvas';
 import path from 'path';
 
-const tmpDir = path.resolve('./tmp');
+const tmpDir = path.resolve('./src/tmp');
 
 // Crea la carpeta tmp si no existe
 await fs.mkdir(tmpDir, { recursive: true });

@@ -135,7 +135,7 @@ export function makeWASocket(connectionOptions, options = {}) {
           mime: 'application/octet-stream',
           ext: '.bin',
         };
-        if (data && saveToFile && !filename) (filename = path.join(__dirname, '../tmp/' + new Date * 1 + '.' + type.ext), await fs.promises.writeFile(filename, data));
+        if (data && saveToFile && !filename) (filename = path.join(__dirname, '../src/tmp/' + new Date * 1 + '.' + type.ext), await fs.promises.writeFile(filename, data));
         return {
           res,
           filename,

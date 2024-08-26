@@ -13,7 +13,7 @@ import webp from 'node-webpmux'
 import fetch from 'node-fetch'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const tmp = path.join(__dirname, '../tmp')
+const tmp = path.join(__dirname, '../src/tmp')
 /**
  * Image to Sticker
  * @param {Buffer} img Image Buffer
@@ -117,7 +117,7 @@ function sticker6(img, url) {
       ext: 'bin'
     }
     if (type.ext == 'bin') reject(img)
-    const tmp = path.join(__dirname, `../tmp/${+ new Date()}.${type.ext}`)
+    const tmp = path.join(__dirname, `../src/tmp/${+ new Date()}.${type.ext}`)
     const out = path.join(tmp + '.webp')
     await fs.promises.writeFile(tmp, img)
     // https://github.com/MhankBarBar/termux-wabot/blob/main/index.js#L313#L368
