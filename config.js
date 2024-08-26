@@ -14,53 +14,20 @@ global.authFile = `MysticSession`;
 global.isBaileysFail = false
 
 global.owner = [
-  ['5219992095479', '👑 Mystic - Creador 👑', true],
-  ['51940617554', '💫 Mystic - Collaborator 2 💫', true],
-  ['51996089079', '💫 Mystic - Collaborator 3 💫', true],
-  ['5218442286089', '💫 Mystic - Collaborator 4 💫', true],
-  ['50246028932', '💫 Mystic - Collaborator 5 💫', true],
-  ['5212412377467', '💫 Mystic - Collaborator 6 💫', true],
-  ['5215517489568', '💫 Mystic - Rey Endymion 💫', false],
-  ['59895555511', '💫 Mystic - Collaborator 8 💫', true],
-  ['573012482597', '💫 Mystic - OfcDiego', true],
-  ['59175655964', '💫 Mystic - By Alba070503 💫', true],
-  ['5493794297363', '💫 Mystic - Gabriel Ofc', true], 
-  ['393518398856', '💫 Mystic - Tester Fabri115💫', true],
-  ['212781160203', '💫 Mystic - Saad 💫', true], 
-  ['5217778573223', '💫 Mystic - Sarethh 💫', true],
-  ['593968585283'],
-  ['5492266466080'],
-  ['5218442114446'],
-  ['59894808483'],
-  ['593980586516'], 
-  ['595975740803'],  
-  ['5492266613038'],
-  ['50497150165'],
-  ['51906662557'],
-  ['573183650526'], 
-  ['5217441298510'], 
-  ['5217294888993'],
-  ['595992611272'],
-  ['5219992843892'],
-  ['5493795319019'],
-  ['573147616444'], 
-  ['5219991402134'],
-  ['5219996125657'],
-  ['5492215034412'],
-  ['5492964650915'],
-  ['5218444937407']
+  ['5219992095479', '👑 *`𝙀𝙢𝙖𝙢-𝖆𝖇𝖔𝖑𝖊𝖑𝖆`*⁩⁩ - 𝙤𝙢𝙚𝙧 👑', true],
+  ['51940617554', '💫 omar 2 💫', true]
 ];
 
-global.suittag = ['5219993404349'];
-global.prems = ['51995386439'];
+global.suittag = ['201144480436'];
+global.prems = ['201144480436'];
 
-global.packname = 'Sticker';
-global.author = 'The Mystic - Bot';
-global.wm = 'The Mystic - Bot';
-global.titulowm = 'The Mystic - Bot';
-global.titulowm2 = `The Mystic - Bot`
-global.igfg = 'The Mystic - Bot';
-global.wait = '*_[ ⏳ ] Cargando..._*';
+global.packname = '𝖘𝖙𝖎𝖐𝖊𝖗 𝖇𝖞-e⃠m͟a͟m͟ a͟b͟o͟l͟e͟l͟a͟';
+global.author = 'b⃠g⃠o⃠j⃠o⃠ b⃠o⃠t⃠ b̶y̶-e̸m̸a̸m̸';
+global.wm = '𝐆𝐎𝐉𝐎 𝐁𝐎𝐓';
+global.titulowm = '𝐆𝐎𝐉𝐎 𝐁𝐎𝐓';
+global.titulowm2 = `𝐆𝐎𝐉𝐎 𝐁𝐎𝐓`
+global.igfg = '𝐆𝐎𝐉𝐎 𝐁𝐎𝐓';
+global.wait = '*_[ ⏳ ] ويت..._*';
 
 global.imagen1 = fs.readFileSync('./src/assets/images/menu-2.jpg');
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
@@ -90,10 +57,10 @@ global.mysticbot = 'The Mystic - Bot';
 global.channel = 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
 global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
-global.waitt = '*_[ ⏳ ] Cargando..._*';
-global.waittt = '*_[ ⏳ ] Cargando..._*';
-global.waitttt = '*_[ ⏳ ] Cargando..._*';
-global.nomorown = '5219993404349';
+global.waitt = '*_[ ⏳ ] استني..._*';
+global.waittt = '*_[ ⏳ ] ويتت..._*';
+global.waitttt = '*_[ ⏳ ] ويت..._*';
+global.nomorown = '201144480436';
 global.pdoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/msword', 'application/pdf', 'text/rtf'];
 global.cmenut = '❖––––––『';
 global.cmenub = '┊✦ ';
@@ -108,8 +75,8 @@ global.htki = '*⭑•̩̩͙⊱•••• ☪*';
 global.htka = '*☪ ••••̩̩͙⊰•⭑*';
 global.comienzo = '• • ◕◕════';
 global.fin = '════◕◕ • •';
-global.botdate = `*[ 📅 ] Fecha:*  ${moment.tz('America/Mexico_City').format('DD/MM/YY')}`;
-global.bottime = `*[ ⏳ ] Hora:* ${moment.tz('America/Mexico_City').format('HH:mm:ss')}`;
+global.botdate = `*[ 📅 ] التاريخ:*  ${moment.tz('Africa/Cairo').format('DD/MM/YY')}`;
+global.bottime = `*[ ⏳ ] الوقت:* ${moment.tz('Africa/Cairo').format('HH:mm:ss')}`;
 global.fgif = {key: {participant: '0@s.whatsapp.net'}, message: {'videoMessage': {'title': wm, 'h': `Hmm`, 'seconds': '999999999', 'gifPlayback': 'true', 'caption': bottime, 'jpegThumbnail': fs.readFileSync('./src/assets/images/menu-1.png')}}};
 global.multiplier = 99;
 global.flaaa = [
