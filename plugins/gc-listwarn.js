@@ -9,7 +9,7 @@ const handler = async (m, {conn, isOwner}) => {
   const adv = Object.entries(global.db.data.users).filter((user) => user[1].warn);
   const warns = global.db.data.users.warn;
   const user = global.db.data.users;
-  const imagewarn = './src/warn.jpg';
+  const imagewarn = './src/assets/images/menu/main/warn.jpg';
   const caption = `${tradutor.texto1}\n 
 *╔═══════════════════·•*
 ║ ${tradutor.texto2[0]} ${adv.length} ${tradutor.texto2[1]} ${adv ? '\n' + adv.map(([jid, user], i) => `

@@ -6,7 +6,7 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const tradutor = _translate.plugins.gc_warn
 
   if (m.mentionedJid.includes(conn.user.jid)) return;
-  const pp = './src/warn.jpg';
+  const pp = './src/assets/images/menu/main/warn.jpg';
   let who;
   if (m.isGroup) {
     who = m.mentionedJid[0] ?

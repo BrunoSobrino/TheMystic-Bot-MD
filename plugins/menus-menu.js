@@ -523,13 +523,13 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
     if (idioma == 'es') {
       pp = global.imagen1
     } else if (idioma == 'pt-br') {
-      pp = global.imagen7
+      pp = global.imagen2
     } else if (idioma == 'fr') {
-      pp = global.imagen8
+      pp = global.imagen3
     }else if (idioma == 'en') {
-      pp = global.imagen9
+      pp = global.imagen4
     } else if (idioma == 'ru') {
-      pp = global.imagen10
+      pp = global.imagen5
     } else {
       pp = global.imagen1 // Imagem Default em espanhol
     }
