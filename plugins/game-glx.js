@@ -104,7 +104,7 @@ _Quieres dinero? Vamos a minar._
 *╘═══════════════════╛*
   🌞🌕🌠🌟⭐🌎🪐
 `
-            let glx_menu = fs.readFileSync('./src/glx_menu.jpg')
+            let glx_menu = fs.readFileSync('./src/assets/images/menu/main/galaxiaMenu.png')
             const selo1234 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
             const idmessage = await conn.sendMessage(m.chat, { image: glx_menu, caption: str.trim() }, { quoted: selo1234 });
             const reactionMessage = { react: { text: "👨‍🚀", key: idmessage.key } }

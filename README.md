@@ -63,8 +63,6 @@
 
 # Opciones de despliegue
 
-- [Regresar a la Parte Superior](#despliegue-soporte-y-comunidad)
-
 ## Despliegue en Cafirexos
 
 <a href="https://cafirexos.com">
@@ -86,8 +84,6 @@
 
 ## Despliegue en BoxMineWorld
 
-- [Regresar a la Parte Superior](#despliegue-soporte-y-comunidad)
-
 <a href="https://boxmineworld.com">
   <img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/>
 </a>
@@ -105,8 +101,6 @@
 
 ## Despliegue en Otros
 
-- [Regresar a la Parte Superior](#despliegue-soporte-y-comunidad)
-
 En esta sección encontrarás **botones de despliegue** que te permitirán implementar el proyecto en distintos entornos con un solo clic. Este proceso es **automático** y no requiere configuraciones manuales adicionales. Simplemente selecciona la plataforma deseada y haz clic en el botón correspondiente para **desplegar** tu proyecto de manera rápida y sencilla.
 
 [![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?skip_quickstart=true&machine=basicLinux32gb&repo=514876515&ref=master&geo=EuropeWest)
@@ -120,8 +114,6 @@ En esta sección encontrarás **botones de despliegue** que te permitirán imple
 # Soporte y Comunidad
 
 ## Comunidades de Ayuda
-
-- [Regresar a la Parte Superior](#despliegue-soporte-y-comunidad)
 
 En este espacio podrás encontrar diversas **comunidades de ayuda** donde podrás **resolver tus dudas**, **compartir experiencias** y **colaborar** con otros usuarios. Únete a la comunidad que mejor se adapte a tus necesidades y forma parte de un **entorno de apoyo mutuo**.
 
@@ -138,8 +130,6 @@ En este espacio podrás encontrar diversas **comunidades de ayuda** donde podrá
 
 ## Colaboradores
 
-- [Regresar a la Parte Superior](#despliegue-soporte-y-comunidad)
-
 Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. Su apoyo ha sido clave para **mejorar** y **expandir** las funcionalidades del proyecto.
 
 <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
@@ -147,8 +137,6 @@ Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. 
 </a>
 
 ## Agradecimientos
-
-- [Regresar a la Parte Superior](#despliegue-soporte-y-comunidad)
 
 <a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device">
   <img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/>

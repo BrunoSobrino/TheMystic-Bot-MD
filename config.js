@@ -65,11 +65,11 @@ global.wait = '*_[ ⏳ ] Cargando..._*';
 global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png');
 global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
 global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png');
-global.imagen5 = fs.readFileSync('./src/assets/images/+18.jpg');
-global.imagen7 = fs.readFileSync('./src/menu_pt.png');
-global.imagen8 = fs.readFileSync('./src/menu_fr.png')
-global.imagen9 = fs.readFileSync('./src/menu_en.png')
-global.imagen10 = fs.readFileSync('./src/menu_ru.png')
+global.imagen5 = fs.readFileSync('./src/assets/images/menu/main/nsfw.png');
+global.imagen7 = fs.readFileSync('./src/assets/images/menu/languages/pt/menu.png');
+global.imagen8 = fs.readFileSync('./src/assets/images/menu/languages/fr/menu.png')
+global.imagen9 = fs.readFileSync('./src/assets/images/menu/languages/en/menu.png')
+global.imagen10 = fs.readFileSync('./src/assets/images/menu/languages/ru/menu.png')
 
 global.mods = [];
 
