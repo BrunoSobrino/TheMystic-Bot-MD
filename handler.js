@@ -1141,10 +1141,10 @@ export async function handler(chatUpdate) {
         if (!('modohorny' in chat)) chat.modohorny = false;
         if (!('autosticker' in chat)) chat.autosticker = false;
         if (!('audios' in chat)) chat.audios = false;
-        if (!('antiLink' in chat)) chat.antiLink = false;
+        if (!('antiLink' in chat)) chat.antiLink = true;
         if (!('antiLink2' in chat)) chat.antiLink2 = false;
         if (!('antiviewonce' in chat)) chat.antiviewonce = false;
-        if (!('antiToxic' in chat)) chat.antiToxic = false;
+        if (!('antiToxic' in chat)) chat.antiToxic = true;
         if (!('antiTraba' in chat)) chat.antiTraba = false;
         if (!('antiArab' in chat)) chat.antiArab = false;
         if (!('antiArab2' in chat)) chat.antiArab2 = false;
@@ -1167,10 +1167,10 @@ export async function handler(chatUpdate) {
           modohorny: true,
           autosticker: false,
           audios: true,
-          antiLink: false,
+          antiLink: true,
           antiLink2: false,
           antiviewonce: false,
-          antiToxic: false,
+          antiToxic: true,
           antiTraba: false,
           antiArab: false,
           antiArab2: false,
@@ -1186,11 +1186,11 @@ export async function handler(chatUpdate) {
       if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {};
       if (settings) {
         if (!('self' in settings)) settings.self = false;
-        if (!('autoread' in settings)) settings.autoread = false;
+        if (!('autoread' in settings)) settings.autoread = true;
         if (!('autoread2' in settings)) settings.autoread2 = false;
         if (!('restrict' in settings)) settings.restrict = false;
-        if (!('antiCall' in settings)) settings.antiCall = false;
-        if (!('antiPrivate' in settings)) settings.antiPrivate = false;
+        if (!('antiCall' in settings)) settings.antiCall = true;
+        if (!('antiPrivate' in settings)) settings.antiPrivate = true;
         if (!('modejadibot' in settings)) settings.modejadibot = true;
         if (!('antispam' in settings)) settings.antispam = false;
         if (!('audios_bot' in settings)) settings.audios_bot = true;
@@ -1198,11 +1198,11 @@ export async function handler(chatUpdate) {
       } else {
         global.db.data.settings[this.user.jid] = {
           self: false,
-          autoread: false,
+          autoread: true,
           autoread2: false,
           restrict: false,
-          antiCall: false,
-          antiPrivate: false,
+          antiCall: true,
+          antiPrivate: true,
           modejadibot: true,
           antispam: false,
           audios_bot: true,
@@ -1402,7 +1402,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
             if (user.commandCount === 2) {
               const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000);
               if (remainingTime > 0) {
-                const messageText = `*[ ℹ️ ] Espera* _${remainingTime} segundos_ *antes de utilizar otro comando.*`;
+                const messageText = `*[ ℹ️ ] تنليه* _${remainingTime}  انتظر ثواني_ *قبل استخدام أمر آخر.*`;
                 m.reply(messageText);
                 return;
               } else {
@@ -1741,17 +1741,17 @@ export async function deleteUpdate(message) {
     if (!chat?.antidelete) return
     if (!msg) return
     if (!msg?.isGroup) return
-    const antideleteMessage = `${tradutor.texto1[0]}
-${tradutor.texto1[1]} @${participant.split`@`[0]}
-${tradutor.texto1[2]} ${time}
-${tradutor.texto1[3]} ${date}\n
-${tradutor.texto1[4]}
-${tradutor.texto1[5]}`.trim();
-    await mconn.conn.sendMessage(msg.chat, { text: antideleteMessage, mentions: [participant] }, { quoted: msg })
-    mconn.conn.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
-  } catch (e) {
-    console.error(e)
-  }
+const antideleteMessage = `_*< ANTI-DELETE />*_\n
+ ▢ *■🧔 المستخدم:* @${participant.split`@`[0]}
+ ▢ *■⏰ الوقت:* ${time}
+ ▢ *■🗓️ التاريخ:* ${date}\n
+ ▢ *■🦇 إرسال الرسالة المحذوفة...*\n
+ *[ ℹ️ ] لتعطيل هذه الوظيفة، اكتب الأمر:* _/تعطيل antidelete_`.trim();
+        await mconn.conn.sendMessage(msg.chat, {text: antideleteMessage, mentions: [participant]}, {quoted: msg})
+        mconn.conn.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
+    } catch (e) {
+        console.error(e)
+      }
 }
 
 global.dfail = (type, m, conn) => {
@@ -1760,17 +1760,32 @@ global.dfail = (type, m, conn) => {
   const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
   const tradutor = _translate.handler.dfail
 
+global.dfail = (type, m, conn) => {
+    const userTag = `@${m.sender.split("@")[0]}`;
+    const emoji = {
+        general: '⚙️',
+        owner: '🦸',
+        moderator: '🛡️',
+        premium: '💎',
+        group: '👥',
+        private: '📱',
+        admin: '👤',
+        botAdmin: '🤖',
+        unreg: '🔒',
+        nsfw: '🔞', 
+        restrict: '⛔',
+    }
   const msg = {
-    rowner: tradutor.texto1,
-    owner: tradutor.texto2,
-    mods: tradutor.texto3,
-    premium: tradutor.texto4,
-    group: tradutor.texto5,
-    private: tradutor.texto6,
-    admin: tradutor.texto7,
-    botAdmin: tradutor.texto8,
-    unreg: tradutor.texto9,
-    restrict: tradutor.texto10,
+    rowner: `*★『${emoji.owner} بطل بعبصه فاوامر المطور وروح للالعاب ${userTag} *`,
+    owner: `*★『${emoji.owner} بطل بعبصه فاوامر المطور وروح للالعاب ${userTag} *`,
+    mods: `*★『${emoji.moderator} هـاد الامـر لـ الـمـوديـتـر فـقـط يـ ${userTag}』*`,
+    premium: `*★『${emoji.premium} هـاد الامـر للبـريـميـوم فقـط يـ ${userTag}』`,
+    group: `*★『${emoji.group} هـاد الامـر يـعمل فقـط فـي المـجموعـات يـ${userTag}』`,
+    private: `*★『${emoji.private} هـاد الامـر خـاص بـ البوت فقـط يـ ${userTag}』*`,
+    admin: `*★『${emoji.admin} هـاد الامـر خـاص بـ ادمـن المـجمـوعه فقـط يـ ${userTag} *`,
+    botAdmin: `*★『${emoji.botAdmin} هـاد الامـر يجـب ان يـكون الـبوت مشـرف فـي المجمـوعه يـ ${userTag}』*`,
+    unreg: `*★『${emoji.unreg} يـجـب ان تـكـون مـسـجـل لـي اسـتـعـمـال الامـر لـلـتـسـجـيـل اكـتـب .تسجيل ${userTag}』*`,
+    restrict: `*★『${emoji.restrict} وضع التقيد شغال يسطا 🐦🌚${userTag}*`,
   }[type];
   const aa = { quoted: m, userJid: conn.user.jid };
   const prep = generateWAMessageFromContent(m.chat, { extendedTextMessage: { text: msg, contextInfo: { externalAdReply: { title: tradutor.texto11[0], body: tradutor.texto11[1], thumbnail: imagen1, sourceUrl: tradutor.texto11[2] } } } }, aa);
