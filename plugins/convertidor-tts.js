@@ -40,7 +40,7 @@ function tts(text, lang = 'es') {
   return new Promise((resolve, reject) => {
     try {
       const tts = gtts(lang);
-      const filePath = join(global.__dirname(import.meta.url), '../src/tmp', (1 * new Date) + '.wav');
+      const filePath = join(global.__dirname(import.meta.url), '../tmp', (1 * new Date) + '.wav');
       tts.save(filePath, text, () => {
         resolve(readFileSync(filePath));
         unlinkSync(filePath);

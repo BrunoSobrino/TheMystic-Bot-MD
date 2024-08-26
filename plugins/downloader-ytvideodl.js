@@ -23,27 +23,27 @@ const handler = async (m, {conn, args, isPrems, isOwner, command}) => {
     const infoYt = await ytdl.getInfo(urlYt);
     const titleYt = infoYt.videoDetails.title;
     const randomName = getRandom('.mp4');
-    const stream = ytdl(urlYt, {filter: (info) => info.itag == 22 || info.itag == 18}).pipe(fs.createWriteStream(`./src/tmp/${randomName}`));
+    const stream = ytdl(urlYt, {filter: (info) => info.itag == 22 || info.itag == 18}).pipe(fs.createWriteStream(`./tmp/${randomName}`));
     m.reply(global.wait);
     // console.log("Descargando ->", urlYt);
     await new Promise((resolve, reject) => {
       stream.on('error', reject);
       stream.on('finish', resolve);
     });
-    const stats = fs.statSync(`./src/tmp/${randomName}`);
+    const stats = fs.statSync(`./tmp/${randomName}`);
     const fileSizeInBytes = stats.size;
     const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
     // console.log("Tamaño del video: " + fileSizeInMegabytes);
     if (fileSizeInMegabytes <= 999) {
       if (command == 'ytshort') {
-        conn.sendMessage( m.chat, {video: fs.readFileSync(`./src/tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: 'video/mp4'}, {quoted: m});
+        conn.sendMessage( m.chat, {video: fs.readFileSync(`./tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: 'video/mp4'}, {quoted: m});
       } else {
-        conn.sendMessage( m.chat, {document: fs.readFileSync(`./src/tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: 'video/mp4'}, {quoted: m});
+        conn.sendMessage( m.chat, {document: fs.readFileSync(`./tmp/${randomName}`), fileName: `${titleYt}.mp4`, mimetype: 'video/mp4'}, {quoted: m});
       }
     } else {
       m.reply(`${tradutor.texto3}`);
     }
-    fs.unlinkSync(`./src/tmp/${randomName}`);
+    fs.unlinkSync(`./tmp/${randomName}`);
   } catch (e) {
     m.reply(e.toString());
   }
