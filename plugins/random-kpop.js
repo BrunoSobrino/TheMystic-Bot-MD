@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 const handler = async (m, {conn, args, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.random_kpop
 
   if (args.length == 0) return conn.reply(m.chat, `${tradutor.texto1[0]} ${usedPrefix}kpop\n${tradutor.texto1[1]} ${usedPrefix}kpop ${tradutor.texto1[2]} ${usedPrefix}kpop ${tradutor.texto1[3]}`, m);

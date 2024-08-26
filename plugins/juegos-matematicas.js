@@ -4,7 +4,7 @@ global.math = global.math ? global.math : {};
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.juegos_matematicas
 
   const mat =`${tradutor.texto1} _${usedPrefix + command} medium_\n\n${tradutor.texto2} ${Object.keys(modes).join(' | ')}`.trim();

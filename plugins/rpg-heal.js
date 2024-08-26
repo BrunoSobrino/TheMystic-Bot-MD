@@ -5,7 +5,7 @@ import {promises} from 'fs';
 const handler = async (m, {conn, args, usedPrefix, __dirname}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_heal
 
   const imgr = flaaa.getRandom();

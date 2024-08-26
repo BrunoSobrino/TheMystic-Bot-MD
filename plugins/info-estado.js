@@ -9,7 +9,7 @@ import { performance } from "perf_hooks";
 const handler = async (m, { conn, usedPrefix }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.info_estado
 
   const _uptime = process.uptime() * 1000;

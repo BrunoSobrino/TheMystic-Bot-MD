@@ -7,7 +7,7 @@ const effects = ['jail', 'gay', 'glass', 'wasted', 'triggered', 'lolice', 'simpc
 const handler = async (m, {conn, usedPrefix, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.sticker_stickermarker
 
   const effect = text.trim().toLowerCase();

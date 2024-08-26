@@ -5,7 +5,7 @@ const cooldown = 1500000; // 25 minutos
 const handler = async (m, {usedPrefix, conn}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_adventure
 
   try {

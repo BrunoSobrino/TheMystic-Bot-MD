@@ -3,7 +3,7 @@ import TicTacToe from '../src/libraries/tictactoe.js';
 const handler = async (m, {conn, usedPrefix, command, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.game_ttt
 
   conn.game = conn.game ? conn.game : {};

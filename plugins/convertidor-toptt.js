@@ -4,7 +4,7 @@ import {toPTT} from '../src/libraries/converter.js';
 const handler = async (m, {conn, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
   const tradutor = _translate.plugins.convertidor_toptt
 
   const q = m.quoted ? m.quoted : m;
