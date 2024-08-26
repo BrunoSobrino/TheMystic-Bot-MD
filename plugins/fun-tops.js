@@ -41,7 +41,7 @@ function handler(m, {groupMetadata, command, conn, participants}) {
   }
 
   if (command == 'topotakus') {
-    const vn = './media/./src/assets/audio/01J67441AFAPG1YRQXDQ0VDTZB.mp3';
+    const vn = './src/assets/audio/01J67441AFAPG1YRQXDQ0VDTZB.mp3';
     const top = `${tradutor.texto2}
     
 *_1.- ${user(a)}_*

@@ -25,7 +25,7 @@ handler.all = async function(m, {conn}) {
   if (/^que no$/i.test(m.text) && !chat.isBanned) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6745EH5251SV6HT327JJW9G.mp3';
+    const vn = './src/assets/audio/01J6745EH5251SV6HT327JJW9G.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -49,7 +49,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(miarda de bot|mierda de bot|mearda de bot|Miarda de Bot|Mierda de Bot|Mearda de Bot)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J673T2Q92H3A0AW5B8RHA2N0.mp3';
+    const vn = './src/assets/audio/01J673T2Q92H3A0AW5B8RHA2N0.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -177,7 +177,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(sexo|Sexo|Hora de sexo|hora de sexo)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J673WHBVDXH4N0Q4WGBM568B.mp3';
+    const vn = './src/assets/audio/01J673WHBVDXH4N0Q4WGBM568B.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -185,7 +185,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(laoracion|La biblia|La oraciÃ³n|La biblia|La oraciÃ³n|la biblia|La Biblia)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6743DB5T555Y9YRAG5GSPVX.mp3';
+    const vn = './src/assets/audio/01J6743DB5T555Y9YRAG5GSPVX.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -217,7 +217,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(noche de paz|Noche de paz|Noche de amor|noche de amor|Noche de Paz)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J673YX9KHGTQ6V7V3Q3X3A1X.mp3';
+    const vn = './src/assets/audio/01J673YX9KHGTQ6V7V3Q3X3A1X.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -225,7 +225,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(Nyapasu|Nyanpasu|nyapasu|Nyapasu|Gambure|Yabure)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J67441AFAPG1YRQXDQ0VDTZB.mp3';
+    const vn = './src/assets/audio/01J67441AFAPG1YRQXDQ0VDTZB.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -233,7 +233,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(ho me vengo|oh me vengo|o me vengo|Ho me vengo|Oh me vengo|O me vengo)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/vengo.mp3';
+    const vn = './src/assets/audio/01J674B3P6G2J8WYAV3N4YJ86E.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -241,7 +241,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(oni-chan|onichan|o-onichan)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6742QGC8P8910A8D990M7W2.mp3';
+    const vn = './src/assets/audio/01J6742QGC8P8910A8D990M7W2.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -257,7 +257,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(QuiÃ©n es tu senpai botsito 7u7|Quien es tu senpai botsito 7u7|QuiÃ©n es tu sempai botsito 7u7|Quien es tu sempai botsito 7u7|QuiÃ©n es tu senpai botsito 7w7|Quien es tu senpai botsito 7w7|quiÃ©n es tu senpai botsito 7u7|quien es tu senpai botsito 7u7|QuiÃ©n es tu sempai botsito 7w7|Quien es tu sempai botsito 7w7|QuiÃ©n es tu senpai botsito|Quien es tu senpai botsito|QuiÃ©n es tu sempai botsito|Quien es tu sempai botsito|QuiÃ©n es tu senpai botsito|Quien es tu senpai botsito|quiÃ©n es tu senpai botsito|quien es tu senpai botsito|QuiÃ©n es tu sempai botsito|Quien es tu sempai botsito)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6749NAPVK16F3CEXTTMJAVS.mp3';
+    const vn = './src/assets/audio/01J6749NAPVK16F3CEXTTMJAVS.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -265,7 +265,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(rawr|Rawr|RAWR|raawwr|rraawr|rawwr)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J674623FTP8T6T00EQCXY5TG.mp3';
+    const vn = './src/assets/audio/01J674623FTP8T6T00EQCXY5TG.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -273,7 +273,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(siu|siiuu|ssiiuu|siuuu|siiuuu|siiiuuuu|siuuuu|siiiiuuuuu|siu|SIIIIUUU)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6747RFN09GR42AXY18VFW10.mp3';
+    const vn = './src/assets/audio/01J6747RFN09GR42AXY18VFW10.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -281,7 +281,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(te amo|teamo)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6748B0RYBJWX5TBMWQZYX95.mp3';
+    const vn = './src/assets/audio/01J6748B0RYBJWX5TBMWQZYX95.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -289,7 +289,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(ooo tio|tio que rico)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6741Q3F6EAM5ZCN28DY6XZ4.mp3';
+    const vn = './src/assets/audio/01J6741Q3F6EAM5ZCN28DY6XZ4.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -297,7 +297,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(un Pato| un pato|un pato que va caminando alegremente|Un pato|Un Pato)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6744PY12JDH4PG59GDHFXV8.mp3';
+    const vn = './src/assets/audio/01J6744PY12JDH4PG59GDHFXV8.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -305,7 +305,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(UwU|uwu|Uwu|uwU|UWU)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J674A7N7KNER6GY6FCYTTZSR.mp3';
+    const vn = './src/assets/audio/01J674A7N7KNER6GY6FCYTTZSR.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -313,7 +313,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(vetealavrg|vete a la vrg|vete a la verga)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/vete a la verga.mp3';
+    const vn = './src/assets/audio/01J674BPFMHSJTJXN0M00YZ1YN.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -321,7 +321,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(fiesta viernes|viernes|Viernes|viernes fiesta)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/viernes.mp3';
+    const vn = './src/assets/audio/01J674CES8KMWCBT6B9E597MFF.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -329,7 +329,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(vivan!!|vivan los novios|vivanlosnovios)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/vivan.mp3';
+    const vn = './src/assets/audio/01J674D3S12JTFDETTNF12V4W8.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -337,7 +337,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(Yamete|yamete|Yamete kudasai|yamete kudasai)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/Yamete-kudasai.mp3';
+    const vn = './src/assets/audio/01J674DR0CB7BD43HHBN1CBBC8.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -345,7 +345,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(epico|esto va a ser epico)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/Epico.mp3';
+    const vn = './src/assets/audio/01J6736ABXJQN1GSVF2XHP4NMK.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -353,7 +353,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(shitpost)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J6746X6AJ09V48P28AZC22M2.mp3';
+    const vn = './src/assets/audio/01J6746X6AJ09V48P28AZC22M2.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
@@ -361,7 +361,7 @@ handler.all = async function(m, {conn}) {
   if (!chat.isBanned && m.text.match(/(no digas eso papu)/gi)) {
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[mconn.conn.user.jid].audios_bot && !m.isGroup) return;
-    const vn = './media/./src/assets/audio/01J67413BMA69VV48TWPCVCYS8.mp3';
+    const vn = './src/assets/audio/01J67413BMA69VV48TWPCVCYS8.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }

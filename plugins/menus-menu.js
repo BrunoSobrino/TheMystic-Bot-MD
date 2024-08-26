@@ -14,7 +14,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     const tradutor = _translate.plugins.menu_menu
     // const pp = imagen7;
 
-    // let vn = './media/./src/assets/audio/01J673Y3TGCFF1D548242AX68Q.mp3'
+    // let vn = './src/assets/audio/01J673Y3TGCFF1D548242AX68Q.mp3'
     const img = './src/assets/images/menu/languages/es/menu.png';
     const d = new Date(new Date + 3600000);
     const locale = 'es-ES';
