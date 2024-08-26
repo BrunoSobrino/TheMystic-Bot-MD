@@ -15,7 +15,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     // const pp = imagen7;
 
     // let vn = './media/menu.mp3'
-    const img = './src/assets/images/menu-2.jpg';
+    const img = './src/assets/images/menu/languages/es/menu.png';
     const d = new Date(new Date + 3600000);
     const locale = 'es-ES';
     const week = d.toLocaleDateString(locale, { weekday: 'long' });
@@ -35,8 +35,6 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     const str = `${tradutor.texto1[0]}
 
 ${tradutor.texto1[1]} ${taguser}
-
-> ✰ Moonlight - Team ✰
 
 ${tradutor.texto1[2]}
 
@@ -523,7 +521,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
     let pp
     // Nouvelles images de menu disponibles 
     if (idioma == 'es') {
-      pp = global.imagen4
+      pp = global.imagen1
     } else if (idioma == 'pt-br') {
       pp = global.imagen7
     } else if (idioma == 'fr') {
@@ -533,7 +531,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
     } else if (idioma == 'ru') {
       pp = global.imagen10
     } else {
-      pp = global.imagen4 // Imagem Default em espanhol
+      pp = global.imagen1 // Imagem Default em espanhol
     }
 
 
