@@ -22,7 +22,7 @@ function handler(m, {groupMetadata, command, conn, participants}) {
   const j = ps.getRandom();
 
   if (command == 'topgays') {
-    const vn = '01J673A5RN30C5EYPMKE5MR9XQ.mp3';
+    const vn = './src/assets/audio/01J673A5RN30C5EYPMKE5MR9XQ.mp3';
     const top = `${tradutor.texto1}
     
 *_1.- ${user(a)}_*
