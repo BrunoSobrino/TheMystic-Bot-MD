@@ -36,7 +36,6 @@
     "@sefinek/google-tts-api": "*",
     "@shineiichijo/marika": "^2.0.6",
     "@vitalets/google-translate-api": "^8.0.0",
-    "@whiskeysockets/baileys": "^6.7.7",
     "baileys": "git+https://github.com/Skidy89/baileys.git#main",
     "acrcloud": "^1.4.0",
     "api-dylux": "^1.6.2",
