@@ -1,4 +1,4 @@
-lkimport { generateWAMessageFromContent } from "baileys";
+import { generateWAMessageFromContent } from "baileys";
 import { smsg } from './src/libraries/simple.js';
 import { format } from 'util';
 import { fileURLToPath } from 'url';
