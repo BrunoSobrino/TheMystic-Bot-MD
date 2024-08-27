@@ -4,7 +4,7 @@ import fs from 'fs';
 const handler = async (m, {conn, args, isPrems, isOwner, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_ytvideodl
 
   const getRandom = (ext) => {

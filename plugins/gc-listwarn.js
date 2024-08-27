@@ -3,7 +3,7 @@
 const handler = async (m, {conn, isOwner}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_listwarn
 
   const adv = Object.entries(global.db.data.users).filter((user) => user[1].warn);

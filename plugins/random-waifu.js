@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 const handler = async (m, {conn, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.random_waifu
 
   const res = await fetch('https://api.waifu.pics/sfw/waifu');

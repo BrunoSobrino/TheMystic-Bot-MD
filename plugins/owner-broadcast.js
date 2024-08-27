@@ -6,7 +6,7 @@ import {randomBytes} from 'crypto';
 const handler = async (m, {conn, command, participants, usedPrefix, text}) => {
   const datas = global
     const idioma = datas.db.data.users[m.sender].language
-    const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.plugins.owner_broadcast
 
   if (!text) return tradutor.texto1;

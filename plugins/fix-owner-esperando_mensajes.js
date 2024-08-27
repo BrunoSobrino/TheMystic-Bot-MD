@@ -6,7 +6,7 @@ import path from 'path';
 const handler = async (m, { conn, usedPrefix }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.fix_owner_esperando_mensajes
 
   if (global.conn.user.jid !== conn.user.jid) {

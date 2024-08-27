@@ -7,7 +7,7 @@ import fs from 'fs';
 const handler = async (m, {conn, text, args}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.sticker_emojimix
 
   if (!args[0]) throw tradutor.texto1;

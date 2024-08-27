@@ -7,7 +7,7 @@ const {downloadContentFromMessage} = (await import("baileys"));
 export async function before(m, {isAdmin, isBotAdmin}) {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins._antiviewonce
   
   const chat = db.data.chats[m.chat];

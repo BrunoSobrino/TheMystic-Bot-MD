@@ -4,7 +4,7 @@ const handler = (m) => m;
 
 handler.all = async function(m) {
   const idioma = global.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins._autosticker
 
   const chat = db.data.chats[m.chat];

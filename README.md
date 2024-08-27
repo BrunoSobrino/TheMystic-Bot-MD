@@ -51,6 +51,7 @@
   - [Comunidades de Ayuda](#guía-de-uso)
   - [Colaboradores](#colaboradores)
   - [Agradecimientos](#agradecimientos)
+  - [Desarollador Principal](#desarollador-principal)
 
 # Avisos Importantes
 
@@ -142,7 +143,7 @@ Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. 
   <img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/>
 </a>
 
-## Desarollador principal
+## Desarollador Principal
 
 <a href="https://github.com/BrunoSobrino">
   <img src="https://i.ibb.co/Qn1W6cP/image.png" width="180px"/>

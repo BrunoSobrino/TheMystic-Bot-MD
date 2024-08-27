@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 const handler = async (m, { conn, args, usedPrefix }) => {
    const datas = global
    const idioma = datas.db.data.users[m.sender].language
-   const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
    const tradutor = _translate.plugins.info_repositorio
 
    const res = await fetch('https://api.github.com/repos/BrunoSobrino/TheMystic-Bot-MD');

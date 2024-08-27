@@ -2,7 +2,7 @@
 const handler = async (m, {conn}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.maker_gay
 
   const vn = './src/assets/audio/01J673A5RN30C5EYPMKE5MR9XQ.mp3';
