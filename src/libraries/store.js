@@ -20,7 +20,7 @@ import {readFileSync, writeFileSync, existsSync} from 'fs';
  * Importing necessary functions and objects from Baileys library
  * @type {import("baileys")}
  */
-const {initAuthCreds, BufferJSON, proto, jidNormalizedUser} = (await import('@whiskeysockets/baileys')).default;
+const {initAuthCreds, BufferJSON, proto, jidNormalizedUser} = (await import('baileys')).default;
 
 /**
  * This function binds event listeners to the WhatsApp socket connection (`conn`)
