@@ -141,3 +141,9 @@ Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. 
 <a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device">
   <img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/>
 </a>
+
+## Desarollador principal
+
+<a href="https://github.com/BrunoSobrino">
+  <img src="https://i.ibb.co/Qn1W6cP/image.png" width="180px"/>
+</a>
