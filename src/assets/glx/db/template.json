@@ -16,7 +16,7 @@
         "terra": {
             "idpelonome": "terra",
             "nomeplaneta": "🌎 Terra",
-            "imgPerfil": "./src/glx/terra.jpg",
+            "imgPerfil": "./src/assets/glx/terra.jpg",
             "id": null,
             "poder": 11000,
             "habitantes": [],
