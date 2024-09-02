@@ -869,7 +869,34 @@ sendList: {
         await conn.relayMessage(jid, { viewOnceMessage: { message } }, {});
     }
 },
-            
+
+sendEvent: {
+            async value(jid, text, des, loc, link) {
+let msg = generateWAMessageFromContent(jid, {
+        messageContextInfo: {
+            messageSecret: randomBytes(32)
+        },
+        eventMessage: {
+            isCanceled: false,
+            name: text,
+            description: des,
+            location: {
+                degreesLatitude: 0,
+                degreesLongitude: 0,
+                name: loc
+            },
+            joinLink: link,
+            startTime: 'm.messageTimestamp'
+        }
+    }, {});
+
+    conn.relayMessage(jid, msg.message, {
+          messageId: msg.key.id,
+        })
+            },
+            enumerable: true
+        },
+
     sendPoll: {
       async value(jid, name = '', optiPoll, options) {
         if (!Array.isArray(optiPoll[0]) && typeof optiPoll[0] === 'string') optiPoll = [optiPoll];
