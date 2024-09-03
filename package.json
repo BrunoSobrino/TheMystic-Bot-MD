@@ -38,7 +38,7 @@
     "@vitalets/google-translate-api": "^8.0.0",
     "baileys": "git+https://github.com/Skidy89/baileys.git#master",
     "acrcloud": "^1.4.0",
-    "api-dylux": "^1.6.2",
+    "api-dylux": "^1.8.3",
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^2.68.0",
     "axios": "^1.1.3",
