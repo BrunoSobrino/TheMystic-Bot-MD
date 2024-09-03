@@ -26,6 +26,7 @@ const handler = async (m, { conn }) => {
     }
 
     const recognise = await recognisePromise;
+    if (!recognise || !recognise?.track) return m.reply('> *[❗] Error: Audio not found.*')
     const { title, subtitle, artists, genres, images } = recognise.track;
     const apiTitle = `${title} - ${subtitle || ''}`.trim();
 
