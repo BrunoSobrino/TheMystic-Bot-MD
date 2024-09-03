@@ -33,8 +33,8 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `${tradutor.texto1} ${u
     }
     m.reply(cap);
     global.videoListXXX.push(vids_);
-  } catch {
-    throw e;
+  } catch (e) {
+    throw e.message;
   }
 };
 handler.help = ['xnxxsearch'].map((v) => v + ' <query>');
