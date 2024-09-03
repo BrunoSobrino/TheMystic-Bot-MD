@@ -58,6 +58,7 @@
 > [!IMPORTANT]\
 > Este proyecto **no está afiliado de ninguna manera** con `WhatsApp`, `Inc. WhatsApp` es una marca registrada de `WhatsApp LLC`, y este bot es un **desarrollo independiente** que **no tiene ninguna relación oficial con la compañía**.
 
+> [!IMPORTANT]\
 > **No** se asegura que este **proyecto siga funcionando el 100% debido** a cuestiones de tiempo personales de @BrunoSobrino, por lo cual **el proyecta esta en manos de colaboradores**.
 
 > [!WARNING]\
