@@ -78,8 +78,8 @@
 - **Panel de Control:** [panel.cafirexos.com](https://panel.cafirexos.com)
 - **Estado de los Servicios:** [estado.cafirexos.com](https://estado.cafirexos.com)
 - **Documentación:** [docs.cafirexos.com](https://docs.cafirexos.com)
-- **Canal de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/whatsapp)
-- **Comunidad de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/comunidad)
+- **Canal de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/whatsapp/canal)
+- **Comunidad de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/whatsapp/comunidad)
 
 </details>
 
