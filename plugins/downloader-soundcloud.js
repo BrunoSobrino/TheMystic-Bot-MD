@@ -31,7 +31,7 @@ const handler = async (m, { conn, text }) => {
     const soundcloudt = `*亗 S O U N D C L O U D*\n
 *› Titulo :* ${downloadres.title || "-"}
 *› Artista:* ${downloadres.author.username || "-"}
-*› Id :* ${downloadres.id || "-"}
+*› Id :* ${downloadres.author.id || "-"}
 *› Followers :* ${downloadres.author.followers_count || "-"}
 *› Likes :* ${downloadres.author.likes_count || "-"}
 *› Publicado :* ${new Date(downloadres.author.created_at).toLocaleDateString() || "-"}
