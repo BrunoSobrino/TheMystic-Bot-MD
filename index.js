@@ -1,4 +1,4 @@
-console.log('[ ℹ️ ] Iniciando...');
+mconsole.log('[ ℹ️ ] Iniciando...');
 import {join, dirname} from 'path';
 import {createRequire} from 'module';
 import {fileURLToPath} from 'url';
