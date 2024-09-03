@@ -14,6 +14,7 @@ const handler = async (m, { conn, text }) => {
       {
         params: {
           q: text,
+          limit: 1
         },
       },
     );
