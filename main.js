@@ -152,6 +152,7 @@ const connectionOptions = {
     msgRetryCounterMap,
     defaultQueryTimeoutMs: undefined,
     version,
+    userDeviceCache: msgRetryCounterCache
 };
 
 global.conn = makeWASocket(connectionOptions);
