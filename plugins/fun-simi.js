@@ -30,7 +30,7 @@ async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es")
         return { status: true, resultado: { simsimi: trad1.text }};        
     } catch {
         try {
-            const response2 = await axios.get(`https://anbusec.xyz/api/v1/simitalk?apikey=${apikeyyy}&ask=${ask}&lc=${language}`);
+            const response2 = await axios.get(`https://api.anbusec.xyz/api/v1/simitalk?apikey=${apikeyyy}&ask=${ask}&lc=${language}`);
             return { status: true, resultado: { simsimi: response2.data.message }};       
         } catch (error2) {
             return { status: false, resultado: { msg: "Todas las API's fallarón. Inténtalo de nuevo más tarde.", error: error2.message }};
