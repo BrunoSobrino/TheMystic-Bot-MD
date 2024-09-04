@@ -25,10 +25,11 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
   if (device !== 'desktop' || device !== 'web') {      
     
   const results = await yts(text);
+  if (!results || !results?.videos) return m.reply('> *[❗] Error: Videos not founds.*')    
   const videos = results.videos.slice(0, 20);
   const randomIndex = Math.floor(Math.random() * videos.length);
   const randomVideo = videos[randomIndex];
-
+      
   var messa = await prepareWAMessageMedia({ image: {url: randomVideo.thumbnail}}, { upload: conn.waUploadToServer })
   const interactiveMessage = {
     body: { text: `*—◉ Resultados obtenidos:* ${results.videos.length}\n*—◉ Video aleatorio:*\n*-› Title:* ${randomVideo.title}\n*-› Author:* ${randomVideo.author.name}\n*-› Views:* ${randomVideo.views}\n*-› ${traductor.texto2[0]}:* ${randomVideo.url}\n*-› Imagen:* ${randomVideo.thumbnail}`.trim() },
