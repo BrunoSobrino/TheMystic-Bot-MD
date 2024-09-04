@@ -1973,9 +1973,9 @@ function getRandom() {
 
 
 /**
- * ??
+ * @deprecated use the operator ?? instead
+ * - (null || undefined) ?? 'idk'
  * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator
- * @return {boolean}
  */
 function nullish(args) {
   return !(args !== null && args !== undefined);
