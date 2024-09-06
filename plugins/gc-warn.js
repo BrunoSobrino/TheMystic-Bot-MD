@@ -2,11 +2,11 @@
 const handler = async (m, {conn, text, command, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_warn
 
   if (m.mentionedJid.includes(conn.user.jid)) return;
-  const pp = './src/warn.jpg';
+  const pp = './src/assets/images/menu/main/warn.jpg';
   let who;
   if (m.isGroup) {
     who = m.mentionedJid[0] ?

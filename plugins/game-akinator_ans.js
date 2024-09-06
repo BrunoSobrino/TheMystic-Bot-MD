@@ -6,7 +6,7 @@ import translate from '@vitalets/google-translate-api';
 export async function before(m) {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.game_akinator_ans
   const teks = tradutor.texto1;
 

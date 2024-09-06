@@ -1,14 +1,14 @@
-import {sticker} from '../lib/sticker.js';
-import uploadFile from '../lib/uploadFile.js';
-import uploadImage from '../lib/uploadImage.js';
-import {webp2png} from '../lib/webp2mp4.js';
+import {sticker} from '../src/libraries/sticker.js';
+import uploadFile from '../src/libraries/uploadFile.js';
+import uploadImage from '../src/libraries/uploadImage.js';
+import {webp2png} from '../src/libraries/webp2mp4.js';
 
 
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.sticker_sticker
 
   if (usedPrefix == 'a' || usedPrefix == 'A') return;
@@ -58,11 +58,11 @@ const isUrl = (text) => {
 
 
 /* import fetch from 'node-fetch'
-import { addExif } from '../lib/sticker.js'
-import { sticker } from '../lib/sticker.js'
-import uploadFile from '../lib/uploadFile.js'
-import uploadImage from '../lib/uploadImage.js'
-import { webp2png } from '../lib/webp2mp4.js'
+import { addExif } from '../src/libraries/sticker.js'
+import { sticker } from '../src/libraries/sticker.js'
+import uploadFile from '../src/libraries/uploadFile.js'
+import uploadImage from '../src/libraries/uploadImage.js'
+import { webp2png } from '../src/libraries/webp2mp4.js'
 import { Sticker } from 'wa-sticker-formatter'
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {

@@ -5,7 +5,7 @@ const handler = async (m, {conn}) => {
   await conn.fetchBlocklist().then(async (data) => {
     const datas = global
     const idioma = datas.db.data.users[m.sender].language
-    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.plugins.owner_blocklist
 
     let txt = `${tradutor.texto1} ${data.length}\n\n┌─⊷\n`;

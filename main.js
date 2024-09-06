@@ -15,9 +15,9 @@ import {format} from 'util';
 import pino from 'pino';
 import Pino from 'pino';
 import {Boom} from '@hapi/boom';
-import {makeWASocket, protoType, serialize} from './lib/simple.js';
+import {makeWASocket, protoType, serialize} from './src/libraries/simple.js';
 import {Low, JSONFile} from 'lowdb';
-import store from './lib/store.js';
+import store from './src/libraries/store.js';
 const {DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC} = await import("baileys");
 import readline from 'readline';
 import NodeCache from 'node-cache';
@@ -100,7 +100,7 @@ loadChatgptDB();
 
 
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
-const msgRetryCounterMap = () => { };
+const msgRetryCounterMap = new Map();
 const msgRetryCounterCache = new NodeCache()
 const {version} = await fetchLatestBaileysVersion();
 let phoneNumber = global.botnumber
@@ -124,37 +124,36 @@ console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n')
 }} while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${authFile}/creds.json`))
 }
 
-//console.info = () => {} // https://github.com/skidy89/baileys actualmente no muestra logs molestos en la consola
+console.info = () => {} // https://github.com/skidy89/baileys actualmente no muestra logs molestos en la consola
 const connectionOptions = {
-logger: pino({ level: 'silent' }),
-printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
-mobile: MethodMobile, 
-browser: opcion == '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
-auth: {
-creds: state.creds,
-keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
-},
-// so you gonna steal this?? https://github.com/skidy89
-// waWebSocketUrl provides better decryption.
-waWebSocketUrl: 'wss://web.whatsapp.com/ws/chat?ED=CAIICA', 
-markOnlineOnConnect: true, 
-generateHighQualityLinkPreview: true, 
-getMessage: async (key) => {
-let jid = jidNormalizedUser(key.remoteJid)
-let msg = await store.loadMessage(jid, key.id)
-return msg?.message || ""
-},
-patchMessageBeforeSending: async (message) => { //fix mass loss messages
-let messages = 0
-global.conn.uploadPreKeysToServerIfRequired()
-messages++
-return message
-},
-msgRetryCounterCache,
-msgRetryCounterMap,
-defaultQueryTimeoutMs: undefined,   
-version
-}
+    logger: Pino({ level: 'silent' }),
+    printQRInTerminal: opcion === '1' || methodCodeQR,
+    mobile: MethodMobile,
+    browser: opcion === '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
+    auth: {
+        creds: state.creds,
+        keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: 'fatal' }).child({ level: 'fatal' })),
+    },
+    waWebSocketUrl: 'wss://web.whatsapp.com/ws/chat?ED=CAIICA',
+    markOnlineOnConnect: true,
+    generateHighQualityLinkPreview: true,
+    getMessage: async (key) => {
+        let jid = jidNormalizedUser(key.remoteJid);
+        let msg = await store.loadMessage(jid, key.id);
+        return msg?.message || "";
+    },
+    patchMessageBeforeSending: async (message) => {
+        let messages = 0;
+        global.conn.uploadPreKeysToServerIfRequired();
+        messages++;
+        return message;
+    },
+    msgRetryCounterCache,
+    msgRetryCounterMap,
+    defaultQueryTimeoutMs: undefined,
+    version,
+    userDeviceCache: msgRetryCounterCache
+};
 
 global.conn = makeWASocket(connectionOptions);
 
@@ -227,7 +226,7 @@ if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
         - atte: sk1d             */
 
 function clearTmp() {
-  const tmp = [join(__dirname, './tmp')];
+  const tmp = [join(__dirname, './src/tmp')];
   const filename = [];
   tmp.forEach((dirname) => readdirSync(dirname).forEach((file) => filename.push(join(dirname, file))));
   return filename.map((file) => {
@@ -389,6 +388,7 @@ global.reloadHandler = async function(restatConn) {
     } catch { }
     conn.ev.removeAllListeners();
     global.conn = makeWASocket(connectionOptions, {chats: oldChats});
+    store?.bind(conn);
     isInit = true;
   }
   if (!isInit) {

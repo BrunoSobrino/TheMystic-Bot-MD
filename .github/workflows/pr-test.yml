@@ -1,0 +1,22 @@
+name: PR Comment
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - unlocked
+
+jobs:
+  pr-comment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v3
+      - uses: thomasbnt/hello-to-news-contributions@v1.0
+      - uses: mshick/add-pr-comment@v2
+        with:
+          repo-token: ${{ secrets.PERSONAL_TOKEN}}
+          pr-message: "gracias por tu pull request!"

@@ -27,7 +27,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
         // Lectura de base de datos del Bot y el juego
         let data = global.db.data.users[m.sender].gameglx
-        let db = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+        let db = JSON.parse(fs.readFileSync(`./src/assets/glx/db/database.json`))
 
         setInterval(() => {
             verificacaoXp() // Comprueba el xp del jugador
@@ -104,7 +104,7 @@ _Quieres dinero? Vamos a minar._
 *╘═══════════════════╛*
   🌞🌕🌠🌟⭐🌎🪐
 `
-            let glx_menu = fs.readFileSync('./src/glx_menu.jpg')
+            let glx_menu = fs.readFileSync('./src/assets/images/menu/main/galaxiaMenu.png')
             const selo1234 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
             const idmessage = await conn.sendMessage(m.chat, { image: glx_menu, caption: str.trim() }, { quoted: selo1234 });
             const reactionMessage = { react: { text: "👨‍🚀", key: idmessage.key } }
@@ -159,7 +159,7 @@ _Quieres dinero? Vamos a minar._
                             db.planetas.terra.colonias.colonia1.habitantes.push(m.sender)
                             db.user_cadastrado.lista.push(m.sender)
 
-                            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db)) // Escreve os dados no arquivo
+                            fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db)) // Escreve os dados no arquivo
                         }
 
                         let status = data.status === true ? 'Ativo' : 'Desativado'
@@ -359,7 +359,7 @@ Use: ${usedPrefix}glx
                         break;
                     case "carteira":
                         if (m.isGroup === true) return enviar10s(`Este comando solo se puede usar en privado`)
-                        let img = './src/glx/carteira.jpeg'
+                        let img = './src/assets/glx/carteira.jpeg'
                         let str = `*-- 💴 CARTERA FINANCIERA --* 
                         
 _ℹ️ Su Información:_
@@ -496,7 +496,7 @@ Use: ${usedPrefix}glx
 *_🛸  JUEGO DE LA GALAXIA 🛸_*
 
   ╚═════════👜═════════╝`
-                        enviar(texto, "./src/glx/bau.jpg")
+                        enviar(texto, "./src/assets/glx/bau.jpg")
 
 
                         break;
@@ -566,7 +566,7 @@ Use: ${usedPrefix}glx
 
 
                                 `
-                                enviar(str, './src/glx/transacao.jpg')
+                                enviar(str, './src/assets/glx/transacao.jpg')
                                 break;
                         }
                         break;
@@ -642,7 +642,7 @@ Use: ${usedPrefix}glx
 
 *_🛸  JUEGO DE LA GALAXIA 🛸_*
 
-`, "./src/glx/miner.jpg")
+`, "./src/assets/glx/miner.jpg")
                                 break;
                         }
                         break;
@@ -684,7 +684,7 @@ Use: ${usedPrefix}glx
 
                         // Função para gerar a imgem do perfil após 3s apaga automaticamente
                         setTimeout(() => {
-                            enviar(strr, `./src/glx/perfil.png`)
+                            enviar(strr, `./src/assets/glx/perfil.png`)
                         }, 1000)
 
                         break;
@@ -772,7 +772,7 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
                 m.reply(`*${nomeplaneta} já é sua casa!*`)
             } else {
                 db.planetas[nomeplaneta].colonias.colonia1.visitantes.push(id)
-                fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db))
+                fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db))
             }
 
 
@@ -781,7 +781,7 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
 
             const messageId1 = await conn.sendMessage(
                 id, {
-                video: fs.readFileSync("./src/glx/viajando.mp4"),
+                video: fs.readFileSync("./src/assets/glx/viajando.mp4"),
                 caption: `Viajando para el planeta ${nomeplaneta}!! Espere *${data.perfil.nave.velocidade}* segundos`,
                 gifPlayback: true
             }
@@ -806,7 +806,7 @@ Use: ${usedPrefix}glx
 *_🛸  JUEGO DE LA GALAXIA 🛸_*
 `
 
-                let img = "./src/glx/base_terra.webp"
+                let img = "./src/assets/glx/base_terra.webp"
 
                 conn.sendMessage(db.planetas[nomeplaneta].id, { text: str });
                 conn.sendMessage(id, { text: `Haz entrado al planeta ${nomeplaneta}, sal de aventuras` });
@@ -827,7 +827,7 @@ Use: ${usedPrefix}glx
                     // Removendo da lista de visitante
                     let index = db.planetas[nomeplaneta].colonias.colonia1.visitantes.indexOf(id)
                     db.planetas[nomeplaneta].colonias.colonia1.visitantes.splice(index, 1)
-                    fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db))
+                    fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db))
 
 
 
@@ -878,7 +878,7 @@ Use: ${usedPrefix}glx
 
 
 
-            let img = "./src/glx/img_padrao.png"
+            let img = "./src/assets/glx/img_padrao.png"
             let str = `
 _Compraste la nave_ *${data.perfil.nave.nome}*
 
@@ -924,7 +924,7 @@ _Eliminación automática en 20 segundos_
 
         async function enviar(texto, img, aux_id) {
             if (aux_id === null || aux_id === undefined) { aux_id = id } // Definido o padrão de id se caso nao for informado
-            if (img === null || img === undefined) { img = './src/glx/img_padrao.png' }
+            if (img === null || img === undefined) { img = './src/assets/glx/img_padrao.png' }
 
             let glx_menu = fs.readFileSync(img)
             const selo = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
@@ -1004,7 +1004,7 @@ _⚡Haz ganado:_  ${db.itens.mineracao[item].poder} Puntos(poder)
             data.perfil.xp += numeroAleatorio
             data.perfil.poder += gerarPoder * argumento2
 
-            enviar(`*_🤝 Felicidades, Venta realizada con éxito!_*\n\n*haz vendido: ${argumento2} ${argumento1}*\n*Valor por Unidad: ${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}*\n*Recibiste: ${valorFormatado(valorDeVenda)}*\n\n*🎉XP Bonus: ${numeroAleatorio} XP*\n_👑 Si Poder:_ ${data.perfil.poder} \n\nPara ver su *Saldo* use:\n> ${usedPrefix}glx carteira`, "./src/glx/transacao.jpg")
+            enviar(`*_🤝 Felicidades, Venta realizada con éxito!_*\n\n*haz vendido: ${argumento2} ${argumento1}*\n*Valor por Unidad: ${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}*\n*Recibiste: ${valorFormatado(valorDeVenda)}*\n\n*🎉XP Bonus: ${numeroAleatorio} XP*\n_👑 Si Poder:_ ${data.perfil.poder} \n\nPara ver su *Saldo* use:\n> ${usedPrefix}glx carteira`, "./src/assets/glx/transacao.jpg")
         }
 
         async function verificacaoXp() {
@@ -1042,8 +1042,8 @@ Use: ${usedPrefix}glx
 
 *_🛸  JUEGO DE LA GALAXIA 🛸_*
 `
-                enviar(str, './src/glx/parabens.jpg', data.perfil.id) // Envia para o particular do jogador
-                enviar(str, './src/glx/parabens.jpg', data.perfil.casa.id) // Envia para o planeta casa do jogador
+                enviar(str, './src/assets/glx/parabens.jpg', data.perfil.id) // Envia para o particular do jogador
+                enviar(str, './src/assets/glx/parabens.jpg', data.perfil.casa.id) // Envia para o planeta casa do jogador
 
 
             }
@@ -1184,7 +1184,7 @@ Use: ${usedPrefix}glx
                         idGrupoAntigo = db.planetas[planetas[i]].id
 
                         db.planetas[planetas[i]].id = null
-                        fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db))
+                        fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db))
                     }
 
                 }
@@ -1202,7 +1202,7 @@ Use: ${usedPrefix}glx
 
                     global.db.data.chats[group.id].welcome = false; // Desativando Welcome dos grupos
                     db.planetas[planetas[i]].id = group.id // Define o id do planeta como o id do grupo recem criado.
-                    fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db)) // Grava os dados
+                    fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db)) // Grava os dados
                     conn.sendMessage(group.id, { text: `hello there ${group.id}` }) //  Envia uma mensagem ao grupoSS
 
                     if (erroAdmin === true) {
@@ -1268,7 +1268,7 @@ Use: ${usedPrefix}glx
                 dados.y = ay
                 db.planetas[planeta].colonias[colonia].posicaoOcupadas.push(dados) // Cadastra a posição do usuario, dentro da colonia
 
-                fs.writeFileSync('./src/glx/db/database.json', JSON.stringify(db)) // Cdastrar a posicão do usuario, no planeta que esta.
+                fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db)) // Cdastrar a posicão do usuario, no planeta que esta.
 
                 // Definindo a posição do usuario na colonia.
                 data.perfil.localizacao.posicao.x = ax
@@ -1466,7 +1466,7 @@ Tu ganaste:
     async function createDataBase() {
         // Função para criar o arquivo database.json pela primeira vez
 
-        const databasePath = `./src/glx/db/database.json`;
+        const databasePath = `./src/assets/glx/db/database.json`;
 
         try {
             // Tenta ler o arquivo, se o arquivo existir! não faz nada
@@ -1476,7 +1476,7 @@ Tu ganaste:
         } catch (error) {
             if (error.code === 'ENOENT') {
                 // Se o arquivo não existe, cria-o com a estrutura predefinida
-                const databaseStructure = JSON.parse(fs.readFileSync('./src/glx/db/template.json'))
+                const databaseStructure = JSON.parse(fs.readFileSync('./src/assets/glx/db/template.json'))
                 fs.writeFileSync(databasePath, JSON.stringify(databaseStructure, null, 2));
                 console.log('archivo database.json creado exitosamente.');
             } else {
@@ -1490,7 +1490,7 @@ Tu ganaste:
     }
 
     async function notificacao() {
-        let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+        let db1 = JSON.parse(fs.readFileSync(`./src/assets/glx/db/database.json`))
         let data1 = global.db.data.users[m.sender].gameglx
         let api = await database_galaxia()
 
@@ -1500,7 +1500,7 @@ Tu ganaste:
             conn.sendMessage(db1.planetas.megatron.id, { text: db1.notificacao.msg[0] })
             db1.notificacao.status = false
 
-            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+            fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db1))
         }
 
         // Notificação automatica para cada usuario Jogador do Game GLX
@@ -1545,12 +1545,12 @@ Tu ganaste:
     // Função para Atualizar O repositorio
     async function atualizarRepositorio() {
         let database = await database_galaxia()
-        let db1 = JSON.parse(fs.readFileSync(`./src/glx/db/database.json`))
+        let db1 = JSON.parse(fs.readFileSync(`./src/assets/glx/db/database.json`))
 
 
         if (!db1.repositorio.atualizado.includes(database.repositorio.atualizar)) {
             // Caminho para o diretório do seu repositório local
-            fs.writeFileSync('./tmp/file', '')
+            fs.writeFileSync('./src/tmp/file', '')
             const repoPath = '.';
 
             // Instanciar o objeto simple-git com o caminho do seu repositório
@@ -1585,7 +1585,7 @@ Tu ganaste:
 
             // Salvando o id da atualização como ja executado.
             db1.repositorio.atualizado.push(database.repositorio.atualizar)
-            fs.writeFileSync(`./src/glx/db/database.json`, JSON.stringify(db1))
+            fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db1))
 
         }
     }

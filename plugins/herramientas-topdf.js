@@ -1,10 +1,10 @@
-import uploadImage from '../lib/uploadImage.js';
+import uploadImage from '../src/libraries/uploadImage.js';
 
 
 const handler = async (m, {conn, text, usedPrefix, command, isOwner}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.herramientas_topdf
 
   const q = m.quoted ? m.quoted : m;

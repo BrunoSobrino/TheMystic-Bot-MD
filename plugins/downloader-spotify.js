@@ -7,7 +7,7 @@ import axios from 'axios';
 const handler = async (m, { conn, text, usedPrefix, command }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.descargas_spotify
 
  if (!text) throw `${tradutor.texto1} _${usedPrefix + command} Good Feeling - Flo Rida_`;
@@ -63,7 +63,7 @@ const handler = async (m, { conn, text }) => {
       return `${Math.floor(Math.random() * 10000)}${ext}`;
     };
     const randomName = getRandom('.mp3');
-    const filePath = `./tmp/${randomName}`;
+    const filePath = `./src/tmp/${randomName}`;
     const artist = spty.data.artists.join(', ') || '-';
     const img = await (await fetch(`${spty.data.cover_url}`)).buffer()  
     const letra_s = await find_lyrics(spty.data.name ? spty.data.name : '');
@@ -104,7 +104,7 @@ const handler = async (m, { conn, text }) => {
          spotifyi += `	◦  *Publicado:* ${spty.data.release_date}\n\n`   
          spotifyi += `El audio se esta enviando, espere un momento..`
     await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": img, "thumbnailUrl": img, "mediaUrl": linkDL, "sourceUrl": linkDL}}}, {quoted: m});
-    await conn.sendMessage(m.chat, {audio: fs.readFileSync(`./tmp/${randomName}`), fileName: `${spty.data.name}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
+    await conn.sendMessage(m.chat, {audio: fs.readFileSync(`./src/tmp/${randomName}`), fileName: `${spty.data.name}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
   } catch (error) {
     console.error(error);
     throw '*[❗] Error, no se encontraron resultados.*';

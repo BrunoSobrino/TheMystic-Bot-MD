@@ -7,7 +7,7 @@
 export async function before(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner}) {
     const datas = global
     const idioma = datas.db.data.users[m.sender].language
-    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.plugins._antiprivado
 
   if (m.isBaileys && m.fromMe) return !0;

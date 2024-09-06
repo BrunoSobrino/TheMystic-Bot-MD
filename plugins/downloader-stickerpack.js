@@ -1,12 +1,12 @@
 /* By https://github.com/ALBERTO9883/NyanCatBot-MD */
 import fetch from 'node-fetch';
-import {sticker} from '../lib/sticker.js';
+import {sticker} from '../src/libraries/sticker.js';
 
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_stickerpack
 
   if (!text) throw `${tradutor.texto1} ${usedPrefix + command}* https://getstickerpack.com/stickers/flork-memes-4-1`;

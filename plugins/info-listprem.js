@@ -3,7 +3,7 @@
 const handler = async (m, {conn, args, isPrems}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.info_listprem
 
   const usuario = global.db.data.users[m.sender].premiumTime;

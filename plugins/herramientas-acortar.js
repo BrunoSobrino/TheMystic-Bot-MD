@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 const handler = async (m, {conn, args, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.herramientas_acortar
 
   if (!text) throw tradutor.texto1;

@@ -1,5 +1,5 @@
 import { generateWAMessageFromContent } from "baileys";
-import { smsg } from './lib/simple.js';
+import { smsg } from './src/libraries/simple.js';
 import { format } from 'util';
 import { fileURLToPath } from 'url';
 import path, { join } from 'path';
@@ -1214,7 +1214,7 @@ export async function handler(chatUpdate) {
     }
 
     const idioma = global.db.data.users[m.sender]?.language || 'es';
-    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.handler.handler
 
     if (opts['nyimak']) {
@@ -1598,7 +1598,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
     }
 
     try {
-      if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this);
+      if (!opts['noprint']) await (await import(`./src/libraries/print.js`)).default(m, this);
     } catch (e) {
       console.log(m, m.quoted, e);
     }
@@ -1618,7 +1618,7 @@ export async function participantsUpdate({ id, participants, action }) {
    * 
    ***********************/
   const idioma = global?.db?.data?.chats[id]?.language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
 
   const m = mconn
@@ -1644,7 +1644,7 @@ export async function participantsUpdate({ id, participants, action }) {
             const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
             const botTt2 = groupMetadata?.participants?.find((u) => m?.conn?.decodeJid(u.id) == m?.conn?.user?.jid) || {};
             const isBotAdminNn = botTt2?.admin === 'admin' || false;
-            text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m.conn.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
+            text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m?.conn?.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
               (chat.sBye || tradutor.texto2 || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0]);
             if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn && action === 'add') {
               const responseb = await m.conn.groupParticipantsUpdate(id, [user], 'remove');
@@ -1683,7 +1683,7 @@ export async function participantsUpdate({ id, participants, action }) {
 export async function groupsUpdate(groupsUpdate) {
   //console.log(groupsUpdate)
   const idioma = global.db.data.chats[groupsUpdate[0].id]?.language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
 
   if (opts['self']) {
@@ -1726,7 +1726,7 @@ export async function deleteUpdate(message) {
   const datas = global
   const id = message.participant // Obtenga la identificación del usuario, solo dentro de esta función "deleteUpdate"
   const idioma = datas.db.data.users[id]?.language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.deleteUpdate
 
 
@@ -1757,7 +1757,7 @@ ${tradutor.texto1[5]}`.trim();
 global.dfail = (type, m, conn) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.dfail
 
   const msg = {

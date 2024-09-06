@@ -1,5 +1,5 @@
-import {webp2mp4} from '../lib/webp2mp4.js';
-import {ffmpeg} from '../lib/converter.js';
+import {webp2mp4} from '../src/libraries/webp2mp4.js';
+import {ffmpeg} from '../src/libraries/converter.js';
 
 
 
@@ -7,7 +7,7 @@ import {ffmpeg} from '../lib/converter.js';
 const handler = async (m, {conn, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.convertidor_tovideo
 
   if (!m.quoted) throw `*${tradutor.texto1} ${usedPrefix + command}*`;
