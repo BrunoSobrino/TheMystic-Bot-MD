@@ -49,7 +49,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   }
 
   if (command == 'ttp') {
-    conn.sendFile(m.chat, `$global.BASE_API_DELIRIUS}/canvas/ttp?text=${encodeURI(text)}`, 'sticker.webp', '', m, {asSticker: true});
+    conn.sendFile(m.chat, `${global.BASE_API_DELIRIUS}/canvas/ttp?text=${encodeURI(text)}`, 'sticker.webp', '', m, {asSticker: true});
   }
 };
 handler.command = handler.help = ['ttp', 'ttp2', 'ttp3', 'ttp4', 'ttp5', 'attp', 'attp2', 'attp3'];
