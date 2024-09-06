@@ -19,7 +19,7 @@ const handler = async (m, { conn, text, args, usedPrefix, command }) => {
   if (command == "attp") {
     const a1 = await (
       await fetch(
-        `https://api.erdwpe.com/api/maker/attp?text=${decodeURI(text)}`,
+        `https://api.cafirexos.com/api/maker/attp?text=${decodeURI(text)}`,
       )
     ).buffer();
     const a2 = await createSticker(a1, false, global.packname, global.author);
