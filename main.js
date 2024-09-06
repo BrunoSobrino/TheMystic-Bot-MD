@@ -519,13 +519,13 @@ setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
   await clearTmp();
 }, 180000);
-
+/*
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return; //intervals at the same thime tho
   await purgeSessionSB();
   await purgeOldFiles();
   await purgeSession();
-}, 1000 * 60 * 60);
+}, 1000 * 60 * 60);*/
 
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
