@@ -1,4 +1,4 @@
-jname: test
+name: test
 
 on:
   pull_request:
