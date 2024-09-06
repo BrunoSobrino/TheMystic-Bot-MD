@@ -56,7 +56,7 @@ global.suittag = ['5219993404349'];
 global.prems = ['51995386439'];
 
 // API
-global.BASE_API_DELIRIUS = "https://deliriusapi-official.vercel.app";
+global.BASE_API_DELIRIUS = "http://144.126.156.179" //"https://deliriusapi-official.vercel.app";
 
 global.packname = 'Sticker';
 global.author = 'The Mystic - Bot';
