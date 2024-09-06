@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+vimport fetch from 'node-fetch';
 import fs from 'fs';
 import uploader from '../src/libraries/uploadImage.js';
 
