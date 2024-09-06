@@ -26,14 +26,15 @@ const handler = async (m, { conn, text, args, usedPrefix, command }) => {
     conn.sendFile(m.chat, a2, "sticker.webp", "", m, { asSticker: true });
   }
   if (command == "ttp2") {
-    conn.sendFile(
-      m.chat,
-      `https://api.lolhuman.xyz/api/ttp2?apikey=${lolkeysapi}&text=${decodeURI(text)}`,
-      "sticker.webp",
-      "",
-      m,
-      { asSticker: true },
+    const ttppredd = `${global.BASE_API_DELIRIUS}/canvas/ttp?text=${encodeURI(text)}&color=red`;
+    const stiker = await createSticker(
+      ttppredd,
+      false,
+      global.packname,
+      global.author,
+      20,
     );
+    m.reply(stiker);
   }
 
   if (command == "ttp") {
