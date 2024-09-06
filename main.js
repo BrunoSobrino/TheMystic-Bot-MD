@@ -1,3 +1,4 @@
+"use strict";
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1'; 
 import './config.js';
 import './api.js';
@@ -26,7 +27,9 @@ const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
 let stopped = 'close';  
 protoType();
 serialize();
-
+const msgRetryCounterMap = new Map();
+const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
+const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
   return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString();
@@ -100,8 +103,7 @@ loadChatgptDB();
 
 
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
-const msgRetryCounterMap = new Map();
-const msgRetryCounterCache = new NodeCache()
+
 const {version} = await fetchLatestBaileysVersion();
 let phoneNumber = global.botnumber
 
@@ -126,7 +128,7 @@ console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n')
 
 console.info = () => {} // https://github.com/skidy89/baileys actualmente no muestra logs molestos en la consola
 const connectionOptions = {
-    logger: Pino({ level: 'debug' }),
+    logger: Pino({ level: 'silent' }),
     printQRInTerminal: opcion === '1' || methodCodeQR,
     mobile: MethodMobile,
     browser: opcion === '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
@@ -148,11 +150,13 @@ const connectionOptions = {
         messages++;
         return message;
     },
-    msgRetryCounterCache,
-    msgRetryCounterMap,
+    msgRetryCounterCache: msgRetryCounterCache,
+    userDevicesCache: userDevicesCache,
+    //msgRetryCounterMap,
     defaultQueryTimeoutMs: undefined,
+    cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
     version,
-    userDeviceCache: msgRetryCounterCache
+    //userDeviceCache: msgRetryCounterCache <=== quien fue el pendejo?????
 };
 
 global.conn = makeWASocket(connectionOptions);
