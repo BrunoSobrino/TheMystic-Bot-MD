@@ -126,7 +126,7 @@ console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n')
 
 console.info = () => {} // https://github.com/skidy89/baileys actualmente no muestra logs molestos en la consola
 const connectionOptions = {
-    logger: Pino({ level: 'silent' }),
+    logger: Pino({ level: 'debug' }),
     printQRInTerminal: opcion === '1' || methodCodeQR,
     mobile: MethodMobile,
     browser: opcion === '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
