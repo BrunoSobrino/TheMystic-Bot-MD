@@ -25,7 +25,7 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
       if (!img) throw `${tradutor.texto1} ${usedPrefix + command}*`;
       let out;
       try {
-        stiker = await sticker(img, false, global.packname, global.author, null, metadata);
+        stiker = await sticker(img, false, global.packname, global.author, [""], metadata);
       } catch (e) {
         console.error(e);
       } finally {
@@ -34,11 +34,11 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
           else if (/image/g.test(mime)) out = await uploadImage(img);
           else if (/video/g.test(mime)) out = await uploadFile(img);
           if (typeof out !== 'string') out = await uploadImage(img);
-          stiker = await sticker(false, out, global.packname, global.author, null, metadata);
+          stiker = await sticker(false, out, global.packname, global.author, [""], metadata);
         }
       }
     } else if (args[0]) {
-      if (isUrl(args[0])) stiker = await sticker(false, args[0], global.packname, global.author, null metadata);
+      if (isUrl(args[0])) stiker = await sticker(false, args[0], global.packname, global.author, [""], metadata);
       else return m.reply(`${tradutor.texto2} ${usedPrefix}s https://telegra.ph/file/0dc687c61410765e98de2.jpg*`);
     }
   } catch (e) {
