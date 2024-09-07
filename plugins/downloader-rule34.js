@@ -1,36 +1,32 @@
-import fetch from 'node-fetch';
-const handler = async (m, { conn, args, usedPrefix }) => {
-if (!args[0]) {
-if (!db.data.chats[m.chat].modohorny && m.isGroup) return conn.reply(m.chat, `❗️ ESTE COMANDO ESTA DESHABILITADO PARA EL BOT (#MODOHORNY)`, m)
-await conn.reply(m.chat, '❗️ INGRESA EL NOMBRE DE LA IMAGEN QUE ESTAS BUSCANDO', m);
-return;
-}
-const use = args[0];
-const url = `https://rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&tags=${use}`;
-try {
-conn.reply(m.chat, wait, m, {
-contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, showAdAttribution: true,
-title: packname,
-body: wm,
-previewType: 0, thumbnail: icons,
-sourceUrl: channel }}})
-const response = await fetch(url);
-const data = await response.json();
-if (!data || data.length === 0) {
-await conn.reply(m.chat, `\`\`\`❗️ NO SE ENCONTRARON RESULTADOS PARA:\n *${use}*\`\`\``, m);
-return;
-}
-const randomIndex = Math.floor(Math.random() * data.length);
-const randomImage = data[randomIndex];
-const urlimg = randomImage.file_url;
-await conn.sendFile(m.chat, urlimg, 'thumbnail.jpg', `*RESULTADO DE:* ${use}`, m, null)
-} catch (error) {
-console.error(error);
-await m.reply(`\`\`\`❗️ OCURRIO UN ERROR\`\`\``);
-}};
-handler.help = ['r34 <texto>'];
-handler.command = ['r34', 'rule34'];
-handler.tags = ['nsfw'];
-handler.register = true;
+import fs from 'fs';
+const timeout = 60000;
+const poin = 10;
+const handler = async (m, {conn, usedPrefix}) => {
+  conn.tekateki = conn.tekateki ? conn.tekateki : {};
+  const id = m.chat;
+  if (id in conn.tekateki) {
+    conn.reply(m.chat, '', conn.tekateki[id][0]);
+    throw false;
+  }
+  const tekateki = JSON.parse(fs.readFileSync(`./src/game/paises.json`));
+  const json = tekateki[Math.floor(Math.random() * tekateki.length)];
+  const _clue = json.response;
+  const clue = _clue.replace(/[A-Za-z]/g, '_');
+  const caption = `
+🌎 *\`ADIVINA EL PAIS\`* 🌎
+QUE PAIS ES: *${json.question}*
 
+「○」 *TIEMPO:* ${(timeout / 1000).toFixed(2)} SEGUNDO/S
+「○」 *PREMIO:* *+${poin}* MYSTIC-COINS`.trim();
+  conn.tekateki[id] = [
+    await conn.reply(m.chat, caption, m), json,
+    poin,
+    setTimeout(async () => {
+      if (conn.tekateki[id]) await conn.reply(m.chat, `\`\`\`¡¡SE ACABO TU TIEMPO!!\`\`\`\n*RESPUESTA:* ${json.response}`, conn.tekateki[id][0]);
+      delete conn.tekateki[id];
+    }, timeout)];
+};
+handler.help = ['paises'];
+handler.tags = ['game'];
+handler.command = /^(advpais|paisadv|adivinarpais|advpaises|countryadv|advcountry)$/i;
 export default handler;
