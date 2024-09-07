@@ -7,6 +7,10 @@ let handler = async (m, { conn, args, text, isOwner, usedPrefix, command }) => {
     const json = datapais[Math.floor(Math.random() * datapais.length)];
     const _clue = json.response;
     const clue = _clue.replace(/[A-Za-z]/g, '_');
+    conn.advpais[m.chat] = {
+        time: 60000,
+        bonus: 350,
+        }
     let teks = `*🌎 \`ADIVINA EL PAIS\` 🌎*
    QUE PAIS ES: *${json.question}*
 
