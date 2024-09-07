@@ -155,7 +155,7 @@ async function addExif(webpSticker, packname, author, categories = [''], metadat
   const img = new webp.Image();
   const stickerPackId = 'Mystic' + randomBytes(12).toString('hex').toUpperCase().toString();
   const json = {
-      "sticker-pack-id": metadata.packId ? metadata.packId : stickerPackId,
+      "sticker-pack-id": metadata.packId ? metadata.packId : `${stickerPackId}`,
       "sticker-pack-name": packname ? packname : undefined,
       "sticker-pack-publisher": author ? author : undefined,
       "android-app-store-link": metadata.androidAppStoreLink ? metadata.androidAppStoreLink : undefined,
