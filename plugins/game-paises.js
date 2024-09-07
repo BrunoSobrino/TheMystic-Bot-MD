@@ -1,32 +1,29 @@
-import fs from 'fs';
-const timeout = 60000;
-const poin = 10;
-const handler = async (m, {conn, usedPrefix}) => {
-  conn.tekateki = conn.tekateki ? conn.tekateki : {};
-  const id = m.chat;
-  if (id in conn.tekateki) {
-    conn.reply(m.chat, '', conn.tekateki[id][0]);
-    throw false;
-  }
-  const tekateki = JSON.parse(fs.readFileSync(`./src/game/paises.json`));
-  const json = tekateki[Math.floor(Math.random() * tekateki.length)];
-  const _clue = json.response;
-  const clue = _clue.replace(/[A-Za-z]/g, '_');
-  const caption = `
-🌎 *\`ADIVINA EL PAIS\`* 🌎
-QUE PAIS ES: *${json.question}*
+import db from '../src/libraries/database.js'
 
-「○」 *TIEMPO:* ${(timeout / 1000).toFixed(2)} SEGUNDO/S
-「○」 *PREMIO:* *+${poin}* MYSTIC-COINS`.trim();
-  conn.tekateki[id] = [
-    await conn.reply(m.chat, caption, m), json,
-    poin,
-    setTimeout(async () => {
-      if (conn.tekateki[id]) await conn.reply(m.chat, `\`\`\`¡¡SE ACABO TU TIEMPO!!\`\`\`\n*RESPUESTA:* ${json.response}`, conn.tekateki[id][0]);
-      delete conn.tekateki[id];
-    }, timeout)];
-};
-handler.help = ['paises'];
-handler.tags = ['game'];
-handler.command = /^(advpais|paisadv|adivinarpais|advpaises|countryadv|advcountry)$/i;
-export default handler;
+let handler = async (m, { conn, args, text, isOwner, usedPrefix, command }) => {
+    conn.advpais = conn.advpais ? conn.advpais : {}
+    if (conn.advpais[m.chat]) return m.reply(`*_< ADIVINANZA - MYSTIC >_*\n\n*TODAVIA QUEDA UNA ADIVINANZA QUE RESPONDER*`)
+    conn.advpais[m.chat] = {
+        number: (9).getRandom(),
+        time: 60000,
+        bonus: 350,
+        opp: 4
+    }
+    let teks = `*🌎 \`ADIVINA EL PAIS\` 🌎*
+   QUE PAIS ES: *${json.question}*
+「○」 *TIEMPO:* 60.00 SEGUNDO/S
+「○」 *PREMIO:* *+10* MYSTIC-COINS\t• TIEMPO : ${(conn.advpais[m.chat].time / 1000).toFixed(2)} segundos
+\t• BONO : +${conn.advpais[m.chat].bonus} Exp`
+    let idmsg = await m.reply(teks)
+    setTimeout(() => {
+      if (conn.advpais[m.chat]) conn.advpais(m.chat, `*¡ ✨ SE ACABO TU TIEMPO !*\n\t  • RESPUESTA : ${conn.advpais[m.chat].number}`, m, { quoted: idmsg })
+      delete conn.advpais[m.chat]
+    }, conn.advpais[m.chat].time)
+}
+
+handler.help = ['game']
+handler.tags = ['game']
+handler.command = /^(advpais|adivinarpais|adivinarpaises)$/i
+handler.register = true
+
+export default handler
