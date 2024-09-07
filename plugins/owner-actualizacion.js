@@ -1,7 +1,3 @@
-// adaptado por Diego : TheMystic-Bot-MD 
-//como que adaptado??? este codigo siempre fue mystic
-// @skidy89
-
 import axios from 'axios';
 
 let previousCommitSHA = '';
