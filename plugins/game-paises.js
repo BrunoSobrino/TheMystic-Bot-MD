@@ -3,7 +3,8 @@ import db from '../src/libraries/database.js'
 let handler = async (m, { conn, args, text, isOwner, usedPrefix, command }) => {
     conn.advpais = conn.advpais ? conn.advpais : {}
     if (conn.advpais[m.chat]) return m.reply(`*_< ADIVINANZA - MYSTIC >_*\n\n*TODAVIA QUEDA UNA ADIVINANZA QUE RESPONDER*`)
-    const json = advpais[Math.floor(Math.random() * advpais.length)];
+    const datapais = JSON.parse(fs.readFileSync(`./src/game/paises.json`));
+    const json = datapais[Math.floor(Math.random() * datapais.length)];
     const _clue = json.response;
     const clue = _clue.replace(/[A-Za-z]/g, '_');
     let teks = `*🌎 \`ADIVINA EL PAIS\` 🌎*
