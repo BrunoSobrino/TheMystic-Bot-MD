@@ -1,4 +1,4 @@
-import db from '../lib/database.js'
+import db from '..src/libraries/database.js'
 
 let handler = async (m, { conn, args, text, isOwner, usedPrefix, command }) => {
     conn.advnro = conn.advnro ? conn.advnro : {}
