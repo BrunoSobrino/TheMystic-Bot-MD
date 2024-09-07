@@ -22,7 +22,7 @@ let handler = async (m, { conn, args, text, isOwner, usedPrefix, command }) => {
 
 handler.help = ['game']
 handler.tags = ['game']
-handler.command = /^(game)$/i
+handler.command = /^(advnro|adivinarnumero|adivinarnro)$/i
 handler.register = true
 
 export default handler
