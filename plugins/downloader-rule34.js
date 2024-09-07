@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 const handler = async (m, { conn, args, usedPrefix }) => {
 if (!args[0]) {
-if (!db.data.chats[m.chat].modohorny && m.isGroup) return conn.reply(m.chat, `❗️ ESTE COMANDO ESTA DESHABILITADO PARA EL BOT (#MODOHORNY)`, m, rcanal)
-await conn.reply(m.chat, '❗️ INGRESA EL NOMBRE DE LA IMAGEN QUE ESTAS BUSCANDO', m, rcanal);
+if (!db.data.chats[m.chat].modohorny && m.isGroup) return conn.reply(m.chat, `❗️ ESTE COMANDO ESTA DESHABILITADO PARA EL BOT (#MODOHORNY)`, m)
+await conn.reply(m.chat, '❗️ INGRESA EL NOMBRE DE LA IMAGEN QUE ESTAS BUSCANDO', m);
 return;
 }
 const use = args[0];
