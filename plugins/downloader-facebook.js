@@ -5,7 +5,7 @@ let enviando = false;
 
 const handler = async (m, {conn, args, command, usedPrefix}) => {
   const idioma = global.db.data.users[m.sender].language;
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.descargas_facebook;
 
   if (!args[0]) {

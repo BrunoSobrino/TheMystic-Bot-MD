@@ -3,7 +3,7 @@ import {search, download} from 'aptoide-scraper';
 const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_modapk
 
 
@@ -21,5 +21,5 @@ const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
     throw `${tradutor.texto4}`;
   }    
 };
-handler.command = /^(apkmod|modapk|dapk2|aptoide|aptoidedl)$/i;
+handler.command = /^(apk|apkmod|modapk|dapk2|aptoide|aptoidedl)$/i;
 export default handler;

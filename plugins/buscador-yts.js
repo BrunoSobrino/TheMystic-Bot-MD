@@ -16,7 +16,7 @@ import fs from 'fs';
 const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
     const datas = global;
     const idioma = datas.db.data.users[m.sender].language;
-    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
     const traductor = _translate.plugins.buscador_yts;
     const device = await getDevice(m.key.id);
     
@@ -25,10 +25,11 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
   if (device !== 'desktop' || device !== 'web') {      
     
   const results = await yts(text);
+  if (!results || !results?.videos) return m.reply('> *[❗] Error: Videos not founds.*')    
   const videos = results.videos.slice(0, 20);
   const randomIndex = Math.floor(Math.random() * videos.length);
   const randomVideo = videos[randomIndex];
-
+      
   var messa = await prepareWAMessageMedia({ image: {url: randomVideo.thumbnail}}, { upload: conn.waUploadToServer })
   const interactiveMessage = {
     body: { text: `*—◉ Resultados obtenidos:* ${results.videos.length}\n*—◉ Video aleatorio:*\n*-› Title:* ${randomVideo.title}\n*-› Author:* ${randomVideo.author.name}\n*-› Views:* ${randomVideo.views}\n*-› ${traductor.texto2[0]}:* ${randomVideo.url}\n*-› Imagen:* ${randomVideo.thumbnail}`.trim() },
@@ -51,13 +52,13 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
                   header: video.title,
                   title: video.author.name,
                   description: 'Descargar MP3',
-                  id: `${prefijo}play.1 ${video.url}`
+                  id: `${prefijo}ytmp3 ${video.url}`
                 },
                 {
                   header: video.title,
                   title: video.author.name,
                   description: 'Descargar MP4',
-                  id: `${prefijo}play.2 ${video.url}`
+                  id: `${prefijo}ytmp4 ${video.url}`
                 }
               ]
             }))
@@ -80,7 +81,7 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
   } else {
   const datas = global;
   const idioma = datas.db.data.users[m.sender].language;
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const traductor = _translate.plugins.buscador_yts;      
   const results = await yts(text);
   const tes = results.all;

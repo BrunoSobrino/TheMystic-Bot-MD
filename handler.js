@@ -1,5 +1,5 @@
 import { generateWAMessageFromContent } from "baileys";
-import { smsg } from './lib/simple.js';
+import { smsg } from './src/libraries/simple.js';
 import { format } from 'util';
 import { fileURLToPath } from 'url';
 import path, { join } from 'path';
@@ -66,442 +66,10 @@ export async function handler(chatUpdate) {
         global.db.data.users[m.sender] = {};
       }
       if (user) {
-        if (!isNumber(user.exp)) user.exp = 0;
-        if (!('premium' in user)) user.premium = false;
-        if (!isNumber(user.joincount)) user.joincount = 2;
-        if (!isNumber(user.limit)) user.limit = 20;
-        if (!isNumber(user.money)) user.money = 15;
-        if (!('language' in user)) user.language = 'es';
-        if (!('registered' in user)) user.registered = false;
-        if (!('mute' in user)) user.mute = false
-        if (!user.registered) {
-          if (!('name' in user)) user.name = m.name;
-          if (!isNumber(user.age)) user.age = -1;
-          if (!isNumber(user.anggur)) user.anggur = 0;
-          if (!isNumber(user.apel)) user.apel = 0;
-          if (!isNumber(user.bibitanggur)) user.bibitanggur = 0;
-          if (!isNumber(user.bibitapel)) user.bibitapel = 0;
-          if (!isNumber(user.bibitjeruk)) user.bibitjeruk = 0;
-          if (!isNumber(user.bibitmangga)) user.bibitmangga = 0;
-          if (!isNumber(user.bibitpisang)) user.bibitpisang = 0;
-          if (!isNumber(user.emas)) user.emas = 0;
-          if (!isNumber(user.jeruk)) user.jeruk = 0;
-          if (!isNumber(user.kayu)) user.kayu = 0;
-          if (!isNumber(user.makanan)) user.makanan = 0;
-          if (!isNumber(user.mangga)) user.mangga = 0;
-          if (!isNumber(user.pisang)) user.pisang = 0;
-          if (!isNumber(user.premiumDate)) user.premiumDate = -1;
-          if (!isNumber(user.regTime)) user.regTime = -1;
-          if (!isNumber(user.semangka)) user.semangka = 0;
-          if (!isNumber(user.stroberi)) user.stroberi = 0;
-        }
-        if (!isNumber(user.afk)) user.afk = -1;
-        if (!('autolevelup' in user)) user.autolevelup = true;
-        if (!('role' in user)) user.role = 'Novato';
-        if (!isNumber(user.agility)) user.agility = 0;
-        if (!isNumber(user.anakanjing)) user.anakanjing = 0;
-        if (!isNumber(user.anakcentaur)) user.anakcentaur = 0;
-        if (!isNumber(user.anakgriffin)) user.anakgriffin = 0;
-        if (!isNumber(user.anakkucing)) user.anakkucing = 0;
-        if (!isNumber(user.anakkuda)) user.anakkuda = 0;
-        if (!isNumber(user.anakkyubi)) user.anakkyubi = 0;
-        if (!isNumber(user.anaknaga)) user.anaknaga = 0;
-        if (!isNumber(user.anakpancingan)) user.anakpancingan = 0;
-        if (!isNumber(user.anakphonix)) user.anakphonix = 0;
-        if (!isNumber(user.anakrubah)) user.anakrubah = 0;
-        if (!isNumber(user.anakserigala)) user.anakserigala = 0;
-        if (!isNumber(user.anggur)) user.anggur = 0;
-        if (!isNumber(user.anjing)) user.anjing = 0;
-        if (!isNumber(user.anjinglastclaim)) user.anjinglastclaim = 0;
-        if (!isNumber(user.antispam)) user.antispam = 0;
-        if (!isNumber(user.antispamlastclaim)) user.antispamlastclaim = 0;
-        if (!isNumber(user.apel)) user.apel = 0;
-        if (!isNumber(user.aqua)) user.aqua = 0;
-        if (!isNumber(user.arc)) user.arc = 0;
-        if (!isNumber(user.arcdurability)) user.arcdurability = 0;
-        if (!isNumber(user.arlok)) user.arlok = 0;
-        if (!isNumber(user.armor)) user.armor = 0;
-        if (!isNumber(user.armordurability)) user.armordurability = 0;
-        if (!isNumber(user.armormonster)) user.armormonster = 0;
-        if (!isNumber(user.as)) user.as = 0;
-        if (!isNumber(user.atm)) user.atm = 0;
-        if (!isNumber(user.axe)) user.axe = 0;
-        if (!isNumber(user.axedurability)) user.axedurability = 0;
-        if (!isNumber(user.ayam)) user.ayam = 0;
-        if (!isNumber(user.ayamb)) user.ayamb = 0;
-        if (!isNumber(user.ayambakar)) user.ayambakar = 0;
-        if (!isNumber(user.ayamg)) user.ayamg = 0;
-        if (!isNumber(user.ayamgoreng)) user.ayamgoreng = 0;
-        if (!isNumber(user.babi)) user.babi = 0;
-        if (!isNumber(user.babihutan)) user.babihutan = 0;
-        if (!isNumber(user.babipanggang)) user.babipanggang = 0;
-        if (!isNumber(user.bandage)) user.bandage = 0;
-        if (!isNumber(user.bank)) user.bank = 0;
-        if (!isNumber(user.banteng)) user.banteng = 0;
-        if (!isNumber(user.batu)) user.batu = 0;
-        if (!isNumber(user.bawal)) user.bawal = 0;
-        if (!isNumber(user.bawalbakar)) user.bawalbakar = 0;
-        if (!isNumber(user.bayam)) user.bayam = 0;
-        if (!isNumber(user.juegos)) user.juegos = 0;
-        if (!isNumber(user.crime)) user.crime = 0;
-        if (!isNumber(user.berlian)) user.berlian = 10;
-        if (!isNumber(user.bibitanggur)) user.bibitanggur = 0;
-        if (!isNumber(user.bibitapel)) user.bibitapel = 0;
-        if (!isNumber(user.bibitjeruk)) user.bibitjeruk = 0;
-        if (!isNumber(user.bibitmangga)) user.bibitmangga = 0;
-        if (!isNumber(user.bibitpisang)) user.bibitpisang = 0;
-        if (!isNumber(user.botol)) user.botol = 0;
-        if (!isNumber(user.bow)) user.bow = 0;
-        if (!isNumber(user.bowdurability)) user.bowdurability = 0;
-        if (!isNumber(user.boxs)) user.boxs = 0;
-        if (!isNumber(user.brick)) user.brick = 0;
-        if (!isNumber(user.brokoli)) user.brokoli = 0;
-        if (!isNumber(user.buaya)) user.buaya = 0;
-        if (!isNumber(user.buntal)) user.buntal = 0;
-        if (!isNumber(user.cat)) user.cat = 0;
-        if (!isNumber(user.catexp)) user.catexp = 0;
-        if (!isNumber(user.catlastfeed)) user.catlastfeed = 0;
-        if (!isNumber(user.centaur)) user.centaur = 0;
-        if (!isNumber(user.centaurexp)) user.centaurexp = 0;
-        if (!isNumber(user.centaurlastclaim)) user.centaurlastclaim = 0;
-        if (!isNumber(user.centaurlastfeed)) user.centaurlastfeed = 0;
-        if (!isNumber(user.clay)) user.clay = 0;
-        if (!isNumber(user.coal)) user.coal = 0;
-        if (!isNumber(user.coin)) user.coin = 0;
-        if (!isNumber(user.common)) user.common = 0;
-        if (!isNumber(user.crystal)) user.crystal = 0;
-        if (!isNumber(user.cumi)) user.cumi = 0;
-        if (!isNumber(user.cupon)) user.cupon = 0;
-        if (!isNumber(user.diamond)) user.diamond = 3;
-        if (!isNumber(user.dog)) user.dog = 0;
-        if (!isNumber(user.dogexp)) user.dogexp = 0;
-        if (!isNumber(user.doglastfeed)) user.doglastfeed = 0;
-        if (!isNumber(user.dory)) user.dory = 0;
-        if (!isNumber(user.dragon)) user.dragon = 0;
-        if (!isNumber(user.dragonexp)) user.dragonexp = 0;
-        if (!isNumber(user.dragonlastfeed)) user.dragonlastfeed = 0;
-        if (!isNumber(user.emas)) user.emas = 0;
-        if (!isNumber(user.emerald)) user.emerald = 0;
-        if (!isNumber(user.enchant)) user.enchant = 0;
-        if (!isNumber(user.esteh)) user.esteh = 0;
-        if (!isNumber(user.exp)) user.exp = 0;
-        if (!isNumber(user.expg)) user.expg = 0;
-        if (!isNumber(user.exphero)) user.exphero = 0;
-        if (!isNumber(user.eleksirb)) user.eleksirb = 0;
-        if (!isNumber(user.emasbatang)) user.emasbatang = 0;
-        if (!isNumber(user.emasbiasa)) user.emasbiasa = 0;
-        if (!isNumber(user.fideos)) user.fideos = 0;
-        if (!isNumber(user.fishingrod)) user.fishingrod = 0;
-        if (!isNumber(user.fishingroddurability)) user.fishingroddurability = 0;
-        if (!isNumber(user.fortress)) user.fortress = 0;
-        if (!isNumber(user.fox)) user.fox = 0;
-        if (!isNumber(user.foxexp)) user.foxexp = 0;
-        if (!isNumber(user.foxlastfeed)) user.foxlastfeed = 0;
-        if (!isNumber(user.fullatm)) user.fullatm = 0;
-        if (!isNumber(user.gadodado)) user.gadodado = 0;
-        if (!isNumber(user.gajah)) user.gajah = 0;
-        if (!isNumber(user.gamemines)) user.gamemines = false;
-        if (!isNumber(user.ganja)) user.ganja = 0;
-        if (!isNumber(user.gardenboxs)) user.gardenboxs = 0;
-        if (!isNumber(user.gems)) user.gems = 0;
-        if (!isNumber(user.glass)) user.glass = 0;
-        if (!isNumber(user.glimit)) user.glimit = 20;
-        if (!isNumber(user.glory)) user.glory = 0;
-        if (!isNumber(user.gold)) user.gold = 0;
-        if (!isNumber(user.griffin)) user.griffin = 0;
-        if (!isNumber(user.griffinexp)) user.griffinexp = 0;
-        if (!isNumber(user.griffinlastclaim)) user.griffinlastclaim = 0;
-        if (!isNumber(user.griffinlastfeed)) user.griffinlastfeed = 0;
-        if (!isNumber(user.gulai)) user.gulai = 0;
-        if (!isNumber(user.gurita)) user.gurita = 0;
-        if (!isNumber(user.harimau)) user.harimau = 0;
-        if (!isNumber(user.haus)) user.haus = 100;
-        if (!isNumber(user.healt)) user.healt = 100;
-        if (!isNumber(user.health)) user.health = 100;
-        if (!isNumber(user.healthmonster)) user.healthmonster = 0;
-        if (!isNumber(user.healtmonster)) user.healtmonster = 0;
-        if (!isNumber(user.hero)) user.hero = 1;
-        if (!isNumber(user.herolastclaim)) user.herolastclaim = 0;
-        if (!isNumber(user.hiu)) user.hiu = 0;
-        if (!isNumber(user.horse)) user.horse = 0;
-        if (!isNumber(user.horseexp)) user.horseexp = 0;
-        if (!isNumber(user.horselastfeed)) user.horselastfeed = 0;
-        if (!isNumber(user.ikan)) user.ikan = 0;
-        if (!isNumber(user.ikanbakar)) user.ikanbakar = 0;
-        if (!isNumber(user.intelligence)) user.intelligence = 0;
-        if (!isNumber(user.iron)) user.iron = 0;
-        if (!isNumber(user.jagung)) user.jagung = 0;
-        if (!isNumber(user.jagungbakar)) user.jagungbakar = 0;
-        if (!isNumber(user.jeruk)) user.jeruk = 0;
-        if (!isNumber(user.joinlimit)) user.joinlimit = 1;
-        if (!isNumber(user.judilast)) user.judilast = 0;
-        if (!isNumber(user.kaleng)) user.kaleng = 0;
-        if (!isNumber(user.kambing)) user.kambing = 0;
-        if (!isNumber(user.kangkung)) user.kangkung = 0;
-        if (!isNumber(user.kapak)) user.kapak = 0;
-        if (!isNumber(user.kardus)) user.kardus = 0;
-        if (!isNumber(user.katana)) user.katana = 0;
-        if (!isNumber(user.katanadurability)) user.katanadurability = 0;
-        if (!isNumber(user.kayu)) user.kayu = 0;
-        if (!isNumber(user.kentang)) user.kentang = 0;
-        if (!isNumber(user.kentanggoreng)) user.kentanggoreng = 0;
-        if (!isNumber(user.kepiting)) user.kepiting = 0;
-        if (!isNumber(user.kepitingbakar)) user.kepitingbakar = 0;
-        if (!isNumber(user.kerbau)) user.kerbau = 0;
-        if (!isNumber(user.kerjadelapan)) user.kerjadelapan = 0;
-        if (!isNumber(user.kerjadelapanbelas)) user.kerjadelapanbelas = 0;
-        if (!isNumber(user.kerjadua)) user.kerjadua = 0;
-        if (!isNumber(user.kerjaduabelas)) user.kerjaduabelas = 0;
-        if (!isNumber(user.kerjaduadelapan)) user.kerjaduadelapan = 0;
-        if (!isNumber(user.kerjaduadua)) user.kerjaduadua = 0;
-        if (!isNumber(user.kerjaduaempat)) user.kerjaduaempat = 0;
-        if (!isNumber(user.kerjaduaenam)) user.kerjaduaenam = 0;
-        if (!isNumber(user.kerjadualima)) user.kerjadualima = 0;
-        if (!isNumber(user.kerjaduapuluh)) user.kerjaduapuluh = 0;
-        if (!isNumber(user.kerjaduasatu)) user.kerjaduasatu = 0;
-        if (!isNumber(user.kerjaduasembilan)) user.kerjaduasembilan = 0;
-        if (!isNumber(user.kerjaduatiga)) user.kerjaduatiga = 0;
-        if (!isNumber(user.kerjaduatujuh)) user.kerjaduatujuh = 0;
-        if (!isNumber(user.kerjaempat)) user.kerjaempat = 0;
-        if (!isNumber(user.kerjaempatbelas)) user.kerjaempatbelas = 0;
-        if (!isNumber(user.kerjaenam)) user.kerjaenam = 0;
-        if (!isNumber(user.kerjaenambelas)) user.kerjaenambelas = 0;
-        if (!isNumber(user.kerjalima)) user.kerjalima = 0;
-        if (!isNumber(user.kerjalimabelas)) user.kerjalimabelas = 0;
-        if (!isNumber(user.kerjasatu)) user.kerjasatu = 0;
-        if (!isNumber(user.kerjasebelas)) user.kerjasebelas = 0;
-        if (!isNumber(user.kerjasembilan)) user.kerjasembilan = 0;
-        if (!isNumber(user.kerjasembilanbelas)) user.kerjasembilanbelas = 0;
-        if (!isNumber(user.kerjasepuluh)) user.kerjasepuluh = 0;
-        if (!isNumber(user.kerjatiga)) user.kerjatiga = 0;
-        if (!isNumber(user.kerjatigabelas)) user.kerjatigabelas = 0;
-        if (!isNumber(user.kerjatigapuluh)) user.kerjatigapuluh = 0;
-        if (!isNumber(user.kerjatujuh)) user.kerjatujuh = 0;
-        if (!isNumber(user.kerjatujuhbelas)) user.kerjatujuhbelas = 0;
-        if (!isNumber(user.korbanngocok)) user.korbanngocok = 0;
-        if (!isNumber(user.kubis)) user.kubis = 0;
-        if (!isNumber(user.kucing)) user.kucing = 0;
-        if (!isNumber(user.kucinglastclaim)) user.kucinglastclaim = 0;
-        if (!isNumber(user.kuda)) user.kuda = 0;
-        if (!isNumber(user.kudalastclaim)) user.kudalastclaim = 0;
-        if (!isNumber(user.kyubi)) user.kyubi = 0;
-        if (!isNumber(user.kyubiexp)) user.kyubiexp = 0;
-        if (!isNumber(user.kyubilastclaim)) user.kyubilastclaim = 0;
-        if (!isNumber(user.kyubilastfeed)) user.kyubilastfeed = 0;
-        if (!isNumber(user.labu)) user.labu = 0;
-        if (!isNumber(user.laper)) user.laper = 100;
-        if (!isNumber(user.lastadventure)) user.lastadventure = 0;
-        if (!isNumber(user.lastbansos)) user.lastbansos = 0;
-        if (!isNumber(user.lastberbru)) user.lastberbru = 0;
-        if (!isNumber(user.lastberkebon)) user.lastberkebon = 0;
-        if (!isNumber(user.lastbunga)) user.lastbunga = 0;
-        if (!isNumber(user.lastbunuhi)) user.lastbunuhi = 0;
-        if (!isNumber(user.lastcoins)) user.lastcoins = 0;
-        if (!isNumber(user.lastclaim)) user.lastclaim = 0;
-        if (!isNumber(user.lastcode)) user.lastcode = 0;
-        if (!isNumber(user.lastcofre)) user.lastcofre = 0;
-        if (!isNumber(user.lastcodereg)) user.lastcodereg = 0;
-        if (!isNumber(user.lastcrusade)) user.lastcrusade = 0;
-        if (!isNumber(user.lastdagang)) user.lastdagang = 0;
-        if (!isNumber(user.lastdiamantes)) user.lastdiamantes = 0;
-        if (!isNumber(user.lastduel)) user.lastduel = 0;
-        if (!isNumber(user.lastdungeon)) user.lastdungeon = 0;
-        if (!isNumber(user.lasteasy)) user.lasteasy = 0;
-        if (!isNumber(user.lastfight)) user.lastfight = 0;
-        if (!isNumber(user.lastfishing)) user.lastfishing = 0;
-        if (!isNumber(user.lastgift)) user.lastgift = 0;
-        if (!isNumber(user.lastgojek)) user.lastgojek = 0;
-        if (!isNumber(user.lastgrab)) user.lastgrab = 0;
-        if (!isNumber(user.lasthourly)) user.lasthourly = 0;
-        if (!isNumber(user.lasthunt)) user.lasthunt = 0;
-        if (!isNumber(user.lastIstigfar)) user.lastIstigfar = 0;
-        if (!isNumber(user.lastjb)) user.lastjb = 0;
-        if (!isNumber(user.lastkill)) user.lastkill = 0;
-        if (!isNumber(user.lastlink)) user.lastlink = 0;
-        if (!isNumber(user.lastlumber)) user.lastlumber = 0;
-        if (!isNumber(user.lastmancingeasy)) user.lastmancingeasy = 0;
-        if (!isNumber(user.lastmancingextreme)) user.lastmancingextreme = 0;
-        if (!isNumber(user.lastmancinghard)) user.lastmancinghard = 0;
-        if (!isNumber(user.lastmancingnormal)) user.lastmancingnormal = 0;
-        if (!isNumber(user.lastmining)) user.lastmining = 0;
-        if (!isNumber(user.lastmisi)) user.lastmisi = 0;
-        if (!isNumber(user.lastmonthly)) user.lastmonthly = 0;
-        if (!isNumber(user.lastmulung)) user.lastmulung = 0;
-        if (!isNumber(user.lastnambang)) user.lastnambang = 0;
-        if (!isNumber(user.lastnebang)) user.lastnebang = 0;
-        if (!isNumber(user.lastngocok)) user.lastngocok = 0;
-        if (!isNumber(user.lastngojek)) user.lastngojek = 0;
-        if (!isNumber(user.lastopen)) user.lastopen = 0;
-        if (!isNumber(user.lastpekerjaan)) user.lastpekerjaan = 0;
-        if (!isNumber(user.lastpago)) user.lastpago = 0;
-        if (!isNumber(user.lastpotionclaim)) user.lastpotionclaim = 0;
-        if (!isNumber(user.lastrampok)) user.lastrampok = 0;
-        if (!isNumber(user.lastramuanclaim)) user.lastramuanclaim = 0;
-        if (!isNumber(user.lastrob)) user.lastrob = 0;
-        if (!isNumber(user.lastroket)) user.lastroket = 0;
-        if (!isNumber(user.lastsda)) user.lastsda = 0;
-        if (!isNumber(user.lastseen)) user.lastseen = 0;
-        if (!isNumber(user.lastSetStatus)) user.lastSetStatus = 0;
-        if (!isNumber(user.lastspam)) user.lastspam = 0;
-        if (!isNumber(user.lastsironclaim)) user.lastsironclaim = 0;
-        if (!isNumber(user.lastsmancingclaim)) user.lastsmancingclaim = 0;
-        if (!isNumber(user.laststringclaim)) user.laststringclaim = 0;
-        if (!isNumber(user.lastswordclaim)) user.lastswordclaim = 0;
-        if (!isNumber(user.lastturu)) user.lastturu = 0;
-        if (!isNumber(user.lastwar)) user.lastwar = 0;
-        if (!isNumber(user.lastwarpet)) user.lastwarpet = 0;
-        if (!isNumber(user.lastweaponclaim)) user.lastweaponclaim = 0;
-        if (!isNumber(user.lastweekly)) user.lastweekly = 0;
-        if (!isNumber(user.lastwork)) user.lastwork = 0;
-        if (!isNumber(user.legendary)) user.legendary = 0;
-        if (!isNumber(user.lele)) user.lele = 0;
-        if (!isNumber(user.leleb)) user.leleb = 0;
-        if (!isNumber(user.lelebakar)) user.lelebakar = 0;
-        if (!isNumber(user.leleg)) user.leleg = 0;
-        if (!isNumber(user.level)) user.level = 0;
-        if (!isNumber(user.limit)) user.limit = 20;
-        if (!isNumber(user.limitjoinfree)) user.limitjoinfree = 1;
-        if (!isNumber(user.lion)) user.lion = 0;
-        if (!isNumber(user.lionexp)) user.lionexp = 0;
-        if (!isNumber(user.lionlastfeed)) user.lionlastfeed = 0;
-        if (!isNumber(user.lobster)) user.lobster = 0;
-        if (!isNumber(user.lumba)) user.lumba = 0;
-        if (!isNumber(user.magicwand)) user.magicwand = 0;
-        if (!isNumber(user.magicwanddurability)) user.magicwanddurability = 0;
-        if (!isNumber(user.makanancentaur)) user.makanancentaur = 0;
-        if (!isNumber(user.makanangriffin)) user.makanangriffin = 0;
-        if (!isNumber(user.makanankyubi)) user.makanankyubi = 0;
-        if (!isNumber(user.makanannaga)) user.makanannaga = 0;
-        if (!isNumber(user.makananpet)) user.makananpet = 0;
-        if (!isNumber(user.makananphonix)) user.makananphonix = 0;
-        if (!isNumber(user.makananserigala)) user.makananserigala = 0;
-        if (!isNumber(user.mana)) user.mana = 0;
-        if (!isNumber(user.mangga)) user.mangga = 0;
-        if (!isNumber(user.money)) user.money = 15;
-        if (!isNumber(user.monyet)) user.monyet = 0;
-        if (!isNumber(user.mythic)) user.mythic = 0;
-        if (!isNumber(user.naga)) user.naga = 0;
-        if (!isNumber(user.nagalastclaim)) user.nagalastclaim = 0;
-        if (!isNumber(user.net)) user.net = 0;
-        if (!isNumber(user.nila)) user.nila = 0;
-        if (!isNumber(user.nilabakar)) user.nilabakar = 0;
-        if (!isNumber(user.note)) user.note = 0;
-        if (!isNumber(user.ojekk)) user.ojekk = 0;
-        if (!isNumber(user.oporayam)) user.oporayam = 0;
-        if (!isNumber(user.orca)) user.orca = 0;
-        if (!isNumber(user.pancing)) user.pancing = 0;
-        if (!isNumber(user.pancingan)) user.pancingan = 1;
-        if (!isNumber(user.panda)) user.panda = 0;
-        if (!isNumber(user.paus)) user.paus = 0;
-        if (!isNumber(user.pausbakar)) user.pausbakar = 0;
-        if (!isNumber(user.pc)) user.pc = 0;
-        if (!isNumber(user.pepesikan)) user.pepesikan = 0;
-        if (!isNumber(user.pertambangan)) user.pertambangan = 0;
-        if (!isNumber(user.pertanian)) user.pertanian = 0;
-        if (!isNumber(user.pet)) user.pet = 0;
-        if (!isNumber(user.petFood)) user.petFood = 0;
-        if (!isNumber(user.phonix)) user.phonix = 0;
-        if (!isNumber(user.phonixexp)) user.phonixexp = 0;
-        if (!isNumber(user.phonixlastclaim)) user.phonixlastclaim = 0;
-        if (!isNumber(user.phonixlastfeed)) user.phonixlastfeed = 0;
-        if (!isNumber(user.pickaxe)) user.pickaxe = 0;
-        if (!isNumber(user.pickaxedurability)) user.pickaxedurability = 0;
-        if (!isNumber(user.pillhero)) user.pillhero = 0;
-        if (!isNumber(user.pisang)) user.pisang = 0;
-        if (!isNumber(user.pointxp)) user.pointxp = 0;
-        if (!isNumber(user.potion)) user.potion = 0;
-        if (!isNumber(user.psenjata)) user.psenjata = 0;
-        if (!isNumber(user.psepick)) user.psepick = 0;
-        if (!isNumber(user.ramuan)) user.ramuan = 0;
-        if (!isNumber(user.ramuancentaurlast)) user.ramuancentaurlast = 0;
-        if (!isNumber(user.ramuangriffinlast)) user.ramuangriffinlast = 0;
-        if (!isNumber(user.ramuanherolast)) user.ramuanherolast = 0;
-        if (!isNumber(user.ramuankucinglast)) user.ramuankucinglast = 0;
-        if (!isNumber(user.ramuankudalast)) user.ramuankudalast = 0;
-        if (!isNumber(user.ramuankyubilast)) user.ramuankyubilast = 0;
-        if (!isNumber(user.ramuannagalast)) user.ramuannagalast = 0;
-        if (!isNumber(user.ramuanphonixlast)) user.ramuanphonixlast = 0;
-        if (!isNumber(user.ramuanrubahlast)) user.ramuanrubahlast = 0;
-        if (!isNumber(user.ramuanserigalalast)) user.ramuanserigalalast = 0;
-        if (!isNumber(user.reglast)) user.reglast = 0;
-        if (!isNumber(user.rendang)) user.rendang = 0;
-        if (!isNumber(user.rhinoceros)) user.rhinoceros = 0;
-        if (!isNumber(user.rhinocerosexp)) user.rhinocerosexp = 0;
-        if (!isNumber(user.rhinoceroslastfeed)) user.rhinoceroslastfeed = 0;
-        if (!isNumber(user.robo)) user.robo = 0;
-        if (!isNumber(user.roboxp)) user.roboxp = 0;
-        if (!isNumber(user.rock)) user.rock = 0;
-        if (!isNumber(user.roket)) user.roket = 0;
-        if (!isNumber(user.roti)) user.roti = 0;
-        if (!isNumber(user.rubah)) user.rubah = 0;
-        if (!isNumber(user.rubahlastclaim)) user.rubahlastclaim = 0;
-        if (!isNumber(user.rumahsakit)) user.rumahsakit = 0;
-        if (!isNumber(user.sampah)) user.sampah = 0;
-        if (!isNumber(user.sand)) user.sand = 0;
-        if (!isNumber(user.sapi)) user.sapi = 0;
-        if (!isNumber(user.sapir)) user.sapir = 0;
-        if (!isNumber(user.seedbayam)) user.seedbayam = 0;
-        if (!isNumber(user.seedbrokoli)) user.seedbrokoli = 0;
-        if (!isNumber(user.seedjagung)) user.seedjagung = 0;
-        if (!isNumber(user.seedkangkung)) user.seedkangkung = 0;
-        if (!isNumber(user.seedkentang)) user.seedkentang = 0;
-        if (!isNumber(user.seedkubis)) user.seedkubis = 0;
-        if (!isNumber(user.seedlabu)) user.seedlabu = 0;
-        if (!isNumber(user.seedtomat)) user.seedtomat = 0;
-        if (!isNumber(user.seedwortel)) user.seedwortel = 0;
-        if (!isNumber(user.serigala)) user.serigala = 0;
-        if (!isNumber(user.serigalalastclaim)) user.serigalalastclaim = 0;
-        if (!isNumber(user.shield)) user.shield = false;
-        if (!isNumber(user.skillexp)) user.skillexp = 0;
-        if (!isNumber(user.snlast)) user.snlast = 0;
-        if (!isNumber(user.soda)) user.soda = 0;
-        if (!isNumber(user.sop)) user.sop = 0;
-        if (!isNumber(user.spammer)) user.spammer = 0;
-        if (!isNumber(user.spinlast)) user.spinlast = 0;
-        if (!isNumber(user.ssapi)) user.ssapi = 0;
-        if (!isNumber(user.stamina)) user.stamina = 100;
-        if (!isNumber(user.steak)) user.steak = 0;
-        if (!isNumber(user.stick)) user.stick = 0;
-        if (!isNumber(user.strength)) user.strength = 0;
-        if (!isNumber(user.string)) user.string = 0;
-        if (!isNumber(user.superior)) user.superior = 0;
-        if (!isNumber(user.suplabu)) user.suplabu = 0;
-        if (!isNumber(user.sushi)) user.sushi = 0;
-        if (!isNumber(user.sword)) user.sword = 0;
-        if (!isNumber(user.sworddurability)) user.sworddurability = 0;
-        if (!isNumber(user.tigame)) user.tigame = 50;
-        if (!isNumber(user.tiketcoin)) user.tiketcoin = 0;
-        if (!isNumber(user.title)) user.title = 0;
-        if (!isNumber(user.tomat)) user.tomat = 0;
-        if (!isNumber(user.tprem)) user.tprem = 0;
-        if (!isNumber(user.trash)) user.trash = 0;
-        if (!isNumber(user.trofi)) user.trofi = 0;
-        if (!isNumber(user.troopcamp)) user.troopcamp = 0;
-        if (!isNumber(user.tumiskangkung)) user.tumiskangkung = 0;
-        if (!isNumber(user.udang)) user.udang = 0;
-        if (!isNumber(user.udangbakar)) user.udangbakar = 0;
-        if (!isNumber(user.umpan)) user.umpan = 0;
-        if (!isNumber(user.uncoommon)) user.uncoommon = 0;
-        if (!isNumber(user.unreglast)) user.unreglast = 0;
-        if (!isNumber(user.upgrader)) user.upgrader = 0;
-        if (!isNumber(user.vodka)) user.vodka = 0;
-        if (!isNumber(user.wallet)) user.wallet = 0;
-        if (!isNumber(user.warn)) user.warn = 0;
-        if (!isNumber(user.weapon)) user.weapon = 0;
-        if (!isNumber(user.weapondurability)) user.weapondurability = 0;
-        if (!isNumber(user.wolf)) user.wolf = 0;
-        if (!isNumber(user.wolfexp)) user.wolfexp = 0;
-        if (!isNumber(user.wolflastfeed)) user.wolflastfeed = 0;
-        if (!isNumber(user.wood)) user.wood = 0;
-        if (!isNumber(user.wortel)) user.wortel = 0;
-        if (!user.lbars) user.lbars = '[▒▒▒▒▒▒▒▒▒]';
-        if (!user.job) user.job = 'Desempleo';
-        if (!user.premium) user.premium = false;
-        if (!user.premium) user.premiumTime = 0;
-        if (!user.wait) user.wait = 0;
-        if (!user.rtrofi) user.rtrofi = 'Bronce';
-      } else {
-        global.db.data.users[m.sender] = {
+        // im gona cook this
+        // why the fuck nobody put the code like this in 3 years??????
+        // credit to mystic or skidy89
+        const dick = {
           afk: -1,
           wait: 0,
           afkReason: '',
@@ -906,24 +474,18 @@ export async function handler(chatUpdate) {
           wortel: 0,
           language: 'es',
           gameglx: {},
-        };
-      }
+        }
+      for (const dicks in dick) {
+        if (user[dicks] === undefined || !user.hasOwnProperty(dicks)) {
+          user[dicks] = dick[dicks] // god pls forgive me
+        }
+      }}
       const akinator = global.db.data.users[m.sender].akinator;
       if (typeof akinator !== 'object') {
         global.db.data.users[m.sender].akinator = {};
       }
       if (akinator) {
-        if (!('sesi' in akinator)) akinator.sesi = false;
-        if (!('server' in akinator)) akinator.server = null;
-        if (!('frontaddr' in akinator)) akinator.frontaddr = null;
-        if (!('session' in akinator)) akinator.session = null;
-        if (!('signature' in akinator)) akinator.signature = null;
-        if (!('question' in akinator)) akinator.question = null;
-        if (!('progression' in akinator)) akinator.progression = null;
-        if (!('step' in akinator)) akinator.step = null;
-        if (!('soal' in akinator)) akinator.soal = null;
-      } else {
-        global.db.data.users[m.sender].akinator = {
+        const akiSettings = {
           sesi: false,
           server: null,
           frontaddr: null,
@@ -934,105 +496,21 @@ export async function handler(chatUpdate) {
           step: null,
           soal: null,
         };
+        for (const aki in akiSettings) {
+          if (akinator[aki] === undefined || !akinator.hasOwnProperty(aki)) {
+            akinator[aki] = akiSettings[aki] ?? {};
+          }
+        }
       }
-      const gameglx = global.db.data.users[m.sender].gameglx
+      let gameglx = global.db.data.users[m.sender].gameglx
       if (typeof gameglx !== 'object') {
-        gameglx = global.db.data.users[m.sender].gameglx = {}
+        global.db.data.users[m.sender].gameglx = {}
       }
       if (gameglx) {
-
-        if (!('status' in gameglx)) gameglx.status = false;
-        if (!('notificacao' in gameglx)) gameglx.notificacao = {};
-        if (!('recebidas' in gameglx.notificacao)) gameglx.notificacao.recebidas = [];
-        // Perfil
-        if (!('perfil' in gameglx)) gameglx.perfil = {};
-        if (!('nome' in gameglx.perfil)) gameglx.perfil.nome = null;
-        if (!('poder' in gameglx.perfil)) gameglx.perfil.poder = 500;
-        if (!('nivel' in gameglx.perfil)) gameglx.perfil.nivel = {};
-        if (!('nome' in gameglx.perfil.nivel)) gameglx.perfil.nivel.nome = 'Iniciante';
-        if (!('id' in gameglx.perfil.nivel)) gameglx.perfil.nivel.id = 0;
-        if (!('proximoNivel' in gameglx.perfil.nivel)) gameglx.perfil.nivel.proximoNivel = 1;
-        if (!('xp' in gameglx.perfil)) gameglx.perfil.xp = 112;
-        if (!('idioma' in gameglx.perfil)) gameglx.perfil.idioma = 'pt-br'; // Definindo padrão 
-        if (!('minerando' in gameglx.perfil)) gameglx.perfil.minerando = false;
-        if (!('id' in gameglx.perfil)) gameglx.perfil.id = null;
-        if (!('username' in gameglx.perfil)) gameglx.perfil.username = null;
-        // Casa
-        if (!('casa' in gameglx.perfil)) gameglx.perfil.casa = {};
-        if (!('id' in gameglx.perfil.casa)) gameglx.perfil.casa.id = null;
-        if (!('idpelonome' in gameglx.perfil.casa)) gameglx.perfil.casa.idpelonome = 'terra';
-        if (!('planeta' in gameglx.perfil.casa)) gameglx.perfil.casa.planeta = null;
-        if (!('colonia' in gameglx.perfil.casa)) gameglx.perfil.casa.colonia = null; // Definir como null em vez de objeto vazio
-        if (gameglx.perfil.casa.colonia === null) gameglx.perfil.casa.colonia = {}; // Verificar se é null antes de definir como objeto vazio
-        if (!('nome' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.nome = null;
-        if (!('id' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.id = 1;
-        if (!('habitante' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.habitante = false;
-
-        // Carteira Dinheiro
-        if (!('carteira' in gameglx.perfil)) gameglx.perfil.carteira = {};
-        if (!('currency' in gameglx.perfil.carteira)) gameglx.perfil.carteira.currency = 'BRL'; // Definindo padrão 
-        if (!('saldo' in gameglx.perfil.carteira)) gameglx.perfil.carteira.saldo = 1500;
-        // localizacao
-        if (!('localizacao' in gameglx.perfil)) gameglx.perfil.localizacao = {};
-        if (!('status' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.status = false;
-        if (!('nomeplaneta' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.nomeplaneta = null;
-        if (!('idpelonome' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.idpelonome = null;
-        if (!('viajando' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.idpelonome = false;
-        if (!('id' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.id = null;
-        //Posição  na casa Colonia
-        if (!('posicao' in gameglx.perfil.casa.colonia)) gameglx.perfil.casa.colonia.posicao = {};
-        if (!('x' in gameglx.perfil.casa.colonia.posicao)) gameglx.perfil.casa.colonia.posicao.x = 0;
-        if (!('y' in gameglx.perfil.casa.colonia.posicao)) gameglx.perfil.casa.colonia.posicao.y = 0;
-        
-        //Posição  em viagens se necessario
-        if (!('posicao' in gameglx.perfil.localizacao)) gameglx.perfil.localizacao.posicao = {};
-        if (!('x' in gameglx.perfil.localizacao.posicao)) gameglx.perfil.localizacao.posicao.x = 0;
-        if (!('y' in gameglx.perfil.localizacao.posicao)) gameglx.perfil.localizacao.posicao.y = 0;
-        // nave
-        if (!('nave' in gameglx.perfil)) gameglx.perfil.nave = {};
-        if (!('nome' in gameglx.perfil.nave)) gameglx.perfil.nave.status = false;
-        if (!('id' in gameglx.perfil.nave)) gameglx.perfil.nave.id = null;
-        if (!('nome' in gameglx.perfil.nave)) gameglx.perfil.nave.nome = null;
-        if (!('velocidade' in gameglx.perfil.nave)) gameglx.perfil.nave.velocidade = null;
-        if (!('poder' in gameglx.perfil.nave)) gameglx.perfil.nave.poder = null;
-        if (!('valor' in gameglx.perfil.nave)) gameglx.perfil.nave.valor = null;
-        // Bolsa
-        if (!('bolsa' in gameglx.perfil)) gameglx.perfil.bolsa = {};
-        if (!('itens' in gameglx.perfil.bolsa)) gameglx.perfil.bolsa.itens = {};
-        if (!('madeira' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.madeira = 1
-        if (!('ferro' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.ferro = 1
-        if (!('diamante' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.diamante = 1
-        if (!('esmeralda' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.esmeralda = 1
-        if (!('carvao' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.carvao = 1
-        if (!('ouro' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.ouro = 1
-        if (!('quartzo' in gameglx.perfil.bolsa.itens)) gameglx.perfil.bolsa.itens.quartzo = 1
-        // Bolsa - naves
-        if (!('naves' in gameglx.perfil.bolsa)) gameglx.perfil.bolsa.naves = {};
-        if (!('compradas' in gameglx.perfil.bolsa.naves)) gameglx.perfil.bolsa.naves.compradas = [];
-        if (!('status' in gameglx.perfil.bolsa.naves)) gameglx.perfil.bolsa.naves.status = false;
-        // Função de ataque 
-        if(!('ataque' in gameglx.perfil)) gameglx.perfil.ataque = null
-        if (gameglx.perfil.ataque === null) gameglx.perfil.ataque = {};
-        if (!('sendoAtacado' in gameglx.perfil.ataque)) gameglx.perfil.ataque.sendoAtacado = {};
-        if (!('status' in gameglx.perfil.ataque.sendoAtacado)) gameglx.perfil.ataque.sendoAtacado.status = false;
-        if (!('atacante' in gameglx.perfil.ataque.sendoAtacado)) gameglx.perfil.ataque.sendoAtacado.atacante = null;
-        if (!('forcaAtaque' in gameglx.perfil.ataque)) gameglx.perfil.ataque.forcaAtaque = {};
-        if (!('ataque' in gameglx.perfil.ataque.forcaAtaque)) gameglx.perfil.ataque.forcaAtaque.ataque = 10;
-        if (!('data' in gameglx.perfil.ataque)) gameglx.perfil.ataque.data = {};
-        if (!('dia' in gameglx.perfil.ataque.data)) gameglx.perfil.ataque.data.dia = 0;
-        if (!('hora' in gameglx.perfil.ataque.data)) gameglx.perfil.ataque.data.hora = 0;
-        if (!('contagem' in gameglx.perfil.ataque.data)) gameglx.perfil.ataque.data.contagem = 0;
-        // Defesa
-        if(!('defesa' in gameglx.perfil)) gameglx.perfil.defesa = {};
-        if(!('forca' in gameglx.perfil.defesa)) gameglx.perfil.defesa.forca = 100;
-        if(!('ataque' in gameglx.perfil.defesa)) gameglx.perfil.defesa.ataque = 40 ;
-
-
-      } else {
-        global.db.data.users[m.sender].gameglx = {
+        const gameGalaxy = { // i want to assign dick instead gameGalaxy
           status: false,
           notificacao: {
-            recebidas:[]
+            recebidas: []
           },
           perfil: {
             xp: 112,
@@ -1059,8 +537,7 @@ export async function handler(chatUpdate) {
                   x: 0,
                   y: 0,
                 }
-              },
-
+              }
             },
             carteira: {
               currency: 'BRL',
@@ -1084,7 +561,6 @@ export async function handler(chatUpdate) {
               velocidade: null,
               poder: null,
               valor: null,
-
             },
             bolsa: {
               itens: {
@@ -1110,16 +586,21 @@ export async function handler(chatUpdate) {
                 status: false,
                 atacante: null,
               },
-              forcaAtaque : {
+              forcaAtaque: {
                 ataque: 10
               }
             },
-            defesa : {
+            defesa: {
               forca: 200,
               ataque: 30
             }
           }
-        };
+        }
+        for (const game in gameGalaxy) {
+          if (gameglx[game] === undefined || !gameglx.hasOwnProperty(game)) {
+            gameglx[game] = gameGalaxy[game] ?? {} // ctrl + v moment 
+          }
+        }
       }
 
 
@@ -1128,33 +609,8 @@ export async function handler(chatUpdate) {
         global.db.data.chats[m.chat] = {};
       }
       if (chat) {
-        if (!('language' in chat)) chat.language = 'es';
-        if (!('isBanned' in chat)) chat.isBanned = false;
-        if (!('welcome' in chat)) chat.welcome = true;
-        if (!('detect' in chat)) chat.detect = true;
-        if (!('detect2' in chat)) chat.detect2 = false;
-        if (!('sWelcome' in chat)) chat.sWelcome = '';
-        if (!('sBye' in chat)) chat.sBye = '';
-        if (!('sPromote' in chat)) chat.sPromote = '';
-        if (!('sDemote' in chat)) chat.sDemote = '';
-        if (!('delete' in chat)) chat.antidelete = false;
-        if (!('modohorny' in chat)) chat.modohorny = false;
-        if (!('autosticker' in chat)) chat.autosticker = false;
-        if (!('audios' in chat)) chat.audios = false;
-        if (!('antiLink' in chat)) chat.antiLink = false;
-        if (!('antiLink2' in chat)) chat.antiLink2 = false;
-        if (!('antiviewonce' in chat)) chat.antiviewonce = false;
-        if (!('antiToxic' in chat)) chat.antiToxic = false;
-        if (!('antiTraba' in chat)) chat.antiTraba = false;
-        if (!('antiArab' in chat)) chat.antiArab = false;
-        if (!('antiArab2' in chat)) chat.antiArab2 = false;
-        if (!('antiporno' in chat)) chat.antiporno = false;
-        if (!('game' in chat)) chat.game = true;
-        if (!('modoadmin' in chat)) chat.modoadmin = false;
-        if (!('simi' in chat)) chat.simi = false;
-        if (!isNumber(chat.expired)) chat.expired = 0;
-      } else {
-        global.db.data.chats[m.chat] = {
+        
+      const chats = { // i want to assign dick instead chats
           isBanned: false,
           welcome: true,
           detect: true,
@@ -1180,23 +636,17 @@ export async function handler(chatUpdate) {
           game: true,
           expired: 0,
           language: 'es',
-        };
+        }
+        for (const chatss in chats) {
+          if (chat[chatss] === undefined || !chat.hasOwnProperty(chatss)) {
+            chat[chatss] = chats[chatss] ?? {}// ctrl + v moment
+          }
+        }
       }
       const settings = global.db.data.settings[this.user.jid];
       if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {};
       if (settings) {
-        if (!('self' in settings)) settings.self = false;
-        if (!('autoread' in settings)) settings.autoread = false;
-        if (!('autoread2' in settings)) settings.autoread2 = false;
-        if (!('restrict' in settings)) settings.restrict = false;
-        if (!('antiCall' in settings)) settings.antiCall = false;
-        if (!('antiPrivate' in settings)) settings.antiPrivate = false;
-        if (!('modejadibot' in settings)) settings.modejadibot = true;
-        if (!('antispam' in settings)) settings.antispam = false;
-        if (!('audios_bot' in settings)) settings.audios_bot = true;
-        if (!('modoia' in settings)) settings.modoia = false;
-      } else {
-        global.db.data.settings[this.user.jid] = {
+       const setttings = { // yk the drill 
           self: false,
           autoread: false,
           autoread2: false,
@@ -1208,13 +658,18 @@ export async function handler(chatUpdate) {
           audios_bot: true,
           modoia: false
         };
+        for (const setting in settings) {
+          if (settings[setting] === undefined || !settings.hasOwnProperty(setting)) {
+            settings[setting] = setttings[setting] ?? {} // ctrl + v moment
+          }
+        }
       }
     } catch (e) {
       console.error(e);
     }
 
-    const idioma = global.db.data.users[m.sender]?.language || 'es';
-    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+    const idioma = global.db.data.users[m.sender]?.language ?? 'es'; // is null? np the operator ?? fix that (i hope)
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.handler.handler
 
     if (opts['nyimak']) {
@@ -1598,7 +1053,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
     }
 
     try {
-      if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this);
+      if (!opts['noprint']) await (await import(`./src/libraries/print.js`)).default(m, this);
     } catch (e) {
       console.log(m, m.quoted, e);
     }
@@ -1617,8 +1072,8 @@ export async function participantsUpdate({ id, participants, action }) {
    * Opção de tradução de idioma
    * 
    ***********************/
-  const idioma = global?.db?.data?.chats[id]?.language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const idioma = global?.db?.data?.chats[id]?.language ?? 'es';
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
 
   const m = mconn
@@ -1644,7 +1099,7 @@ export async function participantsUpdate({ id, participants, action }) {
             const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
             const botTt2 = groupMetadata?.participants?.find((u) => m?.conn?.decodeJid(u.id) == m?.conn?.user?.jid) || {};
             const isBotAdminNn = botTt2?.admin === 'admin' || false;
-            text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m.conn.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
+            text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m?.conn?.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
               (chat.sBye || tradutor.texto2 || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0]);
             if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn && action === 'add') {
               const responseb = await m.conn.groupParticipantsUpdate(id, [user], 'remove');
@@ -1682,8 +1137,8 @@ export async function participantsUpdate({ id, participants, action }) {
  */
 export async function groupsUpdate(groupsUpdate) {
   //console.log(groupsUpdate)
-  const idioma = global.db.data.chats[groupsUpdate[0].id]?.language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const idioma = global.db.data.chats[groupsUpdate[0].id]?.language ?? 'es';
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
 
   if (opts['self']) {
@@ -1725,8 +1180,8 @@ export async function callUpdate(callUpdate) {
 export async function deleteUpdate(message) {
   const datas = global
   const id = message.participant // Obtenga la identificación del usuario, solo dentro de esta función "deleteUpdate"
-  const idioma = datas.db.data.users[id]?.language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const idioma = datas.db.data.users[id]?.language ?? 'es';
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.deleteUpdate
 
 
@@ -1756,8 +1211,8 @@ ${tradutor.texto1[5]}`.trim();
 
 global.dfail = (type, m, conn) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || 'es';
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const idioma = datas.db.data.users[m.sender].language ?? 'es';
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.dfail
 
   const msg = {
@@ -1789,5 +1244,4 @@ watchFile(file, async () => {
       userr.subreloadHandler(false)
     }
   }
-
 });

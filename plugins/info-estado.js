@@ -9,7 +9,7 @@ import { performance } from "perf_hooks";
 const handler = async (m, { conn, usedPrefix }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.info_estado
 
   const _uptime = process.uptime() * 1000;
@@ -33,7 +33,7 @@ const handler = async (m, { conn, usedPrefix }) => {
 
   ${tradutor.texto1[1]} Bruno Sobrino
   ${tradutor.texto1[2]} +5219992095479
-  ${tradutor.texto1[3]} paypal.me/TheShadowBrokers133
+  ${tradutor.texto1[3]} paypal.me/BrunoSob
 
   ${tradutor.texto1[4]} ${rtime}
   ${tradutor.texto1[5]} ${uptime}

@@ -1,13 +1,13 @@
 /* Codigo copiado de GataBot-MD */
 
-import { sticker } from '../lib/sticker.js';
+import { sticker } from '../src/libraries/sticker.js';
 import axios from 'axios';
 
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
     const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.sticker_qc
 
 let text

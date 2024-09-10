@@ -27,7 +27,7 @@ const idioma = 'es'
 const handler = async (m, {conn, text, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.herramientas_chatgptvoz
 
   const sistema1 = tradutor.texto2;
@@ -146,7 +146,7 @@ async function tts(text = 'error', lang = 'es') {
   return new Promise((resolve, reject) => {
     try {
       const tts = gtts(lang);
-      const filePath = join(global.__dirname(import.meta.url), '../tmp', (1 * new Date) + '.wav');
+      const filePath = join(global.__dirname(import.meta.url), '../src/tmp', (1 * new Date) + '.wav');
       tts.save(filePath, text, () => {
         resolve(readFileSync(filePath));
         unlinkSync(filePath);

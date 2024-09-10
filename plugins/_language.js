@@ -8,7 +8,7 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
     try {
         const data = global
         const idioma = data.db.data.users[m.sender].language
-        const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+        const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
         const tradutor = _translate.plugins._language
 
         

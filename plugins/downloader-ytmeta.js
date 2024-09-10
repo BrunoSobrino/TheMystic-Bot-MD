@@ -1,5 +1,5 @@
 /* creditos del código a @darlyn1234 */
-import YTDL from "../lib/ytdll.js";
+import YTDL from "../src/libraries/ytdll.js";
 import axios from "axios";
 import fs from "fs";
 import NodeID3 from "node-id3";
@@ -9,7 +9,7 @@ import ytdl from "ytdl-core";
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_ytmeta
 
   if (!text) return m.reply(tradutor.texto1)

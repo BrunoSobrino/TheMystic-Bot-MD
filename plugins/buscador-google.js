@@ -7,7 +7,7 @@ let handler = async (m, { conn, command, args, usedPrefix }) => {
 
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.buscador_google
 
   const fetch = (await import('node-fetch')).default;

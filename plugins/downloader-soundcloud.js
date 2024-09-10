@@ -1,32 +1,54 @@
-import fetch from 'node-fetch';
+import axios from "axios";
 
-
-
-const handler = async (m, {conn, text}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
-  const tradutor = _translate.plugins.downloader_soundcloud
-
-
+const handler = async (m, { conn, text }) => {
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language;
+  const _translate = JSON.parse(
+    fs.readFileSync(`./src/languages/${idioma}.json`),
+  );
+  const tradutor = _translate.plugins.downloader_soundcloud;
   if (!text) throw `${tradutor.texto1}`;
   try {
-    const res = await fetch(`https://api-v2.soundcloud.com/search/tracks?q=${text}&client_id=iZIs9mchVcX5lhVRyQGGAYlNPVldzAoX`);
-    const json2 = await res.json();
-    let permalinkUrl;
-    if (json2.collection.length > 0) {
-      const randomIndex = Math.floor(Math.random() * json2.collection.length);
-      const randomObject = json2.collection[randomIndex];
-      permalinkUrl = randomObject.permalink_url;
-    } else {
-      permalinkUrl = await json2.collection[0].permalink_url;
-    }
-    const res2 = await fetch(`https://api.akuari.my.id/downloader/scdl?link=${permalinkUrl}`);
-    const json = await res2.json();
-    const shortUrl = await (await fetch(`https://tinyurl.com/api-create.php?url=${json.link}`)).text();
-    const soundcloudt = `${tradutor.texto2[0]} ${json.title}\n┴\n┬\n${tradutor.texto2[1]} ${shortUrl}\n┴\n┬\n${tradutor.texto2[2]}\n├‣ _﹫ᴛʜᴇ ᴍʏsᴛɪᴄ ﹣ ʙᴏᴛ_\n┴`;
-    await conn.sendFile(m.chat, json.thumb, '', soundcloudt, m);
-    await conn.sendMessage(m.chat, {audio: {url: json.link}, fileName: `${json.title}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
+    const searchxd = await axios.get(
+      "https://deliriusapi-official.vercel.app/search/soundcloud",
+      {
+        params: {
+          q: text,
+          limit: 1
+        },
+      },
+    );
+    const shdata = searchxd.data.data[0];
+    const downloadzd = await axios.get(
+      "https://deliriusapi-official.vercel.app/download/soundcloud",
+      {
+        params: {
+          url: shdata.link,
+        },
+      },
+    );
+    const downloadres = downloadzd.data.data;
+    const soundcloudt = `*亗 S O U N D C L O U D*\n
+*› Titulo :* ${downloadres.title || "-"}
+*› Artista:* ${downloadres.author.username || "-"}
+*› Id :* ${downloadres.author.id || "-"}
+*› Followers :* ${downloadres.author.followers_count || "-"}
+*› Likes :* ${downloadres.author.likes_count || "-"}
+*› Publicado :* ${new Date(downloadres.author.created_at).toLocaleDateString() || "-"}
+*› Url :* ${shdata.link || "-"}`;
+    const imgxd =
+      downloadres.imageURL.replace("t500x500", "t1080x1080") ||
+      downloadres.imageURL;
+    await conn.sendFile(m.chat, imgxd, "", soundcloudt, m);
+    await conn.sendMessage(
+      m.chat,
+      {
+        audio: { url: downloadres.url },
+        fileName: `${downloadres.title}.mp3`,
+        mimetype: "audio/mpeg",
+      },
+      { quoted: m },
+    );
   } catch {
     throw `${tradutor.texto3}`;
   }

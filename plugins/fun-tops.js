@@ -6,7 +6,7 @@ const user = (a) => '@' + a.split('@')[0];
 function handler(m, {groupMetadata, command, conn, participants}) {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.fun_tops
 
   const ps = groupMetadata.participants.map((v) => v.id);
@@ -22,7 +22,7 @@ function handler(m, {groupMetadata, command, conn, participants}) {
   const j = ps.getRandom();
 
   if (command == 'topgays') {
-    const vn = './media/gay2.mp3';
+    const vn = './src/assets/audio/01J673A5RN30C5EYPMKE5MR9XQ.mp3';
     const top = `${tradutor.texto1}
     
 *_1.- ${user(a)}_*
@@ -41,7 +41,7 @@ function handler(m, {groupMetadata, command, conn, participants}) {
   }
 
   if (command == 'topotakus') {
-    const vn = './media/otaku.mp3';
+    const vn = './src/assets/audio/01J67441AFAPG1YRQXDQ0VDTZB.mp3';
     const top = `${tradutor.texto2}
     
 *_1.- ${user(a)}_*
@@ -56,7 +56,7 @@ function handler(m, {groupMetadata, command, conn, participants}) {
 *_10.- ${user(j)}_*`;
     m.reply(top, null, {mentions: [a, b, c, d, e, f, g, h, i, j]});
     conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
-    // conn.sendFile(m.chat, vn, 'otaku.mp3', null, m, true, { type: 'audioMessage', ptt: true })
+    // conn.sendFile(m.chat, vn, './src/assets/audio/01J67441AFAPG1YRQXDQ0VDTZB.mp3', null, m, true, { type: 'audioMessage', ptt: true })
   }
 }
 handler.help = handler.command = ['topgays', 'topotakus'];

@@ -1,0 +1,209 @@
+{
+    "user_cadastrado": {
+        "lista": [],
+        "username": []
+    },
+    "repositorio": {
+        "atualizado": []
+    },
+    "notificacao": {
+        "status": false,
+        "msg": [
+            "*NOTIFICACIÓN DE CAMBIOS*\n\n1) Correcciones en el comando glx viajar\n\n2) Se creó un proceso de Notificación para usuarios del juego\n\n3) Corrección en el archivo Template, para nuevas funciones"
+        ]
+    },
+    "planetas": {
+        "terra": {
+            "idpelonome": "terra",
+            "nomeplaneta": "🌎 Terra",
+            "imgPerfil": "./src/assets/glx/terra.jpg",
+            "id": null,
+            "poder": 11000,
+            "habitantes": [],
+            "posicaoOcupadas": [],
+            "colonias": {
+                "colonia1": {
+                    "id": 1,
+                    "nome": "Colonia Capital",
+                    "posicaoOcupadas": [],
+                    "habitantes": [],
+                    "visitantes": [],
+                    "localizacao": {
+                        "x": 700,
+                        "y": 190
+                    }
+                },
+                "colonia2": {
+                    "id": 2,
+                    "nome": "Colonia Capital 222",
+                    "posicaoOcupadas": [],
+                    "habitantes": [],
+                    "visitantes": [],
+                    "localizacao": {
+                        "x": 210,
+                        "y": 130
+                    }
+                },
+                "colonia3": {
+                    "id": 2,
+                    "nome": "Colonia Capital 3",
+                    "posicaoOcupadas": [],
+                    "habitantes": [],
+                    "visitantes": [],
+                    "localizacao": {
+                        "x": 580,
+                        "y": 380
+                    }
+                }
+            }
+        },
+        "megatron": {
+            "idpelonome": "megatron",
+            "nomeplaneta": "🌗 Megatron ",
+            "imgPerfil": "./src/glx/megatron.jpg",
+            "id": null,
+            "poder": 13000,
+            "habitantes": [],
+            "posicaoOcupadas": [],
+            "colonias": {
+                "colonia1": {
+                    "id": 1,
+                    "nome": "Colonia Capital",
+                    "posicaoOcupadas": [],
+                    "habitantes": [],
+                    "visitantes": [],
+                    "localizacao": {
+                        "x": 700,
+                        "y": 190
+                    }
+                }
+            }
+        }
+    },
+    "naves": {
+        "n1": {
+            "id": "n1",
+            "nome": "N1 - Homuy",
+            "velocidade": 10,
+            "xp": 298,
+            "poder": 1000,
+            "valor": 1000
+        },
+        "n2": {
+            "id": "n2",
+            "nome": "N2 - Hercules",
+            "velocidade": 23,
+            "xp": 360,
+            "poder": 1856,
+            "valor": 2321
+        },
+        "n3": {
+            "id": "n3",
+            "nome": "N3 - Flexx",
+            "velocidade": 10,
+            "xp": 600,
+            "poder": 1856,
+            "valor": 1900
+        }
+    },
+    "itens": {
+        "mineracao": {
+            "madeira": {
+                "tempoMineracao": 11000,
+                "quantidadeMinerado": 4,
+                "valorVenda": 7.2,
+                "poder": 5
+            },
+            "ferro": {
+                "tempoMineracao": 13000,
+                "quantidadeMinerado": 2,
+                "valorVenda": 9.78,
+                "poder": 6
+            },
+            "diamante": {
+                "tempoMineracao": 17000,
+                "quantidadeMinerado": 1,
+                "valorVenda": 15.67,
+                "poder": 8
+            },
+            "esmeralda": {
+                "tempoMineracao": 19000,
+                "quantidadeMinerado": 2,
+                "valorVenda": 14.5,
+                "poder": 10
+            },
+            "carvao": {
+                "tempoMineracao": 10000,
+                "quantidadeMinerado": 6,
+                "valorVenda": 5.56,
+                "poder": 4
+            },
+            "ouro": {
+                "tempoMineracao": 19000,
+                "quantidadeMinerado": 1,
+                "valorVenda": 17.9,
+                "poder": 14
+            },
+            "quartzo": {
+                "tempoMineracao": 15000,
+                "quantidadeMinerado": 1,
+                "valorVenda": 14.32,
+                "poder": 14
+            }
+        }
+    },
+    "api": {
+        "niveis": {
+            "nivel1": {
+                "id": 1,
+                "nome": "Recruta Espacial",
+                "totalXp": 1000
+            },
+            "nivel2": {
+                "id": 2,
+                "nome": "Explorador Galáctico",
+                "totalXp": 2000
+            },
+            "nivel3": {
+                "id": 3,
+                "nome": "Piloto Estelar",
+                "totalXp": 4000
+            },
+            "nivel4": {
+                "id": 4,
+                "nome": "Comandante Intergaláctico",
+                "totalXp": 7659
+            },
+            "nivel5": {
+                "id": 5,
+                "nome": "Herói dos Planetas",
+                "totalXp": 13569
+            },
+            "nivel6": {
+                "id": 6,
+                "nome": "Guardião da Galáxia",
+                "totalXp": 25005
+            },
+            "nivel7": {
+                "id": 7,
+                "nome": "Mestre dos Cosmos",
+                "totalXp": 29000
+            },
+            "nivel8": {
+                "id": 8,
+                "nome": "Conquistador do Universo",
+                "totalXp": 45091
+            },
+            "nivel9": {
+                "id": 9,
+                "nome": "Lendário Viajante Estelar",
+                "totalXp": 52012
+            },
+            "nivel10": {
+                "id": 10,
+                "nome": "Imperador Galáctico",
+                "totalXp": 70299
+            }
+        }
+    }
+}

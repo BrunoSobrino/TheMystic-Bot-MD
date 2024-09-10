@@ -51,11 +51,15 @@
   - [Comunidades de Ayuda](#guía-de-uso)
   - [Colaboradores](#colaboradores)
   - [Agradecimientos](#agradecimientos)
+  - [Desarollador Principal](#desarollador-principal)
 
 # Avisos Importantes
 
 > [!IMPORTANT]\
 > Este proyecto **no está afiliado de ninguna manera** con `WhatsApp`, `Inc. WhatsApp` es una marca registrada de `WhatsApp LLC`, y este bot es un **desarrollo independiente** que **no tiene ninguna relación oficial con la compañía**.
+
+> [!IMPORTANT]\
+> **No** se asegura que este **proyecto siga funcionando al 100% debido** a cuestiones de tiempo personales de @BrunoSobrino, por lo cual **el proyecto esta en manos de colaboradores** y usuarios que deseen aportar actualizaciones.
 
 > [!WARNING]\
 > **Este proyecto no ofrece soporte oficial para su uso en Termux.** Termux es una aplicación de terminal para Android y, aunque puede ser utilizada para ejecutar diversos programas, **este proyecto no está diseñado ni probado específicamente para funcionar en Termux**. Por lo tanto, **no garantizamos compatibilidad ni soporte técnico en este entorno**.
@@ -82,7 +86,7 @@
 
 </details>
 
-## Despliegue en BoxMine World
+## Despliegue en BoxMineWorld
 
 <a href="https://boxmineworld.com">
   <img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/>
@@ -140,4 +144,10 @@ Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. 
 
 <a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device">
   <img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/>
+</a>
+
+## Desarollador Principal
+
+<a href="https://github.com/BrunoSobrino">
+  <img src="https://i.ibb.co/Qn1W6cP/image.png" width="180px"/>
 </a>

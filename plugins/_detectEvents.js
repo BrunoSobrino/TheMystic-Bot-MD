@@ -14,7 +14,7 @@ import fetch from 'node-fetch';
 export async function before(m, {conn, participants}) {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins._detectevents
 
   if (!m.messageStubType || !m.isGroup) return !0;

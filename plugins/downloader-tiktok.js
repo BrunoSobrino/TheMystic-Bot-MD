@@ -1,4 +1,3 @@
-import fg from 'api-dylux';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import {generateWAMessageFromContent} from "baileys";
@@ -16,7 +15,7 @@ import('@xct007/frieren-scraper')
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.descargas_tiktok
 
 
@@ -47,12 +46,6 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
       const desc2 = `${tradutor.texto6[0]} _${usedPrefix}tomp3_ ${tradutor.texto6[1]}`;
       await conn.sendMessage(m.chat, {video: {url: tTiktok.video}, caption: desc2}, {quoted: m});
     } catch (e2) {
-      try {
-        const p = await fg.tiktok(args[0]);
-        // let te = `*𝚄𝚂𝙴𝚁𝙽𝙰𝙼𝙴:* ${p.author || 'Indefinido'}`
-        const te = `${tradutor.texto7[0]} _${usedPrefix}tomp3_ ${tradutor.texto7[1]}`;
-        await conn.sendMessage(m.chat, {video: {url: p.nowm}, caption: te}, {quoted: m});
-      } catch (e3) {
         try {
           const {author: {nickname}, video, description} = await tiktokdl(args[0]);
           const url = video.no_watermark2 || video.no_watermark || 'https://tikcdn.net' + video.no_watermark_raw || video.no_watermark_hd;
@@ -61,7 +54,6 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
           await conn.sendMessage(m.chat, {video: {url: url}, caption: cap}, {quoted: m});
         } catch {
           throw `${tradutor.texto9}`;
-          }
         }
       }
     }

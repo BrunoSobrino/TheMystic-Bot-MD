@@ -1,6 +1,6 @@
 const handler = async (m, { conn, text, usedPrefix, command }) => {
   const idioma = global.db.data.users[m.sender].language;
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.downloader_imagen;
 
   if (!text) return m.reply(`${tradutor.texto1} ${usedPrefix + command} Minecraft*`);

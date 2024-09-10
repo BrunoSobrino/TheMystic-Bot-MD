@@ -1,4 +1,4 @@
-import { sticker } from "../lib/sticker.js";
+import { sticker } from "../src/libraries/sticker.js";
 import axios from "axios";
 const emj = /^[\p{Emoji}\u200d]+$/u;
 

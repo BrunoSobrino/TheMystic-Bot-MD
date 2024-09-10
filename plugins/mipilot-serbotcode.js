@@ -4,7 +4,7 @@ import fs from "fs"
 async function handler(m, {usedPrefix}) {
     const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.mipilot_serbotcode
 
     const user = m.sender.split("@")[0]

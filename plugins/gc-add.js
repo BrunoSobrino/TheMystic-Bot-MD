@@ -5,7 +5,7 @@ const {getBinaryNodeChild, getBinaryNodeChildren} = (await import("baileys")).de
 const handler = async (m, {conn, text, participants, args}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_add
 
   if (!global.db.data.settings[conn.user.jid].restrict) throw tradutor.texto1;

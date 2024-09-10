@@ -7,7 +7,7 @@ const poin_bot = 200;
 const handler = async (m, { conn, usedPrefix, text }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.game_suitpvp
 
   conn.suit = conn.suit ? conn.suit : {};
