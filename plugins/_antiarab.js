@@ -5,6 +5,7 @@ const handler = (m) => m;
 handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwner }) {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language ?? 'es'
+  // todo: sometimes this trows undefined.json ill fix
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
 
   const tradutor = _translate.plugins._antiarab
