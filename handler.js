@@ -62,9 +62,6 @@ export async function handler(chatUpdate) {
       }
 
       /* ------------------------------------------------*/
-      if (global.db.data.users[m.sender].language === undefined) {
-        global.db.data.users[m.sender].language = 'es';
-      }
       if (typeof user !== 'object') {
         global.db.data.users[m.sender] = {};
       }
