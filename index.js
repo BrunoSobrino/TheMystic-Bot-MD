@@ -1,27 +1,29 @@
-console.log('[ ℹ️ ] Iniciando...');
-import {join, dirname} from 'path';
-import {createRequire} from 'module';
-import {fileURLToPath} from 'url';
-import {setupMaster, fork} from 'cluster';
+import { join, dirname } from 'path';
+import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
+import { setupMaster, fork } from 'cluster';
 import cfonts from 'cfonts';
-import {createInterface} from 'readline';
-import yargs from 'yargs';
 import readline from 'readline';
+import yargs from 'yargs';
 import chalk from 'chalk'; 
-const {PHONENUMBER_MCC} = await import("baileys");
 import fs from 'fs'; 
 import './config.js';
+
+const { PHONENUMBER_MCC } = await import('baileys');
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
-const {say} = cfonts;
+const { say } = cfonts;
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 let isRunning = false;
+
 const question = (texto) => new Promise((resolver) => rl.question(texto, resolver));
+
+console.log(chalk.yellow.bold('—◉ㅤIniciando sistema...'));
 
 function verificarOCrearCarpetaAuth() {
   const authPath = join(__dirname, global.authFile);
   if (!fs.existsSync(authPath)) {
-    fs.mkdirSync(authPath, { recursive: true }); 
+    fs.mkdirSync(authPath, { recursive: true });
   }
 }
 
@@ -58,27 +60,30 @@ async function start(file) {
     align: 'center',
     gradient: ['red', 'magenta'],
   });
+
   say(`Bot creado por Bruno Sobrino`, {
     font: 'console',
     align: 'center',
     gradient: ['red', 'magenta'],
   });
 
-   verificarOCrearCarpetaAuth();
+  verificarOCrearCarpetaAuth();
+
   if (verificarCredsJson()) {
     const args = [join(__dirname, file), ...process.argv.slice(2)];
     setupMaster({ exec: args[0], args: args.slice(1) });
     const p = fork();
-    return;  
+    return;
   }
 
-  const opcion = await question('[ ℹ️ ] Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n---> ');
+  const opcion = await question(chalk.yellowBright.bold('—◉ㅤSeleccione una opción (solo el numero):\n') + chalk.white.bold('1. Con código QR\n2. Con código de texto de 8 dígitos\n—> '));
+
   let numeroTelefono = '';
   if (opcion === '2') {
-    const phoneNumber = await question(chalk.bgBlack(chalk.bold.yellowBright('Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479\n')));
+    const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤEscriba su número de WhatsApp:\n') + chalk.white.bold('◉ㅤEjemplo: +5219992095479\n'));
     numeroTelefono = formatearNumeroTelefono(phoneNumber);
     if (!esNumeroValido(numeroTelefono)) {
-      console.log(chalk.bgBlack(chalk.bold.redBright("Número inválido. Comience con el código de país de su número de WhatsApp.\nEjemplo: +5219992095479\n")));
+      console.log(chalk.bgRed(chalk.white.bold('[ ERROR ] Número inválido. Asegúrese de haber escrito su numero en formato internacional y haber comenzado con el código de país.\n—◉ㅤEjemplo:\n◉ +5219992095479\n')));
       process.exit(0);
     }
     process.argv.push(numeroTelefono);
@@ -96,7 +101,7 @@ async function start(file) {
   const p = fork();
 
   p.on('message', (data) => {
-    console.log('[RECIBIDO]', data);
+    console.log(chalk.green.bold('—◉ㅤRECIBIDO:'), data);
     switch (data) {
       case 'reset':
         p.process.kill();
@@ -111,7 +116,7 @@ async function start(file) {
 
   p.on('exit', (_, code) => {
     isRunning = false;
-    console.error('[ ℹ️ ] Ocurrió un error inesperado:', code);
+    console.error(chalk.red.bold('[ ERROR ] Ocurrió un error inesperado:'), code);
     p.process.kill();
     isRunning = false;
     start.apply(this, arguments);
