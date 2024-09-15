@@ -3,7 +3,7 @@ const {generateWAMessageFromContent, prepareWAMessageMedia, proto} = (await impo
 import fetch from 'node-fetch';
 const {getBinaryNodeChild, getBinaryNodeChildren} = (await import("baileys")).default;
 const handler = async (m, {conn, text, participants, args}) => {
-  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje ?? 'es'
+  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje 
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_add
 

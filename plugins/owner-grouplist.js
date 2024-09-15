@@ -16,7 +16,7 @@ try {
     const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.jid) || {};
     const isBotAdmin = bot?.admin || false;
     const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.jid);
-    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1] ;
+    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;
     txt += `${tradutor.texto2[0]} ${i + 1}
     ${tradutor.texto2[1]} ${await conn.getName(jid)}
@@ -37,7 +37,7 @@ try {
     const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.jid) || {};
     const isBotAdmin = bot?.admin || false;
     const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.jid);
-    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1] ;
+    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;    
     txt += `${tradutor.texto2[0]} ${i + 1}
     ${tradutor.texto2[1]} ${await conn.getName(jid)}

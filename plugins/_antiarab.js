@@ -4,7 +4,7 @@
 const handler = (m) => m;
 handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwner }) {
   const datas = global
-  let idioma = datas.db.data.users[m.sender].language ?? 'es'
+  let idioma = datas.db.data.users[m.sender].language 
   // todo: sometimes this trows undefined.json ill fix
   if (idioma === undefined || idioma === null) {
     idioma = 'es'
