@@ -18,13 +18,13 @@ export async function before(m, {conn, isAdmin, isBotAdmin}) {
   const user = `@${m.sender.split`@`[0]}`;
   const isGroupLink = linkRegex.exec(m.text);
   const grupo = `https://chat.whatsapp.com`;
-  if (isAdmin && chat.antiLink && m.text.includes(grupo)) return m.reply(tradutor.texto1);
+  if (isAdmin && chat.antiLink && m.text.includes(grupo)) return m.reply(tradutor.texto1.replace('@user', '@' + user.split('@')[0]));
   if (chat.antiLink && isGroupLink && !isAdmin) {
     if (isBotAdmin) {
       const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`;
       if (m.text.includes(linkThisGroup)) return !0;
     }
-    await this.sendMessage(m.chat, {text: tradutor.texto2, mentions: [m.sender]}, {quoted: m});
+    await this.sendMessage(m.chat, {text: tradutor.texto2.replace('@user', '@' + user.split('@')[0]), mentions: [m.sender]}, {quoted: m});
     if (!isBotAdmin) return m.reply(tradutor.texto3);
     if (isBotAdmin && bot.restrict) {
       await conn.sendMessage(m.chat, {delete: {remoteJid: m.chat, fromMe: false, id: bang, participant: delet}});
