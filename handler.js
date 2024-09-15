@@ -1179,8 +1179,8 @@ export async function callUpdate(callUpdate) {
 
 export async function deleteUpdate(message) {
   const datas = global
-  const id = message.participant // Obtenga la identificación del usuario, solo dentro de esta función "deleteUpdate"
-  const idioma = datas.db.data.users[id]?.language;
+  const id = message?.participant 
+  const idioma = datas.db.data.users[id]?.language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.deleteUpdate
 
