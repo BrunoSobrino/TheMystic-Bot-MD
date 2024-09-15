@@ -13,6 +13,8 @@ global.authFile = `MysticSession`;
 // Error de m.isBaileys marcado como false fix temporal
 global.isBaileysFail = false
 
+global.defaultLenguaje = 'es';
+
 global.owner = [
   ['5219992095479', '👑 Mystic - Creador 👑', true],
   ['51940617554', '💫 Mystic - Collaborator 2 💫', true],
