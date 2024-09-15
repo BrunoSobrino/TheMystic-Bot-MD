@@ -3,8 +3,7 @@
   
 const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
 export async function before(m, {conn, isAdmin, isBotAdmin}) {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = global.db.data.users[m.sender].language ?? 'es'
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins._antilink
 
