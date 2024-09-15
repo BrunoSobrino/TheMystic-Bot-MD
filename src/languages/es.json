@@ -13,12 +13,12 @@
             "texto1": "*< ANTI-LINK />*_\n\n*[ ℹ️ ] El antilink está habilitado, pero el participante que envió el enlace es un administrador.*",
             "texto2": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] El participante @user envió un enlace de un grupo de WhatsApp, por lo que será eliminado.*",
             "texto3": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Para que el anti-link funcione correctamente es necesario que el bot sea administrador del grupo.*",
-            "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Esta función está desactivada debido a que la función* _restrict_ *está habilitada.*"
+            "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Esta función está desactivada debido a que la función* _restrict_ *está deshabilitada.*"
         },
         "_antilink2": {
             "texto1": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] El participante @user envió un enlace de un grupo de WhatsApp, por lo que será eliminado.*",
             "texto2": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Para que el anti-link funcione correctamente es necesario que el bot sea administrador del grupo.*",
-            "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Esta función está desactivada debido a que la función* _restrict_ *está habilitada.*"
+            "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Esta función está desactivada debido a que la función* _restrict_ *está deshabilitada.*"
         },
         "_antiprivado": {
             "texto1": "_*< ANTI-PRIVADO />*_\n\n*[ ℹ️ ] La función antiprivado está habilitada, por lo tanto serás bloqueado.*"
