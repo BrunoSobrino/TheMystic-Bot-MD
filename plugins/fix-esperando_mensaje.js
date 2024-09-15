@@ -5,7 +5,7 @@ import path from 'path';
 
 const handler = async (m, { conn, usedPrefix }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.fix_esperando_mensage
 

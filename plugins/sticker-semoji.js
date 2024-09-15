@@ -4,7 +4,7 @@ import fs from "fs";
 
 const handler = async (m, { usedPrefix, conn, args, text, command }) => {
   const datas = global;
-  const idioma = datas.db.data.users[m.sender].language;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(
     fs.readFileSync(`./src/languages/${idioma}.json`),
   );

@@ -3,7 +3,7 @@ import {toDataURL} from 'qrcode';
 
 const handler = async (m, {text, conn}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.herramientas_qrcode
 

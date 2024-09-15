@@ -9,7 +9,7 @@ import {randomBytes} from 'crypto';
 const link = /chat.whatsapp.com/;
 const handler = async (m, {conn, text, groupMetadata}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.owner_chatgp
 

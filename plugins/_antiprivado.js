@@ -2,7 +2,7 @@
 
 export async function before(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner}) {
     const datas = global
-    const idioma = datas.db.data.users[m.sender].language || 'es'
+    const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje || 'es'
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.plugins._antiprivado
 

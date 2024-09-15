@@ -3,7 +3,7 @@ global.math = global.math ? global.math : {};
 
 const handler = async (m, { conn }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.juegos_matematicas_respuestas
 

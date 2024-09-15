@@ -3,7 +3,7 @@ const confirmation = {};
 
 async function handler(m, { conn, args, usedPrefix, command }) {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_transfer
 
@@ -37,7 +37,7 @@ ${tradutor.texto6[4]}`.trim();
 
 handler.before = async (m) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_transfer
   
