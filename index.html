@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hispanic Galaxy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="web/favicon.ico">
+    <link rel="stylesheet" href="web/estilo.css"> <!-- Para Cambiar el Estilo/Tema facilmente -->
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4"> <!-- Para Cambiar el video de fondo, debe ser enlace directo al video. -->
+        Error con Video
+    </video>
+
+    <div class="content" id="content">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <script>
+        async function loadContent(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
+                const htmlContent = await response.text();
+                document.getElementById('content').innerHTML = htmlContent;
+
+                // Este es la seccion de Disqus, se puede cambiar a uno personalizado.
+                const disqusDiv = document.createElement('div');
+                disqusDiv.id = 'disqus_thread';
+                document.getElementById('content').appendChild(disqusDiv);
+
+                var disqus_config = function () {
+                    this.page.url = window.location.href; 
+                    this.page.identifier = document.title;
+                };
+
+                (function() {  
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://amigos-steam.disqus.com/embed.js'; 
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                })();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
+            }
+        }
+
+        function getLocalizedUrl(url) {
+            const userLang = navigator.language || navigator.userLanguage;
+
+            // Identificar el sufijo de idioma
+            if (userLang.startsWith('es')) {
+                return url + 'es.html';
+            } else if (userLang.startsWith('pt')) {
+                return url + 'pt.html';
+            } else if (userLang.startsWith('fr')) {
+                return url + 'fr.html';
+            } else if (userLang.startsWith('ru')) {
+                return url + 'ru.html';
+            } else if (userLang.startsWith('ar')) {
+                return url + 'ar.html';
+            } else if (userLang.startsWith('hi')) {
+                return url + 'hi.html';
+            } else {
+                return url + 'ingles.html';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const userLang = navigator.language || navigator.userLanguage;
+            let htmlFile = 'web/ingles.html'; 
+
+            if (userLang.startsWith('es')) {
+                htmlFile = 'web/es.html'; 
+            } else if (userLang.startsWith('pt')) {
+                htmlFile = 'web/pt.html'; 
+            } else if (userLang.startsWith('fr')) {
+                htmlFile = 'web/fr.html'; 
+            } else if (userLang.startsWith('ru')) {
+                htmlFile = 'web/ru.html'; 
+            } else if (userLang.startsWith('ar')) {
+                htmlFile = 'web/ar.html'; 
+            } else if (userLang.startsWith('hi')) {
+                htmlFile = 'web/hi.html'; 
+            }
+
+            loadContent(htmlFile);
+        });
+
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+
+            if (target.tagName === 'A') {
+                let href = target.getAttribute('href');
+
+                // Ir arriba de la pagina al seleccionar un enlace interno
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
+                    event.preventDefault(); 
+
+                    if (!href.match(/(ingles|es|pt|fr|ru|ar|hi)\.html$/)) {
+                        href = getLocalizedUrl(href); 
+                    }
+
+                    loadContent(href); 
+                } else if (href.startsWith('http://') || href.startsWith('https://')) {
+                    event.preventDefault(); 
+                    href = getLocalizedUrl(href); 
+                    
+                  // 300 es tiempo ajustable.
+                    setTimeout(() => {
+                        window.location.href = href; 
+                    }, 300); 
+                }
+            }
+        });
+
+        window.onpopstate = function() {
+            location.reload(); // Recarga la página al dar atras, ya que no logre hacer funcionar una navegacion consistente hacia atras.
+        };
+    </script>
+
+    <!-- Este es el Widget de Discord, se puede personalizar para tu Server -->
+    <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+        new Crate({
+            server: '1278571215635877908', // Basu
+            channel: '1280976262504124508' // #basurero-sexta-feira
+        })
+    </script>
+
+    <noscript> JavaScript OFF. Se Requiere JS Encendido para poder Visualizar Esto. En caso de no poder Verlo ve al Repositorio.</noscript>
+</body>
+</html>
