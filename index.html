@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hispanic Galaxy</title>
+    <title>🔮TheMysticBot🔮</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
     <link rel="stylesheet" href="web/estilo.css"> <!-- Para Cambiar el Estilo/Tema facilmente -->
@@ -51,7 +51,7 @@
         function getLocalizedUrl(url) {
             const userLang = navigator.language || navigator.userLanguage;
 
-            // Identificar el sufijo de idioma
+            // Identificar el sufijo de idioma, se pueden agregar mas.
             if (userLang.startsWith('es')) {
                 return url + 'es.html';
             } else if (userLang.startsWith('pt')) {
@@ -93,10 +93,10 @@
         document.addEventListener('click', function(event) {
             const target = event.target;
 
-            if (target.tagName === 'A') {
-                let href = target.getAttribute('href');
+            if (target.tagName === 'A' || target.tagName === 'IMG') {  
+                let href = target.closest('a').getAttribute('href'); 
 
-                // Ir arriba de la pagina al seleccionar un enlace interno
+                // Ir arriba de la pagina
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
