@@ -1,110 +1,83 @@
+ <h1>Guía de Instalación Termux</h1>
+    
+    <img src="https://github.com/weskerty/TheMysticMOD/assets/82781997/ffc6bf43-938e-4349-90fe-638c01bb1799" alt="Imagen de guía" style="max-width: 100%; height: auto;">
 
-![image](https://github.com/weskerty/TheMysticMOD/assets/82781997/ffc6bf43-938e-4349-90fe-638c01bb1799)
+    <h2>⬇️ Descargar Termux</h2>
+    <p>Descarga la versión compatible con tu teléfono de aquí: <a href="https://github.com/termux/termux-app/releases">Termux Github</a></p>
+    <p>Suele decir <code>termux-app_vxxx-+apt-android-7-github-debug_universal.apk</code>. Android 7 se refiere a que funciona con Android 7 y superior. Hay otra versión para Android 7 e inferior llamada Android5. También puedes usar <a href="https://github.com/KitsunedFox/termux-monet">Termux Monect</a>.</p>
+    
+    <div class="warning">
+        <strong>¡CUIDADO!</strong>
+        JAMÁS INSTALES TERMUX DESDE GOOGLE PLAY, TIENE DEMASIADAS INCOMPATIBILIDADES Y NO FUNCIONARA.
+    </div>
 
-## ⬇️ Descargar Termux
-Descaga la version compatible con tu Telefono de Aqui: [Termux Github](https://github.com/termux/termux-app/releases)
+    <h2>⬇️ Instalar Requerimientos</h2>
+    <p>Lamentablemente, Termux no es compatible con algunos módulos de nodejs que requiere el bot, así que instalaremos una instancia Linux Debian con estos comandos. Debes entrar en Termux y pegar cada línea.</p>
+    <pre><code> pkg update </code></pre>
+    <pre><code> pkg upgrade </code></pre>
+    <pre><code>pkg install proot-distro -y    </code></pre>
+    <p>Luego:</p>
+    <pre><code>proot-distro install debian</code></pre>
+    <p>Espera un rato dependiendo de la velocidad de tu internet...</p>
 
-Suele decir ""termux-app_vxxx-+apt-android-7-github-debug_universal.apk"" 
-Android 7 se refiere a que funciona con Android 7 y Superior, hay otra version para Android 7 e Inferior llamado Android5. Tambien puedes usar [Termux Monect](https://github.com/KitsunedFox/termux-monet) 
-> [!CAUTION]
-> JAMAS INSTALES TERMUX DE GOOGLE PLAY, TIENE DEMASIADAS INCOMPATIBILIDADES.
+    <h2>🖥️ Iniciar Debian</h2>
+    <pre><code>proot-distro login debian</code></pre>
 
-## ⬇️ Instalar Requerimientos
-Lamentablemente Termux no es compatible con algunos modulos de nodejs que requiere el bot, asi que Instalaremos una Instancia Linux Debian con Estos comandos:
-Deberas entrar en Termux y Pegar cada Linea.
+    <h2>🐧 Ahora puedes instalar el bot normalmente con los mismos pasos que Linux Debian y derivados.</h2>
 
-```sh
-pkg install proot-distro -y
-```
-Luego:
+    <pre><code>apt update
+apt install git curl wget ffmpeg imagemagick -y</code></pre>
 
-```sh
-proot-distro install debian
-```
-Esperas un Rato dependiendo de la velocidad de tu internet...
-
-## 🖥️ Iniciar Debian
-
-```sh
-proot-distro login debian
-```
-
-## 🐧 Ahora puedes Instalar el Bot normalmente con los mismos pasos que Linux Debian y Derivados.
-
-
-```sh
-apt update
-apt install git curl wget ffmpeg imagemagick -y
-```
-
-```sh
-curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+    <pre><code>curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
 bash nodesource_setup.sh
-apt-get install -y nodejs
-```
+apt-get install -y nodejs</code></pre>
 
-```sh
-git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git mystic
+    <pre><code>git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git mystic
 cd mystic
-npm install
-```
+npm install</code></pre>
 
-## ⚙️Preferencias del Bot
-Debes ajustar el `config.js` para agregar el numero del bot, tus administradores del bot, el pais de la fecha y clima y el nombre del paquete de stickers etc.
-Desde Termux es `nano config.js` Editas lo que necesites, para guardar es Ctrl+O luego Enter. Para Salir de Nano es Ctrl+X.
-En Caso de que tengas Root o una version inferior a Android 11 puedes ir a ver los archivos de Termux y ajustarlos desde el explorador de Archivos de Android en la carpeta /data/data/com.termux/files/home/ 
+    <h2>⚙️ Preferencias del Bot</h2>
+    <p>Debes ajustar el <code>config.js</code> para agregar el número del bot, tus administradores del bot, el país de la fecha y clima y el nombre del paquete de stickers, etc. Desde Termux es <code>nano config.js</code>. Edita lo que necesites, para guardar es Ctrl+O luego Enter. Para salir de Nano es Ctrl+X.</p>
+    <p>En caso de que tengas Root o una versión inferior a Android 11, puedes ir a ver los archivos de Termux y ajustarlos desde el explorador de archivos de Android en la carpeta <code>/data/data/com.termux/files/home/</code>.</p>
 
-## 🟢 Iniciar Bot
-Una vez que hayas ajustado todo, inicia el bot con:
-```sh
-npm start .
-```
+    <h2>🟢 Iniciar Bot</h2>
+    <p>Una vez que hayas ajustado todo, inicia el bot con:</p>
+    <pre><code>npm start .</code></pre>
 
-## 🔌 Mantener Abierto Termux
-El bot funcionara mientras Termux este abierto y con Conexion a Internet.
-Permite a Termux ejecutarse sin Restricciones ni Optimizaciones de bateria. 
-Activa el WakeLock desde la Notificacion de Termux.
-> [!IMPORTANT]
->Android 12 y Superior tienen limitaciones de ejecucion, unicamente se puede Resolver con ADB, Root o Custom ROM.
+    <h2>🔌 Mantener Abierto Termux</h2>
+    <p>El bot funcionará mientras Termux esté abierto y con conexión a Internet. Permite a Termux ejecutarse sin restricciones ni optimizaciones de batería. Activa el WakeLock desde la notificación de Termux.</p>
+    <div class="warning">
+        <strong>¡IMPORTANTE!</strong>
+        Android 12 y superior tienen limitaciones de ejecución, únicamente se puede resolver con ADB, Root o Custom ROM.
+    </div>
 
-## 💡 Evitar cerrado Forzoso (Opcional)
-En caso de que termux se te cierre a cada rato, puedes seguir estos pasos OPCIONALES.
-
-- ADB desde Terminal en PC:
-```
-adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"
+    <h2>💡 Evitar Cierre Forzoso (Opcional)</h2>
+    <p>En caso de que Termux se te cierre a cada rato, puedes seguir estos pasos opcionales:</p>
+    
+    <h3>ADB desde Terminal en PC:</h3>
+    <pre><code>adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"
 adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"
-adb shell settings put global settings_enable_monitor_phantom_procs false
-```
+adb shell settings put global settings_enable_monitor_phantom_procs false</code></pre>
 
-#### Con ROOT:
-- On Termux (or any Terminal Emulator), paste the following commands on the following order:
-```
-su -c /system/bin/device_config set_sync_disabled_for_tests persistent
+    <h3>Con ROOT:</h3>
+    <pre><code>su -c /system/bin/device_config set_sync_disabled_for_tests persistent
 su -c /system/bin/device_config put activity_manager max_phantom_processes 2147483647
-su -c setprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs false
-```
+su -c setprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs false</code></pre>
 
-#### O Instalando un Modulo de Magisk
+    <h3>O Instalando un Módulo de Magisk:</h3>
+    <a href="https://raw.githubusercontent.com/HardcodedCat/termux-monet/master/ppr/PhantomProcessRetainer-main.zip" class="badge">LetTheGhostsOut.zip</a>
 
-[![](https://img.shields.io/static/v1?message=LetTheGhostsOut.zip&logo=magisk&labelColor=5c5c5c&color=00af9c&logoColor=white&label=%20&style=for-the-badge)](https://raw.githubusercontent.com/HardcodedCat/termux-monet/master/ppr/PhantomProcessRetainer-main.zip)
+    <p><a href="https://github.com/KitsunedFox/termux-monet/blob/master/README.md">Fuente Termux Monect</a></p>
 
+    <h2>↪️ Volver a Iniciar en Caso de Cierre</h2>
+    <p>Abre Termux y pega esto:</p>
+    <pre><code>proot-distro login debian
+cd mystic
+npm start</code></pre>
 
-[Fuente Termux Monect](https://github.com/KitsunedFox/termux-monet/blob/master/README.md)
-
-## ↪️ Volver a iniciar en caso de Cierre
- Abris termux y Pega esto:
- 
- ```
-    proot-distro login debian
-  ```
-
-```
-    cd mystic
-	npm start 
- ```
-## Servidor Eco-Friendly
-Puedes utilizar un telefono antiguo y Automatizarlo con Tasker como es mi caso.
-Utilizo un Telefono Roto con un Panel Solar para Mantener el bot para [Toda esta Comunidad](https://chat.whatsapp.com/JtrXf1pGoewLlX5Ww2VXDs).
-
-<a href="https://www.hmd.com/en_int/nokia-g-20/environmental-profile"><img src="https://github.com/weskerty/TheMysticMOD/assets/82781997/497b42f7-7317-42b4-bf10-9ab107be313a" width="400" height="300" alt="NokiaG20"/> </a>
+    <h2>Servidor Eco-Friendly</h2>
+    <p>Puedes utilizar un teléfono antiguo y automatizarlo con Tasker como es mi caso. Utilizo un teléfono roto con un panel solar para mantener el bot para <a href="https://chat.whatsapp.com/JtrXf1pGoewLlX5Ww2VXDs">Toda esta Comunidad</a>.</p>
+    
+    <a href="https://www.hmd.com/en_int/nokia-g-20/environmental-profile">
+        <img src="https://github.com/weskerty/TheMysticMOD/assets/82781997/497b42f7-7317-42b4-bf10-9ab107be313a" width="400" height="300" alt="NokiaG20">
+    </a>
