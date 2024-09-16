@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮TheMysticBot🔮</title>
+    <title>Hispanic Galaxy</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
     <link rel="stylesheet" href="web/estilo.css"> <!-- Para Cambiar el Estilo/Tema facilmente -->
 </head>
 <body>
     <video autoplay muted loop id="bg-video">
-        <source src="https://github.com/user-attachments/assets/39cbf647-28cd-4604-a717-ada1439d274b" type="video/mp4"> <!-- Para Cambiar el video de fondo, debe ser enlace directo al video. -->
+        <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4"> <!-- Para Cambiar el video de fondo, debe ser enlace directo al video. -->
         Error con Video
     </video>
 
@@ -51,7 +51,7 @@
         function getLocalizedUrl(url) {
             const userLang = navigator.language || navigator.userLanguage;
 
-            // Identificar el sufijo de idioma, se pueden agregar mas.
+            // Identificar el sufijo de idioma
             if (userLang.startsWith('es')) {
                 return url + 'es.html';
             } else if (userLang.startsWith('pt')) {
@@ -94,33 +94,29 @@
             const target = event.target;
 
             if (target.tagName === 'A' || target.tagName === 'IMG') {  
-                let href = target.closest('a').getAttribute('href'); 
+                const anchor = target.closest('a');  
+                const href = anchor.getAttribute('href'); 
 
-                // Ir arriba de la pagina
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
+                // Comprobar si el enlace contiene web/
+                if (href && href.includes('web/')) {
                     event.preventDefault(); 
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
 
                     if (!href.match(/(ingles|es|pt|fr|ru|ar|hi)\.html$/)) {
-                        href = getLocalizedUrl(href); 
+                        loadContent(getLocalizedUrl(href)); 
+                    } else {
+                        loadContent(href); 
                     }
-
-                    loadContent(href); 
-                } else if (href.startsWith('http://') || href.startsWith('https://')) {
-                    event.preventDefault(); 
-                    href = getLocalizedUrl(href); 
-                    
-                  // 300 es tiempo ajustable.
-                    setTimeout(() => {
-                        window.location.href = href; 
-                    }, 300); 
+                } else {
+                    // Si no contiene web/
+                    return;
                 }
             }
         });
 
         window.onpopstate = function() {
-            location.reload(); // Recarga la página al dar atras, ya que no logre hacer funcionar una navegacion consistente hacia atras.
+            location.reload(); // Recarga la página al dar atrás, ya que no logré hacer funcionar una navegación consistente hacia atrás.
         };
     </script>
 
