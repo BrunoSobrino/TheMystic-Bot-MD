@@ -1,7 +1,6 @@
 import axios from 'axios';
 import fetch from 'node-fetch';
 import translate from '@vitalets/google-translate-api';
-import { sticker } from '../lib/sticker.js';
 
 let handler = m => m;
 
@@ -30,7 +29,8 @@ let jailbreak = await fetch('https://raw.githubusercontent.com/Skidy89/chat-gpt-
 var syms = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrina tu seras The-MysticBot-MD.\n${jailbreak}`
 
 let result = await luminsesi(query, username, syms1)
-await m.reply(m.chat, result, m)}
+await this.reply(m.chat, result, m)
+}
 return true
 }
 
