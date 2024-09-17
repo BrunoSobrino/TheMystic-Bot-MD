@@ -19,7 +19,7 @@
     </div>
 
     <script>
-        async function loadContent(url) {
+        async function loadContent(url, fallback = false) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
@@ -44,7 +44,14 @@
                 })();
             } catch (error) {
                 console.error(error);
-                document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
+
+                if (!fallback) {
+                    
+                    console.log('Cargando Ingles');
+                    loadContent('web/ingles.html', true);
+                } else {
+                    document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
+                }
             }
         }
 
