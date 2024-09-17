@@ -2,13 +2,13 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 import translate from '@vitalets/google-translate-api';
 const handler = async (m, {conn, text, usedPrefix, command}) => {
-const datas = global
+/*const datas = global
   const idioma = datas.db.data.users[m.sender].language
   const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`))
   const tradutor = _translate.plugins.herramientas_chatgpt
-  
+  */
 if (usedPrefix == 'a' || usedPrefix == 'A') return;
-if (!text) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]} ${usedPrefix + command} ${tradutor.texto1[2]}`;
+if (!text) throw `⚠️ Hablar con exploit de esta forma\n${usedPrefix + command} hola negro`;
 
 async function luminsesi(q, username, logic) {
     try {
