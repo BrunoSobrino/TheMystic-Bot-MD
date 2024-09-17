@@ -32,15 +32,15 @@
     <h2>💡 Evitar Cierre Forzoso (Opcional)</h2>
     <p>En caso de que Termux se te cierre a cada rato, puedes seguir estos pasos opcionales:</p>
     
-    <h3>ADB desde Terminal en PC:</h3>
-<code>adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"
-adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"
-adb shell settings put global settings_enable_monitor_phantom_procs false</code>
+    <h3>Con ADB</h3>
+<code>adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"</code>
+<code>adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"</code>
+<code>adb shell settings put global settings_enable_monitor_phantom_procs false</code>
 
     <h3>Con ROOT:</h3>
-<code>su -c /system/bin/device_config set_sync_disabled_for_tests persistent
-su -c /system/bin/device_config put activity_manager max_phantom_processes 2147483647
-su -c setprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs false</code>
+<code>su -c /system/bin/device_config set_sync_disabled_for_tests persistent</code>
+<code>su -c /system/bin/device_config put activity_manager max_phantom_processes 2147483647</code>
+<code>su -c setprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs false</code>
 
     <h2>Servidor Eco-Friendly</h2>
     <p>Puedes utilizar un teléfono antiguo y automatizarlo con Tasker como es mi caso. Utilizo un teléfono roto con un panel solar para mantener el bot para <a href="https://chat.whatsapp.com/JtrXf1pGoewLlX5Ww2VXDs">Toda esta Comunidad</a>.</p>
