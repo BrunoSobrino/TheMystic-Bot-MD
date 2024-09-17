@@ -19,8 +19,8 @@
     </div>
 
     <script>
-        // Función para cargar contenido con verificación de idioma y fallback
-        async function loadContent(url, fallback = false) {
+        // Función para cargar contenido de manera dinámica
+        async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
@@ -44,67 +44,47 @@
                     (d.head || d.body).appendChild(s);
                 })();
             } catch (error) {
-                console.error(error);
-                if (!fallback) {
-                    // Si falla, intenta cargar la versión en inglés
-                    loadContent('web/ingles.html', true);
+                console.error(`Error loading content: ${error.message}`);
+                // Si hay una URL alternativa (fallback), cargarla
+                if (fallbackUrl) {
+                    console.log(`Trying fallback URL: ${fallbackUrl}`);
+                    loadContent(fallbackUrl);
                 } else {
                     document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
                 }
             }
         }
 
-        // Función que retorna la URL localizable según el idioma del usuario
-        function getLocalizedUrl(url) {
+        // Obtener la URL localizada según el idioma del usuario
+        function getLocalizedUrl(urlBase) {
             const userLang = navigator.language || navigator.userLanguage;
             if (userLang.startsWith('es')) {
-                return url + 'es.html';
+                return `${urlBase}es.html`;
             } else if (userLang.startsWith('pt')) {
-                return url + 'pt.html';
+                return `${urlBase}pt.html`;
             } else if (userLang.startsWith('fr')) {
-                return url + 'fr.html';
+                return `${urlBase}fr.html`;
             } else if (userLang.startsWith('ru')) {
-                return url + 'ru.html';
+                return `${urlBase}ru.html`;
             } else if (userLang.startsWith('ar')) {
-                return url + 'ar.html';
+                return `${urlBase}ar.html`;
             } else if (userLang.startsWith('hi')) {
-                return url + 'hi.html';
+                return `${urlBase}hi.html`;
             } else {
-                return url + 'ingles.html'; // Fallback al inglés
+                return `${urlBase}ingles.html`;  // Fallback al inglés
             }
         }
 
-        // Función que intenta cargar un archivo y recurre a fallback si falla
-        async function loadLocalizedContent(url) {
-            const localizedUrl = getLocalizedUrl(url);  // Obtener la URL en base al idioma
-            try {
-                await loadContent(localizedUrl);  // Intentar cargar el archivo en el idioma del usuario
-            } catch (error) {
-                console.error('Fallo al cargar el contenido en el idioma del usuario. Cargando inglés.');
-                loadContent(url + 'ingles.html');  // Fallback al inglés
-            }
+        // Función para cargar contenido localizado con fallback
+        function loadLocalizedContent(urlBase) {
+            const localizedUrl = getLocalizedUrl(urlBase);  // URL basada en el idioma del usuario
+            const fallbackUrl = `${urlBase}ingles.html`;  // URL fallback (inglés)
+            loadContent(localizedUrl, fallbackUrl);  // Cargar contenido con fallback
         }
 
         // Cargar el contenido inicial basado en el idioma del navegador
         document.addEventListener("DOMContentLoaded", function() {
-            const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html';  // Archivo por defecto (inglés)
-
-            if (userLang.startsWith('es')) {
-                htmlFile = 'web/es.html';
-            } else if (userLang.startsWith('pt')) {
-                htmlFile = 'web/pt.html';
-            } else if (userLang.startsWith('fr')) {
-                htmlFile = 'web/fr.html';
-            } else if (userLang.startsWith('ru')) {
-                htmlFile = 'web/ru.html';
-            } else if (userLang.startsWith('ar')) {
-                htmlFile = 'web/ar.html';
-            } else if (userLang.startsWith('hi')) {
-                htmlFile = 'web/hi.html';
-            }
-
-            loadContent(htmlFile);  // Cargar el contenido inicial
+            loadLocalizedContent('web/');  // Cargar la página inicial desde la carpeta "web/"
         });
 
         // Manejo de los clics en enlaces internos
@@ -120,8 +100,8 @@
 
                     window.scrollTo({ top: 0, behavior: 'smooth' });  // Desplazamiento suave hacia arriba
 
-                    // Intentar cargar el contenido según el idioma, con fallback a inglés si falla
-                    loadLocalizedContent(href);
+                    // Intentar cargar el contenido según el idioma con fallback al inglés
+                    loadLocalizedContent(href.replace('.html', ''));  // Remover ".html" y cargar con fallback
                 } else {
                     return;  // Permitir comportamiento normal si el enlace no apunta a "web/"
                 }
