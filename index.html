@@ -19,7 +19,7 @@
     </div>
 
     <script>
-        // Función que carga el contenido HTML y aplica fallback si no encuentra el archivo
+        // Función para cargar el contenido HTML con verificación y fallback a inglés
         async function loadContent(url, fallback = false) {
             try {
                 const response = await fetch(url);
@@ -27,37 +27,36 @@
                 const htmlContent = await response.text();
                 document.getElementById('content').innerHTML = htmlContent;
 
-                // Este es la seccion de Disqus, se puede cambiar a uno personalizado.
+                // Disqus integration (opcional)
                 const disqusDiv = document.createElement('div');
                 disqusDiv.id = 'disqus_thread';
                 document.getElementById('content').appendChild(disqusDiv);
 
                 var disqus_config = function () {
-                    this.page.url = window.location.href; 
+                    this.page.url = window.location.href;
                     this.page.identifier = document.title;
                 };
 
-                (function() {  
+                (function() {
                     var d = document, s = d.createElement('script');
-                    s.src = 'https://amigos-steam.disqus.com/embed.js'; 
+                    s.src = 'https://amigos-steam.disqus.com/embed.js';
                     s.setAttribute('data-timestamp', +new Date());
                     (d.head || d.body).appendChild(s);
                 })();
             } catch (error) {
                 console.error(error);
                 if (!fallback) {
-                    console.log('Cargando versión en inglés por defecto...');
-                    loadContent('web/ingles.html', true);  // Intentamos cargar la versión por defecto en inglés
+                    console.log('Cargando ingl...');
+                    loadContent('web/ingles.html', true);
                 } else {
                     document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
                 }
             }
         }
 
-        // Obtener el archivo HTML correcto según el idioma del navegador
+        
         function getLocalizedUrl(url) {
             const userLang = navigator.language || navigator.userLanguage;
-
             if (userLang.startsWith('es')) {
                 return url + 'es.html';
             } else if (userLang.startsWith('pt')) {
@@ -71,65 +70,68 @@
             } else if (userLang.startsWith('hi')) {
                 return url + 'hi.html';
             } else {
-                return url + 'ingles.html';  // Predeterminado a inglés si no hay idioma específico
+                return url + 'ingles.html'; 
             }
         }
 
-        // Cargar el contenido inicial basado en el idioma del navegador
+        
         document.addEventListener("DOMContentLoaded", function() {
             const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html'; 
+            let htmlFile = 'web/ingles.html';
 
             if (userLang.startsWith('es')) {
-                htmlFile = 'web/es.html'; 
+                htmlFile = 'web/es.html';
             } else if (userLang.startsWith('pt')) {
-                htmlFile = 'web/pt.html'; 
+                htmlFile = 'web/pt.html';
             } else if (userLang.startsWith('fr')) {
-                htmlFile = 'web/fr.html'; 
+                htmlFile = 'web/fr.html';
             } else if (userLang.startsWith('ru')) {
-                htmlFile = 'web/ru.html'; 
+                htmlFile = 'web/ru.html';
             } else if (userLang.startsWith('ar')) {
-                htmlFile = 'web/ar.html'; 
+                htmlFile = 'web/ar.html';
             } else if (userLang.startsWith('hi')) {
-                htmlFile = 'web/hi.html'; 
+                htmlFile = 'web/hi.html';
             }
 
-            loadContent(htmlFile);  // Cargar el contenido inicial basado en el idioma
+            loadContent(htmlFile); 
         });
 
-        // Manejo de los clics en los enlaces internos
+        
         document.addEventListener('click', function(event) {
             const target = event.target;
             if (target.tagName === 'A' || target.tagName === 'IMG') {  
-                const anchor = target.closest('a');  // Obtener el enlace más cercano
-                const href = anchor.getAttribute('href');  // Obtener el href del enlace
+                const anchor = target.closest('a');  
+                const href = anchor.getAttribute('href');  
 
-                // Verificar si el enlace apunta a un archivo dentro de la carpeta "web/"
+                
                 if (href && href.includes('web/')) {
-                    event.preventDefault();  // Prevenir la navegación predeterminada
+                    event.preventDefault();  
 
-                    window.scrollTo({ top: 0, behavior: 'smooth' });  // Hacer scroll al inicio
+                    window.scrollTo({ top: 0, behavior: 'smooth' });  
 
-                    // Si el enlace no tiene un archivo de idioma específico, cargar la versión localizable
-                    if (!href.match(/(ingles|es|pt|fr|ru|ar|hi)\.html$/)) {
-                        const localizedUrl = getLocalizedUrl(href);
-                        loadContent(localizedUrl);  // Cargar el archivo según el idioma
-                    } else {
-                        loadContent(href);  // Cargar el archivo directamente si ya tiene el idioma en el enlace
-                    }
+                    
+                    const localizedUrl = getLocalizedUrl(href);
+
+                    
+                    loadContent(localizedUrl).then(() => {
+                        console.log("Contenido cargado correctamente");
+                    }).catch(() => {
+                        console.log("cargando inglés ");
+                        loadContent('web/ingles.html');  
+                    });
                 } else {
-                    return;  // Dejar que los enlaces que no apuntan a "web/" se comporten normalmente
+                    return;  
                 }
             }
         });
 
-        // Al presionar el botón de "atrás" en el navegador
+        
         window.onpopstate = function() {
-            location.reload();  // Recargar la página al navegar hacia atrás
+            location.reload();  
         };
     </script>
 
-    <!-- Widget de Discord -->
+    <!-- Widget de Discord (opcional) -->
     <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
         new Crate({
             server: '1278571215635877908', // Basu
