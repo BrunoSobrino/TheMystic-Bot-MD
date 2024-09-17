@@ -19,7 +19,7 @@
     </div>
 
     <script>
-        // Función para cargar el contenido HTML con verificación y fallback a inglés
+        // Función para cargar contenido con verificación de idioma y fallback
         async function loadContent(url, fallback = false) {
             try {
                 const response = await fetch(url);
@@ -27,7 +27,7 @@
                 const htmlContent = await response.text();
                 document.getElementById('content').innerHTML = htmlContent;
 
-                // Disqus integration (opcional)
+                // Sección de Disqus (opcional)
                 const disqusDiv = document.createElement('div');
                 disqusDiv.id = 'disqus_thread';
                 document.getElementById('content').appendChild(disqusDiv);
@@ -46,7 +46,7 @@
             } catch (error) {
                 console.error(error);
                 if (!fallback) {
-                    console.log('Cargando ingl...');
+                    // Si falla, intenta cargar la versión en inglés
                     loadContent('web/ingles.html', true);
                 } else {
                     document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
@@ -54,7 +54,7 @@
             }
         }
 
-        
+        // Función que retorna la URL localizable según el idioma del usuario
         function getLocalizedUrl(url) {
             const userLang = navigator.language || navigator.userLanguage;
             if (userLang.startsWith('es')) {
@@ -70,14 +70,25 @@
             } else if (userLang.startsWith('hi')) {
                 return url + 'hi.html';
             } else {
-                return url + 'ingles.html'; 
+                return url + 'ingles.html'; // Fallback al inglés
             }
         }
 
-        
+        // Función que intenta cargar un archivo y recurre a fallback si falla
+        async function loadLocalizedContent(url) {
+            const localizedUrl = getLocalizedUrl(url);  // Obtener la URL en base al idioma
+            try {
+                await loadContent(localizedUrl);  // Intentar cargar el archivo en el idioma del usuario
+            } catch (error) {
+                console.error('Fallo al cargar el contenido en el idioma del usuario. Cargando inglés.');
+                loadContent(url + 'ingles.html');  // Fallback al inglés
+            }
+        }
+
+        // Cargar el contenido inicial basado en el idioma del navegador
         document.addEventListener("DOMContentLoaded", function() {
             const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html';
+            let htmlFile = 'web/ingles.html';  // Archivo por defecto (inglés)
 
             if (userLang.startsWith('es')) {
                 htmlFile = 'web/es.html';
@@ -93,41 +104,33 @@
                 htmlFile = 'web/hi.html';
             }
 
-            loadContent(htmlFile); 
+            loadContent(htmlFile);  // Cargar el contenido inicial
         });
 
-        
+        // Manejo de los clics en enlaces internos
         document.addEventListener('click', function(event) {
             const target = event.target;
             if (target.tagName === 'A' || target.tagName === 'IMG') {  
                 const anchor = target.closest('a');  
                 const href = anchor.getAttribute('href');  
 
-                
+                // Si el enlace apunta a un archivo en la carpeta "web/"
                 if (href && href.includes('web/')) {
-                    event.preventDefault();  
+                    event.preventDefault();  // Prevenir la navegación predeterminada
 
-                    window.scrollTo({ top: 0, behavior: 'smooth' });  
+                    window.scrollTo({ top: 0, behavior: 'smooth' });  // Desplazamiento suave hacia arriba
 
-                    
-                    const localizedUrl = getLocalizedUrl(href);
-
-                    
-                    loadContent(localizedUrl).then(() => {
-                        console.log("Contenido cargado correctamente");
-                    }).catch(() => {
-                        console.log("cargando inglés ");
-                        loadContent('web/ingles.html');  
-                    });
+                    // Intentar cargar el contenido según el idioma, con fallback a inglés si falla
+                    loadLocalizedContent(href);
                 } else {
-                    return;  
+                    return;  // Permitir comportamiento normal si el enlace no apunta a "web/"
                 }
             }
         });
 
-        
+        // Función para manejar el botón "atrás" del navegador
         window.onpopstate = function() {
-            location.reload();  
+            location.reload();  // Recargar la página al navegar hacia atrás
         };
     </script>
 
