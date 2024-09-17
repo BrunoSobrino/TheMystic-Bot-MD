@@ -6,11 +6,40 @@
     <title>🔮The Mystic Bot🔮</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
-    <link rel="stylesheet" href="web/estilo.css"> <!-- Para Cambiar el Estilo/Tema facilmente -->
+    <link rel="stylesheet" href="web/estilo.css">
+    <style>
+        /* Estilo temporal para mostrar el texto de carga */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff; /* Fondo blanco simple */
+            z-index: 1000;
+        }
+
+        .loading-screen p {
+            font-size: 2em;
+            font-family: 'Comfortaa', sans-serif;
+        }
+
+        /* Ocultar la pantalla de carga una vez que se completa la carga */
+        .hide {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <video autoplay muted loop id="bg-video">
-        <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4"> <!-- Para Cambiar el video de fondo, debe ser enlace directo al video. -->
+    <div class="loading-screen" id="loading-screen">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <video autoplay muted loop id="bg-video" preload="auto">
+        <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4">
         Error con Video
     </video>
 
@@ -19,109 +48,104 @@
     </div>
 
     <script>
-        // Función para cargar contenido de manera dinámica
+        // Función para ocultar la pantalla de carga
+        function hideLoadingScreen() {
+            document.getElementById('loading-screen').classList.add('hide');
+        }
+
+        // Cargar contenido de forma asincrónica con soporte para fallback
         async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
-                const htmlContent = await response.text();
-                document.getElementById('content').innerHTML = htmlContent;
+                document.getElementById('content').innerHTML = await response.text();
 
-                // Sección de Disqus (opcional)
-                const disqusDiv = document.createElement('div');
-                disqusDiv.id = 'disqus_thread';
-                document.getElementById('content').appendChild(disqusDiv);
-
-                var disqus_config = function () {
-                    this.page.url = window.location.href;
-                    this.page.identifier = document.title;
-                };
-
-                (function() {
-                    var d = document, s = d.createElement('script');
-                    s.src = 'https://amigos-steam.disqus.com/embed.js';
-                    s.setAttribute('data-timestamp', +new Date());
-                    (d.head || d.body).appendChild(s);
-                })();
+                // Cargar comentarios de Disqus
+                loadDisqus();
             } catch (error) {
-                console.error(`Error loading content: ${error.message}`);
-                // Si hay una URL alternativa (fallback), cargarla
+                console.error(`Error cargando contenido: ${error.message}`);
                 if (fallbackUrl) {
-                    console.log(`Trying fallback URL: ${fallbackUrl}`);
+                    console.log(`Usando fallback URL: ${fallbackUrl}`);
                     loadContent(fallbackUrl);
                 } else {
-                    document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
+                    document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
                 }
             }
         }
 
-        // Obtener la URL localizada según el idioma del usuario
+        // Configuración de Disqus
+        function loadDisqus() {
+            const disqusDiv = document.createElement('div');
+            disqusDiv.id = 'disqus_thread';
+            document.getElementById('content').appendChild(disqusDiv);
+
+            const disqus_config = function () {
+                this.page.url = window.location.href;
+                this.page.identifier = document.title;
+            };
+
+            (function() {
+                const d = document, s = d.createElement('script');
+                s.src = 'https://amigos-steam.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        }
+
+        // Determina la URL localizada según el idioma del navegador
         function getLocalizedUrl(urlBase) {
-            const userLang = navigator.language || navigator.userLanguage;
-            if (userLang.startsWith('es')) {
-                return `${urlBase}es.html`;
-            } else if (userLang.startsWith('pt')) {
-                return `${urlBase}pt.html`;
-            } else if (userLang.startsWith('fr')) {
-                return `${urlBase}fr.html`;
-            } else if (userLang.startsWith('ru')) {
-                return `${urlBase}ru.html`;
-            } else if (userLang.startsWith('ar')) {
-                return `${urlBase}ar.html`;
-            } else if (userLang.startsWith('hi')) {
-                return `${urlBase}hi.html`;
-            } else {
-                return `${urlBase}ingles.html`;  // Fallback al inglés
-            }
+            const lang = navigator.language || navigator.userLanguage;
+            const langMap = {
+                es: 'es.html',
+                pt: 'pt.html',
+                fr: 'fr.html',
+                ru: 'ru.html',
+                ar: 'ar.html',
+                hi: 'hi.html'
+            };
+            return urlBase + (langMap[lang.slice(0, 2)] || 'ingles.html');
         }
 
-        // Función para cargar contenido localizado con fallback
+        // Cargar contenido localizado
         function loadLocalizedContent(urlBase) {
-            const localizedUrl = getLocalizedUrl(urlBase);  // URL basada en el idioma del usuario
-            const fallbackUrl = `${urlBase}ingles.html`;  // URL fallback (inglés)
-            loadContent(localizedUrl, fallbackUrl);  // Cargar contenido con fallback
+            const localizedUrl = getLocalizedUrl(urlBase);
+            const fallbackUrl = `${urlBase}ingles.html`;
+            loadContent(localizedUrl, fallbackUrl);
         }
 
-        // Cargar el contenido inicial basado en el idioma del navegador
-        document.addEventListener("DOMContentLoaded", function() {
-            loadLocalizedContent('web/');  // Cargar la página inicial desde la carpeta "web/"
+        // Al cargar la página, cargar el contenido basado en el idioma
+        document.addEventListener("DOMContentLoaded", () => {
+            const bgVideo = document.getElementById('bg-video');
+            
+            // Esperar a que el video y el contenido estén completamente cargados
+            bgVideo.addEventListener('loadeddata', () => {
+                loadLocalizedContent('web/');
+                hideLoadingScreen();  // Ocultar la pantalla de carga cuando el video esté listo
+            });
         });
 
-        // Manejo de los clics en enlaces internos
-        document.addEventListener('click', function(event) {
-            const target = event.target;
-            if (target.tagName === 'A' || target.tagName === 'IMG') {  
-                const anchor = target.closest('a');  
-                const href = anchor.getAttribute('href');  
-
-                // Si el enlace apunta a un archivo en la carpeta "web/"
-                if (href && href.includes('web/')) {
-                    event.preventDefault();  // Prevenir la navegación predeterminada
-
-                    window.scrollTo({ top: 0, behavior: 'smooth' });  // Desplazamiento suave hacia arriba
-
-                    // Intentar cargar el contenido según el idioma con fallback al inglés
-                    loadLocalizedContent(href.replace('.html', ''));  // Remover ".html" y cargar con fallback
-                } else {
-                    return;  // Permitir comportamiento normal si el enlace no apunta a "web/"
-                }
+        // Navegación basada en clicks en links e imágenes
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a');
+            if (anchor && anchor.getAttribute('href')?.includes('web/')) {
+                event.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                loadLocalizedContent(anchor.getAttribute('href').replace('.html', ''));
             }
         });
 
-        // Función para manejar el botón "atrás" del navegador
-        window.onpopstate = function() {
-            location.reload();  // Recargar la página al navegar hacia atrás
-        };
+        // Manejar navegación con botones de retroceso/adelante
+        window.onpopstate = () => location.reload();
     </script>
 
-    <!-- Widget de Discord (opcional) -->
-    <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+    <!-- Widget de Discord -->
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
         new Crate({
-            server: '1278571215635877908', // Basu
-            channel: '1280976262504124508' // #basurero-sexta-feira
-        })
+            server: '1278571215635877908',
+            channel: '1280976262504124508'
+        });
     </script>
 
-    <noscript> JavaScript OFF. Se Requiere JS Encendido para poder Visualizar Esto. En caso de no poder Verlo ve al Repositorio.</noscript>
+    <noscript>JavaScript OFF. Se requiere JS activado para visualizar esta página. Consulta el repositorio si tienes problemas.</noscript>
 </body>
 </html>
