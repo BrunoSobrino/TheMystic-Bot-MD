@@ -21,7 +21,6 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
     if (data?.status === true) {
       const videoBuffer = await getBuffer(data.resultado.data);
       await conn.sendMessage(m.chat, { video: videoBuffer, filename: 'video.mp4', caption: `_*${tradutor.texto4}*_` }, {quoted: m});
-      videoBuffer = null;
       enviando = false;
     } else {
       console.error('Failed to fetch video data from API:', data);
