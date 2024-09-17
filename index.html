@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔮The Mystic Bot🔮</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet"> 
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
     <link rel="stylesheet" href="web/estilo.css">
     <style>
-        /* Estilo temporal para mostrar el texto de carga */
+        /* Estilo de Carga*/
         .loading-screen {
             position: fixed;
             top: 0;
@@ -18,7 +18,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #fff; /* Fondo blanco simple */
+            background-color: #fff; /* Fondo blanco */
             z-index: 1000;
         }
 
@@ -27,7 +27,7 @@
             font-family: 'Comfortaa', sans-serif;
         }
 
-        /* Ocultar la pantalla de carga una vez que se completa la carga */
+        /* Ocultar el Cargando cuando Cargo gg */
         .hide {
             display: none;
         }
@@ -36,11 +36,12 @@
 <body>
     <div class="loading-screen" id="loading-screen">
         <p>⌛Cargando⏳</p>
+		<p> Need JS ON </p>
     </div>
 
     <video autoplay muted loop id="bg-video" preload="auto">
         <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4">
-        Error con Video
+        Er Video
     </video>
 
     <div class="content" id="content">
@@ -48,22 +49,22 @@
     </div>
 
     <script>
-        // Función para ocultar la pantalla de carga
+        
         function hideLoadingScreen() {
             document.getElementById('loading-screen').classList.add('hide');
         }
 
-        // Cargar contenido de forma asincrónica con soporte para fallback
+        
         async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 document.getElementById('content').innerHTML = await response.text();
 
-                // Cargar comentarios de Disqus
+               // Comentarios Disqus, PErsonalizable y Claramente Opcional.
                 loadDisqus();
             } catch (error) {
-                console.error(`Error cargando contenido: ${error.message}`);
+                console.error(`Error cargando D: ${error.message}`);
                 if (fallbackUrl) {
                     console.log(`Usando fallback URL: ${fallbackUrl}`);
                     loadContent(fallbackUrl);
@@ -73,7 +74,7 @@
             }
         }
 
-        // Configuración de Disqus
+        
         function loadDisqus() {
             const disqusDiv = document.createElement('div');
             disqusDiv.id = 'disqus_thread';
@@ -92,7 +93,7 @@
             })();
         }
 
-        // Determina la URL localizada según el idioma del navegador
+        
         function getLocalizedUrl(urlBase) {
             const lang = navigator.language || navigator.userLanguage;
             const langMap = {
@@ -106,25 +107,25 @@
             return urlBase + (langMap[lang.slice(0, 2)] || 'ingles.html');
         }
 
-        // Cargar contenido localizado
+        
         function loadLocalizedContent(urlBase) {
             const localizedUrl = getLocalizedUrl(urlBase);
             const fallbackUrl = `${urlBase}ingles.html`;
             loadContent(localizedUrl, fallbackUrl);
         }
 
-        // Al cargar la página, cargar el contenido basado en el idioma
+        
         document.addEventListener("DOMContentLoaded", () => {
             const bgVideo = document.getElementById('bg-video');
             
-            // Esperar a que el video y el contenido estén completamente cargados
+            
             bgVideo.addEventListener('loadeddata', () => {
                 loadLocalizedContent('web/');
-                hideLoadingScreen();  // Ocultar la pantalla de carga cuando el video esté listo
+                hideLoadingScreen(); 
             });
         });
 
-        // Navegación basada en clicks en links e imágenes
+        
         document.addEventListener('click', (event) => {
             const anchor = event.target.closest('a');
             if (anchor && anchor.getAttribute('href')?.includes('web/')) {
@@ -134,7 +135,7 @@
             }
         });
 
-        // Manejar navegación con botones de retroceso/adelante
+       
         window.onpopstate = () => location.reload();
     </script>
 
