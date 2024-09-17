@@ -28,13 +28,25 @@ blockquote {
     background-color: rgba(0, 0, 0, 0.7);
     border-left: 5px solid #ccc;
     color: white;
+    animation: backgroundColorChange 5s infinite;
+}
+
+@keyframes backgroundColorChange {
+    0% {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    50% {
+        background-color: rgba(255, 0, 0, 0.7);
+    }
+    100% {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
 }
 
 code {
     font-family: monospace;
     padding: 2px 4px;
     border-radius: 4px;
-    #background-color: rgba(0, 0, 0, 0.7);
     background-color: #232323; 
     border-left: 5px solid #ccc;
     color: white;
