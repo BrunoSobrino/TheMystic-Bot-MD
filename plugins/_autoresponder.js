@@ -11,7 +11,7 @@ await this.sendPresenceUpdate('composing', m.chat);
 
 async function luminsesi(q, username, logic) {
 try {
-const response = await axios.post("https://Luminai.my.id", {
+const response = await axios.post("https://luminai.my.id", {
 content: q,
 user: username,
 prompt: logic,
