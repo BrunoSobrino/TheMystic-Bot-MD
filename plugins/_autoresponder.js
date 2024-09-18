@@ -30,7 +30,7 @@ let username = `${m.pushName}`;
 let syms1 = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino tu seras The-MysticBot-MD.`
 
 let result = await luminsesi(query, username, syms1)
-await this.reply(m.chat, result, m, fake)}
+await this.reply(m.chat, result, m)}
 return true
 }
 
