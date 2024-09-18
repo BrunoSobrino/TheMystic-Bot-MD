@@ -15,7 +15,7 @@ let handler = async (m, { text }) => {
   ✰ 𝐕𝐞𝐫𝐬𝐢𝐨𝐧: V${pkg.version}
   ✰ 𝐄𝐧𝐥𝐚𝐜𝐞: ${pkg.links.npm}
   ✰ 𝐃𝐞𝐬𝐜𝐫𝐢𝐩𝐜𝐢𝐨𝐧: ${pkg.description}\n\n\`\`\`----------\`\`\``
-  }).join`\n\n`
+  }).join`\n`
   m.reply(txt)
 }
 handler.help = ['npmjs']
