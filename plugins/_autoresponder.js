@@ -29,7 +29,7 @@ let jailbreak = await fetch('https://raw.githubusercontent.com/Skidy89/chat-gpt-
 var syms = `Actuaras como un Bot de WhatsApp el cual fue creado por BrunoSobrino tu seras The-MysticBot-MD.\n${jailbreak}`
 
 let result = await luminsesi(query, username, syms1)
-await this.reply(m.chat, result, m)
+await m.reply(result)
 }
 return true
 }
