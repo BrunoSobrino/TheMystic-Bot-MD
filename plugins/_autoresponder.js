@@ -4,7 +4,7 @@ import translate from '@vitalets/google-translate-api';
 
 let handler = m => m;
 
-handler.all = async function (m, {conn}) {
+handler.all = async function (m) {
 let chat = global.db.data.chats[m.chat];
 
 if (m.mentionedJid.includes(this.user.jid) && m.isGroup && !chat.isBanned) {
