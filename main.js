@@ -105,7 +105,7 @@ loadChatgptDB();
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
 
 const {version} = await fetchLatestBaileysVersion();
-let phoneNumber = global.botnumber
+let phoneNumber = global.botnumber || process.argv.find(arg => /^\+\d+$/.test(arg));
 
 const methodCodeQR = process.argv.includes("qr")
 const methodCode = !!phoneNumber || process.argv.includes("code")

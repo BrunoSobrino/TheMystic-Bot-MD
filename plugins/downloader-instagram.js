@@ -2,62 +2,36 @@ import axios from "axios";
 
 const handler = async (m, { conn, args, command, usedPrefix }) => {
   const datas = global;
-  const idioma = datas.db.data.users[m.sender].language;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.descargas_instagram;
 
-  if (!args[0])
-    throw `${tradutor.texto1} _${usedPrefix + command} https://www.instagram.com/reel/C8sWV3Nx_GZ/?igsh=MWZoeTY2cW01Nzg1bQ==`;
-  await m.reply(global.wait);
+  if (!args[0]) throw `${tradutor.texto1} _${usedPrefix + command} https://www.instagram.com/reel/C8sWV3Nx_GZ/?igsh=MWZoeTY2cW01Nzg1bQ==`;
   try {
     const img = await instagramDownload(args[0]);
     for (let i = 0; i < img.data.length; i++) {
       const item = img.data[i];
       if (item.type === "image") {
-        await conn.sendMessage(
-          m.chat,
-          { image: { url: item.url } },
-          { quoted: m },
-        );
+        await conn.sendMessage(m.chat, { image: { url: item.url } }, { quoted: m });
       } else if (item.type === "video") {
-        await conn.sendMessage(
-          m.chat,
-          { video: { url: item.url } },
-          { quoted: m },
-        );
+        await conn.sendMessage(m.chat, { video: { url: item.url } }, { quoted: m });
       }
     }
   } catch (err) {
-    const res = await axios.get(
-      "https://deliriusapi-official.vercel.app/download/instagram",
-      {
-        params: {
-          url: args[0],
-        },
-      },
-    );
+    const res = await axios.get("https://deliriusapi-official.vercel.app/download/instagram", { params: { url: args[0] }});
     const result = res.data.data;
     for (let i = 0; i < result.length; i++) {
       const item = result[i];
       if (item.type === "image") {
-        await conn.sendMessage(
-          m.chat,
-          { image: { url: item.url } },
-          { quoted: m },
-        );
+        await conn.sendMessage(m.chat, { image: { url: item.url } }, { quoted: m });
       } else if (item.type === "video") {
-        await conn.sendMessage(
-          m.chat,
-          { video: { url: item.url } },
-          { quoted: m },
-        );
+        await conn.sendMessage(m.chat, { video: { url: item.url } }, { quoted: m });
       }
     }
   }
 };
 
-handler.command =
-  /^(instagramdl|instagram|igdl|ig|instagramdl2|instagram2|igdl2|ig2|instagramdl3|instagram3|igdl3|ig3)$/i;
+handler.command = /^(instagramdl|instagram|igdl|ig|instagramdl2|instagram2|igdl2|ig2|instagramdl3|instagram3|igdl3|ig3)$/i;
 export default handler;
 
 const instagramDownload = async (url) => {

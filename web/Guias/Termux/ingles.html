@@ -1,0 +1,55 @@
+<h1>Termux Installation Guide</h1>
+
+<img src="https://pm1.aminoapps.com/7668/91d769c068689bda190185f008716df225bd8102r1-1080-737v2_hq.jpg" alt="Guide Image" width="70%" height="auto"/>
+
+<h2>⬇️ Download Termux</h2>
+<p> Install Termux <a href="https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_universal.apk">Click Here to Download Termux ⬇️</a> Remember to grant all permissions to Termux. </p>
+<p>If that version doesn't work with your phone, you should Search for the Compatible Version on <a href="https://github.com/termux/termux-app/releases">Termux Github ↗️</a> or Download <a href="https://f-droid.org/F-Droid.apk">F-Droid ⬇️</a> and Download Termux from There</p>
+<blockquote><p> THE TERMUX FROM GOOGLE PLAY DOES NOT WORK. </p></blockquote>
+
+<h2>⬇️ Install Mystic Bot</h2>
+<p>Simply copy and paste this into Termux</p>
+<code> apt update -y && yes | apt upgrade && pkg install -y wget proot-distro && proot-distro install archlinux && wget -O - https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/Termux.sh | bash </code>
+
+<h1>📹 Demonstrative Video: </h1>
+<video src="https://github.com/user-attachments/assets/a109c5ef-1124-437c-b616-5dc2ca7bdec8" controls width="100%" height="auto"></video>
+
+<p>If you get the error "Arch already installed" you can delete Termux data and start over. Do not minimize to avoid crashes.</p>
+<p>You can also simply run this to skip that error</p>
+<code> apt update -y && yes | apt upgrade && pkg install -y wget proot-distro && wget -O - https://raw.githubusercontent.com/weskerty/test/main/Termux/mystic.sh | bash </code>
+
+<h2>🖥️ Restart</h2>
+<p> To reopen the bot if Termux closes, just open Termux again, this will make it start automatically. </p>
+<p>To cancel automatic execution when opening Termux, press the CTRL + C key on the keyboard.</p>
+
+<h2>⚙️ Bot Preferences</h2>
+<p>You can adjust the <code>config.js</code> to change bot details such as name, date country, sticker pack name, etc. From Termux it's <code> proot-distro login archlinux -- bash -c "nano config.js" </code>. Edit what you need, to save use Ctrl+O then Enter. To exit Nano, use Ctrl+X.</p>
+<p>If you have Root or a version lower than Android 11, you can view Termux files and adjust them from the Android file explorer in the folder <code>/data/data/com.termux/files/home/</code>.</p>
+
+<h2>🔌 Keep Termux Open</h2>
+<blockquote> <p>The bot will work as long as Termux is open and connected to the Internet. Allow Termux to run without battery optimizations. Activate WakeLock from the Termux notification.</p>
+
+<p> Android 12 and above have execution limitations that prevent proper background functionality. This can only be resolved with ADB, Root, or Custom ROM.<p>
+</blockquote>
+
+<h2>💡 Prevent Forced Closing (Optional)</h2>
+<p>If Termux closes frequently, you can follow these optional steps:</p>
+
+<h3>With ADB</h3>
+<code>adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"</code>
+<code>adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"</code>
+<code>adb shell settings put global settings_enable_monitor_phantom_procs false</code>
+
+<h3>With ROOT:</h3>
+<code>su -c /system/bin/device_config set_sync_disabled_for_tests persistent</code>
+<code>su -c /system/bin/device_config put activity_manager max_phantom_processes 2147483647</code>
+<code>su -c setprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs false</code>
+
+<h2>Eco-Friendly Server</h2>
+<p>You can use an old phone and automate it with Tasker as I do. I use a broken phone with a solar panel to keep the bot running for <a href="https://chat.whatsapp.com/JtrXf1pGoewLlX5Ww2VXDs">This Entire Community</a>.</p>
+
+<a href="https://www.hmd.com/en_int/nokia-g-20/environmental-profile">
+<img src="https://github.com/user-attachments/assets/1d33c20a-1af9-42ee-a6d7-4c2e03254f78" width="100%" height="auto" alt="NokiaG20">
+</a>
+
+<h1> With this, you can also run Linux on your phone and use it like a PC. <a href="https://github.com/LinuxDroidMaster/Termux-Desktops/blob/main/Documentation/proot/arch_proot.md">More Info Here</a>  </h1>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mystic Bot🔮</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet"> 
+    <link rel="icon" type="image/x-icon" href="web/favicon.ico">
+    <link rel="stylesheet" href="web/estilo.css">
+    <style>
+        /* Estilo de Carga*/
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #232323; 
+            z-index: 1000;
+        }
+
+        .loading-screen p {
+            font-size: 2em;
+            font-family: 'Comfortaa', sans-serif;
+        }
+
+        /* Ocultar el Cargando cuando Cargo gg */
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loading-screen">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <video autoplay muted loop id="bg-video" preload="auto">
+        <source src="https://github.com/user-attachments/assets/39cbf647-28cd-4604-a717-ada1439d274b" type="video/mp4">
+        Er Video
+    </video>
+
+    <div class="content" id="content">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <script>
+        
+        function hideLoadingScreen() {
+            document.getElementById('loading-screen').classList.add('hide');
+        }
+
+        
+        async function loadContent(url, fallbackUrl = null) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
+                document.getElementById('content').innerHTML = await response.text();
+
+               // Comentarios Disqus, PErsonalizable y Claramente Opcional.
+                loadDisqus();
+            } catch (error) {
+                console.error(`Error cargando D: ${error.message}`);
+                if (fallbackUrl) {
+                    console.log(`Usando fallback URL: ${fallbackUrl}`);
+                    loadContent(fallbackUrl);
+                } else {
+                    document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
+                }
+            }
+        }
+
+        
+        function loadDisqus() {
+            const disqusDiv = document.createElement('div');
+            disqusDiv.id = 'disqus_thread';
+            document.getElementById('content').appendChild(disqusDiv);
+
+            const disqus_config = function () {
+                this.page.url = window.location.href;
+                this.page.identifier = document.title;
+            };
+
+            (function() {
+                const d = document, s = d.createElement('script');
+                s.src = 'https://amigos-steam.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        }
+
+        
+        function getLocalizedUrl(urlBase) {
+            const lang = navigator.language || navigator.userLanguage;
+            const langMap = {
+                es: 'es.html',
+                pt: 'pt.html',
+                fr: 'fr.html',
+                ru: 'ru.html',
+                ar: 'ar.html',
+                hi: 'hi.html'
+            };
+            return urlBase + (langMap[lang.slice(0, 2)] || 'ingles.html');
+        }
+
+        
+        function loadLocalizedContent(urlBase) {
+            const localizedUrl = getLocalizedUrl(urlBase);
+            const fallbackUrl = `${urlBase}ingles.html`;
+            loadContent(localizedUrl, fallbackUrl);
+        }
+
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            const bgVideo = document.getElementById('bg-video');
+            
+            
+            bgVideo.addEventListener('loadeddata', () => {
+                loadLocalizedContent('web/');
+                hideLoadingScreen(); 
+            });
+        });
+
+        
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a');
+            if (anchor && anchor.getAttribute('href')?.includes('web/')) {
+                event.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                loadLocalizedContent(anchor.getAttribute('href').replace('.html', ''));
+            }
+        });
+
+       
+        window.onpopstate = () => location.reload();
+    </script>
+
+    <!-- Widget de Discord -->
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
+        new Crate({
+            server: '1278571215635877908',
+            channel: '1286022420330840215'
+        });
+    </script>
+
+    <noscript>JavaScript OFF. Se requiere JS activado para visualizar esta página. Consulta el repositorio si tienes problemas.</noscript>
+</body>
+</html>

@@ -9,7 +9,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
   if (usedPrefix == 'a' || usedPrefix == 'A') return;
   try {
     const datas = global
-    const idioma = datas.db.data.users[m.sender].language
+    const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.plugins.menu_menu
     // const pp = imagen7;
@@ -546,7 +546,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
     }
   } catch {
     const datas = global
-    const idioma = datas.db.data.users[m.sender].language
+    const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.plugins.menu_menu
 

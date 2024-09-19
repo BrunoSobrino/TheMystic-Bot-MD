@@ -1,7 +1,7 @@
 
 const handler = async (m, { conn }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.owner_grouplist
 
@@ -16,7 +16,7 @@ try {
     const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.jid) || {};
     const isBotAdmin = bot?.admin || false;
     const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.jid);
-    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1] ;
+    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;
     txt += `${tradutor.texto2[0]} ${i + 1}
     ${tradutor.texto2[1]} ${await conn.getName(jid)}
@@ -37,7 +37,7 @@ try {
     const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.jid) || {};
     const isBotAdmin = bot?.admin || false;
     const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.jid);
-    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1] ;
+    const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;    
     txt += `${tradutor.texto2[0]} ${i + 1}
     ${tradutor.texto2[1]} ${await conn.getName(jid)}

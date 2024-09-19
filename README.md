@@ -61,9 +61,6 @@
 > [!IMPORTANT]\
 > **No** se asegura que este **proyecto siga funcionando al 100% debido** a cuestiones de tiempo personales de @BrunoSobrino, por lo cual **el proyecto esta en manos de colaboradores** y usuarios que deseen aportar actualizaciones.
 
-> [!WARNING]\
-> **Este proyecto no ofrece soporte oficial para su uso en Termux.** Termux es una aplicación de terminal para Android y, aunque puede ser utilizada para ejecutar diversos programas, **este proyecto no está diseñado ni probado específicamente para funcionar en Termux**. Por lo tanto, **no garantizamos compatibilidad ni soporte técnico en este entorno**.
-
 
 # Opciones de despliegue
 
@@ -114,6 +111,13 @@ En esta sección encontrarás **botones de despliegue** que te permitirán imple
 [![Run on Repl.it](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://repl.it/github/BrunoSobrino/TheMystic-Bot-MD)
 [![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://dashboard.render.com/blueprint/new?repo=https://github.com/BrunoSobrino/TheMystic-Bot-MD)
 <!-- [![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/remade/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/BrunoSobrino/TheMystic-Bot-MD) -->
+<a href="https://brunosobrino.github.io/TheMystic-Bot-MD/">
+  <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Termux">
+</a>
+<a href="https://brunosobrino.github.io/TheMystic-Bot-MD/">
+  <img src="https://img.shields.io/badge/Linux-black?style=for-the-badge&logo=linux&logoColor=white" alt="Linux">
+  <a href="https://brunosobrino.github.io/TheMystic-Bot-MD/">
+  <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
 
 # Soporte y Comunidad
 

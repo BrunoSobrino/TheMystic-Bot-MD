@@ -15,7 +15,7 @@ import fs from 'fs';
 
 const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
     const datas = global;
-    const idioma = datas.db.data.users[m.sender].language;
+    const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
     const traductor = _translate.plugins.buscador_yts;
     const device = await getDevice(m.key.id);
@@ -80,7 +80,7 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
 
   } else {
   const datas = global;
-  const idioma = datas.db.data.users[m.sender].language;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const traductor = _translate.plugins.buscador_yts;      
   const results = await yts(text);
