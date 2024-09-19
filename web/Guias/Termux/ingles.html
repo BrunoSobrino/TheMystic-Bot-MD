@@ -22,6 +22,12 @@
 <p> To reopen the bot if Termux closes, just open Termux again, this will make it start automatically. </p>
 <p>To cancel automatic execution when opening Termux, press the CTRL + C key on the keyboard.</p>
 
+<p>To Delete Session Data Without Reinstalling Everything Completely Do This:</p>
+<p>When you first enter termux press ctrl c to cancel the autostart
+Then paste:</p>
+<code>proot-distro login archlinux -- bash -c "rm -rf /mystic/MysticSession"</code>
+<p>Now Close Termux and Open It Again, It Should Start the Bot Asking for the Number Again.</p>
+
 <h2>⚙️ Bot Preferences</h2>
 <p>You can adjust the <code>config.js</code> to change bot details such as name, date country, sticker pack name, etc. From Termux it's <code> proot-distro login archlinux -- bash -c "nano config.js" </code>. Edit what you need, to save use Ctrl+O then Enter. To exit Nano, use Ctrl+X.</p>
 <p>If you have Root or a version lower than Android 11, you can view Termux files and adjust them from the Android file explorer in the folder <code>/data/data/com.termux/files/home/</code>.</p>
