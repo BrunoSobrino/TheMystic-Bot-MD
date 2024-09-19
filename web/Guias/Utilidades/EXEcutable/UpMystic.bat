@@ -9,7 +9,7 @@ IF NOT EXIST "%USERPROFILE%\mystic" (
     powershell -NoProfile -ExecutionPolicy Bypass -Command "& { [System.Net.ServicePointManager]::Expect100Continue = $false; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) } -NoNewWindow -Wait"
 
     :: Dependencias en Choco, se puede agregar más.
-    choco install python nodejs ffmpeg-full git -y
+    choco install python nodejs ffmpeg-full git ImageMagick -y
 
     git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git "%USERPROFILE%\mystic"
     cd "%USERPROFILE%\mystic"
