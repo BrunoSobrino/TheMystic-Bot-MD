@@ -4,7 +4,7 @@ import {fileURLToPath} from 'url';
 import fs from 'fs'; 
 import moment from 'moment-timezone';
 
-global.botnumber = "5492604631960", "5492604845932"
+global.botnumber = "5492604631960"
 global.confirmCode = ""
 global.authFile = `MysticSession`;
 
@@ -14,7 +14,7 @@ global.authFile = `MysticSession`;
 global.isBaileysFail = false
 
 global.owner = [
-  ['5492604631960', '5492604845932', true],
+  ['5492604845932', '5492604631960', true],
   ['5493772406612', '5492604057569', true]
 ];
 
