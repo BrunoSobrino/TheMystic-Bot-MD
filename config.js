@@ -4,7 +4,7 @@ import {fileURLToPath} from 'url';
 import fs from 'fs'; 
 import moment from 'moment-timezone';
 
-global.botnumber = "5492604631960"
+global.botnumber = "5492604631960", "5492604845932"
 global.confirmCode = ""
 global.authFile = `MysticSession`;
 
