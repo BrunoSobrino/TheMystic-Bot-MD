@@ -23,6 +23,11 @@
 <p> Para volver a abrir el bot en caso de que se cierre Termux, Solo abre de nuevo Termux, esto hara que se Inicie Automaticamente. </p>
 <p>Para cancelar la ejecucion automatica al abrir Termux Presiona la Tecla CTRL + C del Teclado.</p>
 
+<p>Para Borrar Datos de Sesion sin Reinstalar Todo por completo Haz Esto:</p> 
+<p>Cuando apenas entres a termux pulsa ctrl c para que se cancele el inicio automatico 
+Luego pega:</p>
+<code>proot-distro login archlinux -- bash -c "rm -rf /mystic/MysticSession"</code>
+<p>Ahora Cierra Termux y Abrelo de Nuevo, Deberia Iniciar el Bot Solicitandote el Numero de Nuevo.</p>
 
     <h2>⚙️ Preferencias del Bot</h2>
     <p>Puedes ajustar el <code>config.js</code> para cambiar detalles del bot, como nombre, el país de la fecha, el nombre del paquete de stickers, etc. Desde Termux es <code> proot-distro login archlinux -- bash -c "nano config.js" </code>. Edita lo que necesites, para guardar es Ctrl+O luego Enter. Para salir de Nano es Ctrl+X.</p>
