@@ -54,6 +54,7 @@ IF NOT EXIST "%botpath%" (
 echo ######### Verificando Actualizaciones...
 
 choco upgrade all -y --allow-downgrade --ignore-dependencies --force-dependencies >nul 2>&1
+choco install %dependencias% >nul 2>&1
 if %errorlevel% neq 0 (
     echo ######### Error al actualizar dependencias. Continuando igualmente...
 )
