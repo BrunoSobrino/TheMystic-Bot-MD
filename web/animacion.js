@@ -10,17 +10,21 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-const lights = [];
-for (let i = 0; i < 25; i++) {
-    lights.push({
+const balls = [];
+for (let i = 0; i < 30; i++) {
+    balls.push(createBall());
+}
+
+function createBall() {
+    return {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 2,
         vy: (Math.random() - 0.5) * 2,
-        radius: Math.random() * 50 + 20,
-        color: getRandomColor(),
-        growing: true
-    });
+        radius: Math.random() * 10 + 10,
+        maxRadius: Math.random() * 30 + 40, // Tamaño máximo antes de explotar
+        color: getRandomColor()
+    };
 }
 
 function getRandomColor() {
@@ -29,33 +33,40 @@ function getRandomColor() {
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let light of lights) {
+    for (let i = 0; i < balls.length; i++) {
+        let ball = balls[i];
+        
         ctx.beginPath();
-        ctx.arc(light.x, light.y, light.radius, 0, Math.PI * 2);
-        ctx.fillStyle = light.color;
+        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        ctx.fillStyle = ball.color;
         ctx.fill();
 
-        // Movimiento
-        light.x += light.vx;
-        light.y += light.vy;
+        // Crecer gradualmente
+        ball.radius += 0.3;
 
-        // Cambio de tamaño
-        if (light.growing) {
-            light.radius += 0.5;
-            if (light.radius > 80) light.growing = false;
-        } else {
-            light.radius -= 0.5;
-            if (light.radius < 20) light.growing = true;
+        // Si alcanza su tamaño máximo, explota y se reinicia
+        if (ball.radius > ball.maxRadius) {
+            // Dibujar explosión
+            for (let j = 0; j < 5; j++) {
+                ctx.beginPath();
+                ctx.arc(ball.x + Math.random() * 50 - 25, ball.y + Math.random() * 50 - 25, Math.random() * 15, 0, Math.PI * 2);
+                ctx.fillStyle = getRandomColor();
+                ctx.fill();
+            }
+            // Regenerar la bola
+            balls[i] = createBall();
         }
+
+        // Movimiento
+        ball.x += ball.vx;
+        ball.y += ball.vy;
 
         // Rebote en los bordes
-        if (light.x + light.radius > canvas.width || light.x - light.radius < 0) {
-            light.vx *= -1;
-            light.color = getRandomColor(); // Cambiar color al rebotar
+        if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+            ball.vx *= -1;
         }
-        if (light.y + light.radius > canvas.height || light.y - light.radius < 0) {
-            light.vy *= -1;
-            light.color = getRandomColor(); // Cambiar color al rebotar
+        if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+            ball.vy *= -1;
         }
     }
     requestAnimationFrame(animate);
