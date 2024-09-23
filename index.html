@@ -31,6 +31,25 @@
         .hide {
             display: none;
         }
+
+        /* Estilos para la animación del fondo */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Aseguramos que esté detrás de todo */
+            overflow: hidden; /* Prevenir desbordamiento */
+        }
+
+        /* Estilos del contenido para que quede encima */
+        .content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            font-family: 'Comfortaa', sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -38,16 +57,8 @@
         <p>⌛Cargando⏳</p>
     </div>
 
-    <!-- Sección del video comentada -->
-    <!-- 
-    <video autoplay muted loop id="bg-video" preload="auto">
-        <source src="https://github.com/user-attachments/assets/39cbf647-28cd-4604-a717-ada1439d274b" type="video/mp4">
-        Er Video
-    </video>
-    -->
-
-    <!-- Div para la animación del fondo -->
-    <div class="background-animation"></div>
+    <!-- Contenedor de la animación de fondo -->
+    <div class="background-animation" id="background-animation"></div>
 
     <div class="content" id="content">
         <p>⌛Cargando⏳</p>
