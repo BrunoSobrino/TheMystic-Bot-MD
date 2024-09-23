@@ -57,18 +57,18 @@
         async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(Error fetching ${url}: ${response.statusText});
+                if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 document.getElementById('content').innerHTML = await response.text();
 
                // Comentarios Disqus, PErsonalizable y Claramente Opcional.
                 loadDisqus();
             } catch (error) {
-                console.error(Error cargando D: ${error.message});
+                console.error(`Error cargando D: ${error.message}`);
                 if (fallbackUrl) {
-                    console.log(Usando fallback URL: ${fallbackUrl});
+                    console.log(`Usando fallback URL: ${fallbackUrl}`);
                     loadContent(fallbackUrl);
                 } else {
-                    document.getElementById('content').innerHTML = <p>Error Cargando: ${error.message}</p>;
+                    document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
                 }
             }
         }
@@ -109,7 +109,7 @@
         
         function loadLocalizedContent(urlBase) {
             const localizedUrl = getLocalizedUrl(urlBase);
-            const fallbackUrl = ${urlBase}ingles.html;
+            const fallbackUrl = `${urlBase}ingles.html`;
             loadContent(localizedUrl, fallbackUrl);
         }
 
