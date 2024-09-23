@@ -14,7 +14,7 @@ window.addEventListener('resize', resizeCanvas);
 
 // Crear un array de estrellas
 const stars = [];
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 50; i++) {
     stars.push(createStar());
 }
 
@@ -25,14 +25,15 @@ function createStar() {
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 4,  // Velocidad en X
         vy: (Math.random() - 0.5) * 4,  // Velocidad en Y
-        radius: Math.random() * 8 + 4,  // Tamaño inicial
-        originalRadius: Math.random() * 8 + 4,  // Guardamos el tamaño original para el efecto de achicarse
+        radius: Math.random() * 5 + 5,  // Tamaño inicial
+        originalRadius: Math.random() * 5 + 5,  // Tamaño original para el efecto de achicarse
         color: getRandomColor(),  // Color aleatorio
-        shrinking: true  // Indicador de si la estrella está achicándose
+        shrinking: true,  // Indicador de si la estrella está achicándose
+        sparkle: Math.random() * 100  // Brillo inicial
     };
 }
 
-// Función para obtener un color aleatorio brillante (blanco, azul, amarillo claro)
+// Función para obtener un color aleatorio brillante
 function getRandomColor() {
     const colors = [
         'rgba(255, 255, 255, 1)',   // Blanco
@@ -45,27 +46,28 @@ function getRandomColor() {
 
 // Función para dibujar y animar
 function animate() {
-    // Fondo negro con leve transparencia para crear el rastro
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    // Fondo negro
+    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Dibujar las estrellas
     for (let i = 0; i < stars.length; i++) {
         let star = stars[i];
 
+        // Aumentar el brillo
+        star.sparkle += (Math.random() - 0.5) * 0.2; // Variar el brillo
+        star.sparkle = Math.max(0, Math.min(100, star.sparkle)); // Limitar el brillo
+        const alpha = star.sparkle / 100; // Normalizar el brillo para el color
+
         // Dibujar la estrella
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
+        ctx.fillStyle = `rgba(${255}, ${255}, ${255}, ${alpha})`; // Brillo dinámico
         ctx.fill();
-
-        // Movimiento
-        star.x += star.vx;
-        star.y += star.vy;
 
         // Achicar la estrella
         if (star.shrinking) {
-            star.radius -= 0.05;  // Velocidad a la que se achican las estrellas
+            star.radius -= 0.1;  // Velocidad a la que se achican las estrellas
 
             // Explosión si el radio es muy pequeño
             if (star.radius <= 1) {
@@ -73,6 +75,10 @@ function animate() {
                 stars[i] = createStar();  // Regenerar la estrella
             }
         }
+
+        // Movimiento
+        star.x += star.vx;
+        star.y += star.vy;
 
         // Rebote en los bordes
         if (star.x + star.radius > canvas.width || star.x - star.radius < 0) {
@@ -89,16 +95,17 @@ function animate() {
 
 // Función para crear la explosión de una estrella
 function explodeStar(x, y) {
-    const explosionParticles = 10;
+    const explosionParticles = 20; // Número de partículas en la explosión
     for (let i = 0; i < explosionParticles; i++) {
-        // Dibujar pequeños destellos alrededor de la estrella
-        const particleX = x + (Math.random() * 30 - 15);
-        const particleY = y + (Math.random() * 30 - 15);
+        const particleX = x + (Math.random() * 40 - 20);
+        const particleY = y + (Math.random() * 40 - 20);
         const particleRadius = Math.random() * 2 + 1;
 
+        // Color de las partículas
+        const color = getRandomColor();
         ctx.beginPath();
         ctx.arc(particleX, particleY, particleRadius, 0, Math.PI * 2);
-        ctx.fillStyle = getRandomColor();
+        ctx.fillStyle = color;
         ctx.fill();
     }
 }
