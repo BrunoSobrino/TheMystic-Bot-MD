@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
     <link rel="stylesheet" href="web/estilo.css">
     <style>
-        /* Estilo de Carga*/
+        /* Estilo de Carga */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -38,29 +38,31 @@
         <p>⌛Cargando⏳</p>
     </div>
 
+    <!-- Sección del video comentada -->
+    <!-- 
     <video autoplay muted loop id="bg-video" preload="auto">
         <source src="https://github.com/user-attachments/assets/39cbf647-28cd-4604-a717-ada1439d274b" type="video/mp4">
         Er Video
     </video>
+    -->
+
+    <!-- Div para la animación del fondo -->
+    <div class="background-animation"></div>
 
     <div class="content" id="content">
         <p>⌛Cargando⏳</p>
     </div>
 
     <script>
-        
         function hideLoadingScreen() {
             document.getElementById('loading-screen').classList.add('hide');
         }
 
-        
         async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 document.getElementById('content').innerHTML = await response.text();
-
-               // Comentarios Disqus, PErsonalizable y Claramente Opcional.
                 loadDisqus();
             } catch (error) {
                 console.error(`Error cargando D: ${error.message}`);
@@ -73,7 +75,6 @@
             }
         }
 
-        
         function loadDisqus() {
             const disqusDiv = document.createElement('div');
             disqusDiv.id = 'disqus_thread';
@@ -92,7 +93,6 @@
             })();
         }
 
-        
         function getLocalizedUrl(urlBase) {
             const lang = navigator.language || navigator.userLanguage;
             const langMap = {
@@ -106,25 +106,17 @@
             return urlBase + (langMap[lang.slice(0, 2)] || 'ingles.html');
         }
 
-        
         function loadLocalizedContent(urlBase) {
             const localizedUrl = getLocalizedUrl(urlBase);
             const fallbackUrl = `${urlBase}ingles.html`;
             loadContent(localizedUrl, fallbackUrl);
         }
 
-        
         document.addEventListener("DOMContentLoaded", () => {
-            const bgVideo = document.getElementById('bg-video');
-            
-            
-            bgVideo.addEventListener('loadeddata', () => {
-                loadLocalizedContent('web/');
-                hideLoadingScreen(); 
-            });
+            hideLoadingScreen(); 
+            loadLocalizedContent('web/');
         });
 
-        
         document.addEventListener('click', (event) => {
             const anchor = event.target.closest('a');
             if (anchor && anchor.getAttribute('href')?.includes('web/')) {
@@ -134,7 +126,6 @@
             }
         });
 
-       
         window.onpopstate = () => location.reload();
     </script>
 
@@ -145,6 +136,9 @@
             channel: '1286022420330840215'
         });
     </script>
+
+    <!-- Script externo para la animación del fondo -->
+    <script src="web/animacion.js"></script>
 
     <noscript>JavaScript OFF. Se requiere JS activado para visualizar esta página. Consulta el repositorio si tienes problemas.</noscript>
 </body>
