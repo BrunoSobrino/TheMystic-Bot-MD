@@ -1,15 +1,14 @@
-// Animación simple de luces borrosas rebotando
 const canvas = document.createElement('canvas');
-document.body.appendChild(canvas);
+const bgAnimation = document.getElementById('background-animation');
+bgAnimation.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-window.addEventListener('resize', () => {
+function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-});
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
 const lights = [];
 for (let i = 0; i < 20; i++) {
