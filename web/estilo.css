@@ -70,6 +70,13 @@ code {
     backdrop-filter: blur(5px);
 }
 
+.contenedor-imagenes {
+  display: flex;
+  justify-content: space-around; 
+  align-items: center; 
+  gap: 10px; 
+}
+
 h1, p {
     color: white;
 }
