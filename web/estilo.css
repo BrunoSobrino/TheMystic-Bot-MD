@@ -71,10 +71,11 @@ code {
 }
 
 .contenedor-imagenes {
-  display: flex;
-  justify-content: space-around; 
-  align-items: center; 
-  gap: 2px; 
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 2px;
+    width: "80%"; 
 }
 
 h1, p {
