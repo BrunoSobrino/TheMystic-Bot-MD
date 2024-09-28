@@ -6,5 +6,5 @@ chmod 777 ~/update.sh && \
 git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git mystic && \
 cd mystic && \
 npm install && \
-npm start ."
+npm start code "
 
