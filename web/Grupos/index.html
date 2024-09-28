@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugins 🧩</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="web/favicon.ico">
+    <link rel="stylesheet" href="web/estilo.css">
+    <style>
+        /* Estilo de la pantalla de carga */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #232323; 
+            z-index: 1000;
+        }
+
+        .loading-screen p {
+            font-size: 2em;
+            font-family: 'Comfortaa', sans-serif;
+        }
+
+        /* Clase para ocultar elementos */
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loading-screen">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <video autoplay muted loop id="bg-video" preload="auto">
+        <source src="https://videos.pexels.com/video-files/3141207/3141207-uhd_2560_1440_25fps.mp4" type="video/mp4">
+        Error al cargar el video
+    </video>
+
+    <div class="content" id="content">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <script>
+        // Oculta la pantalla de carga
+        function hideLoadingScreen() {
+            document.getElementById('loading-screen').classList.add('hide');
+        }
+
+        // Carga el contenido de la URL proporcionada
+        async function loadContent(url, fallbackUrl = null) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
+                document.getElementById('content').innerHTML = await response.text();
+                loadDisqus(); // Carga Disqus si el contenido se cargó correctamente
+            } catch (error) {
+                console.error(`Error cargando contenido: ${error.message}`);
+                if (fallbackUrl) {
+                    loadContent(fallbackUrl); // Intenta cargar el fallback si hay error
+                } else {
+                    document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
+                }
+            }
+        }
+
+        // Carga Disqus para comentarios
+        function loadDisqus() {
+            const disqusDiv = document.createElement('div');
+            disqusDiv.id = 'disqus_thread';
+            document.getElementById('content').appendChild(disqusDiv);
+
+            const disqus_config = function () {
+                this.page.url = window.location.href;
+                this.page.identifier = document.title;
+            };
+
+            const s = document.createElement('script');
+            s.src = 'https://amigos-steam.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            document.body.appendChild(s);
+        }
+
+        // Devuelve la URL localizada según el idioma del navegador
+        function getLocalizedUrl(urlBase) {
+            const lang = navigator.language.slice(0, 2); // Obtener el código de idioma
+            const langMap = {
+                es: 'es.html',
+                pt: 'pt.html',
+                fr: 'fr.html',
+                ru: 'ru.html',
+                ar: 'ar.html',
+                hi: 'hi.html'
+            };
+            return `${urlBase}${langMap[lang] || 'ingles.html'}`;
+        }
+
+        // Carga el contenido localizado
+        function loadLocalizedContent(urlBase) {
+            const localizedUrl = getLocalizedUrl(urlBase);
+            const fallbackUrl = `${urlBase}ingles.html`;
+            loadContent(localizedUrl, fallbackUrl);
+        }
+
+        // Inicialización al cargar el DOM
+        document.addEventListener("DOMContentLoaded", () => {
+            const bgVideo = document.getElementById('bg-video');
+
+            // Ocultar pantalla de carga después de 5 segundos
+            const timeoutId = setTimeout(hideLoadingScreen, 5000);
+
+            // Intentar cargar el contenido localizado inmediatamente
+            loadLocalizedContent('web/Grupos');
+
+            // Ocultar la pantalla de carga cuando el video esté listo, si no se ha ocultado aún
+            bgVideo.addEventListener('loadeddata', () => {
+                clearTimeout(timeoutId); // Cancelar el timeout si se ha cargado el video
+                hideLoadingScreen(); // Ocultar la pantalla de carga
+            });
+        });
+
+        // Manejo de clics en enlaces internos
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a');
+            if (anchor && anchor.href.includes('web/')) {
+                event.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                loadLocalizedContent(anchor.href.replace('.html', ''));
+            }
+        });
+
+        // Recarga la página al cambiar el estado del historial
+        window.onpopstate = () => location.reload();
+    </script>
+
+    <!-- Widget de Discord -->
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
+        new Crate({
+            server: '1278571215635877908',
+            channel: '1280978443793727549'
+        });
+    </script>
+
+    <noscript>JavaScript OFF. Se requiere JS activado para visualizar esta página. Consulta el repositorio si tienes problemas.</noscript>
+</body>
+</html>
