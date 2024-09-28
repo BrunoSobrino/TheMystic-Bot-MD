@@ -27,7 +27,7 @@
             font-family: 'Comfortaa', sans-serif;
         }
 
-        /* Clase para ocultar elementos */
+    
         .hide {
             display: none;
         }
@@ -53,24 +53,24 @@
             document.getElementById('loading-screen').classList.add('hide');
         }
 
-        // Carga el contenido de la URL proporcionada
+       
         async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 document.getElementById('content').innerHTML = await response.text();
-                loadDisqus(); // Carga Disqus si el contenido se cargó correctamente
+                loadDisqus(); 
             } catch (error) {
                 console.error(`Error cargando contenido: ${error.message}`);
                 if (fallbackUrl) {
-                    loadContent(fallbackUrl); // Intenta cargar el fallback si hay error
+                    loadContent(fallbackUrl); 
                 } else {
                     document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
                 }
             }
         }
 
-        // Carga Disqus para comentarios
+        // Disqus comentarios
         function loadDisqus() {
             const disqusDiv = document.createElement('div');
             disqusDiv.id = 'disqus_thread';
@@ -87,7 +87,7 @@
             document.body.appendChild(s);
         }
 
-        // Devuelve la URL localizada según el idioma del navegador
+        //  URL según el idioma del navegador
         function getLocalizedUrl(urlBase) {
             const lang = navigator.language.slice(0, 2); // Obtener el código de idioma
             const langMap = {
@@ -101,14 +101,12 @@
             return `${urlBase}${langMap[lang] || 'ingles.html'}`;
         }
 
-        // Carga el contenido localizado
         function loadLocalizedContent(urlBase) {
             const localizedUrl = getLocalizedUrl(urlBase);
             const fallbackUrl = `${urlBase}ingles.html`;
             loadContent(localizedUrl, fallbackUrl);
         }
 
-        // Inicialización al cargar el DOM
         document.addEventListener("DOMContentLoaded", () => {
             const bgVideo = document.getElementById('bg-video');
 
@@ -116,7 +114,7 @@
             const timeoutId = setTimeout(hideLoadingScreen, 5000);
 
             // Intentar cargar el contenido localizado inmediatamente
-            loadLocalizedContent('/');
+            loadLocalizedContent('');
 
             // Ocultar la pantalla de carga cuando el video esté listo, si no se ha ocultado aún
             bgVideo.addEventListener('loadeddata', () => {
@@ -125,7 +123,6 @@
             });
         });
 
-        // Manejo de clics en enlaces internos
         document.addEventListener('click', (event) => {
             const anchor = event.target.closest('a');
             if (anchor && anchor.href.includes('web/')) {
@@ -135,7 +132,6 @@
             }
         });
 
-        // Recarga la página al cambiar el estado del historial
         window.onpopstate = () => location.reload();
     </script>
 
