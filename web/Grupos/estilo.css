@@ -59,7 +59,7 @@ code {
 }
 
 .content {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.3);
     padding: 20px;
     border-radius: 10px;
     max-width: 800px;
@@ -68,13 +68,6 @@ code {
     position: relative;
     z-index: 1;
     backdrop-filter: blur(5px);
-}
-
-.contenedor-imagenes {
-  display: flex;
-  justify-content: space-around; 
-  align-items: center; 
-  gap: 2px; 
 }
 
 h1, p {
