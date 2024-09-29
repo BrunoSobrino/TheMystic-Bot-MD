@@ -4,24 +4,30 @@
   <h1>👩‍🏫 Bienvenido a la Wiki</h1>
 <h2> Aqui encontraras Documentacion y Ajustes Adicionales </h2>
 <h2> Cualquier Duda que Tengas puedes ir a los  <a href="https://weskerty.github.io/TheMysticMOD/web/Grupos/">Grupos de Ayuda</a> </h2>
-  
+<h2> Para Instalaciones Locales Aqui: </h2>
+  <a href="web/Guias/Termux/">
+  <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Termux">
+</a>
+<a href="web/Guias/Linux/">
+  <img src="https://img.shields.io/badge/Linux-black?style=for-the-badge&logo=linux&logoColor=white" alt="Linux">
+  <a href="web/Guias/Windows/">
+  <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
+</a>
   
 
-  <h1>⚙️ Ajustes Manuales</h1>
+  <h1>⚙️ Ajustes de Config.js</h1>
 <details>
-  <summary><b>⚙️ Variables Config.js </b></summary>
+  <summary><b>⚙️ Explicacion de Variables </b></summary>
   <p>Puedes Cambiar estos valores ajustando config.js y agregando el archivo a .gitignore para que el bot pueda Actualizarse sin mostrar fallas de pull. </p>
   <p>Tambien puedes usar .setvar dato = variable pero esto reiniciara el bot en cada cambio en caso de usar Windows</p>
   
-<h3>⚙️Stickers:</h3>
+<h3>⚙️ Stickers:</h3>
 
 <code>global.packname = 'Nombre Sticker'</code>
 
 <code>global.author = 'Nombre Pack Sticker'</code>
 
-
-
-<h3>⚙️Nombre del Bot:</h3>
+<h3>⚙️ Nombre del Bot:</h3>
 
 <p>Se Muestran en Algunos Menus</p>
 
@@ -33,89 +39,75 @@
 
 <code>global.igfg = 'The Mystic - Bot'</code>
 
-global.wm2 = `${dia} ${fecha}\nThe Mystic - Bot`
+<code>global.wm2 = `${dia} ${fecha}\nThe Mystic - Bot`</code>
 
-global.gt = 'The Mystic - Bot'
+<code>global.gt = 'The Mystic - Bot'</code>
 
-global.mysticbot = 'The Mystic - Bot'
+<code>global.mysticbot = 'The Mystic - Bot'</code>
 
-global.channel = 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y'
+<code>global.channel = 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y'</code>
 
-global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
+<code>global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'</code>
 
-global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
+<code>global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'</code>
 
+<p>Aqui se Agrega el número del bot y cuando inicia una nueva sesión no pedirá número sino que empezará con el código directamente. Debe ser sin espacios y sin +. No es necesario agregarlo.</p>
 
+<code>global.botnumber = "595972184435"</code>
 
-  <p>Aqui se Agrega el numero del bot y cuando inicia una nueva sesion no pedira numero sino que empezara con el codigo directamente. Debe ser sin espacios y sin +. No es necesario agregarlo. </p>
+<h3>⚙️ Administradores del Bot:</h3>
 
-  global.botnumber = "595972184435"
+<p>Se agrega el número, el nombre (opcional). Siempre debe tener ese Formato. Se agrega COMA "," si vas a continuar agregando más, cuando llegues al final no debe existir coma o el bot no iniciará.</p>
 
+<code>global.owner = [
+['595972184435', '👑 Marco 👑', true],
+['5218444937407']
+]</code>
 
+<h3>⚙️ Imágenes de Menú:</h3>
 
-  <h3>Administradores del Bot:</h3>
+<p>Ubicación de las imágenes en formato Unix "/" No "\"</p>
 
-  Se agrega el numero, el nombre (opcional). Siempre debe tener ese Formato. Se agrega COMA "," si vas a continuar agregando mas, cuando llegues al final no debe existir coma o el bot no iniciara.
+<code>global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png')</code>
 
-  global.owner = [
+<h3>⚙️ Decoraciones:</h3>
 
-  ['595972184435', '👑 Mystic - Creador 👑', true],
+<p>Se ven en algunos menús</p>
 
-  ['5218444937407']
+<code>global.cmenut = '❖––––––『'</code>
 
-]
+<code>global.cmenub = '┊✦ '</code>
 
+<code>global.cmenuf = '╰━═┅═━––––––๑\n'</code>
 
+<code>global.cmenua = '\n⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❘❙❚❙❘ ⌕\n'</code>
 
-Imagenes de Menu:
+<code>global.dmenut = '*❖─┅──┅〈*'</code>
 
-Ubicacion de las Imagenes en formato Unix "/" No "\"
+<code>global.dmenub = '*┊»*'</code>
 
-global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png')
+<code>global.dmenub2 = '*┊*'</code>
 
+<code>global.dmenuf = '*╰┅────────┅✦*'</code>
 
+<code>global.htjava = '⫹⫺'</code>
 
-Decoraciones:
+<code>global.htki = '*⭑•̩̩͙⊱•••• ☪*'</code>
 
-Se ven en algunos menus
+<code>global.htka = '*☪ ••••̩̩͙⊰•⭑*'</code>
 
-global.cmenut = '❖––––––『'
+<code>global.comienzo = '• • ◕◕════'</code>
 
-global.cmenub = '┊✦ '
+<code>global.fin = '════◕◕ • •'</code>
 
-global.cmenuf = '╰━═┅═━––––––๑\n'
+<h3>⚙️ Hora y Ubicación del Bot:</h3>
 
-global.cmenua = '\n⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❙❘❙❚❙❘ ⌕\n     '
+<p>Útil para Clima y Otros Plugins que Requieren Fecha y Ubicación</p>
 
-global.dmenut = '*❖─┅──┅〈*';
+<code>global.botdate = `*[ 📅 ] Fecha:* ${moment.tz('America/Mexico_City').format('DD/MM/YY')}`</code>
 
-global.dmenub = '*┊»*'
+<code>global.bottime = `*[ ⏳ ] Hora:* ${moment.tz('America/Mexico_City').format('HH:mm:ss')}`</code>
 
-global.dmenub2 = '*┊*'
-
-global.dmenuf = '*╰┅────────┅✦*'
-
-global.htjava = '⫹⫺'
-
-global.htki = '*⭑•̩̩͙⊱•••• ☪*';
-
-global.htka = '*☪ ••••̩̩͙⊰•⭑*'
-
-global.comienzo = '• • ◕◕════'
-
-global.fin = '════◕◕ • •'
-
-
-
-Hora y Ubicacion del Bot:
-
-Util para Clima y Otros Plugins que Requieren Fecha y Ubicacion
-
-
-
-global.botdate = `*[ 📅 ] Fecha:*  ${moment.tz('America/Mexico_City').format('DD/MM/YY')}`
-
-global.bottime = `*[ ⏳ ] Hora:* ${moment.tz('America/Mexico_City').format('HH:mm:ss')}`
 
 
 
@@ -123,6 +115,29 @@ global.bottime = `*[ ⏳ ] Hora:* ${moment.tz('America/Mexico_City').format('HH:
 
 </details>
 
+</br>
+
+
+  <h1>⚙️ Ajustes de Plugins Incluidos</h1>
+<details>
+  <summary><b>⚙️ Explicacion de Plugins </b></summary>
+
+
+</details>
+
+</br>
+  
+  <h1>⚙️ Otro Ejemplo </h1>
+<details>
+  <summary><b>⚙️ Explicacion de Ejemplos </b></summary>
+
+
+</details>
+
+
+
+
+  
 
 </br>
   
