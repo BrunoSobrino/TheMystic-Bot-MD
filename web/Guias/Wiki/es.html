@@ -13,15 +13,113 @@
   <p>Puedes Cambiar estos valores ajustando config.js y agregando el archivo a .gitignore para que el bot pueda Actualizarse sin mostrar fallas de pull. </p>
   <p>Tambien puedes usar .setvar dato = variable pero esto reiniciara el bot en cada cambio en caso de usar Windows</p>
   
-<h3>⚙️Stickers</h3>
+<h3>⚙️Stickers:</h3>
+
 <code>global.packname = 'Nombre Sticker'</code>
+
 <code>global.author = 'Nombre Pack Sticker'</code>
 
-<h3>⚙️Nombre del Bot que se Muestra en Algunos Menus</h3>
+
+
+<h3>⚙️Nombre del Bot:</h3>
+
+<p>Se Muestran en Algunos Menus</p>
+
 <code>global.wm = 'The Mystic - Bot'</code>
+
 <code>global.titulowm = 'The Mystic - Bot'</code>
+
 <code>global.titulowm2 = `The Mystic - Bot`</code>
+
 <code>global.igfg = 'The Mystic - Bot'</code>
+
+global.wm2 = `${dia} ${fecha}\nThe Mystic - Bot`
+
+global.gt = 'The Mystic - Bot'
+
+global.mysticbot = 'The Mystic - Bot'
+
+global.channel = 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y'
+
+global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
+
+global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'
+
+
+
+  <p>Aqui se Agrega el numero del bot y cuando inicia una nueva sesion no pedira numero sino que empezara con el codigo directamente. Debe ser sin espacios y sin +. No es necesario agregarlo. </p>
+
+  global.botnumber = "595972184435"
+
+
+
+  <h3>Administradores del Bot:</h3>
+
+  Se agrega el numero, el nombre (opcional). Siempre debe tener ese Formato. Se agrega COMA "," si vas a continuar agregando mas, cuando llegues al final no debe existir coma o el bot no iniciara.
+
+  global.owner = [
+
+  ['595972184435', '👑 Mystic - Creador 👑', true],
+
+  ['5218444937407']
+
+]
+
+
+
+Imagenes de Menu:
+
+Ubicacion de las Imagenes en formato Unix "/" No "\"
+
+global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png')
+
+
+
+Decoraciones:
+
+Se ven en algunos menus
+
+global.cmenut = '❖––––––『'
+
+global.cmenub = '┊✦ '
+
+global.cmenuf = '╰━═┅═━––––––๑\n'
+
+global.cmenua = '\n⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❙❘❙❚❙❘ ⌕\n     '
+
+global.dmenut = '*❖─┅──┅〈*';
+
+global.dmenub = '*┊»*'
+
+global.dmenub2 = '*┊*'
+
+global.dmenuf = '*╰┅────────┅✦*'
+
+global.htjava = '⫹⫺'
+
+global.htki = '*⭑•̩̩͙⊱•••• ☪*';
+
+global.htka = '*☪ ••••̩̩͙⊰•⭑*'
+
+global.comienzo = '• • ◕◕════'
+
+global.fin = '════◕◕ • •'
+
+
+
+Hora y Ubicacion del Bot:
+
+Util para Clima y Otros Plugins que Requieren Fecha y Ubicacion
+
+
+
+global.botdate = `*[ 📅 ] Fecha:*  ${moment.tz('America/Mexico_City').format('DD/MM/YY')}`
+
+global.bottime = `*[ ⏳ ] Hora:* ${moment.tz('America/Mexico_City').format('HH:mm:ss')}`
+
+
+
+
 
 </details>
 
