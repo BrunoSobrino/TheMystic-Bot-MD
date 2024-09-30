@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mystic Bot 🔮</title>
+    <title>Plugins 🧩</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="web/favicon.ico">
-    <link rel="stylesheet" href="web/estilo.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="estilo.css">
     <style>
         /* Estilo de la pantalla de carga */
         .loading-screen {
@@ -27,7 +27,7 @@
             font-family: 'Comfortaa', sans-serif;
         }
 
-        /* Clase para ocultar elementos */
+    
         .hide {
             display: none;
         }
@@ -39,7 +39,7 @@
     </div>
 
     <video autoplay muted loop id="bg-video" preload="auto">
-        <source src="https://videos.pexels.com/video-files/7180356/7180356-hd_1366_720_25fps.mp4" type="video/mp4">
+        <source src="https://videos.pexels.com/video-files/3141207/3141207-uhd_2560_1440_25fps.mp4" type="video/mp4">
         Error al cargar el video
     </video>
 
@@ -53,24 +53,24 @@
             document.getElementById('loading-screen').classList.add('hide');
         }
 
-        // Carga el contenido de la URL proporcionada
+       
         async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 document.getElementById('content').innerHTML = await response.text();
-                loadDisqus(); // Carga Disqus si el contenido se cargó correctamente
+                loadDisqus(); 
             } catch (error) {
                 console.error(`Error cargando contenido: ${error.message}`);
                 if (fallbackUrl) {
-                    loadContent(fallbackUrl); // Intenta cargar el fallback si hay error
+                    loadContent(fallbackUrl); 
                 } else {
                     document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
                 }
             }
         }
 
-        // Carga Disqus para comentarios
+        // Disqus comentarios
         function loadDisqus() {
             const disqusDiv = document.createElement('div');
             disqusDiv.id = 'disqus_thread';
@@ -87,7 +87,7 @@
             document.body.appendChild(s);
         }
 
-        // Devuelve la URL localizada según el idioma del navegador
+        //  URL según el idioma del navegador
         function getLocalizedUrl(urlBase) {
             const lang = navigator.language.slice(0, 2); // Obtener el código de idioma
             const langMap = {
@@ -101,14 +101,12 @@
             return `${urlBase}${langMap[lang] || 'ingles.html'}`;
         }
 
-        // Carga el contenido localizado
         function loadLocalizedContent(urlBase) {
             const localizedUrl = getLocalizedUrl(urlBase);
             const fallbackUrl = `${urlBase}ingles.html`;
             loadContent(localizedUrl, fallbackUrl);
         }
 
-        // Inicialización al cargar el DOM
         document.addEventListener("DOMContentLoaded", () => {
             const bgVideo = document.getElementById('bg-video');
 
@@ -116,7 +114,7 @@
             const timeoutId = setTimeout(hideLoadingScreen, 5000);
 
             // Intentar cargar el contenido localizado inmediatamente
-            loadLocalizedContent('web/');
+            loadLocalizedContent('');
 
             // Ocultar la pantalla de carga cuando el video esté listo, si no se ha ocultado aún
             bgVideo.addEventListener('loadeddata', () => {
@@ -125,7 +123,6 @@
             });
         });
 
-        // Manejo de clics en enlaces internos
         document.addEventListener('click', (event) => {
             const anchor = event.target.closest('a');
             if (anchor && anchor.href.includes('web/')) {
@@ -135,7 +132,6 @@
             }
         });
 
-        // Recarga la página al cambiar el estado del historial
         window.onpopstate = () => location.reload();
     </script>
 

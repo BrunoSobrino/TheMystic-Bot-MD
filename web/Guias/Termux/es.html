@@ -1,4 +1,9 @@
- <h1>Guía de Instalación Termux</h1>
+<div style="text-align:center;">
+
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Mobile%20Phone%20with%20Arrow.png" alt="Man Technologist Medium-Dark Skin Tone" width="180px" />
+
+
+<h1>Guía de Instalación Termux</h1>
     
     <img src="https://pm1.aminoapps.com/7668/91d769c068689bda190185f008716df225bd8102r1-1080-737v2_hq.jpg" alt="Imagen de guía" width="70%" height="auto"/>
 
@@ -10,10 +15,13 @@
 
     <h2>⬇️ Instalar Mystic Bot</h2>
     <p>Simplemente copia y pega esto en Termux </p>
-<code> apt update -y && yes | apt upgrade && pkg install -y wget proot-distro && proot-distro install archlinux && wget -O - https://raw.githubusercontent.com/weskerty/test/main/Termux/mystic.sh | bash </code>
+<code> apt update -y && yes | apt upgrade && pkg install -y wget proot-distro && proot-distro install archlinux && wget -O - https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/Termux.sh | bash </code>
 
 <h1>📹 Video Demostrativo; </h1>
-  <video src="https://github.com/user-attachments/assets/a109c5ef-1124-437c-b616-5dc2ca7bdec8" controls width="100%" height="auto"></video>
+
+ <iframe width="50%" height="auto" src="https://www.youtube.com/embed/IvunP0qsoac" 
+            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen></iframe>
 
 <p>En caso de Aparecer Error "Arch ya Instalado" puedes borrar Datos de Termux y Empezar de Nuevo. No Minimices para evitar fallas.</p>
 <p>Tambien puedes ejecutar simplemente esto para saltar ese error</p>
@@ -23,10 +31,16 @@
 <p> Para volver a abrir el bot en caso de que se cierre Termux, Solo abre de nuevo Termux, esto hara que se Inicie Automaticamente. </p>
 <p>Para cancelar la ejecucion automatica al abrir Termux Presiona la Tecla CTRL + C del Teclado.</p>
 
+<p>Para Borrar Datos de Sesion sin Reinstalar Todo por completo Haz Esto:</p> 
+<p>Cuando apenas entres a termux pulsa ctrl c para que se cancele el inicio automatico 
+Luego pega:</p>
+<code>proot-distro login archlinux -- bash -c "rm -rf /mystic/MysticSession"</code>
+<p>Ahora Cierra Termux y Abrelo de Nuevo, Deberia Iniciar el Bot Solicitandote el Numero de Nuevo.</p>
 
     <h2>⚙️ Preferencias del Bot</h2>
-    <p>Puedes ajustar el <code>config.js</code> para cambiar detalles del bot, como nombre, el país de la fecha, el nombre del paquete de stickers, etc. Desde Termux es <code> proot-distro login archlinux -- bash -c "nano config.js" </code>. Edita lo que necesites, para guardar es Ctrl+O luego Enter. Para salir de Nano es Ctrl+X.</p>
-    <p>En caso de que tengas Root o una versión inferior a Android 11, puedes ir a ver los archivos de Termux y ajustarlos desde el explorador de archivos de Android en la carpeta <code>/data/data/com.termux/files/home/</code>.</p>
+ <p>Puedes ajustar las variables con .setvar <a href="web/Guias/Wiki">Variables ↗️</a> </p>
+    <p>O Tambien Puedes ajustar el <code>config.js</code> para cambiar detalles del bot, como nombre, el país de la fecha, el nombre del paquete de stickers, etc. Desde Termux es <code> proot-distro login archlinux -- bash -c "nano config.js" </code>Edita lo que necesites, para guardar es Ctrl+O luego Enter. Para salir de Nano es Ctrl+X.</p>
+    <p>En caso de que tengas Root o una versión inferior a Android 11, puedes ir a ver los archivos de Termux y ajustarlos desde el explorador de archivos de Android en la carpeta <code>/data/data/com.termux/files/home/</code></p>
 
     <h2>🔌 Mantener Abierto Termux</h2>
    <blockquote> <p>El bot funcionará mientras Termux esté abierto y con conexión a Internet. Permite a Termux ejecutarse sin restricciones ni optimizaciones de batería. Activa el WakeLock desde la notificación de Termux.</p>
@@ -41,6 +55,7 @@
 <code>adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"</code>
 <code>adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"</code>
 <code>adb shell settings put global settings_enable_monitor_phantom_procs false</code>
+<code>adb shell cmd deviceidle whitelist +com.termux</code>
 
     <h3>Con ROOT:</h3>
 <code>su -c /system/bin/device_config set_sync_disabled_for_tests persistent</code>
