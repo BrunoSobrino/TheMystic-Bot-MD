@@ -53,19 +53,41 @@ Luego pega:</p>
     
     <h3>Con ADB</h3>
 <code>adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"</code>
+</br>
 <code>adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"</code>
+</br>
 <code>adb shell settings put global settings_enable_monitor_phantom_procs false</code>
+</br>
 <code>adb shell cmd deviceidle whitelist +com.termux</code>
+</br>
+</code> adb shell cmd appops set com.termux RUN_IN_BACKGROUND allow </code>
+</br>
+</code> adb shell cmd appops set com.termux RUN_ANY_IN_BACKGROUND allow </code>
+</br>
+</code> adb shell cmd appops set com.termux SYSTEM_EXEMPT_FROM_ACTIVITY_BG_START_RESTRICTION allow </code>
+</br>
+</code> adb shell cmd appops set com.termux SYSTEM_EXEMPT_FROM_HIBERNATION allow </code>
+</br>
+</code> adb shell cmd appops set com.termux SYSTEM_EXEMPT_FROM_POWER_RESTRICTIONS allow </code>
+</br>
+</code> adb shell cmd appops set com.termux SYSTEM_EXEMPT_FROM_SUSPENSION allow </code>
+</br>
+</code> adb shell cmd appops set com.termux WAKE_LOCK allow </code>
+</br>
 
     <h3>Con ROOT:</h3>
 <code>su -c /system/bin/device_config set_sync_disabled_for_tests persistent</code>
+</br>
 <code>su -c /system/bin/device_config put activity_manager max_phantom_processes 2147483647</code>
+</br>
 <code>su -c setprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs false</code>
 
+Demas Permisos con <a href="https://github.com/MuntashirAkon/AppManager/releases">App Manager ↗️</a>
+    
     <h2>Servidor Eco-Friendly</h2>
     <p>Puedes utilizar un teléfono antiguo y automatizarlo con Tasker como es mi caso. Utilizo un teléfono roto con un panel solar para mantener el bot para <a href="https://chat.whatsapp.com/JtrXf1pGoewLlX5Ww2VXDs">Toda esta Comunidad</a>.</p>
-    
+    <p> El bot Base utiliza 400MB de RAM, si tu telefono tiene eso libre, es posible ejecutarlo sin problema. Aunque algunos plugins consumen mas memoria y esto hara que se cierre Termux por falta de RAM </p>
     <a href="https://www.hmd.com/en_int/nokia-g-20/environmental-profile">
         <img src="https://github.com/user-attachments/assets/1d33c20a-1af9-42ee-a6d7-4c2e03254f78" width="100%" height="auto" alt="NokiaG20">
     </a>
-<h1> Con esto Tambien puedes ejecutar Linux en tu Telefono y Usarlo como si Fuese una PC. <a href="https://github.com/LinuxDroidMaster/Termux-Desktops/blob/main/Documentation/proot/arch_proot.md">Mas Info Aqui </a>  </h1>
+<h1> Con esto Tambien puedes ejecutar Linux en tu Telefono y Usarlo como si Fuese una PC. <a href="https://github.com/LinuxDroidMaster/Termux-Desktops/blob/main/Documentation/proot/arch_proot.md">Mas Info Aqui ↗️ </a>  </h1>
