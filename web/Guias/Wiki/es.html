@@ -1,1 +1,189 @@
+<div style="text-align:center;">
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People%20with%20professions/Woman%20Teacher%20Medium%20Skin%20Tone.png" alt="MisticTelegram" width="180px">
 
+  <h1>👩‍🏫 Bienvenido a la Wiki</h1>
+<h2> Aqui encontraras Documentacion y Ajustes Adicionales </h2>
+<h3> Para Instalaciones Locales Aqui: </h3>
+  <a href="web/Guias/Termux/">
+  <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Termux">
+</a>
+<a href="web/Guias/Linux/">
+  <img src="https://img.shields.io/badge/Linux-black?style=for-the-badge&logo=linux&logoColor=white" alt="Linux">
+  <a href="web/Guias/Windows/">
+  <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
+</a>
+  
+</a>
+  
+  <h3> 🧩Para Plugins Extra <a href="https://weskerty.github.io/PluginsMystic/"> Aqui ↗️ </a> </h3>
+  <h3> Cualquier Duda que Tengas puedes ir a los  <a href="https://weskerty.github.io/TheMysticMOD/web/Grupos/">Grupos de Ayuda ↗️</a> </h3>
+  
+</br>
+
+
+  <h1>📜 Menu Funciones </h1>
+<details>
+  <summary><b>🧩 Explicacion de Plugins </b></summary>
+
+
+</details>
+
+</br>
+  
+  <h1>⚙️ Ajustes de Config.js</h1>
+<details>
+  <summary><b>🔩 Explicacion de Variables </b></summary>
+  <p>Puedes Cambiar estos valores ajustando config.js y agregando el archivo a .gitignore para que el bot pueda Actualizarse sin mostrar fallas de pull. </p>
+  <p>Tambien puedes usar .setvar dato = variable pero esto reiniciara el bot en cada cambio en caso de usar Windows</p>
+  
+<h3>⚙️ Stickers:</h3>
+
+<code>global.packname = 'Nombre Sticker'</code>
+
+<code>global.author = 'Nombre Pack Sticker'</code>
+
+<h3>⚙️ Nombre del Bot:</h3>
+
+<p>Se Muestran en Algunos Menus</p>
+
+<code>global.wm = 'The Mystic - Bot'</code>
+
+<code>global.titulowm = 'The Mystic - Bot'</code>
+
+<code>global.titulowm2 = `The Mystic - Bot`</code>
+
+<code>global.igfg = 'The Mystic - Bot'</code>
+
+<code>global.wm2 = `${dia} ${fecha}\nThe Mystic - Bot`</code>
+
+<code>global.gt = 'The Mystic - Bot'</code>
+
+<code>global.mysticbot = 'The Mystic - Bot'</code>
+
+<code>global.channel = 'https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y'</code>
+
+<code>global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'</code>
+
+<code>global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'</code>
+
+<p>Aqui se Agrega el número del bot y cuando inicia una nueva sesión no pedirá número sino que empezará con el código directamente. Debe ser sin espacios y sin +. No es necesario agregarlo.</p>
+
+<code>global.botnumber = "595972184435"</code>
+
+<h3>⚙️ Administradores del Bot:</h3>
+
+<p>Se agrega el número, el nombre (opcional). Siempre debe tener ese Formato. Se agrega COMA "," si vas a continuar agregando más, cuando llegues al final no debe existir coma o el bot no iniciará.</p>
+
+<code>global.owner = [
+['595972184435', '👑 Marco 👑', true],
+['5218444937407']
+]</code>
+
+<h3>⚙️ Imágenes de Menú:</h3>
+
+<p>Ubicación de las imágenes en formato Unix "/" No "\"</p>
+
+<code>global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png')</code>
+
+<h3>⚙️ Decoraciones:</h3>
+
+<p>Se ven en algunos menús</p>
+
+<code>global.cmenut = '❖––––––『'</code>
+
+<code>global.cmenub = '┊✦ '</code>
+
+<code>global.cmenuf = '╰━═┅═━––––––๑\n'</code>
+
+<code>global.cmenua = '\n⌕ ❙❘❙❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❚❙❘❙❘❙❚❙❘❙❙❘❙❚❙❘ ⌕\n'</code>
+
+<code>global.dmenut = '*❖─┅──┅〈*'</code>
+
+<code>global.dmenub = '*┊»*'</code>
+
+<code>global.dmenub2 = '*┊*'</code>
+
+<code>global.dmenuf = '*╰┅────────┅✦*'</code>
+
+<code>global.htjava = '⫹⫺'</code>
+
+<code>global.htki = '*⭑•̩̩͙⊱•••• ☪*'</code>
+
+<code>global.htka = '*☪ ••••̩̩͙⊰•⭑*'</code>
+
+<code>global.comienzo = '• • ◕◕════'</code>
+
+<code>global.fin = '════◕◕ • •'</code>
+
+<h3>⚙️ Hora y Ubicación del Bot:</h3>
+
+<p>Útil para Clima y Otros Plugins que Requieren Fecha y Ubicación</p>
+
+<code>global.botdate = `*[ 📅 ] Fecha:* ${moment.tz('America/Mexico_City').format('DD/MM/YY')}`</code>
+
+<code>global.bottime = `*[ ⏳ ] Hora:* ${moment.tz('America/Mexico_City').format('HH:mm:ss')}`</code>
+
+
+
+
+
+
+</details>
+
+
+</br>
+  
+  <h1>⚙️ Solucion de Errores Bugs </h1>
+<details>
+  <summary><b>⚙️ Problemas Conocidos </b></summary>
+
+  <h2>No responde a mis Mensajes</h2>
+<p>No Responde a Ciertos Numeros o a Ti Mismo. La Mitigacion Actual a esto es Enviar Muchos Mensajes desde Tu Dispositivo Principal en el Chat que no Funciona.</p>
+  </br>
+
+    <h2>No se ve el Mensaje o "Esperando Mensaje"</h2>
+<p>Envia el comando para intentar Solucionar</p>
+  <code> .fixmsgespera </code>
+  </br>
+
+  
+</details>
+
+
+
+
+  
+
+</br>
+  
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Writing%20Hand%20Medium%20Skin%20Tone.png" alt="MisticTelegram" width="180px">
+
+  </br>
+  
+</h1> Pagina en Contruccion. Puedes Ayudar Haciendo tus Modificaciones y Solicitando Pull </h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+ </div>

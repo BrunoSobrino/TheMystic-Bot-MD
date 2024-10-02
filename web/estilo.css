@@ -59,7 +59,7 @@ code {
 }
 
 .content {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     padding: 20px;
     border-radius: 10px;
     max-width: 800px;
@@ -67,14 +67,24 @@ code {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     position: relative;
     z-index: 1;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(7px);
 }
 
 .contenedor-imagenes {
-  display: flex;
-  justify-content: space-around; 
-  align-items: center; 
-  gap: 2px; 
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 2px;
+    width: "80%"; 
+}
+
+.contenedor-texto {
+    margin-bottom: 20px; 
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 2px;
+    width: "80%"; 
 }
 
 h1, p {
