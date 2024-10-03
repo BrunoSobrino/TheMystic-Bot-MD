@@ -26,4 +26,4 @@ fi
 cd "$HOME" || { echo -e "${RED}######### Error en cd Home.${NC}"; exit 1; }
 
 echo -e "${YELLOW}######### Ejecutando Mystic...${NC}"
-nice -n -10 ./mystic.sh || { echo -e "${RED}######### Error al ejecutar mystic.sh.${NC}"; exit 1; }
+nice -n -10 ./alive.sh || { echo -e "${RED}######### Error al Iniciar Alives Script.${NC}"; exit 1; }
