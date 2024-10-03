@@ -29,4 +29,4 @@ done
 
 echo -e "\n${GREEN}Iniciando Bot...${NC}"
 
-proot-distro login archlinux -- /bin/bash -c ./update.sh
+proot-distro login debian -- /bin/bash -c ./update.sh
