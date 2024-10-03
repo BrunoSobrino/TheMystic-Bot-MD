@@ -19,9 +19,7 @@
 
 <iframe width="90%" height="315" src="https://www.youtube.com/embed/IvunP0qsoac?si=py5T95RRZ7XDAzh3" title="YouTube video player" allowfullscreen></iframe>
 
-<p>En caso de Aparecer Error "Arch ya Instalado" puedes borrar Datos de Termux y Empezar de Nuevo. No Minimices para evitar fallas.</p>
-<p>Tambien puedes ejecutar simplemente esto para saltar ese error</p>
-<code> apt update -y && yes | apt upgrade && pkg install -y wget proot-distro && wget -O - https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/Termux.sh | bash </code>
+<p>¿Errores? Contacta con Nosotros en los <a href="web/Grupos">Grupos de Ayuda ↗️</a></p>
 
     <h1>🖥️ Iniciar de Nuevo</h1>
 <p> Para volver a abrir el bot en caso de que se cierre Termux, Solo abre de nuevo Termux, esto hara que se Inicie Automaticamente. </p>
@@ -48,6 +46,7 @@ Luego pega:</p>
     <p>En caso de que Termux se te cierre a cada rato, Prueba esto. Es mejor hacerlo Comando por Comando, pero Si Copias y Pegas Todo Tambien Deberia Funcionar. </p>
 <p>En algunos Telefonos Aparece la Opcion "Inahabilitar Restricciones de Procesos Secundarios" en Opciones de Desarrollador </p>
     <h2>💻 Con ADB</h2>
+    <p>Este Proceso lo Puedes Hacer Desde PC o Desde el Propio Termux Siguiendo  <a href="https://gist.github.com/kairusds/1d4e32d3cf0d6ca44dc126c1a383a48d">Este Tutorial ↗️</a> </p>
 <code>adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent"</code>
 </br>
 <code>adb shell "/system/bin/device_config put activity_manager max_phantom_processes 2147483647"</code>
