@@ -8,7 +8,7 @@ proot-distro login debian -- bash -c "
   bash nodesource_setup.sh && \
   apt-get install nodejs -y && \
   wget https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/update.sh -O ~/update.sh && \
-  wget  https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/mystic.sh -O ~/script/mystic.sh && \
+  mkdir -p ~/script && wget https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/mystic.sh -O ~/script/mystic.sh && \
   wget  https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/alive.sh -O ~/alive.sh && \
   chmod +x ~/update.sh && \
   chmod +x ~/script/mystic.sh && \
