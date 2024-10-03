@@ -1,4 +1,5 @@
 #!/bin/bash
+proot-distro install debian
 wget https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/.bashrc -O ~/.bashrc
 proot-distro login debian -- bash -c "
   apt-get update && \
