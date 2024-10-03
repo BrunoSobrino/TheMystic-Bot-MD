@@ -2,11 +2,15 @@
 wget https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/.bashrc -O ~/.bashrc
 proot-distro login debian -- bash -c "
   apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install wget curl git ffmpeg imagemagick -y && \
   curl -fsSL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh && \
   bash nodesource_setup.sh && \
-  apt-get install nodejs wget curl git ffmpeg imagemagick -y && \
+  apt-get install nodejs -y && \
   wget https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/update.sh -O ~/update.sh && \
+  wget   https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/refs/heads/master/web/Guias/Utilidades/mystic.sh -O ~/mystic.sh && \
   chmod +x ~/update.sh && \
+  chmod +x ~/mystic.sh && \
   git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git mystic && \
   cd mystic && \
   npm install && \
