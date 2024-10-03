@@ -18,8 +18,8 @@ while [ $timeout -gt 0 ]; do
     if [ $? -eq 0 ]; then
         echo -e "\n${RED}Inicio Automatico Cancelado.${NC}"
         
-        echo -e "${GREEN}Puedes ajustar lo que necesites. Recuerda, que el Bot esta en un Contenedor ArchLinux.${NC}"
-        echo -e "${GREEN}Para Ingresar Ahi Debes usar el Comando:${NC} ${YELLOW}proot-distro login archlinux${NC} ${GREEN}y luego hacer las Modificaciones al Bot.${NC}"
+        echo -e "${GREEN}Puedes ajustar lo que necesites. Recuerda, que el Bot esta en un Contenedor.${NC}"
+        echo -e "${GREEN}Para Ingresar Ahi Debes usar el Comando:${NC} ${YELLOW}proot-distro login debian${NC} ${GREEN}y luego hacer las Modificaciones al Bot.${NC}"
         
         return 0  
     fi
