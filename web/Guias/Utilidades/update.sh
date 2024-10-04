@@ -5,8 +5,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' 
 
-echo -e "${YELLOW}######### Actualizando Sistema...${NC}"
-apt-get update -y && apt-get upgrade -y 
+#echo -e "${YELLOW}######### Actualizando Sistema...${NC}"
+#pacman -Syu --noconfirm 
 
 cd "$HOME/mystic/" || { echo -e "${RED}######### Error. No existe Mystic.${NC}"; exit 1; }
 
