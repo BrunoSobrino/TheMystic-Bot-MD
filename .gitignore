@@ -4,6 +4,7 @@ MysticSession
 jadibts
 pluginpilot
 plugins/supersecretlistener.js
+package-lock.json
 
 # Local Databases
 src/glx/db/database.json
