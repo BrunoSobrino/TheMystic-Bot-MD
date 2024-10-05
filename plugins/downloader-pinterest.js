@@ -2,7 +2,8 @@ import _0x36ae01 from 'axios';
 const {
   generateWAMessageContent,
   generateWAMessageFromContent,
-  proto
+  proto,
+  WAE2E
 } = (await import("baileys"))["default"];
 let handler = async (_0x10bd40, {
   conn: _0x9c7141,
@@ -41,18 +42,18 @@ let handler = async (_0x10bd40, {
   let _0x2913ed = 1;
   for (let _0x47c48a of _0x3b2637) {
     _0x51323f.push({
-      'body': proto.Message.InteractiveMessage.Body.fromObject({
+      'body': WAE2E.Message.InteractiveMessage.Body.fromObject({
         'text': "Imagen -" + (" " + _0x2913ed++)
       }),
-      'footer': proto.Message.InteractiveMessage.Footer.fromObject({
+      'footer': WAE2E.Message.InteractiveMessage.Footer.fromObject({
         'text': wm
       }),
-      'header': proto.Message.InteractiveMessage.Header.fromObject({
+      'header': WAE2E.Message.InteractiveMessage.Header.fromObject({
         'title': '',
         'hasMediaAttachment': true,
         'imageMessage': await _0x3f3fc7(_0x47c48a)
       }),
-      'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+      'nativeFlowMessage': WAE2E.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         'buttons': [{
           'name': "cta_url",
           'buttonParamsJson': "{\"display_text\":\"url 📫\",\"Url\":\"https://www.pinterest.com/search/pins/?rs=typed&q=" + _0x27db11 + "\",\"merchant_url\":\"https://www.pinterest.com/search/pins/?rs=typed&q=" + _0x27db11 + "\"}"
@@ -67,17 +68,17 @@ let handler = async (_0x10bd40, {
           'deviceListMetadata': {},
           'deviceListMetadataVersion': 0x2
         },
-        'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
-          'body': proto.Message.InteractiveMessage.Body.create({
+        'interactiveMessage': WAE2E.Message.InteractiveMessage.fromObject({
+          'body': WAE2E.Message.InteractiveMessage.Body.create({
             'text': "[❗] Resultado de : " + _0x27db11
           }),
-          'footer': proto.Message.InteractiveMessage.Footer.create({
+          'footer': WAE2E.Message.InteractiveMessage.Footer.create({
             'text': "🔎 `P I N T E R E S T - S E A R C H`"
           }),
-          'header': proto.Message.InteractiveMessage.Header.create({
+          'header': WAE2E.Message.InteractiveMessage.Header.create({
             'hasMediaAttachment': false
           }),
-          'carouselMessage': proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+          'carouselMessage': WAE2E.Message.InteractiveMessage.CarouselMessage.fromObject({
             'cards': [..._0x51323f]
           })
         })
