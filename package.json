@@ -36,7 +36,7 @@
     "@sefinek/google-tts-api": "*",
     "@shineiichijo/marika": "^2.0.6",
     "@vitalets/google-translate-api": "^8.0.0",
-    "baileys": "git+https://github.com/Skidy89/baileys.git#master",
+    "baileys": "git+https://github.com/Skidy89/baileys.git#developer",
     "acrcloud": "^1.4.0",
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^2.68.0",
