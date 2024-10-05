@@ -30,7 +30,8 @@ const {
     makeInMemoryStore,
     getAggregateVotesInPollMessage, 
     prepareWAMessageMedia,
-    WA_DEFAULT_EPHEMERAL
+    WA_DEFAULT_EPHEMERAL,
+    WAWeb	
 } = (await import("baileys")).default
 
 export function makeWASocket(connectionOptions, options = {}) {
@@ -1518,7 +1519,7 @@ export function smsg(conn, m, hasParent) {
 // https://github.com/Nurutomo/wabot-aq/issues/490
 export function serialize() {
   const MediaType = ['imageMessage', 'videoMessage', 'audioMessage', 'stickerMessage', 'documentMessage'];
-  return Object.defineProperties(proto.WebMessageInfo.prototype, {
+  return Object.defineProperties(WAWeb.WebMessageInfo.prototype, {
     conn: {
       value: undefined,
       enumerable: false,
