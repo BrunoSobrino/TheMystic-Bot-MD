@@ -6,6 +6,7 @@ const {
   generateWAMessage,
   areJidsSameUser,
   decryptPollVote,
+  WAWeb
 } = (await import("baileys")).default;
 
 export async function all(m, chatUpdate) {
@@ -112,7 +113,7 @@ export async function all(m, chatUpdate) {
   }
   const msg = {
     ...chatUpdate,
-    messages: [proto.WebMessageInfo.fromObject(messages)].map((v) => (v.conn = this, v)),
+    messages: [WAWeb.WebMessageInfo.fromObject(messages)].map((v) => (v.conn = this, v)),
     type: 'append',
   };
   this.ev.emit('messages.upsert', msg);
@@ -204,7 +205,7 @@ export async function all(m, chatUpdate) {
   }
   const msg = {
     ...chatUpdate,
-    messages: [proto.WebMessageInfo.fromObject(messages)].map((v) => (v.conn = this, v)),
+    messages: [WAWeb.WebMessageInfo.fromObject(messages)].map((v) => (v.conn = this, v)),
     type: 'append',
   };
   this.ev.emit('messages.upsert', msg);

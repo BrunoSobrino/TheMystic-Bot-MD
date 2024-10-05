@@ -3,8 +3,8 @@ import axios from 'axios';
 import { youtubedl, youtubedlv2 } from '@bochilteam/scraper';
 import fs from "fs";
 import yts from 'yt-search';
-import ytmp33 from '../src/libraries/ytmp33.js';
-import ytmp44 from '../src/libraries/ytmp44.js';
+//import ytmp33 from '../src/libraries/ytmp33.js';
+//import ytmp44 from '../src/libraries/ytmp44.js';
 import ytdl from 'ytdl-core';
 
 let limit1 = 100;
@@ -35,7 +35,7 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
   conn.sendMessage(m.chat, { image: { url: yt_play[0].thumbnail }, caption: texto1 }, { quoted: m });
 
   if (['play', 'play3', 'playdoc'].includes(command)) {
-    try {
+    /*try {
       const { status, resultados, error } = await ytmp33(yt_play[0].url);
       if (!status) throw new Error(error);
 
@@ -59,9 +59,9 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
         return;
       }
     } catch (error) {
-      console.log('Fallo el 1: ' + error)
+      console.log('Fallo el 1: ' + error)*/
       try {
-        const audio = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
+        const audio = `${global.MyApiRestBaseUrl}/api/v2/ytmp3?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
         const ttl = await yt_play[0].title;
         const buff_aud = await getBuffer(audio);
         const fileSizeInBytes = buff_aud.byteLength;
@@ -105,12 +105,12 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
       } catch {  
         throw tradutor.texto4;
       }
-    }
+    //}
    }
   }
 
   if (['play2', 'play4', 'playdoc2'].includes(command)) {
-    try {
+    /*try {
       const { status, resultados, error } = await ytmp44(yt_play[0].url);
       if (!status) throw new Error(error);
 
@@ -133,9 +133,9 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
         await conn.sendMessage(m.chat, { video: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
         return;
       }
-    } catch (error) {
+    } catch (error) {*/
       try {
-        const video = `${global.MyApiRestBaseUrl}/api/v1/ytmp4?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
+        const video = `${global.MyApiRestBaseUrl}/api/v2/ytmp4?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
         const ttl2 = await yt_play[0].title;
         const buff_vid = await getBuffer(video);
         const fileSizeInBytes2 = buff_vid.byteLength;
@@ -179,7 +179,7 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
       } catch {          
         throw tradutor.texto6;
       }
-    }
+  //  }
    }
   }
 };
