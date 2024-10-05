@@ -61,7 +61,7 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
     } catch (error) {
       console.log('Fallo el 1: ' + error)
       try {
-        const audio = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
+        const audio = `${global.MyApiRestBaseUrl}/api/v2/ytmp3?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
         const ttl = await yt_play[0].title;
         const buff_aud = await getBuffer(audio);
         const fileSizeInBytes = buff_aud.byteLength;
@@ -135,7 +135,7 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
       }
     } catch (error) {
       try {
-        const video = `${global.MyApiRestBaseUrl}/api/v1/ytmp4?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
+        const video = `${global.MyApiRestBaseUrl}/api/v2/ytmp4?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
         const ttl2 = await yt_play[0].title;
         const buff_vid = await getBuffer(video);
         const fileSizeInBytes2 = buff_vid.byteLength;
