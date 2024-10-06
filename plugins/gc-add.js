@@ -1,5 +1,5 @@
 
-const {generateWAMessageFromContent, prepareWAMessageMedia,WAE2E} = (await import("baileys")).default;
+const {generateWAMessageFromContent, prepareWAMessageMedia,WAWeb} = (await import("baileys")).default;
 import fetch from 'node-fetch';
 const {getBinaryNodeChild, getBinaryNodeChildren} = (await import("baileys")).default;
 const handler = async (m, {conn, text, participants, args}) => {
@@ -30,7 +30,7 @@ const handler = async (m, {conn, text, participants, args}) => {
       m.reply(teks, null, {mentions: conn.parseMention(teks)});
       const captionn = tradutor.texto4;
       const messaa = await prepareWAMessageMedia({image: jpegThumbnail}, {upload: conn.waUploadToServer});
-      const groupInvite = generateWAMessageFromContent(m.chat, WAE2E.Message.fromObject({groupInviteMessage: {groupJid: m.chat, inviteCode: invite_code, inviteExpiration: invite_code_exp, groupName: await conn.getName(m.chat), caption: captionn, jpegThumbnail: jpegThumbnail}}), {userJid: jid});
+      const groupInvite = generateWAMessageFromContent(m.chat, WAWeb.Message.fromObject({groupInviteMessage: {groupJid: m.chat, inviteCode: invite_code, inviteExpiration: invite_code_exp, groupName: await conn.getName(m.chat), caption: captionn, jpegThumbnail: jpegThumbnail}}), {userJid: jid});
       await conn.relayMessage(jid, groupInvite.message, {messageId: groupInvite.key.id});
     }
   } catch {
