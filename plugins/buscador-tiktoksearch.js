@@ -1,7 +1,7 @@
 // Codigo hecho para The Mystic - Bot - MD por https://github.com/BrunoSobrino
 // By @BrunoSobrino
 import axios from 'axios';
-const { proto, generateWAMessageFromContent, generateWAMessageContent, WAE2E } = (await import("baileys")).default;
+const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys")).default;
 
 let handler = async (message, { conn, text }) => {
     if (!text) return conn.sendMessage(message.chat, { text: '[❗] ¿Qué quieres buscar en TikTok?' }, { quoted: message });
@@ -15,12 +15,12 @@ let handler = async (message, { conn, text }) => {
         let selectedResults = searchResults.slice(0, 7);
         let videoMessages = await Promise.all(selectedResults.map(result => createVideoMessage(result.videoUrl, conn)));
         let results = videoMessages.map((videoMessage, index) => ({
-            body: WAE2E.Message.InteractiveMessage.Body.fromObject({ text: '' }),
-            footer: WAE2E.Message.InteractiveMessage.Footer.fromObject({ text: `*❧ By ${global.wm}*` }),
-            header: WAE2E.Message.InteractiveMessage.Header.fromObject({
+            body: proto.Message.InteractiveMessage.Body.fromObject({ text: '' }),
+            footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `*❧ By ${global.wm}*` }),
+            header: proto.Message.InteractiveMessage.Header.fromObject({
                 title: selectedResults[index].description, hasMediaAttachment: true, videoMessage: videoMessage
             }),
-            nativeFlowMessage: WAE2E.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] })
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] })
         }));
         const responseMessage = generateWAMessageFromContent(message.chat, {
             viewOnceMessage: {
@@ -29,11 +29,11 @@ let handler = async (message, { conn, text }) => {
                         deviceListMetadata: {},
                         deviceListMetadataVersion: 2
                     },
-                    interactiveMessage: WAE2E.Message.InteractiveMessage.fromObject({
-                        body: WAE2E.Message.InteractiveMessage.Body.create({ text: `*< TIKTOK SEARCH >*\n\n` + `📌 *Texto buscado:* ${text}\n\n` + `📈 *Resultados obtenidos:*` }),
-                        footer: WAE2E.Message.InteractiveMessage.Footer.create({ text: '' }),
-                        header: WAE2E.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
-                        carouselMessage: WAE2E.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: results })
+                    interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                        body: proto.Message.InteractiveMessage.Body.create({ text: `*< TIKTOK SEARCH >*\n\n` + `📌 *Texto buscado:* ${text}\n\n` + `📈 *Resultados obtenidos:*` }),
+                        footer: proto.Message.InteractiveMessage.Footer.create({ text: '' }),
+                        header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
+                        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: results })
                     })
                 }
             }
