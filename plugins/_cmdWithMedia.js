@@ -1,4 +1,4 @@
-const { proto, WAWeb, generateWAMessage, areJidsSameUser } = (await import("baileys")).default;
+const { WAWeb, generateWAMessage, areJidsSameUser } = (await import("baileys")).default;
 
 export async function all(m, chatUpdate) {
   if (m?.isBaileys) return;
