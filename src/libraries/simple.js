@@ -1125,7 +1125,7 @@ let msg = generateWAMessageFromContent(jid, {
         else if (copy.key.remoteJid.includes('@broadcast')) sender = sender || copy.key.remoteJid;
         copy.key.remoteJid = jid;
         copy.key.fromMe = areJidsSameUser(sender, conn.user.id) || false;
-        return WAWeb.WebMessageInfo.fromObject(copy);
+        return proto.WebMessageInfo.fromObject(copy);
       },
       enumerable: true,
     },
