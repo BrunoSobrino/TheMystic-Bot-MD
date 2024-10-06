@@ -112,14 +112,14 @@ shuffleArray(searchResults)
 let selectedResults = searchResults.splice(0, 7)
 for (let result of selectedResults) {
 results.push({
-body: WAE2E.Message.InteractiveMessage.Body.fromObject({ text: null }),
-footer: WAE2E.Message.InteractiveMessage.Footer.fromObject({ text: wm }),
-header: WAE2E.Message.InteractiveMessage.Header.fromObject({
+body: proto.Message.InteractiveMessage.Body.fromObject({ text: null }),
+footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: wm }),
+header: proto.Message.InteractiveMessage.Header.fromObject({
 title: '' + result.title,
 hasMediaAttachment: true,
 videoMessage: await createVideoMessage(result.nowm)
 }),
-nativeFlowMessage: WAE2E.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] })})}
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] })})}
 const responseMessage = generateWAMessageFromContent(message.chat, {
 viewOnceMessage: {
 message: {
@@ -127,11 +127,11 @@ messageContextInfo: {
 deviceListMetadata: {},
 deviceListMetadataVersion: 2
 },
-interactiveMessage: WAE2E.Message.InteractiveMessage.fromObject({
-body: WAE2E.Message.InteractiveMessage.Body.create({ text: '[❗️] Resultado de: ' + text }),
-footer: WAE2E.Message.InteractiveMessage.Footer.create({ text: '🔎 `T I K T O K - S E A R C H`' }),
-header: WAE2E.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
-carouselMessage: WAE2E.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: [...results] })})}}
+interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+body: proto.Message.InteractiveMessage.Body.create({ text: '[❗️] Resultado de: ' + text }),
+footer: proto.Message.InteractiveMessage.Footer.create({ text: '🔎 `T I K T O K - S E A R C H`' }),
+header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
+carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: [...results] })})}}
 }, { quoted: message })
 await conn.relayMessage(message.chat, responseMessage.message, { messageId: responseMessage.key.id })
 } catch (error) {

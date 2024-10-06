@@ -449,7 +449,7 @@ END:VCARD
             })
           })
         };
-        const messageContent = WAE2E.Message.fromObject({
+        const messageContent = proto.Message.fromObject({
           viewOnceMessage: {
             message: {
               messageContextInfo: {
@@ -600,20 +600,20 @@ END:VCARD
 });*/
 
             return {
-              body: WAE2E.Message.InteractiveMessage.Body.fromObject({
+              body: proto.Message.InteractiveMessage.Body.fromObject({
                 text: text || ''
               }),
-              footer: WAE2E.Message.InteractiveMessage.Footer.fromObject({
+              footer: proto.Message.InteractiveMessage.Footer.fromObject({
                 text: footer || wm
               }),
-              header: WAE2E.Message.InteractiveMessage.Header.fromObject({
+              header: proto.Message.InteractiveMessage.Header.fromObject({
                 title: text2,
                 subtitle: text || '',
                 hasMediaAttachment: img?.imageMessage || video?.videoMessage ? true : false,
                 imageMessage: img?.imageMessage || null,
                 videoMessage: video?.videoMessage || null
               }),
-              nativeFlowMessage: WAE2E.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+              nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
                 buttons: dynamicButtons.filter(Boolean),
                 messageParamsJson: ''
               }),
@@ -637,19 +637,19 @@ END:VCARD
               })
             };
           }));
-          const interactiveMessage = WAE2E.Message.InteractiveMessage.create({
-            body: WAE2E.Message.InteractiveMessage.Body.fromObject({
+          const interactiveMessage = proto.Message.InteractiveMessage.create({
+            body: proto.Message.InteractiveMessage.Body.fromObject({
               text: text || ''
             }),
-            footer: WAE2E.Message.InteractiveMessage.Footer.fromObject({
+            footer: proto.Message.InteractiveMessage.Footer.fromObject({
               text: footer || wm
             }),
-            header: WAE2E.Message.InteractiveMessage.Header.fromObject({
+            header: proto.Message.InteractiveMessage.Header.fromObject({
               title: text || '',
               subtitle: text || '',
               hasMediaAttachment: false
             }),
-            carouselMessage: WAE2E.Message.InteractiveMessage.CarouselMessage.fromObject({
+            carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
               cards,
             }),
             ...Object.assign({
@@ -671,7 +671,7 @@ END:VCARD
               })
             })
           });
-          const messageContent = WAE2E.Message.fromObject({
+          const messageContent = proto.Message.fromObject({
             viewOnceMessage: {
               message: {
                 messageContextInfo: {
@@ -1142,7 +1142,7 @@ let msg = generateWAMessageFromContent(jid, {
         if (options.readViewOnce && message.message.viewOnceMessage?.message) {
           vtype = Object.keys(message.message.viewOnceMessage.message)[0];
           delete message.message.viewOnceMessage.message[vtype].viewOnce;
-          message.message = WAE2E.Message.fromObject(
+          message.message = proto.Message.fromObject(
               JSON.parse(JSON.stringify(message.message.viewOnceMessage.message)),
           );
           message.message[vtype].contextInfo = message.message.viewOnceMessage.contextInfo;
@@ -1266,7 +1266,7 @@ let msg = generateWAMessageFromContent(jid, {
              * @param {*} options
              */
       async value(jid, participant, inviteCode, inviteExpiration, groupName = 'unknown subject', caption = 'Invitation to join my WhatsApp group', jpegThumbnail, options = {}) {
-        const msg = WAE2E.Message.fromObject({
+        const msg = proto.Message.fromObject({
           groupInviteMessage: proto.GroupInviteMessage.fromObject({
             inviteCode,
             inviteExpiration: parseInt(inviteExpiration) || + new Date(new Date + (3 * 86400000)),
