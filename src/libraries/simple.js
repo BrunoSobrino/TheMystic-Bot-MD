@@ -188,7 +188,7 @@ export function makeWASocket(connectionOptions, options = {}) {
              * @param {String|Buffer} path
              * @param {String} filename
              * @param {String} caption
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Boolean} ptt
              * @param {Object} options
              */
@@ -237,7 +237,7 @@ export function makeWASocket(connectionOptions, options = {}) {
           fileName: filename || pathFile.split('/').pop(),
         };
         /**
-                 * @type {import("baileys").WAWeb.WebMessageInfo}
+                 * @type {import("baileys").proto.WebMessageInfo}
                  */
         let m;
         try {
@@ -258,7 +258,7 @@ export function makeWASocket(connectionOptions, options = {}) {
              * Send Contact
              * @param {String} jid
              * @param {String[][]|String[]} data
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       async value(jid, data, quoted, options) {
@@ -297,7 +297,7 @@ END:VCARD
              * Reply to a message
              * @param {String} jid
              * @param {String|Buffer} text
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       value(jid, text = '', quoted, options) {
@@ -705,7 +705,7 @@ END:VCARD
              * @param {String} footer
              * @param {Buffer} buffer
              * @param {String[] | String[][]} buttons
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
    /*   async value(jid, text = '', footer = '', buffer, buttons, quoted, options) {
@@ -923,7 +923,7 @@ let msg = generateWAMessageFromContent(jid, {
              * @param {String|string[]} call
              * @param {String|string[]} callText
              * @param {String[][]} buttons
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       async value(jid, text = '', footer = '', buffer, url, urlText, call, callText, buttons, quoted, options) {
@@ -1013,7 +1013,7 @@ let msg = generateWAMessageFromContent(jid, {
              * @param {String|string[]} call
              * @param {String|string[]} callText
              * @param {String[][]} buttons
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       async value(jid, text = '', footer = '', buffer, url, urlText, url2, urlText2, buttons, quoted, options) {
@@ -1095,7 +1095,7 @@ let msg = generateWAMessageFromContent(jid, {
       /**
              * cMod
              * @param {String} jid
-             * @param {import("baileys").WAWeb.WebMessageInfo} message
+             * @param {import("baileys").proto.WebMessageInfo} message
              * @param {String} text
              * @param {String} sender
              * @param {*} options
@@ -1133,7 +1133,7 @@ let msg = generateWAMessageFromContent(jid, {
       /**
              * Exact Copy Forward
              * @param {String} jid
-             * @param {import("baileys").WAWeb.WebMessageInfo} message
+             * @param {import("baileys").proto.WebMessageInfo} message
              * @param {Boolean|Number} forwardingScore
              * @param {Object} options
              */
@@ -1242,7 +1242,7 @@ let msg = generateWAMessageFromContent(jid, {
       /**
              *
              * @param {String} messageID
-             * @returns {import("baileys").WAWeb.WebMessageInfo}
+             * @returns {import("baileys").proto.WebMessageInfo}
              */
       value(messageID) {
         return Object.entries(conn.chats)
@@ -1285,7 +1285,7 @@ let msg = generateWAMessageFromContent(jid, {
     processMessageStubType: {
       /**
              * to process MessageStubType
-             * @param {import("baileys").WAWeb.WebMessageInfo} m
+             * @param {import("baileys").proto.WebMessageInfo} m
              */
       async value(m) {
         if (!m.messageStubType) return;
@@ -1332,14 +1332,14 @@ let msg = generateWAMessageFromContent(jid, {
     pushMessage: {
       /**
              * pushMessage
-             * @param {import("baileys").WAWeb.WebMessageInfo[]} m
+             * @param {import("baileys").proto.WebMessageInfo[]} m
              */
       async value(m) {
         if (!m) return;
         if (!Array.isArray(m)) m = [m];
         for (const message of m) {
           try {
-            // if (!(message instanceof WAWeb.WebMessageInfo)) continue // https://github.com/adiwajshing/Baileys/pull/696/commits/6a2cb5a4139d8eb0a75c4c4ea7ed52adc0aec20f
+            // if (!(message instanceof proto.WebMessageInfo)) continue // https://github.com/adiwajshing/Baileys/pull/696/commits/6a2cb5a4139d8eb0a75c4c4ea7ed52adc0aec20f
             if (!message) continue;
             if (message.messageStubType && message.messageStubType != WAMessageStubType.CIPHERTEXT) conn.processMessageStubType(message).catch(console.error);
             const _mtype = Object.keys(message.message || {});
@@ -1429,7 +1429,7 @@ let msg = generateWAMessageFromContent(jid, {
     serializeM: {
       /**
              * Serialize Message, so it easier to manipulate
-             * @param {import("baileys").WAWeb.WebMessageInfo} m
+             * @param {import("baileys").proto.WebMessageInfo} m
              */
       value(m) {
         return smsg(conn, m);
@@ -1483,15 +1483,15 @@ let msg = generateWAMessageFromContent(jid, {
 /**
  * Serialize Message
  * @param {ReturnType<typeof makeWASocket>} conn
- * @param {import("baileys").WAWeb.WebMessageInfo} m
+ * @param {import("baileys").proto.WebMessageInfo} m
  * @param {Boolean} hasParent
  */
 export function smsg(conn, m, hasParent) {
   if (!m) return m;
   /**
-     * @type {import("baileys").WAWeb.WebMessageInfo}
+     * @type {import("baileys").proto.WebMessageInfo}
      */
-  const M = WAWeb.WebMessageInfo;
+  const M = proto.WebMessageInfo;
   m = M.fromObject(m);
   m.conn = conn;
   let protocolMessageKey;
@@ -1687,7 +1687,7 @@ export function serialize() {
           },
           vM: {
             get() {
-              return WAWeb.WebMessageInfo.fromObject({
+              return proto.WebMessageInfo.fromObject({
                 key: {
                   fromMe: this.fromMe,
                   remoteJid: this.chat,
@@ -1728,7 +1728,7 @@ export function serialize() {
                          * Copy quoted message
                          */
             value() {
-              const M = WAWeb.WebMessageInfo;
+              const M = proto.WebMessageInfo;
               return smsg(conn, M.fromObject(M.toObject(this.vM)));
             },
             enumerable: true,
@@ -1833,7 +1833,7 @@ export function serialize() {
     },
     copy: {
       value() {
-        const M = WAWeb.WebMessageInfo;
+        const M = proto.WebMessageInfo;
         return smsg(this.conn, M.fromObject(M.toObject(this)));
       },
       enumerable: true,
@@ -1861,7 +1861,7 @@ export function serialize() {
     getQuotedObj: {
       value() {
         if (!this.quoted.id) return null;
-        const q = WAWeb.WebMessageInfo.fromObject(this.conn?.loadMessage(this.quoted.id) || this.quoted.vM);
+        const q = proto.WebMessageInfo.fromObject(this.conn?.loadMessage(this.quoted.id) || this.quoted.vM);
         return smsg(this.conn, q);
       },
       enumerable: true,
