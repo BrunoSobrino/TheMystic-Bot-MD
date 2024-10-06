@@ -5,8 +5,7 @@ const {
   proto,
   generateWAMessage,
   areJidsSameUser,
-  decryptPollVote,
-  WAWeb
+  decryptPollVote
 } = (await import("baileys")).default;
 
 export async function all(m, chatUpdate) {
@@ -113,7 +112,7 @@ export async function all(m, chatUpdate) {
   }
   const msg = {
     ...chatUpdate,
-    messages: [WAWeb.WebMessageInfo.fromObject(messages)].map((v) => (v.conn = this, v)),
+    messages: [proto.WebMessageInfo.fromObject(messages)].map((v) => (v.conn = this, v)),
     type: 'append',
   };
   this.ev.emit('messages.upsert', msg);
