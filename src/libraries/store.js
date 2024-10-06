@@ -16,7 +16,8 @@
  * Ciphertext error fix and additional improvements by @BrunoSobrino
  * See: https://github.com/BrunoSobrino
  */
-const { BufferJSON, WAE2E, isJidBroadcast, WAMessageStubType, updateMessageWithReceipt, updateMessageWithReaction, jidNormalizedUser, WAWeb, proto } = (await import('baileys')).default;
+const { BufferJSON, isJidBroadcast, WAMessageStubType, updateMessageWithReceipt, updateMessageWithReaction, jidNormalizedUser, proto } = (await import('baileys')).default;
+
 const TIME_TO_DATA_STALE = 5 * 60 * 1000;
 
 function makeInMemoryStore() {
