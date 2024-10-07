@@ -16,7 +16,8 @@
  * Ciphertext error fix and additional improvements by @BrunoSobrino
  * See: https://github.com/BrunoSobrino
  */
-const { BufferJSON, WAE2E, isJidBroadcast, WAMessageStubType, updateMessageWithReceipt, updateMessageWithReaction, jidNormalizedUser, WAWeb } = (await import('baileys')).default;
+const { BufferJSON, proto, isJidBroadcast, WAMessageStubType, updateMessageWithReceipt, updateMessageWithReaction, jidNormalizedUser } = (await import('baileys')).default;
+
 const TIME_TO_DATA_STALE = 5 * 60 * 1000;
 
 function makeInMemoryStore() {
@@ -69,7 +70,7 @@ function makeInMemoryStore() {
                 for (const msg of newMessages) {
                     const jid = msg.key.remoteJid?.decodeJid?.();
                     if (!jid || isJidBroadcast(jid)) continue;
-                    upsertMessage(jid, WAWeb.WebMessageInfo.fromObject(msg), type);
+                    upsertMessage(jid, proto.WebMessageInfo.fromObject(msg), type);
                 }
             }
         });
@@ -154,7 +155,7 @@ function makeInMemoryStore() {
     function fromJSON(json) {
         Object.assign(chats, json.chats);
         for (const jid in json.messages) {
-            messages[jid] = json.messages[jid].map(m => m && WAWeb.WebMessageInfo.fromObject(m));
+            messages[jid] = json.messages[jid].map(m => m && proto.WebMessageInfo.fromObject(m));
         }
     }
 

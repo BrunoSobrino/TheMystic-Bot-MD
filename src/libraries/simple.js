@@ -30,9 +30,7 @@ const {
     makeInMemoryStore,
     getAggregateVotesInPollMessage, 
     prepareWAMessageMedia,
-    WA_DEFAULT_EPHEMERAL,
-    WAWeb,
-    WAE2E
+    WA_DEFAULT_EPHEMERAL
 } = (await import("baileys")).default
 
 export function makeWASocket(connectionOptions, options = {}) {
@@ -190,7 +188,7 @@ export function makeWASocket(connectionOptions, options = {}) {
              * @param {String|Buffer} path
              * @param {String} filename
              * @param {String} caption
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Boolean} ptt
              * @param {Object} options
              */
@@ -239,7 +237,7 @@ export function makeWASocket(connectionOptions, options = {}) {
           fileName: filename || pathFile.split('/').pop(),
         };
         /**
-                 * @type {import("baileys").WAWeb.WebMessageInfo}
+                 * @type {import("baileys").proto.WebMessageInfo}
                  */
         let m;
         try {
@@ -260,7 +258,7 @@ export function makeWASocket(connectionOptions, options = {}) {
              * Send Contact
              * @param {String} jid
              * @param {String[][]|String[]} data
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       async value(jid, data, quoted, options) {
@@ -299,7 +297,7 @@ END:VCARD
              * Reply to a message
              * @param {String} jid
              * @param {String|Buffer} text
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       value(jid, text = '', quoted, options) {
@@ -451,7 +449,7 @@ END:VCARD
             })
           })
         };
-        const messageContent = WAE2E.Message.fromObject({
+        const messageContent = proto.Message.fromObject({
           viewOnceMessage: {
             message: {
               messageContextInfo: {
@@ -602,20 +600,20 @@ END:VCARD
 });*/
 
             return {
-              body: WAE2E.Message.InteractiveMessage.Body.fromObject({
+              body: proto.Message.InteractiveMessage.Body.fromObject({
                 text: text || ''
               }),
-              footer: WAE2E.Message.InteractiveMessage.Footer.fromObject({
+              footer: proto.Message.InteractiveMessage.Footer.fromObject({
                 text: footer || wm
               }),
-              header: WAE2E.Message.InteractiveMessage.Header.fromObject({
+              header: proto.Message.InteractiveMessage.Header.fromObject({
                 title: text2,
                 subtitle: text || '',
                 hasMediaAttachment: img?.imageMessage || video?.videoMessage ? true : false,
                 imageMessage: img?.imageMessage || null,
                 videoMessage: video?.videoMessage || null
               }),
-              nativeFlowMessage: WAE2E.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+              nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
                 buttons: dynamicButtons.filter(Boolean),
                 messageParamsJson: ''
               }),
@@ -639,19 +637,19 @@ END:VCARD
               })
             };
           }));
-          const interactiveMessage = WAE2E.Message.InteractiveMessage.create({
-            body: WAE2E.Message.InteractiveMessage.Body.fromObject({
+          const interactiveMessage = proto.Message.InteractiveMessage.create({
+            body: proto.Message.InteractiveMessage.Body.fromObject({
               text: text || ''
             }),
-            footer: WAE2E.Message.InteractiveMessage.Footer.fromObject({
+            footer: proto.Message.InteractiveMessage.Footer.fromObject({
               text: footer || wm
             }),
-            header: WAE2E.Message.InteractiveMessage.Header.fromObject({
+            header: proto.Message.InteractiveMessage.Header.fromObject({
               title: text || '',
               subtitle: text || '',
               hasMediaAttachment: false
             }),
-            carouselMessage: WAE2E.Message.InteractiveMessage.CarouselMessage.fromObject({
+            carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
               cards,
             }),
             ...Object.assign({
@@ -673,7 +671,7 @@ END:VCARD
               })
             })
           });
-          const messageContent = WAE2E.Message.fromObject({
+          const messageContent = proto.Message.fromObject({
             viewOnceMessage: {
               message: {
                 messageContextInfo: {
@@ -707,7 +705,7 @@ END:VCARD
              * @param {String} footer
              * @param {Buffer} buffer
              * @param {String[] | String[][]} buttons
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
    /*   async value(jid, text = '', footer = '', buffer, buttons, quoted, options) {
@@ -925,7 +923,7 @@ let msg = generateWAMessageFromContent(jid, {
              * @param {String|string[]} call
              * @param {String|string[]} callText
              * @param {String[][]} buttons
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       async value(jid, text = '', footer = '', buffer, url, urlText, call, callText, buttons, quoted, options) {
@@ -1015,7 +1013,7 @@ let msg = generateWAMessageFromContent(jid, {
              * @param {String|string[]} call
              * @param {String|string[]} callText
              * @param {String[][]} buttons
-             * @param {import("baileys").WAWeb.WebMessageInfo} quoted
+             * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
       async value(jid, text = '', footer = '', buffer, url, urlText, url2, urlText2, buttons, quoted, options) {
@@ -1097,7 +1095,7 @@ let msg = generateWAMessageFromContent(jid, {
       /**
              * cMod
              * @param {String} jid
-             * @param {import("baileys").WAWeb.WebMessageInfo} message
+             * @param {import("baileys").proto.WebMessageInfo} message
              * @param {String} text
              * @param {String} sender
              * @param {*} options
@@ -1127,7 +1125,7 @@ let msg = generateWAMessageFromContent(jid, {
         else if (copy.key.remoteJid.includes('@broadcast')) sender = sender || copy.key.remoteJid;
         copy.key.remoteJid = jid;
         copy.key.fromMe = areJidsSameUser(sender, conn.user.id) || false;
-        return WAWeb.WebMessageInfo.fromObject(copy);
+        return proto.WebMessageInfo.fromObject(copy);
       },
       enumerable: true,
     },
@@ -1135,7 +1133,7 @@ let msg = generateWAMessageFromContent(jid, {
       /**
              * Exact Copy Forward
              * @param {String} jid
-             * @param {import("baileys").WAWeb.WebMessageInfo} message
+             * @param {import("baileys").proto.WebMessageInfo} message
              * @param {Boolean|Number} forwardingScore
              * @param {Object} options
              */
@@ -1144,7 +1142,7 @@ let msg = generateWAMessageFromContent(jid, {
         if (options.readViewOnce && message.message.viewOnceMessage?.message) {
           vtype = Object.keys(message.message.viewOnceMessage.message)[0];
           delete message.message.viewOnceMessage.message[vtype].viewOnce;
-          message.message = WAE2E.Message.fromObject(
+          message.message = proto.Message.fromObject(
               JSON.parse(JSON.stringify(message.message.viewOnceMessage.message)),
           );
           message.message[vtype].contextInfo = message.message.viewOnceMessage.contextInfo;
@@ -1244,7 +1242,7 @@ let msg = generateWAMessageFromContent(jid, {
       /**
              *
              * @param {String} messageID
-             * @returns {import("baileys").WAWeb.WebMessageInfo}
+             * @returns {import("baileys").proto.WebMessageInfo}
              */
       value(messageID) {
         return Object.entries(conn.chats)
@@ -1268,7 +1266,7 @@ let msg = generateWAMessageFromContent(jid, {
              * @param {*} options
              */
       async value(jid, participant, inviteCode, inviteExpiration, groupName = 'unknown subject', caption = 'Invitation to join my WhatsApp group', jpegThumbnail, options = {}) {
-        const msg = WAE2E.Message.fromObject({
+        const msg = proto.Message.fromObject({
           groupInviteMessage: proto.GroupInviteMessage.fromObject({
             inviteCode,
             inviteExpiration: parseInt(inviteExpiration) || + new Date(new Date + (3 * 86400000)),
@@ -1287,7 +1285,7 @@ let msg = generateWAMessageFromContent(jid, {
     processMessageStubType: {
       /**
              * to process MessageStubType
-             * @param {import("baileys").WAWeb.WebMessageInfo} m
+             * @param {import("baileys").proto.WebMessageInfo} m
              */
       async value(m) {
         if (!m.messageStubType) return;
@@ -1334,14 +1332,14 @@ let msg = generateWAMessageFromContent(jid, {
     pushMessage: {
       /**
              * pushMessage
-             * @param {import("baileys").WAWeb.WebMessageInfo[]} m
+             * @param {import("baileys").proto.WebMessageInfo[]} m
              */
       async value(m) {
         if (!m) return;
         if (!Array.isArray(m)) m = [m];
         for (const message of m) {
           try {
-            // if (!(message instanceof WAWeb.WebMessageInfo)) continue // https://github.com/adiwajshing/Baileys/pull/696/commits/6a2cb5a4139d8eb0a75c4c4ea7ed52adc0aec20f
+            // if (!(message instanceof proto.WebMessageInfo)) continue // https://github.com/adiwajshing/Baileys/pull/696/commits/6a2cb5a4139d8eb0a75c4c4ea7ed52adc0aec20f
             if (!message) continue;
             if (message.messageStubType && message.messageStubType != WAMessageStubType.CIPHERTEXT) conn.processMessageStubType(message).catch(console.error);
             const _mtype = Object.keys(message.message || {});
@@ -1431,7 +1429,7 @@ let msg = generateWAMessageFromContent(jid, {
     serializeM: {
       /**
              * Serialize Message, so it easier to manipulate
-             * @param {import("baileys").WAWeb.WebMessageInfo} m
+             * @param {import("baileys").proto.WebMessageInfo} m
              */
       value(m) {
         return smsg(conn, m);
@@ -1485,15 +1483,15 @@ let msg = generateWAMessageFromContent(jid, {
 /**
  * Serialize Message
  * @param {ReturnType<typeof makeWASocket>} conn
- * @param {import("baileys").WAWeb.WebMessageInfo} m
+ * @param {import("baileys").proto.WebMessageInfo} m
  * @param {Boolean} hasParent
  */
 export function smsg(conn, m, hasParent) {
   if (!m) return m;
   /**
-     * @type {import("baileys").WAWeb.WebMessageInfo}
+     * @type {import("baileys").proto.WebMessageInfo}
      */
-  const M = WAWeb.WebMessageInfo;
+  const M = proto.WebMessageInfo;
   m = M.fromObject(m);
   m.conn = conn;
   let protocolMessageKey;
@@ -1520,7 +1518,7 @@ export function smsg(conn, m, hasParent) {
 // https://github.com/Nurutomo/wabot-aq/issues/490
 export function serialize() {
   const MediaType = ['imageMessage', 'videoMessage', 'audioMessage', 'stickerMessage', 'documentMessage'];
-  return Object.defineProperties(WAWeb.WebMessageInfo.prototype, {
+  return Object.defineProperties(proto.WebMessageInfo.prototype, {
     conn: {
       value: undefined,
       enumerable: false,
@@ -1689,7 +1687,7 @@ export function serialize() {
           },
           vM: {
             get() {
-              return WAWeb.WebMessageInfo.fromObject({
+              return proto.WebMessageInfo.fromObject({
                 key: {
                   fromMe: this.fromMe,
                   remoteJid: this.chat,
@@ -1730,7 +1728,7 @@ export function serialize() {
                          * Copy quoted message
                          */
             value() {
-              const M = WAWeb.WebMessageInfo;
+              const M = proto.WebMessageInfo;
               return smsg(conn, M.fromObject(M.toObject(this.vM)));
             },
             enumerable: true,
@@ -1835,7 +1833,7 @@ export function serialize() {
     },
     copy: {
       value() {
-        const M = WAWeb.WebMessageInfo;
+        const M = proto.WebMessageInfo;
         return smsg(this.conn, M.fromObject(M.toObject(this)));
       },
       enumerable: true,
@@ -1863,7 +1861,7 @@ export function serialize() {
     getQuotedObj: {
       value() {
         if (!this.quoted.id) return null;
-        const q = WAWeb.WebMessageInfo.fromObject(this.conn?.loadMessage(this.quoted.id) || this.quoted.vM);
+        const q = proto.WebMessageInfo.fromObject(this.conn?.loadMessage(this.quoted.id) || this.quoted.vM);
         return smsg(this.conn, q);
       },
       enumerable: true,

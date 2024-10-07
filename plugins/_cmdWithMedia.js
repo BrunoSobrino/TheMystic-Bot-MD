@@ -1,4 +1,4 @@
-const { WAWeb, generateWAMessage, areJidsSameUser } = (await import("baileys")).default;
+const { proto, generateWAMessage, areJidsSameUser } = (await import("baileys")).default;
 
 export async function all(m, chatUpdate) {
   if (m?.isBaileys) return;
@@ -18,7 +18,7 @@ export async function all(m, chatUpdate) {
   if (m.isGroup) messages.participant = m.sender;
   const msg = {
     ...chatUpdate,
-    messages: [WAWeb.WebMessageInfo.fromObject(messages)],
+    messages: [proto.WebMessageInfo.fromObject(messages)],
     type: 'append',
   };
   this.ev.emit('messages.upsert', msg);
