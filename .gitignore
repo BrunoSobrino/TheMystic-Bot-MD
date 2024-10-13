@@ -8,6 +8,7 @@ package-lock.json
 
 # Local Databases
 src/glx/db/database.json
+src/libraries/tmp
 datasecret
 database.json
 qr_database.json
