@@ -21,7 +21,7 @@ export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
   }
   const user = global.db.data.users[m.sender];
   const chat = global.db.data.chats[m.chat];
-  const bot = global.db.data.settings[mconn.conn.user.jid] || {};
+  const bot = global.db.data.settings[this.user.jid] || {};
   const isToxic = toxicRegex.exec(m.text);
 
   if (isToxic && chat.antiToxic && !isOwner && !isAdmin) {
@@ -33,7 +33,7 @@ export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
     user.warn = 0;
     await m.reply(`${tradutor.texto2} @${m.sender.split('@')[0]}, ${tradutor.texto2_1}`, false, {mentions: [m.sender]});
     user.banned = true;
-    await mconn.conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+    await this.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
     // await this.updateBlockStatus(m.sender, 'block')
   }
   return !1;

@@ -22,13 +22,10 @@ const {
     downloadContentFromMessage,
     jidDecode,
     areJidsSameUser,
-    generateWAMessage,
     generateForwardMessageContent,
     generateWAMessageFromContent,
     WAMessageStubType,
-    extractMessageContent,
-    makeInMemoryStore,
-    getAggregateVotesInPollMessage, 
+    extractMessageContent, 
     prepareWAMessageMedia,
     WA_DEFAULT_EPHEMERAL
 } = (await import("baileys")).default
@@ -1814,14 +1811,14 @@ export function serialize() {
     },
     name: {
       get() {
-        return !nullish(this.pushName) && this.pushName || this.conn?.getName(this.sender);
+        return this?.pushName || this?.verifiedName || this.user?.verifiedName || this.user?.name || this.conn.getName(this.sender);
       },
       enumerable: true,
     },
     download: {
       value(saveToFile = false) {
         const mtype = this.mediaType;
-        return this.conn?.downloadM(this.mediaMessage[mtype], mtype.replace(/message/i, ''), saveToFile);
+        return this?.downloadM(this.mediaMessage[mtype], mtype.replace(/message/i, ''), saveToFile);
       },
       enumerable: true,
       configurable: true,

@@ -13,7 +13,6 @@ import lodash from 'lodash';
 import chalk from 'chalk';
 import syntaxerror from 'syntax-error';
 import {format} from 'util';
-import pino from 'pino';
 import Pino from 'pino';
 import {Boom} from '@hapi/boom';
 import {makeWASocket, protoType, serialize} from './src/libraries/simple.js';
@@ -22,12 +21,13 @@ import store from './src/libraries/store.js';
 const {DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC} = await import("baileys");
 import readline from 'readline';
 import NodeCache from 'node-cache';
+import { isJidBroadcast, isJidNewsletter } from 'baileys';
 const {chain} = lodash;
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
 let stopped = 'close';  
 protoType();
 serialize();
-const msgRetryCounterMap = new Map();
+const socket = new Map();
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 
@@ -130,7 +130,6 @@ console.info = () => {} // https://github.com/skidy89/baileys actualmente no mue
 const connectionOptions = {
     logger: Pino({ level: 'silent' }),
     printQRInTerminal: opcion === '1' || methodCodeQR,
-    mobile: MethodMobile,
     browser: opcion === '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
     auth: {
         creds: state.creds,
@@ -150,16 +149,19 @@ const connectionOptions = {
         messages++;
         return message;
     },
+    shouldIgnoreJid: (jid) => isJidBroadcast(jid) || isJidNewsletter(jid) /** global.conn.user.jid */,
     msgRetryCounterCache: msgRetryCounterCache,
     userDevicesCache: userDevicesCache,
-    //msgRetryCounterMap,
     defaultQueryTimeoutMs: undefined,
     cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
     version,
     //userDeviceCache: msgRetryCounterCache <=== quien fue el pendejo?????
 };
+let i = makeWASocket(connectionOptions)
+await socket.set('socket', i);
+i = null
 
-global.conn = makeWASocket(connectionOptions);
+global.conn = socket.get('socket');
 
 if (!fs.existsSync(`./${authFile}/creds.json`)) {
 if (opcion === '2' || methodCode) {
@@ -266,57 +268,7 @@ fs.watch(dirToWatchccc, (eventType, filename) => {
   }
 });
 
-function purgeSession() {
-let prekey = []
-let directorio = readdirSync("./MysticSession")
-let filesFolderPreKeys = directorio.filter(file => {
-return file.startsWith('pre-key-') /*|| file.startsWith('session-') || file.startsWith('sender-') || file.startsWith('app-') */
-})
-prekey = [...prekey, ...filesFolderPreKeys]
-filesFolderPreKeys.forEach(files => {
-unlinkSync(`./MysticSession/${files}`)
-})
-} 
 
-function purgeSessionSB() {
-try {
-let listaDirectorios = readdirSync('./jadibts/');
-let SBprekey = []
-listaDirectorios.forEach(directorio => {
-if (statSync(`./jadibts/${directorio}`).isDirectory()) {
-let DSBPreKeys = readdirSync(`./jadibts/${directorio}`).filter(fileInDir => {
-return fileInDir.startsWith('pre-key-') /*|| fileInDir.startsWith('app-') || fileInDir.startsWith('session-')*/
-})
-SBprekey = [...SBprekey, ...DSBPreKeys]
-DSBPreKeys.forEach(fileInDir => {
-unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
-})
-}
-})
-if (SBprekey.length === 0) return; //console.log(chalk.cyanBright(`=> No hay archivos por eliminar.`))
-} catch (err) {
-console.log(chalk.bold.red(`[ ℹ️ ] Algo salio mal durante la eliminación, archivos no eliminados`))
-}}
-
-function purgeOldFiles() {
-const directories = ['./MysticSession/', './jadibts/']
-const oneHourAgo = Date.now() - (60 * 60 * 1000)
-directories.forEach(dir => {
-readdirSync(dir, (err, files) => {
-if (err) throw err
-files.forEach(file => {
-const filePath = path.join(dir, file)
-stat(filePath, (err, stats) => {
-if (err) throw err;
-if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') { 
-unlinkSync(filePath, err => {  
-if (err) throw err
-console.log(chalk.bold.green(`Archivo ${file} borrado con éxito`))
-})
-} else {  
-console.log(chalk.bold.red(`Archivo ${file} no borrado` + err))
-} }) }) }) })
-}
 
 async function connectionUpdate(update) {
   
@@ -386,12 +338,15 @@ global.reloadHandler = async function(restatConn) {
     console.error(e);
   }
   if (restatConn) {
-    const oldChats = global.conn.chats;
     try {
       global.conn.ws.close();
     } catch { }
     conn.ev.removeAllListeners();
-    global.conn = makeWASocket(connectionOptions, {chats: oldChats});
+    let i = makeWASocket(connectionOptions);
+    await socket.delete('socket');
+    await socket.set('socket', i);
+    i = null;
+    global.conn = socket.get('socket');
     store?.bind(conn);
     isInit = true;
   }
@@ -423,14 +378,6 @@ global.reloadHandler = async function(restatConn) {
   conn.onCall = handler.callUpdate.bind(global.conn);
   conn.connectionUpdate = connectionUpdate.bind(global.conn);
   conn.credsUpdate = saveCreds.bind(global.conn, true);
-
-  const currentDateTime = new Date();
-  const messageDateTime = new Date(conn.ev);
-  if (currentDateTime >= messageDateTime) {
-    const chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map((v) => v[0]);
-  } else {
-    const chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map((v) => v[0]);
-  }
 
   conn.ev.on('messages.upsert', conn.handler);
   conn.ev.on('group-participants.update', conn.participantsUpdate);
@@ -519,13 +466,6 @@ setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
   await clearTmp();
 }, 180000);
-/*
-setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn?.user) return; //intervals at the same thime tho
-  await purgeSessionSB();
-  await purgeOldFiles();
-  await purgeSession();
-}, 1000 * 60 * 60);*/
 
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;

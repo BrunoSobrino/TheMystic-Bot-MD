@@ -10,6 +10,7 @@ package-lock.json
 src/glx/db/database.json
 datasecret
 database.json
+qr_database.json
 
 # Logs
 logs

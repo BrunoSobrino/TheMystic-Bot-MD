@@ -5,7 +5,7 @@
 /* Bot: https://github.com/Gatito-kw/nekobot-md */
 
 import fetch from 'node-fetch';
-import { generateMessageTag } from "../handler";
+
 
  // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
   // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.

@@ -43,7 +43,7 @@ const convertTextToSpeech = async (text, voiceId) => {
   const options = { method: 'POST', headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey }, body: JSON.stringify({ text: text, model_id: 'eleven_monolingual_v1', voice_settings: { stability: 0.5, similarity_boost: 0.5 }})};
   try {
     const response = await fetch(url, options);
-    const audioBuffer = await response.buffer();
+    const audioBuffer = await response.arrayBuffer();
     return { audio: audioBuffer };
   } catch (error) {
     console.error('Error al generar el audio:', error);

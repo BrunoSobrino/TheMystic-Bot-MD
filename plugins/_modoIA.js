@@ -10,11 +10,11 @@ handler.before = async (m) => {
   let Prefijo = false;
   const prefixRegex = global.prefix;
   if (prefixRegex.test(m.text)) Prefijo = true;
-  const bot = global.db.data.settings[mconn.conn.user.jid]   
+  const bot = global.db.data.settings[global.conn?.user?.jid]   
   if (bot.modoia && !m.isGroup && !Prefijo && !m.fromMe && m.text !== '') {
      if (/^.*false|disnable|(turn)?off|0/i.test(m.text)) return;
         let textodem = m.text;
-        const name = mconn.conn.getName(m.sender)
+        const name = global.conn.getName(m.sender)
         const namedem = `${name || 'Sin definir'}`
         const sytm = await fetch(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/chatgpt_indicciones.txt`).then(v => v.text());
         const sistema1 = sytm.replace('@name', namedem)

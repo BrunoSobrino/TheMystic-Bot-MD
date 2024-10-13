@@ -1,4 +1,3 @@
-import { generateMessageTag } from "../handler";
 
 const handler = async (m, {conn, usedPrefix}) => {
   const datas = global
