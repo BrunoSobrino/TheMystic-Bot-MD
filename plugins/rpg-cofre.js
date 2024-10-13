@@ -29,23 +29,8 @@ ${tradutor.texto2[2]}
 ║➢ *${expp} ${tradutor.texto2[6]}
 ${tradutor.texto2[7]}`;
 
-  const fkontak = {
-    'key': {
-      'participants': '0@s.whatsapp.net',
-      'remoteJid': 'status@broadcast',
-      'fromMe': false,
-      'id': 'Halo',
-    },
-    'message': {
-      'contactMessage': {
-        'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
-      },
-    },
-    'participant': '0@s.whatsapp.net',
-  };
 
-  await conn.sendFile(m.chat, img, 'mystic.jpg', texto, fkontak);
-  // await conn.sendButton(m.chat, texto, wm, img, [['🔰 𝙼𝙴𝙽𝚄', '/menu'] ], fkontak, m)
+  await conn.sendFile(m.chat, img, 'mystic.jpg', texto, global.fkontak);
   global.db.data.users[m.sender].lastcofre = new Date * 1;
 };
 handler.help = ['daily'];

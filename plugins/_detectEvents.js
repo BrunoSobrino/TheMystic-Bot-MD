@@ -4,8 +4,8 @@
 
 /* Bot: https://github.com/Gatito-kw/nekobot-md */
 
-import {WAMessageStubType} from "baileys";
 import fetch from 'node-fetch';
+import { generateMessageTag } from "../handler";
 
  // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
   // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
@@ -25,14 +25,13 @@ export async function before(m, {conn, participants}) {
   const chat = global.db.data.chats[m.chat];
   const mentionsString = [m.sender, m.messageStubParameters[0], ...groupAdmins.map((v) => v.id)];
   const mentionsContentM = [m.sender, m.messageStubParameters[0]];
-  const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
-
+  
   if (chat.detect2 && m.messageStubType == 29) {
     let txt1 = tradutor.texto1;
     txt1 += `${tradutor.texto1_1} ${groupName}\n`;
     txt1 += `${tradutor.tetxo1_2} @${m.messageStubParameters[0].split`@`[0]}\n`;
     txt1 += `${tradutor.tetxo1_3} @${m.sender.split`@`[0]}`;
-    await conn.sendMessage(m.chat, {image: img, caption: txt1, mentions: mentionsString}, {quoted: fkontak2});
+    await conn.sendMessage(m.chat, {image: img, caption: txt1, mentions: mentionsString}, {quoted: global.fkontak});
   }
 
   if (chat.detect2 && m.messageStubType == 30) {
@@ -40,7 +39,7 @@ export async function before(m, {conn, participants}) {
     txt2 += `${tradutor.texto2_1} ${groupName}\n`;
     txt2 += `${tradutor.texto2_2} @${m.messageStubParameters[0].split`@`[0]}\n`;
     txt2 += `${tradutor.texto2_3} @${m.sender.split`@`[0]}`;
-    await conn.sendMessage(m.chat, {image: img, caption: txt2, mentions: mentionsString}, {quoted: fkontak2});
+    await conn.sendMessage(m.chat, {image: img, caption: txt2, mentions: mentionsString}, {quoted: global.fkontak});
   }
 
   if (chat.detect2 && m.messageStubType == 27) {
@@ -52,7 +51,7 @@ export async function before(m, {conn, participants}) {
     } else {
       txt3 += `${tradutor.texto3_4} @${m.messageStubParameters[0].split`@`[0]}\n`;
     }
-    await conn.sendMessage(m.chat, {image: img, caption: txt3, mentions: mentionsContentM}, {quoted: fkontak2});
+    await conn.sendMessage(m.chat, {image: img, caption: txt3, mentions: mentionsContentM}, {quoted: global.fkontak});
   }
 
   if (chat.detect2 && m.messageStubType == 28) {
@@ -64,7 +63,7 @@ export async function before(m, {conn, participants}) {
     } else {
       txt4 += `${tradutor.texto4_4} @${m.messageStubParameters[0].split`@`[0]}\n`;
     }
-    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt4, mentions: mentionsContentM}, {quoted: fkontak2});
+    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt4, mentions: mentionsContentM}, {quoted: global.fkontak});
   }
 
   if (chat.detect2 && m.messageStubType == 32) {
@@ -82,7 +81,7 @@ export async function before(m, {conn, participants}) {
     } else {
       txt5 += `${tradutor.texto5_5} @${m.messageStubParameters[0].split`@`[0]}\n`;
     }
-    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt5, mentions: mentionsContentM}, {quoted: fkontak2});
+    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt5, mentions: mentionsContentM}, {quoted: global.fkontak});
   }
 
   if (chat.detect2 && m.messageStubType == 26) {
@@ -96,13 +95,13 @@ export async function before(m, {conn, participants}) {
     txt6 += `${tradutor.texto6_1} ${groupName}\n`;
     txt6 += `${tradutor.texto6_2} ${'```' + accion + '```'}\n`;
     txt6 += `${tradutor.texto6_3} @${m.sender.split`@`[0]}`;
-    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt6, mentions: mentionsContentM}, {quoted: fkontak2});
+    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt6, mentions: mentionsContentM}, {quoted: global.fkontak});
   }
 
   if (chat.detect2 && m.messageStubType == 21) {
     let txt7 = tradutor.texto7;
     txt7 += `${tradutor.texto7_1} ${'```' + groupName + '```'}\n`;
     txt7 += `${tradutor.texto7_2} @${m.sender.split`@`[0]}`;
-    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt7, mentions: mentionsContentM}, {quoted: fkontak2});
+    await conn.sendMessage(m.chat, {image: {url: pp}, caption: txt7, mentions: mentionsContentM}, {quoted: global.fkontak});
   }
 } /* Cierre del comando */

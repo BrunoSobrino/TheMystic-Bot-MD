@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 
 
 const handler = async (m, {isPrems, conn}) => {
@@ -7,9 +6,7 @@ const handler = async (m, {isPrems, conn}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_daily
 
-  const fkontak = m //{'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
-  const mystic = './src/assets/images/menu/languages/es/menu.png';
-  const dos = [md];
+  
   const user = global.db.data.users[m.sender];
   const premium = user.premium;
 
@@ -43,8 +40,7 @@ const handler = async (m, {isPrems, conn}) => {
   };
 
   const time = user.lastclaim + 7200000; // 2 Horas 7200000
-  if (new Date - user.lastclaim < 7200000) return await conn.reply(m.chat, `${tradutor.texto1[0]} *${msToTime(time - new Date())}* ${tradutor.texto1[1]}`, fkontak, m);
-  // await conn.sendButton(m.chat, `𝙔𝘼 𝙍𝙀𝘾𝙇𝘼𝙈𝘼𝙎𝙏𝙀 𝙏𝙐 𝙍𝙀𝙂𝘼𝙇𝙊 🎁\n𝙑𝙐𝙀𝙇𝙑𝙀 𝙀𝙉 *${msToTime(time - new Date())}* 𝙋𝘼𝙍𝘼 𝙑𝙊𝙇𝙑𝙀𝙍 𝘼 𝙍𝙀𝘾𝙇𝘼𝙈𝘼𝙍`, wm, null, [['𝗠 𝗘 𝗡 𝗨 ☘️', '/menu']], fkontak, m)
+  if (new Date - user.lastclaim < 7200000) return await conn.reply(m.chat, `${tradutor.texto1[0]} *${msToTime(time - new Date())}* ${tradutor.texto1[1]}`, global.fkontak, m);
   let texto = '';
   for (const reward of Object.keys(recompensas)) {
     if (!(reward in user)) continue;
@@ -57,7 +53,7 @@ ${tradutor.texto3[1]}
 ┃ ${texto}
 ${tradutor.texto3[4]} ${premium ? '✅' : '❌'}\n${wm}`;
   const img = './src/assets/images/menu/languages/es/menu.png';
-  await conn.sendFile(m.chat, img, 'mystic.jpg', text, fkontak);
+  await conn.sendFile(m.chat, img, 'mystic.jpg', text, global.fkontak);
   // await conn.sendButton(m.chat, text, texto + `\n\n🎟️ 𝗣 𝗥 𝗘 𝗠 𝗜 𝗨 𝗠 ⇢ ${premium ? '✅' : '❌'}\n${wm}`, img, [['⛰️ 𝘼𝘽𝙍𝙄𝙍 𝘾𝙊𝙁𝙍𝙀 | 𝘾𝙊𝙁𝙁𝙀𝙍 ⛰️', '/cofre'], ['𝙑𝙤𝙡𝙫𝙚𝙧 𝙖𝙡 𝙈𝙚𝙣𝙪́ | 𝘽𝙖𝙘𝙠 𝙩𝙤 𝙈𝙚𝙣𝙪 ☘️', '/menu']], m, dos.getRandom())
   user.lastclaim = new Date * 1;
 };

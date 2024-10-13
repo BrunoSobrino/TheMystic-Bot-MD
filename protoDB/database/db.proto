@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+message User {
+    int32 afk = 1;
+    string afkReason = 2;
+    int32 age = 4;
+    int32 wait = 5;
+    int32 agility = 6;
+    int32 bowDurability = 7;
+    int32 armor = 8;
+    int32 armorDurability = 9;
+    bool autolevelup = 10;
+    int32 lastadventure = 11;
+    string role = 12;
+    string language = 13;
+    int32 exp = 14;
+    int32 money = 15;
+    int32 joincount = 16;
+    int32 wood = 17;
+    int32 rock = 18;
+    int32 string = 19;
+    int32 common = 20;
+    int32 uncommon = 21;
+    int32 mythic = 22;
+    int32 legendary = 23;
+    int32 pet = 24;
+    int32 level = 25;   
+    int32 premiumTime = 26;
+    bool premium = 27;
+    int32 diamond = 28;
+    int32 limit = 29;
+    int32 lastMining = 30;
+    int32 potion = 31;
+    int32 health = 32;
+}
+
+message Chat {
+    bool isBanned = 1;
+    bool welcome = 2;
+    bool banchat = 3;
+    bool detect = 4;
+    bool detect2 = 5;
+    string sWelcome = 6;
+    string sBye = 7;
+    string sPromote = 8;
+    string sDemote = 9;
+    bool antidelete = 10;
+    bool modohorny = 11;
+    bool autosticker = 12;
+    bool audios = 13;
+    bool antiLink2 = 14;
+    bool antiviewonce = 15;
+    bool antiToxic = 16;
+    bool antiTraba = 17;
+    bool modoadmin = 18;
+    bool antiArab = 19;
+    bool antiArab2 = 20;
+    bool antiporno = 21;
+    bool simi = 22;
+    bool game = 23;
+    int32 expired = 24;
+    string language = 25;
+}
+message Settings {
+    bool self = 1;
+    bool autoread = 2;
+    bool autoread2 = 3;
+    bool restrict = 4;
+    bool antiCall = 5;
+    bool antiPrivate = 6;
+    bool modejadibot = 7;
+    bool antispam = 8;
+    bool audiosBot = 9;
+    bool modoia = 10;
+}
+
+message Sticker {
+    string text = 1;
+    string mentionedJid = 2;
+    string creator = 3;
+    bool locked = 4;
+    int32 at = 5;
+}
+
+message Database {
+    map<string, User> users = 1;
+    map<string, Chat> chats = 2;
+    map<string, Settings> settings = 3;
+    map<string, Sticker> stickers = 4;
+}
