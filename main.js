@@ -45,7 +45,7 @@ global.videoListXXX = [];
 const __dirname = global.__dirname(import.meta.url);
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse());
 global.prefix = new RegExp('^[' + (opts['prefix'] || '*/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-.@').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']');
-global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile(`${opts._[0] ? opts._[0] + '_' : ''}database.json`));
+global.db = new Low(new JSONFile(path.join(__dirname, 'database.json')));
 
 
 global.loadDatabase = async function loadDatabase() {
@@ -70,7 +70,6 @@ global.loadDatabase = async function loadDatabase() {
     settings: {},
     ...(global.db.data || {}),
   };
-  global.db.chain = chain(global.db.data);
 };
 loadDatabase();
 
@@ -142,12 +141,6 @@ const connectionOptions = {
         let jid = jidNormalizedUser(key.remoteJid);
         let msg = await store.loadMessage(jid, key.id);
         return msg?.message || "";
-    },
-    patchMessageBeforeSending: async (message) => {
-        let messages = 0;
-        global.conn.uploadPreKeysToServerIfRequired();
-        messages++;
-        return message;
     },
     shouldIgnoreJid: (jid) => isJidBroadcast(jid) || isJidNewsletter(jid) /** global.conn.user.jid */,
     msgRetryCounterCache: msgRetryCounterCache,
@@ -282,15 +275,16 @@ async function connectionUpdate(update) {
     global.timestamp.connect = new Date;
   }
   if (global.db.data == null) loadDatabase();
-if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
+if (update.qr) {
 if (opcion == '1' || methodCodeQR) {
     console.log(chalk.yellow('[ ℹ️ ] Escanea el código QR.'));
  }}
   if (connection == 'open') {
     console.log(chalk.yellow('[ ℹ️ ] Conectado correctamente.'));
+
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-if (reason == 405) {
+if (reason === 405) {
 await fs.unlinkSync("./MysticSession/" + "creds.json")
 console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`)) 
 process.send('reset')}
