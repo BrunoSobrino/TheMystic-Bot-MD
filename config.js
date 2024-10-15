@@ -18,8 +18,12 @@ global.owner = [
   ['5493772406612', '5492604057569', true]
 ];
 
+
 global.suittag =  ['5493772406612', '5492604845932'];
 global.prems = ['5493772406612', '5492604845932'];
+
+// API
+global.BASE_API_DELIRIUS = "https://deliriussapi-oficial.vercel.app";
 
 global.packname = 'Sticker';
 global.author = 'ᴀꜱᴀᴋᴜʀᴀ ᴍᴀᴏ ʙᴏᴛ 👑';
