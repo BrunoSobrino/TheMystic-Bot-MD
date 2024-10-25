@@ -155,7 +155,7 @@ const connectionOptions = {
     //msgRetryCounterMap,
     defaultQueryTimeoutMs: undefined,
     cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
-    version,
+    version: [2, 3000, 1015901307],
     //userDeviceCache: msgRetryCounterCache <=== quien fue el pendejo?????
 };
 
