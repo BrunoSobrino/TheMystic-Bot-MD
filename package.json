@@ -14,7 +14,7 @@
     "qr": "node index.js qr",
     "code": "node index.js code",
     "eslint": "eslint .",
-    "eslintfix": "eslint --fix ."
+    "eslintfix": "eslint --fix .",
     "postinstall": "node pipdeps.js"
   },
   "homepage": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
