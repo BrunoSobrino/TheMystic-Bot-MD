@@ -9,8 +9,7 @@ const handler = async (m, { conn, text }) => {
   const tradutor = _translate.plugins.downloader_soundcloud;
   if (!text) throw `${tradutor.texto1}`;
   try {
-    const searchxd = await axios.get(
-      "https://deliriusapi-official.vercel.app/search/soundcloud",
+    const searchxd = await axios.get(global.BASE_API_DELIRIUS + "/search/soundcloud",
       {
         params: {
           q: text,
@@ -19,8 +18,7 @@ const handler = async (m, { conn, text }) => {
       },
     );
     const shdata = searchxd.data.data[0];
-    const downloadzd = await axios.get(
-      "https://deliriusapi-official.vercel.app/download/soundcloud",
+    const downloadzd = await axios.get(global.BASE_API_DELIRIUS + "/download/soundcloud",
       {
         params: {
           url: shdata.link,
