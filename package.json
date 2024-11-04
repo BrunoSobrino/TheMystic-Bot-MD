@@ -1,5 +1,5 @@
 {
-  "name": "themystic-bot-md",
+  "name": "Megumin-Bot",
   "version": "1.0.0",
   "description": "Un chatbot automatizado para WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.",
   "main": "index.js",
