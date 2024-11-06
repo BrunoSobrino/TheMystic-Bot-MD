@@ -2,6 +2,8 @@ import path from 'path';
 
 import pkg from 'youtube-dl-exec';
 
+import yts from 'yt-search';
+
 import ffmpeg from 'fluent-ffmpeg';
 
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
