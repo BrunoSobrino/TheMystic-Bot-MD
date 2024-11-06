@@ -9,10 +9,10 @@ import moment from 'moment-timezone';
 
 /* Para agregar más APIs asegurate de poner global.apiname = ['APIKey'] */ /* By Skid 🤑 */
 
-global.openai_key = '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';
+global.openai_key = 'sk-0';
 /* Obtén tu API Key en este enlace: https://platform.openai.com/account/api-keys */
 
-global.openai_org_id = 'org-qYD5O8gEdBNUPUn7L42GbvgQ';
+global.openai_org_id = 'org-3';
 /* Obtén tu ID de organización en este enlace: https://platform.openai.com/account/org-settings */
 
 global.MyApiRestBaseUrl = 'https://api.cafirexos.com'; // Bloqueo de IP -> usar esta para no ser bloqueado: 'https://api-brunosobrino.onrender.com';
