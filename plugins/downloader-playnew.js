@@ -411,3 +411,4 @@ const getBuffer = async (url, options) => {
     return res.data;
 
 };
+import yts from 'yt-search';
