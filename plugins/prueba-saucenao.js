@@ -2,9 +2,9 @@
 import fs from 'fs'
 import axios from 'axios'
 import fetch from "node-fetch"
-import uploadFile from '../lib/uploadFile.js'
-import uploadImage from '../lib/uploadImage.js'
-import { webp2png } from '../lib/webp2mp4.js'
+import uploadFile from '../libraries/uploadFile.js'
+import uploadImage from '../libraries/uploadImage.js'
+import { webp2png } from '../libraries/webp2mp4.js'
 import formData from 'form-data'
 let handler = async (m, { conn, args, usedPrefix, command, text }) => {
 try {   
