@@ -89,6 +89,10 @@ await conn.reply(m.chat, '_*ESPERE UN MOMENTO...*_', twa, m)
 await conn.reply(m.chat, `*◎ R E S U L T A D O*
 
 ${resultadoEnBruto}`, twa, m)
-} 
+} catch (e) {
+await m.reply(lenguajeGB['smsMalError3']() + '\n*' + lenguajeGB.smsMensError1() + '*\n*' + usedPrefix + `${lenguajeGB.lenguaje() == 'es' ? 'reporte' : 'report'}` + '* ' + `${lenguajeGB.smsMensError2()} ` + usedPrefix + command)
+console.log(`❗❗ ${lenguajeGB['smsMensError2']()} ${usedPrefix + command} ❗❗`)
+console.log(e)}
+}
 handler.command = /^sauce|source|salsa|zelda$/i
 export default handler
