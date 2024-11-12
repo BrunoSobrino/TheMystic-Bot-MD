@@ -1,5 +1,5 @@
 import { generateWAMessageFromContent } from "baileys";
-import Tiktok from "@tobyg74/tiktok-api-dl";
+import axios from 'axios';
 
 const handler = async (m, { conn, text, args, usedPrefix, command }) => {
   const datas = global;
@@ -23,45 +23,19 @@ const handler = async (m, { conn, text, args, usedPrefix, command }) => {
     }, aa);
     await conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id, mentions: [m.sender] });
 
-    const result = await Tiktok.Downloader(args[0], { version: "v1" });
-    if (result.status === "success") {
-      const desc1n = `${tradutor.texto4[0]} _${usedPrefix}tomp3_ ${tradutor.texto4[1]}`;
-      await conn.sendMessage(m.chat, { video: { url: result.result.video.downloadAddr }, caption: desc1n }, { quoted: m });
-    } else {
-      throw new Error(result.message);
-    }
-  } catch (ee1) {
-    try {
-      const result = await Tiktok.Downloader(args[0], { version: "v1" });
-      if (result.status === "success") {
-        const desc1 = `${tradutor.texto5[0]} _${usedPrefix}tomp3_ ${tradutor.texto5[1]}`;
-        await conn.sendMessage(m.chat, { video: { url: result.result.video.downloadAddr }, caption: desc1 }, { quoted: m });
-      } else {
-        throw new Error(result.message);
-      }
-    } catch (e1) {
-      try {
-        const result = await Tiktok.Downloader(args[0], { version: "v1" });
-        if (result.status === "success") {
-          const desc2 = `${tradutor.texto6[0]} _${usedPrefix}tomp3_ ${tradutor.texto6[1]}`;
-          await conn.sendMessage(m.chat, { video: { url: result.result.video.downloadAddr }, caption: desc2 }, { quoted: m });
-        } else {
-          throw new Error(result.message);
-        }
-      } catch (e2) {
-        try {
-          const result = await Tiktok.Downloader(args[0], { version: "v1" });
-          if (result.status === "success") {
-            const cap = `${tradutor.texto8[0]} _${usedPrefix}tomp3_ ${tradutor.texto8[1]}`;
-            await conn.sendMessage(m.chat, { video: { url: result.result.video.downloadAddr }, caption: cap }, { quoted: m });
-          } else {
-            throw new Error(result.message);
-          }
-        } catch {
-          throw `${tradutor.texto9}`;
-        }
-      }
-    }
+    const response = await axios.get(`http://40.86.184.153/downloadtiktok`, {
+      params: {
+        url: args[0],
+        type: 'video'
+      },
+      responseType: 'arraybuffer'
+    });
+    const buff_vid = response.data;
+    const desc1n = `${tradutor.texto4[0]} _${usedPrefix}tomp3_ ${tradutor.texto4[1]}`;
+    await conn.sendMessage(m.chat, { video: buff_vid, caption: desc1n }, { quoted: m });
+  } catch (error) {
+    console.error('Error fetching video:', error);
+    throw tradutor.texto9;
   }
 };
 
