@@ -24,7 +24,7 @@ global.owner = [
   ['5212412377467', '💫 Mystic - Collaborator 6 💫', true],
   ['5215517489568', '💫 Mystic - Rey Endymion 💫', false],
   ['59895555511', '💫 Mystic - Collaborator 8 💫', true],
-  ['573012482597', '💫 Mystic - OfcDiego', true],
+  ['573012482597', '💫 Mystic - DevDiego', true],
   ['59175655964', '💫 Mystic - By Alba070503 💫', true],
   ['5493794297363', '💫 Mystic - Gabriel Ofc', true], 
   ['393518398856', '💫 Mystic - Tester Fabri115💫', true],
@@ -51,7 +51,8 @@ global.owner = [
   ['5492215034412'],
   ['584125778026'],
   ['5492964650915'],
-  ['5218444937407']
+  ['5218444937407'],
+  ['5218713339906']
 ];
 
 global.suittag = ['5219993404349'];
