@@ -10,4 +10,8 @@ global.ayuda_eventos = `*_SECCION AYUDA (EVENTO NAVIDAD)_*
 
 Si necesitas ayuda para conseguir imagenes futanaris relacionado con la navidad puedes usar los siguientes enlaces:
 
-🤝| Enlace de ayuda: https://rule34.xxx/index.php?page=post&s=list&tags=christmas+futanari+&pid=0, https://rule34.xxx/index.php?page=post&s=list&tags=christmas+futa&pid=0.`
+🤝| Enlace de ayuda: 
+
+https://rule34.xxx/index.php?page=post&s=list&tags=christmas+futanari+&pid=0 
+
+https://rule34.xxx/index.php?page=post&s=list&tags=christmas+futa&pid=0`
