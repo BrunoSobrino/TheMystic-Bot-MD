@@ -1,16 +1,23 @@
-import fetch from 'node-fetch';
-import axios from 'axios';
-import { youtubedl, youtubedlv2 } from '@bochilteam/scraper';
-import fs from "fs";
-import yts from 'yt-search';
-//import ytmp33 from '../src/libraries/ytmp33.js';
-//import ytmp44 from '../src/libraries/ytmp44.js';
-import ytdl from 'ytdl-core';
+import path from 'path';
+import fs from 'fs';
+import pkg from 'youtube-dl-exec';
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import yts from 'yt-search'; // Asegúrate de importar yts para la búsqueda
 
-let limit1 = 100;
-let limit2 = 400;
-let limit_a1 = 50;
-let limit_a2 = 400;
+const { exec } = pkg;
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
+
+// Definir __dirname manualmente
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+let limit1 = 100; // Límite inferior para audio
+let limit2 = 400; // Límite superior para video
+let limit_a1 = 50; // Límite inferior para tamaño de audio
+let limit_a2 = 400; // Límite superior para tamaño de audio
 
 const handler = async (m, { conn, command, args, text, usedPrefix }) => {
   const datas = global;
@@ -28,159 +35,58 @@ const handler = async (m, { conn, command, args, text, usedPrefix }) => {
     additionalText = 'vídeo';
   }
 
-  if (!yt_play || !yt_play[0]?.title) return m.reply('> *[❗] Error: Audio/Video not found.*')
+  if (!yt_play || !yt_play[0]?.title) return m.reply('> *[❗] Error: Audio/Video not found.*`');
   
   const texto1 = `${tradutor.texto2[0]} ${yt_play[0].title}\n${tradutor.texto2[1]} ${yt_play[0].ago}\n${tradutor.texto2[2]} ${secondString(yt_play[0].duration.seconds)}\n${tradutor.texto2[3]} ${MilesNumber(yt_play[0].views)}\n${tradutor.texto2[4]} ${yt_play[0].author.name}\n${tradutor.texto2[5]} ${yt_play[0].videoId}\n${tradutor.texto2[6]} ${yt_play[0].type}\n${tradutor.texto2[7]} ${yt_play[0].url}\n${tradutor.texto2[8]} ${yt_play[0].author.url}\n\n> ${tradutor.texto2[9]} ${additionalText}, ${tradutor.texto2[10]}`.trim();
 
   conn.sendMessage(m.chat, { image: { url: yt_play[0].thumbnail }, caption: texto1 }, { quoted: m });
 
   if (['play', 'play3', 'playdoc'].includes(command)) {
-    /*try {
-      const { status, resultados, error } = await ytmp33(yt_play[0].url);
-      if (!status) throw new Error(error);
-
-      const ttl = resultados.titulo;
-      const buff_aud = await getBuffer(resultados.descargar);
+    try {
+      const buff_aud = await downloadMedia(yt_play[0].url, 'audio');
       const fileSizeInBytes = buff_aud.byteLength;
-      const fileSizeInKB = fileSizeInBytes / 1024;
-      const fileSizeInMB = fileSizeInKB / 1024;
+      const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
       const size = fileSizeInMB.toFixed(2);
 
       if (size >= limit_a2) {
-        await conn.sendMessage(m.chat, { text: `${tradutor.texto3} _${resultados.descargar}_` }, { quoted: m });
+        await conn.sendMessage(m.chat, { text: `${tradutor.texto3} _${yt_play[0].url}_` }, { quoted: m });
         return;
       }
-      if (size >= limit_a1 && size <= limit_a2) {
-        await conn.sendMessage(m.chat, { document: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-        return;
-      } else {
-        if (['playdoc', 'play3'].includes(command)) return await conn.sendMessage(m.chat, { document: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-        await conn.sendMessage(m.chat, { audio: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
+      if (size >= limit_a1) {
+        await conn.sendMessage(m.chat, { document: buff_aud, mimetype: 'audio/mpeg', fileName: `${yt_play[0].title}.mp3` }, { quoted: m });
         return;
       }
-    } catch (error) {
-      console.log('Fallo el 1: ' + error)*/
-      try {
-        const audio = `${global.MyApiRestBaseUrl}/api/v2/ytmp3?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
-        const ttl = await yt_play[0].title;
-        const buff_aud = await getBuffer(audio);
-        const fileSizeInBytes = buff_aud.byteLength;
-        const fileSizeInKB = fileSizeInBytes / 1024;
-        const fileSizeInMB = fileSizeInKB / 1024;
-        const size = fileSizeInMB.toFixed(2);
+      await conn.sendMessage(m.chat, { audio: buff_aud, mimetype: 'audio/mpeg', fileName: `${yt_play[0].title}.mp3` }, { quoted: m });
+      return;
 
-        if (size >= limit_a2) {
-          await conn.sendMessage(m.chat, { text: `${tradutor.texto3} _${audio}_` }, { quoted: m });
-          return;
-        }
-        if (size >= limit_a1 && size <= limit_a2) {
-          await conn.sendMessage(m.chat, { document: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-          return;
-        } else {
-          if (['playdoc', 'play3'].includes(command)) return await conn.sendMessage(m.chat, { document: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-          await conn.sendMessage(m.chat, { audio: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-          return;
-        }
-      } catch {
-        try {
-          const ttl = await yt_play[0].title;
-          const mediaa = await ytMp3(yt_play[0].url);
-          const buff_aud = await getBuffer(mediaa);
-          const fileSizeInBytes = buff_aud.byteLength;
-          const fileSizeInKB = fileSizeInBytes / 1024;
-          const fileSizeInMB = fileSizeInKB / 1024;
-          const size = fileSizeInMB.toFixed(2);
-         if (size >= limit_a2) {
-           await conn.sendMessage(m.chat, { text: `${tradutor.texto3} _${mediaa}_` }, { quoted: m });
-           return;
-         }
-         if (size >= limit_a1 && size <= limit_a2) {
-           await conn.sendMessage(m.chat, { document: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-           return;
-         } else {
-           if (['playdoc', 'play3'].includes(command)) return await conn.sendMessage(m.chat, { document: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-           await conn.sendMessage(m.chat, { audio: buff_aud, mimetype: 'audio/mpeg', fileName: ttl + `.mp3` }, { quoted: m });
-           return;
-         }
-      } catch {  
-        throw tradutor.texto4;
-      }
-    //}
-   }
+    } catch (error) {
+      console.error('Error fetching audio:', error);
+      throw tradutor.texto4;
+    }
   }
 
   if (['play2', 'play4', 'playdoc2'].includes(command)) {
-    /*try {
-      const { status, resultados, error } = await ytmp44(yt_play[0].url);
-      if (!status) throw new Error(error);
-
-      const ttl2 = resultados.titulo;
-      const buff_vid = await getBuffer(resultados.descargar);
+    try {
+      const buff_vid = await downloadMedia(yt_play[0].url, 'video');
       const fileSizeInBytes2 = buff_vid.byteLength;
-      const fileSizeInKB2 = fileSizeInBytes2 / 1024;
-      const fileSizeInMB2 = fileSizeInKB2 / 1024;
+      const fileSizeInMB2 = fileSizeInBytes2 / (1024 * 1024);
       const size2 = fileSizeInMB2.toFixed(2);
 
       if (size2 >= limit2) {
-        await conn.sendMessage(m.chat, { text: `${tradutor.texto5} _${resultados.descargar}_` }, { quoted: m });
+        await conn.sendMessage(m.chat, { text: `${tradutor.texto5} _${yt_play[0].url}_` }, { quoted: m });
         return;
       }
-      if (size2 >= limit1 && size2 <= limit2) {
-        await conn.sendMessage(m.chat, { document: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-        return;
-      } else {
-        if (['playdoc2', 'play4'].includes(command)) return await conn.sendMessage(m.chat, { document: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-        await conn.sendMessage(m.chat, { video: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
+      if (size2 >= limit1) {
+        await conn.sendMessage(m.chat, { document: buff_vid, mimetype: 'video/mp4', fileName: `${yt_play[0].title}.mp4`, caption: `🎥 Aquí está el video ` }, { quoted: m });
         return;
       }
-    } catch (error) {*/
-      try {
-        const video = `${global.MyApiRestBaseUrl}/api/v2/ytmp4?url=${yt_play[0].url}&apikey=${global.MyApiRestApikey}`;
-        const ttl2 = await yt_play[0].title;
-        const buff_vid = await getBuffer(video);
-        const fileSizeInBytes2 = buff_vid.byteLength;
-        const fileSizeInKB2 = fileSizeInBytes2 / 1024;
-        const fileSizeInMB2 = fileSizeInKB2 / 1024;
-        const size2 = fileSizeInMB2.toFixed(2);
+      await conn.sendMessage(m.chat, { video: buff_vid, mimetype: 'video/mp4', fileName: `${yt_play[0].title}.mp4`, caption: `🎥 Aquí está el video ` }, { quoted: m });
+      return;
 
-        if (size2 >= limit2) {
-          await conn.sendMessage(m.chat, { text: `${tradutor.texto5} _${video}_` }, { quoted: m });
-          return;
-        }
-        if (size2 >= limit1 && size2 <= limit2) {
-          await conn.sendMessage(m.chat, { document: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-          return;
-        } else {
-          if (['playdoc2', 'play4'].includes(command)) return await conn.sendMessage(m.chat, { document: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-          await conn.sendMessage(m.chat, { video: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-          return;
-        }
-      } catch {
-        try {
-          const ttl = await yt_play[0].title;
-          const mediaa = await ytMp4(yt_play[0].url);
-          const buff_vid = await getBuffer(mediaa);
-          const fileSizeInBytes = buff_vid.byteLength;
-          const fileSizeInKB = fileSizeInBytes / 1024;
-          const fileSizeInMB = fileSizeInKB / 1024;
-          const size = fileSizeInMB.toFixed(2);
-         if (size2 >= limit2) {
-           await conn.sendMessage(m.chat, { text: `${tradutor.texto5} _${mediaa}_` }, { quoted: m });
-           return;
-         }
-         if (size2 >= limit1 && size2 <= limit2) {
-           await conn.sendMessage(m.chat, { document: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-           return;
-         } else {
-           if (['playdoc2', 'play4'].includes(command)) return await conn.sendMessage(m.chat, { document: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-           await conn.sendMessage(m.chat, { video: buff_vid, mimetype: 'video/mp4', fileName: ttl2 + `.mp4` }, { quoted: m });
-           return;
-         }
-      } catch {          
-        throw tradutor.texto6;
-      }
-  //  }
-   }
+    } catch (error) {
+      console.error('Error fetching video:', error);
+      throw tradutor.texto6;
+    }
   }
 };
 
@@ -190,6 +96,50 @@ export default handler;
 async function search(query, options = {}) {
   const search = await yts.search({query, hl: 'es', gl: 'ES', ...options});
   return search.videos;
+}
+
+async function downloadMedia(url, type) {
+  return new Promise((resolve, reject) => {
+    const tempDir = path.join(__dirname, 'temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir);
+    }
+
+    const outputFilePath = path.join(tempDir, `media.${type === 'audio' ? 'mp3' : 'mp4'}`);
+    const options = {
+      noPlaylist: true,
+      output: outputFilePath,
+      format: type === 'video' ? 'bestvideo[height<=480]+bestaudio' : 'bestaudio', // Reducir calidad de video a 480p
+      mergeOutputFormat: type === 'video' ? 'mp4' : undefined
+    };
+
+    if (type === 'audio') {
+      options.extractAudio = true;
+      options.audioFormat = 'mp3';
+    }
+
+    const process = exec(url, options, { stdio: ['ignore', 'pipe', 'pipe'] });
+    const errors = [];
+
+    process.stderr.on('data', chunk => errors.push(chunk));
+    process.on('close', (code) => {
+      if (code !== 0 || errors.length > 0) {
+        reject(Buffer.concat(errors).toString());
+      } else {
+        fs.readFile(outputFilePath, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+            fs.unlink(outputFilePath, (unlinkErr) => {
+              if (unlinkErr) console.error('Error deleting temp file:', unlinkErr);
+            });
+          }
+        });
+      }
+    });
+    process.on('error', reject);
+  });
 }
 
 function MilesNumber(number) {
@@ -213,92 +163,17 @@ function secondString(seconds) {
   return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 
-function bytesToSize(bytes) {
-  return new Promise((resolve, reject) => {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes === 0) return 'n/a';
-    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-    if (i === 0) resolve(`${bytes} ${sizes[i]}`);
-    resolve(`${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`);
-  });
-}
-
 const getBuffer = async (url, options) => {
-    options ? options : {};
-    const res = await axios({method: 'get', url, headers: {'DNT': 1, 'Upgrade-Insecure-Request': 1,}, ...options, responseType: 'arraybuffer'});
-    return res.data;
+  options ? options : {};
+  const res = await axios({
+    method: 'get',
+    url,
+    headers: {
+      'DNT': 1,
+      'Upgrade-Insecure-Request': 1,
+    },
+    ...options,
+    responseType: 'arraybuffer'
+  });
+  return res.data;
 };
-
-async function ytMp3(url) {
-  return new Promise((resolve, reject) => {
-    ytdl.getInfo(url).then(async (getUrl) => {
-      const result = [];
-      for (let i = 0; i < getUrl.formats.length; i++) {
-        const item = getUrl.formats[i];
-        if (item.mimeType == 'audio/webm; codecs=\"opus\"') {
-          const {contentLength} = item;
-          const bytes = await bytesToSize(contentLength);
-          result[i] = {audio: item.url, size: bytes};
-        }
-      }
-      const resultFix = result.filter((x) => x.audio != undefined && x.size != undefined);
-      const tiny = await axios.get(`https://tinyurl.com/api-create.php?url=${resultFix[0].audio}`);
-      const tinyUrl = tiny.data;
-      const title = getUrl.videoDetails.title;
-      const thumb = getUrl.player_response.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
-      resolve({title, result: tinyUrl, result2: resultFix, thumb});
-    }).catch(reject);
-  });
-}
-
-async function ytMp4(url) {
-  return new Promise(async (resolve, reject) => {
-    ytdl.getInfo(url).then(async (getUrl) => {
-      const result = [];
-      for (let i = 0; i < getUrl.formats.length; i++) {
-        const item = getUrl.formats[i];
-        if (item.container == 'mp4' && item.hasVideo == true && item.hasAudio == true) {
-          const {qualityLabel, contentLength} = item;
-          const bytes = await bytesToSize(contentLength);
-          result[i] = {video: item.url, quality: qualityLabel, size: bytes};
-        }
-      }
-      const resultFix = result.filter((x) => x.video != undefined && x.size != undefined && x.quality != undefined);
-      const tiny = await axios.get(`https://tinyurl.com/api-create.php?url=${resultFix[0].video}`);
-      const tinyUrl = tiny.data;
-      const title = getUrl.videoDetails.title;
-      const thumb = getUrl.player_response.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
-      resolve({title, result: tinyUrl, rersult2: resultFix[0].video, thumb});
-    }).catch(reject);
-  });
-}
-
-async function ytPlay(query) {
-  return new Promise((resolve, reject) => {
-    yts(query).then(async (getData) => {
-      const result = getData.videos.slice( 0, 5 );
-      const url = [];
-      for (let i = 0; i < result.length; i++) {
-        url.push(result[i].url);
-      }
-      const random = url[0];
-      const getAudio = await ytMp3(random);
-      resolve(getAudio);
-    }).catch(reject);
-  });
-}
-
-async function ytPlayVid(query) {
-  return new Promise((resolve, reject) => {
-    yts(query).then(async (getData) => {
-      const result = getData.videos.slice( 0, 5 );
-      const url = [];
-      for (let i = 0; i < result.length; i++) {
-        url.push(result[i].url);
-      }
-      const random = url[0];
-      const getVideo = await ytMp4(random);
-      resolve(getVideo);
-    }).catch(reject);
-  });
-}
