@@ -24,6 +24,7 @@ global.prems = ['5493772406612', '5492604845932'];
 
 // API
 global.BASE_API_DELIRIUS = "https://deliriussapi-oficial.vercel.app";
+global.BASE_API_TOHSAKA = "https://api-rin-tohsaka.vercel.app/";
 
 global.packname = 'Sticker';
 global.author = 'ᴀꜱᴀᴋᴜʀᴀ ᴍᴀᴏ ʙᴏᴛ 👑';
