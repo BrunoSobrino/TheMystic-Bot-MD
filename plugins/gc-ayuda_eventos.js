@@ -1,4 +1,4 @@
-let handler = async (m, { conn }) => {
+/*let handler = async (m, { conn }) => {
 m.reply(global.ayuda_eventos)}
 handler.help = ['eventos']
 handler.tags = ['grupo']
@@ -14,4 +14,4 @@ Si necesitas ayuda para conseguir imagenes futanaris relacionado con la navidad 
 
 https://rule34.xxx/index.php?page=post&s=list&tags=christmas+futanari+&pid=0 
 
-https://rule34.xxx/index.php?page=post&s=list&tags=christmas+futa&pid=0`
+https://rule34.xxx/index.php?page=post&s=list&tags=christmas+futa&pid=0`*/
