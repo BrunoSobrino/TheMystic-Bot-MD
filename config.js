@@ -59,6 +59,7 @@ global.prems = ['51995386439'];
 
 // API
 global.BASE_API_DELIRIUS = "https://deliriussapi-oficial.vercel.app";
+global.BASE_API_TOHSAKA = "https://api-rin-tohsaka.vercel.app/";
 
 global.packname = 'Sticker';
 global.author = 'The Mystic - Bot';
