@@ -46,6 +46,7 @@
 - [Opciones de Despliegue](#opciones-de-despliegue)
   - [Despliegue en Cafirexos](#despliegue-en-cafirexos)
   - [Despliegue en BoxMineWorld](#despliegue-en-boxmineworld)
+  - [Despliegue en SkyUltraPlus](#despliegue-en-skyultraplus)
   - [Despliegue en Otros](#despliegue-en-otros)
 - [Soporte y Comunidad](#soporte-y-comunidad)
   - [Comunidades de Ayuda](#guía-de-uso)
