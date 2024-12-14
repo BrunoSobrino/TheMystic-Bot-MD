@@ -496,43 +496,43 @@ ${tradutor.texto1[16]}
 
     let pp
     // Nuevas Imágenes del menu para otros idiomas
-    if (language == 'es') {
-      pp = global.image1
-    } else if (language == 'pt-br') {
-      pp = global.image2
-    } else if (language == 'fr') {
-      pp = global.image3
-    }else if (language == 'en') {
-      pp = global.image4
-    } else if (language == 'ru') {
-      pp = global.image5
+    if (idioma == 'es') {
+      pp = global.imagen1
+    } else if (idioma == 'pt-br') {
+      pp = global.imagen2
+    } else if (idioma == 'fr') {
+      pp = global.imagen3
+    }else if (idioma == 'en') {
+      pp = global.imagen4
+    } else if (idioma == 'ru') {
+      pp = global.imagen5
     } else {
-      pp = global.image1 // Imagen por defecto (Español/Spanish)
+      pp = global.imagen1 // Imagen por defecto (Español/Spanish)
     }
 
 
 
     if (m.isGroup) {
       // await conn.sendFile(m.chat, vn, './src/assets/audio/01J673Y3TGCFF1D548242AX68Q.mp3', null, m, true, { type: 'audioMessage', ptt: true})
-      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g) ].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: m });
+      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: m });
     } else {
       //await conn.sendFile(m.chat, vn, './src/assets/audio/01J673Y3TGCFF1D548242AX68Q.mp3', null, m, true, { type: 'audioMessage', ptt: true})
       const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { " contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender .split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
-      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g) ].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: fkontak });
+      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: fkontak });
     }
   } catch {
     const datas = global
-    const language = datas.db.data.users[m.sender].language || global.defaultLanguage
-    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${language}.json`))
-    const translator = _translate.plugins.menu_menu
-
-    conn.reply(m.chat, translator.text1[29], m);
+    const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+    const tradutor = _translate.plugins.menu_menu
+    
+    conn.reply(m.chat, translator.texto1[29], m);
   }
 };
-handler.command = /^(menu|menu|memu|memu|help|info|commands|allmenu|2help|menu1.2|help|commands|commandos|cmd)$/i;
+handler.command = /^(menu|help|comandos|commands|cmd|cmds)$/i;
 handler.exp = 50;
 handler.fail = null;
-export defaulthandler;
+export default handler;
 function clockString(ms) {
   const h = isNaN(ms) ? '--' : Math.floor(ms / 3600000);
   const m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60;
