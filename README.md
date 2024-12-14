@@ -103,7 +103,7 @@
 
 ## Despliegue en SkyUltraPlus
 
-<a href="https://skyultraplus.com">
+<a href="https://dash.skyultraplus.com">
   <img width="180px" src="https://qu.ax/wbJoB.png"/>
 </a>
 
