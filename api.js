@@ -50,8 +50,7 @@ global.APIs = {
   erdwpe: 'https://api.erdwpe.com',
   xyroinee: 'https://api.xyroinee.xyz',
   nekobot: 'https://nekobot.xyz',
-  BK9: 'https://apii.bk9.site',
-  tohsaka: 'https://api-rin-tohsaka.vercel.app'
+  BK9: 'https://apii.bk9.site'
 },
 global.APIKeys = {
   'https://api.xteam.xyz': `${keysxteam}`,
