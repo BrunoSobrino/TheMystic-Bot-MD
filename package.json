@@ -1,5 +1,5 @@
 {
-  "name": "TheMystic-Bot-MD",
+  "name": "themystic-bot-md",
   "version": "1.0.0",
   "description": "Un chatbot automatizado para WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.",
   "main": "index.js",
@@ -36,6 +36,7 @@
     "@green-code/music-track-data": "^2.0.3",
     "@sefinek/google-tts-api": "*",
     "@shineiichijo/marika": "^2.0.6",
+    "@tobyg74/tiktok-api-dl": "^1.2.1",
     "@vitalets/google-translate-api": "^8.0.0",
     "@whiskeysockets/baileys": "^6.7.9",
     "acrcloud": "^1.4.0",
