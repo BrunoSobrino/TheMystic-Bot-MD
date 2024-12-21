@@ -14,13 +14,13 @@ global.authFile = `MysticSession`;
 global.isBaileysFail = false
 
 global.owner = [
-  ['5492604845932', '5492604631960', true],
+  ['5492604849203', '5492604631960', true],
   ['5493772406612', '5492604057569', true]
 ];
 
 
-global.suittag =  ['5493772406612', '5492604845932'];
-global.prems = ['5493772406612', '5492604845932'];
+global.suittag =  ['5493772406612', '5492604849203'];
+global.prems = ['5493772406612', '5492604849203'];
 
 // API
 global.BASE_API_DELIRIUS = "https://deliriussapi-oficial.vercel.app";
