@@ -104,7 +104,7 @@
 ## Despliegue en SkyUltraPlus
 
 <a href="https://skyultraplus.com">
-  <img width="180px" src="https://imgur.com/a/GHRABQa.png"/>
+  <img width="180px" src="https://qu.ax/dYZxE.jpg"/>
 </a>
 
 <details>
