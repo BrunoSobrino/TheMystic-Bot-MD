@@ -103,13 +103,14 @@
 
 ## Despliegue en SkyUltraPlus
 
-<a href="https://dash.skyultraplus.com">
-  <img width="180px" src="https://qu.ax/wbJoB.png"/>
+<a href="https://skyultraplus.com">
+  <img width="180px" src="https://imgur.com/a/GHRABQa.png"/>
 </a>
 
 <details>
  <summary><b>:paperclip: Enlaces Importantes</b></summary>
 
+- **Pagina Oficial:** [`aqui`](https://skyultraplus.com)
 - **Tutorial:** [Aquí](https://youtube.com/@Sky-Ultra-Plus)
 - **Dashboard:** [Aquí](https://dash.skyultraplus.com)
 - **Panel:** [Aquí](https://panel.skyultraplus.com)
