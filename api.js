@@ -8,7 +8,22 @@ import axios from 'axios';
 import moment from 'moment-timezone';
 
 /* Para agregar más APIs asegurate de poner global.apiname = ['APIKey'] */ /* By Skid 🤑 */
+const ytdl = require('ytdl-core');
 
+// Usa tu clave de API aquí
+const API_KEY = 'AIzaSyDiapwiIPcUZG4_7wB0sCY4r1Tfi3fX3EM';
+
+async function playCommand(url, chat) {
+    if (!ytdl.validateURL(url)) {
+        return chat.reply('Por favor, proporciona un enlace válido de YouTube.');
+    }
+
+    const info = await ytdl.getInfo(url);
+    const audioStream = ytdl(url, { filter: 'audioonly' });
+
+    // Enviar el audio al chat
+    chat.sendMessage({ audio: audioStream, filename: `${info.videoDetails.title}.mp3` });
+}
 global.openai_key = 'sk-0';
 /* Obtén tu API Key en este enlace: https://platform.openai.com/account/api-keys */
 
