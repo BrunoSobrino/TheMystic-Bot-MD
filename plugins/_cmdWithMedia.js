@@ -1,9 +1,13 @@
-const { proto, generateWAMessage, areJidsSameUser } = (await import("baileys")).default;
+const {
+  proto,
+  generateWAMessage,
+  areJidsSameUser,
+} = (await import('@whiskeysockets/baileys')).default;
 
 export async function all(m, chatUpdate) {
-  if (m?.isBaileys) return;
-  if (!m?.message) return;
-  if (!m?.msg?.fileSha256) return;
+  if (m.isBaileys) return;
+  if (!m.message) return;
+  if (!m.msg.fileSha256) return;
   if (!(Buffer.from(m.msg.fileSha256).toString('base64') in global.db.data.sticker)) return;
 
   const hash = global.db.data.sticker[Buffer.from(m.msg.fileSha256).toString('base64')];
@@ -12,8 +16,8 @@ export async function all(m, chatUpdate) {
     userJid: this.user.id,
     quoted: m.quoted && m.quoted.fakeObj,
   });
-  messages.key.fromMe = areJidsSameUser(m.sender, this.user.id);
-  messages.key.id = m.key.id;
+  messages.key.fromMe = m.isBaileys || (m.sender === m.conn?.user?.jid)
+  messages.key.id = m.key.id; 
   messages.pushName = m.pushName;
   if (m.isGroup) messages.participant = m.sender;
   const msg = {
@@ -23,3 +27,4 @@ export async function all(m, chatUpdate) {
   };
   this.ev.emit('messages.upsert', msg);
 }
+ 
