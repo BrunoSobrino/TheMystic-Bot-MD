@@ -1,3 +1,4 @@
+/*
 import syntaxerror from 'syntax-error';
 import {format} from 'util';
 import {fileURLToPath} from 'url';
@@ -46,3 +47,4 @@ class CustomArray extends Array {
 function pickRandom(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
+*_
