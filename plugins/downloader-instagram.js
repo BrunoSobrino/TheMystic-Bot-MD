@@ -18,7 +18,7 @@ const handler = async (m, { conn, args, command, usedPrefix }) => {
       }
     }
   } catch (err) {
-    const res = await axios.get("https://deliriusapi-official.vercel.app/download/instagram", { params: { url: args[0] }});
+    const res = await axios.get(global.BASE_API_DELIRIUS + "/download/instagram", { params: { url: args[0] }});
     const result = res.data.data;
     for (let i = 0; i < result.length; i++) {
       const item = result[i];
