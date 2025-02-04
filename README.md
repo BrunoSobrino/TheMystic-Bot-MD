@@ -57,10 +57,10 @@
 # Avisos Importantes
 
 > [!IMPORTANT]\
-> Este proyecto **no está afiliado de ninguna manera** con `WhatsApp`, `Inc. WhatsApp` es una marca registrada de `WhatsApp LLC`, y este bot es un **desarrollo independiente** que **no tiene ninguna relación oficial con la compañía**.
+> Este proyecto **no está afiliado, respaldado ni asociado de ninguna manera** con `WhatsApp`. `WhatsApp` es una marca registrada de `WhatsApp LLC`, una subsidiaria de `Meta Platforms, Inc.`. Este bot es un **desarrollo independiente** y **no tiene ninguna relación oficial con la compañía**.
 
 > [!IMPORTANT]\
-> **No** se asegura que este **proyecto siga funcionando al 100% debido** a cuestiones de tiempo personales de @BrunoSobrino, por lo cual **el proyecto esta en manos de colaboradores** y usuarios que deseen aportar actualizaciones.
+> **No** se asegura que este **proyecto siga funcionando al 100% debido** a cuestiones de tiempo personales de [Bruno Sobrino](https://github.com/BrunoSobrino), por lo cual **el proyecto esta en manos de colaboradores** y usuarios que deseen aportar actualizaciones.
 
 
 # Opciones de despliegue
@@ -74,15 +74,19 @@
 <details>
  <summary><b>:paperclip: Enlaces Importantes</b></summary>
 
-- **Sitio Web:** [cafirexos.com](https://cafirexos.com)
-- **Área de Clientes:** [clientes.cafirexos.com](https://clientes.cafirexos.com)
-- **Panel de Control:** [panel.cafirexos.com](https://panel.cafirexos.com)
-- **Estado de los Servicios:** [estado.cafirexos.com](https://estado.cafirexos.com)
-- **Documentación:** [docs.cafirexos.com](https://docs.cafirexos.com)
-- **Canal de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/whatsapp)
-- **Comunidad de WhatsApp:** [¡Únete aquí!](https://cafirexos.com/comunidad)
+- [Sitio web](https://cafirexos.com)
+- [Área de clientes](https://cafirexos.com/clientarea.php)
+- [Panel de control](https://panel.cafirexos.com)
+- [Base de conocimientos](https://cafirexos.com/knowledgebase)
+- [Estado de los servicios](https://estado.cafirexos.com)
+- [Canal de WhatsApp](https://cafirexos.com/whatsapp/canal)
+- [Comunidad de WhatsApp](https://cafirexos.com/whatsapp/comunidad)
+- [Soporte](https://cafirexos.com/submitticket.php)
 
 </details>
+
+> [!IMPORTANT]\
+> El registro de usuarios solo es posible al comprar uno de nuestros productos en la [tienda](https://cafirexos.com/store).
 
 ## Despliegue en BoxMineWorld
 

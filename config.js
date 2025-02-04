@@ -23,7 +23,7 @@ global.suittag =  ['5493772406612', '5492604849203'];
 global.prems = ['5493772406612', '5492604849203'];
 
 // API
-global.BASE_API_DELIRIUS = "https://deliriussapi-oficial.vercel.app";
+global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
 
 global.packname = 'Sticker';
 global.author = 'ᴀꜱᴀᴋᴜʀᴀ ᴍᴀᴏ ʙᴏᴛ 👑';
