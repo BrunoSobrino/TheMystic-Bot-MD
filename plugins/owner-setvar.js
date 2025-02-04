@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,26 +49,26 @@ const updateConfigFile = async (variable, value) => {
   }
 };
 
-const handler = async (m, { text }) => {
+const handler = async (m, {text}) => {
   if (!text) return m.reply('❌ Ej .setvar global.groq = gsk');
 
-  const [variable, value] = text.split('=').map(item => item.trim());
+  const [variable, value] = text.split('=').map((item) => item.trim());
 
   if (!variable || !value) return m.reply('❌ Ej .setvar variable = valor');
 
   try {
-    await ensureConfigIgnored(); 
-    await updateConfigFile(variable, value); 
+    await ensureConfigIgnored();
+    await updateConfigFile(variable, value);
     m.reply(`✅ ${variable.replace(/^global\./, '')} actualizada a ${value}`);
   } catch (error) {
-    console.error("❌ Error al actualizar config.js:", error);
+    console.error('❌ Error al actualizar config.js:', error);
     m.reply(`❌ ${error.message}`);
   }
 };
 
-handler.command = /^setvar$/i; 
+handler.command = /^setvar$/i;
 handler.help = ['cambia ajustes'];
 handler.tags = ['tools'];
-handler.owner = true; 
+handler.owner = true;
 
 export default handler;

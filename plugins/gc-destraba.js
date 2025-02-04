@@ -1,10 +1,9 @@
 
 
 const handler = async (m, {conn}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.gc_destraba
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.gc_destraba;
 
   global.destraba = `
 ${tradutor.texto1}

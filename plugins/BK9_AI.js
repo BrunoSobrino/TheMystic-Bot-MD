@@ -3,9 +3,8 @@ import fs from 'fs';
 import uploader from '../src/libraries/uploadImage.js';
 
 const handler = async (m, {conn, text, command}) => {
-  const datas = global;
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
   const tradutor = _translate.BK9.BK9;
 
   if (command === 'bk9dalle') {
@@ -42,13 +41,13 @@ const handler = async (m, {conn, text, command}) => {
       throw `${tradutor.bk9err}`;
     }
   } else if (command === 'bk9img') {
-    let BK7 = m.quoted ? m.quoted : m;
-    let BK8 = (BK7.msg || BK7).mimetype || BK7.mediaType || '';
+    const BK7 = m.quoted ? m.quoted : m;
+    const BK8 = (BK7.msg || BK7).mimetype || BK7.mediaType || '';
     if (/image/g.test(BK8) && !/webp/g.test(BK8)) {
-      let BK0 = await BK7.download();
-      let BK9img = await uploader(BK0);
-      let BK9api = await (await fetch(`https://bk9.fun/ai/geminiimg?url=${BK9img}&q=${text}`)).json();
-      conn.sendMessage(m.chat, { text: BK9api.BK9 }, { quoted: m });
+      const BK0 = await BK7.download();
+      const BK9img = await uploader(BK0);
+      const BK9api = await (await fetch(`https://bk9.fun/ai/geminiimg?url=${BK9img}&q=${text}`)).json();
+      conn.sendMessage(m.chat, {text: BK9api.BK9}, {quoted: m});
     } else {
       throw `${tradutor.bk9imgtext}`;
     }

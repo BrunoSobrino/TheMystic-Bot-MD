@@ -2,10 +2,9 @@
 
 const xpperlimit = 350;
 const handler = async (m, {conn, command, args}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.rpg_shop
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.rpg_shop;
 
   let count = command.replace(/^buy/i, '');
   count = count ? /all/i.test(count) ? Math.floor(global.db.data.users[m.sender].exp / xpperlimit) : parseInt(count) : args[0] ? parseInt(args[0]) : 1;

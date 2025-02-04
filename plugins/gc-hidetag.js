@@ -1,4 +1,4 @@
-import {generateWAMessageFromContent} from "baileys";
+import {generateWAMessageFromContent} from 'baileys';
 import * as fs from 'fs';
 // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
 // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.

@@ -1,11 +1,10 @@
 const items = ['limit', 'exp'];
 const confirmation = {};
 
-async function handler(m, { conn, args, usedPrefix, command }) {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.rpg_transfer
+async function handler(m, {conn, args, usedPrefix, command}) {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.rpg_transfer;
 
   if (confirmation[m.sender]) return conn.sendMessage(m.chat, {text: tradutor.texto1, mentions: [m.sender]}, {quoted: m});
   const user = global.db.data.users[m.sender];
@@ -25,26 +24,25 @@ async function handler(m, { conn, args, usedPrefix, command }) {
   if (!who) return conn.sendMessage(m.chat, {text: tradutor.texto3, mentions: [m.sender]}, {quoted: m});
   if (!(who in global.db.data.users)) return conn.sendMessage(m.chat, {text: `${tradutor.texto4[0]} ${who} ${tradutor.texto4[1]}`, mentions: [m.sender]}, {quoted: m});
   if (user[type] * 1 < count) return conn.sendMessage(m.chat, {text: `${tradutor.texto5[0]} ${type} ${tradutor.texto5[1]}`, mentions: [m.sender]}, {quoted: m});
-const confirm = `${tradutor.texto6[0]} ${count} ${type} a @${(who || '').replace(/@s\.whatsapp\.net/g, '')}?* 
+  const confirm = `${tradutor.texto6[0]} ${count} ${type} a @${(who || '').replace(/@s\.whatsapp\.net/g, '')}?* 
 ${tradutor.texto6[1]}
 
 ${tradutor.texto6[2]}* 
 ${tradutor.texto6[3]}
 ${tradutor.texto6[4]}`.trim();
   await conn.sendMessage(m.chat, {text: confirm, mentions: [who]}, {quoted: m});
-  confirmation[m.sender] = { sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: '*[❗] Se acabó el tiempo, no se obtuvo respuesta. Transferencia cancelada.*', mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
+  confirmation[m.sender] = {sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: '*[❗] Se acabó el tiempo, no se obtuvo respuesta. Transferencia cancelada.*', mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
 }
 
 handler.before = async (m) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.rpg_transfer
-  
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.rpg_transfer;
+
   if (m.isBaileys) return;
   if (!(m.sender in confirmation)) return;
   if (!m.text) return;
-  const { timeout, sender, message, to, type, count } = confirmation[m.sender];
+  const {timeout, sender, message, to, type, count} = confirmation[m.sender];
   if (m.id === message.id) return;
   const user = global.db.data.users[sender];
   const _user = global.db.data.users[to];

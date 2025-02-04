@@ -1,18 +1,16 @@
-import fetch from 'node-fetch'; 
+import fetch from 'node-fetch';
 
-let handler = async function (m, { text }) {
-
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.BK9.BK9
+const handler = async function(m, {text}) {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.BK9.BK9;
 
   try {
     if (!text) {
       m.reply(`${tradutor.bk9LText_T}`);
       return;
     }
-    const [link, alias] = text.split("+").map(part => part.trim());
+    const [link, alias] = text.split('+').map((part) => part.trim());
     let apiUrl = `https://bk9.site/api/create?url=${encodeURIComponent(link)}`;
     if (alias) apiUrl += `&alias=${encodeURIComponent(alias)}`;
     const response = await fetch(apiUrl);

@@ -1,11 +1,11 @@
-const handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, {conn, text, usedPrefix, command}) => {
   const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.downloader_imagen;
 
   if (!text) return m.reply(`${tradutor.texto1} ${usedPrefix + command} Minecraft*`);
 
-  /*if (m.text.includes('gore') || m.text.includes('cp') ||
+  /* if (m.text.includes('gore') || m.text.includes('cp') ||
       m.text.includes('porno') || m.text.includes('Gore') ||
       m.text.includes('rule') || m.text.includes('CP') ||
       m.text.includes('Rule34')) {

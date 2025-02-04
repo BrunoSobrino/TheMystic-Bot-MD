@@ -16,7 +16,7 @@ export async function all(m, chatUpdate) {
     userJid: this.user.id,
     quoted: m.quoted && m.quoted.fakeObj,
   });
-  messages.key.fromMe = m.isBaileys || (m.sender === m.conn?.user?.jid)
+  messages.key.fromMe = m.isBaileys || (m.sender === this??.user?.jid)
   messages.key.id = m.key.id; 
   messages.pushName = m.pushName;
   if (m.isGroup) messages.participant = m.sender;

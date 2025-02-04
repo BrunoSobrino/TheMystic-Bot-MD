@@ -2,10 +2,9 @@ import {webp2png} from '../src/libraries/webp2mp4.js';
 
 
 const handler = async (m, {conn, usedPrefix, command}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.convertidor_toimg
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.convertidor_toimg;
 
 
   const notStickerMessage = `*${tradutor.texto1} ${usedPrefix + command}*`;

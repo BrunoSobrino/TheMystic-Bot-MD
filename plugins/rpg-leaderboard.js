@@ -1,10 +1,9 @@
 
 
 const handler = async (m, {conn, args, participants}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.rpg_leaderboard
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.rpg_leaderboard;
 
   const users = Object.entries(global.db.data.users).map(([key, value]) => {
     return {...value, jid: key};
@@ -37,7 +36,7 @@ ${tradutor.texto2[3]} ${usersLevel.indexOf(m.sender) + 1} ${tradutor.texto2[6]} 
 ${sortedLevel.slice(0, len).map(({jid, level}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]}  ${tradutor.texto2[8]} ${level}*`).join`\n`}
 
 *⚔️ ${randomAdventurePhrase} ⚔️*`.trim();
-  conn.sendMessage(m.chat, {text: texto, mentions: conn.parseMention(texto)}, {quoted: m})
+  conn.sendMessage(m.chat, {text: texto, mentions: conn.parseMention(texto)}, {quoted: m});
 };
 handler.help = ['top'];
 handler.tags = ['xp'];

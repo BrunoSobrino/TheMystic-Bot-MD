@@ -20,7 +20,7 @@ global.MyApiRestApikey = 'BrunoSobrino';
 
 global.MyApiRestBaseUrl2 = 'https://api-brunosobrino-dcaf9040.koyeb.app';
 
-global.MyApiRestBaseUrl3 = 'https://api-brunosobrino.onrender.com'; 
+global.MyApiRestBaseUrl3 = 'https://api-brunosobrino.onrender.com';
 
 global.keysZens = ['LuOlangNgentot', 'c2459db922', '37CC845916', '6fb0eff124', 'hdiiofficial', 'fiktod', 'BF39D349845E', '675e34de8a', '0b917b905e6f'];
 global.keysxxx = keysZens[Math.floor(keysZens.length * Math.random())];
@@ -50,7 +50,7 @@ global.APIs = {
   erdwpe: 'https://api.erdwpe.com',
   xyroinee: 'https://api.xyroinee.xyz',
   nekobot: 'https://nekobot.xyz',
-  BK9: 'https://apii.bk9.site'
+  BK9: 'https://apii.bk9.site',
 },
 global.APIKeys = {
   'https://api.xteam.xyz': `${keysxteam}`,
@@ -63,7 +63,7 @@ global.APIKeys = {
   'https://api.itsrose.site': 'Rs-Zeltoria',
   'https://api-xcoders.site': 'Frieren',
   'https://api.xyroinee.xyz': 'uwgflzFEh6',
-  'https://apikasu.onrender.com': 'ApiKey'
+  'https://apikasu.onrender.com': 'ApiKey',
 };
 
 /** ************************/

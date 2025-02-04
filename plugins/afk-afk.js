@@ -1,11 +1,9 @@
 
 
-
 const handler = async (m, {text}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.afk_afk
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.afk_afk;
 
   const user = global.db.data.users[m.sender];
   user.afk = + new Date;

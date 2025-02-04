@@ -1,14 +1,13 @@
 import {sticker} from '../src/libraries/sticker.js';
-import MessageType from "baileys";
+import MessageType from 'baileys';
 import fetch from 'node-fetch';
 import fs from 'fs';
 
 
 const handler = async (m, {conn, text, args}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.sticker_emojimix
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.sticker_emojimix;
 
   if (!args[0]) throw tradutor.texto1;
   const [emoji1, emoji2] = text.split`&`;

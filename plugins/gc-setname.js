@@ -1,11 +1,10 @@
-import Presence from "baileys";
+import Presence from 'baileys';
 
 
 const handler = async (m, {conn, args, text}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.gc_setname
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.gc_setname;
 
   if (!text) throw tradutor.texto1;
   try {

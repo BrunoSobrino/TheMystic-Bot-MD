@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
-const handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, {conn, text, usedPrefix, command}) => {
   if (!text) {
-    throw "> *Hola, soy un servicio `Math-Ai` ayudarle a resolver problemas matemáticos y realizar operaciones intratables*";
+    throw '> *Hola, soy un servicio `Math-Ai` ayudarle a resolver problemas matemáticos y realizar operaciones intratables*';
   }
   try {
     conn.sendPresenceUpdate('composing', m.chat);
@@ -11,11 +11,11 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     if (BK8.status && BK8.BK9) {
       const respuestaAPI = BK8.BK9;
       conn.reply(m.chat, respuestaAPI, m);
-       } else {
-      throw "> *Error ⚠️.*";
+    } else {
+      throw '> *Error ⚠️.*';
     }
   } catch (error) {
-    throw "> *Error ⚠️.*";
+    throw '> *Error ⚠️.*';
   }
 };
 

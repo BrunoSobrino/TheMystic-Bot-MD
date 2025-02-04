@@ -1,35 +1,35 @@
 import fetch from 'node-fetch';
-import { addExif } from '../src/libraries/sticker.js';
+import {addExif} from '../src/libraries/sticker.js';
 import uploadFile from '../src/libraries/uploadFile.js';
 import uploadImage from '../src/libraries/uploadImage.js';
-import { webp2png } from '../src/libraries/webp2mp4.js';
+import {webp2png} from '../src/libraries/webp2mp4.js';
 let Sticker;
 import('wa-sticker-formatter')
-  .then((module) => {
-    Sticker = module.Sticker;
-  })
-  .catch((error) => {
-    console.error('wa-sticker-formatter');
-  });
+    .then((module) => {
+      Sticker = module.Sticker;
+    })
+    .catch((error) => {
+      console.error('wa-sticker-formatter');
+    });
 
-async function handler(m, { conn, args, usedPrefix, command }) {
+async function handler(m, {conn, args, usedPrefix, command}) {
   let stiker = false;
 
   try {
     let [packname, ...author] = args.join(' ').split(' ');
     author = (author || []).join(' ');
 
-    let q = m.quoted ? m.quoted : m;
-    let mime = (q.msg || q).mimetype || q.mediaType || '';
+    const q = m.quoted ? m.quoted : m;
+    const mime = (q.msg || q).mimetype || q.mediaType || '';
 
-    let img = await q.download?.();
+    const img = await q.download?.();
 
     if (/webp/g.test(mime)) {
       stiker = await addExif(img, packname || global.packname, author || global.author);
     } else if (/image/g.test(mime)) {
       stiker = await createSticker(img, false, packname || global.packname, author || global.author);
     } else if (/video/g.test(mime)) {
-      stiker = await mp4ToWebp(img, { pack: packname || global.packname, author: author || global.author });
+      stiker = await mp4ToWebp(img, {pack: packname || global.packname, author: author || global.author});
     } else if (args[0] && isUrl(args[0])) {
       stiker = await createSticker(false, args[0], '', author, 20);
     } else {
@@ -41,10 +41,10 @@ async function handler(m, { conn, args, usedPrefix, command }) {
       let [packname, ...author] = args.join(' ').split(' ');
       author = (author || []).join(' ');
 
-      let q = m.quoted ? m.quoted : m;
-      let mime = (q.msg || q).mimetype || q.mediaType || '';
+      const q = m.quoted ? m.quoted : m;
+      const mime = (q.msg || q).mimetype || q.mediaType || '';
 
-      let img = await q.download?.();
+      const img = await q.download?.();
       let out;
 
       if (/webp/g.test(mime)) out = await webp2png(img);
@@ -77,7 +77,7 @@ export default handler;
 const isUrl = (text) => text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi'));
 
 async function createSticker(img, url, packName, authorName, quality) {
-  let stickerMetadata = { type: 'full', pack: packName, author: authorName, quality };
+  const stickerMetadata = {type: 'full', pack: packName, author: authorName, quality};
   return (new Sticker(img ? img : url, stickerMetadata)).toBuffer();
 }
 
@@ -87,16 +87,16 @@ async function mp4ToWebp(file, stickerMetadata) {
   if (!stickerMetadata.author) stickerMetadata.author = '‎';
   if (!stickerMetadata.crop) stickerMetadata.crop = false;
 
-  let getBase64 = file.toString('base64');
+  const getBase64 = file.toString('base64');
   const Format = {
     file: `data:video/mp4;base64,${getBase64}`,
     processOptions: {
       crop: stickerMetadata.crop,
       startTime: '00:00:00.0',
       endTime: '00:00:7.0',
-      loop: 0
+      loop: 0,
     },
-    stickerMetadata: { ...stickerMetadata },
+    stickerMetadata: {...stickerMetadata},
     sessionInfo: {
       WA_VERSION: '2.2106.5',
       PAGE_UA: 'WhatsApp/2.2037.6 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36',
@@ -106,7 +106,7 @@ async function mp4ToWebp(file, stickerMetadata) {
       START_TS: 1614310326309,
       NUM: '6247',
       LAUNCH_TIME_MS: 7934,
-      PHONE_VERSION: '2.20.205.16'
+      PHONE_VERSION: '2.20.205.16',
     },
     config: {
       sessionId: 'session',
@@ -124,19 +124,19 @@ async function mp4ToWebp(file, stickerMetadata) {
         '--disable-cache',
         '--disable-application-cache',
         '--disable-offline-load-stale-cache',
-        '--disk-cache-size=0'
+        '--disk-cache-size=0',
       ],
-      executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
-    }
+      executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    },
   };
 
-  let res = await fetch('https://sticker-api.openwa.dev/convertMp4BufferToWebpDataUrl', {
+  const res = await fetch('https://sticker-api.openwa.dev/convertMp4BufferToWebpDataUrl', {
     method: 'post',
     headers: {
-      Accept: 'application/json, text/plain, */*',
+      'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json;charset=utf-8',
     },
-    body: JSON.stringify(Format)
+    body: JSON.stringify(Format),
   });
 
   return Buffer.from((await res.text()).split(';base64,')[1], 'base64');

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { FormData, Blob } from 'formdata-node';
-import { fileTypeFromBuffer } from 'file-type';
+import {FormData, Blob} from 'formdata-node';
+import {fileTypeFromBuffer} from 'file-type';
 
 /**
  * Upload file to qu.ax
@@ -16,11 +16,11 @@ import { fileTypeFromBuffer } from 'file-type';
  * @return {Promise<string>}
  */
 export default async (buffer) => {
-  const { ext, mime } = await fileTypeFromBuffer(buffer);
+  const {ext, mime} = await fileTypeFromBuffer(buffer);
   const form = new FormData();
-  const blob = new Blob([buffer.toArrayBuffer()], { type: mime });
+  const blob = new Blob([buffer.toArrayBuffer()], {type: mime});
   form.append('files[]', blob, 'tmp.' + ext);
-  const res = await fetch('https://qu.ax/upload.php', { method: 'POST', body: form });
+  const res = await fetch('https://qu.ax/upload.php', {method: 'POST', body: form});
   const result = await res.json();
   if (result && result.success) {
     return result.files[0].url;
@@ -29,7 +29,7 @@ export default async (buffer) => {
   }
 };
 
-/*import fetch from 'node-fetch';
+/* import fetch from 'node-fetch';
 import {FormData, Blob} from 'formdata-node';
 import {fileTypeFromBuffer} from 'file-type';
 export default async (buffer) => {

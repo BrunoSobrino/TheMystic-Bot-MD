@@ -3,12 +3,8 @@ import {sticker} from '../src/libraries/sticker.js';
 const handler = (m) => m;
 
 handler.all = async function(m) {
-  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins._autosticker
-
   const chat = db.data.chats[m.chat];
-  const user = db.data.users[m.sender];
+
 
   if (chat.autosticker && m.isGroup) {
     const q = m;
@@ -20,7 +16,7 @@ handler.all = async function(m) {
       if (!img) return;
       stiker = await sticker(img, false, packname, author);
     } else if (/video/g.test(mime)) {
-      if (/video/g.test(mime)) if ((q.msg || q).seconds > 8) return; //await m.reply(tradutor.texto1);
+      if (/video/g.test(mime)) if ((q.msg || q).seconds > 8) return; // await m.reply(tradutor.texto1);
       const img = await q.download();
       if (!img) return;
       stiker = await sticker(img, false, packname, author);
@@ -29,7 +25,7 @@ handler.all = async function(m) {
       else return;
     }
     if (stiker) {
-      await mconn.conn.sendFile(m.chat, stiker, null, {asSticker: true});
+      await this?.sendFile(m.chat, stiker, null, {asSticker: true});
     }
   }
   return !0;

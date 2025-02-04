@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import {exec} from 'child_process';
 
 function runCommand(command, description) {
   return new Promise((resolve, reject) => {

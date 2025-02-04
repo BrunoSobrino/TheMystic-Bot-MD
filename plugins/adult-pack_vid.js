@@ -2,10 +2,9 @@ import fetch from 'node-fetch';
 
 
 const handler = async (m, {conn, command, usedPrefix}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.adult_pack_vid
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.adult_pack_vid;
 
 
   if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `${tradutor.texto1}`;
@@ -148,12 +147,12 @@ global.videosxxxc = [
 ];
 
 global.videosxxxc2 = [
-"https://telegra.ph/file/2dfb1ad0cab22951e30d1.mp4",
-"https://telegra.ph/file/c430651857023968d3a76.mp4",
-"https://telegra.ph/file/1ba17f6230dd1ea2de48c.mp4",
-"https://telegra.ph/file/e04b802f12aafee3d314e.mp4",
-"https://telegra.ph/file/a58661697d519d3d0acbd.mp4",
-"https://telegra.ph/file/9ed60b18e79fcfebcd76c.mp4",
-"https://telegra.ph/file/d58096000ad5eaef0b05e.mp4",
-"https://telegra.ph/file/60b4c8ebeadebb7e0da06.mp4"
+  'https://telegra.ph/file/2dfb1ad0cab22951e30d1.mp4',
+  'https://telegra.ph/file/c430651857023968d3a76.mp4',
+  'https://telegra.ph/file/1ba17f6230dd1ea2de48c.mp4',
+  'https://telegra.ph/file/e04b802f12aafee3d314e.mp4',
+  'https://telegra.ph/file/a58661697d519d3d0acbd.mp4',
+  'https://telegra.ph/file/9ed60b18e79fcfebcd76c.mp4',
+  'https://telegra.ph/file/d58096000ad5eaef0b05e.mp4',
+  'https://telegra.ph/file/60b4c8ebeadebb7e0da06.mp4',
 ];

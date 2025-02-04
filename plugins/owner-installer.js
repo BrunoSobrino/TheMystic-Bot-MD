@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 import fetch from 'node-fetch';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -12,7 +12,7 @@ const gitignorePath = path.join(__dirname, '../.gitignore');
 // no es necesario verificar que exista lka carpeta plugins, ya que existe en mystic. pero puede ser util para otros bots
 const ensurePluginsDirExists = () => {
   if (!fs.existsSync(pluginsDir)) {
-    fs.mkdirSync(pluginsDir, { recursive: true });
+    fs.mkdirSync(pluginsDir, {recursive: true});
   }
 };
 
@@ -58,9 +58,9 @@ const removeFromGitignore = async (pluginPath) => {
 
     if (gitignoreContent.includes(relativePluginPath)) {
       gitignoreContent = gitignoreContent
-        .split('\n')
-        .filter(line => line.trim() !== relativePluginPath)
-        .join('\n');
+          .split('\n')
+          .filter((line) => line.trim() !== relativePluginPath)
+          .join('\n');
       await writeGitignore(gitignoreContent);
       console.log(`✅ ${relativePluginPath} eliminado de .gitignore`);
     }
@@ -106,7 +106,7 @@ const deletePlugin = async (pluginName) => {
   }
 };
 
-const handler = async (m, { text }) => {
+const handler = async (m, {text}) => {
   if (!text) return m.reply('❌ Ej .plg url .plg nombre');
 
   try {
@@ -114,19 +114,19 @@ const handler = async (m, { text }) => {
     ensurePluginsDirExists(); // innecesario
 
     if (isValidUrl(input)) {
-      const pluginName = path.basename(input); 
-      const pluginPath = await downloadPlugin(input, pluginName); 
-      await addToGitignore(pluginPath); 
+      const pluginName = path.basename(input);
+      const pluginPath = await downloadPlugin(input, pluginName);
+      await addToGitignore(pluginPath);
       m.reply(`✅ ${pluginName} instalado`);
     } else {
-      const result = await deletePlugin(input); 
+      const result = await deletePlugin(input);
       m.reply(result);
     }
   } catch (error) {
-    console.error("Error al procesar el comando:", error);
-    const errorMessage = error.message.includes('Error al eliminar el plugin') // complejo e ineccesario. Brr
-      ? error.message.split('❌ ')[1]
-      : `❌ ${error.message}`;
+    console.error('Error al procesar el comando:', error);
+    const errorMessage = error.message.includes('Error al eliminar el plugin') ? // complejo e ineccesario. Brr
+      error.message.split('❌ ')[1] :
+      `❌ ${error.message}`;
     m.reply(errorMessage);
   }
 };

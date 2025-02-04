@@ -1,13 +1,13 @@
 /* Codigo hecho por @Fabri115 y mejorado por BrunoSobrino */
 
-import { readdirSync, unlinkSync, existsSync, promises as fs, rmSync, readFileSync } from 'fs';
+import {readdirSync, unlinkSync, existsSync, promises as fs, rmSync, readFileSync} from 'fs';
 import path from 'path';
 
-const handler = async (m, { conn, usedPrefix }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.fix_owner_esperando_mensajes
+const handler = async (m, {conn, usedPrefix}) => {
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
+  const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`));
+  const tradutor = _translate.plugins.fix_owner_esperando_mensajes;
 
   if (global.conn.user.jid !== conn.user.jid) {
     return conn.sendMessage(m.chat, {text: tradutor.texto1}, {quoted: m});
@@ -40,5 +40,5 @@ const handler = async (m, { conn, usedPrefix }) => {
 handler.help = ['del_reg_in_session_owner'];
 handler.tags = ['owner'];
 handler.command = /^(del_reg_in_session_owner|dsowner|clearallsession)$/i;
-handler.rowner = true
+handler.rowner = true;
 export default handler;

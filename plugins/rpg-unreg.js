@@ -2,10 +2,9 @@ import {createHash} from 'crypto';
 
 
 const handler = async function(m, {args}) {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.rpg_unreg
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.rpg_unreg;
 
   if (!args[0]) throw tradutor.texto1;
   const user = global.db.data.users[m.sender];

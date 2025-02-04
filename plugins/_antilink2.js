@@ -1,14 +1,14 @@
 // TheMystic-Bot-MD@BrunoSobrino - _antilink2.js
 
- // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
-  // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
-  // To set the language, in the root of the project, modify the config.json file.
+// Para configurar o idioma, na raiz do projeto altere o arquivo config.json
+// Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
+// To set the language, in the root of the project, modify the config.json file.
 
 const linkRegex = /https:/i;
 export async function before(m, {conn, isAdmin, isBotAdmin, text}) {
-    const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje 
-    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-    const tradutor = _translate.plugins._antilink2
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins._antilink2;
 
   if (m.isBaileys && m.fromMe) {
     return !0;

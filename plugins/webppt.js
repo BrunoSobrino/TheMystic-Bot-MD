@@ -20,11 +20,11 @@ async function initializeBrowser() {
     browserInstance = await puppeteer.launch({
       headless: true,
       args: [ // Banderas para Eficiencia. Se pueden Borrar o Agregar mas. Utilizar coma por cada agregado.
-        "--disable-features=BlockInsecurePrivateNetworkRequests",
-        "--disable-features=IsolateOrigins", 
-        "--disable-site-isolation-trials", 
-        '--disable-web-security', 
-        "--proxy-server='direct://'", 
+        '--disable-features=BlockInsecurePrivateNetworkRequests',
+        '--disable-features=IsolateOrigins',
+        '--disable-site-isolation-trials',
+        '--disable-web-security',
+        '--proxy-server=\'direct://\'',
         '--proxy-bypass-list=*',
         '--headless',
         '--hide-scrollbars',
@@ -35,10 +35,10 @@ async function initializeBrowser() {
         '--disable-gl-drawing-for-tests',
         '--disable-canvas-aa', // Disable antialiasing on 2d canvas
         '--disable-2d-canvas-clip-aa',
-	    	'--no-sandbox', 
-        //'--user-data-dir=/$HOME/.config/chromium/' //ubicacion de los datos. util para que utilice tus credenciales. Riesgoso en caso de que sea plugin publico y agregues credenciales privadas.
+	    	'--no-sandbox',
+        // '--user-data-dir=/$HOME/.config/chromium/' //ubicacion de los datos. util para que utilice tus credenciales. Riesgoso en caso de que sea plugin publico y agregues credenciales privadas.
       ],
-      //executablePath: '/usr/bin/chromium'  // Ruta a Chromium en tu sistema, si no funciona este plugin debes descomentar y agregar la ubicacion de tu instalacion de chomium o firefox. Requerido para Termux o Sistema ARM 
+      // executablePath: '/usr/bin/chromium'  // Ruta a Chromium en tu sistema, si no funciona este plugin debes descomentar y agregar la ubicacion de tu instalacion de chomium o firefox. Requerido para Termux o Sistema ARM
     });
   }
   return browserInstance;
@@ -48,8 +48,8 @@ async function saveAsMHTML(url) {
   const browser = await initializeBrowser();
   const page = await browser.newPage();
   try {
-    await page.goto(url, { timeout: 90000, waitUntil: 'networkidle2' });
-    const { data } = await page._client().send('Page.captureSnapshot', { format: 'mhtml' });
+    await page.goto(url, {timeout: 90000, waitUntil: 'networkidle2'});
+    const {data} = await page._client().send('Page.captureSnapshot', {format: 'mhtml'});
     return data;
   } finally {
     await page.close();
@@ -60,8 +60,8 @@ async function saveAsPDF(url) {
   const browser = await initializeBrowser();
   const page = await browser.newPage();
   try {
-    await page.goto(url, { timeout: 90000, waitUntil: 'networkidle2' });
-    return await page.pdf({ format: 'A4', printBackground: true });
+    await page.goto(url, {timeout: 90000, waitUntil: 'networkidle2'});
+    return await page.pdf({format: 'A4', printBackground: true});
   } finally {
     await page.close();
   }
@@ -71,11 +71,11 @@ async function downloadImages(url) {
   const browser = await initializeBrowser();
   const page = await browser.newPage();
   try {
-    await page.goto(url, { timeout: 90000, waitUntil: 'networkidle2' });
-    const images = await page.$$eval('img', imgs => 
-      imgs.map(img => ({ src: img.src, size: img.naturalWidth * img.naturalHeight }))
+    await page.goto(url, {timeout: 90000, waitUntil: 'networkidle2'});
+    const images = await page.$$eval('img', (imgs) =>
+      imgs.map((img) => ({src: img.src, size: img.naturalWidth * img.naturalHeight})),
     );
-    return images.filter(img => img.size > 11240).map(img => img.src);
+    return images.filter((img) => img.size > 11240).map((img) => img.src);
   } finally {
     await page.close();
   }
@@ -94,7 +94,7 @@ async function handleDownloadRequest(url, conn, m, type = 'mhtml') {
 
     const tempFile = path.join(tempDirectory, `file_${Date.now()}.${type}`);
     if (!fs.existsSync(tempDirectory)) {
-      fs.mkdirSync(tempDirectory, { recursive: true });
+      fs.mkdirSync(tempDirectory, {recursive: true});
     }
     fs.writeFileSync(tempFile, content);
 
@@ -149,7 +149,7 @@ async function processQueue() {
   }
 
   if (queue.length > 0 && activeDownloads < maxDownloads) {
-    const { url, conn, m, type } = queue.shift();
+    const {url, conn, m, type} = queue.shift();
     activeDownloads++;
     if (type === 'img') {
       await handleImageDownloadRequest(url, conn, m);
@@ -159,14 +159,14 @@ async function processQueue() {
   }
 }
 
-const handler = async (m, { conn, text }) => {
+const handler = async (m, {conn, text}) => {
   if (!text) {
     await conn.reply(m.chat, '❌ URL?.', m);
     return;
   }
 
   const args = text.trim().split(/\s+/);
-  const url = args.find(arg => arg.startsWith('http'));
+  const url = args.find((arg) => arg.startsWith('http'));
 
   if (!url) {
     await conn.reply(m.chat, '❌ URL', m);
@@ -182,7 +182,7 @@ const handler = async (m, { conn, text }) => {
     type = 'img';
   }
 
-  queue.push({ url, conn, m, type });
+  queue.push({url, conn, m, type});
   processQueue();
 };
 

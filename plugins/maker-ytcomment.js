@@ -1,10 +1,9 @@
 
 
 const handler = async (m, {conn, text}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.maker_ytcomment
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.maker_ytcomment;
 
   if (!text) throw 'No Text';
   conn.sendFile(m.chat, global.API('https://some-random-api.com', '/canvas/youtube-comment', {

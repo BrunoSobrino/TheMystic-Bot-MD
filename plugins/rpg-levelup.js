@@ -1,18 +1,17 @@
-import { canLevelUp, xpRange } from '../src/libraries/levelling.js';
-import { levelup } from '../src/libraries/canvas.js';
+import {canLevelUp, xpRange} from '../src/libraries/levelling.js';
+import {levelup} from '../src/libraries/canvas.js';
 
 
-const handler = async (m, { conn }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.rpg_levelup
+const handler = async (m, {conn}) => {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.rpg_levelup;
 
   const name = conn.getName(m.sender);
   const usertag = '@' + m.sender.split('@s.whatsapp.net')[0];
   const user = global.db.data.users[m.sender];
   if (!canLevelUp(user.level, user.exp, global.multiplier)) {
-    const { min, xp, max } = xpRange(user.level, global.multiplier);
+    const {min, xp, max} = xpRange(user.level, global.multiplier);
     const message = `
 ${tradutor.texto1[0]}
 ${tradutor.texto1[1]} ${usertag}!*

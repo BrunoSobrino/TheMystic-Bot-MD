@@ -1,4 +1,4 @@
-/*import syntaxerror from 'syntax-error';
+/* import syntaxerror from 'syntax-error';
 import {format} from 'util';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';

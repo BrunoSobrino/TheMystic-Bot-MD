@@ -1,11 +1,10 @@
 import translate from '@vitalets/google-translate-api';
 import fetch from 'node-fetch';
 
-const handler = async (m, { conn, command }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.frase_frases
+const handler = async (m, {conn, command}) => {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.frase_frases;
 
   global.frasesromanticas = tradutor.texto3;
 
@@ -26,8 +25,8 @@ const handler = async (m, { conn, command }) => {
   if (command == 'historiaromantica') {
     try {
       const cerpe = await cerpen(`cinta romantis`);
-      const storytime = await translate(cerpe.cerita, { to: 'es', autoCorrect: true }).catch((_) => null);
-      const titletime = await translate(cerpe.title, { to: 'es', autoCorrect: true }).catch((_) => null);
+      const storytime = await translate(cerpe.cerita, {to: 'es', autoCorrect: true}).catch((_) => null);
+      const titletime = await translate(cerpe.title, {to: 'es', autoCorrect: true}).catch((_) => null);
       conn.reply(m.chat, `᭥🫐᭢ Título: ${titletime.text}
 ᭥🍃᭢ Autor: ${cerpe.author}
 ────────────────
@@ -50,25 +49,25 @@ async function cerpen(category) {
     const judul = title.replace(/\s/g, '-');
     const page = Math.floor(Math.random() * 5);
     axios.get('http://cerpenmu.com/category/cerpen-' + judul + '/page/' + page)
-      .then((get) => {
-        const $ = cheerio.load(get.data);
-        const link = [];
-        $('article.post').each(function (a, b) {
-          link.push($(b).find('a').attr('href'));
+        .then((get) => {
+          const $ = cheerio.load(get.data);
+          const link = [];
+          $('article.post').each(function(a, b) {
+            link.push($(b).find('a').attr('href'));
+          });
+          const random = link[Math.floor(Math.random() * link.length)];
+          axios.get(random).then((res) => {
+            const $$ = cheerio.load(res.data);
+            const hasil = {
+              title: $$('#content > article > h1').text(),
+              author: $$('#content > article').text().split('Cerpen Karangan: ')[1].split('Kategori: ')[0],
+              kategori: $$('#content > article').text().split('Kategori: ')[1].split('\n')[0],
+              lolos: $$('#content > article').text().split('Lolos moderasi pada: ')[1].split('\n')[0],
+              cerita: $$('#content > article > p').text(),
+            };
+            resolve(hasil);
+          });
         });
-        const random = link[Math.floor(Math.random() * link.length)];
-        axios.get(random).then((res) => {
-          const $$ = cheerio.load(res.data);
-          const hasil = {
-            title: $$('#content > article > h1').text(),
-            author: $$('#content > article').text().split('Cerpen Karangan: ')[1].split('Kategori: ')[0],
-            kategori: $$('#content > article').text().split('Kategori: ')[1].split('\n')[0],
-            lolos: $$('#content > article').text().split('Lolos moderasi pada: ')[1].split('\n')[0],
-            cerita: $$('#content > article > p').text(),
-          };
-          resolve(hasil);
-        });
-      });
   });
 }
 

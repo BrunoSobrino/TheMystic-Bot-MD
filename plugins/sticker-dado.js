@@ -1,19 +1,20 @@
-let handler = async (m, { conn }) => {
-let stickdados = [
-  'https://tinyurl.com/gdd01',
-  'https://tinyurl.com/gdd02',
-  'https://tinyurl.com/gdd003',
-  'https://tinyurl.com/gdd004',
-  'https://tinyurl.com/gdd05',
-  'https://tinyurl.com/gdd006'
-]
-let url = stickdados[Math.floor(Math.random() * stickdados.length)]
-conn.sendFile(m.chat, url, 'error.webp', null, m, { asSticker: true })}
-handler.command = ['dado', 'dados', 'dadu'] 
+const handler = async (m, {conn}) => {
+  const stickdados = [
+    'https://tinyurl.com/gdd01',
+    'https://tinyurl.com/gdd02',
+    'https://tinyurl.com/gdd003',
+    'https://tinyurl.com/gdd004',
+    'https://tinyurl.com/gdd05',
+    'https://tinyurl.com/gdd006',
+  ];
+  const url = stickdados[Math.floor(Math.random() * stickdados.length)];
+  conn.sendFile(m.chat, url, 'error.webp', null, m, {asSticker: true});
+};
+handler.command = ['dado', 'dados', 'dadu'];
 export default handler;
 
 /* const handler = async (m, {conn}) => {
- 
+
   conn.sendFile(m.chat, `https://api.lolhuman.xyz/api/sticker/dadu?apikey=${lolkeysapi}`, 'error.webp', '', m, {asSticker: true});
 };
 handler.command = ['dado', 'dados', 'dadu'];

@@ -4,10 +4,10 @@
 // 2. Cobrar a otros por el acceso, la distribución o cualquier otro uso comercial del Software.
 // 3. Usar el Software como parte de un producto comercial o una oferta de servicio.
 
-import fs from "fs";
-import path, { join, basename } from "path";
-import { exec } from "child_process";
-import { promisify } from "util";  // Para hacer que exec sea promisificado.
+import fs from 'fs';
+import path, {join, basename} from 'path';
+import {exec} from 'child_process';
+import {promisify} from 'util'; // Para hacer que exec sea promisificado.
 
 const execPromise = promisify(exec);
 const __dirname = path.resolve();
@@ -17,33 +17,33 @@ const maxDownloads = 5; // Instancias Permitidas
 let activeDownloads = 0;
 const queue = [];
 
-const cleanCommand = (text) => text.replace(/^\.(dla)\s*/i, "").trim();
+const cleanCommand = (text) => text.replace(/^\.(dla)\s*/i, '').trim();
 const filterArgs = (args, filter) => args.filter(filter);
 
 const processQueue = () => {
   if (activeDownloads >= maxDownloads) {
-    const { m } = queue[0]; 
+    const {m} = queue[0];
     m.reply(`Hay ${maxDownloads} Descargas Activas, tu Archivo Tardara un Rato.`);
     return;
   }
 
-  if (!queue.length) return; 
-  
-  const { m, resolve, reject } = queue.shift();
+  if (!queue.length) return;
+
+  const {m, resolve, reject} = queue.shift();
   activeDownloads++;
 
   handleRequest(m)
-    .then(resolve)
-    .catch(reject)
-    .finally(() => {
-      activeDownloads--;
-      processQueue(); 
-    });
+      .then(resolve)
+      .catch(reject)
+      .finally(() => {
+        activeDownloads--;
+        processQueue();
+      });
 };
 
-let handler = (m) => {
+const handler = (m) => {
   return new Promise((resolve, reject) => {
-    queue.push({ m, resolve, reject });
+    queue.push({m, resolve, reject});
     processQueue();
   });
 };
@@ -51,20 +51,20 @@ let handler = (m) => {
 const handleRequest = async (m) => {
   const command = cleanCommand(m.text.trim());
   const args = command.split(/\s+/);
-  const urls = filterArgs(args, arg => arg.startsWith("http"));
+  const urls = filterArgs(args, (arg) => arg.startsWith('http'));
 
   if (args[0] === 'update') return await updateYtDlp(m);
 
   if (args[0] === 'curl' && urls.length) {
-    const options = filterArgs(args, arg => !arg.startsWith("http") && arg !== 'curl').join(' ');
-    await Promise.all(urls.map(url => downloadWithCurl(m, url, options)));
+    const options = filterArgs(args, (arg) => !arg.startsWith('http') && arg !== 'curl').join(' ');
+    await Promise.all(urls.map((url) => downloadWithCurl(m, url, options)));
     return;
   }
 
   if (!urls.length) return await execWithoutUrl(m, args.join(' '));
 
-  const options = filterArgs(args, arg => !arg.startsWith("http")).join(' ');
-  await Promise.all(urls.map(url => downloadAndSend(m, url, options)));
+  const options = filterArgs(args, (arg) => !arg.startsWith('http')).join(' ');
+  await Promise.all(urls.map((url) => downloadAndSend(m, url, options)));
 };
 
 const execWithoutUrl = async (m, options) => {
@@ -79,7 +79,7 @@ const execWithoutUrl = async (m, options) => {
 
 // YT-DLP
 const downloadAndSend = async (m, url, options) => {
-  let outputFilePathPrefix = join(ytDlpTempDirectory, `download_${Date.now()}`);
+  const outputFilePathPrefix = join(ytDlpTempDirectory, `download_${Date.now()}`);
   try {
     await prepareDirectory(ytDlpTempDirectory);
     await m.reply(`⏳ Descargando con YT-DLP...`);
@@ -96,7 +96,7 @@ const downloadAndSend = async (m, url, options) => {
   }
 };
 
-// CURL 
+// CURL
 const downloadWithCurl = async (m, url, options) => {
   const fileNameFromUrl = basename(new URL(url).pathname);
   const outputFilePath = join(curlTempDirectory, `download_${Date.now()}_${fileNameFromUrl}`);
@@ -104,10 +104,10 @@ const downloadWithCurl = async (m, url, options) => {
   try {
     await prepareDirectory(curlTempDirectory);
     await m.reply(`⏳ Descargando con CURL...`);
-    
+
     // Ejecutamos curl
     await execPromise(`curl --max-filesize 1500000000 ${options} -o "${outputFilePath}" "${url}"`);
-    
+
     if (fs.existsSync(outputFilePath)) {
       await sendDownloadedFile(m, outputFilePath);
     } else {
@@ -131,14 +131,14 @@ const updateYtDlp = async (m) => {
       const result = await execPromise(`python -m pip install -U --pre "yt-dlp[default]"`);
       await m.reply(`✅ YT-DLP actualizado (python).\n${result}`);
     } catch (error2) {
-      await sendErrorMessage(m, error2, "python -m pip install -U --pre yt-dlp");
+      await sendErrorMessage(m, error2, 'python -m pip install -U --pre yt-dlp');
     }
   }
 };
 
 const prepareDirectory = (dir) => {
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync(dir, {recursive: true});
   }
 };
 
@@ -146,7 +146,7 @@ const findDownloadedFiles = (filePathPrefix, directory) => {
   return new Promise((resolve, reject) => {
     fs.readdir(directory, (err, files) => {
       if (err) reject(err);
-      resolve(files.filter(file => file.startsWith(path.basename(filePathPrefix))));
+      resolve(files.filter((file) => file.startsWith(path.basename(filePathPrefix))));
     });
   });
 };
@@ -155,25 +155,27 @@ const sendDownloadedFile = (m, filePath) => {
   fs.stat(filePath, (err, stats) => {
     if (!err) {
       conn.sendMessage(m.chat, {
-        document: { url: filePath },
+        document: {url: filePath},
         mimetype: 'video/mp4',
-        fileName: path.basename(filePath)
-      }, { quoted: m }, () => {
-        fs.unlink(filePath, (err) => { if (err) console.error(err); });
+        fileName: path.basename(filePath),
+      }, {quoted: m}, () => {
+        fs.unlink(filePath, (err) => {
+          if (err) console.error(err);
+        });
       });
     } else {
-      console.error("Error al enviar el archivo:", err);
+      console.error('Error al enviar el archivo:', err);
     }
   });
 };
 
 const cleanupFiles = (directory, filePathPrefix) => {
   fs.readdir(directory, (err, files) => {
-    if (err) return console.error("Error al limpiar los archivos:", err);
-    files.forEach(file => {
+    if (err) return console.error('Error al limpiar los archivos:', err);
+    files.forEach((file) => {
       if (file.startsWith(path.basename(filePathPrefix))) {
         fs.unlink(join(directory, file), (err) => {
-          if (err) console.error("Error al eliminar el archivo:", err);
+          if (err) console.error('Error al eliminar el archivo:', err);
         });
       }
     });

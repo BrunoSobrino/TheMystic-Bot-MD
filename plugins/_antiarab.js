@@ -2,16 +2,11 @@
 
 
 const handler = (m) => m;
-handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwner }) {
-  const datas = global
-  let idioma = datas.db.data.users[m.sender].language 
-  // todo: sometimes this trows undefined.json ill fix
-  if (idioma === undefined || idioma === null) {
-    idioma = 'es'
-  }
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+handler.before = async function(m, {conn, isAdmin, isBotAdmin, isOwner, isROwner}) {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
 
-  const tradutor = _translate.plugins._antiarab
+  const tradutor = _translate.plugins._antiarab;
   // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
   // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
   // To set the language, in the root of the project, modify the config.json file.
@@ -45,7 +40,7 @@ handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwn
       m.reply(tradutor.texto3);
       const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
       if (responseb[0].status === '404') return;
-    }                                                       
+    }
   }
 };
 export default handler;

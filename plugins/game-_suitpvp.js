@@ -2,10 +2,9 @@
 
 const handler = (m) => m;
 handler.before = async function(m) {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.game__suitpvp
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.game__suitpvp;
 
   this.suit = this.suit ? this.suit : {};
   if (db.data.users[m.sender].suit < 0) db.data.users[m.sender].suit = 0;

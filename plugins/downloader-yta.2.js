@@ -5,26 +5,25 @@ import ytmp33 from '../src/libraries/ytmp33.js';
 
 let enviando = false;
 
-const handler = async (m, { conn, args }) => {
-  const datas = global;
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
+const handler = async (m, {conn, args}) => {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
   const tradutor = _translate.plugins.downloader_yta_2;
-  const tradutorrr = _translate.plugins.downloader_yta;  
+  const tradutorrr = _translate.plugins.downloader_yta;
 
-  if (!args[0]) return await conn.sendMessage(m.chat, { text: tradutor.texto1 }, { quoted: m });
+  if (!args[0]) return await conn.sendMessage(m.chat, {text: tradutor.texto1}, {quoted: m});
 
-  if (enviando) return;  
-  enviando = true; 
+  if (enviando) return;
+  enviando = true;
 
-  const { key } = await conn.sendMessage(m.chat, { text: tradutor.texto2 }, { quoted: m });
+  const {key} = await conn.sendMessage(m.chat, {text: tradutor.texto2}, {quoted: m});
 
   const youtubeLink = args[0];
 
   try {
-    const { status, resultados, error } = await ytmp33(youtubeLink);
+    const {status, resultados, error} = await ytmp33(youtubeLink);
     if (!status) {
-      enviando = false; 
+      enviando = false;
       throw new Error(error);
     }
     const buff_aud = await getBuffer(resultados.descargar);
@@ -34,8 +33,8 @@ const handler = async (m, { conn, args }) => {
     const size = fileSizeInMB.toFixed(2);
     const title = resultados.titulo;
     const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-    await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m });
-    await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
+    await conn.sendMessage(m.chat, {document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3`}, {quoted: m});
+    await conn.sendMessage(m.chat, {text: tradutorrr.texto5[4], edit: key}, {quoted: m});
     enviando = false;
   } catch (error) {
     try {
@@ -48,8 +47,8 @@ const handler = async (m, { conn, args }) => {
       const size = fileSizeInMB.toFixed(2);
       const title = yt_search.all[0].title;
       const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-      await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m });
-      await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
+      await conn.sendMessage(m.chat, {document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3`}, {quoted: m});
+      await conn.sendMessage(m.chat, {text: tradutorrr.texto5[4], edit: key}, {quoted: m});
       enviando = false;
     } catch (error) {
       try {
@@ -62,16 +61,16 @@ const handler = async (m, { conn, args }) => {
         const size = fileSizeInMB.toFixed(2);
         const title = yt_search.all[0].title;
         const cap = `${tradutor.texto3[0]} ${title}\n${tradutor.texto3[1]}  ${size} MB`.trim();
-        await conn.sendMessage(m.chat, { document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m });
-        await conn.sendMessage(m.chat, { text: tradutorrr.texto5[4], edit: key }, { quoted: m });
+        await conn.sendMessage(m.chat, {document: buff_aud, caption: cap, mimetype: 'audio/mpeg', fileName: `${title}.mp3`}, {quoted: m});
+        await conn.sendMessage(m.chat, {text: tradutorrr.texto5[4], edit: key}, {quoted: m});
         enviando = false;
       } catch (error) {
-        enviando = false; 
-        await conn.sendMessage(m.chat, { text: tradutor.texto4, edit: key }, { quoted: m });
+        enviando = false;
+        await conn.sendMessage(m.chat, {text: tradutor.texto4, edit: key}, {quoted: m});
       }
     }
   } finally {
-    enviando = false;  
+    enviando = false;
   }
 };
 
@@ -94,6 +93,6 @@ const getBuffer = async (url, options) => {
     return res.data;
   } catch (e) {
     console.log(`Error : ${e}`);
-    throw e;  
+    throw e;
   }
 };

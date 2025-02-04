@@ -2,10 +2,9 @@ import fetch from 'node-fetch';
 import translate from '@vitalets/google-translate-api';
 
 const handler = async (m, {conn, usedPrefix, command, text}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.game_akinator
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.game_akinator;
 
   if (m.isGroup) return;
   const aki = global.db.data.users[m.sender].akinator;
@@ -31,11 +30,11 @@ const handler = async (m, {conn, usedPrefix, command, text}) => {
       aki.step = step;
       const resultes2 = await translate(question, {to: 'es', autoCorrect: false});
       let txt = `${tradutor.texto5[0]} @${m.sender.split('@')[0]}*\n${tradutor.texto5[1]} ${resultes2.text}*\n\n`;
-      txt += tradutor.texto5[2] 
-      txt += tradutor.texto5[3] 
-      txt += tradutor.texto5[4]
-      txt += tradutor.texto5[5] 
-      txt += tradutor.texto5[6] 
+      txt += tradutor.texto5[2];
+      txt += tradutor.texto5[3];
+      txt += tradutor.texto5[4];
+      txt += tradutor.texto5[5];
+      txt += tradutor.texto5[6];
       txt += `${tradutor.texto5[7]}  ${usedPrefix + command} ${tradutor.texto5[8]}`;
       const soal = await conn.sendMessage(m.chat, {text: txt, mentions: [m.sender]}, {quoted: m});
       aki.soal = soal;

@@ -4,10 +4,9 @@ import path from 'path';
 
 const user = (a) => '@' + a.split('@')[0];
 function handler(m, {groupMetadata, command, conn, text, usedPrefix}) {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.fun_top
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.fun_top;
 
   if (!text) throw `${tradutor.texto1}`;
   const ps = groupMetadata.participants.map((v) => v.id);
@@ -38,7 +37,7 @@ function handler(m, {groupMetadata, command, conn, text, usedPrefix}) {
 *9. ${user(i)}*
 *10. ${user(j)}*`;
   m.reply(top, null, {mentions: [a, b, c, d, e, f, g, h, i, j]});
-  /*conn.sendFile(m.chat, vn, 'error.mp3', null, m, true, {
+  /* conn.sendFile(m.chat, vn, 'error.mp3', null, m, true, {
     type: 'audioMessage',
     ptt: true});*/
 }

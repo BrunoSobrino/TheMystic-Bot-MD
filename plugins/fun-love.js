@@ -1,9 +1,8 @@
 
-const handler = async (m, { conn, command, text }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.fun_love
+const handler = async (m, {conn, command, text}) => {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.fun_love;
 
   const lovePercentage = Math.floor(Math.random() * 100);
   const isHighLove = lovePercentage >= 50;
@@ -16,24 +15,24 @@ const handler = async (m, { conn, command, text }) => {
     `━━━━━━━⬣ *LOVE* ⬣━━━━━━━\n` +
     `${tradutor.texto4[0]}, ${text} ${tradutor.texto4[1]} @${m.sender.split('@')[0]} ${loveDescription} ${tradutor.texto4[2]} ${lovePercentage}% ${tradutor.texto4[3]}\n\n` +
     `*❥ ${loveMessage}*\n` +
-    `━━━━━━━⬣ *LOVE* ⬣━━━━━━━`    
-  
+    `━━━━━━━⬣ *LOVE* ⬣━━━━━━━`;
+
   async function loading() {
-var hawemod = [
-"《 █▒▒▒▒▒▒▒▒▒▒▒》10%",
-"《 ████▒▒▒▒▒▒▒▒》30%",
-"《 ███████▒▒▒▒▒》50%",
-"《 ██████████▒▒》80%",
-"《 ████████████》100%"
-]
-   let { key } = await conn.sendMessage(m.chat, {text: tradutor.texto5, mentions: conn.parseMention(response)}, {quoted: m})
- for (let i = 0; i < hawemod.length; i++) {
-   await new Promise(resolve => setTimeout(resolve, 1000)); 
-   await conn.sendMessage(m.chat, {text: hawemod[i], edit: key, mentions: conn.parseMention(response)}, {quoted: m}); 
+    const hawemod = [
+      '《 █▒▒▒▒▒▒▒▒▒▒▒》10%',
+      '《 ████▒▒▒▒▒▒▒▒》30%',
+      '《 ███████▒▒▒▒▒》50%',
+      '《 ██████████▒▒》80%',
+      '《 ████████████》100%',
+    ];
+    const {key} = await conn.sendMessage(m.chat, {text: tradutor.texto5, mentions: conn.parseMention(response)}, {quoted: m});
+    for (let i = 0; i < hawemod.length; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await conn.sendMessage(m.chat, {text: hawemod[i], edit: key, mentions: conn.parseMention(response)}, {quoted: m});
+    }
+    await conn.sendMessage(m.chat, {text: response, edit: key, mentions: conn.parseMention(response)}, {quoted: m});
   }
-  await conn.sendMessage(m.chat, {text: response, edit: key, mentions: conn.parseMention(response)}, {quoted: m});         
- }
-loading()    
+  loading();
 };
 handler.help = ['love'];
 handler.tags = ['fun'];

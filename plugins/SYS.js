@@ -5,7 +5,7 @@
 // 3. Usar el Software como parte de un producto comercial o una oferta de servicio.
 
 import os from 'os';
-import { exec } from 'child_process';
+import {exec} from 'child_process';
 
 function formatUptime(uptime) {
   const seconds = Math.floor(uptime % 60);
@@ -27,7 +27,7 @@ function getVersions(callback) {
             if (err) pipVersion = '✖️';
             exec('choco -v', (err, chocoVersion) => {
               if (err) chocoVersion = '✖️';
-              callback({ nodeVersion, npmVersion, ffmpegVersion, pythonVersion, pipVersion, chocoVersion });
+              callback({nodeVersion, npmVersion, ffmpegVersion, pythonVersion, pipVersion, chocoVersion});
             });
           });
         });
@@ -41,7 +41,7 @@ function getStorageInfo(callback) {
     exec('wmic logicaldisk get size,freespace,caption', (err, stdout) => {
       if (err) return callback('✖️');
       const lines = stdout.trim().split('\n').slice(1);
-      const storageInfo = lines.map(line => {
+      const storageInfo = lines.map((line) => {
         const [drive, free, total] = line.trim().split(/\s+/);
         return `🖥️ ${drive}: ${(total / (1024 ** 3)).toFixed(2)} GB total, ${(free / (1024 ** 3)).toFixed(2)} GB libres`;
       }).join('\n');
@@ -51,7 +51,7 @@ function getStorageInfo(callback) {
     exec('df -h --output=source,size,avail,target', (err, stdout) => {
       if (err) return callback('✖️');
       const lines = stdout.trim().split('\n').slice(1);
-      const storageInfo = lines.map(line => {
+      const storageInfo = lines.map((line) => {
         const [device, total, free, mount] = line.trim().split(/\s+/);
         return `🖥️ ${mount}: ${total} total, ${free} libres en ${device}`;
       }).join('\n');
@@ -90,10 +90,10 @@ async function systemInfoPlugin(m, extra) {
       cpuArch: os.arch(),
       cpus: os.cpus().length,
       totalMemory: (os.totalmem() / (1024 ** 3)).toFixed(2) + ' GB', // Total RAM en GB
-      freeMemory: (os.freemem() / (1024 ** 3)).toFixed(2) + ' GB',   // RAM libre en GB
-      uptime: formatUptime(os.uptime()),                             // Tiempo de actividad
-      osVersion: os.release(),                                       // Versión del SO
-      loadAverage: os.loadavg().map(load => load.toFixed(2)).join(', ') // Carga promedio
+      freeMemory: (os.freemem() / (1024 ** 3)).toFixed(2) + ' GB', // RAM libre en GB
+      uptime: formatUptime(os.uptime()), // Tiempo de actividad
+      osVersion: os.release(), // Versión del SO
+      loadAverage: os.loadavg().map((load) => load.toFixed(2)).join(', '), // Carga promedio
     };
 
     getVersions((versions) => {
@@ -126,17 +126,17 @@ async function systemInfoPlugin(m, extra) {
               infoMessage += `> *🐧 Distribución Linux*\n${linuxInfo}\n`;
             }
 
-            extra.conn.sendMessage(m.chat, { text: infoMessage });
+            extra.conn.sendMessage(m.chat, {text: infoMessage});
           });
         });
       });
     });
   } catch (error) {
     console.error('Falla Plugin sysinfo:', error);
-    await extra.conn.sendMessage(m.chat, { text: 'ERROR' });
+    await extra.conn.sendMessage(m.chat, {text: 'ERROR'});
   }
 }
 
-systemInfoPlugin.command = ['sysinfo', 'host']; 
+systemInfoPlugin.command = ['sysinfo', 'host'];
 
 export default systemInfoPlugin;

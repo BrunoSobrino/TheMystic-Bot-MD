@@ -1,13 +1,12 @@
 /* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
 
 
-import {generateWAMessageFromContent} from "baileys";
+import {generateWAMessageFromContent} from 'baileys';
 import fs from 'fs';
 const handler = async (m, {conn, usedPrefix, command}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.info_donar
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.info_donar;
 
   const name = await conn.getName(m.sender);
   const donar =`

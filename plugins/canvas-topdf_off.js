@@ -1,4 +1,4 @@
-/*import { createPDFDocument, addImageToPDF } from '../src/libraries/canvaspdf.js';
+/* import { createPDFDocument, addImageToPDF } from '../src/libraries/canvaspdf.js';
 import { promises as fs } from 'fs';
 
 const handler = async (m, { conn, usedPrefix, command, text }) => {

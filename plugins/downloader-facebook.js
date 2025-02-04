@@ -14,13 +14,12 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
 
   if (!enviando) enviando = true;
   try {
-    
     const response = await fetch(`${global.MyApiRestBaseUrl}/api/facebook?url=${args[0]}&apikey=${global.MyApiRestApikey}`);
     const data = await response.json();
 
     if (data?.status === true) {
       const videoBuffer = await getBuffer(data.resultado.data);
-      await conn.sendMessage(m.chat, { video: videoBuffer, filename: 'video.mp4', caption: `_*${tradutor.texto4}*_` }, {quoted: m});
+      await conn.sendMessage(m.chat, {video: videoBuffer, filename: 'video.mp4', caption: `_*${tradutor.texto4}*_`}, {quoted: m});
       enviando = false;
     } else {
       console.error('Failed to fetch video data from API:', data);
@@ -38,11 +37,11 @@ export default handler;
 
 const getBuffer = async (url, options = {}) => {
   const res = await axios({
-    method: 'get', 
-    url, 
+    method: 'get',
+    url,
     headers: {'DNT': 1, 'Upgrade-Insecure-Request': 1},
-    ...options, 
-    responseType: 'arraybuffer'
+    ...options,
+    responseType: 'arraybuffer',
   });
   return res.data;
 };

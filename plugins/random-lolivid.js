@@ -1,10 +1,9 @@
 
 
 const handler = async (m, {conn, usedPrefix, command}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.random_lolivid
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.random_lolivid;
 
   const res = await lolivid[Math.floor(Math.random() * lolivid.length)];
   conn.sendMessage(m.chat, {video: {url: res}, caption: tradutor.texto1}, {quoted: m});

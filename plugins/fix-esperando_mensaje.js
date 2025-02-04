@@ -1,13 +1,13 @@
 /* Codigo hecho por @Fabri115 y mejorado por BrunoSobrino */
 
-import { readdirSync, unlinkSync, existsSync, promises as fs, rmSync, readFileSync } from 'fs';
+import {readdirSync, unlinkSync, existsSync, promises as fs, rmSync, readFileSync} from 'fs';
 import path from 'path';
 
-const handler = async (m, { conn, usedPrefix }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.fix_esperando_mensage
+const handler = async (m, {conn, usedPrefix}) => {
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
+  const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`));
+  const tradutor = _translate.plugins.fix_esperando_mensage;
 
   if (global.conn.user.jid !== conn.user.jid) {
     return conn.sendMessage(m.chat, {text: tradutor.texto1}, {quoted: m});

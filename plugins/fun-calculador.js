@@ -1,9 +1,8 @@
 
-const handler = async (m, { conn, command, text, usedPrefix }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.fun_calculador
+const handler = async (m, {conn, command, text, usedPrefix}) => {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.fun_calculador;
 
   if (!text) throw `${tradutor.texto26}`;
   const percentages = (500).getRandom();
@@ -84,7 +83,7 @@ const handler = async (m, { conn, command, text, usedPrefix }) => {
         description = `${tradutor.texto21[0]} ${text.toUpperCase()} ${tradutor.texto21[1]} ${percentages}% ${command}. ${emoji}*\n${tradutor.texto21[2]}`;
       }
       break;
-      default:
+    default:
       throw `${tradutor.texto22}`;
   }
   const responses = tradutor.texto23;
@@ -95,23 +94,23 @@ const handler = async (m, { conn, command, text, usedPrefix }) => {
 
 *"${response}"*
 
-━━━━⬣ ${tradutor.texto24} ⬣━━━━`.trim()  
+━━━━⬣ ${tradutor.texto24} ⬣━━━━`.trim();
   async function loading() {
-var hawemod = [
-"《 █▒▒▒▒▒▒▒▒▒▒▒》10%",
-"《 ████▒▒▒▒▒▒▒▒》30%",
-"《 ███████▒▒▒▒▒》50%",
-"《 ██████████▒▒》80%",
-"《 ████████████》100%"
-]
-   let { key } = await conn.sendMessage(m.chat, {text: `${tradutor.texto25}`, mentions: conn.parseMention(cal)}, {quoted: m})
- for (let i = 0; i < hawemod.length; i++) {
-   await new Promise(resolve => setTimeout(resolve, 1000)); 
-   await conn.sendMessage(m.chat, {text: hawemod[i], edit: key, mentions: conn.parseMention(cal)}, {quoted: m}); 
+    const hawemod = [
+      '《 █▒▒▒▒▒▒▒▒▒▒▒》10%',
+      '《 ████▒▒▒▒▒▒▒▒》30%',
+      '《 ███████▒▒▒▒▒》50%',
+      '《 ██████████▒▒》80%',
+      '《 ████████████》100%',
+    ];
+    const {key} = await conn.sendMessage(m.chat, {text: `${tradutor.texto25}`, mentions: conn.parseMention(cal)}, {quoted: m});
+    for (let i = 0; i < hawemod.length; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await conn.sendMessage(m.chat, {text: hawemod[i], edit: key, mentions: conn.parseMention(cal)}, {quoted: m});
+    }
+    await conn.sendMessage(m.chat, {text: cal, edit: key, mentions: conn.parseMention(cal)}, {quoted: m});
   }
-  await conn.sendMessage(m.chat, {text: cal, edit: key, mentions: conn.parseMention(cal)}, {quoted: m});         
- }
-loading()    
+  loading();
 };
 handler.help = ['gay2', 'lesbiana', 'pajero', 'pajera', 'puto', 'puta', 'manco', 'manca', 'rata', 'prostituta', 'prostituto'].map((v) => v + ' @tag | nombre');
 handler.tags = ['calculator'];

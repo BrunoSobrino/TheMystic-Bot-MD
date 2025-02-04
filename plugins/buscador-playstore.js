@@ -1,15 +1,14 @@
-import gplay from "google-play-scraper";
+import gplay from 'google-play-scraper';
 
-let handler = async (m, { conn, text }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.buscador_playstore
-  
+const handler = async (m, {conn, text}) => {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.buscador_playstore;
+
   if (!text) throw `*${tradutor.texto1}*`;
-  let res = await gplay.search({ term: text });
+  let res = await gplay.search({term: text});
   if (!res.length) throw `*${tradutor.texto2}*`;
-  let opt = {
+  const opt = {
     contextInfo: {
       externalAdReply: {
         title: res[0].title,
@@ -21,12 +20,12 @@ let handler = async (m, { conn, text }) => {
   };
   await console.log(res);
   res = res.map(
-    (v) =>
-      `${tradutor.texto3[0]} ${v.title}
+      (v) =>
+        `${tradutor.texto3[0]} ${v.title}
       ${tradutor.texto3[1]} ${v.developer}
       ${tradutor.texto3[2]} ${v.priceText}
       ${tradutor.texto3[3]} ${v.scoreText}
-      ${tradutor.texto3[4]}${v.url}`
+      ${tradutor.texto3[4]}${v.url}`,
   ).join`\n\n`;
   m.reply(res, null, opt);
 };

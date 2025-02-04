@@ -1,13 +1,12 @@
 
 
 const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, isROwner}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.config_funciones
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.config_funciones;
 
 
-const optionsFull = `_*${tradutor.texto1[0]}*_\n 
+  const optionsFull = `_*${tradutor.texto1[0]}*_\n 
 
 ${tradutor.texto1[1]}  | WELCOME"
 ${tradutor.texto1[2]} ${usedPrefix + command} welcome
@@ -349,7 +348,7 @@ ${tradutor.texto27[3]}`.trim();
         global.dfail('owner', m, conn);
         throw false;
       }
-      bot.audios_bot = isEnable;      
+      bot.audios_bot = isEnable;
       break;
     case 'modoia':
       isAll = true;
@@ -357,8 +356,8 @@ ${tradutor.texto27[3]}`.trim();
         global.dfail('owner', m, conn);
         throw false;
       }
-      bot.modoia = isEnable;      
-      break;      
+      bot.modoia = isEnable;
+      break;
     case 'nyimak':
       isAll = true;
       if (!isROwner) {
@@ -374,7 +373,7 @@ ${tradutor.texto27[3]}`.trim();
         throw false;
       }
       bot.autoread2 = isEnable;
-      //global.opts['autoread'] = isEnable;
+      // global.opts['autoread'] = isEnable;
       break;
     case 'pconly':
     case 'privateonly':
@@ -444,14 +443,15 @@ ${tradutor.texto27[3]}`.trim();
       }
       chat.antiToxic = isEnable;
       break;
-      case 'game': case 'juegos': case 'fun': case 'ruleta':
-if (m.isGroup) {
-if (!(isAdmin || isOwner)) {
-global.dfail('admin', m, conn)
-throw false
-}}
-chat.game = isEnable          
-break;
+    case 'game': case 'juegos': case 'fun': case 'ruleta':
+      if (m.isGroup) {
+        if (!(isAdmin || isOwner)) {
+          global.dfail('admin', m, conn);
+          throw false;
+        }
+      }
+      chat.game = isEnable;
+      break;
     case 'antitraba':
       if (m.isGroup) {
         if (!(isAdmin || isROwner || isOwner)) {
@@ -464,7 +464,7 @@ break;
     case 'antiarabes':
       if (m.isGroup) {
         if (!(isAdmin || isROwner || isOwner)) {
-          global.dfail('admin', m, conn); 
+          global.dfail('admin', m, conn);
           throw false;
         }
       }
@@ -484,7 +484,7 @@ break;
       throw false;
   }
   conn.sendMessage(m.chat, {text: `_*${tradutor.texto28[0]}*_\n\n*${tradutor.texto28[1]}* _${type}_ *fue* ${isEnable ? '_activada_' : '_desactivada_'} *${tradutor.texto28[2]}* ${isAll ? '_bot._' : isUser ? '' : '_chat._'}`}, {quoted: m});
-  //conn.sendMessage(m.chat, {text: `▢ *Opción:* ${type}\n\n▢ *Estado:* ${isEnable ? 'Activado' : 'Desactivado'}\n\n▢ *Para* ${isAll ? 'este bot' : isUser ? '' : 'este chat'}`}, {quoted: m});
+  // conn.sendMessage(m.chat, {text: `▢ *Opción:* ${type}\n\n▢ *Estado:* ${isEnable ? 'Activado' : 'Desactivado'}\n\n▢ *Para* ${isAll ? 'este bot' : isUser ? '' : 'este chat'}`}, {quoted: m});
 };
 handler.command = /^((en|dis)able|(tru|fals)e|(turn)?[01])$/i;
 export default handler;

@@ -1,19 +1,19 @@
-import { join, dirname } from 'path';
-import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
-import { setupMaster, fork } from 'cluster';
+import {join, dirname} from 'path';
+import {createRequire} from 'module';
+import {fileURLToPath} from 'url';
+import {setupMaster, fork} from 'cluster';
 import cfonts from 'cfonts';
 import readline from 'readline';
 import yargs from 'yargs';
-import chalk from 'chalk'; 
-import fs from 'fs'; 
+import chalk from 'chalk';
+import fs from 'fs';
 import './config.js';
 
-const { PHONENUMBER_MCC } = await import('baileys');
+const {PHONENUMBER_MCC} = await import('baileys');
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
-const { say } = cfonts;
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+const {say} = cfonts;
+const rl = readline.createInterface({input: process.stdin, output: process.stdout});
 let isRunning = false;
 
 const question = (texto) => new Promise((resolver) => rl.question(texto, resolver));
@@ -23,7 +23,7 @@ console.log(chalk.yellow.bold('—◉ㅤIniciando sistema...'));
 function verificarOCrearCarpetaAuth() {
   const authPath = join(__dirname, global.authFile);
   if (!fs.existsSync(authPath)) {
-    fs.mkdirSync(authPath, { recursive: true });
+    fs.mkdirSync(authPath, {recursive: true});
   }
 }
 
@@ -48,7 +48,7 @@ function formatearNumeroTelefono(numero) {
 
 function esNumeroValido(numeroTelefono) {
   const numeroSinSigno = numeroTelefono.replace('+', '');
-  return Object.keys(PHONENUMBER_MCC).some(codigo => numeroSinSigno.startsWith(codigo));
+  return Object.keys(PHONENUMBER_MCC).some((codigo) => numeroSinSigno.startsWith(codigo));
 }
 
 async function start(file) {
@@ -71,7 +71,7 @@ async function start(file) {
 
   if (verificarCredsJson()) {
     const args = [join(__dirname, file), ...process.argv.slice(2)];
-    setupMaster({ exec: args[0], args: args.slice(1) });
+    setupMaster({exec: args[0], args: args.slice(1)});
     const p = fork();
     return;
   }
@@ -96,7 +96,7 @@ async function start(file) {
   }
 
   const args = [join(__dirname, file), ...process.argv.slice(2)];
-  setupMaster({ exec: args[0], args: args.slice(1) });
+  setupMaster({exec: args[0], args: args.slice(1)});
 
   const p = fork();
 

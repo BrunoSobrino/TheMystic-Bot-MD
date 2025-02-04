@@ -4,30 +4,29 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import axios from 'axios';
 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.descargas_spotify
+const handler = async (m, {conn, text, usedPrefix, command}) => {
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.descargas_spotify;
 
- if (!text) throw `${tradutor.texto1} _${usedPrefix + command} Good Feeling - Flo Rida_`;
+  if (!text) throw `${tradutor.texto1} _${usedPrefix + command} Good Feeling - Flo Rida_`;
   try {
     const res = await fetch(`${global.MyApiRestBaseUrl}/api/spotifysearch?text=${text}&apikey=${global.MyApiRestApikey}`);
-    const data = await res.json()
+    const data = await res.json();
     const linkDL = data?.spty?.resultado[0]?.url || data?.spty?.resultado[0]?.link;
     const musics = await fetch(`${global.MyApiRestBaseUrl}/api/spotifydl?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
-    const music = await conn.getFile(musics?.url)
+    const music = await conn.getFile(musics?.url);
     const infos = await fetch(`${global.MyApiRestBaseUrl}/api/spotifyinfo?text=${linkDL}&apikey=${global.MyApiRestApikey}`);
-    const info = await infos.json()
-    const spty = info?.spty?.resultado
-    const img = await (await fetch(`${spty.thumbnail}`)).buffer()  
-    let spotifyi = ` _${tradutor.texto2[0]}_\n\n`
-        spotifyi += ` ${tradutor.texto2[1]} ${spty.title}\n`
-        spotifyi += ` ${tradutor.texto2[2]} ${spty.artist}\n`
-        spotifyi += ` ${tradutor.texto2[3]} ${spty.album}\n`                 
-        spotifyi += ` ${tradutor.texto2[4]} ${spty.year}\n\n`   
-        spotifyi += `> ${tradutor.texto2[5]}`
-    await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": img, "thumbnailUrl": img, "mediaUrl": linkDL, "sourceUrl": linkDL}}}, {quoted: m});
+    const info = await infos.json();
+    const spty = info?.spty?.resultado;
+    const img = await (await fetch(`${spty.thumbnail}`)).buffer();
+    let spotifyi = ` _${tradutor.texto2[0]}_\n\n`;
+    spotifyi += ` ${tradutor.texto2[1]} ${spty.title}\n`;
+    spotifyi += ` ${tradutor.texto2[2]} ${spty.artist}\n`;
+    spotifyi += ` ${tradutor.texto2[3]} ${spty.album}\n`;
+    spotifyi += ` ${tradutor.texto2[4]} ${spty.year}\n\n`;
+    spotifyi += `> ${tradutor.texto2[5]}`;
+    await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {'forwardingScore': 9999999, 'isForwarded': true, 'externalAdReply': {'showAdAttribution': true, 'containsAutoReply': true, 'renderLargerThumbnail': true, 'title': global.titulowm2, 'containsAutoReply': true, 'mediaType': 1, 'thumbnail': img, 'thumbnailUrl': img, 'mediaUrl': linkDL, 'sourceUrl': linkDL}}}, {quoted: m});
     await conn.sendMessage(m.chat, {audio: music.data, fileName: `${spty.name}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
   } catch (error) {
     console.error('Error: ' + error.message);
@@ -37,9 +36,9 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 handler.command = /^(spotify|music)$/i;
 export default handler;
 
-//***Código antiguo/obsoleto.
+//* **Código antiguo/obsoleto.
 
-/*import fetch from 'node-fetch';
+/* import fetch from 'node-fetch';
 import Spotify from 'spotifydl-x';
 import fs from 'fs';
 import NodeID3 from 'node-id3';
@@ -65,10 +64,10 @@ const handler = async (m, { conn, text }) => {
     const randomName = getRandom('.mp3');
     const filePath = `./src/tmp/${randomName}`;
     const artist = spty.data.artists.join(', ') || '-';
-    const img = await (await fetch(`${spty.data.cover_url}`)).buffer()  
+    const img = await (await fetch(`${spty.data.cover_url}`)).buffer()
     const letra_s = await find_lyrics(spty.data.name ? spty.data.name : '');
     let letra;
-    letra = `${letra_s ? letra_s + '\n\n🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖' : '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖'}`  
+    letra = `${letra_s ? letra_s + '\n\n🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖' : '🤴🏻 Descarga por BrunoSobrino & TheMystic-Bot-MD 🤖'}`
     const tags = {
       title: spty.data.name || '-',
       artist: artist,
@@ -100,8 +99,8 @@ const handler = async (m, { conn, text }) => {
     let spotifyi = `*• 💽 Spotify Download •*\n\n`
          spotifyi += `	◦  *Título:* ${spty.data.name}\n`
          spotifyi += `	◦  *Artista:* ${spty.data.artists}\n`
-         spotifyi += `	◦  *Album:* ${spty.data.album_name}\n`                 
-         spotifyi += `	◦  *Publicado:* ${spty.data.release_date}\n\n`   
+         spotifyi += `	◦  *Album:* ${spty.data.album_name}\n`
+         spotifyi += `	◦  *Publicado:* ${spty.data.release_date}\n\n`
          spotifyi += `El audio se esta enviando, espere un momento..`
     await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": img, "thumbnailUrl": img, "mediaUrl": linkDL, "sourceUrl": linkDL}}}, {quoted: m});
     await conn.sendMessage(m.chat, {audio: fs.readFileSync(`./src/tmp/${randomName}`), fileName: `${spty.data.name}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});

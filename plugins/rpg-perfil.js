@@ -4,10 +4,9 @@ import fetch from 'node-fetch';
 
 
 const handler = async (m, {conn, usedPrefix, participants, isPrems}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.rpg_perfil
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.rpg_perfil;
 
   let pp = 'https://telegra.ph/file/06cc652844ea19e8aed1c.jpg';
   const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;

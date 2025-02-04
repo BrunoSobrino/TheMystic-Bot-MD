@@ -1,11 +1,11 @@
 // TheMystic-Bot-MD@BrunoSobrino - _antilink.js
 
-  
+
 const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
 export async function before(m, {conn, isAdmin, isBotAdmin}) {
-  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje 
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins._antilink
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins._antilink;
 
   if (m.isBaileys && m.fromMe) {
     return !0;

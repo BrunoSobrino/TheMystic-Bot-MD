@@ -7,11 +7,10 @@ const handler = async (m, {
   command,
   text,
 }) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.herramientas_dropmail
-  
+  const idioma = global.db.data.users[m.sender].language || 'es';
+  const _translate = global.translate[idioma];
+  const tradutor = _translate.plugins.herramientas_dropmail;
+
   conn.dropmail = conn.dropmail ? conn.dropmail : {};
   const id = 'dropmail';
 
@@ -27,11 +26,10 @@ const handler = async (m, {
   if (lister.includes(feature)) {
     if (feature == 'create') {
       try {
-
         const eml = await random_mail();
         const timeDiff = new Date(eml[2]) - new Date();
         conn.dropmail[id] = [
-          await m.reply(tradutor.texto2[0] + eml[0] + '\n\n' + tradutor.texto2[1]  + eml[1] + tradutor.texto2[2]  + msToTime(timeDiff) + tradutor.texto2[3]  + usedPrefix + command + tradutor.texto2[4] ),
+          await m.reply(tradutor.texto2[0] + eml[0] + '\n\n' + tradutor.texto2[1] + eml[1] + tradutor.texto2[2] + msToTime(timeDiff) + tradutor.texto2[3] + usedPrefix + command + tradutor.texto2[4] ),
           eml[0],
           eml[1],
           eml[2],

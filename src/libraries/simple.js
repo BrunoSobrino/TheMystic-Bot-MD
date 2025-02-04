@@ -16,22 +16,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @type {import("baileys")}
  */
 const {
-    default: _makeWaSocket,
-    makeWALegacySocket,
-    proto,
-    downloadContentFromMessage,
-    jidDecode,
-    areJidsSameUser,
-    generateWAMessage,
-    generateForwardMessageContent,
-    generateWAMessageFromContent,
-    WAMessageStubType,
-    extractMessageContent,
-    makeInMemoryStore,
-    getAggregateVotesInPollMessage, 
-    prepareWAMessageMedia,
-    WA_DEFAULT_EPHEMERAL
-} = (await import("baileys")).default
+  default: _makeWaSocket,
+  makeWALegacySocket,
+  proto,
+  downloadContentFromMessage,
+  jidDecode,
+  areJidsSameUser,
+  generateWAMessage,
+  generateForwardMessageContent,
+  generateWAMessageFromContent,
+  WAMessageStubType,
+  extractMessageContent,
+  makeInMemoryStore,
+  getAggregateVotesInPollMessage,
+  prepareWAMessageMedia,
+  WA_DEFAULT_EPHEMERAL,
+} = (await import('baileys')).default;
 
 export function makeWASocket(connectionOptions, options = {}) {
   /**
@@ -304,8 +304,8 @@ END:VCARD
         return Buffer.isBuffer(text) ? conn.sendFile(jid, text, 'file', '', quoted, false, options) : conn.sendMessage(jid, {...options, text}, {quoted, ...options});
       },
     },
-    
-   /**
+
+    /**
      * Send nativeFlowMessage
      * By: https://github.com/GataNina-Li
      */
@@ -313,17 +313,17 @@ END:VCARD
     sendButtonMessages: {
       async value(jid, messages, quoted, options) {
         messages.length > 1 ? await conn.sendCarousel(jid, messages, quoted, options) : await conn.sendNCarousel(
-          jid, ...messages[0], quoted, options);
-      }
+            jid, ...messages[0], quoted, options);
+      },
     },
-    
-/**
+
+    /**
      * Send nativeFlowMessage
      */
-         
+
     sendNCarousel: {
       async value(jid, text = '', footer = '', buffer, buttons, copy, urls, list, quoted, options) {
-        let img, video;
+        let img; let video;
         if (buffer) {
           if (/^https?:\/\//i.test(buffer)) {
             try {
@@ -332,26 +332,26 @@ END:VCARD
               if (/^image\//i.test(contentType)) {
                 img = await prepareWAMessageMedia({
                   image: {
-                    url: buffer
-                  }
+                    url: buffer,
+                  },
                 }, {
                   upload: conn.waUploadToServer,
-                  ...options
+                  ...options,
                 });
               } else if (/^video\//i.test(contentType)) {
                 video = await prepareWAMessageMedia({
                   video: {
-                    url: buffer
-                  }
+                    url: buffer,
+                  },
                 }, {
                   upload: conn.waUploadToServer,
-                  ...options
+                  ...options,
                 });
               } else {
-                console.error("Incompatible MIME type:", contentType);
+                console.error('Incompatible MIME type:', contentType);
               }
             } catch (error) {
-              console.error("Failed to get MIME type:", error);
+              console.error('Failed to get MIME type:', error);
             }
           } else {
             try {
@@ -359,32 +359,32 @@ END:VCARD
               if (/^image\//i.test(type.mime)) {
                 img = await prepareWAMessageMedia({
                   image: (/^https?:\/\//i.test(buffer)) ? {
-                    url: buffer
-                  } : (type && type?.data)
+                    url: buffer,
+                  } : (type && type?.data),
                 }, {
                   upload: conn.waUploadToServer,
-                  ...options
+                  ...options,
                 });
               } else if (/^video\//i.test(type.mime)) {
                 video = await prepareWAMessageMedia({
                   video: (/^https?:\/\//i.test(buffer)) ? {
-                    url: buffer
-                  } : (type && type?.data)
+                    url: buffer,
+                  } : (type && type?.data),
                 }, {
                   upload: conn.waUploadToServer,
-                  ...options
+                  ...options,
                 });
               }
             } catch (error) {
-              console.error("Failed to get file type:", error);
+              console.error('Failed to get file type:', error);
             }
           }
         }
-        const dynamicButtons = buttons.map(btn => ({
+        const dynamicButtons = buttons.map((btn) => ({
           name: 'quick_reply',
           buttonParamsJson: JSON.stringify({
             display_text: btn[0],
-            id: btn[1]
+            id: btn[1],
           }),
         }));
         dynamicButtons.push(
@@ -392,49 +392,49 @@ END:VCARD
             name: 'cta_copy',
             buttonParamsJson: JSON.stringify({
               display_text: 'Copy',
-              copy_code: copy
-            })
+              copy_code: copy,
+            }),
           } : null);
-        urls?.forEach(url => {
+        urls?.forEach((url) => {
           dynamicButtons.push({
             name: 'cta_url',
             buttonParamsJson: JSON.stringify({
               display_text: url[0],
               url: url[1],
-              merchant_url: url[1]
-            })
+              merchant_url: url[1],
+            }),
           });
         });
-        list?.forEach(lister => {
+        list?.forEach((lister) => {
           dynamicButtons.push({
             name: 'single_select',
             buttonParamsJson: JSON.stringify({
               title: lister[0],
-              sections: lister[1]
-            })
+              sections: lister[1],
+            }),
           });
-        })
+        });
         const interactiveMessage = {
           body: {
-            text: text || ''
+            text: text || '',
           },
           footer: {
-            text: footer || wm
+            text: footer || wm,
           },
           header: {
             hasMediaAttachment: img?.imageMessage || video?.videoMessage ? true : false,
             imageMessage: img?.imageMessage || null,
-            videoMessage: video?.videoMessage || null
+            videoMessage: video?.videoMessage || null,
           },
           nativeFlowMessage: {
             buttons: dynamicButtons.filter(Boolean),
-            messageParamsJson: ''
+            messageParamsJson: '',
           },
           ...Object.assign({
             mentions: typeof text === 'string' ? conn.parseMention(text || '@0') : [],
             contextInfo: {
               mentionedJid: typeof text === 'string' ? conn.parseMention(text || '@0') : [],
-            }
+            },
           }, {
             ...(options || {}),
             ...(conn.temareply?.contextInfo && {
@@ -446,30 +446,30 @@ END:VCARD
                   ...conn.temareply?.contextInfo?.externalAdReply,
                 },
               },
-            })
-          })
+            }),
+          }),
         };
         const messageContent = proto.Message.fromObject({
           viewOnceMessage: {
             message: {
               messageContextInfo: {
                 deviceListMetadata: {},
-                deviceListMetadataVersion: 2
+                deviceListMetadataVersion: 2,
               },
-              interactiveMessage
-            }
-          }
+              interactiveMessage,
+            },
+          },
         });
         const msgs = await generateWAMessageFromContent(jid, messageContent, {
           userJid: conn.user.jid,
           quoted: quoted,
           upload: conn.waUploadToServer,
-          ephemeralExpiration: WA_DEFAULT_EPHEMERAL
+          ephemeralExpiration: WA_DEFAULT_EPHEMERAL,
         });
         await conn.relayMessage(jid, msgs.message, {
-          messageId: msgs.key.id
+          messageId: msgs.key.id,
         });
-      }
+      },
     },
     /**
      * Send carouselMessage
@@ -478,9 +478,9 @@ END:VCARD
       async value(jid, text = '', footer = '', text2 = '', messages, quoted, options) {
         if (messages.length > 1) {
           const cards = await Promise.all(messages.map(async ([text = '', footer = '', buffer, buttons, copy,
-            urls, list
+            urls, list,
           ]) => {
-            let img, video;
+            let img; let video;
             if (/^https?:\/\//i.test(buffer)) {
               try {
                 const response = await fetch(buffer);
@@ -488,26 +488,26 @@ END:VCARD
                 if (/^image\//i.test(contentType)) {
                   img = await prepareWAMessageMedia({
                     image: {
-                      url: buffer
-                    }
+                      url: buffer,
+                    },
                   }, {
                     upload: conn.waUploadToServer,
-                    ...options
+                    ...options,
                   });
                 } else if (/^video\//i.test(contentType)) {
                   video = await prepareWAMessageMedia({
                     video: {
-                      url: buffer
-                    }
+                      url: buffer,
+                    },
                   }, {
                     upload: conn.waUploadToServer,
-                    ...options
+                    ...options,
                   });
                 } else {
-                  console.error("Incompatible MIME types:", contentType);
+                  console.error('Incompatible MIME types:', contentType);
                 }
               } catch (error) {
-                console.error("Failed to get MIME type:", error);
+                console.error('Failed to get MIME type:', error);
               }
             } else {
               try {
@@ -515,34 +515,34 @@ END:VCARD
                 if (/^image\//i.test(type.mime)) {
                   img = await prepareWAMessageMedia({
                     image: (/^https?:\/\//i.test(buffer)) ? {
-                      url: buffer
-                    } : (type && type?.data)
+                      url: buffer,
+                    } : (type && type?.data),
                   }, {
                     upload: conn.waUploadToServer,
-                    ...options
+                    ...options,
                   });
                 } else if (/^video\//i.test(type.mime)) {
                   video = await prepareWAMessageMedia({
                     video: (/^https?:\/\//i.test(buffer)) ? {
-                      url: buffer
-                    } : (type && type?.data)
+                      url: buffer,
+                    } : (type && type?.data),
                   }, {
                     upload: conn.waUploadToServer,
-                    ...options
+                    ...options,
                   });
                 }
               } catch (error) {
-                console.error("Failed to get file type:", error);
+                console.error('Failed to get file type:', error);
               }
             }
-            const dynamicButtons = buttons.map(btn => ({
+            const dynamicButtons = buttons.map((btn) => ({
               name: 'quick_reply',
               buttonParamsJson: JSON.stringify({
                 display_text: btn[0],
-                id: btn[1]
+                id: btn[1],
               }),
             }));
-            /*dynamicButtons.push(
+            /* dynamicButtons.push(
               (copy && (typeof copy === 'string' || typeof copy === 'number')) && {
                 name: 'cta_copy',
                 buttonParamsJson: JSON.stringify({
@@ -550,38 +550,38 @@ END:VCARD
                   copy_code: copy
                 })
               });*/
-	    copy = Array.isArray(copy) ? copy : [copy]
-	    copy.map(copy => {
-                dynamicButtons.push({
-                    name: 'cta_copy',
-                    buttonParamsJson: JSON.stringify({
-                        display_text: 'Copy',
-                        copy_code: copy[0]
-                    })
-                });
+	    copy = Array.isArray(copy) ? copy : [copy];
+	    copy.map((copy) => {
+              dynamicButtons.push({
+                name: 'cta_copy',
+                buttonParamsJson: JSON.stringify({
+                  display_text: 'Copy',
+                  copy_code: copy[0],
+                }),
+              });
             });
-            urls?.forEach(url => {
+            urls?.forEach((url) => {
               dynamicButtons.push({
                 name: 'cta_url',
                 buttonParamsJson: JSON.stringify({
                   display_text: url[0],
                   url: url[1],
-                  merchant_url: url[1]
-                })
+                  merchant_url: url[1],
+                }),
               });
             });
 
-	          list?.forEach(lister => {
+	          list?.forEach((lister) => {
               dynamicButtons.push({
                 name: 'single_select',
                 buttonParamsJson: JSON.stringify({
                   title: lister[0],
-                  sections: lister[1]
-                })
+                  sections: lister[1],
+                }),
               });
-            })
-           
-		/*list?.forEach(lister => {
+            });
+
+            /* list?.forEach(lister => {
     dynamicButtons.push({
         name: 'single_select',
         buttonParamsJson: JSON.stringify({
@@ -591,7 +591,7 @@ END:VCARD
                 rows: [{
                     header: lister[2],
                     title: lister[3],
-                    description: lister[4], 
+                    description: lister[4],
                     id: lister[5]
                 }]
             }]
@@ -601,27 +601,27 @@ END:VCARD
 
             return {
               body: proto.Message.InteractiveMessage.Body.fromObject({
-                text: text || ''
+                text: text || '',
               }),
               footer: proto.Message.InteractiveMessage.Footer.fromObject({
-                text: footer || wm
+                text: footer || wm,
               }),
               header: proto.Message.InteractiveMessage.Header.fromObject({
                 title: text2,
                 subtitle: text || '',
                 hasMediaAttachment: img?.imageMessage || video?.videoMessage ? true : false,
                 imageMessage: img?.imageMessage || null,
-                videoMessage: video?.videoMessage || null
+                videoMessage: video?.videoMessage || null,
               }),
               nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
                 buttons: dynamicButtons.filter(Boolean),
-                messageParamsJson: ''
+                messageParamsJson: '',
               }),
               ...Object.assign({
                 mentions: typeof text === 'string' ? conn.parseMention(text || '@0') : [],
                 contextInfo: {
                   mentionedJid: typeof text === 'string' ? conn.parseMention(text || '@0') : [],
-                }
+                },
               }, {
                 ...(options || {}),
                 ...(conn.temareply?.contextInfo && {
@@ -633,21 +633,21 @@ END:VCARD
                       ...conn.temareply?.contextInfo?.externalAdReply,
                     },
                   },
-                })
-              })
+                }),
+              }),
             };
           }));
           const interactiveMessage = proto.Message.InteractiveMessage.create({
             body: proto.Message.InteractiveMessage.Body.fromObject({
-              text: text || ''
+              text: text || '',
             }),
             footer: proto.Message.InteractiveMessage.Footer.fromObject({
-              text: footer || wm
+              text: footer || wm,
             }),
             header: proto.Message.InteractiveMessage.Header.fromObject({
               title: text || '',
               subtitle: text || '',
-              hasMediaAttachment: false
+              hasMediaAttachment: false,
             }),
             carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
               cards,
@@ -656,7 +656,7 @@ END:VCARD
               mentions: typeof text === 'string' ? conn.parseMention(text || '@0') : [],
               contextInfo: {
                 mentionedJid: typeof text === 'string' ? conn.parseMention(text || '@0') : [],
-              }
+              },
             }, {
               ...(options || {}),
               ...(conn.temareply?.contextInfo && {
@@ -668,37 +668,37 @@ END:VCARD
                     ...conn.temareply?.contextInfo?.externalAdReply,
                   },
                 },
-              })
-            })
+              }),
+            }),
           });
           const messageContent = proto.Message.fromObject({
             viewOnceMessage: {
               message: {
                 messageContextInfo: {
                   deviceListMetadata: {},
-                  deviceListMetadataVersion: 2
+                  deviceListMetadataVersion: 2,
                 },
-                interactiveMessage
-              }
-            }
+                interactiveMessage,
+              },
+            },
           });
           const msgs = await generateWAMessageFromContent(jid, messageContent, {
             userJid: conn.user.jid,
             quoted: quoted,
             upload: conn.waUploadToServer,
-            ephemeralExpiration: WA_DEFAULT_EPHEMERAL
+            ephemeralExpiration: WA_DEFAULT_EPHEMERAL,
           });
           await conn.relayMessage(jid, msgs.message, {
-            messageId: msgs.key.id
+            messageId: msgs.key.id,
           });
         } else {
           await conn.sendNCarousel(jid, ...messages[0], quoted, options);
         }
-      }
+      },
     },
-        
-   // sendButton: {
-      /**
+
+    // sendButton: {
+    /**
              * send Button
              * @param {String} jid
              * @param {String} text
@@ -708,7 +708,7 @@ END:VCARD
              * @param {import("baileys").proto.WebMessageInfo} quoted
              * @param {Object} options
              */
-   /*   async value(jid, text = '', footer = '', buffer, buttons, quoted, options) {
+    /*   async value(jid, text = '', footer = '', buffer, buttons, quoted, options) {
         let type;
         if (Array.isArray(buffer)) (options = quoted, quoted = buttons, buttons = buffer, buffer = null);
         else if (buffer) {
@@ -749,153 +749,151 @@ END:VCARD
       },
       enumerable: true,
     },*/
-         //-- new
-sendButton: {
-    async value(jid, text = '', footer = '', buffer, buttons, copy, urls, quoted, options) {
-        let img, video
+    // -- new
+    sendButton: {
+      async value(jid, text = '', footer = '', buffer, buttons, copy, urls, quoted, options) {
+        let img; let video;
 
-    
+
         if (/^https?:\/\//i.test(buffer)) {
-            try {
-                // Obtener el tipo MIME de la URL
-                const response = await fetch(buffer)
-                const contentType = response.headers.get('content-type')
-                if (/^image\//i.test(contentType)) {
-                    img = await prepareWAMessageMedia({ image: { url: buffer } }, { upload: conn.waUploadToServer })
-                } else if (/^video\//i.test(contentType)) {
-                    video = await prepareWAMessageMedia({ video: { url: buffer } }, { upload: conn.waUploadToServer })
-                } else {
-                    console.error("Tipo MIME no compatible:", contentType)
-                }
-            } catch (error) {
-                console.error("Error al obtener el tipo MIME:", error)
+          try {
+            // Obtener el tipo MIME de la URL
+            const response = await fetch(buffer);
+            const contentType = response.headers.get('content-type');
+            if (/^image\//i.test(contentType)) {
+              img = await prepareWAMessageMedia({image: {url: buffer}}, {upload: conn.waUploadToServer});
+            } else if (/^video\//i.test(contentType)) {
+              video = await prepareWAMessageMedia({video: {url: buffer}}, {upload: conn.waUploadToServer});
+            } else {
+              console.error('Tipo MIME no compatible:', contentType);
             }
+          } catch (error) {
+            console.error('Error al obtener el tipo MIME:', error);
+          }
         } else {
-            
-            try {
-                const type = await conn.getFile(buffer)
-               if (/^image\//i.test(type.mime)) {
-                    img = await prepareWAMessageMedia({ image: { url: buffer } }, { upload: conn.waUploadToServer })
-                } else if (/^video\//i.test(type.mime)) {
-                    video = await prepareWAMessageMedia({ video: { url: buffer } }, { upload: conn.waUploadToServer })
-                }
-            } catch (error) {
-                console.error("Error al obtener el tipo de archivo:", error);
+          try {
+            const type = await conn.getFile(buffer);
+            if (/^image\//i.test(type.mime)) {
+              img = await prepareWAMessageMedia({image: {url: buffer}}, {upload: conn.waUploadToServer});
+            } else if (/^video\//i.test(type.mime)) {
+              video = await prepareWAMessageMedia({video: {url: buffer}}, {upload: conn.waUploadToServer});
             }
+          } catch (error) {
+            console.error('Error al obtener el tipo de archivo:', error);
+          }
         }
 
-        const dynamicButtons = buttons.map(btn => ({
-            name: 'quick_reply',
-            buttonParamsJson: JSON.stringify({
-                display_text: btn[0],
-                id: btn[1]
-            }),
+        const dynamicButtons = buttons.map((btn) => ({
+          name: 'quick_reply',
+          buttonParamsJson: JSON.stringify({
+            display_text: btn[0],
+            id: btn[1],
+          }),
         }));
 
-       
+
         if (copy && (typeof copy === 'string' || typeof copy === 'number')) {
-            // Añadir botón de copiar
-            dynamicButtons.push({
-                name: 'cta_copy',
-                buttonParamsJson: JSON.stringify({
-                    display_text: 'Copy',
-                    copy_code: copy
-                })
-            });
+          // Añadir botón de copiar
+          dynamicButtons.push({
+            name: 'cta_copy',
+            buttonParamsJson: JSON.stringify({
+              display_text: 'Copy',
+              copy_code: copy,
+            }),
+          });
         }
 
         // Añadir botones de URL
         if (urls && Array.isArray(urls)) {
-            urls.forEach(url => {
-                dynamicButtons.push({
-                    name: 'cta_url',
-                    buttonParamsJson: JSON.stringify({
-                        display_text: url[0],
-                        url: url[1],
-                        merchant_url: url[1]
-                    })
-                })
-            })
+          urls.forEach((url) => {
+            dynamicButtons.push({
+              name: 'cta_url',
+              buttonParamsJson: JSON.stringify({
+                display_text: url[0],
+                url: url[1],
+                merchant_url: url[1],
+              }),
+            });
+          });
         }
 
 
         const interactiveMessage = {
-            body: { text: text },
-            footer: { text: footer },
-            header: {
-                hasMediaAttachment: false,
-                imageMessage: img ? img.imageMessage : null,
-                videoMessage: video ? video.videoMessage : null
-            },
-            nativeFlowMessage: {
-                buttons: dynamicButtons,
-                messageParamsJson: ''
-            }
-        }
-
-              
-        let msgL = generateWAMessageFromContent(jid, {
-            viewOnceMessage: {
-                message: {
-                    interactiveMessage } } }, { userJid: conn.user.jid, quoted })
-        
-       conn.relayMessage(jid, msgL.message, { messageId: msgL.key.id, ...options })
-            
-    }
-}, 
-
-sendList: {
-    async value(jid, title, text, buttonText, listSections, quoted, options = {}) {
-        const sections = [...listSections];
-        
-        const message = {
-            interactiveMessage: {
-                header: {title: title} ,
-                body: {text: text}, 
-                nativeFlowMessage: {
-                    buttons: [
-                        {
-                            name: 'single_select',
-                            buttonParamsJson: JSON.stringify({
-                                title: buttonText,
-                                sections
-                            })
-                        }
-                    ],
-                    messageParamsJson: ''
-                }
-            }
+          body: {text: text},
+          footer: {text: footer},
+          header: {
+            hasMediaAttachment: false,
+            imageMessage: img ? img.imageMessage : null,
+            videoMessage: video ? video.videoMessage : null,
+          },
+          nativeFlowMessage: {
+            buttons: dynamicButtons,
+            messageParamsJson: '',
+          },
         };
-        await conn.relayMessage(jid, { viewOnceMessage: { message } }, {});
-    }
-},
 
-sendEvent: {
-            async value(jid, text, des, loc, link) {
-let msg = generateWAMessageFromContent(jid, {
-        messageContextInfo: {
-            messageSecret: randomBytes(32)
-        },
-        eventMessage: {
+
+        const msgL = generateWAMessageFromContent(jid, {
+          viewOnceMessage: {
+            message: {
+              interactiveMessage}}}, {userJid: conn.user.jid, quoted});
+
+        conn.relayMessage(jid, msgL.message, {messageId: msgL.key.id, ...options});
+      },
+    },
+
+    sendList: {
+      async value(jid, title, text, buttonText, listSections, quoted, options = {}) {
+        const sections = [...listSections];
+
+        const message = {
+          interactiveMessage: {
+            header: {title: title},
+            body: {text: text},
+            nativeFlowMessage: {
+              buttons: [
+                {
+                  name: 'single_select',
+                  buttonParamsJson: JSON.stringify({
+                    title: buttonText,
+                    sections,
+                  }),
+                },
+              ],
+              messageParamsJson: '',
+            },
+          },
+        };
+        await conn.relayMessage(jid, {viewOnceMessage: {message}}, {});
+      },
+    },
+
+    sendEvent: {
+      async value(jid, text, des, loc, link) {
+        const msg = generateWAMessageFromContent(jid, {
+          messageContextInfo: {
+            messageSecret: randomBytes(32),
+          },
+          eventMessage: {
             isCanceled: false,
             name: text,
             description: des,
             location: {
-                degreesLatitude: 0,
-                degreesLongitude: 0,
-                name: loc
+              degreesLatitude: 0,
+              degreesLongitude: 0,
+              name: loc,
             },
             joinLink: link,
-            startTime: 'm.messageTimestamp'
-        }
-    }, {});
+            startTime: 'm.messageTimestamp',
+          },
+        }, {});
 
-    conn.relayMessage(jid, msg.message, {
+        conn.relayMessage(jid, msg.message, {
           messageId: msg.key.id,
-        })
-            },
-            enumerable: true
-        },
+        });
+      },
+      enumerable: true,
+    },
 
     sendPoll: {
       async value(jid, name = '', optiPoll, options) {
@@ -1532,7 +1530,7 @@ export function serialize() {
     isBaileys: {
       get() {
         return (this?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender)) && this.id.startsWith('3EB0') && (this.id.length === 20 || this.id.length === 22 || this.id.length === 12) || false;
-	/*this.id?.length === 16 || this.id?.startsWith('3EB0') && this.id?.length === 12 || false;*/ 
+        /* this.id?.length === 16 || this.id?.startsWith('3EB0') && this.id?.length === 12 || false;*/
       },
     },
     chat: {
@@ -1647,9 +1645,9 @@ export function serialize() {
             enumerable: true,
           },
           isBaileys: {
-            get() {  
+            get() {
               return (this?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender)) && this.id.startsWith('3EB0') && (this.id.length === 20 || this.id.length === 22 || this.id.length === 12) || false;
-	      /*this.id?.length === 16 || this.id?.startsWith('3EB0') && this.id.length === 12 || false;*/
+	      /* this.id?.length === 16 || this.id?.startsWith('3EB0') && this.id.length === 12 || false;*/
             },
             enumerable: true,
           },
