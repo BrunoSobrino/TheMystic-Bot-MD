@@ -1091,12 +1091,12 @@ export async function participantsUpdate({ id, participants, action }) {
         }
       }
       break;
-  }
-      break;
+      
     case 'promote':
     case 'daradmin':
     case 'darpoder':
       text = (chat.sPromote || tradutor.texto3 || conn?.spromote || '@user ```is now Admin```');
+      break;
     case 'demote':
     case 'quitarpoder':
     case 'quitaradmin':
