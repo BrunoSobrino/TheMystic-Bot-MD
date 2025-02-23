@@ -1096,7 +1096,7 @@ switch (action) {
           .replace('@user', '@' + user.split('@')[0])
         );
         if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn && action === 'add') {
-          const responseb = await m.conn.groupParticipantsUpdate(id, 
+          const responseb = await m.conn.groupParticipantsUpdate(id) 
           }
         }
       }
