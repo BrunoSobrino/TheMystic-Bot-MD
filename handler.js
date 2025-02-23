@@ -1079,13 +1079,10 @@ export async function participantsUpdate({ id, participants, action }) {
   let text = '';
   switch (action) {
     case 'add':
-    case 'remove':
       if (chat.welcome && !chat?.isBanned) {
         const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
         for (const user of participants) {
-          text = (action === 'add' 
-            ? (chat.sWelcome || tradutor.texto1 || 'Bienvenido, @user!')
-            : (chat.sBye || tradutor.texto2 || 'Adiós, @user!'))
+          text = (chat.sWelcome || tradutor.texto1 || 'Bienvenido, @user!')
             .replace('@user', '@' + user.split('@')[0]);
           await m?.conn?.sendMessage(id, { text, mentions: [user] });
         }
