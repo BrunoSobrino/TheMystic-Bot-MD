@@ -1100,6 +1100,7 @@ export async function participantsUpdate({ id, participants, action }) {
             await m?.conn?.sendMessage(id, { text: text, mentions: [user] });
           }
         }
+        break;
       }
       break;
     case 'promote':
