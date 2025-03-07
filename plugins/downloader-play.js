@@ -24,7 +24,7 @@ const tradutor = _translate.plugins.descargas_play;
       const body = `${tradutor.texto2[0]} ${responsev1.title}\n${tradutor.texto2[1]} ${responsev1.uploaded}\n${tradutor.texto2[2]} ${responsev1.duration}\n${tradutor.texto2[3]} ${responsev1.views}\n${tradutor.texto2[4]} ${responsev1.author.name}\n${tradutor.texto2[5]} ${responsev1.identifier}\n${tradutor.texto2[6]} ${responsev1.type}\n${tradutor.texto2[7]} ${responsev1.url}\n${tradutor.texto2[8]} ${responsev1.author.url}\n\n> ${tradutor.texto2[9]} ${additionalText}, ${tradutor.texto2[10]}`.trim();
       conn.sendMessage(m.chat, { image: { url: responsev1.thumbnail }, caption: body }, { quoted: m });
 
-      const apidownload = await axios.get(`https://api-rin-tohsaka.vercel.app/download/ytmp3?url=${responsev1.url}`)
+      const apidownload = await axios.get(`https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${responsev1.url}`)
       const responsev2 = await apidownload.data.data.download;
             
       await conn.sendMessage(m.chat, { audio: { url: responsev2 }, mimetype: 'audio/mpeg' }, { quoted: m });
@@ -42,7 +42,7 @@ const tradutor = _translate.plugins.descargas_play;
       const body = `${tradutor.texto2[0]} ${responsev1.title}\n${tradutor.texto2[1]} ${responsev1.uploaded}\n${tradutor.texto2[2]} ${responsev1.duration}\n${tradutor.texto2[3]} ${responsev1.views}\n${tradutor.texto2[4]} ${responsev1.author.name}\n${tradutor.texto2[5]} ${responsev1.identifier}\n${tradutor.texto2[6]} ${responsev1.type}\n${tradutor.texto2[7]} ${responsev1.url}\n${tradutor.texto2[8]} ${responsev1.author.url}\n\n> ${tradutor.texto2[9]} ${additionalText}, ${tradutor.texto2[10]}`.trim();
       conn.sendMessage(m.chat, { image: { url: responsev1.thumbnail }, caption: body }, { quoted: m });
 
-      const apidownload = await axios.get(`https://api-rin-tohsaka.vercel.app/download/ytmp4?url=${responsev1.url}`)
+      const apidownload = await axios.get(`https://api.siputzx.my.id/api/d/ytmp4?url=${responsev1.url}`)
       const responsev2 = await apidownload.data.data.download;
             
       await conn.sendMessage(m.chat, { video: { url: responsev2 }, mimetype: 'video/mp4' }, { quoted: m });
@@ -60,7 +60,7 @@ const tradutor = _translate.plugins.descargas_play;
      const body = `${tradutor.texto2[0]} ${responsev1.title}\n${tradutor.texto2[1]} ${responsev1.uploaded}\n${tradutor.texto2[2]} ${responsev1.duration}\n${tradutor.texto2[3]} ${responsev1.views}\n${tradutor.texto2[4]} ${responsev1.author.name}\n${tradutor.texto2[5]} ${responsev1.identifier}\n${tradutor.texto2[6]} ${responsev1.type}\n${tradutor.texto2[7]} ${responsev1.url}\n${tradutor.texto2[8]} ${responsev1.author.url}\n\n> ${tradutor.texto2[9]} ${additionalText}, ${tradutor.texto2[10]}`.trim();
      conn.sendMessage(m.chat, { image: { url: responsev1.thumbnail }, caption: body }, { quoted: m });
 
-     const apidownload = await axios.get(`https://api-rin-tohsaka.vercel.app/download/ytmp3?url=${responsev1.url}`)
+     const apidownload = await axios.get(`https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${responsev1.url}`)
      const responsev2 = await apidownload.data.data.download;
             
       await conn.sendMessage(m.chat, { document: { url: responsev2 }, mimetype: 'audio/mpeg', fileName: `${responsev1.title}.mp3` }, { quoted: m });
@@ -78,7 +78,7 @@ const tradutor = _translate.plugins.descargas_play;
       const body = `${tradutor.texto2[0]} ${responsev1.title}\n${tradutor.texto2[1]} ${responsev1.uploaded}\n${tradutor.texto2[2]} ${responsev1.duration}\n${tradutor.texto2[3]} ${responsev1.views}\n${tradutor.texto2[4]} ${responsev1.author.name}\n${tradutor.texto2[5]} ${responsev1.identifier}\n${tradutor.texto2[6]} ${responsev1.type}\n${tradutor.texto2[7]} ${responsev1.url}\n${tradutor.texto2[8]} ${responsev1.author.url}\n\n> ${tradutor.texto2[9]} ${additionalText}, ${tradutor.texto2[10]}`.trim();
       conn.sendMessage(m.chat, { image: { url: responsev1.thumbnail }, caption: body }, { quoted: m });
 
-      const apidownload = await axios.get(`https://api-rin-tohsaka.vercel.app/download/ytmp4?url=${responsev1.url}`)
+      const apidownload = await axios.get(`https://api.siputzx.my.id/api/d/ytmp4?url=${responsev1.url}`)
       const responsev2 = await apidownload.data.data.download;
             
       await conn.sendMessage(m.chat, { document: { url: responsev2 }, mimetype: 'video/mp4', fileName: `${responsev1.title}.mp4` }, { quoted: m });
