@@ -9,7 +9,7 @@ import chalk from 'chalk';
 import fs from 'fs'; 
 import './config.js';
 
-const { PHONENUMBER_MCC } = await import('baileys');
+const PHONENUMBER_MCC = JSON.parse(fs.readFileSync('./src/phonenumber-mcc.json'));
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
 const { say } = cfonts;

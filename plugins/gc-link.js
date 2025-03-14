@@ -23,7 +23,9 @@ const handler = async (m, {conn, args}) => {
             viewOnceMessage: {
                 message: {
                     interactiveMessage: {
+
                         body: { text: 'https://chat.whatsapp.com/' + await conn.groupInviteCode(m.chat) },
+
                         footer: { text: `${global.wm}`.trim() },
                         header: {
                             hasMediaAttachment: true,
@@ -64,5 +66,6 @@ handler.help = ['linkgroup'];
 handler.tags = ['group'];
 handler.command = /^(link(gro?up)?)$/i;
 handler.group = true;
+handler.admin = true;
 handler.botAdmin = true;
 export default handler;
