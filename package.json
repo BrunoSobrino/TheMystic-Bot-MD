@@ -93,6 +93,7 @@
     "terminal-image": "^2.0.0",
     "url-regex-safe": "^3.0.0",
     "yargs": "^17.3.1",
+    "@hiudyy/ytdl": "^0.2.3",   
     "yt-search": "^2.10.3",
     "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2"
   },
