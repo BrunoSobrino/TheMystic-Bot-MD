@@ -1,4 +1,4 @@
-/*import syntaxerror from 'syntax-error';
+import syntaxerror from 'syntax-error';
 import {format} from 'util';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
@@ -32,7 +32,7 @@ const handler = async (m, _2, msg, pickRandom, isOwner ) => {
     m.exp = old;
   }
 };
-handler.help = ['> ', '=> '];
+handler.help = ['~~> ', '~~~> '];
 handler.tags = ['advanced'];
 handler.customPrefix = /?/;
 handler.command = /(?:)/i;
@@ -45,4 +45,4 @@ class CustomArray extends Array {
 }
 function pickRandom(list) {
   return list[Math.floor(Math.random() * list.length)];
-}*/
+}
