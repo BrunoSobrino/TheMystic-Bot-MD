@@ -10,7 +10,7 @@ const handler = async (m, { conn, text }) => {
   if (!text) return conn.reply(m.chat, tradutor.texto1, m);  
 
   try {
-    const response = await axios.get("https://deliriusapi-official.vercel.app/tools/tiktokstalk", {
+    const response = await axios.get("https://delirius-apiofc.vercel.app/tools/tiktokstalk", {
       params: { q: text }
     });
 
@@ -21,13 +21,13 @@ const handler = async (m, { conn, text }) => {
       const stats = data.result.stats;
 
       const Mystic = `
-${tradutor.texto2[0]} ${user.username}   
-${tradutor.texto2[1]} ${user.nickname}   
-${tradutor.texto2[2]} ${stats.followerCount}    
-${tradutor.texto2[3]} ${stats.followingCount}   
-${tradutor.texto2[4]} ${stats.likeCount || 'N/A'}    
-${tradutor.texto2[5]} ${stats.videoCount || 'N/A'}
-${tradutor.texto2[6]} ${user.signature || 'N/A'}   
+${tradutor.texto2[0]} ${user.username || 'Sin Información'}   
+${tradutor.texto2[1]} ${user.nickname || 'Sin Información'}   
+${tradutor.texto2[2]} ${stats.followerCount || 'Sin Información'}    
+${tradutor.texto2[3]} ${stats.followingCount || 'Sin Información'}   
+${tradutor.texto2[4]} ${stats.likeCount || 'Sin Información'}    
+${tradutor.texto2[5]} ${stats.videoCount || 'Sin Información'}
+${tradutor.texto2[6]} ${user.signature || 'Sin Información'}   
 `.trim();
 
       const imageUrl = user.avatarLarger;

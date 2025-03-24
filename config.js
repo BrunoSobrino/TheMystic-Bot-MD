@@ -22,8 +22,9 @@ global.owner = [
 global.suittag =  ['5493772406612', '5492604849203'];
 global.prems = ['5493772406612', '5492604849203'];
 
-// API
+// API (INTERFAZ DE PROGRAMACIÓN DE APLICACIONES)
 global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
+global.BASE_API_SKYNEX = "https://skynex.boxmine.xyz";
 
 global.packname = 'Sticker';
 global.author = 'ᴀꜱᴀᴋᴜʀᴀ ᴍᴀᴏ ʙᴏᴛ 👑';
@@ -33,16 +34,11 @@ global.titulowm2 = `ᴀꜱᴀᴋᴜʀᴀ ᴍᴀᴏ ʙᴏᴛ 👑`
 global.igfg = 'ᴀꜱᴀᴋᴜʀᴀ ᴍᴀᴏ ʙᴏᴛ 👑';
 global.wait = '*_[ ⏳ ] Cargando..._*';
 
-global.imagen1 = fs.readFileSync('./src/assets/images/menu-2.jpg');
-global.imagen2 = fs.readFileSync('./src/nuevobot.jpg');
-global.imagen3 = fs.readFileSync('./src/Pre Bot Publi.png');
-global.imagen4 = fs.readFileSync('./src/assets/images/menu-1.png');
-global.imagen5 = fs.readFileSync('./src/assets/images/+18.jpg');
-global.imagen6 = fs.readFileSync('././src/assets/images/menu-3.png');
-global.imagen7 = fs.readFileSync('./src/menu_pt.png');
-global.imagen8 = fs.readFileSync('./src/menu_fr.png')
-global.imagen9 = fs.readFileSync('./src/menu_en.png')
-global.imagen10 = fs.readFileSync('./src/menu_ru.png')
+global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png');
+global.imagen2 = fs.readFileSync('./src/assets/images/menu/languages/pt/menu.png');
+global.imagen3 = fs.readFileSync('./src/assets/images/menu/languages/fr/menu.png')
+global.imagen4 = fs.readFileSync('./src/assets/images/menu/languages/en/menu.png')
+global.imagen5 = fs.readFileSync('./src/assets/images/menu/languages/ru/menu.png')
 
 global.mods = [];
 
@@ -81,7 +77,7 @@ global.comienzo = '• • ◕◕════';
 global.fin = '════◕◕ • •';
 global.botdate = `*[ 📅 ] Fecha:*  ${moment.tz('America/Argentina/Mendoza').format('DD/MM/YY')}`;
 global.bottime = `*[ ⏳ ] Hora:* ${moment.tz('America/Argentina/Mendoza').format('HH:mm:ss')}`;
-global.fgif = {key: {participant: '0@s.whatsapp.net'}, message: {'videoMessage': {'title': wm, 'h': `Hmm`, 'seconds': '999999999', 'gifPlayback': 'true', 'caption': bottime, 'jpegThumbnail': fs.readFileSync('./src/assets/images/menu-1.png')}}};
+global.fgif = { key: { participant: '0@s.whatsapp.net' }, message: { 'videoMessage': { 'title': wm, 'h': `Hmm`, 'seconds': '999999999', 'gifPlayback': 'true', 'caption': bottime, 'jpegThumbnail': fs.readFileSync('./src/assets/images/menu/languages/es/menu.png')}}};
 global.multiplier = 99;
 global.flaaa = [
   'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=water-logo&script=water-logo&fontsize=90&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&fillTextColor=%23000&shadowGlowColor=%23000&backgroundColor=%23000&text=',
