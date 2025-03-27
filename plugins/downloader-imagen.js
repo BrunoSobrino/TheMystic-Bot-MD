@@ -7,7 +7,7 @@ if (!text) return m.reply(`${tradutor.texto1} ${usedPrefix + command} Minecraft*
 const api = await axios.get(`${global.BASE_API_DELIRIUS}/search/gimage?query=${text}`);
 const data = api.data.data;
 const random = Math.floor(Math.random() * data.length);
-const image = json[random];
+const image = data[random];
 
 conn.sendFile(m.chat, image.url, 'error.jpg', `${tradutor.texto2[0]} ${text}\n${tradutor.texto2[1]} ${image.origin.website.url}\n${tradutor.texto2[2]}`, m);
 };
