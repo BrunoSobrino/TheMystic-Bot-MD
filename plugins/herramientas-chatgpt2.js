@@ -10,6 +10,6 @@ const api = await axios.get(`https://skynex.boxmine.xyz/docs/ai/exploit?text=${t
 const data = api.data;
 await m.reply(data.answer)
 }
-handler.command = /^(chat|ia2|exploit|eploit)$/i;
+handler.command = /^(chatgpt2|ia2|exploit|eploit)$/i;
 export default handler;
 
