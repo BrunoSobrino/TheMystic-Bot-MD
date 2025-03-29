@@ -32,7 +32,7 @@ const handler = async (m, _2, msg, pickRandom, isOwner ) => {
     m.exp = old;
   }
 };
-handler.help = ['~~> ', '~~~> '];
+handler.help = ['<< ', '<= '];
 handler.tags = ['advanced'];
 handler.customPrefix = /=?>|~/;
 handler.command = /(?:)/i;
