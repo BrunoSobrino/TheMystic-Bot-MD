@@ -25,7 +25,7 @@ global.reglas = `╰Futabu Club╯
 ➥ Se prohíben los insultos y el humor inapropiado hacia personas no receptivas.
 
 ❖ No Uso de Comandos RPG
-➥ Solo se permiten ciertos comandos en el grupo, el resto solo en privado.
+➥ Solo se permiten ciertos comandos en el grupo, el resto solo en privado o en el grupo de Futabu Casino.
 
 ❖ No Spam
 ➥ No se puede enviar muy seguido enlaces, stickers o promociones sin permiso de un administrador.
@@ -37,7 +37,7 @@ global.reglas = `╰Futabu Club╯
 ➥ No se permite acosar a miembros o administradores en privado.
 
 ❖ No Mandar Packs
-➥ No se permiten mandar packs de alguien, sean tetas o pene, mucho menos el trasero, los unicos permitidos de esto son los trans y femboy's, estos deben ser mayores de edad (+18), esto es testeo temporal.
+➥ No se permiten mandar packs de alguien/o tuyos, sean tetas/pene/trasero.
 
 ❖ Uso de comandos +18 del Bot
 ➥ Se permiten ciertos comandos con límites de uso específicos.
