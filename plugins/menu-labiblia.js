@@ -34,7 +34,7 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `${tradutor.texto1[0]} 
 ┏━━━━━━━━━━━━━━━━┓
 ┃ ${tradutor.texto1[2]}
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
-┣ ඬ⃟ 🔞 _${usedPrefix}pack_
+┣ ඬ⃟ 🔞 _${usedPrefix}hot_
 ┣ ඬ⃟ 🔞 _${usedPrefix}pack2_
 ┣ ඬ⃟ 🔞 _${usedPrefix}pack3_
 ┣ ඬ⃟ 🔞 _${usedPrefix}videoxxx_
