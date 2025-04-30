@@ -12,5 +12,5 @@ handler.group = true;
 export default handler
 
 global.futanarimp4 = [
-  "https://us-cdn01-prem.boomio-cdn.com/remote_control.php?time=1746006751&cv=9f2505ceb5c534f1087cedc43bc11a0a&lr=3184875&cv2=a5ce78ad148afe2c2da6ab2873bc32d2&file=%2Fvideos%2F3778000%2F3778613%2F3778613_720p.mp4&cv3=7b148ffed7e5ddccd7d2456825ccfe56&cv4=7bd1dbd2ce85337e139422da502bcc5a"
+  "https://us-cdn12-prem.boomio-cdn.com/remote_control.php?time=1746007599&cv=d98c61b64661042dc5e0ae041ad09f23&lr=1074750&cv2=2ad6b4fd496b354b4376ff816fd21aef&file=%2Fvideos%2F3815000%2F3815381%2F3815381_720p.mp4&cv3=7b148ffed7e5ddccd7d2456825ccfe56&cv4=0966fcd00e27281034111c2db87b53df"
   ]
