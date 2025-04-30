@@ -26,5 +26,6 @@ global.futanarimp4 = [
   "https://api-cdn-us-mp4.rule34.xxx//images/2224/53f4357e73034d6ae86646c293e9eb08.mp4?13271184",
   "https://api-cdn-us-mp4.rule34.xxx//images/1712/bc51e7f169e9ef7bd842652bbfbcf112.mp4?13267867",
   "https://api-cdn-us-mp4.rule34.xxx//images/1712/9139abe3be818d95753210c088c4e45c.mp4?13269188",
-  "https://api-cdn-us-mp4.rule34.xxx//images/1712/ffdea33d855aed84fa4506acf2672116.mp4?13267494"
+  "https://api-cdn-us-mp4.rule34.xxx//images/1712/ffdea33d855aed84fa4506acf2672116.mp4?13267494",
+  "https://us-cdn01-prem.boomio-cdn.com/remote_control.php?time=1746006751&cv=9f2505ceb5c534f1087cedc43bc11a0a&lr=3184875&cv2=a5ce78ad148afe2c2da6ab2873bc32d2&file=%2Fvideos%2F3778000%2F3778613%2F3778613_720p.mp4&cv3=7b148ffed7e5ddccd7d2456825ccfe56&cv4=7bd1dbd2ce85337e139422da502bcc5a"
   ]
