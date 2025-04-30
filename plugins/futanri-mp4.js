@@ -11,7 +11,7 @@ handler.command = /^(futanari)$/i //futa|futasolo|futanarisolo
 handler.group = true;
 export default handler
 
-global.futanari = [
+global.futanarimp4 = [
   "https://ahri2mp4.rule34.xxx//images/1723/af1aad8933411817279b394f83fe7d5a.mp4?13309285"
   "https://api-cdn-us-mp4.rule34.xxx//images/1723/9d946dfb74b020652d433431e197e081.mp4?13309281",
   "https://ahri2mp4.rule34.xxx//images/1723/615dfbf9897d1dbdee5b5a01c25aabb4.mp4?13308215",
