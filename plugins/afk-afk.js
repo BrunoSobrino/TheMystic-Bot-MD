@@ -1,6 +1,3 @@
-
-
-
 const handler = async (m, {text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
