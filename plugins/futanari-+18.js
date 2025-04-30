@@ -5,7 +5,7 @@ let url = futasolo[Math.floor(Math.random() * futasolo.length)]
 conn.sendFile(m.chat, 
 url, null, `*_ACA TIENES UNA RICA FUTANARI SOLA 🔥_*`, m)
 }
-handler.help = ['futasolo]
+handler.help = ['futasolo']
 handler.tags = ['nsfw']
 handler.command = /^(futasolo|futanarisolo)$/i
 handler.group = true;
