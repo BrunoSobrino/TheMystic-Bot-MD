@@ -26,6 +26,5 @@ global.futanarimp4 = [
   "https://api-cdn-us-mp4.rule34.xxx//images/2224/53f4357e73034d6ae86646c293e9eb08.mp4?13271184",
   "https://api-cdn-us-mp4.rule34.xxx//images/1712/bc51e7f169e9ef7bd842652bbfbcf112.mp4?13267867",
   "https://api-cdn-us-mp4.rule34.xxx//images/1712/9139abe3be818d95753210c088c4e45c.mp4?13269188",
-  "https://api-cdn-us-mp4.rule34.xxx//images/1712/ffdea33d855aed84fa4506acf2672116.mp4?13267494",
-  "https://api-cdn-us-mp4.rule34.xxx//images/1712/1e25b670ff687f56fdf731805a7dbd26.mp4?13267294"
+  "https://api-cdn-us-mp4.rule34.xxx//images/1712/ffdea33d855aed84fa4506acf2672116.mp4?13267494"
   ]
