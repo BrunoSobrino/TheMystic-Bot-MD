@@ -14,13 +14,8 @@ const handler = async (m, { conn, text, command, usedPrefix }) => {
     who = m.chat;
   }
 
-  const dReason = 'Sin motivo';
-  const msgtext = text || dReason;
-  const sdms = msgtext.replace(/@\d+-?\d* /g, '');
-
   const warntext = `*[❗] 𝙴𝚃𝙸𝚀𝚄𝙴𝚃𝙴 𝙰 𝚄𝙽𝙰 𝙿𝙴𝚁𝚂𝙾𝙽𝙰 𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙰 𝙰 𝚄𝙽 𝙼𝙴𝙽𝚂𝙰𝙹𝙴 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾 𝙿𝙰𝚁𝙰 𝙱𝙰𝙽𝙴𝙰𝚁 𝙰𝙻 𝚄𝚂𝚄𝙰𝚁𝙸𝙾*\n\n*—◉ 𝙴𝙹𝙴𝙼𝙿𝙻𝙾:*\n*${usedPrefix + command} @${global.suittag}*`;
 
-  // Validación básica de who
   if (!who || typeof who !== 'string' || !who.includes('@s.whatsapp.net')) {
     throw m.reply(warntext, m.chat, { mentions: conn.parseMention(warntext) });
   }
@@ -36,6 +31,11 @@ const handler = async (m, { conn, text, command, usedPrefix }) => {
     global.db.data.settings[conn.user.jid] = { restrict: false };
   }
   const bot = global.db.data.settings[conn.user.jid];
+
+  // Obtener motivo (si está vacío, usar "Sin motivo")
+  let msgtext = text || '';
+  let sdms = msgtext.replace(/@\d+-?\d* /g, '').trim();
+  if (!sdms) sdms = 'Sin motivo';
 
   // Aumentar advertencia
   user.warn += 1;
