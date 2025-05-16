@@ -22,5 +22,6 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ✦ Gore
 ✦ Vore
 ✦ CP (Child Porn)
+✦ Toddler (Relación con bebés)
 
 ⭐| Recuerda que la temática tiene que ser más de Futanari.`
