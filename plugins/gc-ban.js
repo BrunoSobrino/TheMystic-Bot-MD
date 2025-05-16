@@ -9,7 +9,7 @@ const handler = async (m, { conn, text, command, usedPrefix }) => {
       ? m.mentionedJid[0]
       : m.quoted
       ? m.quoted.sender
-      : text;
+      : null;
   } else {
     who = m.chat;
   }
@@ -32,26 +32,28 @@ const handler = async (m, { conn, text, command, usedPrefix }) => {
   }
   const bot = global.db.data.settings[conn.user.jid];
 
-  // Obtener motivo (si está vacío, usar "Sin motivo")
+  // Extraer motivo (eliminar menciones)
   let msgtext = text || '';
-  let sdms = msgtext.replace(/@\d+-?\d* /g, '').trim();
+  let mentioned = conn.parseMention(msgtext);
+  let sdms = msgtext;
+  for (let tag of mentioned) {
+    sdms = sdms.replace('@' + tag.split('@')[0], '').trim();
+  }
   if (!sdms) sdms = 'Sin motivo';
 
   // Aumentar advertencia
   user.warn += 1;
 
   await m.reply(
-    `${
-      user.warn == 1 ? `*@${who.split`@`[0]}*` : `*@${who.split`@`[0]}*`
-    } 𝚂𝙴𝚁𝙰𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾 𝙳𝙴 𝙴𝚂𝚃𝙴 𝙶𝚁𝚄𝙿𝙾!\nMotivo: ${sdms}`,
+    `*@${who.split`@`[0]}* 𝚂𝙴𝚁𝙰𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾 𝙳𝙴 𝙴𝚂𝚃𝙴 𝙶𝚁𝚄𝙿𝙾!\nMotivo: ${sdms}`,
     null,
-    { mentions: [who] },
+    { mentions: [who] }
   );
 
   if (user.warn >= 1) {
     if (!bot.restrict) {
       return m.reply(
-        '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙿𝚁𝙾𝙿𝙸𝙴𝚃𝙰𝙳𝙾 𝙳𝙴𝙻 𝙱𝙾𝚃 𝙽𝙾 𝚃𝙸𝙴𝙽𝙴 𝙷𝙰𝙱𝙸𝙻𝙸𝚃𝙰𝙳𝙾 𝙻𝙰𝚂 𝚁𝙴𝚂𝚃𝚁𝙸𝙲𝙲𝙸𝙾𝙽𝙴𝚂 (#𝚎𝚗𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝) 𝙲𝙾𝙽𝚃𝙰𝙲𝚃𝙴 𝙲𝙾𝙽 𝙴𝙻 𝙿𝙰𝚁𝙰 𝚀𝚄𝙴 𝙻𝙾 𝙷𝙰𝙱𝙸𝙻𝙸𝚃𝙴*',
+        '*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙻 𝙿𝚁𝙾𝙿𝙸𝙴𝚃𝙰𝙳𝙾 𝙳𝙴𝙻 𝙱𝙾𝚃 𝙽𝙾 𝚃𝙸𝙴𝙽𝙴 𝙷𝙰𝙱𝙸𝙻𝙸𝚃𝙰𝙳𝙾 𝙻𝙰𝚂 𝚁𝙴𝚂𝚃𝚁𝙸𝙲𝙲𝙸𝙾𝙽𝙴𝚂 (#enable restrict) 𝙲𝙾𝙽𝚃𝙰𝙲𝚃𝙴 𝙲𝙾𝙽 𝙴𝙻 𝙿𝙰𝚁𝙰 𝚀𝚄𝙴 𝙻𝙾 𝙷𝙰𝙱𝙸𝙻𝙸𝚃𝙴*'
       );
     }
 
