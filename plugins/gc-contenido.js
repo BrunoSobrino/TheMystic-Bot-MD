@@ -9,19 +9,19 @@ export default handler
 global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ★ Futanari
 ★ Trapos/Femboy's
-★ Hentai/Furry
+★ H3nt4i/Furry
 ★ Transexual
-★ Porno normal
-★ Lolis (solo estilo de dibujo/animado)
+★ Prn0 normal
+★ Llis (solo estilo de dibujo/animado)
 
 *_❌|CONTENIDO PROHIBIDO_*
-✦ Earfuck
-✦ Scat
-✦ Necrofilia 
-✦ Zoofilia
-✦ Gore
-✦ Vore
-✦ CP (Child Porn)
-✦ Toddler (Relación con bebés)
+✦ Earfck
+✦ Sct
+✦ Ncrofilia 
+✦ Zfilia
+✦ Gre
+✦ Vre
+✦ P (Chd Pn)
+✦ Tler (Relación con bebés)
 
 ⭐| Recuerda que la temática tiene que ser más de Futanari.`
