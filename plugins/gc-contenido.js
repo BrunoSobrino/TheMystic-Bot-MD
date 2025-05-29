@@ -7,21 +7,9 @@ handler.group = true;
 export default handler
 
 global.contenido = `*_✅|CONTENIDO PERMITIDO_*
-★ Futanari
-★ Trapos/Femboy's
-★ H3nt4i/Furry
-★ Transexual
-★ Prn0 normal
-★ Llis (solo estilo de dibujo/animado)
+★ F
 
 *_❌|CONTENIDO PROHIBIDO_*
-✦ Earfck
-✦ Sct
-✦ Ncrofilia 
-✦ Zfilia
-✦ Gre
-✦ Vre
-✦ P (Chd Pn)
-✦ Tler (Relación con bebés)
+✦ 
 
-⭐| Recuerda que la temática tiene que ser más de Futanari.`
+⭐| Recuerda que la temática tiene que ser más de.`
