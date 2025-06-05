@@ -711,8 +711,6 @@ export async function handler(chatUpdate) {
 
     m.exp += Math.ceil(Math.random() * 10);
 
-    if ((m.id.startsWith('NJX-') || (m.id.startsWith('BAE5') && m.id.length === 16) || (m.id.startsWith('B24E') && m.id.length === 20))) return
-
     let usedPrefix;
     const _user = global.db.data && global.db.data.users && global.db.data.users[m.sender];
 
