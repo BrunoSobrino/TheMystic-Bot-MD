@@ -5,13 +5,11 @@ import { setupMaster, fork } from 'cluster';
 import cfonts from 'cfonts';
 import readline from 'readline';
 import yargs from 'yargs';
-import chalk from 'chalk';
-import fs from 'fs';
+import chalk from 'chalk'; 
+import fs from 'fs'; 
 import './config.js'; //max update 2025
-import pkg from 'google-libphonenumber';
-const { PhoneNumberUtil } = pkg;
-const phoneUtil = PhoneNumberUtil.getInstance();
 
+// const { PHONENUMBER_MCC } = await import('baileys');
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
 const { say } = cfonts;
@@ -22,7 +20,7 @@ const question = (texto) => new Promise((resolver) => rl.question(texto, resolve
 
 console.log(chalk.yellow.bold('—◉ㅤIniciando sistema...'));
 
-function verificarOCrearCarpetaAuth() {
+/*function verificarOCrearCarpetaAuth() {
   const authPath = join(__dirname, global.authFile);
   if (!fs.existsSync(authPath)) {
     fs.mkdirSync(authPath, { recursive: true });
@@ -36,30 +34,22 @@ function verificarCredsJson() {
 
 function formatearNumeroTelefono(numero) {
   let formattedNumber = numero.replace(/[^\d+]/g, '');
-  if (!formattedNumber.startsWith('+')) {
+  if (formattedNumber.startsWith('+52') && !formattedNumber.startsWith('+521')) {
+    formattedNumber = formattedNumber.replace('+52', '+521');
+  } else if (formattedNumber.startsWith('52') && !formattedNumber.startsWith('521')) {
+    formattedNumber = `+521${formattedNumber.slice(2)}`;
+  } else if (formattedNumber.startsWith('52') && formattedNumber.length >= 12) {
+    formattedNumber = `+${formattedNumber}`;
+  } else if (!formattedNumber.startsWith('+')) {
     formattedNumber = `+${formattedNumber}`;
   }
   return formattedNumber;
 }
 
-async function isValidPhoneNumber(number) {
-try {
-number = number.replace(/\s+/g, '')
-if (number.startsWith('+521')) {
-number = number.replace('+521', '+52');
-} else if (number.startsWith('+52') && number[4] === '1') {
-number = number.replace('+52 1', '+52');
-}
-const parsedNumber = phoneUtil.parseAndKeepRawInput(number)
-return phoneUtil.isValidNumber(parsedNumber)
-} catch (error) {
-return false
-}}
-
-async function isValidPhoneNumber(numeroTelefono) {
-  // Implement your phone number validation logic here
-  return numeroTelefono.length >= 15; // Example: Validating that the number has at least 15 digits
-}
+function esNumeroValido(numeroTelefono) {
+  const numeroSinSigno = numeroTelefono.replace('+', '');
+  return Object.keys(PHONENUMBER_MCC).some(codigo => numeroSinSigno.startsWith(codigo));
+}*/
 
 async function start(file) {
   if (isRunning) return;
@@ -77,43 +67,33 @@ async function start(file) {
     gradient: ['red', 'magenta'],
   });
 
-  verificarOCrearCarpetaAuth();
+  /*verificarOCrearCarpetaAuth();
 
-  if (!fs.existsSync(`./MysticSession/creds.json`)) {
-    const args = process.argv.slice(2);
-    let opcion;
-    let phoneNumber = '';
-
-    if (args.includes('methodCode')) {
-      opcion = '2';
-    } else {
-      opcion = await question(chalk.yellowBright.bold('—◉ㅤSeleccione una opción (solo el número):\n') + chalk.white.bold('1. Con código QR\n2. Con código de texto de 8 dígitos\n—> '));
-    }
-
-    if (opcion === '2') {
-      if (!conn.authState.creds.registered) {
-        let addNumber;
-        if (!!phoneNumber) {
-          addNumber = phoneNumber.replace(/[^0-9]/g, '');
-        } else {
-          do {
-            phoneNumber = await question(chalk.bgBlack(chalk.bold.greenBright(`[ ❗ ] Por favor, Ingrese el número de WhatsApp.\n${chalk.bold.yellowBright(`Ejemplo: 5289×××××××`)}\n${chalk.bold.magentaBright('---> ')}`)));
-            phoneNumber = formatearNumeroTelefono(phoneNumber);
-          } while (!await isValidPhoneNumber(phoneNumber));
-          rl.close();
-          addNumber = phoneNumber.replace(/\D/g, '');
-        }
-
-        setTimeout(async () => {
-          let codeBot = await conn.requestPairingCode(addNumber);
-          codeBot = codeBot?.match(/.{1,4}/g)?.join("-") || codeBot;
-          console.log(chalk.bold.white(chalk.bgMagenta(`[ ℹ️ ] Código de vinculación: `)), chalk.bold.white(chalk.white(codeBot)));
-        }, 3000);
-      }
-    }
-
-    process.argv.push(opcion === '1' ? 'qr' : 'code', phoneNumber);
+  if (verificarCredsJson()) {
+    const args = [join(__dirname, file), ...process.argv.slice(2)];
+    setupMaster({ exec: args[0], args: args.slice(1) });
+    const p = fork();
+    return;
   }
+
+  const opcion = await question(chalk.yellowBright.bold('—◉ㅤSeleccione una opción (solo el numero):\n') + chalk.white.bold('1. Con código QR\n2. Con código de texto de 8 dígitos\n—> '));
+
+  let numeroTelefono = '';
+  if (opcion === '2') {
+    const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤEscriba su número de WhatsApp:\n') + chalk.white.bold('◉ㅤEjemplo: +5219992095479\n—> '));
+    numeroTelefono = formatearNumeroTelefono(phoneNumber);
+    if (!esNumeroValido(numeroTelefono)) {
+      console.log(chalk.bgRed(chalk.white.bold('[ ERROR ] Número inválido. Asegúrese de haber escrito su numero en formato internacional y haber comenzado con el código de país.\n—◉ㅤEjemplo:\n◉ +5219992095479\n')));
+      process.exit(0);
+    }
+    process.argv.push(numeroTelefono);
+  }
+
+  if (opcion === '1') {
+    process.argv.push('qr');
+  } else if (opcion === '2') {
+    process.argv.push('code');
+  }*/
 
   const args = [join(__dirname, file), ...process.argv.slice(2)];
   setupMaster({ exec: args[0], args: args.slice(1) });
