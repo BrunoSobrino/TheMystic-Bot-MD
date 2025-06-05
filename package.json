@@ -76,6 +76,7 @@
     "node-id3": "^0.2.6",
     "node-shazam": "*",
     "node-webpmux": "^3.1.1",
+    "node-cache": "^5.1.2",
     "openai": "^3.3.0",
     "pdfkit": "^0.13.0",
     "perf_hooks": "^0.0.1",
