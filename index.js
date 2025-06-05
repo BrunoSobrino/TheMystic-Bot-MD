@@ -101,7 +101,7 @@ async function start(file) {
   const p = fork();
 
   p.on('message', (data) => {
-    console.log(chalk.green.bold('—◉ㅤRECIBIDO:'), data);
+  //  console.log(chalk.green.bold('—◉ㅤRECIBIDO:'), data);
     switch (data) {
       case 'reset':
         p.process.kill();
