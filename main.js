@@ -1,4 +1,3 @@
-"use strict";
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1'; 
 import './config.js';
 import './api.js';
@@ -107,7 +106,7 @@ loadChatgptDB();
 
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
 
-const {version} = await fetchLatestBaileysVersion();
+const { version } = await fetchLatestBaileysVersion();
 let phoneNumber = global.botnumber || process.argv.find(arg => /^\+\d+$/.test(arg));
 
 const methodCodeQR = process.argv.includes("qr")
@@ -166,7 +165,7 @@ msgRetryCounterCache: msgRetryCounterCache || new Map(),
 userDevicesCache: userDevicesCache || new Map(),
 //msgRetryCounterMap,
 defaultQueryTimeoutMs: undefined,
-cachedGroupMetadata: (jid) => globalThis.conn.chats[jid] ?? {},
+cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
 version: version, 
 keepAliveIntervalMs: 55000, 
 maxIdleTimeMs: 60000, 
