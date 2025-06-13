@@ -405,15 +405,15 @@
                 "▢ *Note:* This command can only be used by the bot owner(s)."
             ],
             "texto24": [
-                "▢ *Option:* 🤖",
-                "▢ *Command:*",
-                "▢ *Description:* 'Artificial Intelligence' mode with ChatGPT is activated in all private chats.",
-                "▢ *Note:* This command can only be used by the bot owner(s)."
-            ],
-            "texto25": [
                 "▢ *Option:* ⏳",
                 "▢ *Command:*",
                 "▢ *Description:* The Bot detects when a user spams commands and bans them for 5 seconds and warns them.",
+                "▢ *Note:* This command can only be used by the bot owner(s)."
+            ],
+            "texto25": [
+                "▢ *Option:* 🤖",
+                "▢ *Command:*",
+                "▢ *Description:* Activates or deactivates the command usage for sub-bots.",
                 "▢ *Note:* This command can only be used by the bot owner(s)."
             ],
             "texto26": [
