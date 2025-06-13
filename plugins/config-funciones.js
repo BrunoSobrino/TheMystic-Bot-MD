@@ -6,7 +6,7 @@ const tradutor = _translate.plugins.config_funciones
 
 const optionsFull = `_*${tradutor.texto1[0]}*_\n 
 
-${tradutor.texto1[1]}  | WELCOME"
+${tradutor.texto1[1]}  | WELCOME
 ${tradutor.texto1[2]} ${usedPrefix + command} welcome
 ${tradutor.texto1[3]}
 
