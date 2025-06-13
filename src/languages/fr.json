@@ -400,15 +400,15 @@
                 "▢ *Note :* Cette commande ne peut être utilisée que par le(s) propriétaire(s) du bot."
             ],
             "texto24": [
-                "▢ *Option :* 🤖",
-                "▢ *Commande :*",
-                "▢ *Description :* Le mode 'Intelligence Artificielle' avec ChatGPT est activé dans tous les chats privés.",
-                "▢ *Note :* Cette commande ne peut être utilisée que par le(s) propriétaire(s) du bot."
-            ],
-            "texto25": [
                 "▢ *Option :* ⏳",
                 "▢ *Commande :*",
                 "▢ *Description :* Le Bot détecte quand un utilisateur spamme une commande et le bannit pendant 5 secondes en le prévenant.",
+                "▢ *Note :* Cette commande ne peut être utilisée que par le(s) propriétaire(s) du bot."
+            ],
+            "texto25": [
+                "▢ *Option :* 🤖",
+                "▢ *Commande :*",
+                "▢ *Description :* Active ou désactive l'utilisation de la commande pour les sous-bots.",
                 "▢ *Note :* Cette commande ne peut être utilisée que par le(s) propriétaire(s) du bot."
             ],
             "texto26": [
