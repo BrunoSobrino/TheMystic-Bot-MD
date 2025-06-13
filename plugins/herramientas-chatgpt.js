@@ -12,7 +12,7 @@
 /* [❗]                      [❗]                      [❗] */
 /* -------------------------------------------------------*/
 
-import axios from 'axios';
+import tools from '@takanashi-soft/tools';
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
 const datas = global
@@ -23,11 +23,10 @@ const tradutor = _translate.plugins.herramientas_chatgpt
 if (usedPrefix == 'a' || usedPrefix == 'A') return;
 if (!text) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]} ${usedPrefix + command} ${tradutor.texto1[2]}`;
 try {
-conn.sendPresenceUpdate('composing', m.chat);
 const prompt = tradutor.texto3;
-const chatgpt = await axios.get(`https://skynex.boxmine.xyz/docs/ai/myprompt?text=${text}&prompt=${prompt}&apikey=BrunoSobrino`);
-const data = chatgpt.data;
-m.reply(`${data.answer}`.trim());
+const chatgpt = await tools.ai.mylogic(text, prompt);
+const data = chatgpt.answer;
+m.reply(`${data}`.trim());
 } catch (error) {
 throw tradutor.texto4;
 }};
