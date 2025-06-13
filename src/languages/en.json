@@ -417,18 +417,12 @@
                 "▢ *Note:* This command can only be used by the bot owner(s)."
             ],
             "texto26": [
-                "▢ *Option:* 🤖",
-                "▢ *Command:*",
-                "▢ *Description:* Activates or deactivates the command usage for sub-bots.",
-                "▢ *Note:* This command can only be used by the bot owner(s)."
-            ],
-            "texto27": [
                 "▢ *Option:* 💬",
                 "▢ *Command:*",
                 "▢ *Description:* The Bot will block people who write in the Bot's private chat.",
                 "▢ *Note:* This command can only be used by the bot owner(s)."
             ],
-            "texto28": [
+            "texto27": [
                 "< BOT FUNCTIONS />",
                 "[ ℹ️ ] The option",
                 "has been successfully applied to this"
@@ -2403,10 +2397,6 @@
             "texto2": "Hey! You are cheating",
             "texto3": "*[❗𝐈𝐍𝐅𝐎❗] Unsupported format, only numbers and the following symbols are accepted: +, -, *, /, ×, ÷, π, e, (, )*"
         },
-        "herramientas_chatgpt_del": {
-            "texto1": "*[❗] You are excluded from incoming message and conversation (AI) history*\n\n*—◉ Remember that you can use the /tengain command in the channel to be able to use the command*",
-            "texto2": "*[❗] Error, please try again*"
-        },
         "herramientas_chatgpt": {
             "texto1": [
                 "*[❗] You are in a conversation or order to use the chatbot function*\n\n*—◉ Examples of Petitions and Orders*\n*◉ Reflection on the Netflix series Merlin 2022*\n*◉ JS code for a card game*"
@@ -2414,13 +2404,6 @@
             "texto2": "You will act as a WhatsApp Bot created by BrunoSobrino, you will be The Mystic - Bot.",
             "texto3": "You will act as a WhatsApp Bot created by BrunoSobrino, you will be The Mystic - Bot.",
             "texto4": "*[❗] Error, please try again*"
-        },
-        "herramientas_chatgptvoz": {
-            "texto1": [
-                "*[❗] You are in a conversation or order to use the chatbot function*\n\n*—◉ Examples of Petitions and Orders*\n*◉ Reflection on the Netflix series Merlin 2022*\n*◉ JS code for a card game*"
-            ],
-            "texto2": "You will act as a WhatsApp Bot created by BrunoSobrino, you will be The Mystic - Bot.",
-            "texto3": "*[❗] Error, please try again*"
         },
         "herramientas_clima": {
             "texto1": "*[❗] Enter the name of your country or city*",
@@ -2435,21 +2418,6 @@
                 "「 🌬️ 」 Wind:"
             ],
             "texto3": "*[❗] No corresponding results found, please check if you entered your country or city correctly*"
-        },
-        "herramientas_dalle": {
-            "texto1": [
-                "*[❗] Enter a text to create an image and use it to have fun and use it for a Dall-E function.*\n\n*—◉ Examples of Petitions*\n*◉",
-                "crying kittens*\n*◉",
-                "Hatsune Miku's kiss*"
-            ],
-            "texto2": "*[❗] Creating image, please wait.*",
-            "texto3": [
-                "'[❗] Error in DALL-E API number 1.'",
-                "[❗] Error in DALL-E API number 2.",
-                "[❗] Error in DALL-E API number 3.",
-                "[❗] Error, no functional API.",
-                "*[❗] Error, no result obtained.*"
-            ]
         },
         "herramientas_dropmail": {
             "texto1": [
