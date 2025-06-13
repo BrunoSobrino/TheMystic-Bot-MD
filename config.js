@@ -11,7 +11,7 @@ global.authFile = `MysticSession`;
 // Cambiar a true si el Bot responde a sus comandos con otros comandos.
 // Cambiar a false para usar el Bot desde el mismo numero del Bot.
 // Error de m.isBaileys marcado como false fix temporal
-global.isBaileysFail = false
+global.isBaileysFail = true
 
 global.defaultLenguaje = 'es';
 
@@ -58,9 +58,8 @@ global.owner = [
 global.suittag = ['5219993404349'];
 global.prems = ['51995386439'];
 
-// API (INTERFAZ DE PROGRAMACIÓN DE APLICACIONES)
+// Base Rest Api
 global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
-global.BASE_API_SKYNEX = "https://skynex.boxmine.xyz";
 
 global.packname = 'Sticker';
 global.author = 'The Mystic - Bot';
