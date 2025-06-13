@@ -49,7 +49,6 @@ global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse()
 global.prefix = new RegExp('^[#!/.]')
 global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile(`${opts._[0] ? opts._[0] + '_' : ''}database.json`));
 
-
 global.loadDatabase = async function loadDatabase() {
   if (global.db.READ) {
     return new Promise((resolve) => setInterval(async function() {
@@ -76,33 +75,7 @@ global.loadDatabase = async function loadDatabase() {
 };
 loadDatabase();
 
-/* Creditos a Otosaka (https://wa.me/51993966345) */
-
-global.chatgpt = new Low(new JSONFile(path.join(__dirname, '/db/chatgpt.json')));
-global.loadChatgptDB = async function loadChatgptDB() {
-  if (global.chatgpt.READ) {
-    return new Promise((resolve) =>
-      setInterval(async function() {
-        if (!global.chatgpt.READ) {
-          clearInterval(this);
-          resolve( global.chatgpt.data === null ? global.loadChatgptDB() : global.chatgpt.data );
-        }
-      }, 1 * 1000));
-  }
-  if (global.chatgpt.data !== null) return;
-  global.chatgpt.READ = true;
-  await global.chatgpt.read().catch(console.error);
-  global.chatgpt.READ = null;
-  global.chatgpt.data = {
-    users: {},
-    ...(global.chatgpt.data || {}),
-  };
-  global.chatgpt.chain = lodash.chain(global.chatgpt.data);
-};
-loadChatgptDB();
-
 /* ------------------------------------------------*/
-
 
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
 
@@ -137,9 +110,9 @@ const filterStrings = [
 "RGVjcnlwdGVkIG1lc3NhZ2U=" // "Decrypted message" 
 ]
 
-    console.info = () => { }
-    console.debug = () => { }
-    ['log', 'warn', 'error'].forEach(methodName => redefineConsoleMethod(methodName, filterStrings))
+console.info = () => { }
+console.debug = () => { }
+['log', 'warn', 'error'].forEach(methodName => redefineConsoleMethod(methodName, filterStrings))
 
 const connectionOptions = {
 logger: pino({ level: 'silent' }),
@@ -163,7 +136,6 @@ return "";
 }},
 msgRetryCounterCache: msgRetryCounterCache || new Map(),
 userDevicesCache: userDevicesCache || new Map(),
-//msgRetryCounterMap,
 defaultQueryTimeoutMs: undefined,
 cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
 version: [2, 3000, 1023223821],
