@@ -36,10 +36,7 @@ export async function handler(chatUpdate) {
     return;
   }
   if (global.db.data == null) await global.loadDatabase();
-  /* Creditos a Otosaka (https://wa.me/51993966345) */
-
-  if (global.chatgpt.data === null) await global.loadChatgptDB();
-
+  
   /* ------------------------------------------------*/
   try {
     m = smsg(this, m) || m;
@@ -53,15 +50,7 @@ export async function handler(chatUpdate) {
     m.limit = false;
     try {
       // TODO: use loop to insert data instead of this
-      const user = global.db.data.users[m.sender];
-      /* Creditos a Otosaka (https://wa.me/51993966345) */
-
-      const chatgptUser = global.chatgpt.data.users[m.sender];
-      if (typeof chatgptUser !== 'object') {
-        global.chatgpt.data.users[m.sender] = [];
-      }
-
-      /* ------------------------------------------------*/
+      const user = global.db.data.users[m.sender]
       if (typeof user !== 'object') {
         global.db.data.users[m.sender] = {};
       }
