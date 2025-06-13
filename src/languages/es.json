@@ -406,15 +406,15 @@
                 "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
             ],
             "texto24": [
-                "▢ *Opción:* 🤖",
-                "▢ *Comando:*",
-                "▢ *Descripción:* Se activa el modo 'Inteligencia Artificial' con ChatGPT en todos los chats privados.",
-                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
-            ],
-            "texto25": [
                 "▢ *Opción:* ⏳",
                 "▢ *Comando:*",
                 "▢ *Descripción:* El Bot detecta cuando un usuario hace spam de comando y lo banea por 5 segundos y lo advierte.",
+                "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
+            ],
+            "texto25": [
+                "▢ *Opción:* 🤖",
+                "▢ *Comando:*",
+                "▢ *Descripción:* Activa o desactiva el uso del comando para sub bots (.serbot / .jadibot).",
                 "▢ *Nota:* Este comando solo puede ser usado por el/los propietario(s) del bot."
             ],
             "texto26": [
