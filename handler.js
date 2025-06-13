@@ -1077,10 +1077,10 @@ export async function participantsUpdate({ id, participants, action }) {
       if (chat.welcome && !chat?.isBanned) {
         const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
         for (const user of participants) {
-          let pp = 'https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/avatar_contact.png';
           try {
-            pp = await m?.conn?.profilePictureUrl(user, 'image');
+          let pp = await m?.conn?.profilePictureUrl(m.sender, 'image').catch(_ => 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60');
           } catch (e) {
+          console.log(e);
           } finally {
             const apii = await mconn?.conn?.getFile(pp);
             const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
