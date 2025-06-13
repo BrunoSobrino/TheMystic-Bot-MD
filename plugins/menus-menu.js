@@ -337,8 +337,7 @@ ${tradutor.texto1[25]}
 ╭───── • ◆ • ─────╮
 ├✰ _${usedPrefix}inspect *<wagc_url>*_
 ├✰ _${usedPrefix}chatgpt *<txt>*_
-├✰ _${usedPrefix}delchatgpt_
-├✰ _${usedPrefix}gptvoz *<txt>*_
+├✰ _${usedPrefix}exploit *<txt>*_
 ├✰ _${usedPrefix}dall-e *<txt>*_
 ├✰ _${usedPrefix}spamwa *num|txt|cant>*_
 ├✰ _${usedPrefix}tamaño *<cant> <img / video>*_
