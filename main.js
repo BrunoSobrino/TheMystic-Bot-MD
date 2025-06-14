@@ -15,7 +15,8 @@ import {format} from 'util';
 import pino from 'pino';
 import Pino from 'pino';
 import {Boom} from '@hapi/boom';
-import {makeWASocket, protoType, serialize} from './src/libraries/simple.js';
+import {makeWASocket, protoType, serialize} from './src/libraries/subBotManager.js';
+import {initializeSubBots } from './src/libraries/simple.js';
 import {Low, JSONFile} from 'lowdb';
 import store from './src/libraries/store.js';
 import pkg from 'google-libphonenumber';
@@ -310,6 +311,7 @@ if (opcion == '1' || methodCodeQR) {
     console.log(chalk.yellow('[ ℹ️ ] Escanea el código QR.'));
  }}
   if (connection == 'open') {
+    await initializeSubBots();
     console.log(chalk.yellow('[ ℹ️ ] Conectado correctamente.'));
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
