@@ -32,7 +32,7 @@ const handler = async (m, {conn, isPrems}) => { // lastmiming
   user.lastcoins = new Date * 1;
 };
 handler.help = ['minar2'];
-handler.tags = ['gata'];
+handler.tags = ['xp'];
 handler.command = ['minar2', 'miming2', 'mine2', 'minarmysticcoins', 'minarcoins', 'minarmystic'];
 handler.fail = null;
 handler.exp = 0;
