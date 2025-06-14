@@ -625,6 +625,7 @@ export async function handler(chatUpdate) {
           game: true,
           expired: 0,
           language: 'es',
+          setPrimaryBot: '',
         }
         for (const chatss in chats) {
           if (chat[chatss] === undefined || !chat.hasOwnProperty(chatss)) {
@@ -922,6 +923,12 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         if (plugin.level > _user.level) {
           mconn.conn.reply(m.chat, `${tradutor.texto3[0]} ${plugin.level} ${tradutor.texto3[1]} ${_user.level}, ${tradutor.texto3[2]} ${usedPrefix}lvl ${tradutor.texto3[3]}`, m);
           continue;
+        }
+        const chatPrim = global.db.data.chats[id] || {};
+        if (chatPrim.setPrimaryBot) {
+          if (mconn.conn.user.jid !== chat.setPrimaryBot) {
+        return; 
+          }
         }
         const extra = {
           match,
