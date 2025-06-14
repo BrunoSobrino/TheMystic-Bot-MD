@@ -14,7 +14,7 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
 
     const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : args[0] && args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
 
-    if (command === 'setprimarybot') {
+    if (command === 'setprimary') {
         if (!who) {
             const botsInGroup = await getBotsInGroup();
             let botList = '*🤖 Bots disponibles en este grupo:*\n\n';
@@ -46,7 +46,7 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
         return conn.sendMessage(m.chat, {text: `*✅ Bot primario establecido:*\n+${who.split('@')[0]}\n\n${who === global.conn.user.jid ? '*(Bot principal recomendado)*' : '*(Sub-bot)*'}\n\nAhora solo este bot responderá en este chat.`}, {quoted: m});
     }
 
-    if (command === 'unsetprimarybot') {        
+    if (command === 'delprimary') {        
         if (!chat.setPrimaryBot) return conn.sendMessage(m.chat, {text: '*[❗] No hay un bot primario establecido en este chat.*'}, {quoted: m});
         
         delete chat.setPrimaryBot;
@@ -54,7 +54,9 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
     }
 };
 
-handler.command = /^(setprimarybot|unsetprimarybot)$/i;
+handler.help = ['setprimary', 'delsetprimary'];
+handler.tags = ['group'];
+handler.command = ['setprimary', 'delprimary'];
 handler.group = true;
 handler.admin = true;
 export default handler;
