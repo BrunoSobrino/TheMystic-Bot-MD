@@ -926,7 +926,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         }
         const chatPrim = global.db.data.chats[m.chat] || {};
         if (chatPrim.setPrimaryBot) {
-          if (mconn.conn.user.jid !== chatPrim.setPrimaryBot) {
+          if (conn.user.jid !== chatPrim.setPrimaryBot) {
         return; 
           }
         }
