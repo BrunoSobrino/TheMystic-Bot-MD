@@ -1,6 +1,5 @@
-const handler = async (m, {args, usedPrefix, command, conn}) => {
+const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
     const chat = global.db.data.chats[m.chat] || {};
-    const isAdmin = m.isGroup ? (conn.user.jid === global.conn.user.jid ? true : await conn.groupMetadata(m.chat).then(participants => participants.find(p => p.id === conn.user.jid)?.admin) : true;
 
     const getBotsInGroup = async () => {
         try {
