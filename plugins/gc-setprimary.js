@@ -33,7 +33,6 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
             return conn.sendMessage(m.chat, {text: botList}, {quoted: m});
         }
 
-        console.log(who)
         if (!who.endsWith('@s.whatsapp.net')) return conn.sendMessage(m.chat, {text: '*[❗] El formato del número es incorrecto.*'}, {quoted: m});
         const botsInGroup = await getBotsInGroup();
         if (!botsInGroup.some(bot => bot.id === who)) {
