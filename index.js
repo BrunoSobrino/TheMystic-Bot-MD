@@ -23,17 +23,17 @@ async function start(file) {
   if (isRunning) return;
   isRunning = true;
 
-  /*say('The Mystic', {
+  say('The Mystic', {
     font: 'chrome',
     align: 'center',
     gradient: ['red', 'magenta'],
-  });*/
+  });
 
-  say('The Mystic', {
+  /*say('The Mystic', {
     font: 'simple',
     align: 'left',
     gradient: ['green', 'white']
-  });
+  });*/
 
   say(`Powered By Bruno Sobrino`, {
     font: 'console',
