@@ -15,8 +15,6 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
     const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : args[0] && args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
 
     if (command === 'setprimarybot') {
-        if (!isAdmin) return conn.sendMessage(m.chat, {text: '*[❗] Solo los admins pueden establecer un bot primario en este grupo.*'}, {quoted: m});
-
         if (!who) {
             const botsInGroup = await getBotsInGroup();
             let botList = '*🤖 Bots disponibles en este grupo:*\n\n';
@@ -34,7 +32,8 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
             
             return conn.sendMessage(m.chat, {text: botList}, {quoted: m});
         }
-        
+
+        console.log(who)
         if (!who.endsWith('@s.whatsapp.net')) return conn.sendMessage(m.chat, {text: '*[❗] El formato del número es incorrecto.*'}, {quoted: m});
         const botsInGroup = await getBotsInGroup();
         if (!botsInGroup.some(bot => bot.id === who)) {
@@ -47,9 +46,7 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
         return conn.sendMessage(m.chat, {text: `*✅ Bot primario establecido:*\n+${who.split('@')[0]}\n\n${who === global.conn.user.jid ? '*(Bot principal recomendado)*' : '*(Sub-bot)*'}\n\nAhora solo este bot responderá en este chat.`}, {quoted: m});
     }
 
-    if (command === 'unsetprimarybot') {
-        if (!isAdmin) return conn.sendMessage(m.chat, {text: '*[❗] Solo los admins pueden eliminar el bot primario.*'}, {quoted: m});
-        
+    if (command === 'unsetprimarybot') {        
         if (!chat.setPrimaryBot) return conn.sendMessage(m.chat, {text: '*[❗] No hay un bot primario establecido en este chat.*'}, {quoted: m});
         
         delete chat.setPrimaryBot;
@@ -59,4 +56,5 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
 
 handler.command = /^(setprimarybot|unsetprimarybot)$/i;
 handler.group = true;
+handler.admin = true;
 export default handler;
