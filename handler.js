@@ -927,12 +927,13 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         const chatPrim = global.db.data.chats[m.chat] || {};
         const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '');
         if (chatPrim.setPrimaryBot) {
-            const primaryNumber = normalizeJid(chatPrim.setPrimaryBot);
-            const currentBotNumber = normalizeJid(conn.user.jid);
+            const primaryNumber = normalizeJid(chatPrim.setPrimaryBot) + '@s.whatsapp.net';
+            const currentBotNumber = normalizeJid(conn.user.jid) + '@s.whatsapp.net';
             console.log(chatPrim.setPrimaryBot)
             console.log(primaryNumber)
             console.log(currentBotNumber)
           if (primaryNumber && currentBotNumber !== primaryNumber) {
+            console.log(currentBotNumber !== primaryNumber)
         return; 
           }
         }
