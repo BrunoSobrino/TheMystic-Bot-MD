@@ -29,11 +29,11 @@ global.prems = ['51995386439'];
 global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
 
 global.packname = 'Sticker';
-global.author = 'The Mystic - Bot';
+global.author = 'BrunoSobrino';
 global.wm = 'The Mystic - Bot';
-global.titulowm = 'The Mystic - Bot';
-global.titulowm2 = `The Mystic - Bot`
-global.igfg = 'The Mystic - Bot';
+global.titulowm = 'Mystic Bot';
+global.titulowm2 = `Mystic Bot`
+global.igfg = 'The Mystic';
 global.wait = '*_[ ⏳ ] Cargando..._*';
 
 global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png');
