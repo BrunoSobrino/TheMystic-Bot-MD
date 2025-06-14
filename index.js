@@ -33,9 +33,9 @@ async function start(file) {
     font: 'simple',
     align: 'left',
     gradient: ['green', 'white']
-  })
+  });
 
-  say(`Creado por Bruno Sobrino`, {
+  say(`Powered By Bruno Sobrino`, {
     font: 'console',
     align: 'center',
     gradient: ['red', 'magenta'],
