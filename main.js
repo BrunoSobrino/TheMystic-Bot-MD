@@ -311,8 +311,16 @@ if (opcion == '1' || methodCodeQR) {
     console.log(chalk.yellow('[ ℹ️ ] Escanea el código QR.'));
  }}
   if (connection == 'open') {
-    await initializeSubBots();
     console.log(chalk.yellow('[ ℹ️ ] Conectado correctamente.'));
+    if (!global.subBotsInitialized) {
+      global.subBotsInitialized = true;
+      try {
+        await initializeSubBots();
+        console.log(chalk.green('[ ℹ️ ] Sub-bots inicializados correctamente.'));
+      } catch (error) {
+        console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
+      }
+    }
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
 if (reason == 405) {
