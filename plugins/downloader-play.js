@@ -1,9 +1,9 @@
 import fetch from 'node-fetch';
 import axios from 'axios';
 import yts from 'yt-search';
-import tools from "@takanashi-soft/tools"
+import tools from '@takanashi-soft/tools';
 
-let handler = async (m, { conn, args, text, usedPrefix, command }) => {    
+let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 const datas = global;
 const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
 const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
@@ -29,7 +29,7 @@ conn.sendMessage(m.chat, { audio: downloader, mimetype: "audio/mpeg" }, { quoted
 } catch (error) {
  console.log(error);
  conn.reply(m.chat, tradutor.texto6, m);
- }                
+ }
 }
 
 if (command === 'play2') {
@@ -40,6 +40,7 @@ conn.sendMessage(m.chat, { video: downloader, mimetype: "video/mp4" }, { quoted:
 } catch (error) {
  console.log(error);
  conn.reply(m.chat, tradutor.texto6, m);
+  }
  }
 };
 
