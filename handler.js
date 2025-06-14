@@ -925,8 +925,11 @@ ${tradutor.texto1[1]} ${messageNumber}/3
           continue;
         }
         const chatPrim = global.db.data.chats[m.chat] || {};
+        const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '');
         if (chatPrim.setPrimaryBot) {
-          if (conn.user.jid !== chatPrim.setPrimaryBot) {
+            const primaryNumber = normalizeJid(chatPrim.setPrimaryBot);
+            const currentBotNumber = normalizeJid(conn.user.jid);
+          if (primaryNumber && currentBotNumber !== primaryNumber) {
         return; 
           }
         }
