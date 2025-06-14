@@ -1,12 +1,8 @@
-
-
-
-
 export function before(m) {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.afk__afk
+  const tradutor = _translate.plugins.rpg__afk
 
   const user = global.db.data.users[m.sender];
   if (user.afk > -1) {
