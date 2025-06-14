@@ -928,7 +928,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '');
         if (chatPrim.setPrimaryBot) {
             const primaryNumber = normalizeJid(chatPrim.setPrimaryBot) + '@s.whatsapp.net';
-            const currentBotNumber = normalizeJid(conn.user.jid) + '@s.whatsapp.net';
+            const currentBotNumber = normalizeJid(mconn.conn.user.jid) + '@s.whatsapp.net';
             console.log(chatPrim.setPrimaryBot)
             console.log(primaryNumber)
             console.log(currentBotNumber)
