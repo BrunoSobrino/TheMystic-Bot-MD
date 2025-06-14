@@ -929,12 +929,8 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         if (chatPrim.setPrimaryBot) {
             const primaryNumber = normalizeJid(chatPrim.setPrimaryBot) + '@s.whatsapp.net';
             const currentBotNumber = normalizeJid(mconn.conn.user.jid) + '@s.whatsapp.net';
-            console.log(chatPrim.setPrimaryBot)
-            console.log(primaryNumber)
-            console.log(currentBotNumber)
           if (primaryNumber && currentBotNumber !== primaryNumber) {
-            console.log(currentBotNumber !== primaryNumber)
-        return; 
+            return; 
           }
         }
         const extra = {
