@@ -929,6 +929,9 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         if (chatPrim.setPrimaryBot) {
             const primaryNumber = normalizeJid(chatPrim.setPrimaryBot);
             const currentBotNumber = normalizeJid(conn.user.jid);
+            console.log(chatPrim.setPrimaryBot)
+            console.log(primaryNumber)
+            console.log(currentBotNumber)
           if (primaryNumber && currentBotNumber !== primaryNumber) {
         return; 
           }
