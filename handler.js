@@ -1122,6 +1122,7 @@ export async function participantsUpdate({ id, participants, action }) {
  * Handle groups update
  * @param {import("baileys").BaileysEventMap<unknown>['groups.update']} groupsUpdate
  */
+
 export async function groupsUpdate(groupsUpdate) {
   const idioma = global.db.data.chats[groupsUpdate[0].id]?.language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
@@ -1170,7 +1171,6 @@ export async function deleteUpdate(message) {
   const idioma = datas.db.data.users[id]?.language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.deleteUpdate
-
 
   let d = new Date(new Date + 3600000)
   let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })
