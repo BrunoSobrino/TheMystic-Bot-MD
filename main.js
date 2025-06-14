@@ -172,7 +172,7 @@ console.log(chalk.bold.white(chalk.bgMagenta(`[ ℹ️ ] Código de vinculación
 
 conn.isInit = false;
 conn.well = false;
-// conn.logger.info(`[ ℹ️ ] Cargando...\n`);
+conn.logger.info(`[ ℹ️ ] Cargando...\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -525,7 +525,7 @@ function clockString(ms) {
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
   return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
 }
-_quickTest().then(() => conn.logger.info(chalk.bold(` [ ℹ️ ] Cargando...\n`.trim()))).catch(console.error)
+_quickTest().catch(console.error);
 
 async function isValidPhoneNumber(number) {
 try {
