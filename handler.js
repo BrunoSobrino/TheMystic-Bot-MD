@@ -924,7 +924,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
           mconn.conn.reply(m.chat, `${tradutor.texto3[0]} ${plugin.level} ${tradutor.texto3[1]} ${_user.level}, ${tradutor.texto3[2]} ${usedPrefix}lvl ${tradutor.texto3[3]}`, m);
           continue;
         }
-        const chatPrim = global.db.data.chats[id] || {};
+        const chatPrim = global.db.data.chats[m.chat] || {};
         if (chatPrim.setPrimaryBot) {
           if (mconn.conn.user.jid !== chat.setPrimaryBot) {
         return; 
