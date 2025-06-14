@@ -25,7 +25,7 @@ if (command === 'play') {
 try {
 const audiodlp = await tools.downloader.ytmp3(yt_play[0].url);
 const downloader = audiodlp.download;
-conn.sendMessage(m.chat, { audio: downloader, mimetype: "audio/mpeg" }, { quoted: m });
+conn.sendMessage(m.chat, { audio: { url: downloader }, mimetype: "audio/mpeg" }, { quoted: m });
 } catch (error) {
  console.log(error);
  conn.reply(m.chat, tradutor.texto6, m);
@@ -36,7 +36,7 @@ if (command === 'play2') {
 try {
 const videodlp = await tools.downloader.ytmp4(yt_play[0].url);
 const downloader = videodlp.download;
-conn.sendMessage(m.chat, { video: downloader, mimetype: "video/mp4" }, { quoted: m });
+conn.sendMessage(m.chat, { video: { url: downloader }, mimetype: "video/mp4" }, { quoted: m });
 } catch (error) {
  console.log(error);
  conn.reply(m.chat, tradutor.texto6, m);
