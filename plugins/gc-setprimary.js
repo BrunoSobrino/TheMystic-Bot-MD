@@ -46,7 +46,7 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
         return conn.sendMessage(m.chat, {text: `*✅ Bot primario establecido:*\n+${who.split('@')[0]}\n\n${who === global.conn.user.jid ? '*(Bot principal recomendado)*' : '*(Sub-bot)*'}\n\nAhora solo este bot responderá en este chat.`}, {quoted: m});
     }
 
-    if (command === 'delprimary') {        
+    if (command === 'delprimarybot') {        
         if (!chat.setPrimaryBot) return conn.sendMessage(m.chat, {text: '*[❗] No hay un bot primario establecido en este chat.*'}, {quoted: m});
         
         delete chat.setPrimaryBot;
@@ -54,9 +54,9 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
     }
 };
 
-handler.help = ['setprimary', 'delsetprimary'];
+handler.help = ['setprimary', 'delprimarybot'];
 handler.tags = ['group'];
-handler.command = ['setprimary', 'delprimary'];
+handler.command = ['setprimary', 'delprimarybot'];
 handler.group = true;
 handler.admin = true;
 export default handler;
