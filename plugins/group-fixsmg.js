@@ -37,7 +37,9 @@ const handler = async (m, { conn, usedPrefix }) => {
   }
   await conn.sendMessage(m.chat, {text: `${tradutor.texto6} \n${usedPrefix}s\n${usedPrefix}s\n${usedPrefix}s`}, {quoted: m});
 };
-handler.help = ['fixmsgespera'];
-handler.tags = ['fix'];
+
+handler.help = ['ds'];
+handler.tags = ['group'];
 handler.command = /^(fixmsgespera|ds)$/i;
+
 export default handler;
