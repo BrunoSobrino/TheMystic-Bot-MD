@@ -44,7 +44,7 @@ let handler = async (message, { conn, text }) => {
     }
 };
 handler.help = ['tiktoksearch <txt>'];
-handler.tags = ['buscador'];
+handler.tags = ['search'];
 handler.command = /^(tiktoksearch|tiktoks)$/i;
 export default handler;
 
