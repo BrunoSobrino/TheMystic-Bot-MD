@@ -1,4 +1,3 @@
-
 const {generateWAMessageFromContent, prepareWAMessageMedia, proto} = (await import("baileys")).default;
 import fetch from 'node-fetch';
 const {getBinaryNodeChild, getBinaryNodeChildren} = (await import("baileys")).default;
@@ -37,8 +36,8 @@ const handler = async (m, {conn, text, participants, args}) => {
     throw tradutor.texto5;
   }
 };
-handler.help = ['add', '+'].map((v) => v + ' número');
+handler.help = ['add'].map((v) => v + ' número');
 handler.tags = ['group'];
-handler.command = /^(add|agregar|añadir|\+)$/i;
+handler.command = ['add', 'agregar'];
 handler.admin = handler.group = handler.botAdmin = true;
 export default handler;
