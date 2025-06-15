@@ -50,8 +50,8 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
   }
 };
 
-handler.help = ['pinterest'];
-handler.tags = ['download'];
-handler.command = ['pinterest', 'pin'];
+handler.help = ['pinterestdl'];
+handler.tags = ['search'];
+handler.command = ['pinterestdl', 'pindl'];
 
 export default handler;
