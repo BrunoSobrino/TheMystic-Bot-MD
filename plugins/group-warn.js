@@ -1,4 +1,3 @@
-
 const handler = async (m, {conn, text, command, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -55,6 +54,8 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   return !1;
 };
 
+handler.tags = ['group'];
+handler.help = ['warn'];
 handler.command = /^(advertir|advertencia|warn|warning)$/i;
 handler.group = true;
 handler.admin = true;
