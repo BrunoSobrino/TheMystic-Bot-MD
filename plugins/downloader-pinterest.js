@@ -16,7 +16,7 @@ const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await
 import axios from 'axios';
 
 const handler = async (m, { conn, usedPrefix, command, text }) => {
- if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST _>*\n\n[ ❗️ ] Ej: Gato` }, { quoted: m });
+ if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST >_*\n\n[ ❗️ ] Ingresa un texto para buscar resultados\nEjemplo: ${UsedPrefix + command} Gato` }, { quoted: m });
  try {
  let { data } = await axios.get(`https://api.stellarwa.xyz/search/pinterest?query=${text}`);
  let images = data.data;
@@ -27,7 +27,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  body: proto.Message.InteractiveMessage.Body.fromObject({ text: `\n□ Número de resultado: ${i + 1}\n` }), 
  footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: global.pickbot }), 
  header: proto.Message.InteractiveMessage.Header.fromObject({ 
- title: '*_< BUSQUEDAS - PINTEREST _>*', 
+ title: '*_< BUSQUEDAS - PINTEREST >_*', 
  hasMediaAttachment: true, 
  imageMessage: await generateWAMessageContent({ image: { url: image.mini } }, { upload: conn.waUploadToServer }).then(res => res.imageMessage) 
  }), 
