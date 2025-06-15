@@ -16,7 +16,7 @@ const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await
 import axios from 'axios';
 
 const handler = async (m, { conn, usedPrefix, command, text }) => {
- if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST >_*\n\n[ ❗️ ] Ingresa un texto para buscar resultados\nEjemplo: ${usedPrefix + command} Gato` }, { quoted: m });
+ if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST />_*\n\n[ ❗️ ] Ingresa un texto para buscar resultados\nEjemplo: ${usedPrefix + command} Gato` }, { quoted: m });
  try {
  let { data } = await axios.get(`https://api.stellarwa.xyz/search/pinterest?query=${text}`);
  let images = data.data;
@@ -27,7 +27,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  body: proto.Message.InteractiveMessage.Body.fromObject({ text: `\n□ Número de resultado: ${i + 1}\n` }), 
  footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: global.pickbot }), 
  header: proto.Message.InteractiveMessage.Header.fromObject({ 
- title: '*_< BUSQUEDAS - PINTEREST >_*', 
+ title: '*_< BUSQUEDAS - PINTEREST />_*', 
  hasMediaAttachment: true, 
  imageMessage: await generateWAMessageContent({ image: { url: image.mini } }, { upload: conn.waUploadToServer }).then(res => res.imageMessage) 
  }), 
@@ -47,7 +47,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  message: { 
  messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 }, 
  interactiveMessage: proto.Message.InteractiveMessage.fromObject({ 
- body: proto.Message.InteractiveMessage.Body.create({ text: "*_< BUSQUEDAS - PINTEREST >_*" }), 
+ body: proto.Message.InteractiveMessage.Body.create({ text: "*_< BUSQUEDAS - PINTEREST />_*" }), 
  footer: proto.Message.InteractiveMessage.Footer.create({ text: `□ *Busqueda:* ${text}\n□ *Solicitante:* ${global.db.data.users[m.sender].name}` }), 
  header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }), 
  carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: [ ...push ] }) 
@@ -55,10 +55,10 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  } 
 } 
 }, {});
- await conn.relayMessage(m.chat, bot.message, { messageId: bot.key.id });
+ await conn.relayMessage(m.chat, bot.message, { messageId: bot.key.id }, { quoted: m });
  } catch (error) {
  console.error(error);
- conn.sendMessage(m.chat, { text: "*_< BUSQUEDAS - PINTEREST _>*\n\n[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙿𝚁𝙾𝙲𝙴𝚂𝙰𝚁 𝚂𝚄 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳" }, { quoted: m });
+ conn.sendMessage(m.chat, { text: "*_< BUSQUEDAS - PINTEREST />_*\n\n[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙿𝚁𝙾𝙲𝙴𝚂𝙰𝚁 𝚂𝚄 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳" }, { quoted: m });
  }
 };
 
