@@ -6,6 +6,7 @@ let handler = async (m, { conn, text }) => {
   if (!text) return reply(`[ ❗ ] Ingresa un texto para la busqueda.`);
  // await reply("「 ✰ 」ESTOY ENVIANDO SUS RESULTADOS...");
 
+  try {
   async function createImage(url) {
     const { imageMessage } = await generateWAMessageContent({
       image: {
@@ -91,7 +92,9 @@ let handler = async (m, { conn, text }) => {
   await Rifky.relayMessage(m.chat, bot.message, {
     messageId: bot.key.id
   });
-   }
+   } catch (e) {
+    m.reply(`[ ❗ ] Error: ${e}`)
+}}
 
 handler.help = ['pinterest', 'pin'];
 handler.tags = ['download'];
