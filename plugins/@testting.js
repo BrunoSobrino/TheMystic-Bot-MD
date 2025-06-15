@@ -6,7 +6,7 @@ import yts from 'yt-search';
 import tools from '@takanashi-soft/tools';
 import fs from 'fs';
 import { writeFile } from 'fs/promises';
-import { tmpdir } from 'path';
+import { tmpdir } from 'os';
 import { randomBytes, createHash } from 'crypto';
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
