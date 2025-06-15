@@ -1,4 +1,3 @@
-
 const handler = async (m, {conn, participants, command, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -24,6 +23,8 @@ const handler = async (m, {conn, participants, command, usedPrefix}) => {
     return;
   }
 };
+handler.help = ['kick'];
+handler.tags = ['group'];
 handler.command = /^(kick|expulsar|eliminar|echar|sacar)$/i;
 handler.admin = handler.group = handler.botAdmin = true;
 export default handler;
