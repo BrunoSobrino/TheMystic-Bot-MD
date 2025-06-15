@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { proto, generateWAMessageFromContent } from '@whiskeysockets/baileys';
+import { proto, generateWAMessageFromContent } from 'baileys';
 
 let handler = async (m, { conn, text }) => {
   if (!text) return conn.reply(m.chat, `[ ❗ ] Ingresa un término de búsqueda.`, m);
