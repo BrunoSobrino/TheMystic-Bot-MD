@@ -1,3 +1,4 @@
+const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys")).default;
 import fetch from 'node-fetch';
 
 let handler = async (m, { conn, text }) => {
