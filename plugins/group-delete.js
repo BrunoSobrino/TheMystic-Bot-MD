@@ -1,6 +1,5 @@
 /* Creditos a https://github.com/FG98F */
 
-
 const handler = async (m, {conn, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
