@@ -1,4 +1,5 @@
-import { parseFile, write } from 'music-metadata';
+import { parseFile } from 'music-metadata';
+import NodeID3 from 'node-id3';
 import fetch from 'node-fetch';
 import axios from 'axios';
 import yts from 'yt-search';
@@ -69,7 +70,19 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
       const fileSha256 = createHash('sha256').update(audioData).digest();
       const fileEncSha256 = createHash('sha256').update(audioData).digest();
       const mediaKey = randomBytes(32);
-      const jpegThumbnail = coverBuffer ? await resizeImage(coverBuffer, 200, 150) : undefined;
+      
+      // Crear thumbnail (usando node-id3 para extraer la imagen si existe)
+      let jpegThumbnail;
+      try {
+        const tags = NodeID3.read(audioPath);
+        if (tags.image && tags.image.imageBuffer) {
+          jpegThumbnail = await resizeImage(tags.image.imageBuffer, 200, 150);
+        } else if (coverBuffer) {
+          jpegThumbnail = await resizeImage(coverBuffer, 200, 150);
+        }
+      } catch (e) {
+        console.log('Error al procesar thumbnail:', e);
+      }
       
       // Crear el mensaje de documento
       const documentMessage = {
@@ -126,6 +139,42 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   }
 };
 
+// Función para agregar metadatos al archivo de audio usando node-id3
+async function addMetadataToAudio(audioUrl, metadata) {
+  const tempPath = join(tmpdir(), `${randomBytes(6).toString('hex')}.mp3`);
+  
+  // Descargar el audio
+  const response = await axios.get(audioUrl, { responseType: 'arraybuffer' });
+  await writeFile(tempPath, response.data);
+  
+  // Crear tags ID3
+  const tags = {
+    title: metadata.title,
+    artist: metadata.artist,
+    album: metadata.album,
+    year: metadata.year,
+    genre: metadata.genre,
+    unsynchronisedLyrics: {
+      language: 'spa',
+      text: metadata.lyrics || ''
+    },
+    image: metadata.cover ? {
+      mime: 'image/jpeg',
+      type: {
+        id: 3,
+        name: 'front cover'
+      },
+      description: 'Cover',
+      imageBuffer: metadata.cover
+    } : undefined
+  };
+  
+  // Escribir metadatos
+  NodeID3.write(tags, tempPath);
+  
+  return tempPath;
+}
+
 // Función para redimensionar imagen para el thumbnail
 async function resizeImage(buffer, width, height) {
   try {
@@ -138,35 +187,6 @@ async function resizeImage(buffer, width, height) {
     console.error('Error al redimensionar imagen:', error);
     return undefined;
   }
-}
-
-// Función para agregar metadatos al archivo de audio
-async function addMetadataToAudio(audioUrl, metadata) {
-  const tempPath = join(tmpdir(), `${randomBytes(6).toString('hex')}.mp3`);
-  
-  // Descargar el audio
-  const response = await axios.get(audioUrl, { responseType: 'arraybuffer' });
-  await writeFile(tempPath, response.data);
-  
-  // Escribir nuevos metadatos
-  await write(tempPath, {
-    title: metadata.title,
-    artist: metadata.artist,
-    album: metadata.album,
-    year: metadata.year,
-    genre: metadata.genre,
-    lyrics: metadata.lyrics ? [{ text: metadata.lyrics }] : [],
-    picture: metadata.cover ? [{
-      type: 'cover',
-      data: metadata.cover,
-      format: 'image/jpeg'
-    }] : []
-  }, {
-    keepOriginal: false,
-    preservePadding: false
-  });
-  
-  return tempPath;
 }
 
 // Función para obtener letras de canciones
@@ -187,7 +207,7 @@ async function getLyrics(title, artist) {
 // Función para descargar buffers
 async function getBuffer(url, options) {
   try {
-    options ? options : {};
+    options = options || {};
     const res = await axios({
       method: 'get',
       url,
