@@ -1,6 +1,3 @@
-
-
-
 const handler = async (m, {conn, participants, groupMetadata, args}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -26,7 +23,7 @@ ${tradutor.texto1[2]}`.trim();
 handler.help = ['admins <texto>'];
 handler.tags = ['group'];
 // regex detect A word without case sensitive
-handler.customPrefix = /a|@/i;
-handler.command = /^(admins|@admins|dmins)$/i;
+handler.customPrefix = /a/i;
+handler.command = /^(admins|dmins)$/i;
 handler.group = true;
 export default handler;
