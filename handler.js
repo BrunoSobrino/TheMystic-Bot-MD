@@ -938,7 +938,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
             if (!isActiveBot(chatPrim.setPrimaryBot)) {
               console.log(`⚠ Bot primario ${primaryNumber} no está activo - Liberando chat`);
               delete chatPrim.setPrimaryBot;
-              global.db.data.chats[m.chat] = chatPrim.setPrimaryBot
+              global.db.data.chats[m.chat] = chatPrim
             }
             else if (primaryNumber && currentBotNumber !== primaryNumber) {
             return; 
