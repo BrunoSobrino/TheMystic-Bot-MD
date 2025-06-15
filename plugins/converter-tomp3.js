@@ -18,6 +18,6 @@ const handler = async (m, {conn, usedPrefix, command}) => {
 
 handler.help = ['tomp3'];
 handler.tags = ['converter'];
-handler.command = ['tomp3', 'toaudio', 'tovn'];
+handler.command = ['tomp3', 'toaudio'];
 
 export default handler;
