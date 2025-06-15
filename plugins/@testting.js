@@ -1,13 +1,13 @@
+import { parseFile, write } from 'music-metadata';
 import fetch from 'node-fetch';
 import axios from 'axios';
 import yts from 'yt-search';
 import tools from '@takanashi-soft/tools';
 import fs from 'fs';
 import { writeFile } from 'fs/promises';
-import mm from 'music-metadata';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { randomBytes } from 'crypto';
+import { randomBytes, createHash } from 'crypto';
 const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys")).default;
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
@@ -65,19 +65,25 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
       // Leer el archivo de audio procesado
       const audioData = fs.readFileSync(audioPath);
       
-      // Generar el mensaje con la estructura completa
+      // Generar hashes necesarios
+      const fileSha256 = createHash('sha256').update(audioData).digest();
+      const fileEncSha256 = createHash('sha256').update(audioData).digest();
+      const mediaKey = randomBytes(32);
+      const jpegThumbnail = coverBuffer ? await resizeImage(coverBuffer, 200, 150) : undefined;
+      
+      // Crear el mensaje de documento
       const documentMessage = {
-        url: '', // WhatsApp lo completará automáticamente
+        url: '',
         mimetype: 'audio/mpeg',
-        fileSha256: await generateFileHash(audioData),
+        fileSha256,
         fileLength: audioData.length,
         pageCount: 0,
-        mediaKey: randomBytes(32),
-        fileName: `${yt_play[0].title}.mp3`.slice(0, 256), // Limitar longitud del nombre
-        fileEncSha256: await generateFileHash(audioData),
-        directPath: '', // WhatsApp lo completará
+        mediaKey,
+        fileName: `${yt_play[0].title}.mp3`.slice(0, 256),
+        fileEncSha256,
+        directPath: '',
         mediaKeyTimestamp: Date.now(),
-        jpegThumbnail: coverBuffer ? await resizeImage(coverBuffer, 200, 150) : undefined,
+        jpegThumbnail,
         contextInfo: {
           mentionedJid: [],
           groupMentions: [],
@@ -88,7 +94,7 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
         thumbnailWidth: 200
       };
       
-      // Crear el mensaje completo
+      // Generar el mensaje completo
       const responseMessage = generateWAMessageFromContent(m.chat, {
         documentMessage: proto.Message.DocumentMessage.fromObject(documentMessage)
       }, {
@@ -120,23 +126,18 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   }
 };
 
-handler.command = ['test1', 'test2'];
-export default handler;
-
-
-// Función para generar hash SHA256 de un buffer
-async function generateFileHash(buffer) {
-  const crypto = await import('crypto');
-  return crypto.createHash('sha256').update(buffer).digest();
-}
-
 // Función para redimensionar imagen para el thumbnail
 async function resizeImage(buffer, width, height) {
-  const sharp = (await import('sharp')).default;
-  return await sharp(buffer)
-    .resize(width, height)
-    .jpeg({ quality: 80 })
-    .toBuffer();
+  try {
+    const sharp = (await import('sharp')).default;
+    return await sharp(buffer)
+      .resize(width, height)
+      .jpeg({ quality: 80 })
+      .toBuffer();
+  } catch (error) {
+    console.error('Error al redimensionar imagen:', error);
+    return undefined;
+  }
 }
 
 // Función para agregar metadatos al archivo de audio
@@ -148,7 +149,7 @@ async function addMetadataToAudio(audioUrl, metadata) {
   await writeFile(tempPath, response.data);
   
   // Escribir nuevos metadatos
-  await mm.write(tempPath, {
+  await write(tempPath, {
     title: metadata.title,
     artist: metadata.artist,
     album: metadata.album,
@@ -183,44 +184,33 @@ async function getLyrics(title, artist) {
   }
 }
 
+// Función para descargar buffers
+async function getBuffer(url, options) {
+  try {
+    options ? options : {};
+    const res = await axios({
+      method: 'get',
+      url,
+      headers: {
+        'DNT': 1,
+        'Upgrade-Insecure-Request': 1
+      },
+      ...options,
+      responseType: 'arraybuffer'
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Error al obtener buffer:', error);
+    return null;
+  }
+}
+
+// Función de búsqueda en YouTube
 async function search(query, options = {}) {
   const search = await yts.search({query, hl: 'es', gl: 'ES', ...options});
   return search.videos;
 }
 
-function MilesNumber(number) {
-  const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-  const rep = '$1.';
-  const arr = number.toString().split('.');
-  arr[0] = arr[0].replace(exp, rep);
-  return arr[1] ? arr.join('.') : arr[0];
-}
+handler.command = ['test1', 'test2'];
 
-function secondString(seconds) {
-  seconds = Number(seconds);
-  const d = Math.floor(seconds / (3600 * 24));
-  const h = Math.floor((seconds % (3600 * 24)) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const dDisplay = d > 0 ? d + (d == 1 ? ' día, ' : ' días, ') : '';
-  const hDisplay = h > 0 ? h + (h == 1 ? ' hora, ' : ' horas, ') : '';
-  const mDisplay = m > 0 ? m + (m == 1 ? ' minuto, ' : ' minutos, ') : '';
-  const sDisplay = s > 0 ? s + (s == 1 ? ' segundo' : ' segundos') : '';
-  return dDisplay + hDisplay + mDisplay + sDisplay;
-}
-
-function bytesToSize(bytes) {
-  return new Promise((resolve, reject) => {
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes === 0) return 'n/a';
-    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-    if (i === 0) resolve(`${bytes} ${sizes[i]}`);
-    resolve(`${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`);
-  });
-}
-
-const getBuffer = async (url, options) => {
-    options ? options : {};
-    const res = await axios({method: 'get', url, headers: {'DNT': 1, 'Upgrade-Insecure-Request': 1,}, ...options, responseType: 'arraybuffer'});
-    return res.data;
-};
+export default handler;
