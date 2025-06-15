@@ -16,7 +16,7 @@ const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await
 import axios from 'axios';
 
 const handler = async (m, { conn, usedPrefix, command, text }) => {
- if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST >_*\n\n[ ❗️ ] Ingresa un texto para buscar resultados\nEjemplo: ${UsedPrefix + command} Gato` }, { quoted: m });
+ if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST >_*\n\n[ ❗️ ] Ingresa un texto para buscar resultados\nEjemplo: ${usedPrefix + command} Gato` }, { quoted: m });
  try {
  let { data } = await axios.get(`https://api.stellarwa.xyz/search/pinterest?query=${text}`);
  let images = data.data;
@@ -47,7 +47,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  message: { 
  messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 }, 
  interactiveMessage: proto.Message.InteractiveMessage.fromObject({ 
- body: proto.Message.InteractiveMessage.Body.create({ text: "*_< BUSQUEDAS - PINTEREST _>*" }), 
+ body: proto.Message.InteractiveMessage.Body.create({ text: "*_< BUSQUEDAS - PINTEREST >_*" }), 
  footer: proto.Message.InteractiveMessage.Footer.create({ text: `□ *Busqueda:* ${text}\n□ *Solicitante:* ${global.db.data.users[m.sender].name}` }), 
  header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }), 
  carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: [ ...push ] }) 
