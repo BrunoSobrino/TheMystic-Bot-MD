@@ -8,7 +8,7 @@ import mm from 'music-metadata';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
-import { proto, generateWAMessageFromContent } from '@whiskeysockets/baileys';
+import { proto, generateWAMessageFromContent } from 'baileys';
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   const datas = global;
