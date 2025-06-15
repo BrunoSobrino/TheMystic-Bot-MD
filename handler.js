@@ -926,10 +926,21 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         }
         const chatPrim = global.db.data.chats[m.chat] || {};
         const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '');
+        const isActiveBot = (jid) => {
+          const normalizedJid = normalizeJid(jid) + '@s.whatsapp.net';
+          return normalizedJid === global.conn.user.jid || 
+         global.conns.some(bot => bot.user.jid === normalizedJid);
+        };
         if (chatPrim.setPrimaryBot) {
+          console.log(!isActiveBot(chatPrim.setPrimaryBot))
             const primaryNumber = normalizeJid(chatPrim.setPrimaryBot) + '@s.whatsapp.net';
             const currentBotNumber = normalizeJid(mconn.conn.user.jid) + '@s.whatsapp.net';
-          if (primaryNumber && currentBotNumber !== primaryNumber) {
+            if (!isActiveBot(chatPrim.setPrimaryBot)) {
+              console.log(`⚠ Bot primario ${primaryNumber} no está activo - Liberando chat`);
+              delete chatPrim.setPrimaryBot;
+              global.db.data.chats[m.chat] = chatPrim.setPrimaryBot
+            }
+            else if (primaryNumber && currentBotNumber !== primaryNumber) {
             return; 
           }
         }
