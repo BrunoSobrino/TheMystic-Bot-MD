@@ -1,6 +1,3 @@
-
-
-
 const handler = async (m, {conn, usedPrefix, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -32,7 +29,7 @@ const handler = async (m, {conn, usedPrefix, text}) => {
     conn.reply(m.chat, tradutor.texto3, m);
   }
 };
-handler.help = ['*593xxx*', '*@usuario*', '*responder chat*'].map((v) => 'promote ' + v);
+handler.help = ['promote'].map((v) => 'mention ' + v);
 handler.tags = ['group'];
 handler.command = /^(promote|daradmin|darpoder)$/i;
 handler.group = true;
