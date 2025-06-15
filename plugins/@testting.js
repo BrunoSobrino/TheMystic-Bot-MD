@@ -1,4 +1,4 @@
-import { parseFile } from 'music-metadata';
+const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys")).default;
 import NodeID3 from 'node-id3';
 import fetch from 'node-fetch';
 import axios from 'axios';
@@ -6,37 +6,37 @@ import yts from 'yt-search';
 import tools from '@takanashi-soft/tools';
 import fs from 'fs';
 import { writeFile } from 'fs/promises';
-import { tmpdir } from 'os';
-import { join } from 'path';
+import { tmpdir } from 'path';
 import { randomBytes, createHash } from 'crypto';
-const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys")).default;
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
+  // Obtener idioma y textos traducidos
   const datas = global;
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.descargas_play;
 
   if (!text) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]}`;
-  
-  let additionalText = '';
-  if (['test1'].includes(command)) {
-    additionalText = 'audio';
-  } else if (['test2'].includes(command)) {
-    additionalText = 'vídeo';
-  }
 
+  // Buscar en YouTube
   const yt_play = await search(args.join(' '));
-  const texto1 = `${tradutor.texto2[0]} ${yt_play[0].title}\n${tradutor.texto2[1]} ${yt_play[0].ago}\n${tradutor.texto2[2]} ${yt_play[0].duration.timestamp}\n${tradutor.texto2[3]} ${yt_play[0].views}\n${tradutor.texto2[4]} ${yt_play[0].author.name}\n${tradutor.texto2[5]} ${yt_play[0].videoId}\n${tradutor.texto2[6]} ${yt_play[0].type}\n${tradutor.texto2[7]} ${yt_play[0].url}\n${tradutor.texto2[8]} ${yt_play[0].author.url}\n\n${tradutor.texto2[9]} ${additionalText}, ${tradutor.texto2[10]}`.trim();
+  if (!yt_play || !yt_play[0]) throw tradutor.texto6;
+
+  // Mostrar información del video
+  const texto1 = `${tradutor.texto2[0]} ${yt_play[0].title}\n${tradutor.texto2[1]} ${yt_play[0].ago}\n${tradutor.texto2[2]} ${yt_play[0].duration.timestamp}\n${tradutor.texto2[3]} ${yt_play[0].views}\n${tradutor.texto2[4]} ${yt_play[0].author.name}\n${tradutor.texto2[5]} ${yt_play[0].videoId}\n${tradutor.texto2[6]} ${yt_play[0].type}\n${tradutor.texto2[7]} ${yt_play[0].url}\n${tradutor.texto2[8]} ${yt_play[0].author.url}`.trim();
   
-  conn.sendMessage(m.chat, { image: { url: yt_play[0].thumbnail }, caption: texto1 }, { quoted: m });
+  await conn.sendMessage(m.chat, { 
+    image: { url: yt_play[0].thumbnail }, 
+    caption: texto1 
+  }, { quoted: m });
 
   if (command === 'test1') {
     try {
+      // Descargar audio
       const audiodlp = await tools.downloader.ytmp3(yt_play[0].url);
       const downloader = audiodlp.download;
       
-      // Obtener letra de la canción
+      // Obtener metadatos adicionales
       let lyrics = '';
       try {
         lyrics = await getLyrics(yt_play[0].title, yt_play[0].author.name);
@@ -44,7 +44,6 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
         console.log('No se pudo obtener la letra:', e);
       }
       
-      // Descargar la imagen de portada
       let coverBuffer;
       try {
         coverBuffer = await getBuffer(yt_play[0].thumbnail);
@@ -52,7 +51,7 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
         console.log('No se pudo obtener la portada:', e);
       }
       
-      // Procesar el archivo para agregar metadatos
+      // Procesar el archivo con metadatos
       const audioPath = await addMetadataToAudio(downloader, {
         title: yt_play[0].title,
         artist: yt_play[0].author.name,
@@ -63,40 +62,27 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
         cover: coverBuffer
       });
       
-      // Leer el archivo de audio procesado
+      // Leer el archivo procesado
       const audioData = fs.readFileSync(audioPath);
-      
-      // Generar hashes necesarios
+            
+      // Generar hashes y metadatos
       const fileSha256 = createHash('sha256').update(audioData).digest();
       const fileEncSha256 = createHash('sha256').update(audioData).digest();
       const mediaKey = randomBytes(32);
+      const jpegThumbnail = coverBuffer ? await resizeImage(coverBuffer, 200, 150) : undefined;
       
-      // Crear thumbnail (usando node-id3 para extraer la imagen si existe)
-      let jpegThumbnail;
-      try {
-        const tags = NodeID3.read(audioPath);
-        if (tags.image && tags.image.imageBuffer) {
-          jpegThumbnail = await resizeImage(tags.image.imageBuffer, 200, 150);
-        } else if (coverBuffer) {
-          jpegThumbnail = await resizeImage(coverBuffer, 200, 150);
-        }
-      } catch (e) {
-        console.log('Error al procesar thumbnail:', e);
-      }
-      
-      // Crear el mensaje de documento
-      const documentMessage = {
+      // Crear mensaje de documento
+      const documentMessage = proto.Message.DocumentMessage.fromObject({
         url: '',
         mimetype: 'audio/mpeg',
-        fileSha256,
-        fileLength: audioData.length,
-        pageCount: 0,
-        mediaKey,
+        fileSha256: fileSha256,
+        fileLength: audioData.length.toString(),
+        mediaKey: mediaKey,
         fileName: `${yt_play[0].title}.mp3`.slice(0, 256),
-        fileEncSha256,
+        fileEncSha256: fileEncSha256,
         directPath: '',
-        mediaKeyTimestamp: Date.now(),
-        jpegThumbnail,
+        mediaKeyTimestamp: Math.floor(Date.now() / 1000).toString(),
+        jpegThumbnail: jpegThumbnail,
         contextInfo: {
           mentionedJid: [],
           groupMentions: [],
@@ -105,49 +91,75 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
         },
         thumbnailHeight: 150,
         thumbnailWidth: 200
-      };
+      });
       
-      // Generar el mensaje completo
+      // Generar y enviar mensaje
       const responseMessage = generateWAMessageFromContent(m.chat, {
-        documentMessage: proto.Message.DocumentMessage.fromObject(documentMessage)
+        documentMessage: documentMessage
       }, {
         quoted: m,
         upload: conn.waUploadToServer
       });
       
-      // Enviar el mensaje
       await conn.relayMessage(m.chat, responseMessage.message, { messageId: responseMessage.key.id });
       
-      // Eliminar archivo temporal
+      // Limpiar archivo temporal
       fs.unlinkSync(audioPath);
       
     } catch (error) {
-      console.log(error);
+      console.error('Error en test1:', error);
       conn.reply(m.chat, tradutor.texto6, m);
     }
-  }
-
-  if (command === 'test2') {
+  } 
+  else if (command === 'test2') {
     try {
+      // Descargar video
       const videodlp = await tools.downloader.ytmp4(yt_play[0].url);
       const downloader = videodlp.download;
-      conn.sendMessage(m.chat, { video: { url: downloader }, mimetype: "video/mp4" }, { quoted: m });
+      
+      // Importar Baileys dinámicamente
+      const { proto, generateWAMessageFromContent } = (await import("baileys")).default;
+      
+      // Generar mensaje de video
+      const videoMessage = {
+        video: { url: downloader },
+        mimetype: "video/mp4",
+        caption: yt_play[0].title,
+        jpegThumbnail: await getBuffer(yt_play[0].thumbnail),
+        contextInfo: {
+          mentionedJid: [],
+          groupMentions: [],
+          forwardingScore: 0,
+          isForwarded: false
+        }
+      };
+      
+      // Generar y enviar mensaje
+      const responseMessage = generateWAMessageFromContent(m.chat, {
+        videoMessage: proto.Message.VideoMessage.fromObject(videoMessage)
+      }, {
+        quoted: m,
+        upload: conn.waUploadToServer
+      });
+      
+      await conn.relayMessage(m.chat, responseMessage.message, { messageId: responseMessage.key.id });
+      
     } catch (error) {
-      console.log(error);
+      console.error('Error en test2:', error);
       conn.reply(m.chat, tradutor.texto6, m);
     }
   }
 };
 
-// Función para agregar metadatos al archivo de audio usando node-id3
+// Función para agregar metadatos al audio
 async function addMetadataToAudio(audioUrl, metadata) {
-  const tempPath = join(tmpdir(), `${randomBytes(6).toString('hex')}.mp3`);
+  const tempPath = `${tmpdir()}/${randomBytes(6).toString('hex')}.mp3`;
   
-  // Descargar el audio
+  // Descargar audio
   const response = await axios.get(audioUrl, { responseType: 'arraybuffer' });
   await writeFile(tempPath, response.data);
   
-  // Crear tags ID3
+  // Configurar tags ID3
   const tags = {
     title: metadata.title,
     artist: metadata.artist,
@@ -158,24 +170,21 @@ async function addMetadataToAudio(audioUrl, metadata) {
       language: 'spa',
       text: metadata.lyrics || ''
     },
-    image: metadata.cover ? {
-      mime: 'image/jpeg',
-      type: {
-        id: 3,
-        name: 'front cover'
-      },
-      description: 'Cover',
-      imageBuffer: metadata.cover
+    APIC: metadata.cover ? {
+      type: 3, // Front cover
+      data: metadata.cover,
+      description: 'Cover'
     } : undefined
   };
   
   // Escribir metadatos
-  NodeID3.write(tags, tempPath);
+  const success = NodeID3.write(tags, tempPath);
+  if (!success) throw new Error('Error al escribir metadatos');
   
   return tempPath;
 }
 
-// Función para redimensionar imagen para el thumbnail
+// Función para redimensionar imagen
 async function resizeImage(buffer, width, height) {
   try {
     const sharp = (await import('sharp')).default;
@@ -189,7 +198,7 @@ async function resizeImage(buffer, width, height) {
   }
 }
 
-// Función para obtener letras de canciones
+// Función para obtener letras
 async function getLyrics(title, artist) {
   try {
     const response = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`);
@@ -227,10 +236,17 @@ async function getBuffer(url, options) {
 
 // Función de búsqueda en YouTube
 async function search(query, options = {}) {
-  const search = await yts.search({query, hl: 'es', gl: 'ES', ...options});
-  return search.videos;
+  try {
+    const search = await yts.search({query, hl: 'es', gl: 'ES', ...options});
+    return search.videos;
+  } catch (error) {
+    console.error('Error en búsqueda YouTube:', error);
+    return [];
+  }
 }
 
+handler.help = ['test1', 'test2'];
+handler.tags = ['downloader'];
 handler.command = ['test1', 'test2'];
 
 export default handler;
