@@ -23,27 +23,33 @@ const handler = async (m, { conn, usedPrefix, command, text, args }) => {
  const [efecto, ...textoArray] = text.split(" ");
  const texto = textoArray.join("");
 
- if (!efecto) {
- let voiceList = await getVoiceList(tradutor);
- let responseText = `*${tradutor.texto1}*\n`;
- for (let i = 0, count = 0; count < 100 && i < voiceList.resultado.length; i++) {
- const entry = voiceList.resultado[i];
- if (entry.ID.length <= 20) {
-   responseText += `*◉ ${usedPrefix + command} ${entry.ID} ${tradutor.texto2}*\n`;
-   count++;
+ if (!efecto) { 
+ let voiceList = await getVoiceList(tradutor); 
+ if (voiceList.resultado && voiceList.resultado.length > 0) {
+ let responseText = `*${tradutor.texto1}*\n`; 
+ for (let i = 0, count = 0; count < 100 && i < voiceList.resultado.length; i++) {  
+ const entry = voiceList.resultado[i]; 
+ if (entry.ID && entry.ID.length <= 20) { 
+    responseText += `*◉ ${usedPrefix + command} ${entry.ID} ${tradutor.texto2}*\n`; 
+    count++; 
+   } 
+  } 
+  return conn.sendMessage(m.chat, { text: responseText.trim() }, { quoted: m }); 
+ } else {
+  return conn.sendMessage(m.chat, { text: `*${tradutor.texto3[0]} ${usedPrefix + command} ${tradutor.texto3[1]}*` }, { quoted: m });
   }
-}
- return conn.sendMessage(m.chat, { text: responseText.trim() }, { quoted: m });
-}
-
- let efectoValido = false;
- let voiceList = await getVoiceList(tradutor);
- for (const entry of voiceList.resultado) {
- if (entry.ID === efecto) {
-   efectoValido = true;
-   break;
-  }
-}
+ }
+        
+ let efectoValido = false; 
+ let voiceList = await getVoiceList(tradutor); 
+ if (voiceList.resultado && voiceList.resultado.length > 0) {
+ for (const entry of voiceList.resultado) { 
+ if (entry.ID === efecto) { 
+     efectoValido = true; 
+     break; 
+     } 
+   } 
+ }
 
  if (!efectoValido) return conn.sendMessage(m.chat, { text: `*${tradutor.texto3[0]} ${usedPrefix + command} ${tradutor.texto3[1]}*` }, { quoted: m });
  if (!texto) return conn.sendMessage(m.chat, { text: `*${tradutor.texto4[0]}*\n*◉ ${usedPrefix + command} ${efecto} ${tradutor.texto4[1]}*` }, { quoted: m });
