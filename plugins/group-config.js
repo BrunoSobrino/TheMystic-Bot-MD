@@ -1,4 +1,3 @@
-
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -25,9 +24,9 @@ ${tradutor.texto1[1]}
   await conn.groupSettingUpdate(m.chat, isClose);
   {m.reply(`${tradutor.texto1[0]}`);}
 };
-handler.help = ['group open / close', 'grupo abrir / cerrar'];
+handler.help = ['group open / close'];
 handler.tags = ['group'];
-handler.command = /^(group|grupo)$/i;
+handler.command = ['group', 'grupo'];
 handler.admin = true;
 handler.botAdmin = true;
 export default handler;
