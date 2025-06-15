@@ -60,7 +60,7 @@ const handler = async (m, {conn, args}) => {
       );  
    }
 };
-handler.help = ['linkgroup'];
+handler.help = ['link'];
 handler.tags = ['group'];
 handler.command = /^(link(gro?up)?)$/i;
 handler.group = true;
