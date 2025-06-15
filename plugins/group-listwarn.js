@@ -1,5 +1,3 @@
-
-
 const handler = async (m, {conn, isOwner}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -18,6 +16,9 @@ const handler = async (m, {conn, isOwner}) => {
 *╚══════════════════·•*`;
   await conn.sendMessage(m.chat, {text: caption}, {quoted: m}, {mentions: await conn.parseMention(caption)});
 };
+
+handler.help = ['listwarn'];
+handler.tags = ['group'];
 handler.command = /^(listwarn)$/i;
 handler.group = true;
 handler.admin = true;
