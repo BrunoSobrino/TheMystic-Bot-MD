@@ -15,11 +15,11 @@ let handler = async (m, { conn, text }) => {
         let imageCards = await Promise.all(
             selectedResults.map(async (result, index) => ({
                 body: proto.Message.InteractiveMessage.Body.fromObject({ text: `\nRESULTADO: ${index + 1}\n` }),
-                footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: global.pickbot }),
+                footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `*❧ By ${global.wm}*` }),
                 header: proto.Message.InteractiveMessage.Header.fromObject({
-                    title: '「 ✰ 」RESULTADOS ENCONTRADOS',
+                    title: result.description || `Imagen ${index + 1}`,
                     hasMediaAttachment: true,
-                    imageMessage: await createImage(result.imageUrl)
+                    imageMessage: await createImage(result.imageUrl, conn)
                 }),
                 nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
                     buttons: [
@@ -42,10 +42,10 @@ let handler = async (m, { conn, text }) => {
                     messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
                     interactiveMessage: proto.Message.InteractiveMessage.fromObject({
                         body: proto.Message.InteractiveMessage.Body.create({
-                            text: "「 ✰ 」INFORMACION"
+                            text: "「 ✰ 」INFORMACIÓN DE BÚSQUEDA"
                         }),
                         footer: proto.Message.InteractiveMessage.Footer.create({
-                            text: `✰ *BUSQUEDA:*\n> ${text}\n\n✰ *USUARIO:*\n> ${m.pushName}`
+                            text: `✰ *Término:* ${text}\n✰ *Usuario:* ${m.pushName}`
                         }),
                         header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
                         carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: imageCards })
@@ -61,9 +61,9 @@ let handler = async (m, { conn, text }) => {
     }
 };
 
-handler.help = ['pinterest', 'pin'];
-handler.tags = ['download'];
-handler.command = ['pinterest', 'pin'];
+handler.help = ['pinterestsearch', 'pinsearch'];
+handler.tags = ['search'];
+handler.command = ['pinterestsearch', 'pinsearch'];
 export default handler;
 
 async function pinterestSearch(query) {
@@ -84,9 +84,13 @@ async function pinterestSearch(query) {
     }
 }
 
-async function createImage(url) {
-    const { imageMessage } = await generateWAMessageContent({ image: { url } }, { upload: conn.waUploadToServer });
-    return imageMessage;
+async function createImage(url, conn) {
+    try {
+        const { imageMessage } = await generateWAMessageContent({ image: { url } }, { upload: conn.waUploadToServer });
+        return imageMessage;
+    } catch (error) {
+        throw new Error(`Error al crear el mensaje de imagen: ${error.message}`);
+    }
 }
 
 function shuffleArray(array) {
