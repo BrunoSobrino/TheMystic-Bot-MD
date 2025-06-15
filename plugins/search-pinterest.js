@@ -54,8 +54,8 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
   }) 
  } 
 } 
-}, {});
- await conn.relayMessage(m.chat, bot.message, { messageId: bot.key.id }, { quoted: m });
+}, { quoted: m });
+ await conn.relayMessage(m.chat, bot.message, { messageId: bot.key.id });
  } catch (error) {
  console.error(error);
  conn.sendMessage(m.chat, { text: "*_< BUSQUEDAS - PINTEREST />_*\n\n[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙿𝚁𝙾𝙲𝙴𝚂𝙰𝚁 𝚂𝚄 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳" }, { quoted: m });
