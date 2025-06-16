@@ -1254,8 +1254,7 @@ global.dfail = (type, m, conn) => {
     }
     else if (primaryNumber2 && currentBotNumber2 !== primaryNumber2) {
       return; 
-    } else {
-      if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
+    } else if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
   }
 };
 
