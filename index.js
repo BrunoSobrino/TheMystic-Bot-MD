@@ -8,7 +8,7 @@ import yargs from 'yargs';
 import chalk from 'chalk'; 
 import fs from 'fs'; 
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import './config.js'; 
+import './config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
@@ -34,15 +34,19 @@ function verificarCredsJson() {
 
 function formatearNumeroTelefono(numero) {
   let formattedNumber = numero.replace(/[^\d+]/g, '');
-  if (formattedNumber.startsWith('+52') && !formattedNumber.startsWith('+521')) {
-    formattedNumber = formattedNumber.replace('+52', '+521');
+  
+  if (formattedNumber.startsWith('521')) {
+    formattedNumber = `+${formattedNumber}`;
+  } else if (formattedNumber.startsWith('52') && formattedNumber.length >= 12) {
+    formattedNumber = `+521${formattedNumber.slice(2)}`;
   } else if (formattedNumber.startsWith('52') && !formattedNumber.startsWith('521')) {
     formattedNumber = `+521${formattedNumber.slice(2)}`;
-  } else if (formattedNumber.startsWith('52') && formattedNumber.length >= 12) {
-    formattedNumber = `+${formattedNumber}`;
+  } else if (formattedNumber.startsWith('+52') && !formattedNumber.startsWith('+521')) {
+    formattedNumber = formattedNumber.replace('+52', '+521');
   } else if (!formattedNumber.startsWith('+')) {
     formattedNumber = `+${formattedNumber}`;
   }
+  
   return formattedNumber;
 }
 
