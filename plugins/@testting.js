@@ -11,10 +11,11 @@ const handler = async (m, {conn, text}) => {
   }
 
   try {
-    const img = await q.download();
+    const imgBuffer = await q.download();
+    const imgBase64 = imgBuffer.toString('base64');
     const payload = {
       prompt: text || "Añade algo creativo a la imagen", 
-      image: fs.readFileSync(img).toString('base64'), 
+      image: imgBase64, 
       output_format: 'png'
     };
 
