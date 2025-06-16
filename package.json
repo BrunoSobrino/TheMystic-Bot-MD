@@ -85,7 +85,6 @@
     "pino": "^7.8.0",
     "pino-pretty": "^7.5.1",
     "plotly": "^1.0.6",
-    "puppeteer": "*",
     "qrcode": "^1.5.0",
     "qrcode-terminal": "^0.12.0",
     "readline": "^1.3.0",
@@ -102,6 +101,7 @@
     "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2"
   },
   "optionalDependencies": {
+    "puppeteer": "*",
     "@xct007/frieren-scraper": "github:BrunoSobrino/frieren-scraper",
     "wa-sticker-formatter": "^4.3.2"
   },
