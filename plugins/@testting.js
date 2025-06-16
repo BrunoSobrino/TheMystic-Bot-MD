@@ -1,6 +1,5 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import fs from 'node:fs';
 
 const handler = async (m, {conn, text}) => {
   const q = m.quoted ? m.quoted : m;
@@ -14,14 +13,14 @@ const handler = async (m, {conn, text}) => {
     // 1. Descargar la imagen
     const imgBuffer = await q.download();
     
-    // 2. Crear FormData para la nueva API v1
+    // 2. Crear FormData para la API
     const formData = new FormData();
-    formData.append('init_image', imgBuffer, 'input_image.png');
-    formData.append('image_strength', '0.35'); // Controla cuánto se modifica la imagen original (0-1)
-    formData.append('prompt', text || "Añade algo creativo a la imagen");
+    formData.append('init_image', imgBuffer, 'input.png');
+    formData.append('image_strength', '0.35');
+    formData.append('prompt', text || "Mejora esta imagen");
     formData.append('output_format', 'png');
     
-    // 3. Enviar a la API v1
+    // 3. Enviar a la API de Stability AI
     const response = await axios.post(
       'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image',
       formData,
@@ -32,34 +31,31 @@ const handler = async (m, {conn, text}) => {
           ...formData.getHeaders()
         },
         responseType: 'arraybuffer',
-        timeout: 60000 // 60 segundos de timeout
+        timeout: 60000
       }
     );
 
     // 4. Enviar la imagen resultante
-    if (response.status === 200) {
-      await conn.sendMessage(
-        m.chat, 
-        { 
-          image: response.data,
-          caption: '🎨 Imagen editada con IA'
-        }, 
-        { quoted: m }
-      );
-    } else {
-      throw new Error(`Estado inesperado: ${response.status}`);
-    }
+    await conn.sendMessage(
+      m.chat, 
+      { 
+        image: response.data,
+        caption: '🎨 Imagen editada con IA'
+      }, 
+      { quoted: m }
+    );
 
   } catch (e) {
-    console.error('Error completo:', e);
+    console.error('Error:', e);
     
     let errorMessage = '❌ Error al procesar la imagen';
     if (e.response) {
       try {
+        // CORRECCIÓN: Paréntesis bien cerrados y manejo seguro del buffer
         const errorData = JSON.parse(Buffer.from(e.response.data).message;
         errorMessage += `\nCódigo: ${e.response.status}\nMensaje: ${errorData || 'Sin detalles'}`;
-      } catch {
-        errorMessage += `\nCódigo: ${e.response.status}`;
+      } catch (parseError) {
+        errorMessage += `\nCódigo: ${e.response.status}\nNo se pudo parsear la respuesta`;
       }
     } else {
       errorMessage += `\n${e.message}`;
