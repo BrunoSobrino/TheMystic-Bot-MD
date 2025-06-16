@@ -13,14 +13,17 @@ const handler = async (m, {conn, text}) => {
     // 1. Descargar la imagen
     const imgBuffer = await q.download();
     
-    // 2. Crear FormData para la API
+    // 2. Crear FormData con parámetros correctos
     const formData = new FormData();
     formData.append('init_image', imgBuffer, 'input.png');
+    formData.append('text_prompts[0][text]', text || "Mejora esta imagen");
+    formData.append('text_prompts[0][weight]', '1');
     formData.append('image_strength', '0.35');
-    formData.append('prompt', text || "Mejora esta imagen");
-    formData.append('output_format', 'png');
+    formData.append('cfg_scale', '7');
+    formData.append('samples', '1');
+    formData.append('steps', '30');
     
-    // 3. Enviar a la API de Stability AI
+    // 3. Enviar a la API con configuración correcta
     const response = await axios.post(
       'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image',
       formData,
@@ -49,13 +52,18 @@ const handler = async (m, {conn, text}) => {
     console.error('Error:', e);
     
     let errorMessage = '❌ Error al procesar la imagen';
-    if (e.response && e.response.data) {
+    if (e.response) {
       try {
-        // CORRECCIÓN: Paréntesis correctamente cerrados
-        const errorData = JSON.parse(Buffer.from(e.response.data).toString()).message;
-        errorMessage += `\nCódigo: ${e.response.status}\nMensaje: ${errorData || 'Sin detalles'}`;
-      } catch (parseError) {
-        errorMessage += `\nCódigo: ${e.response.status}\nRespuesta no JSON: ${Buffer.from(e.response.data).toString('utf8').substring(0, 100)}`;
+        const errorData = JSON.parse(Buffer.from(e.response.data).toString());
+        errorMessage += `\nCódigo: ${e.response.status}\nMensaje: ${errorData.message || errorData.name || 'Error de API'}`;
+        
+        if (e.response.status === 400) {
+          errorMessage += '\nPosible causa: Parámetros inválidos o imagen no compatible';
+        } else if (e.response.status === 402) {
+          errorMessage += '\nCréditos insuficientes en tu cuenta de Stability AI';
+        }
+      } catch {
+        errorMessage += `\nCódigo: ${e.response.status}`;
       }
     } else {
       errorMessage += `\n${e.message}`;
