@@ -23,14 +23,14 @@ const handler = async (m, {conn, text}) => {
     formData.append('samples', '1');
     formData.append('steps', '30');
     
-    // 3. Enviar a la API con configuración correcta
+    // 3. Enviar a la API con headers correctos
     const response = await axios.post(
       'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image',
       formData,
       {
         headers: { 
           Authorization: 'Bearer sk-E7i5FjEOysKtRgXy3yljzchSmaqJnVW4q2grQS4PAUB4clGv',
-          Accept: 'image/*',
+          Accept: 'image/png', // Header corregido
           ...formData.getHeaders()
         },
         responseType: 'arraybuffer',
@@ -59,8 +59,6 @@ const handler = async (m, {conn, text}) => {
         
         if (e.response.status === 400) {
           errorMessage += '\nPosible causa: Parámetros inválidos o imagen no compatible';
-        } else if (e.response.status === 402) {
-          errorMessage += '\nCréditos insuficientes en tu cuenta de Stability AI';
         }
       } catch {
         errorMessage += `\nCódigo: ${e.response.status}`;
