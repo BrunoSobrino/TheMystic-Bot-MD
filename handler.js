@@ -932,7 +932,6 @@ ${tradutor.texto1[1]} ${messageNumber}/3
          global.conns.some(bot => bot.user.jid === normalizedJid);
         };
         if (chatPrim.setPrimaryBot) {
-          console.log(!isActiveBot(chatPrim.setPrimaryBot))
             const primaryNumber = normalizeJid(chatPrim.setPrimaryBot) + '@s.whatsapp.net';
             const currentBotNumber = normalizeJid(mconn.conn.user.jid) + '@s.whatsapp.net';
             if (!isActiveBot(chatPrim.setPrimaryBot)) {
@@ -1254,8 +1253,8 @@ global.dfail = (type, m, conn) => {
     }
     else if (primaryNumber2 && currentBotNumber2 !== primaryNumber2) {
       return; 
-    } else if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
-  }
+    } 
+  } else if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
 };
 
 const file = global.__filename(import.meta.url, true);
