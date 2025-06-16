@@ -49,13 +49,13 @@ const handler = async (m, {conn, text}) => {
     console.error('Error:', e);
     
     let errorMessage = '❌ Error al procesar la imagen';
-    if (e.response) {
+    if (e.response && e.response.data) {
       try {
-        // CORRECCIÓN: Paréntesis bien cerrados y manejo seguro del buffer
-        const errorData = JSON.parse(Buffer.from(e.response.data).message;
+        // CORRECCIÓN: Paréntesis correctamente cerrados
+        const errorData = JSON.parse(Buffer.from(e.response.data).toString()).message;
         errorMessage += `\nCódigo: ${e.response.status}\nMensaje: ${errorData || 'Sin detalles'}`;
       } catch (parseError) {
-        errorMessage += `\nCódigo: ${e.response.status}\nNo se pudo parsear la respuesta`;
+        errorMessage += `\nCódigo: ${e.response.status}\nRespuesta no JSON: ${Buffer.from(e.response.data).toString('utf8').substring(0, 100)}`;
       }
     } else {
       errorMessage += `\n${e.message}`;
