@@ -152,7 +152,7 @@ global.conn = makeWASocket(connectionOptions);
 if (!fs.existsSync(`./${authFile}/creds.json`)) {
 if (opcion === '2' || methodCode) {
 opcion = '2'
-if (!conn.authState.creds.registered) {  Add commentMore actions
+if (!conn.authState.creds.registered) {
 if (MethodMobile) throw new Error('No se puede usar un código de emparejamiento con la API móvil')
 
 let numeroTelefono
