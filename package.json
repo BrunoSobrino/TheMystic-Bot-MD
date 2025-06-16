@@ -66,6 +66,7 @@
     "imagemaker.js": "^2.0.4",
     "jsdom": "^19.0.0",
     "link-preview-js": "^3.0.0",
+    "libphonenumber-js": "*",
     "lodash": "^4.17.21",
     "lowdb": "^3.0.0",
     "md5": "^2.3.0",
