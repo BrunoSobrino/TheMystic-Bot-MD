@@ -1240,7 +1240,7 @@ global.dfail = (type, m, conn) => {
 
     const chat = global.db.data.chats[m.chat];
     const botId = this.user.jid;
-    const primaryBotId = chat.setprimaryBot;
+    const primaryBotId = chat.setPrimaryBot;
     if (!primaryBotId || primaryBotId === botId) {
   if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
   };
