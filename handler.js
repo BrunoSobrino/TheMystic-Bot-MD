@@ -1238,12 +1238,25 @@ global.dfail = (type, m, conn) => {
   const aa = { quoted: m, userJid: conn.user.jid };
   const prep = generateWAMessageFromContent(m.chat, { extendedTextMessage: { text: msg, contextInfo: { externalAdReply: { title: tradutor.texto11[0], body: tradutor.texto11[1], thumbnail: imagen1, sourceUrl: tradutor.texto11[2] } } } }, aa);
 
-    const chat = global.db.data.chats[m.chat];
-    const botId = this.user.jid;
-    const primaryBotId = chat.setPrimaryBot;
-    if (!primaryBotId || primaryBotId === botId) {
-  if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
+  const chatPrim2 = global.db.data.chats[m.chat] || {};
+  const normalizeJid2 = (jid) => jid?.replace(/[^0-9]/g, '');
+  const isActiveBot2 = (jid) => {
+    const normalizedJid2 = normalizeJid2(jid) + '@s.whatsapp.net';
+    return normalizedJid2 === global.conn.user.jid || 
+      global.conns.some(bot => bot.user.jid === normalizedJid2);
   };
+  if (chatPrim2.setPrimaryBot) {
+    const primaryNumber2 = normalizeJid2(chatPrim2.setPrimaryBot) + '@s.whatsapp.net';
+    const currentBotNumber2 = normalizeJid2(mconn.conn.user.jid) + '@s.whatsapp.net';
+    if (!isActiveBot2(chatPrim2.setPrimaryBot)) {
+      delete chatPrim2.setPrimaryBot;
+      global.db.data.chats[m.chat] = chatPrim2
+    }
+    else if (primaryNumber2 && currentBotNumber2 !== primaryNumber2) {
+      return; 
+    } else {
+      if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
+  }
 };
 
 const file = global.__filename(import.meta.url, true);
