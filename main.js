@@ -181,6 +181,7 @@ rl.close()
             console.log(chalk.black(chalk.bgGreen(`Su código de emparejamiento: `)), chalk.black(chalk.white(codigo)))
         }, 3000)
 }}
+}
 
 conn.isInit = false;
 conn.well = false;
