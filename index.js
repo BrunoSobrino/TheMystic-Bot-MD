@@ -7,10 +7,9 @@ import readline from 'readline';
 import yargs from 'yargs';
 import chalk from 'chalk'; 
 import fs from 'fs'; 
-import './config.js';
-import './config.js'; //max update 2025
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import './config.js'; 
 
-const { PHONENUMBER_MCC } = await import('baileys');
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
 const { say } = cfonts;
@@ -48,8 +47,12 @@ function formatearNumeroTelefono(numero) {
 }
 
 function esNumeroValido(numeroTelefono) {
-  const numeroSinSigno = numeroTelefono.replace('+', '');
-  return Object.keys(PHONENUMBER_MCC).some(codigo => numeroSinSigno.startsWith(codigo));
+  try {
+    const phoneNumber = parsePhoneNumberFromString(numeroTelefono);
+    return phoneNumber && phoneNumber.isValid();
+  } catch {
+    return false;
+  }
 }
 
 async function start(file) {
