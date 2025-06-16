@@ -78,10 +78,10 @@ loadDatabase();
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
 
 const { version } = await fetchLatestBaileysVersion();
-let phoneNumber = global.botnumber || process.argv.find(arg => /^\+\d+$/.test(arg));
+let phoneNumber = global.botnumber || process.argv.find(arg => arg.startsWith('--phone='))?.split('=')[1];
+const methodCodeQR = process.argv.includes('--method=qr');
+const methodCode = !!phoneNumber || process.argv.includes('--method=code');
 
-const methodCodeQR = process.argv.includes("qr")
-const methodCode = !!phoneNumber || process.argv.includes("code")
 const MethodMobile = process.argv.includes("mobile")
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (texto) => new Promise((resolver) => rl.question(texto, resolver))
