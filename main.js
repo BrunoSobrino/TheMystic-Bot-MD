@@ -115,6 +115,12 @@ console.info = () => { }
 console.debug = () => { }
 ['log', 'warn', 'error'].forEach(methodName => redefineConsoleMethod(methodName, filterStrings))
 
+process.on('uncaughtException', (err) => {
+  if (filterStrings.includes(Buffer.from(err.message).toString('base64'))) return; 
+  console.error('Uncaught Exception:', err);
+});
+
+
 const connectionOptions = {
 logger: pino({ level: 'silent' }),
 printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
