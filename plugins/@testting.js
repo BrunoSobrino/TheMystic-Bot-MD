@@ -1,6 +1,12 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import sharp from 'sharp'; // Para redimensionar imágenes
+import sharp from 'sharp';
+
+// Dimensiones exactas permitidas por la API
+const ALLOWED_DIMENSIONS = [
+  [1024, 1024], [1152, 896], [1216, 832], [1344, 768], [1536, 640],
+  [640, 1536], [768, 1344], [832, 1216], [896, 1152]
+];
 
 const handler = async (m, {conn, text}) => {
   const q = m.quoted ? m.quoted : m;
@@ -11,32 +17,47 @@ const handler = async (m, {conn, text}) => {
   }
 
   try {
-    // 1. Descargar la imagen
+    // 1. Descargar la imagen y obtener metadata
     const imgBuffer = await q.download();
+    const metadata = await sharp(imgBuffer).metadata();
     
-    // 2. Redimensionar la imagen a dimensiones compatibles
+    // 2. Encontrar la dimensión compatible más cercana
+    const findClosestDimensions = (width, height) => {
+      let closest = ALLOWED_DIMENSIONS[0];
+      let minDiff = Infinity;
+      
+      for (const [w, h] of ALLOWED_DIMENSIONS) {
+        const ratioDiff = Math.abs((width/height) - (w/h));
+        if (ratioDiff < minDiff) {
+          minDiff = ratioDiff;
+          closest = [w, h];
+        }
+      }
+      
+      return closest;
+    };
+    
+    const [targetWidth, targetHeight] = findClosestDimensions(metadata.width, metadata.height);
+    console.log(`Redimensionando de ${metadata.width}x${metadata.height} a ${targetWidth}x${targetHeight}`);
+
+    // 3. Redimensionar manteniendo relación de aspecto
     const resizedBuffer = await sharp(imgBuffer)
       .resize({
-        width: 1024,
-        height: 1024,
-        fit: 'inside', // Mantiene la relación de aspecto
-        withoutEnlargement: true // No agranda imágenes pequeñas
+        width: targetWidth,
+        height: targetHeight,
+        fit: 'cover', // Asegura que cubra completamente el área
+        position: 'centre',
+        withoutEnlargement: false // Permite aumentar tamaño si es necesario
       })
+      .toFormat('png')
       .toBuffer();
-    
-    // 3. Verificar dimensiones finales
-    const metadata = await sharp(resizedBuffer).metadata();
-    console.log(`Imagen redimensionada a: ${metadata.width}x${metadata.height}`);
 
-    // 4. Crear FormData con parámetros correctos
+    // 4. Crear FormData
     const formData = new FormData();
     formData.append('init_image', resizedBuffer, 'input.png');
     formData.append('text_prompts[0][text]', text || "Mejora esta imagen");
     formData.append('text_prompts[0][weight]', '1');
     formData.append('image_strength', '0.35');
-    formData.append('cfg_scale', '7');
-    formData.append('samples', '1');
-    formData.append('steps', '30');
     
     // 5. Enviar a la API
     const response = await axios.post(
@@ -53,20 +74,20 @@ const handler = async (m, {conn, text}) => {
       }
     );
 
-    // 6. Enviar la imagen resultante
+    // 6. Enviar resultado
     await conn.sendMessage(
       m.chat, 
       { 
         image: response.data,
-        caption: '🎨 Imagen editada con IA'
+        caption: `🎨 Imagen editada (${targetWidth}x${targetHeight})`
       }, 
       { quoted: m }
     );
 
   } catch (e) {
     console.error('Error:', e);
-    
     let errorMessage = '❌ Error al procesar la imagen';
+    
     if (e.response) {
       try {
         const errorData = JSON.parse(Buffer.from(e.response.data).toString());
