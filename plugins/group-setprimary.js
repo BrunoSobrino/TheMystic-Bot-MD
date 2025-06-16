@@ -48,7 +48,7 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
     if (command === 'delprimarybot') {        
         if (!chat.setPrimaryBot) return conn.sendMessage(m.chat, {text: '*[❗] No hay un bot primario establecido en este chat.*'}, {quoted: m});
         
-        delete chat.setPrimaryBot;
+        chat.setPrimaryBot = null;
         return conn.sendMessage(m.chat, {text: '*✅ Se eliminó el bot primario, ahora todos los bots pueden responder.*'}, {quoted: m});
     }
 };
