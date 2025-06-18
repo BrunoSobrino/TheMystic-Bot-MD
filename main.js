@@ -376,7 +376,7 @@ let handler = await import('./handler.js');
 global.reloadHandler = async function(restatConn) {
   
   try {
-    
+   
     const Handler = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
     if (Object.keys(Handler || {}).length) handler = Handler;
   } catch (e) {
@@ -393,37 +393,6 @@ global.reloadHandler = async function(restatConn) {
     isInit = true;
   }
   if (!isInit) {
-    conn.ev.on('messages.upsert', async ({ messages }) => {
-  const msg = messages[0];
-  if (!msg || msg.key?.remoteJid?.startsWith('status@')) return;
-  if (msg.message?.extendedTextMessage?.contextInfo?.mentionedJid?.length) {
-    const mentioned = msg.message.extendedTextMessage.contextInfo.mentionedJid;
-    const resolvedJids = [];
-    for (const jid of mentioned) {
-      if (jid.endsWith('@lid')) {
-        const lid = jid.split('@')[0];
-        try {
-          const metadata = await conn.groupMetadata(msg.key.remoteJid);
-          for (const participant of metadata.participants) {
-            const contactDetails = await conn.onWhatsApp(participant.id);
-            const participantLid = contactDetails?.[0]?.lid?.split('@')[0];
-            if (participantLid === lid) {
-              resolvedJids.push(participant.id);
-              break;
-            }
-          }
-        } catch (e) {
-          console.error('❌ Error resolviendo lid global:', e);
-          resolvedJids.push(jid);
-        }
-      } else {
-        resolvedJids.push(jid);
-      }
-    }
-    msg.message.extendedTextMessage.contextInfo.mentionedJid = resolvedJids;
-  }
-   conn.handler({ messages: [msg], type: 'notify' });
-});
     conn.ev.off('messages.upsert', conn.handler);
     conn.ev.off('group-participants.update', conn.participantsUpdate);
     conn.ev.off('groups.update', conn.groupsUpdate);
