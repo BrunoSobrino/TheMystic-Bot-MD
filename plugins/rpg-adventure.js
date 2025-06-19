@@ -324,7 +324,7 @@ ${cmenua}`;
   }
 };
 handler.help = ['adventure'];
-handler.tags = ['rpg'];
+handler.tags = ['xp'];
 handler.command = /^(adventure|adv|aventura|aventurar)$/i;
 handler.cooldown = cooldown;
 handler.disabled = false;

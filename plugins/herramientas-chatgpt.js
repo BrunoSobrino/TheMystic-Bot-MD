@@ -1,17 +1,18 @@
-import fetch from 'node-fetch';
-import fs from 'fs';
-import path from 'path';
-import axios from 'axios';
-import translate from '@vitalets/google-translate-api';
-import { perplexity } from '../lib/scraper.js';
-import { Configuration, OpenAIApi } from "openai";
+/* -------------------------------------------------------*/
+/* [❗]                      [❗]                      [❗] */
+/*                                                       */
+/*       |- [ ⚠ ] - CREDITOS DEL CODIGO - [ ⚠ ] -|      */
+/*     —◉ DESAROLLADO POR OTOSAKA:                       */
+/*     ◉ Otosaka (https://github.com/6otosaka9)          */
+/*     ◉ Número: wa.me/51993966345                       */
+/*                                                       */
+/*     —◉ FT:                                            */
+/*     ◉ BrunoSobrino (https://github.com/BrunoSobrino)  */
+/*                                                       */
+/* [❗]                      [❗]                      [❗] */
+/* -------------------------------------------------------*/
 
-const apikey_base64 = "c2stcHJvai1tUzN4bGZueXo0UjBPWV8zbm1DVDlMQmlmYXhYbVdaa0ptUVFJMDVKR2FxdHZCbk9ncWZjRXdCbEJmMU5WN0lYa0pncVJuM3BNc1QzQmxia0ZKMVJ5aEJzUl93NzRXbll5LWdjdkowT0NQUXliWTBOcENCcDZIOTlCVVVtcWxuTjVraEZxMk43TGlMU0RsU0s1cXA5Tm1kWVZXc0E=";
-
-const apikey = Buffer.from(apikey_base64, 'base64').toString('utf-8');
-const configuration = new Configuration({apiKey: apikey, 
-});
-const openai = new OpenAIApi(configuration);
+import tools from '@takanashi-soft/tools';
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
 let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
@@ -20,27 +21,15 @@ if (!text) return m.reply(await tr(`*Hola cómo esta 😊, El que te puedo ayuda
 //let syst = `Actuaras como un Bot de WhatsApp el cual fue creado por elrebelde, tu seras LoliBot.`
 let syms1 = await fetch('https://raw.githubusercontent.com/Skidy89/chat-gpt-jailbreak/main/Text.txt').then(v => v.text());
 
-if (command == 'ia' || command == 'chatgpt') {
-await conn.sendPresenceUpdate('composing', m.chat)
-try {     
-const messages = [{ role: 'system', content: syms1 },
-{ role: 'user', content: text }];
-
-const chooseModel = (query) => {
-const lowerText = query.toLowerCase();
-
-if (lowerText.includes('código') || lowerText.includes('programación') || lowerText.includes('code') || lowerText.includes('script')) {
-return 'codellama-70b-instruct';
-} else if (lowerText.includes('noticias') || lowerText.includes('actual') || lowerText.includes('hoy') || lowerText.includes('último')) {
-return 'sonar-medium-online';
-} else if (lowerText.includes('explica') || lowerText.includes('por qué') || lowerText.includes('razona') || lowerText.includes('analiza')) {
-return 'sonar-reasoning-pro';
-} else if (lowerText.includes('cómo') || lowerText.includes('paso a paso') || lowerText.includes('instrucciones')) {
-return 'mixtral-8x7b-instruct';
-} else if (lowerText.includes('charla') || lowerText.includes('habla') || lowerText.includes('dime')) {
-return 'sonar-medium-chat';
-} else {
-return 'sonar-pro';
+if (usedPrefix == 'a' || usedPrefix == 'A') return;
+if (!text) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]} ${usedPrefix + command} ${tradutor.texto1[2]}`;
+try {
+const prompt = tradutor.texto3;
+const chatgpt = await tools.ai.mylogic(text, prompt);
+const data = chatgpt.answer;
+m.reply(`${data}`.trim());
+} catch (error) {
+throw tradutor.texto4;
 }};
 
 const selectedModel = chooseModel(text);

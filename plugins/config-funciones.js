@@ -1,15 +1,12 @@
-
-
 const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, isROwner}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.config_funciones
-
+const datas = global
+const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+const tradutor = _translate.plugins.config_funciones
 
 const optionsFull = `_*${tradutor.texto1[0]}*_\n 
 
-${tradutor.texto1[1]}  | WELCOME"
+${tradutor.texto1[1]}  | WELCOME
 ${tradutor.texto1[2]} ${usedPrefix + command} welcome
 ${tradutor.texto1[3]}
 
@@ -159,31 +156,24 @@ ${tradutor.texto23[3]}
 
 --------------------------------
 
-${tradutor.texto24[0]} | MODOIA
-${tradutor.texto24[1]} ${usedPrefix + command} modoia
+${tradutor.texto24[0]} | ANTISPAM
+${tradutor.texto24[1]} ${usedPrefix + command} antispam
 ${tradutor.texto24[2]}
 ${tradutor.texto24[3]}
 
 --------------------------------
 
-${tradutor.texto25[0]} | ANTISPAM
-${tradutor.texto25[1]} ${usedPrefix + command} antispam
-${tradutor.texto25[2]}
+${tradutor.texto25[0]} | MODEJADIBOT
+${tradutor.texto25[1]} ${usedPrefix + command} modejadibot
+${tradutor.texto25[2]} (${usedPrefix}serbot / ${usedPrefix}jadibot). 
 ${tradutor.texto25[3]}
 
 --------------------------------
 
-${tradutor.texto26[0]} | MODEJADIBOT
-${tradutor.texto26[1]} ${usedPrefix + command} modejadibot
-${tradutor.texto26[2]} (${usedPrefix}serbot / ${usedPrefix}jadibot). 
-${tradutor.texto26[3]}
-
---------------------------------
-
-${tradutor.texto27[0]} | ANTIPRIVADO
-${tradutor.texto27[1]} ${usedPrefix + command} antiprivado
-${tradutor.texto27[2]}
-${tradutor.texto27[3]}`.trim();
+${tradutor.texto26[0]} | ANTIPRIVADO
+${tradutor.texto26[1]} ${usedPrefix + command} antiprivado
+${tradutor.texto26[2]}
+${tradutor.texto26[3]}`.trim();
 
   const isEnable = /true|enable|(turn)?on|1/i.test(command);
   const chat = global.db.data.chats[m.chat];
@@ -350,14 +340,6 @@ ${tradutor.texto27[3]}`.trim();
         throw false;
       }
       bot.audios_bot = isEnable;      
-      break;
-    case 'modoia':
-      isAll = true;
-      if (!(isROwner || isOwner)) {
-        global.dfail('owner', m, conn);
-        throw false;
-      }
-      bot.modoia = isEnable;      
       break;      
     case 'nyimak':
       isAll = true;
@@ -483,8 +465,7 @@ break;
       if (!/[01]/.test(command)) return await conn.sendMessage(m.chat, {text: optionsFull}, {quoted: m});
       throw false;
   }
-  conn.sendMessage(m.chat, {text: `_*${tradutor.texto28[0]}*_\n\n*${tradutor.texto28[1]}* _${type}_ *fue* ${isEnable ? '_activada_' : '_desactivada_'} *${tradutor.texto28[2]}* ${isAll ? '_bot._' : isUser ? '' : '_chat._'}`}, {quoted: m});
-  //conn.sendMessage(m.chat, {text: `▢ *Opción:* ${type}\n\n▢ *Estado:* ${isEnable ? 'Activado' : 'Desactivado'}\n\n▢ *Para* ${isAll ? 'este bot' : isUser ? '' : 'este chat'}`}, {quoted: m});
+  conn.sendMessage(m.chat, {text: `_*${tradutor.texto27[0]}*_\n\n*${tradutor.texto27[1]}* _${type}_ *fue* ${isEnable ? '_activada_' : '_desactivada_'} *${tradutor.texto27[2]}* ${isAll ? '_bot._' : isUser ? '' : '_chat._'}`}, {quoted: m});
 };
 handler.command = /^((en|dis)able|(tru|fals)e|(turn)?[01])$/i;
 export default handler;

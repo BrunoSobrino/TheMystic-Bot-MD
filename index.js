@@ -7,9 +7,8 @@ import readline from 'readline';
 import yargs from 'yargs';
 import chalk from 'chalk'; 
 import fs from 'fs'; 
-import './config.js'; //max update 2025
+import './config.js';
 
-const PHONENUMBER_MCC = JSON.parse(fs.readFileSync('./src/phonenumber-mcc.json'));
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
 const { say } = cfonts;
@@ -47,8 +46,8 @@ function formatearNumeroTelefono(numero) {
 }
 
 function esNumeroValido(numeroTelefono) {
-  const numeroSinSigno = numeroTelefono.replace('+', '');
-  return Object.keys(PHONENUMBER_MCC).some(codigo => numeroSinSigno.startsWith(codigo));
+  const regex = /^\+521\d{10}$/;
+  return regex.test(numeroTelefono);
 }
 
 async function start(file) {
@@ -70,31 +69,30 @@ async function start(file) {
   verificarOCrearCarpetaAuth();
 
   if (verificarCredsJson()) {
+    console.log(chalk.green.bold('—◉ㅤSesión existente encontrada, iniciando...'));
     const args = [join(__dirname, file), ...process.argv.slice(2)];
     setupMaster({ exec: args[0], args: args.slice(1) });
-    const p = fork();
+    fork();
     return;
   }
 
   const opcion = await question(chalk.yellowBright.bold('—◉ㅤSeleccione una opción (solo el numero):\n') + chalk.white.bold('1. Con código QR\n2. Con código de texto de 8 dígitos\n—> '));
 
-  let numeroTelefono = '';
   if (opcion === '2') {
     const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤEscriba su número de WhatsApp:\n') + chalk.white.bold('◉ㅤEjemplo: +5219992095479\n—> '));
-    numeroTelefono = formatearNumeroTelefono(phoneNumber);
+    const numeroTelefono = formatearNumeroTelefono(phoneNumber);
+    
     if (!esNumeroValido(numeroTelefono)) {
       console.log(chalk.bgRed(chalk.white.bold('[ ERROR ] Número inválido. Asegúrese de haber escrito su numero en formato internacional y haber comenzado con el código de país.\n—◉ㅤEjemplo:\n◉ +5219992095479\n')));
       process.exit(0);
     }
-    process.argv.push(numeroTelefono);
+    
+    process.argv.push('--phone=' + numeroTelefono);
+    process.argv.push('--method=code');
+  } else if (opcion === '1') {
+    process.argv.push('--method=qr');
   }
-
-  if (opcion === '1') {
-    process.argv.push('qr');
-  } else if (opcion === '2') {
-    process.argv.push('code');
-  }
-
+  
   const args = [join(__dirname, file), ...process.argv.slice(2)];
   setupMaster({ exec: args[0], args: args.slice(1) });
 
@@ -106,7 +104,7 @@ async function start(file) {
       case 'reset':
         p.process.kill();
         isRunning = false;
-        start.apply(this, arguments);
+        start(file);
         break;
       case 'uptime':
         p.send(process.uptime());
@@ -114,27 +112,26 @@ async function start(file) {
     }
   });
 
-  p.on('exit', (_, code) => {
+  p.on('exit', (code, signal) => {
     isRunning = false;
-    console.error(chalk.red.bold('[ ERROR ] Ocurrió un error inesperado:'), code);
-    p.process.kill();
-    isRunning = false;
-    start.apply(this, arguments);
-    if (process.env.pm_id) {
-      process.exit(1);
-    } else {
-      process.exit();
+    console.error(chalk.red.bold('[ ERROR ] Proceso secundario terminado:'), { code, signal });
+    if (code !== 0) {
+      console.log(chalk.yellow.bold('—◉ㅤReiniciando...'));
+      start(file);
     }
   });
 
-  const opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse());
-  if (!opts['test']) {
-    if (!rl.listenerCount()) {
-      rl.on('line', (line) => {
-        p.emit('message', line.trim());
-      });
-    }
+  const opts = yargs(process.argv.slice(2)).argv;
+  if (!opts.test) {
+    rl.on('line', (line) => {
+      p.emit('message', line.trim());
+    });
   }
 }
 
-start('main.js');
+try {
+  start('main.js');
+} catch (error) {
+  console.error(chalk.red.bold('[ ERROR CRÍTICO ]:'), error);
+  process.exit(1);
+}

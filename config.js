@@ -23,9 +23,8 @@ global.owner = [
 global.suittag =  ['5493772406612', '5492604849203'];
 global.prems = ['5493772406612', '5492604849203'];
 
-// API (INTERFAZ DE PROGRAMACIÓN DE APLICACIONES)
+// Base Rest Api
 global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
-global.BASE_API_SKYNEX = "https://skynex.boxmine.xyz";
 
 global.packname = 'Sticker';
 global.author = 'ᴀꜱᴀᴋᴜʀᴀ ᴍᴀᴏ ʙᴏᴛ 👑';

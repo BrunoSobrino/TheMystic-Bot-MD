@@ -45,7 +45,6 @@
 - [Opciones de Despliegue](#opciones-de-despliegue)
   - [Despliegue en Cafirexos](#despliegue-en-cafirexos)
   - [Despliegue en BoxMineWorld](#despliegue-en-boxmineworld)
-  - [Despliegue en SkyUltraPlus](#despliegue-en-skyultraplus)
   - [Despliegue en Otros](#despliegue-en-otros)
 - [Soporte y Comunidad](#soporte-y-comunidad)
   - [Comunidades de Ayuda](#guía-de-uso)
@@ -103,27 +102,6 @@
 - **Panel de Control:** [panel.boxmineworld.com](https://panel.boxmineworld.com)
 - **Documentación:** [docs.boxmineworld.com](https://docs.boxmineworld.com)
 - **Comunidad de Discord:** [¡Únete aquí!](https://discord.gg/84qsr4v)
-
-</details>
-
-## Despliegue en SkyUltraPlus
-
-<a href="https://skyultraplus.com">
-  <img width="180px" src="https://qu.ax/dYZxE.jpg"/>
-</a>
-
-<details>
- <summary><b>:paperclip: Enlaces Importantes</b></summary>
-
-- **Pagina Oficial:** [`aqui`](https://skyultraplus.com)
-- **Tutorial:** [Aquí](https://youtube.com/@Sky-Ultra-Plus)
-- **Dashboard:** [Aquí](https://dash.skyultraplus.com)
-- **Panel:** [Aquí](https://panel.skyultraplus.com)
-- **Estado de servicios:** [Aquí](https://estado.skyultraplus.com)
-- **Canal de WhatsApp:** [Aquí](https://whatsapp.com/channel/0029VakUvreFHWpyWUr4Jr0g)
-- **Comunidad:** [Aquí](https://chat.whatsapp.com/E6iWpvGuJ8zJNPbN3zOr0D)
-- **Contacto(s):** [`Gata Dios`](https://wa.me/message/B3KTM5XN2JMRD1) / [`Russell`](https://api.whatsapp.com/send/?phone=15167096032&text&type=phone_number&app_absent=0) / [`elrebelde21`](https://facebook.com/elrebelde21)
-- **Discord:** [SkyUltraPlus](https://discord.gg/Ph4eWsZ8)
 
 </details>
 
