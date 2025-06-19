@@ -7,5 +7,5 @@ const exploit = await tools.ai.exploit(text);
 const data = exploit.answer;
 await m.reply(data)
 }
-handler.command = /^(chat|ia2|exploit|eploit)$/i;
+handler.command = /^(chatgpt2|ia2|exploit|eploit)$/i;
 export default handler;

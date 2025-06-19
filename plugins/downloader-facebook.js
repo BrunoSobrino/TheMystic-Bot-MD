@@ -1,9 +1,9 @@
-import fetch from 'node-fetch';
 import axios from 'axios';
 import fs from 'fs';
+import request from 'request';
 let enviando = false;
 
-const handler = async (m, {conn, args, command, usedPrefix}) => {
+const handler = async (m, { conn, args, command, usedPrefix }) => {
   const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.descargas_facebook;
@@ -14,22 +14,14 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
 
   if (!enviando) enviando = true;
   try {
-    
-    const response = await fetch(`${global.MyApiRestBaseUrl}/api/facebook?url=${args[0]}&apikey=${global.MyApiRestApikey}`);
-    const data = await response.json();
-
-    if (data?.status === true) {
-      const videoBuffer = await getBuffer(data.resultado.data);
-      await conn.sendMessage(m.chat, { video: videoBuffer, filename: 'video.mp4', caption: `_*${tradutor.texto4}*_` }, {quoted: m});
-      enviando = false;
-    } else {
-      console.error('Failed to fetch video data from API:', data);
-      enviando = false;
-    }
+    const videoUrl = await getFacebookVideoUrl(args[0]);
+    const videoBuffer = await getBuffer(videoUrl);
+    await conn.sendMessage(m.chat, { video: videoBuffer, filename: 'video.mp4', caption: `_*${tradutor.texto4}*_` }, { quoted: m });
+    enviando = false;
   } catch (error) {
     console.error('Error occurred:', error);
     enviando = false;
-    throw `_*${tradutor.texto5}*`;
+    throw `_*${tradutor.texto5}*_`;
   }
 };
 
@@ -38,11 +30,35 @@ export default handler;
 
 const getBuffer = async (url, options = {}) => {
   const res = await axios({
-    method: 'get', 
-    url, 
-    headers: {'DNT': 1, 'Upgrade-Insecure-Request': 1},
-    ...options, 
+    method: 'get',
+    url,
+    headers: { 'DNT': 1, 'Upgrade-Insecure-Request': 1 },
+    ...options,
     responseType: 'arraybuffer'
   });
   return res.data;
+};
+
+const getFacebookVideoUrl = async (url) => {
+  return new Promise((resolve, reject) => {
+    let options = {
+      method: 'POST',
+      url: 'https://www.getfvid.com/downloader',
+      formData: { url: url }
+    };
+    request(options, function (error, response) {
+      if (error) return reject(new Error(error));
+      let isPrivate = response.body.match(/Uh-Oh! This video might be private and not publi/g);
+      if (isPrivate) {
+        return reject(new Error('This Video Is Private'));
+      }
+      const rgx = /<a href="(.+?)" target="_blank" class="btn btn-download"(.+?)>(.+?)<\/a>/g;
+      let arr = [...response.body.matchAll(rgx)];
+      if (arr.length > 0) {
+        resolve(arr[0][1].replace(/amp;/gi, ''));
+      } else {
+        reject(new Error('Invalid Video URL'));
+      }
+    });
+  });
 };
