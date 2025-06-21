@@ -40,7 +40,7 @@ ${storytime.text}`, m);
     }
   }
 };
-handler.tags = ['frases'];
+handler.tags = ['tools'];
 handler.command = handler.help = ['consejo', 'fraseromantica', 'historiaromantica'];
 export default handler;
 
