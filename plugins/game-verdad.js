@@ -1,5 +1,3 @@
-
-
 const handler = async (m, {conn}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -11,7 +9,7 @@ const handler = async (m, {conn}) => {
   conn.reply(m.chat, `*┌────「 𝚅𝙴𝚁𝙳𝙰𝙳 」─*\n*“${pickRandom(global.verdad)}”*\n*└────「 𝙼𝚈𝚂𝚃𝙸𝙲 」─*`, m);
 };
 handler.help = ['verdad'];
-handler.tags = ['fun'];
+handler.tags = ['game'];
 handler.command = /^verdad/i;
 export default handler;
 
