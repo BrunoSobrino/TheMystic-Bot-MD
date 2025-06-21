@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 
-
 const handler = async (m, {conn, args, command, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -41,6 +40,8 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
     throw `${tradutor.texto7}\n*◉ https://www.xnxx.com/video-14lcwbe8/rubia_novia_follada_en_cuarto_de_bano*`;
   }
 };
+handler.tags = ['nsfw'];
+handler.help = ['xnxxdl'];
 handler.command = /^(xnxxdl)$/i;
 export default handler;
 
