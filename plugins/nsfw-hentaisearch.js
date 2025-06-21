@@ -1,7 +1,6 @@
 import cheerio from 'cheerio';
 import axios from 'axios';
 
-
 const handler = async (m, {conn, text, __dirname, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -25,6 +24,8 @@ ${i+1}. *_${v.title}_*
   }
   conn.sendFile(m.chat, randomThumbnail, 'error.jpg', teks, m);
 };
+handler.tags = ['nsfw'];
+handler.help = ['hentaisearch'];
 handler.command = /^(hentaisearch|searchhentai)$/i;
 export default handler;
 async function searchHentai(search) {
