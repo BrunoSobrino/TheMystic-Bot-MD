@@ -1,7 +1,6 @@
 import util from 'util';
 import path from 'path';
 
-
 const user = (a) => '@' + a.split('@')[0];
 function handler(m, {groupMetadata, command, conn, text, usedPrefix}) {
   const datas = global
@@ -43,7 +42,7 @@ function handler(m, {groupMetadata, command, conn, text, usedPrefix}) {
     ptt: true});*/
 }
 handler.help = handler.command = ['top'];
-handler.tags = ['fun'];
+handler.tags = ['game'];
 handler.group = true;
 export default handler;
 function pickRandom(list) {
