@@ -30,6 +30,8 @@ const handler = async (m, {conn, text, usedPrefix, command, args}) => {
     throw `${tradutor.texto3}`;
   }
 };
+handler.tags = ['nsfw'];
+handler.help = ['hentaipdf'];
 handler.command = /^(hentaipdf)$/i;
 export default handler;
 async function nhentaiScraper(id) {
