@@ -1516,6 +1516,7 @@ export function smsg(conn, m, hasParent) {
 }
 
 // https://github.com/Nurutomo/wabot-aq/issues/490
+// Fix 2025 - @BrunoSobrino - LID Resolved
 export function serialize() {
   const MediaType = ['imageMessage', 'videoMessage', 'audioMessage', 'stickerMessage', 'documentMessage'];
   return Object.defineProperties(proto.WebMessageInfo.prototype, {
@@ -1528,23 +1529,25 @@ export function serialize() {
       get() {
         return this.key?.id;
       },
+      enumerable: true,
     },
     isBaileys: {
       get() {
         return (this?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender)) && this.id.startsWith('3EB0') && (this.id.length === 20 || this.id.length === 22 || this.id.length === 12) || false;
-	/*this.id?.length === 16 || this.id?.startsWith('3EB0') && this.id?.length === 12 || false;*/ 
       },
+      enumerable: true,
     },
     chat: {
       get() {
         const senderKeyDistributionMessage = this.message?.senderKeyDistributionMessage?.groupId;
         return (
           this.key?.remoteJid ||
-                    (senderKeyDistributionMessage &&
-                        senderKeyDistributionMessage !== 'status@broadcast'
-                    ) || ''
+          (senderKeyDistributionMessage &&
+            senderKeyDistributionMessage !== 'status@broadcast'
+          ) || ''
         ).decodeJid();
       },
+      enumerable: true,
     },
     isGroup: {
       get() {
@@ -1554,6 +1557,10 @@ export function serialize() {
     },
     sender: {
       get() {
+        const parse1 = (this.participant || this.key.participant || this.chat || '').decodeJid();
+        if (parse1 && parse1.includes('@lid')) {
+          return parse1.resolveLidToRealJid(this.chat, mconn.conn);
+        }
         return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
       },
       enumerable: true,
@@ -1562,14 +1569,15 @@ export function serialize() {
       get() {
         return this.key?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender) || false;
       },
+      enumerable: true,
     },
     mtype: {
       get() {
         if (!this.message) return '';
         const type = Object.keys(this.message);
-        return (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(type[0]) && type[0]) || // Sometimes message in the front
-                    (type.length >= 3 && type[1] !== 'messageContextInfo' && type[1]) || // Sometimes message in midle if mtype length is greater than or equal to 3
-                    type[type.length - 1]; // common case
+        return (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(type[0]) && type[0]) ||
+               (type.length >= 3 && type[1] !== 'messageContextInfo' && type[1]) ||
+               type[type.length - 1];
       },
       enumerable: true,
     },
@@ -1578,6 +1586,7 @@ export function serialize() {
         if (!this.message) return null;
         return this.message[this.mtype];
       },
+      enumerable: true,
     },
     mediaMessage: {
       get() {
@@ -1599,9 +1608,6 @@ export function serialize() {
     },
     quoted: {
       get() {
-        /**
-                 * @type {ReturnType<typeof makeWASocket>}
-                 */
         const self = this;
         const msg = self.msg;
         const contextInfo = msg?.contextInfo;
@@ -1610,6 +1616,7 @@ export function serialize() {
         const type = Object.keys(quoted)[0];
         const q = quoted[type];
         const text = typeof q === 'string' ? q : q.text;
+        
         return Object.defineProperties(JSON.parse(JSON.stringify(typeof q === 'string' ? {text: q} : q)), {
           mtype: {
             get() {
@@ -1649,13 +1656,16 @@ export function serialize() {
           isBaileys: {
             get() {  
               return (this?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender)) && this.id.startsWith('3EB0') && (this.id.length === 20 || this.id.length === 22 || this.id.length === 12) || false;
-	      /*this.id?.length === 16 || this.id?.startsWith('3EB0') && this.id.length === 12 || false;*/
             },
             enumerable: true,
           },
           sender: {
             get() {
-              return (contextInfo.participant || this.chat || '').decodeJid();
+              const parse1 = (contextInfo.participant || this.chat || '').decodeJid();
+              if (parse1 && parse1.includes('@lid')) {
+                return parse1.resolveLidToRealJid(this.chat, mconn.conn);
+              }
+              return parse1;
             },
             enumerable: true,
           },
@@ -1673,7 +1683,16 @@ export function serialize() {
           },
           mentionedJid: {
             get() {
-              return q.contextInfo?.mentionedJid || self.getQuotedObj()?.mentionedJid || [];
+              const mentioned = q.contextInfo?.mentionedJid || self.getQuotedObj()?.mentionedJid || [];
+              return mentioned.map(user => {
+                if (user && typeof user === 'object') {
+                  user = user.lid || user.jid || user.id || '';
+                }
+                if (typeof user === 'string' && user.includes('@lid')) {
+                  return user.resolveLidToRealJid(user, mconn.conn);
+                }
+                return user;
+              }).filter(jid => jid && typeof jid === 'string');
             },
             enumerable: true,
           },
@@ -1683,7 +1702,6 @@ export function serialize() {
               return sender ? self.conn?.getName(sender) : null;
             },
             enumerable: true,
-
           },
           vM: {
             get() {
@@ -1697,11 +1715,13 @@ export function serialize() {
                 ...(self.isGroup ? {participant: this.sender} : {}),
               });
             },
+            enumerable: true,
           },
           fakeObj: {
             get() {
               return this.vM;
             },
+            enumerable: true,
           },
           download: {
             value(saveToFile = false) {
@@ -1712,33 +1732,19 @@ export function serialize() {
             configurable: true,
           },
           reply: {
-            /**
-                         * Reply to quoted message
-                         * @param {String|Object} text
-                         * @param {String|false} chatId
-                         * @param {Object} options
-                         */
             value(text, chatId, options) {
               return self.conn?.reply(chatId ? chatId : this.chat, text, this.vM, options);
             },
             enumerable: true,
           },
           copy: {
-            /**
-                         * Copy quoted message
-                         */
             value() {
               const M = proto.WebMessageInfo;
-              return smsg(conn, M.fromObject(M.toObject(this.vM)));
+              return smsg(self.conn, M.fromObject(M.toObject(this.vM)));
             },
             enumerable: true,
           },
           forward: {
-            /**
-                         * Forward quoted message
-                         * @param {String} jid
-                         *  @param {Boolean} forceForward
-                         */
             value(jid, force = false, options) {
               return self.conn?.sendMessage(jid, {
                 forward: this.vM, force, ...options,
@@ -1747,41 +1753,22 @@ export function serialize() {
             enumerable: true,
           },
           copyNForward: {
-            /**
-                         * Exact Forward quoted message
-                         * @param {String} jid
-                         * @param {Boolean|Number} forceForward
-                         * @param {Object} options
-                         */
             value(jid, forceForward = false, options) {
               return self.conn?.copyNForward(jid, this.vM, forceForward, options);
             },
             enumerable: true,
-
           },
           cMod: {
-            /**
-                         * Modify quoted Message
-                         * @param {String} jid
-                         * @param {String} text
-                         * @param {String} sender
-                         * @param {Object} options
-                         */
             value(jid, text = '', sender = this.sender, options = {}) {
               return self.conn?.cMod(jid, this.vM, text, sender, options);
             },
             enumerable: true,
-
           },
           delete: {
-            /**
-                         * Delete quoted message
-                         */
             value() {
               return self.conn?.sendMessage(this.chat, {delete: this.vM.key});
             },
             enumerable: true,
-
           },
         });
       },
@@ -1790,6 +1777,7 @@ export function serialize() {
     _text: {
       value: null,
       writable: true,
+      enumerable: true,
     },
     text: {
       get() {
@@ -1808,7 +1796,16 @@ export function serialize() {
     },
     mentionedJid: {
       get() {
-        return this.msg?.contextInfo?.mentionedJid?.length && this.msg.contextInfo.mentionedJid || [];
+        const mentioned = this.msg?.contextInfo?.mentionedJid || [];
+        return mentioned.map(user => {
+          if (user && typeof user === 'object') {
+            user = user.lid || user.jid || user.id || '';
+          }
+          if (typeof user === 'string' && user.includes('@lid')) {
+            return user.resolveLidToRealJid(user, mconn.conn);
+          }
+          return user;
+        }).filter(jid => jid && typeof jid === 'string');
       },
       enumerable: true,
     },
@@ -1830,6 +1827,7 @@ export function serialize() {
       value(text, chatId, options) {
         return this.conn?.reply(chatId ? chatId : this.chat, text, this, options);
       },
+      enumerable: true,
     },
     copy: {
       value() {
@@ -1870,6 +1868,7 @@ export function serialize() {
       get() {
         return this.getQuotedObj;
       },
+      enumerable: true,
     },
     delete: {
       value() {
@@ -1934,6 +1933,32 @@ export function protoType() {
     const str = this.split(' ');
     return str.map((v) => v.capitalize()).join(' ');
   };
+
+// Resolver problema del LID, Fu*k You Meta 	
+String.prototype.resolveLidToRealJid = async function (groupChatId, conn) {
+  const lidJid = this.toString(); // 'this' es el lidJid
+  if (!lidJid.endsWith('@lid') || !groupChatId.endsWith('@g.us')) return null;
+  const lidToFind = lidJid.split('@')[0];
+
+  try {
+    const metadata = await conn.groupMetadata(groupChatId);
+    for (const participant of metadata.participants) {
+      try {
+        const contactDetails = await conn.onWhatsApp(participant.jid);
+        const possibleLid = contactDetails?.[0]?.lid?.split('@')[0];
+        if (possibleLid === lidToFind) {
+          return participant.jid;
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+  } catch (e) {
+    console.error('❌ Error al obtener metadata del grupo:', e);
+  }
+
+  return null;
+};    
   String.prototype.decodeJid = function decodeJid() {
     if (/:\d+@/gi.test(this)) {
       const decode = jidDecode(this) || {};
