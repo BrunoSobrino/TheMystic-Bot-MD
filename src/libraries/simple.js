@@ -1201,57 +1201,51 @@ let msg = generateWAMessageFromContent(jid, {
     },
 parseMention: {
   /**
-   * Parses string into mentionedJid(s), resolving LIDs when possible
+   * Parses mentions in text, including LIDs (e.g., @12345@lid).
+   * Automatically resolves LIDs to real JIDs if possible.
    * @param {String} text
-   * @param {String} groupJid (optional) Needed for LID resolution
-   * @return {Promise<Array<String>>}
+   * @return {Promise<Array<String>>} (Async due to possible LID resolution)
    */
-  async value(text = '', groupJid = null) {
-    if (!text) return [];
+  async value(text = '') {
+    const mentions = [...text.matchAll(/@([0-9]{5,16})(?:@(lid|s\.whatsapp\.net))?/g)];
+    
+    const processedMentions = await Promise.all(
+      mentions.map(async (match) => {
+        const number = match[1]; // El número (ej: 12345)
+        const domain = match[2]; // El dominio (lid o s.whatsapp.net)
 
-    try {
-      // 1. Find all mentions (@number or @lid)
-      const mentions = [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(match => match[1]);
-      
-      if (mentions.length === 0) return [];
-
-      // 2. Process each mention
-      const processedJids = await Promise.all(mentions.map(async mention => {
-        try {
-          const possibleLid = `${mention}@lid`;
-          
-          // Check if it's a LID and we have group context
-          if (groupJid && groupJid.endsWith('@g.us') && mention.length > 5) {
-            // Use cached resolution if available
-            if (this._lidCache?.has(possibleLid)) {
-              const cached = await this._lidCache.get(possibleLid);
-              return cached !== possibleLid ? cached : `${mention}@s.whatsapp.net`;
-            }
-            
-            // Try to resolve LID
-            const resolved = await possibleLid.resolveLidToRealJid(groupJid, this);
-            if (resolved && !resolved.endsWith('@lid')) {
-              // Cache the resolved JID
-              this._lidCache = this._lidCache || new Map();
-              this._lidCache.set(possibleLid, resolved);
-              return resolved;
-            }
-          }
-          
-          // Default case: convert to standard JID
-          return `${mention}@s.whatsapp.net`;
-        } catch (e) {
-          console.error(`Error processing mention ${mention}:`, e);
-          return null;
+        // Caso 1: Mención tradicional sin dominio (@12345 → 12345@s.whatsapp.net)
+        if (!domain) {
+          return `${number}@s.whatsapp.net`;
         }
-      }));
-      
-      // Return filtered array of valid JIDs
-      return processedJids.filter(jid => jid && typeof jid === 'string');
-    } catch (e) {
-      console.error('Error in parseMention:', e);
-      return [];
-    }
+
+        // Caso 2: Ya es un JID completo (@12345@s.whatsapp.net → se conserva)
+        if (domain === 's.whatsapp.net') {
+          return `${number}@${domain}`;
+        }
+
+        // Caso 3: Es un LID (@12345@lid → intentar resolver)
+        if (domain === 'lid') {
+          const lidJid = `${number}@${domain}`;
+          try {
+            // Usamos this.mconn para la conexión (asume que existe en el contexto)
+            const groupChatId = this.groupMetadata?.id; // O this.id si es un mensaje grupal
+            if (this.mconn && groupChatId) {
+              const realJid = await lidJid.resolveLidToRealJid(groupChatId, this.mconn);
+              return realJid;
+            }
+          } catch (error) {
+            console.error('Failed to resolve LID:', error);
+          }
+          return lidJid; // Si no se puede resolver, se conserva el LID
+        }
+
+        // Default (nunca debería llegar aquí)
+        return `${number}@s.whatsapp.net`;
+      })
+    );
+
+    return processedMentions;
   },
   enumerable: true,
 },
