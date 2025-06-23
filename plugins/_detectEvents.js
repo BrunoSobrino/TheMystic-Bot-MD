@@ -13,21 +13,21 @@ import fetch from 'node-fetch';
 
 export async function before(m, {conn, participants}) {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas?.db?.data?.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins._detectevents
 
-  if (!m.messageStubType || !m.isGroup) return !0;
-  const groupName = (await conn.groupMetadata(m.chat)).subject;
+  if (!m?.messageStubType || !m?.isGroup) return !0;
+  const groupName = (await conn?.groupMetadata(m?.chat)).subject;
   const groupAdmins = participants.filter((p) => p.admin);
-  const pp = await conn.profilePictureUrl(m.chat, 'image').catch((_) => null) || 'https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/avatar_contact.png';
+  const pp = await conn?.profilePictureUrl(m.chat, 'image').catch((_) => null) || 'https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/avatar_contact.png';
   const img = await (await fetch(pp)).buffer();
-  const chat = global.db.data.chats[m.chat];
+  const chat = global?.db?.data?.chats[m.chat];
   const mentionsString = [m.sender, m.messageStubParameters[0], ...groupAdmins.map((v) => v.id)];
   const mentionsContentM = [m.sender, m.messageStubParameters[0]];
   const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
 
-  if (chat.detect2 && m.messageStubType == 29) {
+  if (chat?.detect2 && m?.messageStubType == 29) {
     let txt1 = tradutor.texto1;
     txt1 += `${tradutor.texto1_1} ${groupName}\n`;
     txt1 += `${tradutor.tetxo1_2} @${m.messageStubParameters[0].split`@`[0]}\n`;
