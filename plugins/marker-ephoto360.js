@@ -1,6 +1,5 @@
-import { ephoto } from 'nayan-api-servers';
-
-
+import pkg from 'nayan-api-servers';
+const { ephoto } = pkg;
 
 const handler = async (m, {conn, args, command, usedPrefix}) => {
   const datas = global
