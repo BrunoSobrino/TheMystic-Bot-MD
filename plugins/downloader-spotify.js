@@ -31,7 +31,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     await conn.sendMessage(m.chat, {audio: music.data, fileName: `${spty.name}.mp3`, mimetype: 'audio/mpeg'}, {quoted: m});
   } catch (error) {
     console.error('Error: ' + error.message);
-    throw tradutor.texto3;
+    throw `${tradutor.texto3}\n> ${error}`;
   }
 };
 handler.command = /^(spotify|music)$/i;
