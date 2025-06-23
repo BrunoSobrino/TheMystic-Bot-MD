@@ -320,15 +320,15 @@ async function connectionUpdate(update) {
   if (global.db.data == null) loadDatabase();
 if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
 if (opcion == '1' || methodCodeQR) {
-    console.log(chalk.yellow('[ㅤℹ️ㅤ] Escanea el código QR.'));
+    console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
  }}
   if (connection == 'open') {
-    console.log(chalk.yellow('[ㅤℹ️ㅤ] Conectado correctamente.'));
+    console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
     if (!global.subBotsInitialized) {
       global.subBotsInitialized = true;
       try {
         await initializeSubBots();
-        console.log(chalk.yellow('[ㅤℹ️ㅤ] Sub-bots inicializados correctamente (ignorar si no hay subbots).'));
+        console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Sub-bots inicializados correctamente (ignorar si no hay subbots).'));
       } catch (error) {
         console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
       }
