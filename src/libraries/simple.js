@@ -1935,31 +1935,42 @@ export function protoType() {
   };
 
 // Resolver problema del LID, Fu*k You Meta 	
-String.prototype.resolveLidToRealJid = async function (groupChatId, conn) {
-  const lidJid = this.toString(); // 'this' es el lidJid
-  if (!lidJid.endsWith('@lid') || !groupChatId.endsWith('@g.us')) return null;
+String.prototype.resolveLidToRealJid = async function (groupChatId, conn, maxRetries = 3, retryDelay = 60000) {
+  const lidJid = this.toString();
+  if (!lidJid.endsWith('@lid') || !groupChatId.endsWith('@g.us')) return lidJid;
   const lidToFind = lidJid.split('@')[0];
-
-  try {
-    const metadata = await conn.groupMetadata(groupChatId);
-    for (const participant of metadata.participants) {
-      try {
-        const contactDetails = await conn.onWhatsApp(participant.jid);
-        const possibleLid = contactDetails?.[0]?.lid?.split('@')[0];
-        if (possibleLid === lidToFind) {
-          return participant.jid;
+  let attempts = 0;
+  while (attempts < maxRetries) {
+    try {
+      const metadata = await conn?.groupMetadata(groupChatId);
+      if (!metadata?.participants) {
+        throw new Error('No se pudieron obtener los participantes del grupo');
+      }
+      for (const participant of metadata?.participants) {
+        try {
+          if (!participant?.jid) continue;
+          const contactDetails = await conn?.onWhatsApp(participant.jid);
+          if (!contactDetails?.[0]?.lid) continue;
+          const possibleLid = contactDetails[0].lid.split('@')[0];
+          if (possibleLid === lidToFind) {
+            return participant.jid;
+          }
+        } catch (e) {
+          continue;
         }
-      } catch (e) {
-        continue;
+      }
+      return lidJid;
+    } catch (e) {
+      attempts++;      
+      if (attempts < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
       }
     }
-  } catch (e) {
-    console.error('❌ Error al obtener metadata del grupo:', e);
   }
-
-  return null;
-};    
-  String.prototype.decodeJid = function decodeJid() {
+  return lidJid;
+};
+	
+String.prototype.decodeJid = function decodeJid() {
     if (/:\d+@/gi.test(this)) {
       const decode = jidDecode(this) || {};
       return (decode.user && decode.server && decode.user + '@' + decode.server || this).trim();
