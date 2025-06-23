@@ -10,13 +10,13 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) return m.reply(`${tradutor.texto1} _${usedPrefix + command} Good Feeling - Flo Rida_`);
 
   try {
-
     let songInfo = await spotifyxv(text);
     if (!songInfo.length) return m.reply(tradutor.texto2);
     let song = songInfo[0];
 
-    const res = await axios.get(`https://api.stellarwa.xyz/dow/spotify?url=${song.url}`);
+    const res = await axios.get(`https://api.stellarwa.xyz/dow/spotify?url=${song.url}`, { responseType: 'json' });
     const data = res.data?.data;
+
     if (!data?.download) return m.reply(tradutor.texto3);
 
     let spotifyi = ` _${tradutor.texto2[0]}_\n\n`;
@@ -26,7 +26,23 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     spotifyi += ` ${tradutor.texto2[4]} ${data.duration}\n\n`;
     spotifyi += `> ${tradutor.texto2[5]}`;
 
-    await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": data.image, "thumbnailUrl": data.image, "mediaUrl": data.download, "sourceUrl": data.download}}}, {quoted: m});
+    await conn.sendMessage(m.chat, {
+      text: spotifyi.trim(),
+      contextInfo: {
+        forwardingScore: 9999999,
+        isForwarded: true,
+        externalAdReply: {
+          showAdAttribution: true,
+          containsAutoReply: true,
+          renderLargerThumbnail: true,
+          title: global.titulowm2,
+          mediaType: 1,
+          thumbnailUrl: data.image,
+          mediaUrl: data.download,
+          sourceUrl: data.download
+        }
+      }
+    }, { quoted: m });
 
     await conn.sendMessage(m.chat, {
       audio: { url: data.download },
@@ -35,7 +51,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     }, { quoted: m });
 
   } catch (e) {
-    m.reply(`${tradutor.texto3}\n> ${e}`); 
+    // console.error('Error:', e);
+    m.reply(`${tradutor.texto3}\n> ${e}`);
   }
 };
 
@@ -45,7 +62,7 @@ handler.command = ['spotify', 'music'];
 export default handler;
 
 async function spotifyxv(query) {
-  const res = await axios.get(`https://api.stellarwa.xyz/search/spotify?query=${query}`);
+  const res = await axios.get(`https://api.stellarwa.xyz/search/spotify?query=${query}`, { responseType: 'json' });
   if (!res.data?.status || !res.data?.data?.length) return [];
 
   const firstTrack = res.data.data[0];
