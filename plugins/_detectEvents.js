@@ -143,4 +143,5 @@ export async function before(m, { conn, participants }) {
     return true;
   } catch (error) {
     return true; 
+  }
 }
