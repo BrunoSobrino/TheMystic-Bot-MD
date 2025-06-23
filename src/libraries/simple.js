@@ -1207,6 +1207,7 @@ let msg = generateWAMessageFromContent(jid, {
              */
       value(text = '') {
 	      const mentioneds = [...text.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net')
+	      console.log(mentioneds)
         return mentioneds;
       },
       enumerable: true,
