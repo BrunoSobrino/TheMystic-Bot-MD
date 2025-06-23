@@ -1609,50 +1609,16 @@ export function serialize() {
       },
       enumerable: true,
     },
-sender: {
-  get() {
-    try {
-      // 1. Obtener el participant del mensaje citado
-      const rawParticipant = contextInfo.participant;
-
-	    console.log(contextInfo)
-
-	    console.log(rawParticipant)
-      
-      // 2. Si no hay participant, verificar si el mensaje citado es mío
-      if (!rawParticipant) {
-        const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
-        if (isFromMe) {
-          return safeDecodeJid(self.conn?.user?.id, self.conn);
+    sender: {
+      get() {
+        const parse1 = (this.participant || this.key.participant || this.chat || '').decodeJid();
+        if (parse1 && parse1.includes('@lid')) {
+          return parse1.resolveLidToRealJid(this.chat, mconn.conn);
         }
-        return this.chat; // Fallback: Usar el chat (grupo o individual)
-      }
-
-      // 3. Decodificar el participant (puede ser LID o JID normal)
-      const parse1 = safeDecodeJid(rawParticipant, self.conn);
-
-      // 4. Si es un LID, intentar resolverlo
-      if (parse1 && parse1.endsWith('@lid')) {
-        // Usar async/await con .then() ya que los getters no pueden ser async
-        const resolved = parse1.resolveLidToRealJid(this.chat, self.conn)
-          .then(resolvedJid => resolvedJid || parse1)
-          .catch(() => parse1);
-        
-        // En un entorno real, deberías esperar esta promesa donde uses este valor
-        return resolved;
-      }
-
-      // 5. Si no es LID, devolver el JID decodificado
-
-	    console.log(parse1)
-      return parse1;
-    } catch (e) {
-      console.error('Error en quoted sender getter:', e);
-      return '';
-    }
-  },
-  enumerable: true,
-},
+        return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
+      },
+      enumerable: true,
+    },
 	fromMe: {
       get() {
         try {
