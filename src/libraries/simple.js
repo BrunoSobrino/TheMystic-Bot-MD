@@ -1248,30 +1248,6 @@ parseMention: {
   },
   enumerable: true,
 },	  
-/*parseMention: {
-  value(text = '') {
-    try {
-      const esNumeroValido = (numero) => {
-        const len = numero.length;
-        if (len < 8 || len > 13) return false;
-        if (len > 10 && numero.startsWith('9')) return false;
-        const codigosValidos = ['52', '1', '54', '55', '57'];
-        return codigosValidos.some(codigo => numero.startsWith(codigo));
-      };
-      return (text.match(/@(\d{5,20})/g) || [])
-        .map(m => m.substring(1)) 
-        .map(numero => (
-          esNumeroValido(numero)
-            ? `${numero}@s.whatsapp.net`
-            : `${numero}@lid` 
-        ));
-    } catch (error) {
-      console.error('Error:', error);
-      return [];
-    }
-  },
-  enumerable: true,
-},*/
 	  getName: {
       /**
              * Get name from jid
