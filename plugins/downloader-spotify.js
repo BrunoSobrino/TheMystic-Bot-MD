@@ -26,7 +26,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     spotifyi += ` ${tradutor.texto2[4]} ${data.duration}\n\n`;
     spotifyi += `> ${tradutor.texto2[5]}`;
 
-    await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": img, "thumbnailUrl": img, "mediaUrl": linkDL, "sourceUrl": linkDL}}}, {quoted: m});
+    await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": data.image, "thumbnailUrl": data.image, "mediaUrl": data.download, "sourceUrl": data.download}}}, {quoted: m});
 
     await conn.sendMessage(m.chat, {
       audio: { url: data.download },
