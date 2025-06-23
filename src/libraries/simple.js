@@ -1202,50 +1202,59 @@ let msg = generateWAMessageFromContent(jid, {
 parseMention: {
   /**
    * Parses mentions in text, including LIDs (e.g., @12345@lid).
-   * Automatically resolves LIDs to real JIDs if possible.
+   * Automatically resolves LIDs to real JIDs using the global `mconn`.
    * @param {String} text
-   * @return {Promise<Array<String>>} (Async due to possible LID resolution)
+   * @return {Promise<Array<String>>} (Always returns an array, even if empty)
    */
   async value(text = '') {
-    const mentions = [...text.matchAll(/@([0-9]{5,16})(?:@(lid|s\.whatsapp\.net))?/g)];
-    
-    const processedMentions = await Promise.all(
-      mentions.map(async (match) => {
-        const number = match[1]; // El número (ej: 12345)
-        const domain = match[2]; // El dominio (lid o s.whatsapp.net)
+    try {
+      // Busca menciones en formato @numero, @numero@lid o @numero@s.whatsapp.net
+      const mentions = [...text.matchAll(/@([0-9]{5,16})(?:@(lid|s\.whatsapp\.net))?/g)];
+      
+      if (!mentions.length) return []; // Retorna array vacío si no hay menciones
 
-        // Caso 1: Mención tradicional sin dominio (@12345 → 12345@s.whatsapp.net)
-        if (!domain) {
-          return `${number}@s.whatsapp.net`;
-        }
+      const processedMentions = await Promise.all(
+        mentions.map(async (match) => {
+          const number = match[1]; // El número (ej: 12345)
+          const domain = match[2]; // El dominio (lid o s.whatsapp.net)
 
-        // Caso 2: Ya es un JID completo (@12345@s.whatsapp.net → se conserva)
-        if (domain === 's.whatsapp.net') {
-          return `${number}@${domain}`;
-        }
-
-        // Caso 3: Es un LID (@12345@lid → intentar resolver)
-        if (domain === 'lid') {
-          const lidJid = `${number}@${domain}`;
-          try {
-            // Usamos this.mconn para la conexión (asume que existe en el contexto)
-            const groupChatId = mconn?.conn?.groupMetadata?.id; // O this.id si es un mensaje grupal
-            if (this && groupChatId) {
-              const realJid = await lidJid.resolveLidToRealJid(groupChatId, mconn?.conn);
-              return realJid;
-            }
-          } catch (error) {
-            console.error('Failed to resolve LID:', error);
+          // Caso 1: Mención tradicional sin dominio (@12345 → 12345@s.whatsapp.net)
+          if (!domain) {
+            return `${number}@s.whatsapp.net`;
           }
-          return lidJid; // Si no se puede resolver, se conserva el LID
-        }
 
-        // Default (nunca debería llegar aquí)
-        return `${number}@s.whatsapp.net`;
-      })
-    );
+          // Caso 2: Ya es un JID completo (@12345@s.whatsapp.net → se conserva)
+          if (domain === 's.whatsapp.net') {
+            return `${number}@${domain}`;
+          }
 
-    return processedMentions;
+          // Caso 3: Es un LID (@12345@lid → intentar resolver con mconn global)
+          if (domain === 'lid') {
+            const lidJid = `${number}@${domain}`;
+            try {
+              if (typeof mconn?.conn?.groupMetadata === 'function') {
+                // Obtiene el groupChatId desde el contexto (this.id) o de otro lugar
+                const groupChatId = this?.id?.endsWith('@g.us') ? this.id : null;
+                if (groupChatId) {
+                  const realJid = await lidJid.resolveLidToRealJid(groupChatId, mconn.conn);
+                  return realJid || lidJid; // Fallback al LID si resolución falla
+                }
+              }
+            } catch (error) {
+              console.error('Error resolving LID:', error);
+            }
+            return lidJid; // Conserva el LID si no hay conexión/grupo
+          }
+
+          return `${number}@s.whatsapp.net`; // Default (nunca debería llegar aquí)
+        })
+      );
+
+      return processedMentions.filter(Boolean); // Filtra valores nulos/undefined
+    } catch (error) {
+      console.error('Error in parseMention:', error);
+      return []; // Retorna array vacío en caso de error crítico
+    }
   },
   enumerable: true,
 },
