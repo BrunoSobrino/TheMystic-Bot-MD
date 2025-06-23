@@ -2,9 +2,6 @@
 /* GitHub: https://github.com/Gatito-kw */
 /* Bot: https://github.com/Gatito-kw/nekobot-md */
 
-// Credits: @Gatito-kw
-// Enhanced with robust error handling and rate limit protection
-
 import { WAMessageStubType } from "baileys";
 import fetch from 'node-fetch';
 import fs from 'fs';
