@@ -1223,7 +1223,7 @@ let msg = generateWAMessageFromContent(jid, {
         if (jid.endsWith('@g.us')) {
           return new Promise(async (resolve) => {
             v = conn.chats[jid] || {};
-            if (!(v.name || v.subject)) v = await conn.groupMetadata(jid) || {};
+            if (!(v.name || v.subject)) v = await conn?.groupMetadata(jid).catch(() => ({}));
             resolve(v.name || v.subject || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international'));
           });
         } else {
