@@ -1229,9 +1229,9 @@ parseMention: {
           const lidJid = `${number}@${domain}`;
           try {
             // Usamos this.mconn para la conexión (asume que existe en el contexto)
-            const groupChatId = this.groupMetadata?.id; // O this.id si es un mensaje grupal
-            if (this.mconn && groupChatId) {
-              const realJid = await lidJid.resolveLidToRealJid(groupChatId, this.mconn);
+            const groupChatId = mconn?.conn?.groupMetadata?.id; // O this.id si es un mensaje grupal
+            if (this && groupChatId) {
+              const realJid = await lidJid.resolveLidToRealJid(groupChatId, mconn?.conn);
               return realJid;
             }
           } catch (error) {
