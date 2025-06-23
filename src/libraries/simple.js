@@ -1756,20 +1756,35 @@ export function serialize() {
               },
               enumerable: true,
             },
-            sender: {
-              get() {
-		      console.log(contextInfo.participant)
-		      console.log(contextInfo)
-                const parse1 = safeDecodeJid(contextInfo.participant || this.chat, self.conn);
-                if (parse1 && safeEndsWith(parse1, '@lid')) {
-                  const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
-                  return typeof resolved === 'string' ? resolved : parse1;
-                }
-                return parse1;
-              },
-              enumerable: true,
-            },
-            fromMe: {
+		  sender: {
+			  get() {
+				  try {
+					  const rawParticipant = contextInfo.participant;
+					  if (!rawParticipant) {
+						  const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
+						  return isFromMe ? safeDecodeJid(self.conn?.user?.id, self.conn) : this.chat;
+					  }
+					  const parse1 = safeDecodeJid(rawParticipant, self.conn);
+					  if (parse1 && parse1.endsWith('@lid')) {
+						  if (!self.conn._lidCache) self.conn._lidCache = new Map();
+						  if (self.conn._lidCache.has(parse1)) return self.conn._lidCache.get(parse1);
+						  const resolvedPromise = parse1.resolveLidToRealJid(this.chat, self.conn).then(resolvedJid => {
+							  const result = resolvedJid || parse1;
+							  self.conn._lidCache.set(parse1, result);
+							  return result;
+						  }).catch(() => parse1);
+						  self.conn._lidCache.set(parse1, resolvedPromise);
+						  return parse1;
+					  }
+					  return parse1;
+				  } catch (e) {
+					  console.error('Error en quoted sender getter:', e);
+					  return '';
+				  }
+			  },
+			  enumerable: true,
+		  },
+	fromMe: {
               get() {
                 const sender = this.sender || '';
                 const userJid = self.conn?.user?.jid || '';
