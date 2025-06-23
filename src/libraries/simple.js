@@ -1790,40 +1790,10 @@ sender: {
               },
               enumerable: true,
             },
-
-sender: {
-  get() {
-      // 1. Obtener el participant del mensaje citado
-      const rawParticipant = contextInfo.participant;
-
-      // 2. Si no hay participant, verificar si el mensaje citado es mío
-      if (!rawParticipant) {
-        const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
-        if (isFromMe) {
-          return safeDecodeJid(self.conn?.user?.id, self.conn);
-        }
-        return this.chat; // Fallback: Usar el chat (grupo o individual)
-      }
-
-      // 3. Decodificar el participant (puede ser LID o JID normal)
-      const parse1 = safeDecodeJid(rawParticipant, self.conn);
-
-      // 4. Si es un LID, intentar resolverlo
-      if (parse1 && safeEndsWith(parse1, '@lid')) {
-        const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
-        return typeof resolved === 'string' ? resolved : parse1;
-      }
-
-      // 5. Si no es LID, devolver el JID decodificado
-      return parse1;
-  },
-  enumerable: true,
-},
-
-
-		  
-           /* sender: {
+            sender: {
               get() {
+		      console.log(contextInfo.participant)
+		      console.log(contextInfo)
                 const parse1 = safeDecodeJid(contextInfo.participant || this.chat, self.conn);
                 if (parse1 && safeEndsWith(parse1, '@lid')) {
                   const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
@@ -1832,7 +1802,7 @@ sender: {
                 return parse1;
               },
               enumerable: true,
-            },*/
+            },
             fromMe: {
               get() {
                 const sender = this.sender || '';
