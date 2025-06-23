@@ -1200,56 +1200,73 @@ let msg = generateWAMessageFromContent(jid, {
       enumerable: true,
     },
 parseMention: {
-  /**
-   * Parses mentions in text, including LIDs (e.g., @12345@lid).
-   * Always returns an array (empty if no mentions or errors).
-   * @param {String} text
-   * @return {Promise<Array<String>>}
-   */
-  async value(text = "") {
-    if (!text || typeof text !== "string") return []; // Retorna [] si no hay texto o no es string
+  async value(text = '') {
+    console.debug('[parseMention] Inicio - Texto recibido:', text);
+    
+    if (!text || typeof text !== 'string') {
+      console.debug('[parseMention] Texto vacío o no es string - Retornando []');
+      return [];
+    }
 
-	  console.log(text)
-	  
     try {
-      const mentions = [...text.matchAll(/@([0-9]{5,16})(?:@(lid|s\.whatsapp\.net))?/g)];
-      if (!mentions.length) return []; // Retorna [] si no hay coincidencias
+      const mentions = [...text.matchAll(/@(\d{5,20})(?:@(lid|s\.whatsapp\.net))?/g)];
+      console.debug('[parseMention] Coincidencias encontradas:', mentions);
 
-	    console.log(mentions)
+      if (!mentions.length) {
+        console.debug('[parseMention] No hay menciones - Retornando []');
+        return [];
+      }
 
-      const processedMentions = await Promise.all(
-        mentions.map(async (match) => {
-          const number = match[1];
-          const domain = match[2];
+      const processed = [];
+      
+      for (const [idx, match] of mentions.entries()) {
+        const number = match[1];
+        const domain = match[2];
+        console.debug(`[parseMention] Procesando mención ${idx + 1}:`, { number, domain });
 
-          // Mención tradicional (@numero)
-          if (!domain) return `${number}@s.whatsapp.net`;
+        // Caso LID (@número@lid)
+        if (domain === 'lid') {
+          const lidJid = `${number}@lid`;
+          console.debug(`[parseMention] Es LID: ${lidJid} - Intentando resolver...`);
 
-          // JID completo (@numero@s.whatsapp.net)
-          if (domain === "s.whatsapp.net") return `${number}@${domain}`;
-
-          // LID (@numero@lid)
-          if (domain === "lid") {
-            const lidJid = `${number}@${domain}`;
-            try {
-              if (mconn?.conn && this?.id?.endsWith("@g.us")) {
-                const realJid = await lidJid.resolveLidToRealJid(this.id, mconn.conn);
-                return realJid || lidJid; // Fallback al LID si la resolución falla
-              }
-            } catch (error) {
-              console.error("Error resolving LID:", error);
+          try {
+            if (!mconn?.conn) {
+              console.debug('[parseMention] mconn.conn no disponible - No se puede resolver LID');
+              continue;
             }
-            return lidJid;
+
+            if (!this?.id?.endsWith('@g.us')) {
+              console.debug('[parseMention] this.id no es grupo - No se puede resolver LID');
+              continue;
+            }
+
+            console.debug(`[parseMention] Resolviendo LID con groupId: ${this.id}`);
+            const realJid = await lidJid.resolveLidToRealJid(this.id, mconn.conn);
+            
+            if (realJid.endsWith('@s.whatsapp.net')) {
+              console.debug(`[parseMention] LID resuelto: ${realJid}`);
+              processed.push(realJid);
+            } else {
+              console.debug('[parseMention] LID no se resolvió a JID válido');
+            }
+          } catch (e) {
+            console.error('[parseMention] Error al resolver LID:', e);
           }
+        } 
+        // Caso número normal
+        else {
+          const jid = `${number}@s.whatsapp.net`;
+          console.debug(`[parseMention] Número normal: ${jid}`);
+          processed.push(jid);
+        }
+      }
 
-          return `${number}@s.whatsapp.net`; // Default (nunca debería llegar aquí)
-        })
-      );
-
-      return processedMentions.filter(jid => jid && typeof jid === "string"); // Filtra valores inválidos
+      console.debug('[parseMention] Resultado final:', processed);
+      return processed;
+      
     } catch (error) {
-      console.error("Error in parseMention:", error);
-      return []; // Retorna array vacío en caso de error
+      console.error('[parseMention] Error crítico:', error);
+      return [];
     }
   },
   enumerable: true,
