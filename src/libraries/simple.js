@@ -1770,7 +1770,7 @@ export function serialize() {
               enumerable: true,
             },
 
-sender2: {
+sender: {
   get() {
     try {
       // 1. Obtener el participant del mensaje citado
@@ -1806,7 +1806,7 @@ sender2: {
 
 
 		  
-            sender: {
+           /* sender: {
               get() {
                 const parse1 = safeDecodeJid(contextInfo.participant || this.chat, self.conn);
                 if (parse1 && safeEndsWith(parse1, '@lid')) {
@@ -1816,7 +1816,7 @@ sender2: {
                 return parse1;
               },
               enumerable: true,
-            },
+            },*/
             fromMe: {
               get() {
                 const sender = this.sender || '';
