@@ -1207,23 +1207,23 @@ parseMention: {
    * @return {Promise<Array<String>>}
    */
   async value(text = '', groupJid = null) {
-    if (!text) return []; // Always return an array
+    if (!text) return [];
 
-console.log(text)
-	  
     try {
       // 1. Find all mentions (@number or @lid)
       const mentions = [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(match => match[1]);
       
+      if (mentions.length === 0) return [];
+
       // 2. Process each mention
       const processedJids = await Promise.all(mentions.map(async mention => {
-        const possibleLid = `${mention}@lid`;
-        
-        // Check if it's a LID and we have group context
-        if (groupJid && groupJid.endsWith('@g.us') && mention.length > 5) {
-          try {
+        try {
+          const possibleLid = `${mention}@lid`;
+          
+          // Check if it's a LID and we have group context
+          if (groupJid && groupJid.endsWith('@g.us') && mention.length > 5) {
             // Use cached resolution if available
-            if (this._lidCache && this._lidCache.has(possibleLid)) {
+            if (this._lidCache?.has(possibleLid)) {
               const cached = await this._lidCache.get(possibleLid);
               return cached !== possibleLid ? cached : `${mention}@s.whatsapp.net`;
             }
@@ -1232,29 +1232,30 @@ console.log(text)
             const resolved = await possibleLid.resolveLidToRealJid(groupJid, this);
             if (resolved && !resolved.endsWith('@lid')) {
               // Cache the resolved JID
-              if (!this._lidCache) this._lidCache = new Map();
+              this._lidCache = this._lidCache || new Map();
               this._lidCache.set(possibleLid, resolved);
               return resolved;
             }
-          } catch (e) {
-            console.error('Error resolving LID mention:', e);
           }
+          
+          // Default case: convert to standard JID
+          return `${mention}@s.whatsapp.net`;
+        } catch (e) {
+          console.error(`Error processing mention ${mention}:`, e);
+          return null;
         }
-        
-        // Default case: convert to standard JID
-        return `${mention}@s.whatsapp.net`;
       }));
       
-      // Ensure we always return an array, filtering any invalid entries
+      // Return filtered array of valid JIDs
       return processedJids.filter(jid => jid && typeof jid === 'string');
     } catch (e) {
       console.error('Error in parseMention:', e);
-      return []; // Fallback to empty array
+      return [];
     }
   },
   enumerable: true,
 },
-	getName: {
+	  getName: {
       /**
              * Get name from jid
              * @param {String} jid
