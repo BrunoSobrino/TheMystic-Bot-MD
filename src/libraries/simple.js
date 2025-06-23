@@ -1614,6 +1614,8 @@ export function serialize() {
         try {
           const rawParticipant = this.participant || this.key.participant || this.chat || '';
           const parse1 = safeDecodeJid(rawParticipant, this.conn);
+
+		console.log(parse1)
           
           if (!parse1) return '';
           
@@ -1771,12 +1773,12 @@ export function serialize() {
             },
             sender: {
               get() {
-                const parse1 = safeDecodeJid(quoted.participant || this.chat, self.conn);
-                    console.log(quoted)
+                const parse1 = safeDecodeJid(contextInfo.participant || this.chat, self.conn);
                 if (parse1 && safeEndsWith(parse1, '@lid')) {
                   const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
                   return typeof resolved === 'string' ? resolved : parse1;
                 }
+		      console.log(parse1)
                 return parse1;
               },
               enumerable: true,
