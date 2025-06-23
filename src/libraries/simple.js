@@ -1204,50 +1204,66 @@ parseMention: {
   async value(text = '') {
     try {
       // 1. Configuración de reglas
-      const MAX_DIGITOS_NUMERO = 13; // Máximo para números válidos
-      const CODIGOS_PAIS = ['52', '1', '54', '55', '57']; // México, USA, Argentina, Brasil, Colombia
+      const MAX_DIGITOS_NUMERO = 13;
+      const CODIGOS_PAIS = ['52', '1', '54', '55', '57'];
 
-      // 2. Función de validación mejorada
-      const esNumeroValido = (numero) => {
-        const len = numero.length;
-        
-        // Regla 1: Longitud máxima
-        if (len > MAX_DIGITOS_NUMERO) return false;
-        
-        // Regla 2: Código de país válido
-        return CODIGOS_PAIS.some(codigo => numero.startsWith(codigo));
-      };
+      // 2. Función de validación optimizada
+      const esNumeroValido = (numero) => (
+        numero.length <= MAX_DIGITOS_NUMERO && 
+        CODIGOS_PAIS.some(codigo => numero.startsWith(codigo))
+      );
 
-      // 3. Procesamiento con logs
+      // 3. Procesamiento mejorado
       const menciones = (text.match(/@(\d{5,20})/g) || [])
         .map(m => m.substring(1))
         .filter(numero => numero.length >= 5);
 
-      console.log('Menciones crudas:', menciones);
+      console.log('Menciones detectadas:', menciones);
 
-      const resultado = menciones.map(numero => {
-        const valido = esNumeroValido(numero);
-        console.log(`Procesando ${numero}:`, valido ? 'VÁLIDO' : 'LID');
-        
-        return valido 
-          ? `${numero}@s.whatsapp.net`
-          : `${numero}@lid`; // WhatsApp lo convertirá automáticamente
-      });
+      // 4. Formateo compatible con resolveLidToRealJid
+      const resultado = await Promise.all(
+        menciones.map(async numero => {
+          const valido = esNumeroValido(numero);
+          console.log(`Procesando ${numero}:`, valido ? 'VÁLIDO' : 'LID');
+          
+          if (valido) {
+            return `${numero}@s.whatsapp.net`;
+          } else {
+            // Formato especial para LIDs que requiere tu otra función
+            const lidJid = `${numero}@lid`;
+            
+            // Opcional: Resolución inmediata si tienes el contexto
+            if (mconn.chat && mconn?.conn) {
+              try {
+                const realJid = await lidJid.resolveLidToRealJid(this.groupId, this.conn);
+		      console.log(realJid)
+		      console.log(lidJid)
+                return realJid || lidJid; // Fallback al LID si falla
+              } catch (e) {
+                console.error('Error resolviendo LID:', e);
+                return lidJid;
+              }
+            }
+            return lidJid;
+          }
+        })
+      );
 
-      console.log('Resultado final:', resultado);
-      return resultado;
+      console.log('Resultado final procesado:', resultado);
+	    console.log(resultado)
+      return resultado.filter(Boolean); // Filtra cualquier undefined/null
 
     } catch (error) {
       console.error('Error en parseMention:', {
         error: error.message,
         stack: error.stack,
-        textReceived: text
+        text: text.slice(0, 50) + (text.length > 50 ? '...' : '') 
       });
       return [];
     }
   },
   enumerable: true,
-},	  
+},
 	  getName: {
       /**
              * Get name from jid
