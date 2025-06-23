@@ -328,7 +328,7 @@ if (opcion == '1' || methodCodeQR) {
       global.subBotsInitialized = true;
       try {
         await initializeSubBots();
-        console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Sub-bots inicializados correctamente (ignorar si no hay subbots).'));
+        //console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Sub-bots inicializados correctamente (ignorar si no hay subbots).'));
       } catch (error) {
         console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
       }
