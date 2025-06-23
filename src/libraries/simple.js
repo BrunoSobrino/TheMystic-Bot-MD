@@ -1199,18 +1199,40 @@ let msg = generateWAMessageFromContent(jid, {
       },
       enumerable: true,
     },
-    parseMention: {
-      /**
-             * Parses string into mentionedJid(s)
-             * @param {String} text
-             * @return {Array<String>}
-             */
-      value(text = '') {
-        return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net');
-      },
-      enumerable: true,
-    },
-    getName: {
+parseMention: {
+  /**
+   * Parses string into mentionedJid(s), resolving LIDs when possible
+   * @param {String} text
+   * @param {String} groupJid (optional) Needed for LID resolution
+   * @return {Promise<Array<String>>}
+   */
+  async value(text = '', groupJid = null) {
+    const mentions = [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(match => match[1]);
+    const processedJids = await Promise.all(mentions.map(async mention => {
+      const possibleLid = `${mention}@lid`;
+      if (groupJid && groupJid.endsWith('@g.us') && mention.length > 5) { 
+        try {
+          if (this._lidCache && this._lidCache.has(possibleLid)) {
+            const cached = await this._lidCache.get(possibleLid);
+            return cached !== possibleLid ? cached : `${mention}@s.whatsapp.net`;
+          }
+          const resolved = await possibleLid.resolveLidToRealJid(groupJid, this);
+          if (resolved && !resolved.endsWith('@lid')) {
+            if (!this._lidCache) this._lidCache = new Map();
+            this._lidCache.set(possibleLid, resolved);
+            return resolved;
+          }
+        } catch (e) {
+          console.error('Error resolving LID mention:', e);
+        }
+      }
+      return `${mention}@s.whatsapp.net`;
+    }));
+    return processedJids.filter(jid => jid); 
+  },
+  enumerable: true,
+},
+	  getName: {
       /**
              * Get name from jid
              * @param {String} jid
