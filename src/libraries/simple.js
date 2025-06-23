@@ -1210,14 +1210,21 @@ parseMention: {
 
       // Extracción de menciones
       const menciones = [...text.matchAll(/@(\d{5,20})/g)].map(m => m[1]);
+
+	    console.log(menciones)
+	    
       if (!menciones.length) return [];
 
-      // Procesamiento
-      return menciones.map(numero => {
+      const testit = menciones.map(numero => {
         return esNumeroValido(numero) 
           ? `${numero}@s.whatsapp.net` 
           : `${numero}@lid`;
-      });
+      });   
+
+	    console.log(testit)
+
+      // Procesamiento
+      return testit
 
     } catch (error) {
       console.error('Error procesando menciones:', error);
