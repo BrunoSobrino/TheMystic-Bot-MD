@@ -69,7 +69,7 @@ async function start(file) {
   verificarOCrearCarpetaAuth();
 
   if (verificarCredsJson()) {
-    console.log(chalk.green.bold('—◉ㅤSesión existente encontrada, iniciando...'));
+    //console.log(chalk.green.bold('—◉ㅤSesión existente encontrada, iniciando...'));
     const args = [join(__dirname, file), ...process.argv.slice(2)];
     setupMaster({ exec: args[0], args: args.slice(1) });
     fork();
