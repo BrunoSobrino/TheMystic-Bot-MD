@@ -1772,8 +1772,8 @@ export function serialize() {
             sender: {
               get() {
                 const parse1 = safeDecodeJid(contextInfo.participant || this.chat, self.conn);
-                    console.log(parse1)
-		      console.log(safeEndsWith(parse1, '@lid'))
+		      console.log(contextInfo)
+                    console.log(contextInfo.participant)
                 if (parse1 && safeEndsWith(parse1, '@lid')) {
                   const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
                   return typeof resolved === 'string' ? resolved : parse1;
