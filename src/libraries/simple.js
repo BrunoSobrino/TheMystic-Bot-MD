@@ -1201,38 +1201,77 @@ let msg = generateWAMessageFromContent(jid, {
       enumerable: true,
     },
 parseMention: {
-  value(text = '') {
+  async value(text = '') {
     try {
-      // 1. Reglas de validación mejoradas
+      // 1. Configuración de reglas
+      const MAX_DIGITOS_NUMERO = 13; // Máximo para números válidos
+      const CODIGOS_PAIS = ['52', '1', '54', '55', '57']; // México, USA, Argentina, Brasil, Colombia
+
+      // 2. Función de validación mejorada
       const esNumeroValido = (numero) => {
         const len = numero.length;
-        // Regla 1: Longitud estándar para números internacionales
-        if (len < 8 || len > 13) return false; // Rango real: 8-13 dígitos
         
-        // Regla 2: No puede empezar con 9 si es muy largo (para evitar LIDs)
-        if (len > 10 && numero.startsWith('9')) return false;
+        // Regla 1: Longitud máxima
+        if (len > MAX_DIGITOS_NUMERO) return false;
         
-        // Regla 3: Códigos de país comunes
-        const codigosValidos = ['52', '1', '54', '55', '57']; // México, USA, Argentina, Brasil, Colombia
-        return codigosValidos.some(codigo => numero.startsWith(codigo));
+        // Regla 2: Código de país válido
+        return CODIGOS_PAIS.some(codigo => numero.startsWith(codigo));
       };
 
-      // 2. Procesamiento eficiente
+      // 3. Procesamiento con logs
+      const menciones = (text.match(/@(\d{5,20})/g) || [])
+        .map(m => m.substring(1))
+        .filter(numero => numero.length >= 5);
+
+      console.log('Menciones crudas:', menciones);
+
+      const resultado = menciones.map(numero => {
+        const valido = esNumeroValido(numero);
+        console.log(`Procesando ${numero}:`, valido ? 'VÁLIDO' : 'LID');
+        
+        return valido 
+          ? `${numero}@s.whatsapp.net`
+          : `${numero}@lid`; // WhatsApp lo convertirá automáticamente
+      });
+
+      console.log('Resultado final:', resultado);
+      return resultado;
+
+    } catch (error) {
+      console.error('Error en parseMention:', {
+        error: error.message,
+        stack: error.stack,
+        textReceived: text
+      });
+      return [];
+    }
+  },
+  enumerable: true,
+},	  
+/*parseMention: {
+  value(text = '') {
+    try {
+      const esNumeroValido = (numero) => {
+        const len = numero.length;
+        if (len < 8 || len > 13) return false;
+        if (len > 10 && numero.startsWith('9')) return false;
+        const codigosValidos = ['52', '1', '54', '55', '57'];
+        return codigosValidos.some(codigo => numero.startsWith(codigo));
+      };
       return (text.match(/@(\d{5,20})/g) || [])
-        .map(m => m.substring(1)) // Elimina el @
+        .map(m => m.substring(1)) 
         .map(numero => (
           esNumeroValido(numero)
             ? `${numero}@s.whatsapp.net`
-            : `${numero}@lid` // Todo lo demás es LID
+            : `${numero}@lid` 
         ));
-        
     } catch (error) {
       console.error('Error:', error);
       return [];
     }
   },
   enumerable: true,
-},
+},*/
 	  getName: {
       /**
              * Get name from jid
