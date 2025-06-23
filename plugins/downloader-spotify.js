@@ -51,8 +51,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     }, { quoted: m });
 
   } catch (e) {
-    // console.error('Error:', e);
-    m.reply(`${tradutor.texto3}\n> ${e}`);
+    m.reply(`${tradutor.texto3}`);
   }
 };
 
