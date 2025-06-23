@@ -1793,7 +1793,6 @@ sender: {
 
 sender: {
   get() {
-    try {
       // 1. Obtener el participant del mensaje citado
       const rawParticipant = contextInfo.participant;
 
@@ -1817,10 +1816,6 @@ sender: {
 
       // 5. Si no es LID, devolver el JID decodificado
       return parse1;
-    } catch (e) {
-      console.error('Error en quoted sender getter:', e);
-      return '';
-    }
   },
   enumerable: true,
 },
