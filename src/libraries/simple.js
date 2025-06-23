@@ -1201,41 +1201,27 @@ let msg = generateWAMessageFromContent(jid, {
       enumerable: true,
     },
 parseMention: {
-  /**
-   * Detecta y clasifica menciones
-   * @param {String} text
-   * @return {Promise<Array<String>>}
-   */
   async value(text = '') {
-    try {
-      // 1. Extraer menciones crudas
-      const rawMentions = [...text.matchAll(/@(\d{5,20})/g)].map(m => m[1]);
-      if (!rawMentions.length) return [];
+    try {      
+      // Función de validación interna
+      const esNumeroValido = (numero) => {
+        return Object.keys(PHONENUMBER_MCC).some(codigo => numero.startsWith(codigo));
+      };
 
-      // 2. Verificar y clasificar cada mención
-      const processed = await Promise.all(
-        rawMentions.map(async number => {
-          try {
-            const { isMobile } = PHONENUMBER_MCC[number.slice(0, 3)] || {};
-            
-            if (isMobile && number.length >= 10) {
-              return `${number}@s.whatsapp.net`;
-            }
-            return `${number}@lid`;
-          } catch {
-            return `${number}@lid`; 
-          }
-        })
-      );
+      // Extracción de menciones
+      const menciones = [...text.matchAll(/@(\d{5,20})/g)].map(m => m[1]);
+      if (!menciones.length) return [];
 
-      console.log(processed)
+      // Procesamiento
+      return menciones.map(numero => {
+        return esNumeroValido(numero) 
+          ? `${numero}@s.whatsapp.net` 
+          : `${numero}@lid`;
+      });
 
-	    console.log(processed.filter(Boolean))
-	    
-      return processed.filter(Boolean); 
     } catch (error) {
-      console.error('Error en parseMention:', error);
-      return []; 
+      console.error('Error procesando menciones:', error);
+      return [];
     }
   },
   enumerable: true,
