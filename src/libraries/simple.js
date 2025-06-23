@@ -1200,70 +1200,81 @@ let msg = generateWAMessageFromContent(jid, {
       enumerable: true,
     },
 parseMention: {
+  /**
+   * Procesa menciones normales y LIDs, garantizando siempre un array válido
+   * @param {String} text - Texto a analizar
+   * @return {Promise<Array<String>>} - Array de JIDs válidos (puede estar vacío)
+   */
   async value(text = '') {
-    console.debug('[parseMention] Inicio - Texto recibido:', text);
-    
+    // 1. Validación inicial
     if (!text || typeof text !== 'string') {
-      console.debug('[parseMention] Texto vacío o no es string - Retornando []');
+      console.debug('[parseMention] Texto inválido o vacío');
       return [];
     }
 
     try {
+      // 2. Detección de menciones
       const mentions = [...text.matchAll(/@(\d{5,20})(?:@(lid|s\.whatsapp\.net))?/g)];
-      console.debug('[parseMention] Coincidencias encontradas:', mentions);
+      console.debug(`[parseMention] Menciones crudas:`, JSON.stringify(mentions));
 
       if (!mentions.length) {
-        console.debug('[parseMention] No hay menciones - Retornando []');
+        console.debug('[parseMention] No se encontraron menciones');
         return [];
       }
 
-      const processed = [];
+      // 3. Procesamiento por etapas
+      const results = [];
       
-      for (const [idx, match] of mentions.entries()) {
-        const number = match[1];
-        const domain = match[2];
-        console.debug(`[parseMention] Procesando mención ${idx + 1}:`, { number, domain });
+      for (const [fullMatch, number, domain] of mentions) {
+        try {
+          console.debug(`[parseMention] Procesando:`, { number, domain });
 
-        // Caso LID (@número@lid)
-        if (domain === 'lid') {
-          const lidJid = `${number}@lid`;
-          console.debug(`[parseMention] Es LID: ${lidJid} - Intentando resolver...`);
-
-          try {
-            if (!mconn?.conn) {
-              console.debug('[parseMention] mconn.conn no disponible - No se puede resolver LID');
-              continue;
-            }
-
-            if (!this?.id?.endsWith('@g.us')) {
-              console.debug('[parseMention] this.id no es grupo - No se puede resolver LID');
-              continue;
-            }
-
-            console.debug(`[parseMention] Resolviendo LID con groupId: ${this.id}`);
-            const realJid = await lidJid.resolveLidToRealJid(this.id, mconn.conn);
-            
-            if (realJid.endsWith('@s.whatsapp.net')) {
-              console.debug(`[parseMention] LID resuelto: ${realJid}`);
-              processed.push(realJid);
-            } else {
-              console.debug('[parseMention] LID no se resolvió a JID válido');
-            }
-          } catch (e) {
-            console.error('[parseMention] Error al resolver LID:', e);
+          // Caso 1: Mención normal (@número)
+          if (!domain) {
+            const jid = `${number}@s.whatsapp.net`;
+            console.debug(`[parseMention] Mención estándar: ${jid}`);
+            results.push(jid);
+            continue;
           }
-        } 
-        // Caso número normal
-        else {
-          const jid = `${number}@s.whatsapp.net`;
-          console.debug(`[parseMention] Número normal: ${jid}`);
-          processed.push(jid);
+
+          // Caso 2: JID completo (@número@s.whatsapp.net)
+          if (domain === 's.whatsapp.net') {
+            console.debug(`[parseMention] JID ya completo: ${fullMatch}`);
+            results.push(fullMatch);
+            continue;
+          }
+
+          // Caso 3: LID (@número@lid)
+          if (domain === 'lid') {
+            const lidJid = `${number}@lid`;
+            console.debug(`[parseMention] Intentando resolver LID: ${lidJid}`);
+
+            if (mconn?.conn && this?.id?.endsWith('@g.us')) {
+              const realJid = await lidJid.resolveLidToRealJid(this.id, mconn.conn);
+              
+              if (realJid && realJid.endsWith('@s.whatsapp.net')) {
+                console.debug(`[parseMention] LID resuelto: ${realJid}`);
+                results.push(realJid);
+              } else {
+                console.debug('[parseMention] LID no resuelto (formato inválido)');
+              }
+            } else {
+              console.debug('[parseMention] No se puede resolver LID (falta conexión o groupId)');
+            }
+          }
+        } catch (error) {
+          console.error(`[parseMention] Error procesando mención ${fullMatch}:`, error);
         }
       }
 
-      console.debug('[parseMention] Resultado final:', processed);
-      return processed;
+      // 4. Garantizar array válido
+      const finalResult = results.filter(jid => 
+        jid && typeof jid === 'string' && jid.includes('@')
+      );
       
+      console.debug('[parseMention] Resultado final:', finalResult);
+      return finalResult;
+
     } catch (error) {
       console.error('[parseMention] Error crítico:', error);
       return [];
