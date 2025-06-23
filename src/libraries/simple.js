@@ -1488,37 +1488,69 @@ let msg = generateWAMessageFromContent(jid, {
  */
 export function smsg(conn, m, hasParent) {
   if (!m) return m;
-  /**
-     * @type {import("baileys").proto.WebMessageInfo}
-     */
   const M = proto.WebMessageInfo;
-  m = M.fromObject(m);
-  m.conn = conn;
-  let protocolMessageKey;
-  if (m.message) {
-    if (m.mtype == 'protocolMessage' && m.msg.key) {
-      protocolMessageKey = m.msg.key;
-      if (protocolMessageKey == 'status@broadcast') protocolMessageKey.remoteJid = m.chat;
-      if (!protocolMessageKey.participant || protocolMessageKey.participant == 'status_me') protocolMessageKey.participant = m.sender;
-      protocolMessageKey.fromMe = conn.decodeJid(protocolMessageKey.participant) === conn.decodeJid(conn.user.id);
-      if (!protocolMessageKey.fromMe && protocolMessageKey.remoteJid === conn.decodeJid(conn.user.id)) protocolMessageKey.remoteJid = m.sender;
-    }
-    if (m.quoted) if (!m.quoted.mediaMessage) delete m.quoted.download;
-  }
-  if (!m.mediaMessage) delete m.download;
-
   try {
-    if (protocolMessageKey && m.mtype == 'protocolMessage') conn.ev.emit('message.delete', protocolMessageKey);
+    m = M.fromObject(m);
+    m.conn = conn;
+    let protocolMessageKey;
+    if (m.message) {
+      if (m.mtype == 'protocolMessage' && m.msg?.key) {
+        protocolMessageKey = m.msg.key;
+        if (protocolMessageKey.remoteJid === 'status@broadcast') {
+          protocolMessageKey.remoteJid = m.chat || '';
+        }
+        if (!protocolMessageKey.participant || protocolMessageKey.participant === 'status_me') {
+          protocolMessageKey.participant = typeof m.sender === 'string' ? m.sender : '';
+        }
+        const decodedParticipant = conn?.decodeJid?.(protocolMessageKey.participant) || '';
+        protocolMessageKey.fromMe = decodedParticipant === (conn?.user?.id || '');
+        if (!protocolMessageKey.fromMe && protocolMessageKey.remoteJid === (conn?.user?.id || '')) {
+          protocolMessageKey.remoteJid = typeof m.sender === 'string' ? m.sender : '';
+        }
+      }
+      if (m.quoted && !m.quoted.mediaMessage) {
+        delete m.quoted.download;
+      }
+    }
+    if (!m.mediaMessage) {
+      delete m.download;
+    }
+    if (protocolMessageKey && m.mtype == 'protocolMessage') {
+      try {
+        conn.ev.emit('message.delete', protocolMessageKey);
+      } catch (e) {
+        console.error('Error al emitir message.delete:', e);
+      }
+    }
+    return m;
   } catch (e) {
-    console.error(e);
+    console.error('Error en smsg:', e);
+    return m;
   }
-  return m;
 }
 
 // https://github.com/Nurutomo/wabot-aq/issues/490
 // Fix 2025 - @BrunoSobrino - LID Resolved
 export function serialize() {
   const MediaType = ['imageMessage', 'videoMessage', 'audioMessage', 'stickerMessage', 'documentMessage'];
+  
+  // Función segura para endsWith
+  const safeEndsWith = (str, suffix) => typeof str === 'string' && str.endsWith(suffix);
+  
+  // Función segura para decodeJid
+  const safeDecodeJid = (jid, conn) => {
+    try {
+      if (!jid || typeof jid !== 'string') return '';
+      return conn?.decodeJid?.(jid) || jid;
+    } catch (e) {
+      console.error('Error en safeDecodeJid:', e);
+      return '';
+    }
+  };
+
+  // Función segura para split
+  const safeSplit = (str, separator) => typeof str === 'string' ? str.split(separator) : [];
+
   return Object.defineProperties(proto.WebMessageInfo.prototype, {
     conn: {
       value: undefined,
@@ -1527,250 +1559,336 @@ export function serialize() {
     },
     id: {
       get() {
-        return this.key?.id;
+        try {
+          return this.key?.id || '';
+        } catch (e) {
+          console.error('Error en id getter:', e);
+          return '';
+        }
       },
       enumerable: true,
     },
     isBaileys: {
       get() {
-        return (this?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender)) && this.id.startsWith('3EB0') && (this.id.length === 20 || this.id.length === 22 || this.id.length === 12) || false;
+        try {
+          const userId = this.conn?.user?.id || '';
+          const sender = this.sender || '';
+          return (this?.fromMe || areJidsSameUser(userId, sender)) && 
+                 this.id?.startsWith?.('3EB0') && 
+                 [20, 22, 12].includes(this.id?.length) || false;
+        } catch (e) {
+          console.error('Error en isBaileys getter:', e);
+          return false;
+        }
       },
       enumerable: true,
     },
     chat: {
       get() {
-        const senderKeyDistributionMessage = this.message?.senderKeyDistributionMessage?.groupId;
-        return (
-          this.key?.remoteJid ||
-          (senderKeyDistributionMessage &&
-            senderKeyDistributionMessage !== 'status@broadcast'
-          ) || ''
-        ).decodeJid();
+        try {
+          const senderKeyDistributionMessage = this.message?.senderKeyDistributionMessage?.groupId;
+          const rawJid = this.key?.remoteJid || 
+                        (senderKeyDistributionMessage && senderKeyDistributionMessage !== 'status@broadcast') || 
+                        '';
+          return safeDecodeJid(rawJid, this.conn);
+        } catch (e) {
+          console.error('Error en chat getter:', e);
+          return '';
+        }
       },
       enumerable: true,
     },
     isGroup: {
       get() {
-        return this.chat.endsWith('@g.us');
+        try {
+          return safeEndsWith(this.chat, '@g.us');
+        } catch (e) {
+          console.error('Error en isGroup getter:', e);
+          return false;
+        }
       },
       enumerable: true,
     },
     sender: {
       get() {
-        const parse1 = (this.participant || this.key.participant || this.chat || '').decodeJid();
-        if (parse1 && parse1.includes('@lid')) {
-          return parse1.resolveLidToRealJid(this.chat, mconn.conn);
+        try {
+          const rawParticipant = this.participant || this.key.participant || this.chat || '';
+          const parse1 = safeDecodeJid(rawParticipant, this.conn);
+          
+          if (!parse1) return '';
+          
+          if (safeEndsWith(parse1, '@lid')) {
+            const resolved = parse1.resolveLidToRealJid(this.chat, this.conn);
+            return typeof resolved === 'string' ? resolved : parse1;
+          }
+          
+          return this.key?.fromMe 
+            ? safeDecodeJid(this.conn?.user?.id, this.conn)
+            : parse1;
+        } catch (e) {
+          console.error('Error en sender getter:', e);
+          return '';
         }
-        return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
       },
       enumerable: true,
     },
     fromMe: {
       get() {
-        return this.key?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender) || false;
+        try {
+          const userId = this.conn?.user?.id || '';
+          const sender = this.sender || '';
+          return this.key?.fromMe || areJidsSameUser(userId, sender) || false;
+        } catch (e) {
+          console.error('Error en fromMe getter:', e);
+          return false;
+        }
       },
       enumerable: true,
     },
     mtype: {
       get() {
-        if (!this.message) return '';
-        const type = Object.keys(this.message);
-        return (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(type[0]) && type[0]) ||
-               (type.length >= 3 && type[1] !== 'messageContextInfo' && type[1]) ||
-               type[type.length - 1];
+        try {
+          if (!this.message) return '';
+          const type = Object.keys(this.message);
+          
+          if (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(type[0])) {
+            return type[0];
+          }
+          
+          if (type.length >= 3 && type[1] !== 'messageContextInfo') {
+            return type[1];
+          }
+          
+          return type[type.length - 1];
+        } catch (e) {
+          console.error('Error en mtype getter:', e);
+          return '';
+        }
       },
       enumerable: true,
     },
     msg: {
       get() {
-        if (!this.message) return null;
-        return this.message[this.mtype];
+        try {
+          if (!this.message) return null;
+          return this.message[this.mtype] || null;
+        } catch (e) {
+          console.error('Error en msg getter:', e);
+          return null;
+        }
       },
       enumerable: true,
     },
     mediaMessage: {
       get() {
-        if (!this.message) return null;
-        const Message = ((this.msg?.url || this.msg?.directPath) ? {...this.message} : extractMessageContent(this.message)) || null;
-        if (!Message) return null;
-        const mtype = Object.keys(Message)[0];
-        return MediaType.includes(mtype) ? Message : null;
+        try {
+          if (!this.message) return null;
+          
+          const Message = ((this.msg?.url || this.msg?.directPath) ? {...this.message} : extractMessageContent(this.message)) || null;
+          if (!Message) return null;
+          
+          const mtype = Object.keys(Message)[0];
+          return MediaType.includes(mtype) ? Message : null;
+        } catch (e) {
+          console.error('Error en mediaMessage getter:', e);
+          return null;
+        }
       },
       enumerable: true,
     },
     mediaType: {
       get() {
-        let message;
-        if (!(message = this.mediaMessage)) return null;
-        return Object.keys(message)[0];
+        try {
+          const message = this.mediaMessage;
+          if (!message) return null;
+          return Object.keys(message)[0];
+        } catch (e) {
+          console.error('Error en mediaType getter:', e);
+          return null;
+        }
       },
       enumerable: true,
     },
     quoted: {
       get() {
-        const self = this;
-        const msg = self.msg;
-        const contextInfo = msg?.contextInfo;
-        const quoted = contextInfo?.quotedMessage;
-        if (!msg || !contextInfo || !quoted) return null;
-        const type = Object.keys(quoted)[0];
-        const q = quoted[type];
-        const text = typeof q === 'string' ? q : q.text;
-        
-        return Object.defineProperties(JSON.parse(JSON.stringify(typeof q === 'string' ? {text: q} : q)), {
-          mtype: {
-            get() {
-              return type;
+        try {
+          const self = this;
+          const msg = self.msg;
+          const contextInfo = msg?.contextInfo;
+          const quoted = contextInfo?.quotedMessage;
+          
+          if (!msg || !contextInfo || !quoted) return null;
+          
+          const type = Object.keys(quoted)[0];
+          const q = quoted[type];
+          const text = typeof q === 'string' ? q : q?.text || '';
+          
+          return Object.defineProperties(JSON.parse(JSON.stringify(typeof q === 'string' ? {text: q} : q || {})), {
+            mtype: {
+              get() {
+                return type;
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          mediaMessage: {
-            get() {
-              const Message = ((q.url || q.directPath) ? {...quoted} : extractMessageContent(quoted)) || null;
-              if (!Message) return null;
-              const mtype = Object.keys(Message)[0];
-              return MediaType.includes(mtype) ? Message : null;
+            mediaMessage: {
+              get() {
+                const Message = ((q?.url || q?.directPath) ? {...quoted} : extractMessageContent(quoted)) || null;
+                if (!Message) return null;
+                const mtype = Object.keys(Message)[0];
+                return MediaType.includes(mtype) ? Message : null;
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          mediaType: {
-            get() {
-              let message;
-              if (!(message = this.mediaMessage)) return null;
-              return Object.keys(message)[0];
+            mediaType: {
+              get() {
+                const message = this.mediaMessage;
+                if (!message) return null;
+                return Object.keys(message)[0];
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          id: {
-            get() {
-              return contextInfo.stanzaId;
+            id: {
+              get() {
+                return contextInfo.stanzaId || '';
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          chat: {
-            get() {
-              return contextInfo.remoteJid || self.chat;
+            chat: {
+              get() {
+                return contextInfo.remoteJid || self.chat || '';
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          isBaileys: {
-            get() {  
-              return (this?.fromMe || areJidsSameUser(this.conn?.user.id, this.sender)) && this.id.startsWith('3EB0') && (this.id.length === 20 || this.id.length === 22 || this.id.length === 12) || false;
+            isBaileys: {
+              get() {
+                const userId = self.conn?.user?.id || '';
+                const sender = this.sender || '';
+                return (this?.fromMe || areJidsSameUser(userId, sender)) && 
+                       this.id?.startsWith?.('3EB0') && 
+                       [20, 22, 12].includes(this.id?.length) || false;
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          sender: {
-            get() {
-              const parse1 = (contextInfo.participant || this.chat || '').decodeJid();
-              if (parse1 && parse1.includes('@lid')) {
-                return parse1.resolveLidToRealJid(this.chat, mconn.conn);
-              }
-              return parse1;
-            },
-            enumerable: true,
-          },
-          fromMe: {
-            get() {
-              return areJidsSameUser(this.sender, self.conn?.user.jid);
-            },
-            enumerable: true,
-          },
-          text: {
-            get() {
-              return text || this.caption || this.contentText || this.selectedDisplayText || '';
-            },
-            enumerable: true,
-          },
-          mentionedJid: {
-            get() {
-              const mentioned = q.contextInfo?.mentionedJid || self.getQuotedObj()?.mentionedJid || [];
-              return mentioned.map(user => {
-                if (user && typeof user === 'object') {
-                  user = user.lid || user.jid || user.id || '';
+            sender: {
+              get() {
+                const parse1 = safeDecodeJid(contextInfo.participant || this.chat, self.conn);
+                if (parse1 && safeEndsWith(parse1, '@lid')) {
+                  const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
+                  return typeof resolved === 'string' ? resolved : parse1;
                 }
-                if (typeof user === 'string' && user.includes('@lid')) {
-                  return user.resolveLidToRealJid(user, mconn.conn);
-                }
-                return user;
-              }).filter(jid => jid && typeof jid === 'string');
+                return parse1;
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          name: {
-            get() {
-              const sender = this.sender;
-              return sender ? self.conn?.getName(sender) : null;
+            fromMe: {
+              get() {
+                const sender = this.sender || '';
+                const userJid = self.conn?.user?.jid || '';
+                return areJidsSameUser(sender, userJid);
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          vM: {
-            get() {
-              return proto.WebMessageInfo.fromObject({
-                key: {
-                  fromMe: this.fromMe,
-                  remoteJid: this.chat,
-                  id: this.id,
-                },
-                message: quoted,
-                ...(self.isGroup ? {participant: this.sender} : {}),
-              });
+            text: {
+              get() {
+                return text || this.caption || this.contentText || this.selectedDisplayText || '';
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          fakeObj: {
-            get() {
-              return this.vM;
+            mentionedJid: {
+              get() {
+                const mentioned = q?.contextInfo?.mentionedJid || self.getQuotedObj()?.mentionedJid || [];
+                return mentioned.map(user => {
+                  if (user && typeof user === 'object') {
+                    user = user.lid || user.jid || user.id || '';
+                  }
+                  if (typeof user === 'string' && user.includes('@lid')) {
+                    const resolved = user.resolveLidToRealJid(user, self.conn);
+                    return typeof resolved === 'string' ? resolved : user;
+                  }
+                  return user;
+                }).filter(jid => jid && typeof jid === 'string');
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          download: {
-            value(saveToFile = false) {
-              const mtype = this.mediaType;
-              return self.conn?.downloadM(this.mediaMessage[mtype], mtype.replace(/message/i, ''), saveToFile);
+            name: {
+              get() {
+                const sender = this.sender;
+                return sender ? self.conn?.getName?.(sender) : null;
+              },
+              enumerable: true,
             },
-            enumerable: true,
-            configurable: true,
-          },
-          reply: {
-            value(text, chatId, options) {
-              return self.conn?.reply(chatId ? chatId : this.chat, text, this.vM, options);
+            vM: {
+              get() {
+                return proto.WebMessageInfo.fromObject({
+                  key: {
+                    fromMe: this.fromMe,
+                    remoteJid: this.chat,
+                    id: this.id,
+                  },
+                  message: quoted,
+                  ...(self.isGroup ? {participant: this.sender} : {}),
+                });
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          copy: {
-            value() {
-              const M = proto.WebMessageInfo;
-              return smsg(self.conn, M.fromObject(M.toObject(this.vM)));
+            fakeObj: {
+              get() {
+                return this.vM;
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          forward: {
-            value(jid, force = false, options) {
-              return self.conn?.sendMessage(jid, {
-                forward: this.vM, force, ...options,
-              }, {...options});
+            download: {
+              value(saveToFile = false) {
+                const mtype = this.mediaType;
+                return self.conn?.downloadM?.(this.mediaMessage?.[mtype], mtype?.replace(/message/i, ''), saveToFile);
+              },
+              enumerable: true,
+              configurable: true,
             },
-            enumerable: true,
-          },
-          copyNForward: {
-            value(jid, forceForward = false, options) {
-              return self.conn?.copyNForward(jid, this.vM, forceForward, options);
+            reply: {
+              value(text, chatId, options) {
+                return self.conn?.reply?.(chatId ? chatId : this.chat, text, this.vM, options);
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          cMod: {
-            value(jid, text = '', sender = this.sender, options = {}) {
-              return self.conn?.cMod(jid, this.vM, text, sender, options);
+            copy: {
+              value() {
+                const M = proto.WebMessageInfo;
+                return smsg(self.conn, M.fromObject(M.toObject(this.vM)));
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-          delete: {
-            value() {
-              return self.conn?.sendMessage(this.chat, {delete: this.vM.key});
+            forward: {
+              value(jid, force = false, options) {
+                return self.conn?.sendMessage?.(jid, {
+                  forward: this.vM, force, ...options,
+                }, {...options});
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-        });
+            copyNForward: {
+              value(jid, forceForward = false, options) {
+                return self.conn?.copyNForward?.(jid, this.vM, forceForward, options);
+              },
+              enumerable: true,
+            },
+            cMod: {
+              value(jid, text = '', sender = this.sender, options = {}) {
+                return self.conn?.cMod?.(jid, this.vM, text, sender, options);
+              },
+              enumerable: true,
+            },
+            delete: {
+              value() {
+                return self.conn?.sendMessage?.(this.chat, {delete: this.vM.key});
+              },
+              enumerable: true,
+            },
+          });
+        } catch (e) {
+          console.error('Error en quoted getter:', e);
+          return null;
+        }
       },
       enumerable: true,
     },
@@ -1781,86 +1899,139 @@ export function serialize() {
     },
     text: {
       get() {
-        const msg = this.msg;
-        const text = (typeof msg === 'string' ? msg : msg?.text) || msg?.caption || msg?.contentText || '';
-        return typeof this._text === 'string' ? this._text : '' || (typeof text === 'string' ? text : (
-                    text?.selectedDisplayText ||
-                    text?.hydratedTemplate?.hydratedContentText ||
-                    text
-                )) || '';
+        try {
+          const msg = this.msg;
+          const text = (typeof msg === 'string' ? msg : msg?.text) || msg?.caption || msg?.contentText || '';
+          return typeof this._text === 'string' ? this._text : '' || (typeof text === 'string' ? text : (
+                      text?.selectedDisplayText ||
+                      text?.hydratedTemplate?.hydratedContentText ||
+                      text
+                  )) || '';
+        } catch (e) {
+          console.error('Error en text getter:', e);
+          return '';
+        }
       },
       set(str) {
-        return this._text = str;
+        this._text = str;
       },
       enumerable: true,
     },
     mentionedJid: {
       get() {
-        const mentioned = this.msg?.contextInfo?.mentionedJid || [];
-        return mentioned.map(user => {
-          if (user && typeof user === 'object') {
-            user = user.lid || user.jid || user.id || '';
-          }
-          if (typeof user === 'string' && user.includes('@lid')) {
-            return user.resolveLidToRealJid(user, mconn.conn);
-          }
-          return user;
-        }).filter(jid => jid && typeof jid === 'string');
+        try {
+          const mentioned = this.msg?.contextInfo?.mentionedJid || [];
+          return mentioned.map(user => {
+            if (user && typeof user === 'object') {
+              user = user.lid || user.jid || user.id || '';
+            }
+            if (typeof user === 'string' && user.includes('@lid')) {
+              const resolved = user.resolveLidToRealJid(user, this.conn);
+              return typeof resolved === 'string' ? resolved : user;
+            }
+            return user;
+          }).filter(jid => jid && typeof jid === 'string');
+        } catch (e) {
+          console.error('Error en mentionedJid getter:', e);
+          return [];
+        }
       },
       enumerable: true,
     },
     name: {
       get() {
-        return !nullish(this.pushName) && this.pushName || this.conn?.getName(this.sender);
+        try {
+          if (!nullish(this.pushName) && this.pushName) return this.pushName;
+          const sender = this.sender;
+          return sender ? this.conn?.getName?.(sender) : '';
+        } catch (e) {
+          console.error('Error en name getter:', e);
+          return '';
+        }
       },
       enumerable: true,
     },
     download: {
       value(saveToFile = false) {
-        const mtype = this.mediaType;
-        return this.conn?.downloadM(this.mediaMessage[mtype], mtype.replace(/message/i, ''), saveToFile);
+        try {
+          const mtype = this.mediaType;
+          return this.conn?.downloadM?.(this.mediaMessage?.[mtype], mtype?.replace(/message/i, ''), saveToFile);
+        } catch (e) {
+          console.error('Error en download:', e);
+          return Promise.reject(e);
+        }
       },
       enumerable: true,
       configurable: true,
     },
     reply: {
       value(text, chatId, options) {
-        return this.conn?.reply(chatId ? chatId : this.chat, text, this, options);
+        try {
+          return this.conn?.reply?.(chatId ? chatId : this.chat, text, this, options);
+        } catch (e) {
+          console.error('Error en reply:', e);
+          return Promise.reject(e);
+        }
       },
       enumerable: true,
     },
     copy: {
       value() {
-        const M = proto.WebMessageInfo;
-        return smsg(this.conn, M.fromObject(M.toObject(this)));
+        try {
+          const M = proto.WebMessageInfo;
+          return smsg(this.conn, M.fromObject(M.toObject(this)));
+        } catch (e) {
+          console.error('Error en copy:', e);
+          return null;
+        }
       },
       enumerable: true,
     },
     forward: {
       value(jid, force = false, options = {}) {
-        return this.conn?.sendMessage(jid, {
-          forward: this, force, ...options,
-        }, {...options});
+        try {
+          return this.conn?.sendMessage?.(jid, {
+            forward: this, force, ...options,
+          }, {...options});
+        } catch (e) {
+          console.error('Error en forward:', e);
+          return Promise.reject(e);
+        }
       },
       enumerable: true,
     },
     copyNForward: {
       value(jid, forceForward = false, options = {}) {
-        return this.conn?.copyNForward(jid, this, forceForward, options);
+        try {
+          return this.conn?.copyNForward?.(jid, this, forceForward, options);
+        } catch (e) {
+          console.error('Error en copyNForward:', e);
+          return Promise.reject(e);
+        }
       },
       enumerable: true,
     },
     cMod: {
       value(jid, text = '', sender = this.sender, options = {}) {
-        return this.conn?.cMod(jid, this, text, sender, options);
+        try {
+          return this.conn?.cMod?.(jid, this, text, sender, options);
+        } catch (e) {
+          console.error('Error en cMod:', e);
+          return Promise.reject(e);
+        }
       },
       enumerable: true,
     },
     getQuotedObj: {
       value() {
-        if (!this.quoted.id) return null;
-        const q = proto.WebMessageInfo.fromObject(this.conn?.loadMessage(this.quoted.id) || this.quoted.vM);
-        return smsg(this.conn, q);
+        try {
+          if (!this.quoted?.id) return null;
+          const q = proto.WebMessageInfo.fromObject(this.conn?.loadMessage?.(this.quoted.id) || this.quoted.vM || {});
+          return smsg(this.conn, q);
+        } catch (e) {
+          console.error('Error en getQuotedObj:', e);
+          return null;
+        }
       },
       enumerable: true,
     },
@@ -1872,7 +2043,12 @@ export function serialize() {
     },
     delete: {
       value() {
-        return this.conn?.sendMessage(this.chat, {delete: this.key});
+        try {
+          return this.conn?.sendMessage?.(this.chat, {delete: this.key});
+        } catch (e) {
+          console.error('Error en delete:', e);
+          return Promise.reject(e);
+        }
       },
       enumerable: true,
     },
