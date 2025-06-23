@@ -1201,33 +1201,33 @@ let msg = generateWAMessageFromContent(jid, {
       enumerable: true,
     },
 parseMention: {
-  async value(text = '') {
-    try {      
-      // Función de validación interna
+  value(text = '') {
+    try {
+      // 1. Reglas de validación mejoradas
       const esNumeroValido = (numero) => {
-        return Object.keys(PHONENUMBER_MCC).some(codigo => numero.startsWith(codigo));
+        const len = numero.length;
+        // Regla 1: Longitud estándar para números internacionales
+        if (len < 8 || len > 13) return false; // Rango real: 8-13 dígitos
+        
+        // Regla 2: No puede empezar con 9 si es muy largo (para evitar LIDs)
+        if (len > 10 && numero.startsWith('9')) return false;
+        
+        // Regla 3: Códigos de país comunes
+        const codigosValidos = ['52', '1', '54', '55', '57']; // México, USA, Argentina, Brasil, Colombia
+        return codigosValidos.some(codigo => numero.startsWith(codigo));
       };
 
-      // Extracción de menciones
-      const menciones = [...text.matchAll(/@(\d{5,20})/g)].map(m => m[1]);
-
-	    console.log(menciones)
-	    
-      if (!menciones.length) return [];
-
-      const testit = menciones.map(numero => {
-        return esNumeroValido(numero) 
-          ? `${numero}@s.whatsapp.net` 
-          : `${numero}@lid`;
-      });   
-
-	    console.log(testit)
-
-      // Procesamiento
-      return testit
-
+      // 2. Procesamiento eficiente
+      return (text.match(/@(\d{5,20})/g) || [])
+        .map(m => m.substring(1)) // Elimina el @
+        .map(numero => (
+          esNumeroValido(numero)
+            ? `${numero}@s.whatsapp.net`
+            : `${numero}@lid` // Todo lo demás es LID
+        ));
+        
     } catch (error) {
-      console.error('Error procesando menciones:', error);
+      console.error('Error:', error);
       return [];
     }
   },
