@@ -35,7 +35,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     }, { quoted: m });
 
   } catch (e) {
-    m.reply(`${tradutor.texto4}`); 
+    m.reply(`${tradutor.texto3}\n> ${e}`); 
   }
 };
 
