@@ -30,7 +30,8 @@ const {
     makeInMemoryStore,
     getAggregateVotesInPollMessage, 
     prepareWAMessageMedia,
-    WA_DEFAULT_EPHEMERAL
+    WA_DEFAULT_EPHEMERAL,
+    PHONENUMBER_MCC
 } = (await import("baileys")).default
 
 export function makeWASocket(connectionOptions, options = {}) {
@@ -1199,20 +1200,46 @@ let msg = generateWAMessageFromContent(jid, {
       },
       enumerable: true,
     },
-    parseMention: {
-      /**
-             * Parses string into mentionedJid(s)
-             * @param {String} text
-             * @return {Array<String>}
-             */
-      value(text = '') {
-	      console.log(...text)
-	      const mentioneds = [...text.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1])
-	      console.log(mentioneds)
-        return mentioneds;
-      },
-      enumerable: true,
-    },
+parseMention: {
+  /**
+   * Detecta y clasifica menciones
+   * @param {String} text
+   * @return {Promise<Array<String>>}
+   */
+  async value(text = '') {
+    try {
+      // 1. Extraer menciones crudas
+      const rawMentions = [...text.matchAll(/@(\d{5,20})/g)].map(m => m[1]);
+      if (!rawMentions.length) return [];
+
+      // 2. Verificar y clasificar cada mención
+      const processed = await Promise.all(
+        rawMentions.map(async number => {
+          try {
+            const { isMobile } = PHONENUMBER_MCC[number.slice(0, 3)] || {};
+            
+            if (isMobile && number.length >= 10) {
+              return `${number}@s.whatsapp.net`;
+            }
+            return `${number}@lid`;
+          } catch {
+            return `${number}@lid`; 
+          }
+        })
+      );
+
+      console.log(processed)
+
+	    console.log(processed.filter(Boolean))
+	    
+      return processed.filter(Boolean); 
+    } catch (error) {
+      console.error('Error en parseMention:', error);
+      return []; 
+    }
+  },
+  enumerable: true,
+},
 	  getName: {
       /**
              * Get name from jid
