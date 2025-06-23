@@ -1770,7 +1770,7 @@ export function serialize() {
               enumerable: true,
             },
 
-sender: {
+sender2: {
   get() {
     try {
       // 1. Obtener el participant del mensaje citado
