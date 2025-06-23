@@ -38,7 +38,7 @@
     "@shineiichijo/marika": "^2.0.6",
     "@takanashi-soft/tools": "github:takanashi-soft/soft-tools",
     "@vitalets/google-translate-api": "^8.0.0",
-    "baileys": "github:BrunoSobrino/Baileys-Itsukichann",
+    "baileys": "git+ssh://git@github.com/BrunoSobrino/Baileys-Itsukichann.git"
     "acrcloud": "^1.4.0",
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^2.68.0",
