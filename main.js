@@ -185,7 +185,7 @@ rl.close()
 
 conn.isInit = false;
 conn.well = false;
-conn.logger.info(`[ ℹ️ ] Cargando...\n`);
+conn.logger.info(`[ㅤℹ️­ㅤ] Cargando...\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -320,15 +320,15 @@ async function connectionUpdate(update) {
   if (global.db.data == null) loadDatabase();
 if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
 if (opcion == '1' || methodCodeQR) {
-    console.log(chalk.yellow('[ ℹ️ ] Escanea el código QR.'));
+    console.log(chalk.yellow('[ㅤℹ️ㅤ] Escanea el código QR.'));
  }}
   if (connection == 'open') {
-    console.log(chalk.yellow('[ ℹ️ ] Conectado correctamente.'));
+    console.log(chalk.yellow('[ㅤℹ️ㅤ] Conectado correctamente.'));
     if (!global.subBotsInitialized) {
       global.subBotsInitialized = true;
       try {
         await initializeSubBots();
-        console.log(chalk.green('[ ℹ️ ] Sub-bots inicializados correctamente.'));
+        console.log(chalk.yellow('[ㅤℹ️ㅤ] Sub-bots inicializados correctamente (ignorar si no hay subbots).'));
       } catch (error) {
         console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
       }
