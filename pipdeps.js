@@ -1,231 +1,120 @@
-import { exec, execSync } from 'child_process';
+import { exec } from 'child_process';
 import { writeFile, chmod, access, constants } from 'fs/promises';
 import { existsSync } from 'fs';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-// Configuración de efectos
-const PLAY_SOUND = true; // Cambiar a false para desactivar sonidos
-const DELAY = 150; // Tiempo entre animaciones en ms
+// Configuración mejorada
+const USE_SOUND = false; // Desactivado por defecto para evitar errores
+const USE_ANSI_COLORS = true;
+const MINIMAL_LOGS = true;
 
-// Sonidos básicos (usando beep si sox no está disponible)
-async function playSound(type) {
-  if (!PLAY_SOUND) return;
-  
+// Polyfill para sonidos seguros
+async function playSound() {
+  if (!USE_SOUND) return;
   try {
-    const sounds = {
-      start: 'play -q -n synth 0.1 sine 800 vol 0.5',
-      success: 'play -q -n synth 0.2 sine 1000 vol 0.5',
-      error: 'play -q -n synth 0.3 sine 400 vol 0.5',
-      progress: 'play -q -n synth 0.05 sine 1200 vol 0.3'
-    };
-    execSync(sounds[type] || 'echo -n "\a"');
-  } catch {
-    // Fallback a beep básico
+    // Intento con beep nativo de terminal
     process.stdout.write('\x07');
+  } catch {
+    // Silencio si falla
   }
 }
 
-// Animación de carga personalizada
-async function animateText(text, frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'], delay = 100) {
-  let i = 0;
-  const spinner = setInterval(() => {
-    process.stdout.write(`\r${frames[i]} ${text}`);
-    i = (i + 1) % frames.length;
-  }, delay);
-
-  return {
-    stop: () => {
-      clearInterval(spinner);
-      process.stdout.write('\r'.padEnd(text.length + 3, ' ') + '\r');
-    }
-  };
-}
-
-// Instalar dependencias npm si no existen
-async function ensureDependencies() {
-  const deps = ['nanospinner', 'chalk', 'gradient-string'];
-  let needInstall = false;
-
-  const checking = await animateText('Verificando dependencias...');
-  await new Promise(resolve => setTimeout(resolve, 1000));
-
-  for (const dep of deps) {
-    try {
-      require.resolve(dep);
-    } catch {
-      needInstall = true;
-      break;
-    }
-  }
-
-  checking.stop();
-
-  if (needInstall) {
-    const installing = await animateText('Instalando paquetes necesarios...');
-    await playSound('progress');
-    
-    try {
-      await new Promise((resolve, reject) => {
-        exec(`npm install ${deps.join(' ')}`, (error) => {
-          if (error) reject(error);
-          else resolve();
-        });
-      });
-      installing.stop();
-      console.log('✔ Dependencias instaladas');
-      await playSound('success');
-      return true;
-    } catch (error) {
-      installing.stop();
-      console.log('✖ Error instalando dependencias');
-      await playSound('error');
-      return false;
-    }
-  }
-  return true;
-}
-
-// Cargar dependencias visuales
-async function loadVisualDeps() {
+// Cargador seguro de dependencias
+async function safeRequire(pkg) {
   try {
-    const { default: chalk } = await import('chalk');
-    const { default: gradient } = await import('gradient-string');
-    const { createSpinner } = await import('nanospinner');
-    
-    return {
-      chalk,
-      gradient,
-      createSpinner,
-      banner: () => {
-        console.log(gradient.rainbow('════════════════════════════════════════'));
-        console.log(gradient.pastel('       INSTALADOR AVANZADO YT-DLP       '));
-        console.log(gradient.rainbow('════════════════════════════════════════\n'));
-      }
-    };
-  } catch (error) {
+    return await import(pkg);
+  } catch {
     return null;
   }
 }
 
-// Ejecutar comando con spinner
-async function runCommand(command, description, visual) {
-  if (visual) {
-    const spinner = visual.createSpinner(
-      visual.chalk.cyan(description)
-    ).start();
-    
+// Instalador optimizado de dependencias
+async function installDeps() {
+  if (MINIMAL_LOGS) console.log('🔍 Verificando dependencias...');
+  
+  const neededDeps = [];
+  for (const pkg of ['nanospinner', 'chalk']) {
     try {
-      await new Promise((resolve, reject) => {
-        exec(command, (error) => {
-          if (error) reject(error);
-          else resolve();
-        });
-      });
-      spinner.success();
-      return true;
-    } catch (error) {
-      spinner.error({ text: visual.chalk.red(error.message) });
-      return false;
+      require.resolve(pkg);
+    } catch {
+      neededDeps.push(pkg);
     }
-  } else {
-    console.log(`▶ ${description}...`);
-    try {
-      await new Promise((resolve, reject) => {
-        exec(command, (error) => {
-          if (error) reject(error);
-          else resolve();
-        });
-      });
-      return true;
-    } catch (error) {
-      console.log(`✖ Error: ${error.message}`);
-      return false;
-    }
+  }
+
+  if (neededDeps.length === 0) return true;
+
+  if (MINIMAL_LOGS) console.log('📦 Instalando complementos...');
+  
+  try {
+    await new Promise((resolve, reject) => {
+      exec(`npm install --omit=dev ${neededDeps.join(' ')}`, 
+        { stdio: MINIMAL_LOGS ? 'ignore' : 'inherit' },
+        (error) => error ? reject(error) : resolve()
+      );
+    });
+    return true;
+  } catch {
+    return false;
   }
 }
 
-// Instalación principal
+// Instalación principal mejorada
 async function installYtDlp() {
-  await playSound('start');
-  
-  // Verificar e instalar dependencias
-  const depsOk = await ensureDependencies();
-  const visual = depsOk ? await loadVisualDeps() : null;
-  
-  if (visual) {
-    visual.banner();
-    await new Promise(resolve => setTimeout(resolve, DELAY));
-  }
-
-  // Descargar yt-dlp
-  const downloadStep = visual 
-    ? visual.createSpinner(visual.chalk.yellow('Obteniendo yt-dlp...')).start()
-    : { stop: () => {}, fail: () => {} };
-
   try {
-    // Intentar con curl primero
+    // Paso 1: Gestionar dependencias
+    const depsOk = await installDeps();
+    const chalk = depsOk ? (await safeRequire('chalk'))?.default : null;
+    const spinner = depsOk ? (await safeRequire('nanospinner'))?.createSpinner : null;
+
+    // Paso 2: Descargar yt-dlp
+    const downloadMsg = chalk ? chalk.blue('Descargando yt-dlp...') : 'Descargando yt-dlp...';
+    const spinnerObj = spinner ? spinner(downloadMsg).start() : null;
+    
     try {
-      await runCommand(
-        'curl -sSL https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ./yt-dlp',
-        'Descargando con curl',
-        visual
-      );
+      // Intento con curl (más rápido)
+      await new Promise((resolve, reject) => {
+        exec('curl -sSL https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ./yt-dlp', 
+          (error) => error ? reject(error) : resolve()
+        );
+      });
     } catch {
       // Fallback a fetch si curl falla
-      if (visual) {
-        downloadStep.text = visual.chalk.yellow('Descargando con Node.js...');
-      } else {
-        console.log('⬇ Descargando con Node.js...');
-      }
-      
+      if (spinnerObj) spinnerObj.text = chalk.blue('Usando método alternativo...');
       const response = await fetch('https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp');
       const data = await response.arrayBuffer();
       await writeFile('./yt-dlp', Buffer.from(data));
     }
 
-    // Hacer ejecutable
+    // Paso 3: Hacer ejecutable
     await chmod('./yt-dlp', 0o755);
-    downloadStep.stop();
     
-    // Verificar versión
+    // Paso 4: Verificar versión
     const version = await new Promise(resolve => {
       exec('./yt-dlp --version', (error, stdout) => {
-        resolve(error ? '?' : stdout.trim());
+        resolve(error ? 'desconocida' : stdout.trim());
       });
     });
 
-    if (visual) {
-      console.log(visual.gradient.morning(`\n✔ Versión instalada: ${version}\n`));
-      console.log(visual.chalk.green.bold('¡Instalación completada con éxito! 🎉'));
-      console.log(visual.chalk.blue('Usa: ') + visual.chalk.white.bgBlue('./yt-dlp [URL]'));
-    } else {
-      console.log(`\n✔ Versión: ${version}`);
-      console.log('✅ yt-dlp instalado correctamente');
-      console.log('💡 Usa: ./yt-dlp [URL]');
-    }
+    // Resultado final
+    if (spinnerObj) spinnerObj.success({ 
+      text: chalk ? chalk.green(`Versión ${version} instalada`) : `Versión ${version} instalada`
+    });
 
-    await playSound('success');
+    const successMsg = chalk ? 
+      chalk.green.bold('✅ Listo! Usa: ') + chalk.white.bgBlue('./yt-dlp [URL]') :
+      '✅ Listo! Usa: ./yt-dlp [URL]';
+    
+    console.log(successMsg);
+
   } catch (error) {
-    downloadStep.fail();
-    if (visual) {
-      console.log(visual.chalk.red.bold('\n✖ Error durante la instalación:'));
-      console.log(visual.chalk.yellow(error.message));
-      console.log(visual.chalk.cyan('\n📌 Solución alternativa:'));
-      console.log('1. Descarga manual desde:');
-      console.log(visual.chalk.blue('   https://github.com/yt-dlp/yt-dlp/releases'));
-      console.log('2. Súbelo como "yt-dlp"');
-      console.log('3. Ejecuta: ' + visual.chalk.white('chmod +x yt-dlp'));
-    } else {
-      console.log('\n❌ Error:', error.message);
-      console.log('📌 Solución alternativa:');
-      console.log('1. Descarga manual desde https://github.com/yt-dlp/yt-dlp/releases');
-      console.log('2. Súbelo como "yt-dlp"');
-      console.log('3. Ejecuta: chmod +x yt-dlp');
-    }
-    await playSound('error');
+    const errorMsg = chalk ? 
+      chalk.red.bold('❌ Error: ') + chalk.yellow(error.message) + 
+      chalk.cyan('\nSolución manual:\n1. Descarga desde https://github.com/yt-dlp/yt-dlp/releases\n2. Súbelo como yt-dlp\n3. Ejecuta: chmod +x yt-dlp') :
+      `❌ Error: ${error.message}\nSolución manual:\n1. Descarga desde https://github.com/yt-dlp/yt-dlp/releases\n2. Súbelo como yt-dlp\n3. Ejecuta: chmod +x yt-dlp`;
+    
+    console.error(errorMsg);
   }
 }
 
-// Iniciar proceso
-installYtDlp();
+installYtDlp().catch(() => {});
