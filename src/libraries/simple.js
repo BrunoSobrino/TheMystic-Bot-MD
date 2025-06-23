@@ -1231,13 +1231,11 @@ parseMention: {
           } else {
             // Formato especial para LIDs que requiere tu otra función
             const lidJid = `${numero}@lid`;
-            
+		  
             // Opcional: Resolución inmediata si tienes el contexto
-            if (mconn.chat && mconn?.conn) {
+            if (mconn?.conn?.chat && mconn?.conn) {
               try {
                 const realJid = await lidJid.resolveLidToRealJid(this.groupId, this.conn);
-		      console.log(realJid)
-		      console.log(lidJid)
                 return realJid || lidJid; // Fallback al LID si falla
               } catch (e) {
                 console.error('Error resolviendo LID:', e);
