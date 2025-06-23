@@ -1614,8 +1614,6 @@ export function serialize() {
         try {
           const rawParticipant = this.participant || this.key.participant || this.chat || '';
           const parse1 = safeDecodeJid(rawParticipant, this.conn);
-
-		console.log(parse1)
           
           if (!parse1) return '';
           
@@ -1771,6 +1769,43 @@ export function serialize() {
               },
               enumerable: true,
             },
+
+sender: {
+  get() {
+    try {
+      // 1. Obtener el participant del mensaje citado
+      const rawParticipant = contextInfo.participant;
+
+      // 2. Si no hay participant, verificar si el mensaje citado es mío
+      if (!rawParticipant) {
+        const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
+        if (isFromMe) {
+          return safeDecodeJid(self.conn?.user?.id, self.conn);
+        }
+        return this.chat; // Fallback: Usar el chat (grupo o individual)
+      }
+
+      // 3. Decodificar el participant (puede ser LID o JID normal)
+      const parse1 = safeDecodeJid(rawParticipant, self.conn);
+
+      // 4. Si es un LID, intentar resolverlo
+      if (parse1 && safeEndsWith(parse1, '@lid')) {
+        const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
+        return typeof resolved === 'string' ? resolved : parse1;
+      }
+
+      // 5. Si no es LID, devolver el JID decodificado
+      return parse1;
+    } catch (e) {
+      console.error('Error en quoted sender getter:', e);
+      return '';
+    }
+  },
+  enumerable: true,
+},
+
+
+		  
             sender: {
               get() {
                 const parse1 = safeDecodeJid(contextInfo.participant || this.chat, self.conn);
@@ -1778,7 +1813,6 @@ export function serialize() {
                   const resolved = parse1.resolveLidToRealJid(this.chat, self.conn);
                   return typeof resolved === 'string' ? resolved : parse1;
                 }
-		      console.log(parse1)
                 return parse1;
               },
               enumerable: true,
