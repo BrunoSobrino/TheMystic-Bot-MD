@@ -2030,19 +2030,9 @@ export function smsg(conn, m, hasParent) {
 // https://github.com/Nurutomo/wabot-aq/issues/490
 // Fix 2025 - @BrunoSobrino - LID Resolved
 export function serialize() {
-  const MediaType = [
-    "imageMessage",
-    "videoMessage",
-    "audioMessage",
-    "stickerMessage",
-    "documentMessage",
-  ];
-
-  // Función segura para endsWith
+  const MediaType = ["imageMessage", "videoMessage", "audioMessage", "stickerMessage", "documentMessage",];
   const safeEndsWith = (str, suffix) =>
     typeof str === "string" && str.endsWith(suffix);
-
-  // Función segura para decodeJid
   const safeDecodeJid = (jid, conn) => {
     try {
       if (!jid || typeof jid !== "string") return "";
@@ -2052,11 +2042,8 @@ export function serialize() {
       return "";
     }
   };
-
-  // Función segura para split
   const safeSplit = (str, separator) =>
     typeof str === "string" ? str.split(separator) : [];
-
   return Object.defineProperties(proto.WebMessageInfo.prototype, {
     conn: {
       value: undefined,
@@ -2123,22 +2110,13 @@ export function serialize() {
     },
     sender: {
       get() {
-        try {
-	const rawJid = this.participant || this.key.participant || this.chat || "";
-        const parse1 = rawJid.decodeJid();    
-	if (this.key?.fromMe && this.conn?.user?.id) {
-		const selfJid = this.conn.decodeJid(this.conn.user.id);
-		return selfJid.resolveLidToRealJid(this.chat, this.conn);
-	}
-	if (parse1) return parse1.resolveLidToRealJid(this.chat, this.conn);
-	const fallbackJid = this.conn?.decodeJid(rawJid) || "";
-	return fallbackJid.resolveLidToRealJid(this.chat, this.conn);
-	} catch (e) {
-	      console.error('Error en sender getter:', e);
-	      return "";
-	}
+        const parse1 = (this.participant || this.key.participant || this.chat || '').decodeJid();
+        if (parse1 && parse1.includes('@lid')) {
+          return parse1.resolveLidToRealJid(this.chat, mconn.conn);
+        }
+        return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
       },
-	enumerable: true,
+      enumerable: true,
     },
     fromMe: {
       get() {
