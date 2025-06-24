@@ -2110,6 +2110,9 @@ export function serialize() {
     },
     sender: {
       get() {
+	if (this.messageStubType === 32) {
+          return this.messageStubParameters?.[0] || this.key?.remoteJid || '';
+	}
         const parse1 = (this.participant || this.key.participant || this.chat || '').decodeJid();
         if (parse1 && parse1.includes('@lid')) {
           return parse1.resolveLidToRealJid(this.chat, mconn.conn);
