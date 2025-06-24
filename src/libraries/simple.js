@@ -1827,87 +1827,69 @@ sender: {
 sender: {
   get() {
     try {
-      // Debug inicial
-      console.log('[LID DEBUG] Iniciando sender getter', new Date().toISOString());
-      
-      // 1. Obtener participant
+      // 1. Optimización: Cache global persistente
+      if (!global.lidResolutionCache) {
+        global.lidResolutionCache = {
+          resolved: new Map(),
+          inProgress: new Map()
+        };
+      }
+      const cache = global.lidResolutionCache;
+
+      // 2. Obtener participant
       const rawParticipant = contextInfo.participant;
       if (!rawParticipant) {
         const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
-        const result = isFromMe ? safeDecodeJid(self.conn?.user?.id, self.conn) : this.chat;
-        console.log('[LID DEBUG] Caso sin participant, retornando:', result);
-        return result;
+        return isFromMe ? safeDecodeJid(self.conn?.user?.id, self.conn) : this.chat;
       }
-      
-      // 2. Decodificar JID
+
+      // 3. Decodificar JID
       const parse1 = safeDecodeJid(rawParticipant, self.conn);
-      console.log('[LID DEBUG] JID decodificado:', parse1);
-
-      // 3. Si no es LID, retornar directamente
+      
+      // 4. Si no es LID, retornar directamente
       if (!parse1.endsWith('@lid')) {
-        console.log('[LID DEBUG] JID normal retornado:', parse1);
         return parse1;
       }
 
-      // 4. Inicializar cache con temporizador de 5 segundos
-      if (!self.conn._lidCache) {
-        console.log('[LID DEBUG] Inicializando cache con temporizador');
-        self.conn._lidCache = {
-          map: new Map(),
-          timers: new Map()
-        };
+      // 5. Verificar cache resuelto
+      if (cache.resolved.has(parse1)) {
+        return cache.resolved.get(parse1);
       }
 
-      // 5. Verificar cache (con bloqueo para evitar spam)
-      const cache = self.conn._lidCache;
-      if (cache.map.has(parse1)) {
-        const cached = cache.map.get(parse1);
-        console.log(`[LID DEBUG] Cache hit para ${parse1}:`, cached);
-        return cached;
+      // 6. Bloquear solicitudes duplicadas
+      if (cache.inProgress.has(parse1)) {
+        return parse1; // Retornar temporal mientras se resuelve
       }
 
-      // 6. Bloquear nuevas solicitudes por 5 segundos
-      if (cache.timers.has(parse1)) {
-        console.log(`[LID DEBUG] Solicitud bloqueada temporalmente para ${parse1}`);
+      // 7. Marcar como en progreso
+      cache.inProgress.set(parse1, true);
+
+      // 8. Resolver el LID (con timeout de seguridad)
+      const resolutionPromise = Promise.race([
+        parse1.resolveLidToRealJid(this.chat, self.conn),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout excedido')), 5000)
+      ])
+      .then(resolvedJid => {
+        const result = resolvedJid || parse1;
+        // Guardar en cache resuelto
+        cache.resolved.set(parse1, result);
+        return result;
+      })
+      .catch(error => {
+        console.error(`[LID ERROR] Error resolviendo ${parse1}:`, error.message);
+        // Guardar el original para no reintentar
+        cache.resolved.set(parse1, parse1);
         return parse1;
-      }
+      })
+      .finally(() => {
+        // Limpiar estado de progreso
+        cache.inProgress.delete(parse1);
+      });
 
-      // 7. Establecer temporizador de bloqueo
-      cache.timers.set(parse1, setTimeout(() => {
-        cache.timers.delete(parse1);
-        console.log(`[LID DEBUG] Bloqueo liberado para ${parse1}`);
-      }, 5000));
+      // 9. Guardar promesa en cache (opcional)
+      cache.resolved.set(parse1, resolutionPromise);
 
-      // 8. Resolver el LID (con manejo mejorado de errores)
-      console.log(`[LID DEBUG] Resolviendo LID: ${parse1}`);
-      const resolvePromise = parse1.resolveLidToRealJid(this.chat, self.conn)
-        .then(resolvedJid => {
-          const result = resolvedJid || parse1;
-          console.log(`[LID DEBUG] Resolución exitosa: ${parse1} → ${result}`);
-          
-          // Actualizar cache
-          cache.map.set(parse1, result);
-          cache.timers.delete(parse1);
-          
-          // Disparar evento de actualización
-          self.conn.emit('lid-resolved', { original: parse1, resolved: result });
-          
-          return result;
-        })
-        .catch(error => {
-          console.error(`[LID ERROR] Fallo en resolución: ${parse1}`, error);
-          
-          // Guardar en cache para no reintentar
-          cache.map.set(parse1, parse1);
-          cache.timers.delete(parse1);
-          
-          return parse1;
-        });
-
-      // 9. Guardar promesa en cache
-      cache.map.set(parse1, resolvePromise);
-
-      // 10. Retornar el LID temporal (la promesa se resolverá después)
       return parse1;
 
     } catch (e) {
