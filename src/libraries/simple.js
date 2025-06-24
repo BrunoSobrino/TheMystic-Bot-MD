@@ -1636,36 +1636,52 @@ export function serialize() {
 sender: {
   get() {
     try {
-      const parse1 = (this.participant || this.key.participant || this.chat || '').decodeJid();
-      if (!parse1 || !parse1.includes('@lid')) {
-        return this.conn?.decodeJid(
-          this.key?.fromMe && this.conn?.user.id || 
-          this.participant || 
-          this.key.participant || 
-          this.chat || ''
+      const rawParticipant = this.participant || this.key.participant || this.chat || '';
+      const parse1 = rawParticipant.decodeJid();
+      console.log('[DEBUG] JID obtenido:', parse1); // 1. Log del JID crudo
+
+      // Caso normal (no es @lid)
+      if (!parse1 || !parse1.endsWith('@lid')) {
+        const normalJid = this.conn?.decodeJid(
+          this.key?.fromMe ? this.conn.user.id : rawParticipant
         );
+        console.log('[DEBUG] Retornando JID normal:', normalJid); // 2. Log para JIDs regulares
+        return normalJid;
       }
+
+      // Inicializar caché
       if (!this.conn._lidCache) {
+        console.log('[DEBUG] Inicializando caché LID'); // 3. Log creación de caché
         this.conn._lidCache = new Map();
       }
+
+      // Verificar caché
       if (this.conn._lidCache.has(parse1)) {
         const cached = this.conn._lidCache.get(parse1);
+        console.log(`[DEBUG] En caché para ${parse1}:`, cached instanceof Promise ? 'Promesa pendiente' : cached); // 4. Log de caché
         return cached instanceof Promise ? parse1 : cached;
       }
+
+      console.log(`[DEBUG] Resolviendo LID: ${parse1}`); // 5. Log antes de resolver
+
       const resolvePromise = parse1.resolveLidToRealJid(this.chat, this.conn)
         .then(resolvedJid => {
           const result = resolvedJid || parse1;
+          console.log(`[DEBUG] Resolución exitosa: ${parse1} → ${result}`); // 6. Log éxito
           this.conn._lidCache.set(parse1, result);
           return result;
-        }).catch(() => {
+        })
+        .catch(error => {
+          console.error(`[ERROR] Falló la resolución de ${parse1}:`, error); // 7. Log error (¡IMPORTANTE!)
           this.conn._lidCache.set(parse1, parse1);
           return parse1;
         });
+
       this.conn._lidCache.set(parse1, resolvePromise);
       return parse1;
 
     } catch (e) {
-      console.error('Error en sender getter:', e);
+      console.error('[ERROR CRÍTICO] En sender getter:', e); // 8. Log de errores inesperados
       return '';
     }
   },
@@ -1811,52 +1827,60 @@ sender: {
 sender: {
   get() {
     try {
-      const rawParticipant = this.participant || this.key.participant || this.chat || '';
-      const parse1 = rawParticipant.decodeJid();
-      console.log('[DEBUG] JID obtenido:', parse1); // 1. Log del JID crudo
+      console.log('[DEBUG] Iniciando quoted sender getter'); // Debug 1: Inicio del proceso
+      
+      const rawParticipant = contextInfo.participant;
+      if (!rawParticipant) {
+        console.log('[DEBUG] No hay rawParticipant, verificando si es propio'); // Debug 2
+        const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
+        const result = isFromMe ? safeDecodeJid(self.conn?.user?.id, self.conn) : this.chat;
+        console.log('[DEBUG] Retornando (caso no participant):', result); // Debug 3
+        return result;
+      }
+      
+      const parse1 = safeDecodeJid(rawParticipant, self.conn);
+      console.log('[DEBUG] JID decodificado:', parse1); // Debug 4: JID obtenido
 
-      // Caso normal (no es @lid)
-      if (!parse1 || !parse1.endsWith('@lid')) {
-        const normalJid = this.conn?.decodeJid(
-          this.key?.fromMe ? this.conn.user.id : rawParticipant
-        );
-        console.log('[DEBUG] Retornando JID normal:', normalJid); // 2. Log para JIDs regulares
-        return normalJid;
+      if (!parse1.endsWith('@lid')) {
+        console.log('[DEBUG] Retornando JID normal (no @lid):', parse1); // Debug 5
+        return parse1;
       }
 
-      // Inicializar caché
-      if (!this.conn._lidCache) {
-        console.log('[DEBUG] Inicializando caché LID'); // 3. Log creación de caché
-        this.conn._lidCache = new Map();
+      // Inicializar caché si no existe
+      if (!self.conn._lidCache) {
+        console.log('[DEBUG] Inicializando caché LID'); // Debug 6
+        self.conn._lidCache = new Map();
       }
 
       // Verificar caché
-      if (this.conn._lidCache.has(parse1)) {
-        const cached = this.conn._lidCache.get(parse1);
-        console.log(`[DEBUG] En caché para ${parse1}:`, cached instanceof Promise ? 'Promesa pendiente' : cached); // 4. Log de caché
+      if (self.conn._lidCache.has(parse1)) {
+        const cached = self.conn._lidCache.get(parse1);
+        console.log(`[DEBUG] En caché para ${parse1}:`, 
+                   cached instanceof Promise ? 'Promesa pendiente' : cached); // Debug 7
         return cached instanceof Promise ? parse1 : cached;
       }
 
-      console.log(`[DEBUG] Resolviendo LID: ${parse1}`); // 5. Log antes de resolver
+      console.log(`[DEBUG] Resolviendo LID: ${parse1}`); // Debug 8: Antes de resolver
 
-      const resolvePromise = parse1.resolveLidToRealJid(this.chat, this.conn)
+      const resolvePromise = parse1.resolveLidToRealJid(this.chat, self.conn)
         .then(resolvedJid => {
           const result = resolvedJid || parse1;
-          console.log(`[DEBUG] Resolución exitosa: ${parse1} → ${result}`); // 6. Log éxito
-          this.conn._lidCache.set(parse1, result);
+          console.log(`[DEBUG] Resolución exitosa: ${parse1} → ${result}`); // Debug 9: Éxito
+          self.conn._lidCache.set(parse1, result);
           return result;
         })
         .catch(error => {
-          console.error(`[ERROR] Falló la resolución de ${parse1}:`, error); // 7. Log error (¡IMPORTANTE!)
-          this.conn._lidCache.set(parse1, parse1);
+          console.error(`[ERROR] Falló resolución de ${parse1}:`, error); // Debug 10: Error importante!
+          self.conn._lidCache.set(parse1, parse1);
           return parse1;
         });
 
-      this.conn._lidCache.set(parse1, resolvePromise);
+      self.conn._lidCache.set(parse1, resolvePromise);
+      console.log(`[DEBUG] Retornando temporal ${parse1} (promesa en progreso)`); // Debug 11
       return parse1;
 
     } catch (e) {
-      console.error('[ERROR CRÍTICO] En sender getter:', e); // 8. Log de errores inesperados
+      console.error('[ERROR CRÍTICO] En quoted sender getter:', e); // Debug 12
       return '';
     }
   },
