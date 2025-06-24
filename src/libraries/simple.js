@@ -1788,29 +1788,14 @@ sender: {
         const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
         return isFromMe ? safeDecodeJid(self.conn?.user?.id, self.conn) : this.chat;
       }
-      const parse1 = safeDecodeJid(rawParticipant, self.conn);
-      if (parse1 && parse1.endsWith('@lid')) {
-        if (!self.conn._lidCache) self.conn._lidCache = new Map();
-        if (self.conn._lidCache.has(parse1)) {
-          return self.conn._lidCache.get(parse1);
-        }
-        const resolvedPromise = parse1.resolveLidToRealJid(this.chat, self.conn)
-          .then(resolvedJid => {
-            const result = resolvedJid || parse1;
-            self.conn._lidCache.set(parse1, result);
-            return result;
-          })
-          .catch(() => parse1);
-        self.conn._lidCache.set(parse1, resolvedPromise);
-        return parse1;
-      }
-      return parse1;
+      const parsedJid = safeDecodeJid(rawParticipant, self.conn);
+      return parsedJid?.resolveLidToRealJid(this.chat, self.conn) || parsedJid;
     } catch (e) {
       console.error('Error en quoted sender getter:', e);
       return '';
     }
   },
-  enumerable: true,
+  enumerable: true
 },
 		  fromMe: {
               get() {
@@ -2143,40 +2128,49 @@ export function protoType() {
   };
 
 // Resolver problema del LID, Fu*k You Meta 	
-String.prototype.resolveLidToRealJid = async function (groupChatId, conn, maxRetries = 3, retryDelay = 60000) {
-  const lidJid = this.toString();
-  if (!lidJid.endsWith('@lid') || !groupChatId.endsWith('@g.us')) return lidJid;
-  const lidToFind = lidJid.split('@')[0];
-  let attempts = 0;
-  while (attempts < maxRetries) {
-    try {
-      const metadata = await conn?.groupMetadata(groupChatId);
-      if (!metadata?.participants) {
-        throw new Error('No se pudieron obtener los participantes del grupo');
-      }
-      for (const participant of metadata?.participants) {
-        try {
-          if (!participant?.jid) continue;
-          const contactDetails = await conn?.onWhatsApp(participant.jid);
-          if (!contactDetails?.[0]?.lid) continue;
-          const possibleLid = contactDetails[0].lid.split('@')[0];
-          if (possibleLid === lidToFind) {
-            return participant.jid;
+String.prototype.resolveLidToRealJid = (function() {
+  const lidCache = new Map();
+  return async function(groupChatId, conn, maxRetries = 3, retryDelay = 60000) {
+    const inputJid = this.toString();
+    if (!inputJid.endsWith('@lid') || !groupChatId?.endsWith('@g.us')) {
+      return inputJid.includes('@') ? inputJid : `${inputJid}@s.whatsapp.net`;
+    }
+    if (lidCache.has(inputJid)) {
+      return lidCache.get(inputJid);
+    }
+    const lidToFind = inputJid.split('@')[0];
+    let attempts = 0;
+    while (attempts < maxRetries) {
+      try {
+        const metadata = await conn?.groupMetadata(groupChatId);
+        if (!metadata?.participants) throw new Error('No se obtuvieron participantes');
+        for (const participant of metadata.participants) {
+          try {
+            if (!participant?.jid) continue;
+            const contactDetails = await conn?.onWhatsApp(participant.jid);
+            if (!contactDetails?.[0]?.lid) continue;
+            const possibleLid = contactDetails[0].lid.split('@')[0];
+            if (possibleLid === lidToFind) {
+              lidCache.set(inputJid, participant.jid);
+              return participant.jid;
+            }
+          } catch (e) {
+            continue;
           }
-        } catch (e) {
-          continue;
         }
-      }
-      return lidJid;
-    } catch (e) {
-      attempts++;      
-      if (attempts < maxRetries) {
+        lidCache.set(inputJid, inputJid);
+        return inputJid;
+      } catch (e) {
+        if (++attempts >= maxRetries) {
+          lidCache.set(inputJid, inputJid);
+          return inputJid;
+        }
         await new Promise(resolve => setTimeout(resolve, retryDelay));
       }
     }
-  }
-  return lidJid;
-};
+    return inputJid;
+  };
+})();
 	
 String.prototype.decodeJid = function decodeJid() {
     if (/:\d+@/gi.test(this)) {
