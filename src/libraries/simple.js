@@ -2110,9 +2110,15 @@ export function serialize() {
     },
     sender: {
       get() {
-	if (this.messageStubType === 32) {
-          return this.messageStubParameters?.[0] || this.key?.remoteJid || '';
-	}
+        if (this.messageStubType) {
+          if (this.messageStubType === 32) { 
+            return this.messageStubParameters?.[0] || this.key?.remoteJid || '';
+          } else if (this.messageStubType === 20) { 
+            return this.key?.participant || this.key?.remoteJid || '';
+          } else { 
+            return this.key?.participant || this.key?.remoteJid || '';
+          }
+        }
         const parse1 = (this.participant || this.key.participant || this.chat || '').decodeJid();
         if (parse1 && parse1.includes('@lid')) {
           return parse1.resolveLidToRealJid(this.chat, mconn.conn);
