@@ -1782,77 +1782,78 @@ export function serialize() {
 sender: {
     get() {
         try {
-            console.log('[DEBUG] Iniciando getter sender');
-            
-            // Verificar contextInfo
-            if (!contextInfo) {
-                console.warn('[DEBUG] contextInfo no está definido');
-                return '';
-            }
-            
-            const rawParticipant = contextInfo.participant;
-            console.log(`[DEBUG] rawParticipant: ${rawParticipant}`);
-            
-            // Caso cuando no hay participant
+            console.log('[DEBUG] === Iniciando getter sender ===');
+            console.log('[DEBUG] this:', JSON.stringify(this, null, 2));
+            console.log('[DEBUG] contextInfo:', contextInfo ? JSON.stringify(contextInfo) : 'undefined');
+
+            // 1. Buscar el participant en múltiples ubicaciones posibles
+            const rawParticipant = this.key?.participant?.endsWith('@lid') ? this.key.participant :
+                                 this.key?.remoteJid?.endsWith('@lid') ? this.key.remoteJid :
+                                 contextInfo?.participant || '';
+
+            console.log(`[DEBUG] rawParticipant encontrado: ${rawParticipant}`);
+
+            // 2. Caso cuando no hay participant válido
             if (!rawParticipant) {
-                console.log('[DEBUG] No hay rawParticipant, verificando si es propio mensaje');
+                console.log('[DEBUG] No hay rawParticipant válido, verificando si es mensaje propio');
                 const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || '');
                 console.log(`[DEBUG] isFromMe: ${isFromMe}`);
                 
                 const userJid = safeDecodeJid(self.conn?.user?.id, self.conn);
-                console.log(`[DEBUG] userJid: ${userJid}`);
+                console.log(`[DEBUG] userJid obtenido: ${userJid}`);
                 
                 const result = isFromMe ? userJid : this.chat;
-                console.log(`[DEBUG] Retornando: ${result}`);
+                console.log(`[DEBUG] Retornando (caso no participant): ${result}`);
                 return result;
             }
-            
-            // Decodificar JID
+
+            // 3. Decodificar JID
             const parse1 = safeDecodeJid(rawParticipant, self.conn);
-            console.log(`[DEBUG] JID decodificado (parse1): ${parse1}`);
-            
+            console.log(`[DEBUG] JID decodificado: ${parse1}`);
+
             if (!parse1) {
                 console.warn('[DEBUG] No se pudo decodificar el JID');
                 return '';
             }
-            
-            // Manejo de LID
+
+            // 4. Manejo especial para LID
             if (parse1.endsWith('@lid')) {
-                console.log('[DEBUG] Es un LID, procesando...');
+                console.log('[DEBUG] Identificado como LID, procesando...');
                 
-                // Verificar conexión y cache
                 if (!self.conn) {
                     console.warn('[DEBUG] No hay conexión disponible');
                     return parse1;
                 }
-                
+
+                // Inicializar cache si no existe
                 if (!self.conn._lidCache) {
                     console.log('[DEBUG] Inicializando _lidCache');
                     self.conn._lidCache = new Map();
                 }
-                
+
                 // Verificar cache
                 if (self.conn._lidCache.has(parse1)) {
                     const cached = self.conn._lidCache.get(parse1);
-                    console.log(`[DEBUG] Encontrado en cache: ${cached}`);
+                    console.log(`[DEBUG] Valor encontrado en cache:`, cached);
                     
                     if (cached instanceof Promise) {
-                        console.log('[DEBUG] Hay una resolución en curso, retornando LID temporal');
+                        console.log('[DEBUG] Promesa pendiente en cache, retornando LID temporal');
                         return parse1;
                     }
+                    console.log(`[DEBUG] Retornando valor cacheado: ${cached}`);
                     return cached;
                 }
-                
-                // Verificar método resolveLidToRealJid
+
+                // Verificar que exista el método de resolución
                 if (typeof parse1.resolveLidToRealJid !== 'function') {
-                    console.warn('[DEBUG] resolveLidToRealJid no es una función');
+                    console.warn('[DEBUG] resolveLidToRealJid no disponible');
                     return parse1;
                 }
-                
-                console.log('[DEBUG] Resolviendo LID...');
+
+                console.log('[DEBUG] Iniciando resolución de LID...');
                 const resolvedPromise = parse1.resolveLidToRealJid(this.chat, self.conn)
                     .then(resolvedJid => {
-                        console.log(`[DEBUG] LID resuelto: ${resolvedJid}`);
+                        console.log(`[DEBUG] LID resuelto correctamente: ${resolvedJid}`);
                         const result = resolvedJid || parse1;
                         self.conn._lidCache.set(parse1, result);
                         return result;
@@ -1861,16 +1862,17 @@ sender: {
                         console.error('[DEBUG] Error resolviendo LID:', err);
                         return parse1;
                     });
-                
+
                 self.conn._lidCache.set(parse1, resolvedPromise);
                 console.log('[DEBUG] Promesa de resolución almacenada en cache');
                 return parse1;
             }
-            
+
+            // 5. Caso normal (no es LID)
             console.log(`[DEBUG] Retornando JID normal: ${parse1}`);
             return parse1;
         } catch (e) {
-            console.error('[DEBUG] Error en quoted sender getter:', e);
+            console.error('[DEBUG] Error crítico en getter sender:', e);
             return '';
         }
     },
