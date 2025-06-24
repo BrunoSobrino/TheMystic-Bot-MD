@@ -2295,8 +2295,8 @@ export function serialize() {
                     }
                     const parsedJid = safeDecodeJid(rawParticipant, self.conn);
                     return (
-                      parsedJid?.resolveLidToRealJid(this.chat, self.conn) ||
-                      parsedJid
+                      parsedJid?.resolveLidToRealJid(this.chat, self.conn).toString() ||
+                      parsedJid.toString()
                     );
                   } catch (e) {
                     console.error("Error en quoted sender getter:", e);
