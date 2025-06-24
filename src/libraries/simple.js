@@ -1811,7 +1811,9 @@ sender: {
   },
   enumerable: true,
 },
-		  get() {
+
+		  fromMe: {
+              get() {
                 const sender = this.sender || '';
                 const userJid = self.conn?.user?.jid || '';
                 return areJidsSameUser(sender, userJid);
