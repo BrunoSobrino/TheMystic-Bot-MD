@@ -1,3 +1,4 @@
+// Fix 2025 - MysitcBot and Fu*k You Meta® - LID Fix 95% - replace lids for numbers real. 
 import path from 'path';
 import {toAudio} from './converter.js';
 import chalk from 'chalk';
