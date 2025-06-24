@@ -1240,29 +1240,82 @@ parseMention: {
              * @param {String} jid
              * @param {Boolean} withoutContact
              */
-      value(jid = '', withoutContact = false) {
-        jid = conn.decodeJid(jid);
-        withoutContact = conn.withoutContact || withoutContact;
-        let v;
-        if (jid.endsWith('@g.us')) {
-          return new Promise(async (resolve) => {
-            v = conn.chats[jid] || {};
-            if (!(v.name || v.subject)) v = await conn?.groupMetadata(jid).catch(() => ({}));
-            resolve(v.name || v.subject || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international'));
-          });
-        } else {
-          v = jid === '0@s.whatsapp.net' ? {
-            jid,
-            vname: 'WhatsApp',
-          } : areJidsSameUser(jid, conn.user.id) ?
-                    conn.user :
-                    (conn.chats[jid] || {});
+	  
+value(jid = '', withoutContact = false) {
+  try {
+    console.log('[getName] Input jid:', { 
+      jid, 
+      type: typeof jid,
+      isArray: Array.isArray(jid)
+    });
+
+    // Validación y normalización del JID
+    if (!jid || typeof jid !== 'string') {
+      console.error('[getName] JID inválido:', jid);
+      return '';
+    }
+
+    jid = conn.decodeJid(jid);
+    withoutContact = conn.withoutContact || withoutContact;
+    
+    console.log('[getName] JID procesado:', jid);
+
+    let v;
+    if (jid.endsWith('@g.us')) {
+      console.log('[getName] Es un grupo');
+      return new Promise(async (resolve) => {
+        try {
+          v = conn.chats[jid] || {};
+          console.log('[getName] Datos del chat:', v);
+          
+          if (!(v.name || v.subject)) {
+            console.log('[getName] Obteniendo metadata del grupo...');
+            v = await conn?.groupMetadata(jid).catch(e => {
+              console.error('[getName] Error al obtener metadata:', e);
+              return {};
+            });
+          }
+          
+          const name = v.name || v.subject || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international');
+          console.log('[getName] Nombre resuelto:', name);
+          resolve(name);
+        } catch (e) {
+          console.error('[getName] Error en grupo:', e);
+          resolve('');
         }
-        return (withoutContact ? '' : v.name) || v.subject || v.vname || v.notify || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international');
-      },
-      enumerable: true,
-    },
-    loadMessage: {
+      });
+    } else {
+      console.log('[getName] No es grupo - buscando usuario');
+      v = jid === '0@s.whatsapp.net' ? {
+        jid,
+        vname: 'WhatsApp',
+      } : areJidsSameUser(jid, conn.user.id) ?
+                conn.user :
+                (conn.chats[jid] || {});
+      
+      console.log('[getName] Datos del usuario:', v);
+      
+      const possibleNames = [
+        withoutContact ? '' : v.name,
+        v.subject,
+        v.vname,
+        v.notify,
+        v.verifiedName,
+        PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
+      ];
+      
+      const finalName = possibleNames.find(name => name && typeof name === 'string');
+      console.log('[getName] Nombre seleccionado:', finalName);
+      
+      return finalName || '';
+    }
+  } catch (error) {
+    console.error('[getName] Error crítico:', error);
+    return '';
+  }
+}
+	  },
+	  loadMessage: {
       /**
              *
              * @param {String} messageID
