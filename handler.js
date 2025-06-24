@@ -1090,14 +1090,12 @@ export async function participantsUpdate({ id, participants, action }) {
   if (global.db.data == null) await loadDatabase();
   const chat = global.db.data.chats[id] || {};
   const botTt = global.db.data.settings[mconn?.conn?.user?.jid] || {};
-  if (m?.messageStubType === 28 && participants.includes(m?.conn?.user?.jid)) {
-    return;
-  }
   let text = '';
   switch (action) {
     case 'add':
     case 'remove':
       if (chat.welcome && !chat?.isBanned) {
+        if (action === 'remove' && participants.includes(m?.conn?.user?.jid)) return;
         const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
         for (const user of participants) {
           try {
