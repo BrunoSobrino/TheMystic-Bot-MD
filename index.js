@@ -46,7 +46,7 @@ function formatearNumeroTelefono(numero) {
 }
 
 function esNumeroValido(numeroTelefono) {
-  const regex = /^\+521\d{10}$/;
+  const regex = /^\+\d{7,15}$/;
   return regex.test(numeroTelefono);
 }
 
