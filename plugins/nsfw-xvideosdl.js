@@ -18,6 +18,8 @@ const handler = async (m, { conn, args, command, usedPrefix, text }) => {
     throw `${tradutor.texto4}\n*◉ https://www.xvideos.com/video70389849/pequena_zorra_follada_duro*`;
   }
 };
+handler.tags = ['nsfw'];
+handler.help = ['xvideosdl'];
 handler.command = /^(xvideosdl)$/i;
 export default handler;
 

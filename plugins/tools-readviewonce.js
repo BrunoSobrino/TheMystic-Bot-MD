@@ -1,5 +1,3 @@
-
-
 const {downloadContentFromMessage} = (await import("baileys"));
 
 const handler = async (m, {conn}) => {

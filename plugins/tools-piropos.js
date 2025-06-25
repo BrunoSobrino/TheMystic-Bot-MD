@@ -1,6 +1,5 @@
 /* By https://github.com/DIEGO-OFC/DORRAT-BOT-MD */
 
-
 const handler = async (m, {conn, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -11,11 +10,11 @@ const handler = async (m, {conn, text}) => {
 
   m.reply(`*╔═══════════════════════════*\n➢ *"${pickRandom(global.piropo)}"*\n*╚═══════════════════════════*`);
 };
-handler.tags = ['frases'];
+handler.help = ['piropo'];
+handler.tags = ['tools'];
 handler.command = ['piropo'];
 export default handler;
 
 function pickRandom(list) {
   return list[Math.floor(list.length * Math.random())];
 }
-

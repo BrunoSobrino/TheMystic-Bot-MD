@@ -1,6 +1,5 @@
 import { execSync } from 'child_process';
 
-
 const handler = async (m, { conn, text }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -43,6 +42,8 @@ const handler = async (m, { conn, text }) => {
   }
  }
 };
+handler.help = ['update'];
+handler.tags = ['owner'];
 handler.command = /^(update|actualizar|gitpull)$/i;
 handler.rowner = true;
 export default handler;

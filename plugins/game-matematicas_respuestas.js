@@ -1,6 +1,5 @@
 global.math = global.math ? global.math : {};
 
-
 const handler = async (m, { conn }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje

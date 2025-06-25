@@ -1,4 +1,3 @@
-
 const handler = async (m, { conn, command, text, usedPrefix }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -114,6 +113,6 @@ var hawemod = [
 loading()    
 };
 handler.help = ['gay2', 'lesbiana', 'pajero', 'pajera', 'puto', 'puta', 'manco', 'manca', 'rata', 'prostituta', 'prostituto'].map((v) => v + ' @tag | nombre');
-handler.tags = ['calculator'];
+handler.tags = ['game'];
 handler.command = /^(gay2|lesbiana|pajero|pajera|puto|puta|manco|manca|rata|prostituta|prostituto)$/i;
 export default handler;

@@ -1,5 +1,3 @@
-
-
 const handler = async (m, { command, text }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -17,6 +15,6 @@ ${tradutor.texto1[2]} ${[tradutor.texto1[3], tradutor.texto1[4], tradutor.texto1
 
 }
 handler.help = ['pregunta <texto>?'];
-handler.tags = ['kerang'];
+handler.tags = ['game'];
 handler.command = /^pregunta|preguntas|apakah$/i;
 export default handler;

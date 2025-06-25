@@ -1,6 +1,5 @@
 global.math = global.math ? global.math : {};
 
-
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -43,6 +42,8 @@ conn.sendHydrated(m.chat, mat, author, null, null, null, null, null, [
   ];
 };
 
+handler.help = ['math'];
+handler.tags = ['game'];
 handler.command = /^math|mates|matemáticas/i;
 export default handler;
 

@@ -1,4 +1,3 @@
-
 const handler = async (m, { conn, command, text }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -36,6 +35,6 @@ var hawemod = [
 loading()    
 };
 handler.help = ['love'];
-handler.tags = ['fun'];
+handler.tags = ['game'];
 handler.command = /^(love|amor)$/i;
 export default handler;
