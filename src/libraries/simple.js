@@ -2290,12 +2290,13 @@ export function serialize() {
 sender: {
   get() {
     try {
-      const possibleJid = 
-        (this.key?.fromMe && this.conn?.user?.id) || 
-        this.contextInfo?.participant || 
-        this.key?.participant || 
-        this.chat;
-      
+      const possibleJid = contextInfo.participant
+	    console.log('jid 1: ' + possibleJid)
+	      if (!possibleJid) {
+	      const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || "");
+	      return isFromMe
+      }
+	       
       console.log('Possible JID:', possibleJid); // Debug
       
       if (!possibleJid) return '';
