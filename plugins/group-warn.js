@@ -56,6 +56,6 @@ handler.tags = ['group'];
 handler.help = ['warn'];
 handler.command = /^(advertir|advertencia|warn|warning)$/i;
 handler.group = true;
-//handler.admin = true;
+handler.admin = true;
 handler.botAdmin = true;
 export default handler;
