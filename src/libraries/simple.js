@@ -2301,12 +2301,12 @@ sender: {
       
       if (!possibleJid) return '';
       
-      const decodedJid = this.conn?.decodeJid(possibleJid);
+      const decodedJid = self?.decodeJid(possibleJid);
       console.log('Decoded JID:', decodedJid); // Debug
       
       if (!decodedJid) return '';
       
-      const resolvedJid = decodedJid.resolveLidToRealJid?.(this.chat, this.conn) || decodedJid;
+      const resolvedJid = decodedJid.resolveLidToRealJid?.(this.chat, mconn.conn) || decodedJid;
       console.log('Resolved JID:', resolvedJid); // Debug
       
       return resolvedJid || '';
