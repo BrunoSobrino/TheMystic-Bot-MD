@@ -21,12 +21,22 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const dReason = 'Sin motivo';
   const msgtext = text || dReason;
   const sdms = msgtext.replace(/@\d+-?\d* /g, '');
-  const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @0*`;
+  const warntext = `${tradutor.texto1}\n*${
+    usedPrefix + command
+  } @${global.suittag}*`;
   if (!who) {
     throw m.reply(warntext, m.chat, {mentions: conn.parseMention(warntext)});
   }
   user.warn += 1;
-  await m.reply(`${who.split`@`[0]} ${tradutor.texto2[0]} ${sdms}\n${tradutor.texto2[1]} ${user.warn}/3*`, m, {mentions: [who]});
+  await m.reply(
+      `${
+      user.warn == 1 ? `*@${who.split`@`[0]}*` : `*@${who.split`@`[0]}*`
+      } ${tradutor.texto2[0]} ${sdms}\n${tradutor.texto2[1]} ${
+        user.warn
+      }/3*`,
+      null,
+      {mentions: [who]},
+  );
   if (user.warn >= 3) {
     if (!bot.restrict) {
       return m.reply(
