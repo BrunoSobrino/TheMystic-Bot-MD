@@ -2287,7 +2287,25 @@ export function serialize() {
                 },
                 enumerable: true,
               },
-              sender: {
+		sender: {
+			get() {
+    try {
+      return this.conn?.decodeJid(
+        (this.key?.fromMe && this.conn?.user.id) || 
+        contextInfo.participant || 
+        this.key.participant || 
+        this.chat || 
+        ''
+      )?.resolveLidToRealJid(this.chat, this.conn);
+    } catch (e) {
+      console.error("Error en quoted sender getter:", e);
+      return "";
+    }
+  },
+  enumerable: true,
+},
+    
+              /*sender: {
                 get() {
                   try {
                     const rawParticipant = contextInfo.participant;
@@ -2310,7 +2328,7 @@ export function serialize() {
                   }
                 },
                 enumerable: true,
-              },
+              },*/
               fromMe: {
                 get() {
                   const sender = this.sender || "";
