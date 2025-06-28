@@ -2287,24 +2287,35 @@ export function serialize() {
                 },
                 enumerable: true,
               },
-		sender: {
-			get() {
+sender: {
+  get() {
     try {
-      return this.conn?.decodeJid(
-        (this.key?.fromMe && this.conn?.user.id) || 
-        contextInfo.participant || 
-        this.key.participant || 
-        this.chat || 
-        ''
-      )?.resolveLidToRealJid(this.chat, this.conn);
+      const possibleJid = 
+        (this.key?.fromMe && this.conn?.user?.id) || 
+        this.contextInfo?.participant || 
+        this.key?.participant || 
+        this.chat;
+      
+      console.log('Possible JID:', possibleJid); // Debug
+      
+      if (!possibleJid) return '';
+      
+      const decodedJid = this.conn?.decodeJid(possibleJid);
+      console.log('Decoded JID:', decodedJid); // Debug
+      
+      if (!decodedJid) return '';
+      
+      const resolvedJid = decodedJid.resolveLidToRealJid?.(this.chat, this.conn) || decodedJid;
+      console.log('Resolved JID:', resolvedJid); // Debug
+      
+      return resolvedJid || '';
     } catch (e) {
       console.error("Error en quoted sender getter:", e);
-      return "";
+      return '';
     }
   },
   enumerable: true,
-},
-    
+},    
               /*sender: {
                 get() {
                   try {
