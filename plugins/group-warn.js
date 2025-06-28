@@ -14,7 +14,9 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
       m.quoted.sender :
       text;
   } else who = m.chat;
+  console.log(who)
   const user = global.db.data.users[who];
+  console.log(user)
   const bot = global.db.data.settings[conn.user.jid] || {};
   const dReason = 'Sin motivo';
   const msgtext = text || dReason;
