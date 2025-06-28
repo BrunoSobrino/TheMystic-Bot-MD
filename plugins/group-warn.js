@@ -8,9 +8,9 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const pp = './src/assets/images/menu/main/warn.jpg';
   let who;
   if (m.isGroup) {
-    who = m?.message?.extendedTextMessage?.contextInfo?.participant || m?.mentionedJid[0] || m?.quoted?.sender || m?.sender;
+    who = m?.message?.extendedTextMessage?.contextInfo?.participant || m?.mentionedJid[0] || m?.quoted?.sender || false;
   } else {
-    who = m.quoted?.sender || null;
+    who = m.quoted?.sender || false;
   }
   const user = global.db.data.users[who];
   const bot = global.db.data.settings[conn.user.jid] || {};
