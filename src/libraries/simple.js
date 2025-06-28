@@ -2231,6 +2231,27 @@ export function serialize() {
           const q = quoted[type];
           const text = typeof q === "string" ? q : q?.text || "";
 
+      let resolvedSender = null;
+      const rawParticipant = contextInfo.participant;
+      if (rawParticipant) {
+        const decodedJid = safeDecodeJid(rawParticipant, self.conn);
+        if (decodedJid?.resolveLidToRealJid) {
+          decodedJid.resolveLidToRealJid(self.chat, self.conn)
+            .then((realJid) => {
+              resolvedSender = realJid || decodedJid;
+            })
+            .catch(() => {
+              resolvedSender = decodedJid;
+            });
+        } else {
+          resolvedSender = decodedJid;
+        }
+      } else {
+        resolvedSender = self.key?.fromMe
+          ? safeDecodeJid(self.conn?.user?.id, self.conn)
+          : self.chat;
+      }
+	
           return Object.defineProperties(
             JSON.parse(
               JSON.stringify(typeof q === "string" ? { text: q } : q || {}),
@@ -2289,32 +2310,14 @@ export function serialize() {
               },
 sender: {
   get() {
-    try {
-      const possibleJid = contextInfo.participant
-	    console.log('jid 1: ' + possibleJid)
-	      if (!possibleJid) {
-	      const isFromMe = this.key?.fromMe || areJidsSameUser(this.chat, self.conn?.user?.id || "");
-	      return isFromMe
-      }
-	       
-      console.log('Possible JID:', possibleJid); // Debug
-      
-      if (!possibleJid) return '';
-      
-      const decodedJid = safeDecodeJid(possibleJid);
-      console.log('Decoded JID:', decodedJid); // Debug
-      
-      if (!decodedJid) return '';
-      
-      const resolvedJid = decodedJid.resolveLidToRealJid?.(this.chat, mconn.conn) || decodedJid;
-      console.log('Resolved JID:', resolvedJid); // Debug
-      
-      return resolvedJid || '';
-    } catch (e) {
-      console.error("Error en quoted sender getter:", e);
-      return '';
-    }
-  },
+	                return resolvedSender || 
+                safeDecodeJid(contextInfo.participant || 
+                  (self.key?.fromMe && self.conn?.user?.id) || 
+                  self.chat, 
+                  self.conn
+                );
+
+    },
   enumerable: true,
 },    
               /*sender: {
