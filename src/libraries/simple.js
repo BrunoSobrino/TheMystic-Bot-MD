@@ -2301,7 +2301,7 @@ sender: {
       
       if (!possibleJid) return '';
       
-      const decodedJid = self?.decodeJid(possibleJid);
+      const decodedJid = safeDecodeJid(possibleJid);
       console.log('Decoded JID:', decodedJid); // Debug
       
       if (!decodedJid) return '';
