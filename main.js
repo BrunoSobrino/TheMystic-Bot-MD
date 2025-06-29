@@ -82,8 +82,6 @@ global.loadDatabase = async function loadDatabase() {
 };
 await loadDatabase();
 
-/* ------------------------------------------------*/
-
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
 const { version } = await fetchLatestBaileysVersion();
 let phoneNumber = global.botnumber || process.argv.find(arg => arg.startsWith('--phone='))?.split('=')[1];
@@ -210,16 +208,12 @@ if (!opts['test']) {
   if (global.db) {
     setInterval(async () => {
       if (global.db.data) await global.db.write();
-      if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 'tmp', 'jadibts'], tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
+      if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 'tmp', 'jadibts'], tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
     }, 30 * 1000);
   }
 }
 
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
-
-/* ------------------------------------------------*/
-/*          MANEJO ROBUSTO DE LIDs                 */
-/* ------------------------------------------------*/
 
 async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay = 1000) {
     if (!lidJid?.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
@@ -273,12 +267,10 @@ async function processLidsInMessage(message, groupJid) {
     try {
         const remoteJid = message.key.remoteJid || groupJid;
         
-        // Procesar participant en el key
         if (message.key?.participant?.endsWith('@lid')) {
             message.key.participant = await resolveLidToRealJid(message.key.participant, remoteJid);
         }
 
-        // Procesar contextInfo.mentionedJid
         if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
             const mentionedJid = message.message.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(mentionedJid)) {
@@ -290,7 +282,6 @@ async function processLidsInMessage(message, groupJid) {
             }
         }
 
-        // Procesar participant en contextInfo (para mensajes citados)
         if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
             message.message.extendedTextMessage.contextInfo.participant = 
                 await resolveLidToRealJid(
@@ -299,25 +290,12 @@ async function processLidsInMessage(message, groupJid) {
                 );
         }
 
-        // Procesar mentionedJid directo en el mensaje
-        if (message.mentionedJid) {
-            message.mentionedJid = await Promise.all(
-                message.mentionedJid.filter(jid => jid).map(
-                    async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, remoteJid) : jid
-                )
-            );
-        }
-
         return message;
     } catch (e) {
         console.error('Error en processLidsInMessage:', e);
         return message;
     }
 }
-
-/* ------------------------------------------------*/
-/*          MANEJO DE CONEXIÓN Y EVENTOS           */
-/* ------------------------------------------------*/
 
 async function connectionUpdate(update) {
     const {connection, lastDisconnect, isNewLogin} = update;
@@ -416,36 +394,47 @@ global.reloadHandler = async function(restatConn) {
     conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
     conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
-    // Handler seguro con procesamiento de LIDs
     conn.handler = async (m) => {
-        if (!m?.key) {
-            console.error('Mensaje inválido recibido:', m);
-            return;
-        }
-
+        if (!m) return;
+        
         try {
-            const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
-            return handler.handler.call(global.conn, processedMsg);
+            // Manejar batches de mensajes
+            if (m.messages) {
+                for (const message of m.messages) {
+                    if (message?.key) {
+                        const processedMsg = await processLidsInMessage(message, message.key.remoteJid);
+                        await handler.handler.call(global.conn, processedMsg);
+                    }
+                }
+                return;
+            }
+            
+            // Manejar mensajes individuales
+            if (m?.key) {
+                const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
+                return handler.handler.call(global.conn, processedMsg);
+            }
         } catch (e) {
-            console.error('Error procesando mensaje:', e);
-            return handler.handler.call(global.conn, m);
+            console.error('Error en conn.handler:', e);
         }
     };
 
-    // Evento messages.upsert seguro
-    conn.ev.on('messages.upsert', async ({ messages, type }) => {
+    conn.ev.on('messages.upsert', async (update) => {
         try {
-            const validMessages = messages.filter(m => m?.key);
-            const processedMessages = await Promise.all(
-                validMessages.map(m => processLidsInMessage(m, m.key.remoteJid))
-            );
-            conn.handler({ messages: processedMessages, type });
+            const { messages, type } = update;
+            if (!Array.isArray(messages)) return;
+
+            for (const message of messages) {
+                if (message?.key) {
+                    const processedMsg = await processLidsInMessage(message, message.key.remoteJid);
+                    await conn.handler(processedMsg);
+                }
+            }
         } catch (e) {
             console.error('Error en messages.upsert:', e);
         }
     });
 
-    // Evento group-participants.update seguro
     conn.ev.on('group-participants.update', async (update) => {
         try {
             if (update.participants) {
@@ -461,7 +450,6 @@ global.reloadHandler = async function(restatConn) {
         }
     });
 
-    // Configurar otros eventos con manejo de errores
     const safeBind = (fn) => (...args) => {
         try {
             return fn.call(global.conn, ...args);
@@ -479,10 +467,6 @@ global.reloadHandler = async function(restatConn) {
     isInit = false;
     return true;
 };
-
-/* ------------------------------------------------*/
-/*          MANEJO DE PLUGINS                      */
-/* ------------------------------------------------*/
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 const pluginFilter = (filename) => /\.js$/.test(filename);
@@ -536,10 +520,6 @@ global.reload = async (_ev, filename) => {
 Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
-
-/* ------------------------------------------------*/
-/*          FUNCIONES DE MANTENIMIENTO            */
-/* ------------------------------------------------*/
 
 function clearTmp() {
   const tmp = [join(__dirname, './src/tmp')];
@@ -601,7 +581,6 @@ function clockString(ms) {
   return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
 }
 
-// Prueba rápida de dependencias
 async function _quickTest() {
   const test = await Promise.all([
     spawn('ffmpeg'),
