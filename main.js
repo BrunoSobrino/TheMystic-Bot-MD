@@ -29,17 +29,35 @@ let stopped = 'close';
 protoType();
 serialize();
 
-// Función para asegurar que todas las Promises estén resueltas
-global.ensureResolved = async function(obj) {
-    if (obj && typeof obj.then === 'function') {
-        return await obj;
-    }
-    if (obj && typeof obj === 'object') {
-        for (const key in obj) {
-            obj[key] = await global.ensureResolved(obj[key]);
+// Función mejorada para manejar Promises y objetos inmutables
+global.safeResolve = async function(obj) {
+    try {
+        if (!obj) return obj;
+        
+        // Si es una Promise, la resolvemos
+        if (typeof obj.then === 'function') {
+            return await obj;
         }
+        
+        // No intentamos modificar objetos complejos (como mensajes)
+        if (obj.key || obj.message) {
+            return obj;
+        }
+        
+        // Para objetos simples, creamos una copia
+        if (typeof obj === 'object') {
+            const result = Array.isArray(obj) ? [] : {};
+            for (const key in obj) {
+                result[key] = await global.safeResolve(obj[key]);
+            }
+            return result;
+        }
+        
+        return obj;
+    } catch (e) {
+        console.error('Error en safeResolve:', e);
+        return obj;
     }
-    return obj;
 };
 
 const msgRetryCounterMap = new Map();
@@ -296,22 +314,34 @@ async function processLidsInMessage(message, groupJid) {
     if (!message || !message.key) return message;
 
     try {
-        const remoteJid = message.key.remoteJid || groupJid;
+        // Creamos una copia segura del mensaje para trabajar
+        const messageCopy = {
+            key: {...message.key},
+            message: message.message ? {...message.message} : undefined,
+            // Copiamos otras propiedades relevantes
+            ...(message.quoted && {quoted: {...message.quoted}}),
+            ...(message.mentionedJid && {mentionedJid: [...message.mentionedJid]})
+        };
+
+        const remoteJid = messageCopy.key.remoteJid || groupJid;
         
-        if (message.key?.participant?.endsWith('@lid')) {
-            message.key.participant = await resolveLidToRealJid(message.key.participant, remoteJid);
+        // Procesamos participant en el key
+        if (messageCopy.key?.participant?.endsWith('@lid')) {
+            messageCopy.key.participant = await resolveLidToRealJid(messageCopy.key.participant, remoteJid);
         }
 
-        if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
-            message.message.extendedTextMessage.contextInfo.participant = 
+        // Procesamos contextInfo.participant
+        if (messageCopy.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
+            messageCopy.message.extendedTextMessage.contextInfo.participant = 
                 await resolveLidToRealJid(
-                    message.message.extendedTextMessage.contextInfo.participant, 
+                    messageCopy.message.extendedTextMessage.contextInfo.participant, 
                     remoteJid
                 );
         }
 
-        if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
-            const mentionedJid = message.message.extendedTextMessage.contextInfo.mentionedJid;
+        // Procesamos mentionedJid
+        if (messageCopy.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
+            const mentionedJid = messageCopy.message.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(mentionedJid)) {
                 for (let i = 0; i < mentionedJid.length; i++) {
                     if (mentionedJid[i]?.endsWith('@lid')) {
@@ -321,8 +351,9 @@ async function processLidsInMessage(message, groupJid) {
             }
         }
 
-        if (message.message?.extendedTextMessage?.contextInfo?.quotedMessage?.extendedTextMessage?.contextInfo?.mentionedJid) {
-            const quotedMentionedJid = message.message.extendedTextMessage.contextInfo.quotedMessage.extendedTextMessage.contextInfo.mentionedJid;
+        // Procesamos quotedMessage mentionedJid
+        if (messageCopy.message?.extendedTextMessage?.contextInfo?.quotedMessage?.extendedTextMessage?.contextInfo?.mentionedJid) {
+            const quotedMentionedJid = messageCopy.message.extendedTextMessage.contextInfo.quotedMessage.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(quotedMentionedJid)) {
                 for (let i = 0; i < quotedMentionedJid.length; i++) {
                     if (quotedMentionedJid[i]?.endsWith('@lid')) {
@@ -332,26 +363,29 @@ async function processLidsInMessage(message, groupJid) {
             }
         }
 
-        if (message.message?.conversation) {
-            message.message.conversation = await extractAndProcessLids(message.message.conversation, remoteJid);
+        // Procesamos texto del mensaje
+        if (messageCopy.message?.conversation) {
+            messageCopy.message.conversation = await extractAndProcessLids(messageCopy.message.conversation, remoteJid);
         }
         
-        if (message.message?.extendedTextMessage?.text) {
-            message.message.extendedTextMessage.text = await extractAndProcessLids(message.message.extendedTextMessage.text, remoteJid);
+        if (messageCopy.message?.extendedTextMessage?.text) {
+            messageCopy.message.extendedTextMessage.text = await extractAndProcessLids(messageCopy.message.extendedTextMessage.text, remoteJid);
         }
 
-        if (message.message?.extendedTextMessage?.contextInfo?.participant && !message.quoted) {
-            message.quoted = {
-                sender: message.message.extendedTextMessage.contextInfo.participant,
-                message: message.message.extendedTextMessage.contextInfo.quotedMessage
-            };
+        // Estructuramos quoted
+        if (messageCopy.message?.extendedTextMessage?.contextInfo?.participant && !messageCopy.quoted) {
+            const quotedSender = await resolveLidToRealJid(
+                messageCopy.message.extendedTextMessage.contextInfo.participant, 
+                remoteJid
+            );
             
-            if (message.quoted.sender?.then) {
-                message.quoted.sender = await message.quoted.sender;
-            }
+            messageCopy.quoted = {
+                sender: quotedSender,
+                message: messageCopy.message.extendedTextMessage.contextInfo.quotedMessage
+            };
         }
 
-        return await global.ensureResolved(message);
+        return messageCopy;
     } catch (e) {
         console.error('Error en processLidsInMessage:', e);
         return message;
@@ -464,26 +498,23 @@ global.reloadHandler = async function(restatConn) {
                 type: m.type || 'notify'
             };
 
+            // Procesar batches de mensajes
             if (m.messages && Array.isArray(m.messages)) {
                 for (const message of m.messages) {
                     if (message?.key) {
                         const processedMsg = await processLidsInMessage(message, message.key.remoteJid);
-                        const fullyResolvedMsg = await global.ensureResolved(processedMsg);
-                        handlerInput.messages.push(fullyResolvedMsg);
+                        handlerInput.messages.push(processedMsg);
                     }
                 }
             } 
+            // Procesar mensaje individual
             else if (m?.key) {
                 const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
-                const fullyResolvedMsg = await global.ensureResolved(processedMsg);
-                handlerInput.messages.push(fullyResolvedMsg);
+                handlerInput.messages.push(processedMsg);
             }
 
+            // Llamar al handler solo si hay mensajes válidos
             if (handlerInput.messages.length > 0) {
-                for (let i = 0; i < handlerInput.messages.length; i++) {
-                    handlerInput.messages[i] = await global.ensureResolved(handlerInput.messages[i]);
-                }
-                
                 await handler.handler.call(global.conn, handlerInput);
             }
         } catch (e) {
@@ -510,7 +541,7 @@ global.reloadHandler = async function(restatConn) {
             if (update.participants) {
                 update.participants = await Promise.all(
                     update.participants.filter(p => p).map(
-                        p => p.endsWith('@lid') ? resolveLidToRealJid(p, update.id) : p
+                        async p => p.endsWith('@lid') ? await resolveLidToRealJid(p, update.id) : p
                     )
                 );
             }
