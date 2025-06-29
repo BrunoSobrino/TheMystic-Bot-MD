@@ -29,6 +29,19 @@ let stopped = 'close';
 protoType();
 serialize();
 
+// Función para asegurar que todas las Promises estén resueltas
+global.ensureResolved = async function(obj) {
+    if (obj && typeof obj.then === 'function') {
+        return await obj;
+    }
+    if (obj && typeof obj === 'object') {
+        for (const key in obj) {
+            obj[key] = await global.ensureResolved(obj[key]);
+        }
+    }
+    return obj;
+};
+
 const msgRetryCounterMap = new Map();
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
@@ -261,17 +274,6 @@ async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay 
     return lidJid;
 }
 
-async function resolveLidToRealJidSync(lidJid, groupJid) {
-    if (!lidJid?.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
-        return lidJid?.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
-    }
-
-    const cached = lidCache.get(lidJid);
-    if (cached) return cached;
-
-    return lidJid;
-}
-
 async function extractAndProcessLids(text, groupJid) {
     if (!text) return text;
     
@@ -349,7 +351,7 @@ async function processLidsInMessage(message, groupJid) {
             }
         }
 
-        return message;
+        return await global.ensureResolved(message);
     } catch (e) {
         console.error('Error en processLidsInMessage:', e);
         return message;
@@ -466,30 +468,20 @@ global.reloadHandler = async function(restatConn) {
                 for (const message of m.messages) {
                     if (message?.key) {
                         const processedMsg = await processLidsInMessage(message, message.key.remoteJid);
-                        
-                        if (processedMsg.quoted?.sender?.then) {
-                            processedMsg.quoted.sender = await processedMsg.quoted.sender;
-                        }
-                        
-                        handlerInput.messages.push(processedMsg);
+                        const fullyResolvedMsg = await global.ensureResolved(processedMsg);
+                        handlerInput.messages.push(fullyResolvedMsg);
                     }
                 }
             } 
             else if (m?.key) {
                 const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
-                
-                if (processedMsg.quoted?.sender?.then) {
-                    processedMsg.quoted.sender = await processedMsg.quoted.sender;
-                }
-                
-                handlerInput.messages.push(processedMsg);
+                const fullyResolvedMsg = await global.ensureResolved(processedMsg);
+                handlerInput.messages.push(fullyResolvedMsg);
             }
 
             if (handlerInput.messages.length > 0) {
-                for (const msg of handlerInput.messages) {
-                    if (msg.quoted?.sender?.then) {
-                        msg.quoted.sender = await msg.quoted.sender;
-                    }
+                for (let i = 0; i < handlerInput.messages.length; i++) {
+                    handlerInput.messages[i] = await global.ensureResolved(handlerInput.messages[i]);
                 }
                 
                 await handler.handler.call(global.conn, handlerInput);
