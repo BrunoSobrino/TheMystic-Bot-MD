@@ -261,16 +261,46 @@ async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay 
     return lidJid;
 }
 
+async function extractAndProcessLids(text, groupJid) {
+    if (!text) return text;
+    
+    // Buscar todos los LIDs en el texto (ejemplo: 12345678@lid)
+    const lidMatches = text.match(/\d+@lid/g) || [];
+    let processedText = text;
+    
+    for (const lid of lidMatches) {
+        try {
+            const realJid = await resolveLidToRealJid(lid, groupJid);
+            processedText = processedText.replace(new RegExp(lid, 'g'), realJid);
+        } catch (e) {
+            console.error(`Error procesando LID ${lid}:`, e);
+        }
+    }
+    
+    return processedText;
+}
+
 async function processLidsInMessage(message, groupJid) {
     if (!message || !message.key) return message;
 
     try {
         const remoteJid = message.key.remoteJid || groupJid;
         
+        // Procesar participant en el key
         if (message.key?.participant?.endsWith('@lid')) {
             message.key.participant = await resolveLidToRealJid(message.key.participant, remoteJid);
         }
 
+        // Procesar contextInfo.participant (mensajes citados)
+        if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
+            message.message.extendedTextMessage.contextInfo.participant = 
+                await resolveLidToRealJid(
+                    message.message.extendedTextMessage.contextInfo.participant, 
+                    remoteJid
+                );
+        }
+
+        // Procesar mentionedJid en contextInfo
         if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
             const mentionedJid = message.message.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(mentionedJid)) {
@@ -282,12 +312,33 @@ async function processLidsInMessage(message, groupJid) {
             }
         }
 
-        if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
-            message.message.extendedTextMessage.contextInfo.participant = 
-                await resolveLidToRealJid(
-                    message.message.extendedTextMessage.contextInfo.participant, 
-                    remoteJid
+        // Procesar quotedMessage mentionedJid
+        if (message.message?.extendedTextMessage?.contextInfo?.quotedMessage?.extendedTextMessage?.contextInfo?.mentionedJid) {
+            const quotedMentionedJid = message.message.extendedTextMessage.contextInfo.quotedMessage.extendedTextMessage.contextInfo.mentionedJid;
+            if (Array.isArray(quotedMentionedJid)) {
+                message.message.extendedTextMessage.contextInfo.quotedMessage.extendedTextMessage.contextInfo.mentionedJid = await Promise.all(
+                    quotedMentionedJid.filter(jid => jid).map(
+                        async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, remoteJid) : jid
+                    )
                 );
+            }
+        }
+
+        // Procesar texto del mensaje para LIDs
+        if (message.message?.conversation) {
+            message.message.conversation = await extractAndProcessLids(message.message.conversation, remoteJid);
+        }
+        
+        if (message.message?.extendedTextMessage?.text) {
+            message.message.extendedTextMessage.text = await extractAndProcessLids(message.message.extendedTextMessage.text, remoteJid);
+        }
+
+        // Estructurar quoted para compatibilidad con plugins
+        if (message.message?.extendedTextMessage?.contextInfo?.participant && !message.quoted) {
+            message.quoted = {
+                sender: message.message.extendedTextMessage.contextInfo.participant,
+                message: message.message.extendedTextMessage.contextInfo.quotedMessage
+            };
         }
 
         return message;
