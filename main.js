@@ -261,10 +261,20 @@ async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay 
     return lidJid;
 }
 
+async function resolveLidToRealJidSync(lidJid, groupJid) {
+    if (!lidJid?.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
+        return lidJid?.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
+    }
+
+    const cached = lidCache.get(lidJid);
+    if (cached) return cached;
+
+    return lidJid;
+}
+
 async function extractAndProcessLids(text, groupJid) {
     if (!text) return text;
     
-    // Buscar todos los LIDs en el texto (ejemplo: 12345678@lid)
     const lidMatches = text.match(/\d+@lid/g) || [];
     let processedText = text;
     
@@ -286,12 +296,10 @@ async function processLidsInMessage(message, groupJid) {
     try {
         const remoteJid = message.key.remoteJid || groupJid;
         
-        // Procesar participant en el key
         if (message.key?.participant?.endsWith('@lid')) {
             message.key.participant = await resolveLidToRealJid(message.key.participant, remoteJid);
         }
 
-        // Procesar contextInfo.participant (mensajes citados)
         if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
             message.message.extendedTextMessage.contextInfo.participant = 
                 await resolveLidToRealJid(
@@ -300,31 +308,28 @@ async function processLidsInMessage(message, groupJid) {
                 );
         }
 
-        // Procesar mentionedJid en contextInfo
         if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
             const mentionedJid = message.message.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(mentionedJid)) {
-                message.message.extendedTextMessage.contextInfo.mentionedJid = await Promise.all(
-                    mentionedJid.filter(jid => jid).map(
-                        async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, remoteJid) : jid
-                    )
-                );
+                for (let i = 0; i < mentionedJid.length; i++) {
+                    if (mentionedJid[i]?.endsWith('@lid')) {
+                        mentionedJid[i] = await resolveLidToRealJid(mentionedJid[i], remoteJid);
+                    }
+                }
             }
         }
 
-        // Procesar quotedMessage mentionedJid
         if (message.message?.extendedTextMessage?.contextInfo?.quotedMessage?.extendedTextMessage?.contextInfo?.mentionedJid) {
             const quotedMentionedJid = message.message.extendedTextMessage.contextInfo.quotedMessage.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(quotedMentionedJid)) {
-                message.message.extendedTextMessage.contextInfo.quotedMessage.extendedTextMessage.contextInfo.mentionedJid = await Promise.all(
-                    quotedMentionedJid.filter(jid => jid).map(
-                        async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, remoteJid) : jid
-                    )
-                );
+                for (let i = 0; i < quotedMentionedJid.length; i++) {
+                    if (quotedMentionedJid[i]?.endsWith('@lid')) {
+                        quotedMentionedJid[i] = await resolveLidToRealJid(quotedMentionedJid[i], remoteJid);
+                    }
+                }
             }
         }
 
-        // Procesar texto del mensaje para LIDs
         if (message.message?.conversation) {
             message.message.conversation = await extractAndProcessLids(message.message.conversation, remoteJid);
         }
@@ -333,12 +338,15 @@ async function processLidsInMessage(message, groupJid) {
             message.message.extendedTextMessage.text = await extractAndProcessLids(message.message.extendedTextMessage.text, remoteJid);
         }
 
-        // Estructurar quoted para compatibilidad con plugins
         if (message.message?.extendedTextMessage?.contextInfo?.participant && !message.quoted) {
             message.quoted = {
                 sender: message.message.extendedTextMessage.contextInfo.participant,
                 message: message.message.extendedTextMessage.contextInfo.quotedMessage
             };
+            
+            if (message.quoted.sender?.then) {
+                message.quoted.sender = await message.quoted.sender;
+            }
         }
 
         return message;
@@ -449,29 +457,41 @@ global.reloadHandler = async function(restatConn) {
         if (!m) return;
         
         try {
-            // Crear estructura compatible con el handler
             const handlerInput = {
                 messages: [],
                 type: m.type || 'notify'
             };
 
-            // Procesar batches de mensajes
             if (m.messages && Array.isArray(m.messages)) {
                 for (const message of m.messages) {
                     if (message?.key) {
                         const processedMsg = await processLidsInMessage(message, message.key.remoteJid);
+                        
+                        if (processedMsg.quoted?.sender?.then) {
+                            processedMsg.quoted.sender = await processedMsg.quoted.sender;
+                        }
+                        
                         handlerInput.messages.push(processedMsg);
                     }
                 }
             } 
-            // Procesar mensaje individual
             else if (m?.key) {
                 const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
+                
+                if (processedMsg.quoted?.sender?.then) {
+                    processedMsg.quoted.sender = await processedMsg.quoted.sender;
+                }
+                
                 handlerInput.messages.push(processedMsg);
             }
 
-            // Solo llamar al handler si hay mensajes válidos
             if (handlerInput.messages.length > 0) {
+                for (const msg of handlerInput.messages) {
+                    if (msg.quoted?.sender?.then) {
+                        msg.quoted.sender = await msg.quoted.sender;
+                    }
+                }
+                
                 await handler.handler.call(global.conn, handlerInput);
             }
         } catch (e) {
@@ -484,7 +504,6 @@ global.reloadHandler = async function(restatConn) {
             const { messages, type } = update;
             if (!Array.isArray(messages)) return;
 
-            // Pasar el batch completo al handler
             await conn.handler({
                 messages: messages.filter(m => m?.key),
                 type
