@@ -413,7 +413,7 @@ global.reloadHandler = async function(restatConn) {
   conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
   conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
-  //conn.handler = handler.handler.bind(global.conn);
+  conn.handler = handler.handler.bind(global.conn);
   conn.participantsUpdate = handler.participantsUpdate.bind(global.conn);
   conn.groupsUpdate = handler.groupsUpdate.bind(global.conn);
   conn.onDelete = handler.deleteUpdate.bind(global.conn);
