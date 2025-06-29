@@ -32,6 +32,7 @@ serialize();
 const msgRetryCounterMap = new Map();
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
+const lidCache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
 
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
   return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString();
@@ -217,14 +218,12 @@ if (!opts['test']) {
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
 
 /* ------------------------------------------------*/
-/*          IMPLEMENTACIÓN DE MANEJO DE LIDs       */
+/*          MANEJO ROBUSTO DE LIDs                 */
 /* ------------------------------------------------*/
 
-const lidCache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
-
-async function resolveLidToRealJidAsync(lidJid, groupJid, maxRetries = 3, retryDelay = 1000) {
-    if (!lidJid.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
-        return lidJid.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
+async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay = 1000) {
+    if (!lidJid?.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
+        return lidJid?.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
     }
 
     const cached = lidCache.get(lidJid);
@@ -268,48 +267,52 @@ async function resolveLidToRealJidAsync(lidJid, groupJid, maxRetries = 3, retryD
     return lidJid;
 }
 
-function resolveLidToRealJidSync(lidJid) {
-    if (!lidJid.endsWith("@lid")) {
-        return lidJid.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
-    }
-    return lidCache.get(lidJid) || lidJid;
-}
-
-async function resolveLidToRealJid(lidJid, groupJid) {
-    const syncValue = resolveLidToRealJidSync(lidJid);
-    if (syncValue !== lidJid || !lidJid.endsWith("@lid")) {
-        return syncValue;
-    }
-    return await resolveLidToRealJidAsync(lidJid, groupJid);
-}
-
 async function processLidsInMessage(message, groupJid) {
-    if (!message) return message;
+    if (!message || !message.key) return message;
 
-    // Procesar participantes en mensajes
-    if (message.key?.participant?.endsWith('@lid')) {
-        message.key.participant = await resolveLidToRealJid(message.key.participant, groupJid || message.key.remoteJid);
-    }
+    try {
+        const remoteJid = message.key.remoteJid || groupJid;
+        
+        // Procesar participant en el key
+        if (message.key?.participant?.endsWith('@lid')) {
+            message.key.participant = await resolveLidToRealJid(message.key.participant, remoteJid);
+        }
 
-    // Procesar menciones en mensajes
-    if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
-        message.message.extendedTextMessage.contextInfo.mentionedJid = await Promise.all(
-            message.message.extendedTextMessage.contextInfo.mentionedJid.map(
-                async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, groupJid || message.key.remoteJid) : jid
-            )
-        );
-    }
+        // Procesar contextInfo.mentionedJid
+        if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
+            const mentionedJid = message.message.extendedTextMessage.contextInfo.mentionedJid;
+            if (Array.isArray(mentionedJid)) {
+                message.message.extendedTextMessage.contextInfo.mentionedJid = await Promise.all(
+                    mentionedJid.filter(jid => jid).map(
+                        async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, remoteJid) : jid
+                    )
+                );
+            }
+        }
 
-    // Procesar citas en mensajes
-    if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
-        message.message.extendedTextMessage.contextInfo.participant = 
-            await resolveLidToRealJid(
-                message.message.extendedTextMessage.contextInfo.participant, 
-                groupJid || message.key.remoteJid
+        // Procesar participant en contextInfo (para mensajes citados)
+        if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
+            message.message.extendedTextMessage.contextInfo.participant = 
+                await resolveLidToRealJid(
+                    message.message.extendedTextMessage.contextInfo.participant, 
+                    remoteJid
+                );
+        }
+
+        // Procesar mentionedJid directo en el mensaje
+        if (message.mentionedJid) {
+            message.mentionedJid = await Promise.all(
+                message.mentionedJid.filter(jid => jid).map(
+                    async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, remoteJid) : jid
+                )
             );
-    }
+        }
 
-    return message;
+        return message;
+    } catch (e) {
+        console.error('Error en processLidsInMessage:', e);
+        return message;
+    }
 }
 
 /* ------------------------------------------------*/
@@ -413,50 +416,72 @@ global.reloadHandler = async function(restatConn) {
     conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
     conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
-    // Handler modificado para procesar LIDs
+    // Handler seguro con procesamiento de LIDs
     conn.handler = async (m) => {
+        if (!m?.key) {
+            console.error('Mensaje inválido recibido:', m);
+            return;
+        }
+
         try {
-            m = await processLidsInMessage(m, m.key.remoteJid);
-            return handler.handler.call(global.conn, m);
+            const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
+            return handler.handler.call(global.conn, processedMsg);
         } catch (e) {
-            console.error('Error processing LIDs:', e);
+            console.error('Error procesando mensaje:', e);
             return handler.handler.call(global.conn, m);
         }
     };
 
-    // Evento messages.upsert modificado
+    // Evento messages.upsert seguro
     conn.ev.on('messages.upsert', async ({ messages, type }) => {
-        const processedMessages = await Promise.all(
-            messages.map(async m => await processLidsInMessage(m, m.key.remoteJid))
-        );
-        conn.handler({ messages: processedMessages, type });
-    });
-
-    // Evento group-participants.update modificado
-    conn.ev.on('group-participants.update', async (update) => {
-        if (update.participants) {
-            update.participants = await Promise.all(
-                update.participants.map(async p => 
-                    p.endsWith('@lid') ? await resolveLidToRealJid(p, update.id) : p
-                )
+        try {
+            const validMessages = messages.filter(m => m?.key);
+            const processedMessages = await Promise.all(
+                validMessages.map(m => processLidsInMessage(m, m.key.remoteJid))
             );
+            conn.handler({ messages: processedMessages, type });
+        } catch (e) {
+            console.error('Error en messages.upsert:', e);
         }
-        handler.participantsUpdate.call(global.conn, update);
     });
 
-    // Configurar otros eventos
-    conn.ev.on('groups.update', handler.groupsUpdate.bind(global.conn));
-    conn.ev.on('message.delete', handler.deleteUpdate.bind(global.conn));
-    conn.ev.on('call', handler.callUpdate.bind(global.conn));
-    conn.ev.on('connection.update', connectionUpdate.bind(global.conn));
-    conn.ev.on('creds.update', saveCreds.bind(global.conn, true));
+    // Evento group-participants.update seguro
+    conn.ev.on('group-participants.update', async (update) => {
+        try {
+            if (update.participants) {
+                update.participants = await Promise.all(
+                    update.participants.filter(p => p).map(
+                        p => p.endsWith('@lid') ? resolveLidToRealJid(p, update.id) : p
+                    )
+                );
+            }
+            handler.participantsUpdate.call(global.conn, update);
+        } catch (e) {
+            console.error('Error en group-participants.update:', e);
+        }
+    });
+
+    // Configurar otros eventos con manejo de errores
+    const safeBind = (fn) => (...args) => {
+        try {
+            return fn.call(global.conn, ...args);
+        } catch (e) {
+            console.error('Error en evento:', fn.name, e);
+        }
+    };
+
+    conn.ev.on('groups.update', safeBind(handler.groupsUpdate));
+    conn.ev.on('message.delete', safeBind(handler.deleteUpdate));
+    conn.ev.on('call', safeBind(handler.callUpdate));
+    conn.ev.on('connection.update', safeBind(connectionUpdate));
+    conn.ev.on('creds.update', safeBind(saveCreds.bind(global.conn, true)));
 
     isInit = false;
     return true;
 };
 
 /* ------------------------------------------------*/
-/*          MANEJO DE PLUGINS Y MANTENIMIENTO      */
+/*          MANEJO DE PLUGINS                      */
 /* ------------------------------------------------*/
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
