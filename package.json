@@ -34,7 +34,7 @@
     "@bochilteam/scraper": "^4.2.4",
     "@brandond/findthelyrics": "^2.0.5",
     "@green-code/music-track-data": "^2.0.3",
-    "@nxst/module": "github:nxst-devs/star-module",
+    "@takanashi-soft/tools": "github:nxst-devs/star-module",
     "@sefinek/google-tts-api": "*",
     "@shineiichijo/marika": "^2.0.6",
     "@vitalets/google-translate-api": "^8.0.0",
