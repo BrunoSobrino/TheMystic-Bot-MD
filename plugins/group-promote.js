@@ -18,8 +18,8 @@ const handler = async (m, {conn, usedPrefix, text}) => {
   try {
     if (text) {
       var user = number + '@s.whatsapp.net';
-    } else if (await m.quoted.sender) {
-      var user = await m.quoted.sender;
+    } else if (m.quoted.sender) {
+      var user = m.quoted.sender;
     } else if (m.mentionedJid) {
       var user = number + '@s.whatsapp.net';
     }
