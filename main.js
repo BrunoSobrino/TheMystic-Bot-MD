@@ -32,6 +32,7 @@ serialize();
 const msgRetryCounterMap = new Map();
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
+const lidCache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
 
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
   return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString();
@@ -80,8 +81,6 @@ global.loadDatabase = async function loadDatabase() {
   global.db.chain = chain(global.db.data);
 };
 await loadDatabase();
-
-/* ------------------------------------------------*/
 
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
 const { version } = await fetchLatestBaileysVersion();
@@ -216,15 +215,9 @@ if (!opts['test']) {
 
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
 
-/* ------------------------------------------------*/
-/*          IMPLEMENTACIÓN DE MANEJO DE LIDs       */
-/* ------------------------------------------------*/
-
-const lidCache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
-
-async function resolveLidToRealJidAsync(lidJid, groupJid, maxRetries = 3, retryDelay = 1000) {
-    if (!lidJid.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
-        return lidJid.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
+async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay = 1000) {
+    if (!lidJid?.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
+        return lidJid?.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
     }
 
     const cached = lidCache.get(lidJid);
@@ -268,53 +261,41 @@ async function resolveLidToRealJidAsync(lidJid, groupJid, maxRetries = 3, retryD
     return lidJid;
 }
 
-function resolveLidToRealJidSync(lidJid) {
-    if (!lidJid.endsWith("@lid")) {
-        return lidJid.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
-    }
-    return lidCache.get(lidJid) || lidJid;
-}
-
-async function resolveLidToRealJid(lidJid, groupJid) {
-    const syncValue = resolveLidToRealJidSync(lidJid);
-    if (syncValue !== lidJid || !lidJid.endsWith("@lid")) {
-        return syncValue;
-    }
-    return await resolveLidToRealJidAsync(lidJid, groupJid);
-}
-
 async function processLidsInMessage(message, groupJid) {
-    if (!message) return message;
+    if (!message || !message.key) return message;
 
-    // Procesar participantes en mensajes
-    if (message.key?.participant?.endsWith('@lid')) {
-        message.key.participant = await resolveLidToRealJid(message.key.participant, groupJid || message.key.remoteJid);
+    try {
+        const remoteJid = message.key.remoteJid || groupJid;
+        
+        if (message.key?.participant?.endsWith('@lid')) {
+            message.key.participant = await resolveLidToRealJid(message.key.participant, remoteJid);
+        }
+
+        if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
+            const mentionedJid = message.message.extendedTextMessage.contextInfo.mentionedJid;
+            if (Array.isArray(mentionedJid)) {
+                message.message.extendedTextMessage.contextInfo.mentionedJid = await Promise.all(
+                    mentionedJid.filter(jid => jid).map(
+                        async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, remoteJid) : jid
+                    )
+                );
+            }
+        }
+
+        if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
+            message.message.extendedTextMessage.contextInfo.participant = 
+                await resolveLidToRealJid(
+                    message.message.extendedTextMessage.contextInfo.participant, 
+                    remoteJid
+                );
+        }
+
+        return message;
+    } catch (e) {
+        console.error('Error en processLidsInMessage:', e);
+        return message;
     }
-
-    // Procesar menciones en mensajes
-    if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
-        message.message.extendedTextMessage.contextInfo.mentionedJid = await Promise.all(
-            message.message.extendedTextMessage.contextInfo.mentionedJid.map(
-                async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, groupJid || message.key.remoteJid) : jid
-            )
-        );
-    }
-
-    // Procesar citas en mensajes
-    if (message.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
-        message.message.extendedTextMessage.contextInfo.participant = 
-            await resolveLidToRealJid(
-                message.message.extendedTextMessage.contextInfo.participant, 
-                groupJid || message.key.remoteJid
-            );
-    }
-
-    return message;
 }
-
-/* ------------------------------------------------*/
-/*          MANEJO DE CONEXIÓN Y EVENTOS           */
-/* ------------------------------------------------*/
 
 async function connectionUpdate(update) {
     const {connection, lastDisconnect, isNewLogin} = update;
@@ -413,51 +394,87 @@ global.reloadHandler = async function(restatConn) {
     conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
     conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
-    // Handler modificado para procesar LIDs
     conn.handler = async (m) => {
+        if (!m) return;
+        
         try {
-            m = await processLidsInMessage(m, m.key.remoteJid);
-            return handler.handler.call(global.conn, m);
+            // Crear estructura compatible con el handler
+            const handlerInput = {
+                messages: [],
+                type: m.type || 'notify'
+            };
+
+            // Procesar batches de mensajes
+            if (m.messages && Array.isArray(m.messages)) {
+                for (const message of m.messages) {
+                    if (message?.key) {
+                        const processedMsg = await processLidsInMessage(message, message.key.remoteJid);
+                        handlerInput.messages.push(processedMsg);
+                    }
+                }
+            } 
+            // Procesar mensaje individual
+            else if (m?.key) {
+                const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
+                handlerInput.messages.push(processedMsg);
+            }
+
+            // Solo llamar al handler si hay mensajes válidos
+            if (handlerInput.messages.length > 0) {
+                await handler.handler.call(global.conn, handlerInput);
+            }
         } catch (e) {
-            console.error('Error processing LIDs:', e);
-            return handler.handler.call(global.conn, m);
+            console.error('Error en conn.handler:', e);
         }
     };
 
-    // Evento messages.upsert modificado
-    conn.ev.on('messages.upsert', async ({ messages, type }) => {
-        const processedMessages = await Promise.all(
-            messages.map(async m => await processLidsInMessage(m, m.key.remoteJid))
-        );
-        conn.handler({ messages: processedMessages, type });
-    });
+    conn.ev.on('messages.upsert', async (update) => {
+        try {
+            const { messages, type } = update;
+            if (!Array.isArray(messages)) return;
 
-    // Evento group-participants.update modificado
-    conn.ev.on('group-participants.update', async (update) => {
-        if (update.participants) {
-            update.participants = await Promise.all(
-                update.participants.map(async p => 
-                    p.endsWith('@lid') ? await resolveLidToRealJid(p, update.id) : p
-                )
-            );
+            // Pasar el batch completo al handler
+            await conn.handler({
+                messages: messages.filter(m => m?.key),
+                type
+            });
+        } catch (e) {
+            console.error('Error en messages.upsert:', e);
         }
-        handler.participantsUpdate.call(global.conn, update);
     });
 
-    // Configurar otros eventos
-    conn.ev.on('groups.update', handler.groupsUpdate.bind(global.conn));
-    conn.ev.on('message.delete', handler.deleteUpdate.bind(global.conn));
-    conn.ev.on('call', handler.callUpdate.bind(global.conn));
-    conn.ev.on('connection.update', connectionUpdate.bind(global.conn));
-    conn.ev.on('creds.update', saveCreds.bind(global.conn, true));
+    conn.ev.on('group-participants.update', async (update) => {
+        try {
+            if (update.participants) {
+                update.participants = await Promise.all(
+                    update.participants.filter(p => p).map(
+                        p => p.endsWith('@lid') ? resolveLidToRealJid(p, update.id) : p
+                    )
+                );
+            }
+            handler.participantsUpdate.call(global.conn, update);
+        } catch (e) {
+            console.error('Error en group-participants.update:', e);
+        }
+    });
+
+    const safeBind = (fn) => (...args) => {
+        try {
+            return fn.call(global.conn, ...args);
+        } catch (e) {
+            console.error('Error en evento:', fn.name, e);
+        }
+    };
+
+    conn.ev.on('groups.update', safeBind(handler.groupsUpdate));
+    conn.ev.on('message.delete', safeBind(handler.deleteUpdate));
+    conn.ev.on('call', safeBind(handler.callUpdate));
+    conn.ev.on('connection.update', safeBind(connectionUpdate));
+    conn.ev.on('creds.update', safeBind(saveCreds.bind(global.conn, true)));
 
     isInit = false;
     return true;
 };
-
-/* ------------------------------------------------*/
-/*          MANEJO DE PLUGINS Y MANTENIMIENTO      */
-/* ------------------------------------------------*/
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 const pluginFilter = (filename) => /\.js$/.test(filename);
@@ -511,10 +528,6 @@ global.reload = async (_ev, filename) => {
 Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
-
-/* ------------------------------------------------*/
-/*          FUNCIONES DE MANTENIMIENTO            */
-/* ------------------------------------------------*/
 
 function clearTmp() {
   const tmp = [join(__dirname, './src/tmp')];
@@ -576,7 +589,6 @@ function clockString(ms) {
   return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
 }
 
-// Prueba rápida de dependencias
 async function _quickTest() {
   const test = await Promise.all([
     spawn('ffmpeg'),
