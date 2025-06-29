@@ -429,7 +429,58 @@ global.reloadHandler = async function(restatConn) {
     const chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map((v) => v[0]);
   }
 
-  conn.ev.on('messages.upsert', conn.handler);
+  //conn.ev.on('messages.upsert', conn.handler);
+    conn.ev.on('messages.upsert', async ({ messages }) => {
+      for (const message of messages) {
+        if (message.key?.participant?.endsWith('@lid')) {
+          try {
+            const realJid = await resolveLidToRealJid(
+              message.key.participant,
+              message.key.remoteJid
+            );
+            message.key.participant = realJid;
+          } catch (e) {
+            console.error('Error resolving LID:', e);
+          }
+        }
+      }
+    });
+    conn.ev.on('group-participants.update', async (update) => {
+      if (update.participants) {
+        for (let i = 0; i < update.participants.length; i++) {
+          if (update.participants[i].endsWith('@lid')) {
+            try {
+              update.participants[i] = await resolveLidToRealJid(
+                update.participants[i],
+                update.id
+              );
+            } catch (e) {
+              console.error('Error resolving LID:', e);
+            }
+          }
+        }
+      }
+    });
+    conn.handler = async (m) => {
+    try {
+      if (m.key?.participant?.endsWith('@lid')) {
+        m.key.participant = await resolveLidToRealJid(
+          m.key.participant,
+          m.key.remoteJid
+        );
+      }
+      if (m.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
+        m.message.extendedTextMessage.contextInfo.mentionedJid = 
+          await Promise.all(m.message.extendedTextMessage.contextInfo.mentionedJid.map(
+            async jid => jid.endsWith('@lid') ? await resolveLidToRealJid(jid, m.key.remoteJid) : jid
+          ));
+      }
+      return handler.handler.call(global.conn, m);
+    } catch (e) {
+      console.error('Error processing LIDs:', e);
+      return handler.handler.call(global.conn, m);
+    }
+  };
   conn.ev.on('group-participants.update', conn.participantsUpdate);
   conn.ev.on('groups.update', conn.groupsUpdate);
   conn.ev.on('message.delete', conn.onDelete);
@@ -488,6 +539,66 @@ global.reload = async (_ev, filename) => {
 Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
+
+const lidCache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
+async function resolveLidToRealJidAsync(lidJid, groupJid, maxRetries = 3, retryDelay = 60000) {
+  if (!lidJid.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
+    return lidJid.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
+  }
+  const cached = lidCache.get(lidJid);
+  if (cached) return cached;
+  const lidToFind = lidJid.split("@")[0];
+  let attempts = 0;
+  while (attempts < maxRetries) {
+    try {
+      const metadata = await conn.groupMetadata(groupJid);
+      if (!metadata?.participants) throw new Error("No se obtuvieron participantes");
+      for (const participant of metadata.participants) {
+        try {
+          if (!participant?.jid) continue;
+          const contactDetails = await conn.onWhatsApp(participant.jid);
+          if (!contactDetails?.[0]?.lid) continue;
+          const possibleLid = contactDetails[0].lid.split("@")[0];
+          if (possibleLid === lidToFind) {
+            lidCache.set(lidJid, participant.jid);
+            return participant.jid;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+      lidCache.set(lidJid, lidJid);
+      return lidJid;
+    } catch (e) {
+      if (++attempts >= maxRetries) {
+        lidCache.set(lidJid, lidJid);
+        return lidJid;
+      }
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+    }
+  }
+  return lidJid;
+}
+function resolveLidToRealJidSync(lidJid) {
+  if (!lidJid.endsWith("@lid")) {
+    return lidJid.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
+  }
+  return lidCache.get(lidJid) || lidJid;
+}
+function resolveLidToRealJid(lidJid, groupJid, callback) {
+  const syncValue = resolveLidToRealJidSync(lidJid);
+  if (syncValue !== lidJid || !lidJid.endsWith("@lid")) {
+    return callback ? callback(syncValue) : syncValue;
+  }
+  if (typeof callback === 'function') {
+    resolveLidToRealJidAsync(lidJid, groupJid)
+      .then(result => callback(result))
+      .catch(() => callback(lidJid));
+    return lidJid; 
+  } else {
+    return resolveLidToRealJidAsync(lidJid, groupJid);
+  }
+}
 async function _quickTest() {
   const test = await Promise.all([
     spawn('ffmpeg'),
