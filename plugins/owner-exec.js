@@ -6,7 +6,7 @@ import {createRequire} from 'module';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(__dirname);
 const handler = async (m, _2, msg, pickRandom, isOwner ) => {
-  const mention = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false;
+  const mention = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false;
   const {conn, usedPrefix, noPrefix, args, groupMetadata, command, isROwner} = _2;
   if (!isROwner) return;
   let _return;

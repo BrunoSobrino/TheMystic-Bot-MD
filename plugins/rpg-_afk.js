@@ -10,7 +10,7 @@ export function before(m) {
    user.afk = -1;
    user.afkReason = '';
  }
- const jids = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])];
+ const jids = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [await m?.quoted?.sender] : [])])];
  for (const jid of jids) {
  const user = global.db.data.users[jid];
  if (!user) {

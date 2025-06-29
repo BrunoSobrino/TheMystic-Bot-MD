@@ -10,7 +10,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
     let who;
     if (m.isGroup) {
-      who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false;
+      who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false;
     } else { 
       who = m.chat;
     }

@@ -10,7 +10,7 @@ const handler = async (m, {conn, participants, usedPrefix, command}) => {
   const kicktext = `${tradutor.texto2} \n*${usedPrefix + command} @${global.suittag}*`;
   if (!m.mentionedJid[0] && !m.quoted) return m.reply(kicktext, m.chat, {mentions: conn.parseMention(kicktext)});
   if (m.mentionedJid.includes(conn.user.jid)) return;
-  const user = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted.sender;
+  const user = m.mentionedJid[0] ? m.mentionedJid[0] : await m?.quoted?.sender;
   const owr = m.chat.split`-`[0];
   await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
 };

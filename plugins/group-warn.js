@@ -8,11 +8,12 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const pp = './src/assets/images/menu/main/warn.jpg';
   let who;
   if (m.isGroup) {
-    who = m?.message?.extendedTextMessage?.contextInfo?.participant || m?.mentionedJid[0] || m?.quoted?.sender || false;
-  } else {
-    who = m.quoted?.sender || false;
-  }
-  console.log(who)
+    who = m.mentionedJid[0] ?
+      m.mentionedJid[0] :
+      m.quoted ?
+      await m?.quoted?.sender :
+      text;
+  } else who = m.chat;
   const user = global.db.data.users[who];
   const bot = global.db.data.settings[conn.user.jid] || {};
   const dReason = 'Sin motivo';
