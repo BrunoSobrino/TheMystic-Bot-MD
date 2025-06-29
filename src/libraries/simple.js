@@ -2231,27 +2231,6 @@ export function serialize() {
           const q = quoted[type];
           const text = typeof q === "string" ? q : q?.text || "";
 
-      let resolvedSender = null;
-      const rawParticipant = contextInfo.participant;
-      if (rawParticipant) {
-        const decodedJid = safeDecodeJid(rawParticipant, self.conn);
-        if (decodedJid?.resolveLidToRealJid) {
-          decodedJid.resolveLidToRealJid(self.chat, self.conn)
-            .then((realJid) => {
-              resolvedSender = realJid || decodedJid;
-            })
-            .catch(() => {
-              resolvedSender = decodedJid;
-            });
-        } else {
-          resolvedSender = decodedJid;
-        }
-      } else {
-        resolvedSender = self.key?.fromMe
-          ? safeDecodeJid(self.conn?.user?.id, self.conn)
-          : self.chat;
-      }
-	
           return Object.defineProperties(
             JSON.parse(
               JSON.stringify(typeof q === "string" ? { text: q } : q || {}),
@@ -2308,19 +2287,7 @@ export function serialize() {
                 },
                 enumerable: true,
               },
-sender: {
-  get() {
-	                return resolvedSender || 
-                safeDecodeJid(contextInfo.participant || 
-                  (self.key?.fromMe && self.conn?.user?.id) || 
-                  self.chat, 
-                  self.conn
-                );
-
-    },
-  enumerable: true,
-},    
-              /*sender: {
+              sender: {
                 get() {
                   try {
                     const rawParticipant = contextInfo.participant;
@@ -2343,7 +2310,7 @@ sender: {
                   }
                 },
                 enumerable: true,
-              },*/
+              },
               fromMe: {
                 get() {
                   const sender = this.sender || "";
