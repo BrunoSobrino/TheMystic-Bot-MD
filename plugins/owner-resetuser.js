@@ -13,8 +13,8 @@ const handler = async (m, { conn, text }) => {
     if (numberMatches) {
         const number = numberMatches.join('');
         user = number + '@s.whatsapp.net';
-    } else if (m.quoted && m.quoted.sender) {
-        const quotedNumberMatches = m.quoted.sender.match(numberPattern);
+    } else if (m.quoted && await m?.quoted?.sender) {
+        const quotedNumberMatches = await m?.quoted?.sender.match(numberPattern);
         if (quotedNumberMatches) {
             const number = quotedNumberMatches.join('');
             user = number + '@s.whatsapp.net';

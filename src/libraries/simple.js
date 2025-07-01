@@ -2110,6 +2110,12 @@ export function serialize() {
     },
     sender: {
       get() {
+        return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
+      },
+      enumerable: true,
+    },	  
+    /*sender: {
+      get() {
         if (this.messageStubType) {
           if (this.messageStubType === 32) { 
             return this.messageStubParameters?.[0] || this.key?.remoteJid || '';
@@ -2126,7 +2132,7 @@ export function serialize() {
         return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
       },
       enumerable: true,
-    },
+    },*/
     fromMe: {
       get() {
         try {

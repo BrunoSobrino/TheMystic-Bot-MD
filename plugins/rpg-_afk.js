@@ -10,7 +10,16 @@ export function before(m) {
    user.afk = -1;
    user.afkReason = '';
  }
- const jids = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])];
+const getQuotedSender = async () => {
+    try {
+      return m.quoted ? await m.quoted?.sender : null;
+    } catch {
+      return null;
+    }
+  };
+  (async () => {
+    const quotedSender = await getQuotedSender();
+    const jids = [...new Set([...(m.mentionedJid || []), ...(quotedSender ? [quotedSender] : [])])];
  for (const jid of jids) {
  const user = global.db.data.users[jid];
  if (!user) {
@@ -23,5 +32,6 @@ export function before(m) {
  const reason = user.afkReason || '';
  m.reply(`${tradutor.texto1[0]}\n\n*—◉ ${tradutor.texto1[1]}*\n*—◉ ${reason ? `${tradutor.texto1[2]}` + reason : `${tradutor.texto1[3]}`}*\n*—◉ ${tradutor.texto1[4]} ${(new Date - afkTime).toTimeString()}*`.trim());
  }
+ })();  
  return true;
 }

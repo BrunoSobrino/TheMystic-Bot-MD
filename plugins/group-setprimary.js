@@ -12,7 +12,7 @@ const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
         }
     };
 
-    const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : args[0] && args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
+    const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : args[0] && args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
 
     if (command === 'setprimary') {
         if (!who) {
