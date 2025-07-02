@@ -1091,7 +1091,7 @@ export async function participantsUpdate({ id, participants, action }) {
   const chat = global.db.data.chats[id] || {};
   let text = '';
   switch (action) {
-    case 'add':
+    case 'remove':
       if (chat.welcome && !chat?.isBanned) {
         if (action === 'remove' && participants.includes(m?.conn?.user?.jid)) return;
         const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
