@@ -8,5 +8,5 @@ const data = exploit.answer;
 await conn.sendMessage(m.chat, {text: data, mentions: conn.parseMention(data)}, {quoted: m});           
 //await m.reply(data)
 }
-handler.command = /^(chat|ia2|exploit|eploit)$/i;
+handler.command = /^(chatgpt2|ia2|exploit|eploit)$/i;
 export default handler;
