@@ -18,7 +18,7 @@ const handler = async (m, { conn }) => {
   }
 
   try {
-    chat.primaryBot = who
+    chat.setPrimaryBot = who
     conn.reply(m.chat, `@${who.split`@`[0]}.`, m, { mentions: [who] })
   } catch (e) {
     await m.reply(`${e}`);
