@@ -9,9 +9,11 @@ handler.all = async function(m, {conn}) {
 
   const chat = global.db.data.chats[m.chat];
 
-const botId = conn.user.jid
-const primaryBotId = chat.setPrimaryBot
-if (!primaryBotId || primaryBotId === botId) {
+const botId = conn.user.jid;
+const primaryBotId = chat.setPrimaryBot;
+if (primaryBotId || primaryBotId !=== botId) {
+    return;
+}
 
   if ((m.mtype === 'groupInviteMessage' || m.text.startsWith('https://chat') || m.text.startsWith('Abre este enlace')) && !m.isBaileys && !m.isGroup && !chat.isBanned && !m.fromMe) {
     const join = `${tradutor.texto1[0]} @${m.sender.split('@')[0]}, ${tradutor.texto1[1]} https://chat.whatsapp.com/LjJbmdO0qSDEKgB60qivZj`.trim();
@@ -352,7 +354,6 @@ if (!primaryBotId || primaryBotId === botId) {
     const vn = './src/assets/audio/01J67413BMA69VV48TWPCVCYS8.mp3';
     mconn.conn.sendPresenceUpdate('recording', m.chat);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
-  }
   }
 
   return !0;
