@@ -10,11 +10,11 @@ const handler = async (m, { conn, command }) => {
   const who = m?.message?.extendedTextMessage?.contextInfo?.participant || m?.mentionedJid[0] || await m?.quoted?.sender;
   const chat = global.db.data.chats[m.chat];
 
+  if (command === 'setprimary') {
   if (!who) return conn.reply(m.chat, `❗ Por favor menciona un bot para modificar la configuración.`, m);
 
   if (!subBots.includes(who)) return conn.reply(m.chat, `❗ El usuario mencionado no es Sub-Bot.`, m);
 
-  if (command === 'setprimary') {
     if (chat.setPrimaryBot === who) {
       return conn.reply(m.chat, `✅ @${who.split`@`[0]} ya es el Bot principal del Grupo.`, m, { mentions: [who] });
     }
