@@ -7,7 +7,7 @@ handler.all = async function(m) {
     if (!chat.setPrimaryBot) return true;
     const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '') + '@s.whatsapp.net';
     const primaryJid = normalizeJid(chat.setPrimaryBot);
-    const currentJid = conn.user.jid || '';
+    const currentJid = global.conn.user.jid || '';
     const isPrimaryActive = () => {
       if (primaryJid === currentJid) return true;
       return global.conns?.some(bot => bot.user?.jid === primaryJid) || false;
@@ -19,9 +19,10 @@ handler.all = async function(m) {
     return true; 
   };  
   if (/^bot$/i.test(m.text) && !chat.isBanned && checkPrimaryBot()) {
+    console.log(checkPrimaryBot())
     conn.sendPresenceUpdate('recording', m.chat);
     await m.reply(`*Hola, ¿Cómo puedo ayudarte?*`);
-    m.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
+    mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
   return !0;
 };
