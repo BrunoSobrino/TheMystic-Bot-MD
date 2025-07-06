@@ -12,9 +12,9 @@
 /* [❗]                      [❗]                      [❗] */
 /* -------------------------------------------------------*/
 
-import tools from '@takanashi-soft/tools';
+import tools from '@shiroko/module';
 
-const handler = async (m, {conn, text, usedPrefix, command}) => {
+const handler = async (m, { conn, text, usedPrefix, command }) => {
 const datas = global
 const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
 const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
@@ -28,7 +28,12 @@ const chatgpt = await tools.ai.mylogic(text, prompt);
 const data = chatgpt.answer;
 m.reply(`${data}`.trim());
 } catch (error) {
+console.log(error);
 throw tradutor.texto4;
 }};
-handler.command = /^(openai|chatgpt|ia|robot|openai2|chatgpt2|ia2|robot2|Mystic|MysticBot)$/i;
+
+handler.help = ['chatgpt'];
+handler.tags = ['tools'];
+handler.command = ['openai', 'chatgpt', 'ia', 'mystic', 'mysticbot'];
+
 export default handler;
