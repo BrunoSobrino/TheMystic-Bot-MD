@@ -3,15 +3,30 @@ const handler = (m) => m;
 handler.all = async function(m) {
   const vn = './src/assets/audio/01J67301CY64MEGCXYP1NRFPF1.mp3';
   const chat = global.db.data.chats[m.chat];
-  //const s = seconds: '4556'
-  // const estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "5219992095479-1625305606@g.us" } : {}) }, message: {orderMessage: { itemCount : -999999, status: 1, surface : 1, message: '𝑇ℎ𝑒 𝑀𝑦𝑠𝑡𝑖𝑐 - 𝐵𝑜𝑡', orderTitle: 'Bang', thumbnail: fs.readFileSync('./src/assets/images/menu/languages/es/menu.png'), sellerJid: '0@s.whatsapp.net'}}}
-  // const estiloaudio = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "5219992095479-1625305606@g.us" } : {}) }, message: {"audioMessage": { "mimetype":"audio/ogg; codecs=opus", "seconds": "99569", "ptt": "true"}}}
-  if (/^bot$/i.test(m.text) && !chat.isBanned) {
+  const checkPrimaryBot = () => {
+    if (!chat.setPrimaryBot) return true;
+    const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '') + '@s.whatsapp.net';
+    const primaryJid = normalizeJid(chat.setPrimaryBot);
+    const currentJid = global.conn.user.jid || '';
+    const isPrimaryActive = () => {
+      if (primaryJid === currentJid) return true;
+      return global.conns?.some(bot => bot.user?.jid === primaryJid) || false;
+    };
+    if (isPrimaryActive()) {
+      return primaryJid === currentJid;
+    }
+    delete chat.setPrimaryBot;
+    return true; 
+  };  
+  if (/^bot$/i.test(m.text) && !chat.isBanned && checkPrimaryBot()) {
     conn.sendPresenceUpdate('recording', m.chat);
     await m.reply(`*Hola, ¿Cómo puedo ayudarte?*`);
     m.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
-    // conn.sendFile(m.chat, vn, 'bot.mp3', null, m, true, { type: 'audioMessage', seconds: '4556', ptt: true, sendEphemeral: true, quoted: m })
   }
   return !0;
 };
 export default handler;
+
+  //const s = seconds: '4556'
+  // const estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "5219992095479-1625305606@g.us" } : {}) }, message: {orderMessage: { itemCount : -999999, status: 1, surface : 1, message: '𝑇ℎ𝑒 𝑀𝑦𝑠𝑡𝑖𝑐 - 𝐵𝑜𝑡', orderTitle: 'Bang', thumbnail: fs.readFileSync('./src/assets/images/menu/languages/es/menu.png'), sellerJid: '0@s.whatsapp.net'}}}
+  // const estiloaudio = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "5219992095479-1625305606@g.us" } : {}) }, message: {"audioMessage": { "mimetype":"audio/ogg; codecs=opus", "seconds": "99569", "ptt": "true"}}}
