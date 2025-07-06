@@ -7,7 +7,7 @@ handler.all = async function(m) {
     if (!chat.setPrimaryBot) return true;
     const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '') + '@s.whatsapp.net';
     const primaryJid = normalizeJid(chat.setPrimaryBot);
-    const currentJid = global.conn.user.jid || '';
+    const currentJid = conn.user.jid || '';
     const isPrimaryActive = () => {
       if (primaryJid === currentJid) return true;
       return global.conns?.some(bot => bot.user?.jid === primaryJid) || false;
