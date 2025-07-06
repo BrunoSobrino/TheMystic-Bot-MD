@@ -1,5 +1,8 @@
 // Plugin para test de comandos - powered by @BrunoSobrino
 import yts from 'yt-search';
+import { Innertube, UniversalCache, Utils } from "youtubei.js";
+import axios from 'axios';
+import { ID3Writer } from 'browser-id3-writer';
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
     const datas = global;
