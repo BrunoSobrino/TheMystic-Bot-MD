@@ -99,7 +99,9 @@
     "url-regex-safe": "^3.0.0",
     "yargs": "^17.3.1",
     "yt-search": "^2.10.3",
-    "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2"
+    "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2",
+    "youtubei.js": "*",
+    "browser-id3-writer": "*"
   },
   "optionalDependencies": {
     "puppeteer": "*",
