@@ -10,4 +10,4 @@ global.comunidad = `*GRUPO DE LA COMUNIDAD*
 
 _⚠️| Este grupo será solamente de avisos o noticias relacionada con los grupos de la comunidad Futabu, solo podran hablar los del Equipo de Staff y los miembros solo podran ver, usaremos este grupo ya que facilitara el ver mas rapido el mensaje ya que en varios grupos se habla demasiado y se pierden los mensajes._
 
-Link: https://chat.whatsapp.com/DQvGBkJUBfsClBdrQtk8xw`
+Link: https://chat.whatsapp.com/IKCpRmuyrNBL41wb9J2kNO?mode=ac_c`
