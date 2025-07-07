@@ -8,7 +8,7 @@ export default handler
 
 global.rolcasino = `🎰|Comandos Casino/RPG/Economia:
 
-_*[BOT SUMIKA]*_
+_*[BOT MITAMA]*_
 • #bal - Ver tu balance.
 
 • #einfo - ver info de tu economía.
