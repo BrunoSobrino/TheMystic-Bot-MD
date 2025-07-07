@@ -1,6 +1,6 @@
 import fs from 'fs';
 const handler = (m) => m;
-handler.all = async function(m) {
+handler.all = async function(m, { conn }) {
   const vn = './src/assets/audio/01J67301CY64MEGCXYP1NRFPF1.mp3';
   const chat = global.db.data.chats[m.chat];
   const checkPrimaryBot = () => {
@@ -19,7 +19,6 @@ handler.all = async function(m) {
     return true; 
   };  
   if (/^bot$/i.test(m.text) && !chat.isBanned && checkPrimaryBot()) {
-    console.log(checkPrimaryBot())
     conn.sendPresenceUpdate('recording', m.chat);
     await m.reply(`*Hola, ¿Cómo puedo ayudarte?*`);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
