@@ -19,7 +19,7 @@ handler.all = async function(m, { conn }) {
     return true; 
   };  
   if (/^bot$/i.test(m.text) && !chat.isBanned && checkPrimaryBot()) {
-    conn.sendPresenceUpdate('recording', m.chat);
+    mconn.conn.sendPresenceUpdate('recording', m.chat);
     await m.reply(`*Hola, ¿Cómo puedo ayudarte?*`);
     mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
