@@ -1,13 +1,13 @@
 import fs from 'fs';
 const handler = (m) => m;
-handler.all = async function(m, { conn }) {
+handler.all = async function(m) {
   const vn = './src/assets/audio/01J67301CY64MEGCXYP1NRFPF1.mp3';
   const chat = global.db.data.chats[m.chat];
   const checkPrimaryBot = () => {
     if (!chat.setPrimaryBot) return true;
     const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '') + '@s.whatsapp.net';
     const primaryJid = normalizeJid(chat.setPrimaryBot);
-    const currentJid = global.conn.user.jid || '';
+    const currentJid = m.conn.user.jid || '';
     const isPrimaryActive = () => {
       if (primaryJid === currentJid) return true;
       return global.conns?.some(bot => bot.user?.jid === primaryJid) || false;
