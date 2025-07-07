@@ -3,22 +3,7 @@ const handler = (m) => m;
 handler.all = async function(m) {
   const vn = './src/assets/audio/01J67301CY64MEGCXYP1NRFPF1.mp3';
   const chat = global.db.data.chats[m.chat];
-  const checkPrimaryBot = () => {
-    if (!chat.setPrimaryBot) return true;
-    const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '') + '@s.whatsapp.net';
-    const primaryJid = normalizeJid(chat.setPrimaryBot);
-    const currentJid = m.conn.user.jid || '';
-    const isPrimaryActive = () => {
-      if (primaryJid === currentJid) return true;
-      return global.conns?.some(bot => bot.user?.jid === primaryJid) || false;
-    };
-    if (isPrimaryActive()) {
-      return primaryJid === currentJid;
-    }
-    delete chat.setPrimaryBot;
-    return true; 
-  };  
-  if (/^bot$/i.test(m.text) && !chat.isBanned && checkPrimaryBot()) {
+  if (/^bot$/i.test(m.text) && !chat.isBanned) {
     m.conn.sendPresenceUpdate('recording', m.chat);
     await m.reply(`*Hola, ¿Cómo puedo ayudarte?*`);
     m.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
