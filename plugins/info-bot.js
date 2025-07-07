@@ -19,9 +19,9 @@ handler.all = async function(m, { conn }) {
     return true; 
   };  
   if (/^bot$/i.test(m.text) && !chat.isBanned && checkPrimaryBot()) {
-    mconn.conn.sendPresenceUpdate('recording', m.chat);
+    global.conn.sendPresenceUpdate('recording', m.chat);
     await m.reply(`*Hola, ¿Cómo puedo ayudarte?*`);
-    mconn.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
+    global.conn.sendMessage(m.chat, {audio: {url: vn}, fileName: 'error.mp3', mimetype: 'audio/mpeg', ptt: true}, {quoted: m});
   }
   return !0;
 };
