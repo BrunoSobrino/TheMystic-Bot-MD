@@ -1,61 +1,48 @@
-const handler = async (m, {args, usedPrefix, isAdmin, command, conn}) => {
-    const chat = global.db.data.chats[m.chat] || {};
+import ws from 'ws'
 
-    const getBotsInGroup = async () => {
-        try {
-            const groupMetadata = await conn.groupMetadata(m.chat);
-            const participants = groupMetadata.participants;
-            const allBots = [global.conn.user.jid, ...global.conns.map(bot => bot.user.jid)];
-            return participants.filter(p => allBots.includes(p.id));
-        } catch {
-            return [];
-        }
-    };
+const handler = async (m, { conn, command }) => {
+  const subBots = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn.user.jid)])];
 
-    const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : args[0] && args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
+  if (!subBots.includes(global.conn.user.jid)) {
+    subBots.push(global.conn.user.jid);
+  }
 
-    if (command === 'setprimary') {
-        if (!who) {
-            const botsInGroup = await getBotsInGroup();
-            let botList = '*🤖 Bots disponibles en este grupo:*\n\n';
-            botsInGroup.forEach((bot, index) => {
-                const isMainBot = bot.id === global.conn.user.jid;
-                const isCurrentPrimary = chat.setPrimaryBot === bot.id;
-                const recommendation = isMainBot ? ' (Recomendado - Bot principal)' : isCurrentPrimary ? ' (Actual bot primario)' : '';
-                botList += `${index + 1}. +${bot.id.split('@')[0]}${recommendation}\n`;
-            });
-            botList += `\n*Para establecer uno como primario, usa:*\n${usedPrefix}setprimarybot @bot`;
-            
-            if (botsInGroup.length === 0) {
-                botList = '*[❗] No hay bots disponibles en este grupo.*\n\nAsegúrate de que los bots estén agregados al grupo.';
-            }
-            
-            return conn.sendMessage(m.chat, {text: botList}, {quoted: m});
-        }
+  const who = m?.message?.extendedTextMessage?.contextInfo?.participant || m?.mentionedJid[0] || await m?.quoted?.sender;
+  const chat = global.db.data.chats[m.chat];
 
-        if (!who.endsWith('@s.whatsapp.net')) return conn.sendMessage(m.chat, {text: '*[❗] El formato del número es incorrecto.*'}, {quoted: m});
-        const botsInGroup = await getBotsInGroup();
-        if (!botsInGroup.some(bot => bot.id === who)) {
-            return conn.sendMessage(m.chat, {text: '*[❗] El bot mencionado no está en este grupo.*\n\nAgrega el bot al grupo primero.'}, {quoted: m});
-        }
-        if (!global.conns.some(bot => bot.user.jid === who) && who !== global.conn.user.jid) {
-            return conn.sendMessage(m.chat, {text: '*[❗] El bot mencionado no está disponible o no es un bot válido.*'}, {quoted: m});
-        }
-        chat.setPrimaryBot = who;
-        return conn.sendMessage(m.chat, {text: `*✅ Bot primario establecido:*\n+${who.split('@')[0]}\n\n${who === global.conn.user.jid ? '*(Bot principal recomendado)*' : '*(Sub-bot)*'}\n\nAhora solo este bot responderá en este chat.`}, {quoted: m});
+  if (command === 'setprimary') {
+  if (!who) return conn.reply(m.chat, `❗ Por favor menciona un bot para modificar la configuración.`, m);
+
+  if (!subBots.includes(who)) return conn.reply(m.chat, `❗ El usuario mencionado no es Sub-Bot.`, m);
+
+    if (chat.setPrimaryBot === who) {
+      return conn.reply(m.chat, `✅ @${who.split`@`[0]} ya es el Bot principal del Grupo.`, m, { mentions: [who] });
     }
 
-    if (command === 'delprimarybot') {        
-        if (!chat.setPrimaryBot) return conn.sendMessage(m.chat, {text: '*[❗] No hay un bot primario establecido en este chat.*'}, {quoted: m});
-        
-        delete chat.setPrimaryBot;
-        return conn.sendMessage(m.chat, {text: '*✅ Se eliminó el bot primario, ahora todos los bots pueden responder.*'}, {quoted: m});
+    try {
+      chat.setPrimaryBot = who;
+      conn.reply(m.chat, `[❕] Se ha establecido a @${who.split`@`[0]} como bot primario de este grupo.`, m, { mentions: [who] });
+    } catch (e) {
+      await m.reply(`❗ Ocurrió un error al establecer el bot primario.`);
     }
+  } else if (command === 'delprimary') {
+    if (!chat.setPrimaryBot) {
+      return conn.reply(m.chat, `❗ No hay un bot primario establecido en este grupo.`, m);
+    }
+
+    try {
+      const previousBot = chat.setPrimaryBot;
+      delete chat.setPrimaryBot
+      conn.reply(m.chat, `▶️ @${previousBot.split`@`[0]} ha sido eliminado como bot primario del grupo.`, m, { mentions: [previousBot] });
+    } catch (e) {
+      await m.reply(`❗ Ocurrió un error al eliminar el bot primario.`);
+    }
+  }
 };
 
-handler.help = ['setprimary', 'delprimarybot'];
+handler.help = ['setprimary', 'delprimary'];
 handler.tags = ['group'];
-handler.command = ['setprimary', 'delprimarybot'];
-handler.group = true;
+handler.command = ['setprimary', 'delprimary'];
 handler.admin = true;
+
 export default handler;
