@@ -8,7 +8,7 @@ export default handler
 
 global.rolgacha = `🌸| Comandos Gacha:
 
-_*[BOT SUMIKA]*_
+_*[BOT MITAMA]*_
 • #rw - Girar waifu.
 
 • #waifus - Ver tus waifus.
