@@ -33,7 +33,8 @@ const handler = async (m, { conn, args }) => {
       await conn.sendMessage(m.chat, {
         document: { url: data5.dl },
         fileName: `${data5.name}.apk`,
-        mimetype: 'application/vnd.android.package-archive'
+        mimetype: 'application/vnd.android.package-archive',
+        caotion: null
       }, { quoted: m })
 
     } else {
