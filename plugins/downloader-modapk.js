@@ -1,6 +1,3 @@
-import axios from 'axios'
-import fs from 'fs'
-
 import {search, download} from 'aptoide-scraper';
  
 const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
