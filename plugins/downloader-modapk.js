@@ -15,19 +15,19 @@ const handler = async (m, { conn, text }) => {
 
   try {
     const response = await axios.get(`https://api.stellarwa.xyz/search/apk?query=${query}`);
-    const data = response.data.data;
+    const data5 = response.data.data;
 
-    if (data.name && data.dl) {
+    if (data5.name && data5.dl) {
       const formattedMessage = `${tradutor.texto2[0]} ${data5.name}\n${tradutor.texto2[1]}* ${data5.package}\n${tradutor.texto2[2]} ${data.lastUpdated}\n${tradutor.texto2[3]} ${data5.size}`.trim();
 
             await conn.sendMessage(m.chat, {
-        image: { url: data.banner },
+        image: { url: data5.banner },
         caption: formattedMessage
       }, { quoted: m });
 
       await conn.sendMessage(m.chat, {
-        document: { url: data.dl },
-        fileName: `${data.name}.apk`,
+        document: { url: data5.dl },
+        fileName: `${data5.name}.apk`,
         mimetype: 'application/vnd.android.package-archive'
       }, { quoted: m });
 
