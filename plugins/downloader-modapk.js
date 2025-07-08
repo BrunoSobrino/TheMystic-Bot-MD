@@ -1,5 +1,5 @@
 import fs from 'fs';
-import axios from 'axios';
+import fetch from 'node-fetch';
 
 const handler = async (m, { conn, text }) => {
   const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
@@ -18,10 +18,13 @@ const handler = async (m, { conn, text }) => {
   const query = text.trim();
 
   try {
-    const res = await axios.get(`https://api.stellarwa.xyz/search/apk?query=${query}`);
-    const data = res.json.data;
+    const response = await fetch(`https://api.stellarwa.xyz/search/apk?query=${encodeURIComponent(query)}`);
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+    
+    const json = await response.json();
+    const data = json.data;
 
-    if (data.name && data.dl) {
+    if (data?.name && data?.dl) {
       const mensaje = `${tradutor.texto2[0]} ${data.name}\n${tradutor.texto2[1]} ${data.lastUpdated}\n${tradutor.texto2[2]} ${data.lastup}\n${tradutor.texto2[3]} ${data.size}`;
 
       await conn.sendMessage(m.chat, {
