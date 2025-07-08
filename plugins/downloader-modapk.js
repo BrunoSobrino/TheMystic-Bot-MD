@@ -7,11 +7,11 @@ const handler = async (m, { conn, args }) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_modapk
 
-  if (!text) {
+  const query = args[0];
+
+  if (!query) {
      throw `${tradutor.texto1}`;
   }
-
-  const query = args[0];
 
   try {
     const response = await axios.get(`https://api.stellarwa.xyz/search/apk?query=${query}`);
