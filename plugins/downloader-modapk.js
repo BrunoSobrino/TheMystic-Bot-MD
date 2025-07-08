@@ -16,6 +16,7 @@ const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
       return await conn.sendMessage(m.chat, {text: `${tradutor.texto3}`}, {quoted: m});
 
 await conn.sendMessage(m.chat, {document: {url: data5.dllink}, mimetype: 'application/vnd.android.package-archive', fileName: data5.name + '.apk', caption: null}, {quoted: m});
+   }
   } catch {
     throw `${tradutor.texto4}`;
   }}
