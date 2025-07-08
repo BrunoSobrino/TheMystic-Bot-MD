@@ -18,7 +18,7 @@ const handler = async (m, { conn, text }) => {
     const data5 = response.data.data;
 
     if (data5.name && data5.dl) {
-      const formattedMessage = `${tradutor.texto2[0]} ${data5.name}\n${tradutor.texto2[1]}* ${data5.package}\n${tradutor.texto2[2]} ${data.lastUpdated}\n${tradutor.texto2[3]} ${data5.size}`.trim();
+      const formattedMessage = `${tradutor.texto2[0]} ${data5.name}\n${tradutor.texto2[1]}* ${data5.package}\n${tradutor.texto2[2]} ${data5.lastUpdated}\n${tradutor.texto2[3]} ${data5.size}`.trim();
 
             await conn.sendMessage(m.chat, {
         image: { url: data5.banner },
