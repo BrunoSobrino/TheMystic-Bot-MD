@@ -35,7 +35,7 @@ const handler = async (m, { conn, text }) => {
       throw `${tradutor.texto4}`;
     }
   } catch (error) {
-    await m.reply(`[ ❗ ] *Fail:* ${e}`);
+    await m.reply(`[ ❗ ] *Fail:* ${error}`);
   }
 };
 
