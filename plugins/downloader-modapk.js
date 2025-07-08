@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const handler = async (m, { conn, text }) => {
+const handler = async (m, { conn, args }) => {
 
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -11,7 +11,7 @@ const handler = async (m, { conn, text }) => {
      throw `${tradutor.texto1}`;
   }
 
-  const query = text.trim();
+  const query = args[0];
 
   try {
     const response = await axios.get(`https://api.stellarwa.xyz/search/apk?query=${query}`);
