@@ -414,7 +414,7 @@ global.reloadHandler = async function(restartConn) {
             console.error(chalk.red('[❌] Error al cargar handler:'), e);
             return null;
         });
-        
+
         if (Handler && Object.keys(Handler).length) {
             handler = Handler;
             console.log(chalk.green('[ℹ️] Handler recargado correctamente'));
@@ -423,16 +423,15 @@ global.reloadHandler = async function(restartConn) {
         }
     } catch (e) {
         console.error(chalk.red('[❌] Error al recargar handler:'), e);
-        // Continuar con el handler existente en lugar de salir
+        // Continuar con el handler existente
     }
 
     if (restartConn) {
         console.log(chalk.yellow('[ℹ️] Reiniciando conexión...'));
-        
+
         const oldChats = global.conn?.chats || {};
-        
+
         try {
-            // Cerrar conexión existente de manera segura
             if (global.conn?.ws) {
                 global.conn.ws.close();
                 global.conn.ev.removeAllListeners();
@@ -441,16 +440,30 @@ global.reloadHandler = async function(restartConn) {
         } catch (e) {
             console.error(chalk.red('[❌] Error al cerrar conexión:'), e);
         }
+
+        try {
+            global.conn = makeWASocket({
+                ...connectionOptions,
+                logger: pino({ level: 'silent' }),
+                printQRInTerminal: opcion === '1' || methodCodeQR
+            });
+
+            if (store) store.bind(global.conn);
+            console.log(chalk.green('[ℹ️] Nueva conexión establecida'));
+        } catch (e) {
+            console.error(chalk.red('[❌] Error al crear nueva conexión:'), e);
+            throw e;
+        }
+
         isInit = true;
     }
 
-    // Función segura para vincular eventos
     const safeBindEvent = (event, handlerFunc) => {
         if (typeof handlerFunc !== 'function') {
             console.error(chalk.red(`[❌] Handler para ${event} no es una función`));
             return;
         }
-        
+
         try {
             global.conn.ev.removeAllListeners(event);
             global.conn.ev.on(event, handlerFunc);
@@ -460,9 +473,7 @@ global.reloadHandler = async function(restartConn) {
         }
     };
 
-    // Configurar handlers solo si existen
     try {
-        // Verificar y configurar handlers principales
         if (handler?.handler) {
             global.conn.handler = handler.handler.bind(global.conn);
             safeBindEvent('messages.upsert', global.conn.handler);
@@ -490,7 +501,7 @@ global.reloadHandler = async function(restartConn) {
             safeBindEvent('call', global.conn.onCall);
         }
 
-        // Configurar eventos esenciales
+        // Eventos críticos
         safeBindEvent('connection.update', connectionUpdate);
         safeBindEvent('creds.update', saveCreds.bind(global.conn, true));
 
@@ -501,8 +512,7 @@ global.reloadHandler = async function(restartConn) {
     }
 
     isInit = false;
-    
-    // Verificación final opcional
+
     if (restartConn) {
         setTimeout(() => {
             if (global.conn?.user) {
