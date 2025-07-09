@@ -14,6 +14,7 @@ const require = createRequire(__dirname);
 const { say } = cfonts;
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 let isRunning = false;
+let childProcess = null;
 
 const question = (texto) => new Promise((resolver) => rl.question(texto, resolver));
 
@@ -69,10 +70,9 @@ async function start(file) {
   verificarOCrearCarpetaAuth();
 
   if (verificarCredsJson()) {
-    //console.log(chalk.green.bold('—◉ㅤSesión existente encontrada, iniciando...'));
     const args = [join(__dirname, file), ...process.argv.slice(2)];
     setupMaster({ exec: args[0], args: args.slice(1) });
-    fork();
+    forkProcess(file);
     return;
   }
 
@@ -95,36 +95,43 @@ async function start(file) {
   
   const args = [join(__dirname, file), ...process.argv.slice(2)];
   setupMaster({ exec: args[0], args: args.slice(1) });
+  forkProcess(file);
+}
 
-  const p = fork();
+function forkProcess(file) {
+  childProcess = fork();
 
-  p.on('message', (data) => {
+  childProcess.on('message', (data) => {
     console.log(chalk.green.bold('—◉ㅤRECIBIDO:'), data);
     switch (data) {
       case 'reset':
-        p.process.kill();
+        console.log(chalk.yellow.bold('—◉ㅤSolicitud de reinicio recibida...'));
+        childProcess.removeAllListeners();
+        childProcess.kill('SIGTERM');
         isRunning = false;
-        start(file);
+        setTimeout(() => start(file), 1000);
         break;
       case 'uptime':
-        p.send(process.uptime());
+        childProcess.send(process.uptime());
         break;
     }
   });
 
-  p.on('exit', (code, signal) => {
+  childProcess.on('exit', (code, signal) => {
+    console.log(chalk.yellow.bold(`—◉ㅤProceso secundario terminado (${code || signal})`));
     isRunning = false;
-    console.error(chalk.red.bold('[ ERROR ] Proceso secundario terminado:'), { code, signal });
-    if (code !== 0) {
-      console.log(chalk.yellow.bold('—◉ㅤReiniciando...'));
-      start(file);
+    childProcess = null;
+    
+    if (code !== 0 || signal === 'SIGTERM') {
+      console.log(chalk.yellow.bold('—◉ㅤReiniciando proceso...'));
+      setTimeout(() => start(file), 1000);
     }
   });
 
   const opts = yargs(process.argv.slice(2)).argv;
   if (!opts.test) {
     rl.on('line', (line) => {
-      p.emit('message', line.trim());
+      childProcess.emit('message', line.trim());
     });
   }
 }
