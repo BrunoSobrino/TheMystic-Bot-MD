@@ -29,22 +29,11 @@ let stopped = 'close';
 protoType();
 serialize();
 
-// Función mejorada para manejar Promises y objetos inmutables
 global.safeResolve = async function(obj) {
     try {
         if (!obj) return obj;
-        
-        // Si es una Promise, la resolvemos
-        if (typeof obj.then === 'function') {
-            return await obj;
-        }
-        
-        // No intentamos modificar objetos complejos (como mensajes)
-        if (obj.key || obj.message) {
-            return obj;
-        }
-        
-        // Para objetos simples, creamos una copia
+        if (typeof obj.then === 'function') return await obj;
+        if (obj.key || obj.message) return obj;
         if (typeof obj === 'object') {
             const result = Array.isArray(obj) ? [] : {};
             for (const key in obj) {
@@ -52,7 +41,6 @@ global.safeResolve = async function(obj) {
             }
             return result;
         }
-        
         return obj;
     } catch (e) {
         console.error('Error en safeResolve:', e);
@@ -247,27 +235,20 @@ if (!opts['test']) {
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
 
 async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay = 1000) {
-    if (!lidJid?.endsWith("@lid") || !groupJid?.endsWith("@g.us")) {
-        return lidJid?.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
-    }
-
+    if (!lidJid?.endsWith("@lid") || !groupJid?.endsWith("@g.us")) return lidJid?.includes("@") ? lidJid : `${lidJid}@s.whatsapp.net`;
     const cached = lidCache.get(lidJid);
     if (cached) return cached;
-
     const lidToFind = lidJid.split("@")[0];
     let attempts = 0;
-
     while (attempts < maxRetries) {
         try {
             const metadata = await conn.groupMetadata(groupJid);
             if (!metadata?.participants) throw new Error("No se obtuvieron participantes");
-
             for (const participant of metadata.participants) {
                 try {
                     if (!participant?.jid) continue;
                     const contactDetails = await conn.onWhatsApp(participant.jid);
                     if (!contactDetails?.[0]?.lid) continue;
-                    
                     const possibleLid = contactDetails[0].lid.split("@")[0];
                     if (possibleLid === lidToFind) {
                         lidCache.set(lidJid, participant.jid);
@@ -277,7 +258,6 @@ async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay 
                     continue;
                 }
             }
-            
             lidCache.set(lidJid, lidJid);
             return lidJid;
         } catch (e) {
@@ -294,10 +274,8 @@ async function resolveLidToRealJid(lidJid, groupJid, maxRetries = 3, retryDelay 
 
 async function extractAndProcessLids(text, groupJid) {
     if (!text) return text;
-    
     const lidMatches = text.match(/\d+@lid/g) || [];
     let processedText = text;
-    
     for (const lid of lidMatches) {
         try {
             const realJid = await resolveLidToRealJid(lid, groupJid);
@@ -306,40 +284,21 @@ async function extractAndProcessLids(text, groupJid) {
             console.error(`Error procesando LID ${lid}:`, e);
         }
     }
-    
     return processedText;
 }
 
 async function processLidsInMessage(message, groupJid) {
     if (!message || !message.key) return message;
-
     try {
-        // Creamos una copia segura del mensaje para trabajar
         const messageCopy = {
             key: {...message.key},
             message: message.message ? {...message.message} : undefined,
-            // Copiamos otras propiedades relevantes
             ...(message.quoted && {quoted: {...message.quoted}}),
             ...(message.mentionedJid && {mentionedJid: [...message.mentionedJid]})
         };
-
         const remoteJid = messageCopy.key.remoteJid || groupJid;
-        
-        // Procesamos participant en el key
-        if (messageCopy.key?.participant?.endsWith('@lid')) {
-            messageCopy.key.participant = await resolveLidToRealJid(messageCopy.key.participant, remoteJid);
-        }
-
-        // Procesamos contextInfo.participant
-        if (messageCopy.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
-            messageCopy.message.extendedTextMessage.contextInfo.participant = 
-                await resolveLidToRealJid(
-                    messageCopy.message.extendedTextMessage.contextInfo.participant, 
-                    remoteJid
-                );
-        }
-
-        // Procesamos mentionedJid
+        if (messageCopy.key?.participant?.endsWith('@lid')) { messageCopy.key.participant = await resolveLidToRealJid(messageCopy.key.participant, remoteJid) }
+        if (messageCopy.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) { messageCopy.message.extendedTextMessage.contextInfo.participant = await resolveLidToRealJid( messageCopy.message.extendedTextMessage.contextInfo.participant, remoteJid ) }
         if (messageCopy.message?.extendedTextMessage?.contextInfo?.mentionedJid) {
             const mentionedJid = messageCopy.message.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(mentionedJid)) {
@@ -350,8 +309,6 @@ async function processLidsInMessage(message, groupJid) {
                 }
             }
         }
-
-        // Procesamos quotedMessage mentionedJid
         if (messageCopy.message?.extendedTextMessage?.contextInfo?.quotedMessage?.extendedTextMessage?.contextInfo?.mentionedJid) {
             const quotedMentionedJid = messageCopy.message.extendedTextMessage.contextInfo.quotedMessage.extendedTextMessage.contextInfo.mentionedJid;
             if (Array.isArray(quotedMentionedJid)) {
@@ -362,29 +319,12 @@ async function processLidsInMessage(message, groupJid) {
                 }
             }
         }
-
-        // Procesamos texto del mensaje
-        if (messageCopy.message?.conversation) {
-            messageCopy.message.conversation = await extractAndProcessLids(messageCopy.message.conversation, remoteJid);
-        }
-        
-        if (messageCopy.message?.extendedTextMessage?.text) {
-            messageCopy.message.extendedTextMessage.text = await extractAndProcessLids(messageCopy.message.extendedTextMessage.text, remoteJid);
-        }
-
-        // Estructuramos quoted
+        if (messageCopy.message?.conversation) { messageCopy.message.conversation = await extractAndProcessLids(messageCopy.message.conversation, remoteJid) }
+        if (messageCopy.message?.extendedTextMessage?.text) { messageCopy.message.extendedTextMessage.text = await extractAndProcessLids(messageCopy.message.extendedTextMessage.text, remoteJid) }
         if (messageCopy.message?.extendedTextMessage?.contextInfo?.participant && !messageCopy.quoted) {
-            const quotedSender = await resolveLidToRealJid(
-                messageCopy.message.extendedTextMessage.contextInfo.participant, 
-                remoteJid
-            );
-            
-            messageCopy.quoted = {
-                sender: quotedSender,
-                message: messageCopy.message.extendedTextMessage.contextInfo.quotedMessage
-            };
+            const quotedSender = await resolveLidToRealJid( messageCopy.message.extendedTextMessage.contextInfo.participant, remoteJid );
+            messageCopy.quoted = { sender: quotedSender, message: messageCopy.message.extendedTextMessage.contextInfo.quotedMessage };
         }
-
         return messageCopy;
     } catch (e) {
         console.error('Error en processLidsInMessage:', e);
@@ -410,11 +350,13 @@ async function connectionUpdate(update) {
             console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
         }
     }
-
-   console.log(connection)  
     
-    if (connection == 'open') {
-        console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
+    if (connection === 'open') {
+        console.log(chalk.green.bold('══════════════════════════════'));
+        console.log(chalk.green.bold('✅ CONEXIÓN EXITOSA'));
+        console.log(chalk.green.bold(`🕒 ${new Date().toLocaleString()}`));
+        console.log(chalk.green.bold(`👤 Usuario: ${conn.user?.name || conn.user?.id || 'Desconocido'}`));
+        console.log(chalk.green.bold('══════════════════════════════'));
         if (!global.subBotsInitialized) {
             global.subBotsInitialized = true;
             try {
