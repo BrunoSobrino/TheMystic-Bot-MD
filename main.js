@@ -459,6 +459,7 @@ global.reloadHandler = async function(restartConn) {
         try {
             global.conn.ev.removeAllListeners(event);
             global.conn.ev.on(event, handlerFunc);
+            console.log(chalk.blue(`[ℹ️] Evento ${event} configurado correctamente`));
         } catch (e) {
             console.error(chalk.red(`[❌] Error al configurar ${event}:`), e);
         }
@@ -490,8 +491,12 @@ global.reloadHandler = async function(restartConn) {
             safeBindEvent('call', global.conn.onCall);
         }
 
-        safeBindEvent('connection.update', connectionUpdate);
-        safeBindEvent('creds.update', saveCreds.bind(global.conn, true));
+        // ⚠️ CORRECCIÓN CLAVE: bind del connectionUpdate y saveCreds
+        global.conn.connectionUpdate = connectionUpdate.bind(global.conn);
+        safeBindEvent('connection.update', global.conn.connectionUpdate);
+
+        global.conn.credsUpdate = saveCreds.bind(global.conn, true);
+        safeBindEvent('creds.update', global.conn.credsUpdate);
 
         console.log(chalk.green('[ℹ️] Configuración de eventos completada'));
     } catch (e) {
