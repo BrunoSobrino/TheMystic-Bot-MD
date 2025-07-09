@@ -409,29 +409,31 @@ global.reloadHandler = async function(restartConn) {
     console.log(chalk.blue('[ℹ️] Ejecutando reloadHandler. Reinicio necesario:', restartConn));
 
     try {
-        // Recargar el handler
+        // Recargar el handler de manera segura
         const Handler = await import(`./handler.js?update=${Date.now()}`).catch(e => {
             console.error(chalk.red('[❌] Error al cargar handler:'), e);
-            throw e;
+            return null;
         });
         
         if (Handler && Object.keys(Handler).length) {
             handler = Handler;
             console.log(chalk.green('[ℹ️] Handler recargado correctamente'));
+        } else {
+            console.log(chalk.yellow('[⚠️] No se pudo recargar el handler, usando el existente'));
         }
     } catch (e) {
-        console.error(chalk.red('[❌] Error crítico al recargar handler:'), e);
-        process.exit(1);
+        console.error(chalk.red('[❌] Error al recargar handler:'), e);
+        // Continuar con el handler existente en lugar de salir
     }
 
     if (restartConn) {
         console.log(chalk.yellow('[ℹ️] Reiniciando conexión...'));
         
-        const oldChats = global.conn.chats;
+        const oldChats = global.conn?.chats || {};
         
         try {
             // Cerrar conexión existente de manera segura
-            if (global.conn.ws && global.conn.ws.readyState !== WebSocket.CLOSED) {
+            if (global.conn?.ws) {
                 global.conn.ws.close();
                 global.conn.ev.removeAllListeners();
                 console.log(chalk.yellow('[ℹ️] Conexión anterior cerrada'));
@@ -448,52 +450,78 @@ global.reloadHandler = async function(restartConn) {
                 printQRInTerminal: opcion === '1' || methodCodeQR
             }, { chats: oldChats });
 
-            store?.bind(global.conn);
+            if (store) store.bind(global.conn);
             console.log(chalk.green('[ℹ️] Nueva conexión establecida'));
         } catch (e) {
             console.error(chalk.red('[❌] Error al crear nueva conexión:'), e);
-            process.exit(1);
+            throw e; // Relanzar el error para manejo externo
         }
 
         isInit = true;
     }
 
-    // Configurar handlers y eventos
-    const bindEvent = (event, handler) => {
-        global.conn.ev.off(event); // Remover listener antiguo
-        global.conn.ev.on(event, handler);
-        console.log(chalk.blue(`[ℹ️] Evento ${event} configurado`));
+    // Función segura para vincular eventos
+    const safeBindEvent = (event, handlerFunc) => {
+        if (typeof handlerFunc !== 'function') {
+            console.error(chalk.red(`[❌] Handler para ${event} no es una función`));
+            return;
+        }
+        
+        try {
+            global.conn.ev.removeAllListeners(event);
+            global.conn.ev.on(event, handlerFunc);
+            console.log(chalk.blue(`[ℹ️] Evento ${event} configurado correctamente`));
+        } catch (e) {
+            console.error(chalk.red(`[❌] Error al configurar ${event}:`), e);
+        }
     };
 
+    // Configurar handlers solo si existen
     try {
-        // Configurar todos los handlers con manejo de LID
-        global.conn.handler = handler.handler.bind(global.conn);
-        global.conn.participantsUpdate = handler.participantsUpdate.bind(global.conn);
-        global.conn.groupsUpdate = handler.groupsUpdate.bind(global.conn);
-        global.conn.onDelete = handler.deleteUpdate.bind(global.conn);
-        global.conn.onCall = handler.callUpdate.bind(global.conn);
-        
-        // Configurar eventos
-        bindEvent('messages.upsert', global.conn.handler);
-        bindEvent('group-participants.update', global.conn.participantsUpdate);
-        bindEvent('groups.update', global.conn.groupsUpdate);
-        bindEvent('message.delete', global.conn.onDelete);
-        bindEvent('call', global.conn.onCall);
-        bindEvent('connection.update', connectionUpdate);
-        bindEvent('creds.update', saveCreds.bind(global.conn, true));
+        // Verificar y configurar handlers principales
+        if (handler?.handler) {
+            global.conn.handler = handler.handler.bind(global.conn);
+            safeBindEvent('messages.upsert', global.conn.handler);
+        } else {
+            console.error(chalk.red('[❌] handler.handler no está definido'));
+        }
 
-        console.log(chalk.green('[ℹ️] Todos los handlers y eventos configurados'));
+        if (handler?.participantsUpdate) {
+            global.conn.participantsUpdate = handler.participantsUpdate.bind(global.conn);
+            safeBindEvent('group-participants.update', global.conn.participantsUpdate);
+        }
+
+        if (handler?.groupsUpdate) {
+            global.conn.groupsUpdate = handler.groupsUpdate.bind(global.conn);
+            safeBindEvent('groups.update', global.conn.groupsUpdate);
+        }
+
+        if (handler?.deleteUpdate) {
+            global.conn.onDelete = handler.deleteUpdate.bind(global.conn);
+            safeBindEvent('message.delete', global.conn.onDelete);
+        }
+
+        if (handler?.callUpdate) {
+            global.conn.onCall = handler.callUpdate.bind(global.conn);
+            safeBindEvent('call', global.conn.onCall);
+        }
+
+        // Configurar eventos esenciales
+        safeBindEvent('connection.update', connectionUpdate);
+        safeBindEvent('creds.update', saveCreds.bind(global.conn, true));
+
+        console.log(chalk.green('[ℹ️] Configuración de eventos completada'));
     } catch (e) {
-        console.error(chalk.red('[❌] Error al configurar handlers:'), e);
-        process.exit(1);
+        console.error(chalk.red('[❌] Error crítico al configurar handlers:'), e);
+        throw e;
     }
 
     isInit = false;
     
-    // Verificación final
+    // Verificación final opcional
     if (restartConn) {
-        setTimeout(async () => {
-            if (global.conn.user) {
+        setTimeout(() => {
+            if (global.conn?.user) {
                 console.log(chalk.green.bold('══════════════════════════════'));
                 console.log(chalk.green.bold('✅ REINICIO COMPLETADO'));
                 console.log(chalk.green.bold(`🕒 ${new Date().toLocaleString()}`));
