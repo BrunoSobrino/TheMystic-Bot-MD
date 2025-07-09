@@ -182,6 +182,7 @@ const connectionOptions = {
 };
 
 global.conn = makeWASocket(connectionOptions);
+await global.reloadHandler(true);
 
 if (!fs.existsSync(`./${authFile}/creds.json`)) {
   if (opcion === '2' || methodCode) {
