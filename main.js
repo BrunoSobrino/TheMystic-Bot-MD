@@ -441,24 +441,6 @@ global.reloadHandler = async function(restartConn) {
         } catch (e) {
             console.error(chalk.red('[❌] Error al cerrar conexión:'), e);
         }
-
-        // Crear nueva instancia con las opciones actualizadas
-        try {
-            global.conn = makeWASocket({
-                ...connectionOptions,
-                logger: pino({ level: 'silent' }),
-                printQRInTerminal: opcion === '1' || methodCodeQR
-            }, { chats: oldChats });
-            global.conn.ev.emit('connection.update', { connection: 'open', isNewLogin: true });
-
-
-            if (store) store.bind(global.conn);
-            console.log(chalk.green('[ℹ️] Nueva conexión establecida'));
-        } catch (e) {
-            console.error(chalk.red('[❌] Error al crear nueva conexión:'), e);
-            throw e; // Relanzar el error para manejo externo
-        }
-
         isInit = true;
     }
 
