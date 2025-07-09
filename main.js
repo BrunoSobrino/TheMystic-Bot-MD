@@ -449,6 +449,8 @@ global.reloadHandler = async function(restartConn) {
                 logger: pino({ level: 'silent' }),
                 printQRInTerminal: opcion === '1' || methodCodeQR
             }, { chats: oldChats });
+            global.conn.ev.emit('connection.update', { connection: 'open', isNewLogin: true });
+
 
             if (store) store.bind(global.conn);
             console.log(chalk.green('[ℹ️] Nueva conexión establecida'));
