@@ -406,105 +406,107 @@ let isInit = true;
 let handler = await import('./handler.js');
 
 global.reloadHandler = async function(restartConn) {
+    console.log(chalk.blue('[ℹ️] Ejecutando reloadHandler. Reinicio necesario:', restartConn));
+
     try {
-        const Handler = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
-        if (Object.keys(Handler || {}).length) handler = Handler;
+        // Recargar el handler
+        const Handler = await import(`./handler.js?update=${Date.now()}`).catch(e => {
+            console.error(chalk.red('[❌] Error al cargar handler:'), e);
+            throw e;
+        });
+        
+        if (Handler && Object.keys(Handler).length) {
+            handler = Handler;
+            console.log(chalk.green('[ℹ️] Handler recargado correctamente'));
+        }
     } catch (e) {
-        console.error('Error al recargar handler:', e);
+        console.error(chalk.red('[❌] Error crítico al recargar handler:'), e);
+        process.exit(1);
     }
 
     if (restartConn) {
+        console.log(chalk.yellow('[ℹ️] Reiniciando conexión...'));
+        
         const oldChats = global.conn.chats;
+        
         try {
-            if (global.conn.ws) {
+            // Cerrar conexión existente de manera segura
+            if (global.conn.ws && global.conn.ws.readyState !== WebSocket.CLOSED) {
                 global.conn.ws.close();
                 global.conn.ev.removeAllListeners();
+                console.log(chalk.yellow('[ℹ️] Conexión anterior cerrada'));
             }
         } catch (e) {
-            console.error('Error cerrando conexión:', e);
+            console.error(chalk.red('[❌] Error al cerrar conexión:'), e);
         }
-        global.conn = makeWASocket({
-            ...connectionOptions,
-            logger: pino({ level: 'silent' })
-        }, { chats: oldChats });
-        store?.bind(conn);
+
+        // Crear nueva instancia con las opciones actualizadas
+        try {
+            global.conn = makeWASocket({
+                ...connectionOptions,
+                logger: pino({ level: 'silent' }),
+                printQRInTerminal: opcion === '1' || methodCodeQR
+            }, { chats: oldChats });
+
+            store?.bind(global.conn);
+            console.log(chalk.green('[ℹ️] Nueva conexión establecida'));
+        } catch (e) {
+            console.error(chalk.red('[❌] Error al crear nueva conexión:'), e);
+            process.exit(1);
+        }
+
         isInit = true;
-        console.log(chalk.yellow('[ℹ️] Nueva instancia de conexión creada'));
     }
 
-    if (!isInit) {
-        conn.ev.off('messages.upsert', conn.handler);
-        conn.ev.off('group-participants.update', conn.participantsUpdate);
-        conn.ev.off('groups.update', conn.groupsUpdate);
-        conn.ev.off('message.delete', conn.onDelete);
-        conn.ev.off('call', conn.onCall);
-        conn.ev.off('connection.update', conn.connectionUpdate);
-        conn.ev.off('creds.update', conn.credsUpdate);
-    }
-
-    conn.welcome = '👋 ¡Bienvenido/a!\n@user';
-    conn.bye = '👋 ¡Hasta luego!\n@user';
-    conn.spromote = '*[ ℹ️ ] @user Fue promovido a administrador.*';
-    conn.sdemote = '*[ ℹ️ ] @user Fue degradado de administrador.*';
-    conn.sDesc = '*[ ℹ️ ] La descripción del grupo ha sido modificada.*';
-    conn.sSubject = '*[ ℹ️ ] El nombre del grupo ha sido modificado.*';
-    conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
-    conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
-    conn.handler = async (m) => {
-        if (!m) return;
-        try {
-            const handlerInput = {
-                messages: [],
-                type: m.type || 'notify'
-            };
-            if (m.messages && Array.isArray(m.messages)) {
-                for (const message of m.messages) {
-                    if (message?.key) {
-                        const processedMsg = await processLidsInMessage(message, message.key.remoteJid);
-                        handlerInput.messages.push(processedMsg);
-                    }
-                }
-            } 
-            else if (m?.key) {
-                const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
-                handlerInput.messages.push(processedMsg);
-            }
-            if (handlerInput.messages.length > 0) {
-                await handler.handler.call(global.conn, handlerInput);
-            }
-        } catch (e) {
-            console.error('Error en conn.handler:', e);
-        }
+    // Configurar handlers y eventos
+    const bindEvent = (event, handler) => {
+        global.conn.ev.off(event); // Remover listener antiguo
+        global.conn.ev.on(event, handler);
+        console.log(chalk.blue(`[ℹ️] Evento ${event} configurado`));
     };
-    conn.ev.on('messages.upsert', conn.handler);
-    conn.ev.on('group-participants.update', async (update) => {
-        try {
-            if (update.participants) {
-                update.participants = await Promise.all(
-                    update.participants.filter(p => p).map(
-                        async p => p.endsWith('@lid') ? await resolveLidToRealJid(p, update.id) : p
-                    )
-                );
-            }
-            handler.participantsUpdate.call(global.conn, update);
-        } catch (e) {
-            console.error('Error en group-participants.update:', e);
-        }
-    });
-    conn.ev.on('groups.update', handler.groupsUpdate.bind(global.conn));
-    conn.ev.on('message.delete', handler.deleteUpdate.bind(global.conn));
-    conn.ev.on('call', handler.callUpdate.bind(global.conn));
-    conn.ev.on('connection.update', (update) => {
-        connectionUpdate(update).catch(e => {
-            console.error(chalk.red('[ERROR] En connectionUpdate:'), e);
-        });
-    });
-    conn.ev.on('creds.update', saveCreds.bind(global.conn, true));
+
+    try {
+        // Configurar todos los handlers con manejo de LID
+        global.conn.handler = handler.handler.bind(global.conn);
+        global.conn.participantsUpdate = handler.participantsUpdate.bind(global.conn);
+        global.conn.groupsUpdate = handler.groupsUpdate.bind(global.conn);
+        global.conn.onDelete = handler.deleteUpdate.bind(global.conn);
+        global.conn.onCall = handler.callUpdate.bind(global.conn);
+        
+        // Configurar eventos
+        bindEvent('messages.upsert', global.conn.handler);
+        bindEvent('group-participants.update', global.conn.participantsUpdate);
+        bindEvent('groups.update', global.conn.groupsUpdate);
+        bindEvent('message.delete', global.conn.onDelete);
+        bindEvent('call', global.conn.onCall);
+        bindEvent('connection.update', connectionUpdate);
+        bindEvent('creds.update', saveCreds.bind(global.conn, true));
+
+        console.log(chalk.green('[ℹ️] Todos los handlers y eventos configurados'));
+    } catch (e) {
+        console.error(chalk.red('[❌] Error al configurar handlers:'), e);
+        process.exit(1);
+    }
 
     isInit = false;
+    
+    // Verificación final
+    if (restartConn) {
+        setTimeout(async () => {
+            if (global.conn.user) {
+                console.log(chalk.green.bold('══════════════════════════════'));
+                console.log(chalk.green.bold('✅ REINICIO COMPLETADO'));
+                console.log(chalk.green.bold(`🕒 ${new Date().toLocaleString()}`));
+                console.log(chalk.green.bold(`👤 Usuario: ${global.conn.user?.name || 'Desconocido'}`));
+                console.log(chalk.green.bold('══════════════════════════════'));
+            } else {
+                console.log(chalk.yellow('[⚠️] Esperando autenticación...'));
+            }
+        }, 3000);
+    }
+
     return true;
 };
-
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 const pluginFilter = (filename) => /\.js$/.test(filename);
