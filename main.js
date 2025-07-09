@@ -405,25 +405,43 @@ process.on('uncaughtException', console.error);
 let isInit = true;
 let handler = await import('./handler.js');
 
-global.reloadHandler = async function(restatConn) {
+global.reloadHandler = async function(restartConn) {
     try {
         const Handler = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
         if (Object.keys(Handler || {}).length) handler = Handler;
     } catch (e) {
-        console.error(e);
+        console.error('Error al recargar handler:', e);
     }
-    
-    if (restatConn) {
+
+    if (restartConn) {
         const oldChats = global.conn.chats;
         try {
-            global.conn.ws.close();
-        } catch { }
-        conn.ev.removeAllListeners();
-        global.conn = makeWASocket(connectionOptions, {chats: oldChats});
+            if (global.conn.ws) {
+                global.conn.ws.close();
+                global.conn.ev.removeAllListeners();
+            }
+        } catch (e) {
+            console.error('Error cerrando conexión:', e);
+        }
+        global.conn = makeWASocket({
+            ...connectionOptions,
+            logger: pino({ level: 'silent' })
+        }, { chats: oldChats });
         store?.bind(conn);
         isInit = true;
+        console.log(chalk.yellow('[ℹ️] Nueva instancia de conexión creada'));
     }
-    
+
+    if (!isInit) {
+        conn.ev.off('messages.upsert', conn.handler);
+        conn.ev.off('group-participants.update', conn.participantsUpdate);
+        conn.ev.off('groups.update', conn.groupsUpdate);
+        conn.ev.off('message.delete', conn.onDelete);
+        conn.ev.off('call', conn.onCall);
+        conn.ev.off('connection.update', conn.connectionUpdate);
+        conn.ev.off('creds.update', conn.credsUpdate);
+    }
+
     conn.welcome = '👋 ¡Bienvenido/a!\n@user';
     conn.bye = '👋 ¡Hasta luego!\n@user';
     conn.spromote = '*[ ℹ️ ] @user Fue promovido a administrador.*';
@@ -432,17 +450,13 @@ global.reloadHandler = async function(restatConn) {
     conn.sSubject = '*[ ℹ️ ] El nombre del grupo ha sido modificado.*';
     conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
     conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
-
     conn.handler = async (m) => {
         if (!m) return;
-        
         try {
             const handlerInput = {
                 messages: [],
                 type: m.type || 'notify'
             };
-
-            // Procesar batches de mensajes
             if (m.messages && Array.isArray(m.messages)) {
                 for (const message of m.messages) {
                     if (message?.key) {
@@ -451,13 +465,10 @@ global.reloadHandler = async function(restatConn) {
                     }
                 }
             } 
-            // Procesar mensaje individual
             else if (m?.key) {
                 const processedMsg = await processLidsInMessage(m, m.key.remoteJid);
                 handlerInput.messages.push(processedMsg);
             }
-
-            // Llamar al handler solo si hay mensajes válidos
             if (handlerInput.messages.length > 0) {
                 await handler.handler.call(global.conn, handlerInput);
             }
@@ -465,21 +476,7 @@ global.reloadHandler = async function(restatConn) {
             console.error('Error en conn.handler:', e);
         }
     };
-
-    conn.ev.on('messages.upsert', async (update) => {
-        try {
-            const { messages, type } = update;
-            if (!Array.isArray(messages)) return;
-
-            await conn.handler({
-                messages: messages.filter(m => m?.key),
-                type
-            });
-        } catch (e) {
-            console.error('Error en messages.upsert:', e);
-        }
-    });
-
+    conn.ev.on('messages.upsert', conn.handler);
     conn.ev.on('group-participants.update', async (update) => {
         try {
             if (update.participants) {
@@ -494,24 +491,20 @@ global.reloadHandler = async function(restatConn) {
             console.error('Error en group-participants.update:', e);
         }
     });
-
-    const safeBind = (fn) => (...args) => {
-        try {
-            return fn.call(global.conn, ...args);
-        } catch (e) {
-            console.error('Error en evento:', fn.name, e);
-        }
-    };
-
-    conn.ev.on('groups.update', safeBind(handler.groupsUpdate));
-    conn.ev.on('message.delete', safeBind(handler.deleteUpdate));
-    conn.ev.on('call', safeBind(handler.callUpdate));
-    conn.ev.on('connection.update', safeBind(connectionUpdate));
-    conn.ev.on('creds.update', safeBind(saveCreds.bind(global.conn, true)));
+    conn.ev.on('groups.update', handler.groupsUpdate.bind(global.conn));
+    conn.ev.on('message.delete', handler.deleteUpdate.bind(global.conn));
+    conn.ev.on('call', handler.callUpdate.bind(global.conn));
+    conn.ev.on('connection.update', (update) => {
+        connectionUpdate(update).catch(e => {
+            console.error(chalk.red('[ERROR] En connectionUpdate:'), e);
+        });
+    });
+    conn.ev.on('creds.update', saveCreds.bind(global.conn, true));
 
     isInit = false;
     return true;
 };
+
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 const pluginFilter = (filename) => /\.js$/.test(filename);
