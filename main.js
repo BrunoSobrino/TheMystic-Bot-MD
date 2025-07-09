@@ -410,6 +410,8 @@ async function connectionUpdate(update) {
             console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
         }
     }
+
+   console.log(connection)  
     
     if (connection == 'open') {
         console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
