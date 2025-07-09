@@ -409,7 +409,6 @@ global.reloadHandler = async function(restartConn) {
     console.log(chalk.blue('[ℹ️] Ejecutando reloadHandler. Reinicio necesario:', restartConn));
 
     try {
-        // Recargar el handler de manera segura
         const Handler = await import(`./handler.js?update=${Date.now()}`).catch(e => {
             console.error(chalk.red('[❌] Error al cargar handler:'), e);
             return null;
@@ -423,20 +422,15 @@ global.reloadHandler = async function(restartConn) {
         }
     } catch (e) {
         console.error(chalk.red('[❌] Error al recargar handler:'), e);
-        // Continuar con el handler existente
     }
 
     if (restartConn) {
         console.log(chalk.yellow('[ℹ️] Reiniciando conexión...'));
 
-        const oldChats = global.conn?.chats || {};
-
         try {
-            if (global.conn?.ws) {
-                global.conn.ws.close();
-                global.conn.ev.removeAllListeners();
-                console.log(chalk.yellow('[ℹ️] Conexión anterior cerrada'));
-            }
+            if (global.conn?.ws) global.conn.ws.close();
+            if (global.conn?.ev) global.conn.ev.removeAllListeners();
+            console.log(chalk.yellow('[ℹ️] Conexión anterior cerrada'));
         } catch (e) {
             console.error(chalk.red('[❌] Error al cerrar conexión:'), e);
         }
@@ -454,8 +448,6 @@ global.reloadHandler = async function(restartConn) {
             console.error(chalk.red('[❌] Error al crear nueva conexión:'), e);
             throw e;
         }
-
-        isInit = true;
     }
 
     const safeBindEvent = (event, handlerFunc) => {
@@ -467,7 +459,6 @@ global.reloadHandler = async function(restartConn) {
         try {
             global.conn.ev.removeAllListeners(event);
             global.conn.ev.on(event, handlerFunc);
-            console.log(chalk.blue(`[ℹ️] Evento ${event} configurado correctamente`));
         } catch (e) {
             console.error(chalk.red(`[❌] Error al configurar ${event}:`), e);
         }
@@ -477,8 +468,6 @@ global.reloadHandler = async function(restartConn) {
         if (handler?.handler) {
             global.conn.handler = handler.handler.bind(global.conn);
             safeBindEvent('messages.upsert', global.conn.handler);
-        } else {
-            console.error(chalk.red('[❌] handler.handler no está definido'));
         }
 
         if (handler?.participantsUpdate) {
@@ -501,7 +490,6 @@ global.reloadHandler = async function(restartConn) {
             safeBindEvent('call', global.conn.onCall);
         }
 
-        // Eventos críticos
         safeBindEvent('connection.update', connectionUpdate);
         safeBindEvent('creds.update', saveCreds.bind(global.conn, true));
 
@@ -509,22 +497,6 @@ global.reloadHandler = async function(restartConn) {
     } catch (e) {
         console.error(chalk.red('[❌] Error crítico al configurar handlers:'), e);
         throw e;
-    }
-
-    isInit = false;
-
-    if (restartConn) {
-        setTimeout(() => {
-            if (global.conn?.user) {
-                console.log(chalk.green.bold('══════════════════════════════'));
-                console.log(chalk.green.bold('✅ REINICIO COMPLETADO'));
-                console.log(chalk.green.bold(`🕒 ${new Date().toLocaleString()}`));
-                console.log(chalk.green.bold(`👤 Usuario: ${global.conn.user?.name || 'Desconocido'}`));
-                console.log(chalk.green.bold('══════════════════════════════'));
-            } else {
-                console.log(chalk.yellow('[⚠️] Esperando autenticación...'));
-            }
-        }, 3000);
     }
 
     return true;
