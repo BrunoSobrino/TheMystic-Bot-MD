@@ -11,9 +11,8 @@ let handler = async (message, { conn, text }) => {
         let response = await tiktokSearch(text);
         if (!response.status) throw new Error(response.resultado);
         let searchResults = response.resultado;
-        shuffleArray(searchResults);
+        if (searchResults.length === 0) throw new Error('*[❗] No se encontraron videos válidos de tiktok.*');
         let selectedResults = getRandomElements(searchResults, Math.min(searchResults.length, 10));
-        if (selectedResults.length === 0) throw new Error('*[❗] No se encontraron videos válidos de tiktok.*');
         
         const BATCH_SIZE = 2;
         const RETRY_ATTEMPTS = 2;
