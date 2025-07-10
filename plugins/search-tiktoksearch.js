@@ -12,7 +12,7 @@ let handler = async (message, { conn, text }) => {
         if (!response.status) throw new Error(response.resultado);
         let searchResults = response.resultado;
         shuffleArray(searchResults);
-        let selectedResults = searchResults.slice(0, Math.min(searchResults.length, 10));
+        let selectedResults = getRandomElements(searchResults, Math.min(searchResults.length, 10));
         if (selectedResults.length === 0) throw new Error('*[❗] No se encontraron videos válidos de tiktok.*');
         
         const BATCH_SIZE = 2;
@@ -91,7 +91,7 @@ async function tiktokSearch(query, maxRetries = 3) {
             const response = await axios.post("https://tikwm.com/api/feed/search", 
                 new URLSearchParams({
                     keywords: query, 
-                    count: '15',  
+                    count: '30',  
                     cursor: '0', 
                     HD: '1'
                 }), {
@@ -136,10 +136,11 @@ async function createVideoMessage(url, conn, timeout = 15000) {
     }
 }
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+function getRandomElements(array, count) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    return array;
+    return shuffled.slice(0, count);
 }
