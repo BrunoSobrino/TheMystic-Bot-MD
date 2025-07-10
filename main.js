@@ -342,10 +342,19 @@ if (opcion == '1' || methodCodeQR) {
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
 const lastErrors = {};  
+const lastErrors = {};
+const errorTimers = {};
+
 function shouldLogError(errorType) {
     const now = Date.now();
-    if (lastErrors[errorType] && (now - lastErrors[errorType] < 5000)) return false;
+    const lastErrorTime = lastErrors[errorType] || 0;
+    if (now - lastErrorTime < 5000) return false;
+    if (errorTimers[errorType]) { clearTimeout(errorTimers[errorType]) }
     lastErrors[errorType] = now;
+    errorTimers[errorType] = setTimeout(() => {
+        delete lastErrors[errorType];
+        delete errorTimers[errorType];
+    }, 5000);
     return true;
 }
 if (reason == 405) {
