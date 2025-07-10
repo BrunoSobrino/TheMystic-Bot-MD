@@ -341,10 +341,8 @@ if (opcion == '1' || methodCodeQR) {
     }
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-const lastErrors = {};  
 const lastErrors = {};
 const errorTimers = {};
-
 function shouldLogError(errorType) {
     const now = Date.now();
     const lastErrorTime = lastErrors[errorType] || 0;
