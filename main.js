@@ -308,6 +308,8 @@ console.log(chalk.bold.red(`Archivo ${file} no borrado` + err))
 
 async function connectionUpdate(update) {
   let isFirstConnection = '';
+  let qrAlreadyShown = false;
+  let qrTimeout = null;
   const {connection, lastDisconnect, isNewLogin} = update;
   stopped = connection;
   if (isNewLogin) conn.isInit = true;
@@ -320,6 +322,11 @@ async function connectionUpdate(update) {
 if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
 if (opcion == '1' || methodCodeQR) {
     console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
+    qrAlreadyShown = true;
+     if (qrTimeout) clearTimeout(qrTimeout);
+        qrTimeout = setTimeout(() => {
+        qrAlreadyShown = false;
+    }, 60000); 
  }}
   if (connection == 'open') {
     console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
@@ -328,7 +335,6 @@ if (opcion == '1' || methodCodeQR) {
       global.subBotsInitialized = true;
       try {
         await initializeSubBots();
-        //console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Sub-bots inicializados correctamente (ignorar si no hay subbots).'));
       } catch (error) {
         console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
       }
