@@ -7,7 +7,7 @@ let handler = async (message, { conn, text }) => {
     if (!text) return conn.sendMessage(message.chat, { text: '[❗] ¿Qué quieres buscar en TikTok?' }, { quoted: message });
     
     try {
-        const processingMsg = await conn.sendMessage(message.chat, { text: '🔍 Buscando en TikTok...' }, { quoted: message });
+        const processingMsg = await conn.sendMessage(message.chat, { text: '*[🔍] Buscando en TikTok, espere...*' }, { quoted: message });
         let response = await tiktokSearch(text);
         if (!response.status) throw new Error(response.resultado);
         let searchResults = response.resultado;
@@ -38,7 +38,7 @@ let handler = async (message, { conn, text }) => {
         if (validVideos.length === 0) throw new Error('*[❗] No se pudieron cargar los videos.*');
         const results = validVideos.map((videoMessage, index) => ({
             body: proto.Message.InteractiveMessage.Body.fromObject({ text: '' }),
-            footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `*❧ By ${global.wm}*` }),
+            footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `*❧ By ${global.wm}*`.trim() }),
             header: proto.Message.InteractiveMessage.Header.fromObject({
                 title: selectedResults[index].description || "Video de TikTok",
                 hasMediaAttachment: true,
@@ -56,7 +56,7 @@ let handler = async (message, { conn, text }) => {
                     },
                     interactiveMessage: proto.Message.InteractiveMessage.fromObject({
                         body: proto.Message.InteractiveMessage.Body.create({ 
-                            text: `*< TIKTOK SEARCH >*\n\n📌 *Texto buscado:* ${text}\n\n📈 *Resultados:* ${validVideos.length}/${selectedResults.length}`
+                            text: `*< TIKTOK SEARCH >*\n\n📌 *Texto buscado:* ${text}`
                         }),
                         footer: proto.Message.InteractiveMessage.Footer.create({ text: '' }),
                         header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
@@ -127,23 +127,11 @@ async function tiktokSearch(query, maxRetries = 3) {
 
 async function createVideoMessage(url, conn, timeout = 15000) {
     try {
-        const response = await axios.get(url, { 
-            responseType: 'arraybuffer',
-            timeout: timeout
-        });
-        
-        if (!response.data || response.data.length === 0) {
-            throw new Error('Video vacío o no disponible');
-        }
-        
-        const { videoMessage } = await generateWAMessageContent(
-            { video: response.data }, 
-            { upload: conn.waUploadToServer }
-        );
-        
+        const response = await axios.get(url, { responseType: 'arraybuffer', timeout: timeout });
+        if (!response.data || response.data.length === 0) throw new Error('Video vacío o no disponible');
+        const { videoMessage } = await generateWAMessageContent({ video: response.data }, { upload: conn.waUploadToServer });
         return videoMessage;
     } catch (error) {
-        console.error(`Error al crear mensaje de video (${url}):`, error.message);
         return null;
     }
 }
