@@ -307,8 +307,7 @@ console.log(chalk.bold.red(`Archivo ${file} no borrado` + err))
 }
 
 async function connectionUpdate(update) {
-  
-
+  let isFirstConnection = '';
   const {connection, lastDisconnect, isNewLogin} = update;
   stopped = connection;
   if (isNewLogin) conn.isInit = true;
@@ -324,6 +323,7 @@ if (opcion == '1' || methodCodeQR) {
  }}
   if (connection == 'open') {
     console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
+    isFirstConnection = true;
     if (!global.subBotsInitialized) {
       global.subBotsInitialized = true;
       try {
@@ -335,34 +335,63 @@ if (opcion == '1' || methodCodeQR) {
     }
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
+function shouldLogError(errorType) {
+    const now = Date.now();
+    if (lastErrors[errorType] && (now - lastErrors[errorType] < 5000)) return false;
+    lastErrors[errorType] = now;
+    return true;
+}
 if (reason == 405) {
 await fs.unlinkSync("./MysticSession/" + "creds.json")
 console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`)) 
 process.send('reset')}
 if (connection === 'close') {
     if (reason === DisconnectReason.badSession) {
-        conn.logger.error(`[ ⚠ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
-        //process.exit();
+      if (shouldLogError('badSession')) {
+        conn.logger.error(`[ ⚠ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`); 
+      }
+        await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionClosed) {
+      if (shouldLogError('connectionClosed')) {
         conn.logger.warn(`[ ⚠ ] Conexión cerrada, reconectando...`);
+      }
         await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionLost) {
+      if (shouldLogError('connectionLost')) {
         conn.logger.warn(`[ ⚠ ] Conexión perdida con el servidor, reconectando...`);
+      }
         await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionReplaced) {
+      if (shouldLogError('connectionReplaced')) {
         conn.logger.error(`[ ⚠ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
-        //process.exit();
-    } else if (reason === DisconnectReason.loggedOut) {
-        conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
-        //process.exit();
-    } else if (reason === DisconnectReason.restartRequired) {
-        conn.logger.info(`[ ⚠ ] Reinicio necesario, reinicie el servidor si presenta algún problema.`);
+      }
         await global.reloadHandler(true).catch(console.error);
+    } else if (reason === DisconnectReason.loggedOut) {
+      if (shouldLogError('loggedOut')) {
+        conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+      }
+    } else if (reason === DisconnectReason.restartRequired) {
+       if (isFirstConnection) {
+        if (shouldLogError('restartRequired')) {
+            //conn.logger.info(`[ ⚠ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
+        }
+        isFirstConnection = false; 
+    } else {
+         if (shouldLogError('restartRequired')) {
+            conn.logger.info(`[ ⚠ ] Reinicio necesario, reconectando...`);
+        }
+        await global.reloadHandler(true).catch(console.error);
+    }
     } else if (reason === DisconnectReason.timedOut) {
+      if (shouldLogError('timedOut')) {
         conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
+      }
         await global.reloadHandler(true).catch(console.error);
     } else {
+      const unknownError = `unknown_${reason || ''}_${connection || ''}`;
+      if (shouldLogError(unknownError)) {
         conn.logger.warn(`[ ⚠ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
+      }
         await global.reloadHandler(true).catch(console.error);
     }
 }
