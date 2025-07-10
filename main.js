@@ -341,6 +341,7 @@ if (opcion == '1' || methodCodeQR) {
     }
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
+const lastErrors = {};  
 function shouldLogError(errorType) {
     const now = Date.now();
     if (lastErrors[errorType] && (now - lastErrors[errorType] < 5000)) return false;
