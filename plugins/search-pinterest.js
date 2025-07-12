@@ -18,7 +18,7 @@ import axios from 'axios';
 const handler = async (m, { conn, usedPrefix, command, text }) => {
  if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST />_*\n\n[ ❗️ ] Ingresa un texto para buscar resultados\nEjemplo: ${usedPrefix + command} Gato` }, { quoted: m });
  try {
- let { data } = await axios.get(`https://api.stellarwa.xyz/search/pinterest?query=${text}`);
+ let { data } = await axios.get(`${global.APIs.stellar}/search/pinterest?query=${text}&apikey=global.APIKeys[global.APIs.stellar]`);
  let images = data.data;
  let push = [];
  for (let i = 0; i < images.length; i++) {
