@@ -14,7 +14,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     if (!songInfo.length) return m.reply(tradutor.texto2);
     let song = songInfo[0];
 
-    const res = await axios.get(`https://api.stellarwa.xyz/dow/spotify?url=${song.url}`, { responseType: 'json' });
+    const res = await axios.get(`${global.APIs.stellar}/dow/spotify?url=${song.url}&apikey=${global.APIKeys[global.APIs.stellar]}`, { responseType: 'json' });
     const data = res.data?.data;
 
     if (!data?.download) return m.reply(tradutor.texto3);
@@ -61,7 +61,7 @@ handler.command = ['spotify', 'music'];
 export default handler;
 
 async function spotifyxv(query) {
-  const res = await axios.get(`https://api.stellarwa.xyz/search/spotify?query=${query}`, { responseType: 'json' });
+  const res = await axios.get(`${global.APIs.stellar}/search/spotify?query=${query}&apikey=${global.APIKeys[global.APIs.stellar]}`, { responseType: 'json' });
   if (!res.data?.status || !res.data?.data?.length) return [];
 
   const firstTrack = res.data.data[0];
