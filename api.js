@@ -34,6 +34,7 @@ global.itsrose = ['4b146102c4d500809da9d1ff'];
 global.APIs = {
   CFROSAPI: 'https://api.cafirexos.com',
   xteam: 'https://api.xteam.xyz',
+  stellar: 'https://api.stellarwa.xyz',
   dzx: 'https://api.dhamzxploit.my.id',
   lol: 'https://api.lolhuman.xyz',
   neoxr: 'https://api.neoxr.my.id',
@@ -54,6 +55,7 @@ global.APIs = {
 },
 global.APIKeys = {
   'https://api.xteam.xyz': `${keysxteam}`,
+  'https://api.stellarwa.xyz': `BrunoSobrino`,
   'https://api.lolhuman.xyz': 'GataDios',
   'https://api.neoxr.my.id': `${keysneoxr}`,
   'https://api.zahwazein.xyz': `${keysxxx}`,
