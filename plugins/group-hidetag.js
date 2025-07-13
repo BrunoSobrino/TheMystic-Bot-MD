@@ -17,7 +17,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
 **/
 
     const users = participants.map((u) => conn.decodeJid(u.id));
-    const quoted = m.quoted ? m.quoted : m;
+    const quoted = m.quoted ? m.quoted : m || m.text || m.sender;
     const mime = (quoted.msg || quoted).mimetype || '';
     const isMedia = /image|video|sticker|audio/.test(mime);
     const more = String.fromCharCode(8206);
@@ -42,7 +42,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
 };
 handler.help = ['hidetag'];
 handler.tags = ['group'];
-handler.command = /^(hidetag|notificar|notify)$/i;
+handler.command = /^(hidetag|notificar|notify|tag)$/i;
 handler.group = true;
 handler.admin = true;
 export default handler;
