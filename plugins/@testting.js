@@ -35,7 +35,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     fetch(video.thumbnail).then(res => res.buffer())
                 ]);
 
-                // Intentar obtener letras primero con el título del video, luego con la consulta original
                 let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
                 if (!lyricsData) {
                     lyricsData = await Genius.searchLyrics(query).catch(() => null);
@@ -49,18 +48,15 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     album: 'YouTube Audio',
                     APIC: thumbnailBuffer,
                     year: new Date().getFullYear(),
+                    unsynchronisedLyrics: {
+                        language: 'spa',
+                        text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
+                    },
                     comment: {
                         language: 'spa',
                         text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nVideo De YouTube: ${video.url}`
                     }
                 };
-
-                if (formattedLyrics) {
-                    tags.unsynchronisedLyrics = {
-                        language: 'spa',
-                        text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
-                    };
-                }
 
                 const taggedBuffer = NodeID3.write(tags, audioBuffer);
 
@@ -118,12 +114,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 const caption = `*${videoMetadata.title}*`;
                 const fixedVideoBuffer = readFileSync(fixedPath);
                 
-                await conn.sendMessage(m.chat, {
-                    video: fixedVideoBuffer,
-                    caption: caption,
-                    mimetype: 'video/mp4',
-                    fileName: `${sanitizeFileName(videoMetadata.title)}.mp4`
-                }, { quoted: m });
+                await conn.sendMessage(m.chat, { video: fixedVideoBuffer, caption: caption, mimetype: 'video/mp4', fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` }, { quoted: m });
 
             } catch (ffmpegError) {
                 throw new Error(`Al procesar el video: ${ffmpegError.message}`);
@@ -140,7 +131,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 }, 1000);
             }
         }
-
     } catch (e) {
         console.error(`Error en ${command}:`, e);
         m.reply(`*[❗] Error: ${e.message}*`);
