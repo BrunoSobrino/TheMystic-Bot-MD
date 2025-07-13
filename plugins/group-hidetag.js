@@ -2,17 +2,20 @@ import {generateWAMessageFromContent} from "baileys";
 import * as fs from 'fs';
 
 const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
-   try {
     const users = participants.map((u) => conn.decodeJid(u.id));
-    const q = m.quoted ? m.quoted : m || m.text || m.sender;
-    const c = m.quoted ? await m.getQuotedObj() : m.msg || m.text || m.sender;
-    const msg = conn.cMod(m.chat, generateWAMessageFromContent(m.chat, {[m.quoted ? q.mtype : 'extendedTextMessage']: m.quoted ? c.message[q.mtype] : {text: '' || c}}, {quoted: m, userJid: conn.user.id}), text || q.text, conn.user.jid, {mentions: users});
-    await conn.relayMessage(m.chat, msg.message, {messageId: msg.key.id});
-  } catch {
-    /**
-    [ By @NeKosmic || https://github.com/NeKosmic/ ]
-    **/
-    const users = participants.map((u) => conn.decodeJid(u.id));
+    const isDocumentMessage = m.message.documentMessage || (m.quoted && m.quoted.mtype === 'documentMessage');
+    
+    if (isDocumentMessage) {
+        try {
+            const q = m.quoted ? m.quoted : m || m.text || m.sender;
+            const c = m.quoted ? await m.getQuotedObj() : m.msg || m.text || m.sender;
+            const msg = conn.cMod(m.chat, generateWAMessageFromContent(m.chat, {[m.quoted ? q.mtype : 'extendedTextMessage']: m.quoted ? c.message[q.mtype] : {text: '' || c}}, {quoted: m, userJid: conn.user.id}), text || q.text, conn.user.jid, {mentions: users});
+            await conn.relayMessage(m.chat, msg.message, {messageId: msg.key.id});
+            return;
+        } catch {
+        }
+    }
+    
     const more = String.fromCharCode(8206);
     const masss = more.repeat(850);
     let htextos = text;
@@ -74,7 +77,6 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
     } else {
         await conn.relayMessage(m.chat, {extendedTextMessage: {text: `${masss}\n${htextos}\n`, ...{contextInfo: {mentionedJid: users, externalAdReply: {thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}}}}}, {});
     }
-  }
 };
 
 handler.help = ['hidetag'];
