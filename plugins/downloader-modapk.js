@@ -1,11 +1,10 @@
 import {search, download} from 'aptoide-scraper';
-
+ 
 const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_modapk
-
 
  if (!text) throw `${tradutor.texto1}`;
   try {    
@@ -15,11 +14,15 @@ const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
     await conn.sendMessage(m.chat, {image: {url: data5.icon}, caption: response}, {quoted: m});
  if (data5.size.includes('GB') || data5.size.replace(' MB', '') > 999) {
       return await conn.sendMessage(m.chat, {text: `${tradutor.texto3}`}, {quoted: m});
-    }
-    await conn.sendMessage(m.chat, {document: {url: data5.dllink}, mimetype: 'application/vnd.android.package-archive', fileName: data5.name + '.apk', caption: null}, {quoted: m});
+
+await conn.sendMessage(m.chat, {document: {url: data5.dllink}, mimetype: 'application/vnd.android.package-archive', fileName: data5.name + '.apk', caption: null}, {quoted: m});
+   }
   } catch {
     throw `${tradutor.texto4}`;
-  }    
-};
-handler.command = /^(apk|apkmod|modapk|dapk2|aptoide|aptoidedl)$/i;
-export default handler;
+  }}
+
+handler.help = ['apk']
+handler.tags = ['search']
+handler.command = /^(apk|apkmod|modapk|dapk2|aptoide|aptoidedl)$/i
+
+export default handler
