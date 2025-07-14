@@ -6,7 +6,7 @@ import NodeID3 from 'node-id3';
 import ffmpeg from 'fluent-ffmpeg';
 import axios from 'axios';
 
-const tmpDir = join(process.cwd(), './src/tmp');
+const tmpDir = join(process.cwd(), '../tmp');
 if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
 
 let handler = async (m, { conn, args, usedPrefix }) => {
