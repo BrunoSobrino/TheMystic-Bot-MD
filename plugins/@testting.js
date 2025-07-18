@@ -8,6 +8,7 @@ import axios from 'axios';
 import NodeID3 from 'node-id3';
 import ffmpeg from 'fluent-ffmpeg';
 import { load } from 'cheerio';
+const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = (await import("baileys")).default;
 
 const ytDownloader = createYoutubeDownloader();
 
@@ -85,6 +86,61 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                         }
                     }
                 }, { quoted: m });
+
+const audioPath = join(tmpDir, `${video.videoId}.mp3`);
+writeFileSync(audioPath, taggedBuffer);
+
+const thumbnailMessage = await prepareWAMessageMedia(
+    { image: { url: video.thumbnail } },
+    { upload: conn.waUploadToServer }
+);
+
+const documentMessage = await prepareWAMessageMedia(
+    { 
+        document: {
+            url: audioPath,
+            mimetype: 'audio/mpeg',
+            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+            fileLength: taggedBuffer.length,
+            title: video.title.substring(0, 64), 
+            ptt: false 
+        }
+    },
+    { 
+        upload: conn.waUploadToServer,
+        mediaType: 'document'
+    }
+);
+
+const message = {
+    documentMessage: {
+        ...documentMessage.documentMessage,
+        mimetype: 'audio/mpeg',
+        title: video.title.substring(0, 64),
+        fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+        jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+        mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+        contextInfo: {
+            externalAdReply: {
+                title: video.title.substring(0, 32), 
+                body: "",
+                thumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                sourceUrl: video.url || ""
+            }
+        }
+    }
+};
+
+await conn.relayMessage(
+    m.chat,
+    message,
+    { messageId: m.key.id, quoted: m }
+);
+
+setTimeout(() => {
+    if (existsSync(audioPath)) unlinkSync(audioPath);
+}, 5000);
+               
 
             } catch (audioError) {
                 throw audioError;
