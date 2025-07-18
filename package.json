@@ -14,8 +14,7 @@
     "qr": "node index.js qr",
     "code": "node index.js code",
     "eslint": "eslint .",
-    "eslintfix": "eslint --fix .",
-    "postinstall": "node pipdeps.js"
+    "eslintfix": "eslint --fix ."
   },
   "homepage": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
   "author": {
@@ -36,7 +35,6 @@
     "@green-code/music-track-data": "^2.0.3",
     "@sefinek/google-tts-api": "*",
     "@shineiichijo/marika": "^2.0.6",
-    "@shiroko/module": "github:shiroko-devs/star-module",
     "@vitalets/google-translate-api": "^8.0.0",
     "baileys": "git+ssh://git@github.com/BrunoSobrino/Baileys-Itsukichann.git",
     "acrcloud": "^1.4.0",
