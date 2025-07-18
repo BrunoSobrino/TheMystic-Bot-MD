@@ -120,14 +120,14 @@ const message = {
         fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
         jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
         mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-        contextInfo: {
+        /*contextInfo: {
             externalAdReply: {
                 title: video.title.substring(0, 32), 
                 body: "",
                 thumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
                 sourceUrl: video.url || ""
             }
-        }
+        }*/
     }
 };
 
