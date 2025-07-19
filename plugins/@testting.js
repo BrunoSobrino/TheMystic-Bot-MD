@@ -8,6 +8,7 @@ import axios from 'axios';
 import NodeID3 from 'node-id3';
 import ffmpeg from 'fluent-ffmpeg';
 import { load } from 'cheerio';
+const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
 const ytDownloader = createYoutubeDownloader();
 
@@ -19,10 +20,17 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         const query = args.join(' ');
         if (!query) return m.reply(`*[❗] Ejemplo: ${usedPrefix + command} Beggin You*`);
 
-        const { videos } = await yts(query);
-        if (!videos || videos.length === 0) return m.reply('*[❗] No se encontraron resultados.*');
+        let video;
+        const isYouTubeUrl = isValidYouTubeUrl(query);
+        
+        if (isYouTubeUrl) {
+            video = await getVideoInfoFromUrl(query);
+        } else {
+            const { videos } = await yts(query);
+            if (!videos || videos.length === 0) return m.reply('*[❗] No se encontraron resultados.*');
+            video = videos[0];
+        }
 
-        const video = videos[0];
         const isAudio = command === 'test';
         const mediaUrl = await getY2MetaLink(video.url, isAudio);
         const timestamp = Date.now();
@@ -36,7 +44,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 ]);
 
                 let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
-                if (!lyricsData) {
+                if (!lyricsData && !isYouTubeUrl) {
                     lyricsData = await Genius.searchLyrics(query).catch(() => null);
                 }
 
@@ -48,15 +56,18 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     album: 'YouTube Audio',
                     APIC: thumbnailBuffer,
                     year: new Date().getFullYear(),
-                    unsynchronisedLyrics: {
-                        language: 'spa',
-                        text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
-                    },
                     comment: {
                         language: 'spa',
                         text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nVideo De YouTube: ${video.url}`
                     }
                 };
+
+                if (formattedLyrics) {
+                    tags.unsynchronisedLyrics = {
+                        language: 'spa',
+                        text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
+                    };
+                }
 
                 const taggedBuffer = NodeID3.write(tags, audioBuffer);
 
@@ -75,6 +86,38 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                         }
                     }
                 }, { quoted: m });
+
+const audioPath = join(tmpDir, `${video.videoId}.mp3`);
+writeFileSync(audioPath, taggedBuffer);
+
+const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+const documentMessage = await prepareWAMessageMedia({ 
+        document: {
+            url: audioPath,
+            mimetype: 'audio/mpeg',
+            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+            fileLength: taggedBuffer.length,
+            title: video.title.substring(0, 64), 
+            ptt: false 
+        }
+    }, { upload: conn.waUploadToServer, mediaType: 'document' }
+);
+const mesg = generateWAMessageFromContent(m.chat, {
+    documentMessage: {
+        ...documentMessage.documentMessage,
+        mimetype: 'audio/mpeg',
+        title: video.title.substring(0, 64),
+        fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+        jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+        mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+    }}, { userJid: conn.user.jid, quoted: m})
+                
+await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                
+setTimeout(() => {
+    if (existsSync(audioPath)) unlinkSync(audioPath);
+}, 5000);
+               
 
             } catch (audioError) {
                 throw audioError;
@@ -131,6 +174,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 }, 1000);
             }
         }
+
     } catch (e) {
         console.error(`Error en ${command}:`, e);
         m.reply(`*[❗] Error: ${e.message}*`);
@@ -141,6 +185,67 @@ handler.help = ['test <búsqueda>', 'test2 <búsqueda>'];
 handler.tags = ['downloader'];
 handler.command = /^(test|test2)$/i;
 export default handler;
+
+function isValidYouTubeUrl(url) {
+    const ytRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/)|youtu\.be\/|music\.youtube\.com\/watch\?v=)/i;
+    return ytRegex.test(url) && extractVideoId(url);
+}
+
+async function getVideoInfoFromUrl(url) {
+    try {
+        const videoId = extractVideoId(url);
+        if (!videoId) throw new Error('URL de YouTube no válida');
+        const videoInfo = await yts({ videoId: videoId });
+        
+        if (!videoInfo || !videoInfo.title) {
+            throw new Error('No se pudo obtener información del video');
+        }
+        return {
+            videoId: videoId,
+            url: `https://youtu.be/${videoId}`,
+            title: videoInfo.title,
+            author: {
+                name: videoInfo.author.name
+            },
+            duration: {
+                seconds: videoInfo.seconds,
+                timestamp: videoInfo.timestamp
+            },
+            thumbnail: videoInfo.thumbnail,
+            views: videoInfo.views,
+            ago: videoInfo.ago
+        };
+        
+    } catch (error) {
+        console.error('Error en getVideoInfoFromUrl:', error);
+        return getVideoInfoFromYouTubeAPI(url);
+    }
+}
+
+async function getVideoInfoFromYouTubeAPI(url) {
+    try {
+        const videoId = extractVideoId(url);
+        if (!videoId) throw new Error('ID de video no válido');
+        return {
+            videoId: videoId,
+            url: url,
+            title: 'Video de YouTube', 
+            author: {
+                name: 'Canal de YouTube' 
+            },
+            duration: {
+                seconds: 0,
+                timestamp: '0:00'
+            },
+            thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+            views: 0,
+            ago: 'Desconocido'
+        };
+        
+    } catch (error) {
+        throw new Error(`Error al procesar URL de YouTube: ${error.message}`);
+    }
+}
 
 function sanitizeFileName(name) {
     return name.replace(/[\\/:*?"<>|]/g, '');
@@ -275,6 +380,11 @@ function createYoutubeDownloader() {
         return json;
     }
     return { search, getKey, convert, handleFormat };
+}
+
+function extractVideoId(url) {
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|m\.youtube\.com\/watch\?v=)([^&\n?#]+)/);
+    return match ? match[1] : null;
 }
 
 const Genius = {
