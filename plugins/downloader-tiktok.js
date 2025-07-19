@@ -1,3 +1,4 @@
+import { generateWAMessageFromContent } from "baileys";
 import axios from 'axios';
 import cheerio from 'cheerio';
 import {generateWAMessageFromContent} from "baileys";
@@ -9,10 +10,16 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.descargas_tiktok
 
+const handler = async (m, { conn, text, args, usedPrefix, command }) => {
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
+  const tradutor = _translate.plugins.descargas_tiktok;
 
   if (!text) throw `${tradutor.texto1} _${usedPrefix + command} https://vm.tiktok.com/ZM686Q4ER/_`;
   if (!/(?:https:?\/{2})?(?:w{3}|vm|vt|t)?\.?tiktok.com\/([^\s&]+)/gi.test(text)) throw `${tradutor.texto2} _${usedPrefix + command} https://vm.tiktok.com/ZM686Q4ER/_`;
   const texto = `${tradutor.texto3}`;
+
   // let buttons = [{ buttonText: { displayText: '♫ 𝙰𝚄𝙳𝙸𝙾 ♫' }, buttonId: `${usedPrefix}tomp3` }]
   try {
     const aa = {quoted: m, userJid: conn.user.jid};
@@ -44,18 +51,3 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
  };
 handler.command = /^(tiktok|ttdl|tiktokdl|tiktoknowm|tt|ttnowm|tiktokaudio)$/i;
 export default handler;
-
-async function tiktokdlF(url) {
-  if (!/tiktok/.test(url)) return `${tradutor.texto10} _${usedPrefix + command} https://vm.tiktok.com/ZM686Q4ER/_`;
-  const gettoken = await axios.get('https://tikdown.org/id');
-  const $ = cheerio.load(gettoken.data);
-  const token = $('#download-form > input[type=hidden]:nth-child(2)').attr( 'value' );
-  const param = {url: url, _token: token};
-  const {data} = await axios.request('https://tikdown.org/getAjax?', {method: 'post', data: new URLSearchParams(Object.entries(param)), headers: {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8', 'user-agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36'}});
-  const getdata = cheerio.load(data.html);
-  if (data.status) {
-    return {status: true, thumbnail: getdata('img').attr('src'), video: getdata('div.download-links > div:nth-child(1) > a').attr('href'), audio: getdata('div.download-links > div:nth-child(2) > a').attr('href')};
-  } else {
-    return {status: false};
-  }
-}

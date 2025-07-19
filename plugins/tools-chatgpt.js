@@ -37,3 +37,5 @@ handler.tags = ['tools'];
 handler.command = ['openai', 'chatgpt', 'ia', 'mystic', 'mysticbot'];
 
 export default handler;
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
