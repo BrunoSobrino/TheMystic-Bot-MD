@@ -1,7 +1,5 @@
 // Plugin para test de comandos - powered by @BrunoSobrino
 // Si vas a robar deja creditos o doname >:v
-// Plugin para test de comandos - powered by @BrunoSobrino
-// Si vas a robar deja creditos o doname >:v
 import yts from 'yt-search';
 import { existsSync, mkdirSync, writeFileSync, statSync, unlinkSync, createReadStream, readFileSync } from 'fs';
 import { join } from 'path';
