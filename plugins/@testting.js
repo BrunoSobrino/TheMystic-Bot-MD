@@ -8,7 +8,7 @@ import axios from 'axios';
 import NodeID3 from 'node-id3';
 import ffmpeg from 'fluent-ffmpeg';
 import { load } from 'cheerio';
-const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = (await import("baileys")).default;
+const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
 const ytDownloader = createYoutubeDownloader();
 
@@ -112,7 +112,7 @@ const documentMessage = await prepareWAMessageMedia(
     }
 );
 
-const message = {
+const mesg = generateWAMessageFromContent(m.chat, {
     documentMessage: {
         ...documentMessage.documentMessage,
         mimetype: 'audio/mpeg',
@@ -128,14 +128,11 @@ const message = {
                 sourceUrl: video.url || ""
             }
         }*/
-    }
-};
-
-await conn.relayMessage(
-    m.chat,
-    message,
-    { messageId: m.key.id, quoted: m }
-);
+    }}, { userJid: conn.user.jid, quoted: m})
+                
+await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                
+//await conn.relayMessage(m.chat, message, { messageId: m.key.id, quoted: m });
 
 setTimeout(() => {
     if (existsSync(audioPath)) unlinkSync(audioPath);
