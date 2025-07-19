@@ -31,7 +31,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
             video = videos[0];
         }
 
-        const isAudio = command === 'test';
+        const isAudio = command === 'test' || command === 'play';
         const mediaUrl = await getY2MetaLink(video.url, isAudio);
         const timestamp = Date.now();
         const id = `${video.videoId}_${timestamp}`;
@@ -183,7 +183,7 @@ setTimeout(() => {
 
 handler.help = ['test <búsqueda>', 'test2 <búsqueda>'];
 handler.tags = ['downloader'];
-handler.command = /^(test|test2)$/i;
+handler.command = /^(test|test2|play|play2)$/i;
 export default handler;
 
 function isValidYouTubeUrl(url) {
