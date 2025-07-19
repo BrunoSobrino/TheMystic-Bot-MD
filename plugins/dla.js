@@ -5,7 +5,7 @@
 // Usted puede usarlo, modificarlo y redistribuirlo bajo esa licencia.
 // Licencia completa: https://www.gnu.org/licenses/agpl-3.0.html
 
-mport fs from "fs";
+import fs from "fs";
 import path, { join, basename } from "path";
 import { exec } from "child_process";
 import { promisify } from "util";
