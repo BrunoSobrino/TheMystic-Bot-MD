@@ -15,9 +15,8 @@ const ytDownloader = createYoutubeDownloader();
 const tmpDir = join(process.cwd(), './src/tmp');
 if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
 
-// Límites de tamaño en bytes
-const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024; // 50 MB
-const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024; // 100 MB
+const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024;
+const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024;
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
     try {
@@ -47,7 +46,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     fetch(video.thumbnail).then(res => res.buffer())
                 ]);
 
-                // Verificar el tamaño del archivo de audio
                 const audioSize = audioBuffer.length;
                 const shouldSendAsDocument = audioSize > AUDIO_SIZE_LIMIT;
 
@@ -80,44 +78,47 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 const taggedBuffer = NodeID3.write(tags, audioBuffer);
 
                 if (shouldSendAsDocument) {
-                    // Enviar como documento si supera el límite
-                    const audioPath = join(tmpDir, `${video.videoId}.mp3`);
-                    writeFileSync(audioPath, taggedBuffer);
+                    await m.reply(`*📄 Archivo de audio grande detectado*\n*Tamaño:* ${(audioSize / (1024 * 1024)).toFixed(2)} MB\n*Enviando como documento debido al tamaño (>50 MB)*\n\n⏳ *El archivo puede tardar un momento en enviarse...*`);
 
-                    const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-                    const documentMessage = await prepareWAMessageMedia({ 
-                        document: {
-                            url: audioPath,
-                            mimetype: 'audio/mpeg',
-                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                            fileLength: taggedBuffer.length,
-                            title: video.title.substring(0, 64), 
-                            ptt: false 
+                    setImmediate(async () => {
+                        try {
+                            const audioPath = join(tmpDir, `${video.videoId}.mp3`);
+                            writeFileSync(audioPath, taggedBuffer);
+
+                            const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                            const documentMessage = await prepareWAMessageMedia({ 
+                                document: {
+                                    url: audioPath,
+                                    mimetype: 'audio/mpeg',
+                                    fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                                    fileLength: taggedBuffer.length,
+                                    title: video.title.substring(0, 64), 
+                                    ptt: false 
+                                }
+                            }, { upload: conn.waUploadToServer, mediaType: 'document' });
+
+                            const mesg = generateWAMessageFromContent(m.chat, {
+                                documentMessage: {
+                                    ...documentMessage.documentMessage,
+                                    mimetype: 'audio/mpeg',
+                                    title: video.title.substring(0, 64),
+                                    fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                                    jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                                    mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                                }
+                            }, { userJid: conn.user.jid, quoted: m });
+                            
+                            await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+
+                            setTimeout(() => {
+                                if (existsSync(audioPath)) unlinkSync(audioPath);
+                            }, 5000);
+                        } catch (error) {
+                            console.error('Error enviando documento de audio:', error);
+                            await m.reply('*[❗] Error al enviar el documento de audio*');
                         }
-                    }, { upload: conn.waUploadToServer, mediaType: 'document' });
-
-                    const mesg = generateWAMessageFromContent(m.chat, {
-                        documentMessage: {
-                            ...documentMessage.documentMessage,
-                            mimetype: 'audio/mpeg',
-                            title: video.title.substring(0, 64),
-                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                            jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-                            mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-                        }
-                    }, { userJid: conn.user.jid, quoted: m });
-                    
-                    await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    
-                    // Mensaje informativo sobre el tamaño
-                    await m.reply(`*📄 Archivo enviado como documento*\n*Tamaño:* ${(audioSize / (1024 * 1024)).toFixed(2)} MB\n*Razón:* Supera el límite de 50 MB para audio`);
-
-                    setTimeout(() => {
-                        if (existsSync(audioPath)) unlinkSync(audioPath);
-                    }, 5000);
-
+                    });
                 } else {
-                    // Enviar como audio normal
                     await conn.sendMessage(m.chat, {
                         audio: taggedBuffer,
                         fileName: `${sanitizeFileName(video.title)}.mp3`,
@@ -140,7 +141,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
             }
 
         } else {
-            // Manejo de video
             const rawPath = join(tmpDir, `${id}_raw.mp4`);
             const fixedPath = join(tmpDir, `${id}_fixed.mp4`);
 
@@ -171,7 +171,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 const fixedStats = statSync(fixedPath);
                 if (fixedStats.size === 0) throw new Error("El video reparado está vacío o falló.");
 
-                // Verificar el tamaño del archivo de video
                 const videoSize = fixedStats.size;
                 const shouldSendAsDocument = videoSize > VIDEO_SIZE_LIMIT;
 
@@ -179,36 +178,39 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 const fixedVideoBuffer = readFileSync(fixedPath);
 
                 if (shouldSendAsDocument) {
-                    // Enviar como documento si supera el límite
-                    const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-                    const documentMessage = await prepareWAMessageMedia({ 
-                        document: {
-                            url: fixedPath,
-                            mimetype: 'video/mp4',
-                            fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
-                            fileLength: videoSize,
-                            title: videoMetadata.title.substring(0, 64)
-                        }
-                    }, { upload: conn.waUploadToServer, mediaType: 'document' });
+                    await m.reply(`*📄 Archivo de video grande detectado*\n*Tamaño:* ${(videoSize / (1024 * 1024)).toFixed(2)} MB\n*Enviando como documento debido al tamaño (>100 MB)*\n\n⏳ *El archivo puede tardar un momento en enviarse...*`);
 
-                    const mesg = generateWAMessageFromContent(m.chat, {
-                        documentMessage: {
-                            ...documentMessage.documentMessage,
-                            mimetype: 'video/mp4',
-                            title: videoMetadata.title.substring(0, 64),
-                            fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
-                            jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-                            mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-                        }
-                    }, { userJid: conn.user.jid, quoted: m });
-                    
-                    await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    
-                    // Mensaje informativo sobre el tamaño
-                    await m.reply(`*📄 Archivo enviado como documento*\n*Tamaño:* ${(videoSize / (1024 * 1024)).toFixed(2)} MB\n*Razón:* Supera el límite de 100 MB para video`);
+                    setImmediate(async () => {
+                        try {
+                            const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                            const documentMessage = await prepareWAMessageMedia({ 
+                                document: {
+                                    url: fixedPath,
+                                    mimetype: 'video/mp4',
+                                    fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
+                                    fileLength: videoSize,
+                                    title: videoMetadata.title.substring(0, 64)
+                                }
+                            }, { upload: conn.waUploadToServer, mediaType: 'document' });
 
+                            const mesg = generateWAMessageFromContent(m.chat, {
+                                documentMessage: {
+                                    ...documentMessage.documentMessage,
+                                    mimetype: 'video/mp4',
+                                    title: videoMetadata.title.substring(0, 64),
+                                    fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
+                                    jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                                    mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                                }
+                            }, { userJid: conn.user.jid, quoted: m });
+                            
+                            await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                        } catch (error) {
+                            console.error('Error enviando documento de video:', error);
+                            await m.reply('*[❗] Error al enviar el documento de video*');
+                        }
+                    });
                 } else {
-                    // Enviar como video normal
                     await conn.sendMessage(m.chat, { 
                         video: fixedVideoBuffer, 
                         caption: caption, 
@@ -466,7 +468,7 @@ const Genius = {
             lyrics = lyrics.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '').trim();
 
             return {
-                title: searchRes.data.response.sections[0].hits[0].results.title,
+                title: searchRes.data.response.sections[0].hits[0].result.title,
                 artist: searchRes.data.response.sections[0].hits[0].result.primary_artist.name,
                 url: lyricsUrl,
                 lyrics: lyrics
