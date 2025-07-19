@@ -1,5 +1,7 @@
 // Plugin para test de comandos - powered by @BrunoSobrino
 // Si vas a robar deja creditos o doname >:v
+// Plugin para test de comandos - powered by @BrunoSobrino
+// Si vas a robar deja creditos o doname >:v
 import yts from 'yt-search';
 import { existsSync, mkdirSync, writeFileSync, statSync, unlinkSync, createReadStream, readFileSync } from 'fs';
 import { join } from 'path';
@@ -14,6 +16,10 @@ const ytDownloader = createYoutubeDownloader();
 
 const tmpDir = join(process.cwd(), './src/tmp');
 if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
+
+// Límites de tamaño en bytes
+const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024; // 50 MB
+const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024; // 100 MB
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
     try {
@@ -43,6 +49,10 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     fetch(video.thumbnail).then(res => res.buffer())
                 ]);
 
+                // Verificar el tamaño del archivo de audio
+                const audioSize = audioBuffer.length;
+                const shouldSendAsDocument = audioSize > AUDIO_SIZE_LIMIT;
+
                 let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
                 if (!lyricsData && !isYouTubeUrl) {
                     lyricsData = await Genius.searchLyrics(query).catch(() => null);
@@ -71,59 +81,68 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
                 const taggedBuffer = NodeID3.write(tags, audioBuffer);
 
-                await conn.sendMessage(m.chat, {
-                    audio: taggedBuffer,
-                    fileName: `${sanitizeFileName(video.title)}.mp3`,
-                    mimetype: 'audio/mpeg',
-                    contextInfo: {
-                        externalAdReply: {
-                            title: video.title,
-                            body: `${video.author.name}`,
-                            thumbnailUrl: video.thumbnail,
-                            sourceUrl: video.url,
-                            mediaType: 1,
-                            renderLargerThumbnail: true
+                if (shouldSendAsDocument) {
+                    // Enviar como documento si supera el límite
+                    const audioPath = join(tmpDir, `${video.videoId}.mp3`);
+                    writeFileSync(audioPath, taggedBuffer);
+
+                    const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                    const documentMessage = await prepareWAMessageMedia({ 
+                        document: {
+                            url: audioPath,
+                            mimetype: 'audio/mpeg',
+                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                            fileLength: taggedBuffer.length,
+                            title: video.title.substring(0, 64), 
+                            ptt: false 
                         }
-                    }
-                }, { quoted: m });
+                    }, { upload: conn.waUploadToServer, mediaType: 'document' });
 
-const audioPath = join(tmpDir, `${video.videoId}.mp3`);
-writeFileSync(audioPath, taggedBuffer);
+                    const mesg = generateWAMessageFromContent(m.chat, {
+                        documentMessage: {
+                            ...documentMessage.documentMessage,
+                            mimetype: 'audio/mpeg',
+                            title: video.title.substring(0, 64),
+                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                            jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                            mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                        }
+                    }, { userJid: conn.user.jid, quoted: m });
+                    
+                    await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                    
+                    // Mensaje informativo sobre el tamaño
+                    await m.reply(`*📄 Archivo enviado como documento*\n*Tamaño:* ${(audioSize / (1024 * 1024)).toFixed(2)} MB\n*Razón:* Supera el límite de 50 MB para audio`);
 
-const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-const documentMessage = await prepareWAMessageMedia({ 
-        document: {
-            url: audioPath,
-            mimetype: 'audio/mpeg',
-            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-            fileLength: taggedBuffer.length,
-            title: video.title.substring(0, 64), 
-            ptt: false 
-        }
-    }, { upload: conn.waUploadToServer, mediaType: 'document' }
-);
-const mesg = generateWAMessageFromContent(m.chat, {
-    documentMessage: {
-        ...documentMessage.documentMessage,
-        mimetype: 'audio/mpeg',
-        title: video.title.substring(0, 64),
-        fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-        jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-        mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-    }}, { userJid: conn.user.jid, quoted: m})
-                
-await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                
-setTimeout(() => {
-    if (existsSync(audioPath)) unlinkSync(audioPath);
-}, 5000);
-               
+                    setTimeout(() => {
+                        if (existsSync(audioPath)) unlinkSync(audioPath);
+                    }, 5000);
+
+                } else {
+                    // Enviar como audio normal
+                    await conn.sendMessage(m.chat, {
+                        audio: taggedBuffer,
+                        fileName: `${sanitizeFileName(video.title)}.mp3`,
+                        mimetype: 'audio/mpeg',
+                        contextInfo: {
+                            externalAdReply: {
+                                title: video.title,
+                                body: `${video.author.name}`,
+                                thumbnailUrl: video.thumbnail,
+                                sourceUrl: video.url,
+                                mediaType: 1,
+                                renderLargerThumbnail: true
+                            }
+                        }
+                    }, { quoted: m });
+                }
 
             } catch (audioError) {
                 throw audioError;
             }
 
         } else {
+            // Manejo de video
             const rawPath = join(tmpDir, `${id}_raw.mp4`);
             const fixedPath = join(tmpDir, `${id}_fixed.mp4`);
 
@@ -154,10 +173,51 @@ setTimeout(() => {
                 const fixedStats = statSync(fixedPath);
                 if (fixedStats.size === 0) throw new Error("El video reparado está vacío o falló.");
 
+                // Verificar el tamaño del archivo de video
+                const videoSize = fixedStats.size;
+                const shouldSendAsDocument = videoSize > VIDEO_SIZE_LIMIT;
+
                 const caption = `*${videoMetadata.title}*`;
                 const fixedVideoBuffer = readFileSync(fixedPath);
-                
-                await conn.sendMessage(m.chat, { video: fixedVideoBuffer, caption: caption, mimetype: 'video/mp4', fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` }, { quoted: m });
+
+                if (shouldSendAsDocument) {
+                    // Enviar como documento si supera el límite
+                    const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                    const documentMessage = await prepareWAMessageMedia({ 
+                        document: {
+                            url: fixedPath,
+                            mimetype: 'video/mp4',
+                            fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
+                            fileLength: videoSize,
+                            title: videoMetadata.title.substring(0, 64)
+                        }
+                    }, { upload: conn.waUploadToServer, mediaType: 'document' });
+
+                    const mesg = generateWAMessageFromContent(m.chat, {
+                        documentMessage: {
+                            ...documentMessage.documentMessage,
+                            mimetype: 'video/mp4',
+                            title: videoMetadata.title.substring(0, 64),
+                            fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
+                            jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                            mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                        }
+                    }, { userJid: conn.user.jid, quoted: m });
+                    
+                    await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                    
+                    // Mensaje informativo sobre el tamaño
+                    await m.reply(`*📄 Archivo enviado como documento*\n*Tamaño:* ${(videoSize / (1024 * 1024)).toFixed(2)} MB\n*Razón:* Supera el límite de 100 MB para video`);
+
+                } else {
+                    // Enviar como video normal
+                    await conn.sendMessage(m.chat, { 
+                        video: fixedVideoBuffer, 
+                        caption: caption, 
+                        mimetype: 'video/mp4', 
+                        fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` 
+                    }, { quoted: m });
+                }
 
             } catch (ffmpegError) {
                 throw new Error(`Al procesar el video: ${ffmpegError.message}`);
@@ -408,13 +468,13 @@ const Genius = {
             lyrics = lyrics.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '').trim();
 
             return {
-                title: searchRes.data.response.sections[0].hits[0].result.title,
+                title: searchRes.data.response.sections[0].hits[0].results.title,
                 artist: searchRes.data.response.sections[0].hits[0].result.primary_artist.name,
                 url: lyricsUrl,
                 lyrics: lyrics
             };
 
         } catch (error) { 
-      }
+        }
     }
 };
