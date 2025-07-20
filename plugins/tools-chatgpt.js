@@ -2,12 +2,13 @@ import axios from 'axios';
 import fs from 'fs';
 
 let handler = async (m, { conn, args, usedPrefix, command, text }) => {
-    try {
+    
         const datas = global;
         const idioma = datas.db.data.users[m.sender]?.language || global.defaultLenguaje;
         const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
         const tradutor = _translate.plugins.herramientas.chatgpt;
-        
+    
+    try {
         if (!text) return m.reply(tradutor.texto1[0]);
         
         let mediax = null;
