@@ -19,6 +19,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
  try {
  const img = await conn.getFile(image);  
  const tuanime = await jadianime(img.data);
+  console.log(tuanime)
  await conn.sendFile(m.chat, tuanime.image_data, 'error.jpg', null, m);
  } catch (e) {
  try {
