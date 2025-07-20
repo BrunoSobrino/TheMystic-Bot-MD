@@ -1,10 +1,12 @@
-import GoogleVideo from 'googlevideo';
-import { createWriteStream, unlink } from 'node:fs';
+import { createWriteStream, unlink, createReadStream } from 'node:fs';
 import { pipeline } from 'stream/promises';
+import { Readable } from 'stream';
 import axios from 'axios';
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
   if (!text) throw `*¡URL de YouTube requerida!*\nEjemplo: ${usedPrefix + command} https://youtu.be/...`;
+  
+  let tempFile = null;
   
   try {
     await m.reply('*🔍 Obteniendo información del video...*');
@@ -18,186 +20,192 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
         'x-rapidapi-host': 'social-download-all-in-one.p.rapidapi.com',
         'Content-Type': 'application/json'
       },
-      data: { url: text }
+      data: { url: text },
+      timeout: 10000
     });
+    
+    console.log('API Response:', JSON.stringify(apiResponse.data, null, 2));
     
     const { medias, source, title, author, duration } = apiResponse.data;
     if (source !== 'youtube') throw '❌ Solo soportamos YouTube con este método';
     
-    // 2. Obtener la URL directa de googlevideo.com
-    const media = medias.find(m => m.type === 'video') || medias[0];
-    const streamingUrl = media.url;
-    
-    if (!streamingUrl || !streamingUrl.includes('googlevideo.com')) {
-      throw 'La API no devolvió un enlace directo de Google Video válido';
+    if (!medias || medias.length === 0) {
+      throw '❌ No se encontraron medios disponibles para descargar';
     }
     
-    // 3. Configuración del cliente GoogleVideo
-    const client = new GoogleVideo.ServerAbrStream({
-      fetch: async (url, options) => {
-        console.log(`Fetching: ${url}`);
-        const response = await fetch(url, {
-          ...options,
-          headers: {
-            'Referer': 'https://www.youtube.com/',
-            'Origin': 'https://www.youtube.com',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': '*/*',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Connection': 'keep-alive',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'cross-site',
-            ...options?.headers
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        return response;
+    // 2. Buscar el mejor formato de video
+    let selectedMedia;
+    
+    // Prioridad: video > video con audio > cualquier formato
+    selectedMedia = medias.find(m => m.type === 'video' && m.hasAudio === false) ||
+                   medias.find(m => m.type === 'video') ||
+                   medias.find(m => m.url && m.url.includes('googlevideo')) ||
+                   medias[0];
+    
+    if (!selectedMedia || !selectedMedia.url) {
+      throw '❌ No se encontró URL de descarga válida';
+    }
+    
+    console.log('Selected media:', selectedMedia);
+    
+    const downloadUrl = selectedMedia.url;
+    
+    await m.reply('*📥 Descargando video...*');
+    
+    // 3. Descargar directamente usando axios con stream
+    tempFile = `temp_video_${Date.now()}.mp4`;
+    
+    const downloadResponse = await axios({
+      method: 'GET',
+      url: downloadUrl,
+      responseType: 'stream',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://www.youtube.com/',
+        'Accept': 'video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'identity',
+        'Range': 'bytes=0-',
+        'Connection': 'keep-alive'
       },
-      serverAbrStreamingUrl: streamingUrl,
-      // Configuración mínima requerida
-      videoPlaybackUstreamerConfig: undefined, // Usar configuración por defecto
-      durationMs: duration ? duration * 1000 : undefined
+      timeout: 60000, // 60 segundos
+      maxRedirects: 5
     });
     
-    // 4. Configurar el procesamiento de chunks
-    const tempFile = `temp_${Date.now()}.mp4`;
-    const writeStream = createWriteStream(tempFile);
-    const videoChunks = [];
-    
-    // Event listeners para el cliente
-    client.on('data', (streamData) => {
-      try {
-        console.log('Recibidos datos del stream');
-        
-        // Procesar los formatos inicializados
-        if (streamData.initializedFormats) {
-          for (const formatData of streamData.initializedFormats) {
-            if (formatData.mediaChunks) {
-              for (const chunk of formatData.mediaChunks) {
-                if (chunk && chunk.length > 0) {
-                  videoChunks.push(chunk);
-                  writeStream.write(chunk);
-                }
-              }
-            }
-          }
-        }
-      } catch (chunkError) {
-        console.error('Error procesando chunks:', chunkError);
-      }
-    });
-    
-    client.on('error', (error) => {
-      console.error('Error en el cliente GoogleVideo:', error);
-      writeStream.destroy();
-    });
-    
-    // 5. Inicializar y procesar el stream
-    await new Promise((resolve, reject) => {
-      let resolved = false;
-      
-      const cleanup = () => {
-        if (!resolved) {
-          resolved = true;
-          writeStream.end();
-        }
-      };
-      
-      client.on('end', () => {
-        console.log('Stream terminado');
-        cleanup();
-        resolve();
-      });
-      
-      client.on('error', (error) => {
-        console.error('Error del cliente:', error);
-        cleanup();
-        reject(error);
-      });
-      
-      // Timeout de seguridad
-      const timeout = setTimeout(() => {
-        if (!resolved) {
-          console.log('Timeout alcanzado');
-          cleanup();
-          resolve(); // Continuar con lo que se haya descargado
-        }
-      }, 30000); // 30 segundos
-      
-      try {
-        // Inicializar con configuración mínima
-        client.init({
-          audioFormats: [], // Sin audio por ahora
-          videoFormats: [{
-            itag: media.itag || 18, // Formato básico MP4
-            width: media.width || 640,
-            height: media.height || 360,
-            fps: media.fps || 30
-          }],
-          clientAbrState: {
-            playerTimeMs: 0,
-            enabledTrackTypesBitfield: 1 // Habilitar video
-          }
-        });
-        
-        clearTimeout(timeout);
-      } catch (initError) {
-        clearTimeout(timeout);
-        console.error('Error en init:', initError);
-        reject(initError);
-      }
-    });
-    
-    // 6. Verificar que se descargó contenido
-    if (videoChunks.length === 0) {
-      unlink(tempFile, () => {});
-      throw 'No se pudo descargar contenido del video';
+    if (!downloadResponse.data) {
+      throw '❌ No se pudo obtener el stream del video';
     }
     
-    console.log(`Descarga completada: ${videoChunks.length} chunks, archivo: ${tempFile}`);
+    // 4. Crear stream de escritura
+    const writeStream = createWriteStream(tempFile);
+    let downloadedBytes = 0;
     
-    // 7. Enviar el video
+    // Monitorear progreso
+    downloadResponse.data.on('data', (chunk) => {
+      downloadedBytes += chunk.length;
+      // Log cada MB descargado
+      if (downloadedBytes % (1024 * 1024) === 0) {
+        console.log(`Descargados: ${Math.round(downloadedBytes / (1024 * 1024))}MB`);
+      }
+    });
+    
+    // 5. Pipeline para descargar
+    await pipeline(downloadResponse.data, writeStream);
+    
+    console.log(`Descarga completada: ${downloadedBytes} bytes`);
+    
+    // Verificar que el archivo se descargó correctamente
+    if (downloadedBytes < 1000) { // Menos de 1KB
+      throw '❌ El archivo descargado es demasiado pequeño, posiblemente corrupto';
+    }
+    
+    await m.reply('*📤 Enviando video...*');
+    
+    // 6. Enviar el video
     await conn.sendMessage(m.chat, {
       video: { url: `file://${process.cwd()}/${tempFile}` },
-      caption: `*${title || 'Video de YouTube'}*\n⏱ ${duration ? `${duration}s` : 'Duración desconocida'} | 👤 ${author || 'Autor desconocido'}`,
-      mimetype: 'video/mp4'
+      caption: `*${title || 'Video de YouTube'}*\n⏱ ${duration ? `${duration}s` : ''} | 👤 ${author || ''}\n📏 ${Math.round(downloadedBytes / (1024 * 1024))}MB`,
+      mimetype: selectedMedia.extension === 'webm' ? 'video/webm' : 'video/mp4'
     }, { quoted: m });
     
-    // 8. Limpieza
-    setTimeout(() => {
-      unlink(tempFile, (err) => {
-        if (err) console.error('Error eliminando archivo temporal:', err);
-        else console.log('Archivo temporal eliminado:', tempFile);
-      });
-    }, 5000); // Esperar 5 segundos antes de eliminar
+    console.log('Video enviado exitosamente');
     
   } catch (error) {
-    console.error('Error en ytdl:', error);
+    console.error('Error completo:', error);
     
     // Mensajes de error más específicos
-    let errorMessage = 'Falló la descarga';
+    let errorMessage = 'Falló la descarga del video';
     
-    if (error.message?.includes('base64')) {
-      errorMessage = 'Error de formato en los datos del video';
-    } else if (error.message?.includes('HTTP')) {
-      errorMessage = 'Error de conexión con el servidor de video';
-    } else if (error.message?.includes('googlevideo')) {
-      errorMessage = 'URL de video no válida o expirada';
+    if (error.response?.status) {
+      errorMessage = `Error HTTP ${error.response.status}: ${error.response.statusText || 'Error del servidor'}`;
+    } else if (error.code === 'ECONNABORTED') {
+      errorMessage = 'Timeout: La descarga tomó demasiado tiempo';
+    } else if (error.code === 'ENOTFOUND') {
+      errorMessage = 'Error de conexión: No se pudo conectar al servidor';
+    } else if (error.message?.includes('API')) {
+      errorMessage = 'Error en la API de YouTube';
     } else if (error.message) {
       errorMessage = error.message;
     }
     
     throw `*Error:* ${errorMessage}`;
+    
+  } finally {
+    // 7. Limpieza garantizada
+    if (tempFile) {
+      setTimeout(() => {
+        unlink(tempFile, (err) => {
+          if (err && err.code !== 'ENOENT') {
+            console.error('Error eliminando archivo temporal:', err);
+          } else {
+            console.log('Archivo temporal eliminado:', tempFile);
+          }
+        });
+      }, 10000); // Esperar 10 segundos antes de eliminar
+    }
+  }
+};
+
+// Versión alternativa usando ytdl-core como fallback
+const handlerYTDL = async (m, {conn, text, usedPrefix, command}) => {
+  if (!text) throw `*¡URL de YouTube requerida!*\nEjemplo: ${usedPrefix + command} https://youtu.be/...`;
+  
+  try {
+    // Importar ytdl-core dinámicamente
+    const ytdl = await import('ytdl-core').catch(() => null);
+    
+    if (!ytdl) {
+      throw 'ytdl-core no está instalado. Instala con: npm install ytdl-core';
+    }
+    
+    await m.reply('*🔍 Obteniendo información del video (método alternativo)...*');
+    
+    if (!ytdl.validateURL(text)) {
+      throw '❌ URL de YouTube no válida';
+    }
+    
+    const info = await ytdl.getInfo(text);
+    const title = info.videoDetails.title;
+    const author = info.videoDetails.author.name;
+    const duration = info.videoDetails.lengthSeconds;
+    
+    // Buscar formato apropiado
+    const format = ytdl.chooseFormat(info.formats, {
+      quality: 'lowest',
+      filter: 'videoandaudio'
+    });
+    
+    if (!format) {
+      throw '❌ No se encontró formato compatible';
+    }
+    
+    await m.reply('*📥 Descargando video (método alternativo)...*');
+    
+    const tempFile = `temp_ytdl_${Date.now()}.mp4`;
+    const stream = ytdl(text, { format: format });
+    const writeStream = createWriteStream(tempFile);
+    
+    await pipeline(stream, writeStream);
+    
+    await conn.sendMessage(m.chat, {
+      video: { url: `file://${process.cwd()}/${tempFile}` },
+      caption: `*${title}*\n⏱ ${duration}s | 👤 ${author}`,
+      mimetype: 'video/mp4'
+    }, { quoted: m });
+    
+    setTimeout(() => unlink(tempFile, () => {}), 5000);
+    
+  } catch (error) {
+    console.error('Error en ytdl alternativo:', error);
+    throw `*Error (método alternativo):* ${error.message || 'Falló la descarga'}`;
   }
 };
 
 handler.help = ['ytdl <url>'];
 handler.tags = ['downloader'];
 handler.command = ['ytdl', 'youtube'];
+
+// Exportar ambas versiones
+handler.alternative = handlerYTDL;
+
 export default handler;
