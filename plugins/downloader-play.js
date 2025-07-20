@@ -44,7 +44,7 @@ conn.sendMessage(m.chat, { video: { url: downloader }, mimetype: "video/mp4" }, 
 
 handler.help = ['play', 'play2'];
 handler.tags = ['downloader'];
-handler.command = ['play', 'play2'];
+//handler.command = ['play', 'play2'];
 
 export default handler;
 
