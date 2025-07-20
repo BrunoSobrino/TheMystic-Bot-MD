@@ -81,6 +81,7 @@ async function jadianime(image) {
             "method": "POST"
         }).then(res => { 
             let yanz = res.data
+            console.log(yanz)
             resolve(yanz)
         }).catch(err => {
             reject(err)
