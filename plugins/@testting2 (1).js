@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { writeFileSync, existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import CloudScraper from 'cloudscraper.js'; // Nuevo módulo para bypass de CloudFlare
+import { CloudScraper } from 'cloudscraper.js'; 
 import NodeID3 from 'node-id3';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
