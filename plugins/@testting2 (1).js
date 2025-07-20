@@ -84,19 +84,39 @@ handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
 
 async function generateMusic(prompt) {
+    // Generar user agents aleatorios más realistas
+    const userAgents = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0'
+    ];
+    
+    const randomUserAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+    
+    // Generar un sessionId único para simular una sesión real
+    const sessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    
     const headers = {
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'User-Agent': randomUserAgent,
         'Accept': 'application/json, text/plain, */*',
-        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
-        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'DNT': '1',
         'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
         'Sec-Ch-Ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
         'Sec-Ch-Ua-Mobile': '?0',
         'Sec-Ch-Ua-Platform': '"Windows"',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'cross-site',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-Session-Id': sessionId,
         'Referer': 'https://suno.com/',
         'Origin': 'https://suno.com'
     };
@@ -110,61 +130,130 @@ async function generateMusic(prompt) {
     };
 
     try {
+        // Configuración muy avanzada para evadir anti-bots
         const gotOptions = {
-            headers: headers,
             timeout: {
-                request: 60000,
-                response: 60000
+                request: 90000,
+                response: 90000
             },
             retry: {
-                limit: 3,
+                limit: 2,
                 methods: ['GET', 'POST'],
-                statusCodes: [408, 413, 429, 500, 502, 503, 504, 521, 522, 524]
+                statusCodes: [408, 413, 429, 500, 502, 503, 504, 521, 522, 524],
+                calculateDelay: ({computedValue}) => {
+                    return computedValue * 2 + Math.random() * 3000; // Delay exponencial + aleatorio
+                }
             },
             hooks: {
                 beforeRequest: [
-                    options => {
-                        const delay = Math.random() * 1000 + 500; // 500-1500ms
-                        return new Promise(resolve => setTimeout(() => resolve(), delay));
+                    async (options) => {
+                        // Delay inicial más largo para simular carga de página
+                        const delay = Math.random() * 3000 + 2000; // 2-5 segundos
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        
+                        // Rotar headers aleatoriamente
+                        if (Math.random() > 0.5) {
+                            options.headers['X-Forwarded-For'] = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+                        }
+                    }
+                ],
+                beforeRetry: [
+                    async (options) => {
+                        // Delay más largo antes de reintentar
+                        const retryDelay = Math.random() * 5000 + 5000; // 5-10 segundos
+                        await new Promise(resolve => setTimeout(resolve, retryDelay));
+                        
+                        // Cambiar User-Agent en cada retry
+                        options.headers['User-Agent'] = userAgents[Math.floor(Math.random() * userAgents.length)];
                     }
                 ]
             },
             http2: false,
             decompress: true,
             followRedirect: true,
-            maxRedirects: 5,
-            throwHttpErrors: false
+            maxRedirects: 3,
+            throwHttpErrors: false,
+            // Simular conexión más lenta
+            agent: {
+                keepAlive: false
+            }
         };
 
+        // Paso 1: Simular visita a la página principal (opcional)
+        try {
+            await got.get('https://suno.com/', {
+                headers: {
+                    'User-Agent': randomUserAgent,
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'DNT': '1',
+                    'Connection': 'keep-alive',
+                    'Upgrade-Insecure-Requests': '1'
+                },
+                timeout: { request: 15000 },
+                throwHttpErrors: false
+            });
+            
+            // Delay después de "cargar" la página
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000));
+        } catch (e) {
+            // Ignorar errores de la visita inicial
+        }
+
+        // Paso 2: Realizar la petición principal
         const generateResponse = await got.post('https://suno.exomlapi.com/generate', {
             ...gotOptions,
+            headers: headers,
             json: requestData,
             responseType: 'json'
         });
 
-        if (generateResponse.statusCode !== 200) {
-            throw new Error(`HTTP ${generateResponse.statusCode}: ${generateResponse.statusMessage}`);
+        if (generateResponse.statusCode === 403) {
+            throw new Error('Acceso bloqueado por sistemas anti-bot. Intenta más tarde.');
+        } else if (generateResponse.statusCode === 429) {
+            throw new Error('Demasiadas peticiones. Espera un momento antes de intentar nuevamente.');
+        } else if (generateResponse.statusCode !== 200) {
+            throw new Error(`HTTP ${generateResponse.statusCode}: ${generateResponse.statusMessage || 'Error desconocido'}`);
         }
 
-        if (generateResponse.body.status !== 'initiated') {
+        if (!generateResponse.body || generateResponse.body.status !== 'initiated') {
             throw new Error('No se pudo iniciar la generación de la canción');
         }
 
         const taskId = generateResponse.body.taskId;
         const token = generateResponse.body.token;
 
-        async function checkStatus() {
+        async function checkStatus(attempt = 1) {
             const statusData = { taskId: taskId, token: token };
             
-            await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 2000)); // 2-4 segundos
+            // Delay más largo y variable entre verificaciones
+            const baseDelay = Math.random() * 4000 + 3000; // 3-7 segundos
+            const exponentialDelay = attempt * 1000; // Incrementa con cada intento
+            await new Promise(resolve => setTimeout(resolve, baseDelay + exponentialDelay));
             
             const statusResponse = await got.post('https://suno.exomlapi.com/check-status', {
                 ...gotOptions,
+                headers: {
+                    ...headers,
+                    'X-Request-ID': Math.random().toString(36).substring(2, 15),
+                    'X-Attempt': attempt.toString()
+                },
                 json: statusData,
                 responseType: 'json'
             });
 
-            if (statusResponse.statusCode !== 200) {
+            if (statusResponse.statusCode === 403) {
+                throw new Error('Acceso bloqueado durante verificación de estado.');
+            } else if (statusResponse.statusCode === 429) {
+                // Esperar más tiempo si hay rate limiting
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                return checkStatus(attempt + 1);
+            } else if (statusResponse.statusCode !== 200) {
+                if (attempt < 5) {
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                    return checkStatus(attempt + 1);
+                }
                 throw new Error(`Error al verificar estado: HTTP ${statusResponse.statusCode}`);
             }
 
@@ -175,22 +264,31 @@ async function generateMusic(prompt) {
             if (statusResponse.body.status === 'error') {
                 throw new Error('Error al generar la canción: ' + (statusResponse.body.message || 'Error desconocido'));
             }
-            return checkStatus();
+
+            // Limitar intentos para evitar bucles infinitos
+            if (attempt > 20) {
+                throw new Error('Tiempo de espera agotado para la generación de música');
+            }
+
+            // Continuar verificando el estado
+            return checkStatus(attempt + 1);
         }
 
         return await checkStatus();
 
     } catch (error) {
         console.error('Error en generateMusic:', error);
-        if (error.response?.statusCode === 403) {
-            throw new Error('Acceso bloqueado por sistemas anti-bot. Intenta más tarde.');
-        } else if (error.response?.statusCode === 429) {
-            throw new Error('Demasiadas peticiones. Espera un momento antes de intentar nuevamente.');
+        
+        // Manejo específico de errores
+        if (error.message.includes('403') || error.message.includes('Forbidden')) {
+            throw new Error('Servicio temporalmente no disponible. El proveedor ha bloqueado el acceso.');
+        } else if (error.message.includes('429') || error.message.includes('Too Many Requests')) {
+            throw new Error('Demasiadas peticiones. Espera 5 minutos antes de intentar nuevamente.');
         } else if (error.code === 'ETIMEDOUT' || error.code === 'ECONNRESET') {
             throw new Error('Timeout de conexión. El servicio puede estar ocupado.');
         }
         
-        throw new Error(`Error al conectar con el servicio de música: ${error.message}`);
+        throw new Error(`Error al generar música: ${error.message}`);
     }
 }
 
