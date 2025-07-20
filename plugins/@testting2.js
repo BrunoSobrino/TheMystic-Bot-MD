@@ -58,6 +58,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     if (isYouTube) {
       // Para YouTube: enviar el mejor video y el mejor audio por separado
       if (bestVideo) {
+        m.reply(bestVideo.url)
         await conn.sendFile(m.chat, bestVideo.url, 'video.mp4', 
           `${caption}\n📹 *Video:* ${bestVideo.label || bestVideo.quality}`, m);
       }
