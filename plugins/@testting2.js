@@ -6,13 +6,35 @@ import HttpsProxyAgent from 'https-proxy-agent';
 // Función para obtener proxy gratuito
 async function getFreeProxy() {
   try {
-    const res = await axios.get('https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=1000&country=&ssl=all&anonymity=elite', {
+    // Opción 1: Geonode.com
+    const res = await axios.get('https://proxylist.geonode.com/api/proxy-list?limit=50&page=1&sort_by=lastChecked&sort_type=desc&protocols=http', {
+      timeout: 5000
+    });
+    
+    const proxies = res.data.data.map(p => `${p.ip}:${p.port}`);
+    return proxies[0]; // toma el primero
+    
+    // Opción 2: Proxyspace
+    /*
+    const res = await axios.get('https://www.proxyspace.pro/http.txt', {
       timeout: 5000
     });
     const list = res.data.split('\n').filter(Boolean);
-    return list[0]; // toma el primero funcional
+    return list[0];
+    */
+    
+    // Opción 3: FreeProxyList
+    /*
+    const res = await axios.get('https://free-proxy-list.net/', {
+      timeout: 5000
+    });
+    const html = res.data;
+    const matches = html.match(/\d+\.\d+\.\d+\.\d+:\d+/g);
+    return matches ? matches[0] : null;
+    */
+    
   } catch (error) {
-    console.log('Error obteniendo proxy, continuando sin proxy');
+    console.log('Error obteniendo proxy, continuando sin proxy:', error.message);
     return null;
   }
 }
