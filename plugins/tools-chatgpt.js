@@ -64,7 +64,7 @@ let handler = async (m, { conn, args, usedPrefix, command, text }) => {
     }
 };
 
-handler.help = ['testia <texto> (opcional: responder a imagen)'];
+handler.help = ['openai <texto> : IA de texto', 'imgia <texto> : Analiza imágenes'];
 handler.tags = ['ai'];
-handler.command = /^(testia)$/i;
+handler.command = /^(openai|chatgpt|ia|mystic|mysticbot|imgia)$/i;
 export default handler;
