@@ -1,8 +1,7 @@
 import { join } from 'path';
 import { writeFileSync, existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import axios from 'axios';
-import fetch from 'node-fetch';
+import got from 'got';
 import NodeID3 from 'node-id3';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
@@ -18,8 +17,8 @@ const handler = async (m, { conn, args }) => {
         const song = generatedSongs[0];
         
         const [audioBuffer, thumbnailBuffer] = await Promise.all([
-            fetch(song.audio_url).then(res => res.buffer()),
-            fetch(song.image_url).then(res => res.buffer())
+            got(song.audio_url).buffer(),
+            got(song.image_url).buffer()
         ]);
                
         const tags = {
@@ -87,9 +86,21 @@ export default handler;
 async function generateMusic(prompt) {
     const headers = {
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-        'Referer': 'https://suno.com/'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Sec-Ch-Ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'Sec-Ch-Ua-Platform': '"Windows"',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'cross-site',
+        'Referer': 'https://suno.com/',
+        'Origin': 'https://suno.com'
     };
+
     const requestData = {
         prompt: prompt,
         title: prompt.substring(0, 50),
@@ -97,24 +108,88 @@ async function generateMusic(prompt) {
         customMode: false,
         instrumental: false
     };
+
     try {
-        const generateResponse = await axios.post(
-            'https://suno.exomlapi.com/generate',
-            requestData, { headers: headers, timeout: 60000 });
-        if (generateResponse.data.status !== 'initiated') throw new Error('No se pudo iniciar la generación de la canción');
-        const taskId = generateResponse.data.taskId;
-        const token = generateResponse.data.token;
+        const gotOptions = {
+            headers: headers,
+            timeout: {
+                request: 60000,
+                response: 60000
+            },
+            retry: {
+                limit: 3,
+                methods: ['GET', 'POST'],
+                statusCodes: [408, 413, 429, 500, 502, 503, 504, 521, 522, 524]
+            },
+            hooks: {
+                beforeRequest: [
+                    options => {
+                        const delay = Math.random() * 1000 + 500; // 500-1500ms
+                        return new Promise(resolve => setTimeout(() => resolve(), delay));
+                    }
+                ]
+            },
+            http2: false,
+            decompress: true,
+            followRedirect: true,
+            maxRedirects: 5,
+            throwHttpErrors: false
+        };
+
+        const generateResponse = await got.post('https://suno.exomlapi.com/generate', {
+            ...gotOptions,
+            json: requestData,
+            responseType: 'json'
+        });
+
+        if (generateResponse.statusCode !== 200) {
+            throw new Error(`HTTP ${generateResponse.statusCode}: ${generateResponse.statusMessage}`);
+        }
+
+        if (generateResponse.body.status !== 'initiated') {
+            throw new Error('No se pudo iniciar la generación de la canción');
+        }
+
+        const taskId = generateResponse.body.taskId;
+        const token = generateResponse.body.token;
+
         async function checkStatus() {
             const statusData = { taskId: taskId, token: token };
-            const statusResponse = await axios.post('https://suno.exomlapi.com/check-status', statusData, { headers: headers, timeout: 30000 });
-            if (statusResponse.data.status === 'TEXT_SUCCESS') return statusResponse.data.results;
-            if (statusResponse.data.status === 'error') throw new Error('Error al generar la canción: ' + (statusResponse.data.message || 'Error desconocido'));
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 2000)); // 2-4 segundos
+            
+            const statusResponse = await got.post('https://suno.exomlapi.com/check-status', {
+                ...gotOptions,
+                json: statusData,
+                responseType: 'json'
+            });
+
+            if (statusResponse.statusCode !== 200) {
+                throw new Error(`Error al verificar estado: HTTP ${statusResponse.statusCode}`);
+            }
+
+            if (statusResponse.body.status === 'TEXT_SUCCESS') {
+                return statusResponse.body.results;
+            }
+
+            if (statusResponse.body.status === 'error') {
+                throw new Error('Error al generar la canción: ' + (statusResponse.body.message || 'Error desconocido'));
+            }
             return checkStatus();
         }
+
         return await checkStatus();
+
     } catch (error) {
         console.error('Error en generateMusic:', error);
+        if (error.response?.statusCode === 403) {
+            throw new Error('Acceso bloqueado por sistemas anti-bot. Intenta más tarde.');
+        } else if (error.response?.statusCode === 429) {
+            throw new Error('Demasiadas peticiones. Espera un momento antes de intentar nuevamente.');
+        } else if (error.code === 'ETIMEDOUT' || error.code === 'ECONNRESET') {
+            throw new Error('Timeout de conexión. El servicio puede estar ocupado.');
+        }
+        
         throw new Error(`Error al conectar con el servicio de música: ${error.message}`);
     }
 }
