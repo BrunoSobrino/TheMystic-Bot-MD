@@ -18,7 +18,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
  const image = await uploadImage(data);
  try {
  const img = await conn.getFile(image);  
- const tuanime = await toanime(img.data);
+ const tuanime = await jadianime(img.data);
  await conn.sendFile(m.chat, tuanime.image_data, 'error.jpg', null, m);
  } catch (e) {
  try {
@@ -51,38 +51,6 @@ handler.tags = ['converter'];
 handler.command = ['jadianime', 'toanime'];
 
 export default handler;
-
-async function toanime(input) {
-  try {
-    const baseUrl = 'https://tools.betabotz.eu.org';  
-    const image = await Jimp.read(input);
-    const buffer = await new Promise((resolve, reject) => {
-      image.getBuffer(Jimp.MIME_JPEG, (err, buf) => {
-        if (err) {
-          reject('Terjadi Error Saat Mengambil Data......');
-        } else {
-          resolve(buf);
-        }
-      });
-    });
-    const form = new FormData();
-    form.append('image', buffer, { filename: 'toanime.jpg' });
-    const { data } = await axios.post(`${baseUrl}/ai/toanime`, form, {
-      headers: {
-        ...form.getHeaders(),
-        'accept': 'application/json',
-      },
-    });
-    const res = {
-      image_data: data.result,
-      image_size: data.size
-    };
-    return res;
-  } catch (error) {
-    console.error('Identificación fallida:', error);
-    return 'Identificación fallida';
-  }
-}
 
 async function jadianime(image) {
     return new Promise(async(resolve, reject) => {
