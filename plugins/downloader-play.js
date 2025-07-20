@@ -1,5 +1,4 @@
 import yts from 'yt-search';
-import tools from '@shiroko/module';
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 const datas = global;
