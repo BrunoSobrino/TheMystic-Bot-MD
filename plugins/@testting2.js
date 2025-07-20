@@ -24,7 +24,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     const result = response.data;
 
     if (result.data?.media) {
-      const media = result.data.media;
+      const media = result.data.medias;
       
       if (media.type === 'video') {
         await conn.sendFile(m.chat, media.url, 'social.mp4', '*Video descargado*', m);
