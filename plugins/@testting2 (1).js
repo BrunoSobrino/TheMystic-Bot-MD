@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { writeFileSync, existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import got from 'cloudflare-scraper'; // Using cloudflare-scraper instead of regular got
+import got from 'got';
 import NodeID3 from 'node-id3';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
@@ -16,7 +16,7 @@ const handler = async (m, { conn, args }) => {
         
         const song = generatedSongs[0];
         
-        // Use cloudflare-scraper for downloading files too
+        // Use regular got for downloading files
         const [audioBuffer, thumbnailBuffer] = await Promise.all([
             got(song.audio_url).buffer(),
             got(song.image_url).buffer()
@@ -97,41 +97,136 @@ async function generateMusic(prompt) {
     };
 
     try {
-        console.log('Iniciando bypass de Cloudflare con cloudflare-scraper...');
+        console.log('Iniciando generación de música...');
         
-        // Using cloudflare-scraper with modern async/await syntax
-        const generateResponse = await got.post('https://suno.exomlapi.com/generate', {
-            json: requestData,
-            headers: {
-                'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-                'Accept': 'application/json, text/plain, */*',
-                'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'DNT': '1',
-                'Connection': 'keep-alive',
-                'Sec-Ch-Ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-                'Sec-Ch-Ua-Mobile': '?0',
-                'Sec-Ch-Ua-Platform': '"Windows"',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'cross-site',
-                'Cache-Control': 'no-cache',
-                'Referer': 'https://suno.com/',
-                'Origin': 'https://suno.com'
-            },
-            timeout: {
-                request: 90000
-            },
-            retry: {
-                limit: 2,
-                methods: ['POST']
+        // Lista de User Agents rotativos
+        const userAgents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:122.0) Gecko/20100101 Firefox/122.0'
+        ];
+        
+        const randomUserAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+        const randomIP = generateRandomIP();
+        
+        // Configuración de headers optimizada
+        const baseHeaders = {
+            'Content-Type': 'application/json',
+            'User-Agent': randomUserAgent,
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Sec-Ch-Ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'Sec-Ch-Ua-Platform': '"Linux"',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'cross-site',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Referer': 'https://suno.com/',
+            'Origin': 'https://suno.com',
+            'X-Forwarded-For': randomIP,
+            'X-Real-IP': randomIP,
+            'X-Originating-IP': randomIP
+        };
+
+        // Intentar diferentes estrategias
+        let generateResponse;
+        
+        // Estrategia 1: got con configuración básica
+        try {
+            console.log('Intentando con got básico...');
+            generateResponse = await got.post('https://suno.exomlapi.com/generate', {
+                json: requestData,
+                headers: baseHeaders,
+                timeout: {
+                    request: 30000,
+                    connect: 10000
+                },
+                retry: {
+                    limit: 2,
+                    methods: ['POST']
+                },
+                responseType: 'json',
+                followRedirect: true,
+                maxRedirects: 3,
+                dnsCache: true,
+                keepAlive: true
+            });
+        } catch (error1) {
+            console.log('Got básico falló:', error1.message);
+            
+            // Estrategia 2: got con proxy simulado
+            try {
+                console.log('Intentando con headers extendidos...');
+                await sleep(Math.random() * 2000 + 1000); // Delay aleatorio
+                
+                generateResponse = await got.post('https://suno.exomlapi.com/generate', {
+                    json: requestData,
+                    headers: {
+                        ...baseHeaders,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-Custom-Header': generateRandomString(),
+                        'X-Client-Version': '1.0.0'
+                    },
+                    timeout: {
+                        request: 45000,
+                        connect: 15000
+                    },
+                    retry: {
+                        limit: 3,
+                        methods: ['POST'],
+                        statusCodes: [408, 413, 429, 500, 502, 503, 504]
+                    },
+                    responseType: 'json',
+                    followRedirect: true,
+                    maxRedirects: 5
+                });
+            } catch (error2) {
+                console.log('Estrategia 2 falló:', error2.message);
+                
+                // Estrategia 3: Usando curl simulation
+                try {
+                    console.log('Intentando simulación de curl...');
+                    await sleep(Math.random() * 3000 + 2000);
+                    
+                    generateResponse = await got.post('https://suno.exomlapi.com/generate', {
+                        json: requestData,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'curl/7.68.0',
+                            'Accept': '*/*',
+                            'Connection': 'keep-alive'
+                        },
+                        timeout: {
+                            request: 60000
+                        },
+                        retry: {
+                            limit: 1
+                        },
+                        responseType: 'json'
+                    });
+                } catch (error3) {
+                    console.log('Todas las estrategias fallaron');
+                    throw new Error(`No se pudo conectar al servicio después de varios intentos. Último error: ${error3.message}`);
+                }
             }
-        });
+        }
+
+        if (!generateResponse || !generateResponse.body) {
+            throw new Error('Respuesta vacía del servidor');
+        }
 
         const responseBody = generateResponse.body;
+        console.log('Respuesta del servidor:', JSON.stringify(responseBody, null, 2));
+
         if (!responseBody || responseBody.status !== 'initiated') {
-            throw new Error('No se pudo iniciar la generación de la canción');
+            throw new Error('No se pudo iniciar la generación de la canción: ' + (responseBody?.message || 'Status: ' + responseBody?.status));
         }
 
         const taskId = responseBody.taskId;
@@ -139,35 +234,44 @@ async function generateMusic(prompt) {
 
         console.log(`Generación iniciada. TaskID: ${taskId}`);
 
+        // Función para verificar el estado
         async function checkStatus(attempt = 1) {
-            // Delay progresivo entre verificaciones
-            const delay = Math.random() * 3000 + 3000 + (attempt * 1000); // 3-6s + incremento por intento
-            await new Promise(resolve => setTimeout(resolve, delay));
+            const delay = Math.random() * 3000 + 4000 + (attempt * 1500);
+            console.log(`Esperando ${Math.round(delay/1000)}s antes del intento ${attempt}...`);
+            await sleep(delay);
             
             try {
                 const statusResponse = await got.post('https://suno.exomlapi.com/check-status', {
                     json: { taskId: taskId, token: token },
                     headers: {
                         'Content-Type': 'application/json',
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+                        'User-Agent': randomUserAgent,
                         'Accept': 'application/json, text/plain, */*',
-                        'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
                         'Referer': 'https://suno.com/',
                         'X-Request-ID': Math.random().toString(36).substring(2, 15),
-                        'X-Attempt': attempt.toString()
+                        'X-Attempt': attempt.toString(),
+                        'X-Forwarded-For': generateRandomIP()
                     },
                     timeout: {
-                        request: 60000
+                        request: 30000,
+                        connect: 10000
                     },
                     retry: {
-                        limit: 1
-                    }
+                        limit: 2,
+                        statusCodes: [408, 413, 429, 500, 502, 503, 504]
+                    },
+                    responseType: 'json'
                 });
+
+                if (!statusResponse || !statusResponse.body) {
+                    throw new Error('Respuesta vacía al verificar estado');
+                }
 
                 const status = statusResponse.body.status;
                 console.log(`Estado actual: ${status} (Intento ${attempt})`);
 
                 if (status === 'TEXT_SUCCESS') {
+                    console.log('¡Generación completada!');
                     return statusResponse.body.results;
                 }
 
@@ -175,17 +279,28 @@ async function generateMusic(prompt) {
                     throw new Error('Error al generar la canción: ' + (statusResponse.body.message || 'Error desconocido'));
                 }
 
-                // Limitar intentos para evitar bucles infinitos
-                if (attempt > 25) {
-                    throw new Error('Tiempo de espera agotado para la generación de música');
+                if (status === 'failed' || status === 'cancelled') {
+                    throw new Error(`Generación ${status}: ${statusResponse.body.message || 'La generación no se completó'}`);
                 }
 
-                // Continuar verificando el estado
+                // Limitar intentos
+                if (attempt > 30) {
+                    throw new Error('Tiempo de espera agotado para la generación de música (más de 30 intentos)');
+                }
+
+                // Estados válidos para continuar: 'initiated', 'processing', 'queued'
                 return checkStatus(attempt + 1);
 
             } catch (error) {
-                if (attempt < 5 && (error.code === 'ETIMEDOUT' || error.message.includes('timeout'))) {
-                    console.log(`Timeout en intento ${attempt}, reintentando...`);
+                console.log(`Error en intento ${attempt}:`, error.message);
+                
+                if (attempt < 5 && (
+                    error.code === 'ETIMEDOUT' || 
+                    error.code === 'ECONNRESET' || 
+                    error.code === 'ENOTFOUND' ||
+                    error.message.includes('timeout')
+                )) {
+                    console.log(`Reintentando debido a error de red...`);
                     return checkStatus(attempt + 1);
                 }
                 throw error;
@@ -198,20 +313,37 @@ async function generateMusic(prompt) {
         console.error('Error en generateMusic:', error);
         
         // Manejo específico de errores
-        if (error.message.includes('captcha') || error.message.includes('challenge')) {
-            throw new Error('Cloudflare requiere verificación manual. Intenta más tarde.');
-        } else if (error.response?.statusCode === 403 || error.message.includes('403') || error.message.includes('Forbidden')) {
-            throw new Error('Acceso denegado. El servicio puede estar temporalmente bloqueado.');
-        } else if (error.response?.statusCode === 429 || error.message.includes('429') || error.message.includes('Too Many Requests')) {
-            throw new Error('Demasiadas peticiones. Espera 10 minutos antes de intentar nuevamente.');
+        if (error.message.includes('ECONNREFUSED')) {
+            throw new Error('No se pudo conectar al servicio. El servidor puede estar caído o bloqueado.');
+        } else if (error.message.includes('captcha') || error.message.includes('challenge')) {
+            throw new Error('Servicio requiere verificación. Intenta más tarde.');
+        } else if (error.response?.statusCode === 403 || error.message.includes('403')) {
+            throw new Error('Acceso denegado. Intenta con otro prompt o espera unos minutos.');
+        } else if (error.response?.statusCode === 429 || error.message.includes('429')) {
+            throw new Error('Demasiadas peticiones. Espera 10-15 minutos antes de intentar nuevamente.');
         } else if (error.code === 'ETIMEDOUT' || error.code === 'ECONNRESET') {
-            throw new Error('Timeout de conexión. El servicio puede estar sobrecargado.');
+            throw new Error('Timeout de conexión. El servicio puede estar sobrecargado, intenta más tarde.');
+        } else if (error.message.includes('getaddrinfo ENOTFOUND')) {
+            throw new Error('No se pudo resolver la dirección del servidor. Verifica tu conexión.');
         }
         
         throw new Error(`Error al generar música: ${error.message}`);
     }
 }
 
+// Funciones auxiliares
 function sanitizeFileName(str) {
     return str.replace(/[\/\\|:*?"<>]/g, '').trim();
+}
+
+function generateRandomIP() {
+    return Array.from({length: 4}, () => Math.floor(Math.random() * 256)).join('.');
+}
+
+function generateRandomString(length = 10) {
+    return Math.random().toString(36).substring(2, 2 + length);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
