@@ -29,7 +29,7 @@ const handler = async (m, {conn, usedPrefix}) => {
         'sourceUrl': 'https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA'}},
     'caption': text,
     'footer': wm,
-     'buttons':[
+     ///'buttons':[
      //{buttonId: `${usedPrefix}menu`, buttonText: {displayText: '𝙼𝙴𝙽𝚄'}, type: 1},
      //{buttonId: `${usedPrefix}donar`, buttonText: {displayText: '𝙳𝙾𝙽𝙰𝚁'}, type: 1}],
     'headerType': 6};
