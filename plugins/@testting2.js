@@ -1,21 +1,24 @@
 import axios from 'axios';
+import { URLSearchParams } from 'url';
 
-const handler = async (m, {conn, text, usedPrefix, command}) => {
-  if (!text) throw `*¡Por favor ingresa una URL de Instagram válida!*\n*Ejemplo:* ${usedPrefix + command} https://www.instagram.com/p/Cejemplo/`;
+const handler = async (m, { conn, text, usedPrefix, command }) => {
+  if (!text) throw `*¡Ingresa una URL válida!*\nEjemplo: ${usedPrefix + command} https://www.youtube.com/watch?v=ejemplo`;
   
   try {
-    m.reply(`*Procesando tu solicitud, por favor espera...*`);
+    await m.reply('*📥 Procesando tu enlace...*');
     
+    const encodedParams = new URLSearchParams();
+    encodedParams.append('url', text.trim());
+
     const options = {
-      method: 'GET',
-      url: 'https://instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com/',
-      params: {
-        url: text.trim() 
-      },
+      method: 'POST',
+      url: 'https://all-video-downloader1.p.rapidapi.com/all',
       headers: {
         'x-rapidapi-key': 'a9cd57bfb2msh6b049d004bf6e44p1dd089jsn737528d11dcd',
-        'x-rapidapi-host': 'instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com'
-      }
+        'x-rapidapi-host': 'all-video-downloader1.p.rapidapi.com',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: encodedParams,
     };
 
     const response = await axios.request(options);
@@ -25,35 +28,40 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
       throw result?.message || 'La API no devolvió resultados válidos';
     }
 
-    // Construir mensaje con la información obtenida
-    let caption = `*Instagram Downloader*\n`;
-    if (result.username) caption += `👤 *Usuario:* @${result.username}\n`;
-    if (result.caption) caption += `📝 *Descripción:* ${result.caption}\n`;
+    // Construir mensaje con información del video
+    let caption = `*📹 Descarga Exitosa*\n`;
+    if (result.title) caption += `🔹 *Título:* ${result.title}\n`;
+    if (result.duration) caption += `⏱ *Duración:* ${result.duration} segundos\n`;
+    if (result.platform) caption += `🌐 *Plataforma:* ${result.platform}\n`;
 
-    // Enviar el contenido multimedia
-    if (result.media) {
-      if (result.media.includes('.mp4')) {
-        await conn.sendMessage(m.chat, {
-          video: { url: result.media },
-          caption: caption
-        }, { quoted: m });
-      } else {
-        await conn.sendMessage(m.chat, {
-          image: { url: result.media },
-          caption: caption
-        }, { quoted: m });
-      }
+    // Enviar el mejor formato de video disponible
+    if (result.videos && result.videos.length > 0) {
+      const bestQuality = result.videos.reduce((prev, current) => 
+        (prev.quality > current.quality) ? prev : current);
+      
+      await conn.sendMessage(m.chat, { 
+        video: { url: bestQuality.url },
+        caption: caption
+      }, { quoted: m });
+    } else if (result.url) {
+      // Si solo hay una URL directa
+      await conn.sendMessage(m.chat, { 
+        video: { url: result.url },
+        caption: caption
+      }, { quoted: m });
     } else {
-      throw 'No se encontró contenido multimedia en esta publicación';
+      throw 'No se encontró contenido descargable';
     }
 
   } catch (error) {
-    console.error('Error en Instagram Downloader:', error);
-    throw `*Error al procesar:* ${error.message || 'Ocurrió un error desconocido'}\n\n*Posibles soluciones:*\n- Verifica que la URL sea correcta\n- Asegúrate que la cuenta no sea privada\n- Intenta con otra publicación`;
+    console.error('Error en socialdl:', error);
+    throw `*⚠️ Error al descargar*\n${error.message || 'Intenta con otro enlace o verifica que sea válido'}`;
   }
 };
 
-handler.help = ['instagram <url>'];
+handler.help = ['socialdl <url>'];
 handler.tags = ['downloader'];
-handler.command = ['socialdl'];
+handler.command = ['socialdl', 'descargasocial', 'videodl'];
+handler.limit = true;
+
 export default handler;
