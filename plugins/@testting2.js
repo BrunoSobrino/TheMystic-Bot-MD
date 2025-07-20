@@ -26,11 +26,11 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     const result = response.data;
 
     // Verificar si hay medios disponibles
-    if (!result.data?.medias || result.data.medias.length === 0) {
+    if (!result.data?.media || result.data.medias.length === 0) {
       throw 'No se encontraron medios descargables en esta URL';
     }
 
-    const medias = result.data.medias;
+    const medias = result.data.media;
     const isYouTube = result.source === 'youtube';
     const isTikTok = result.source === 'tiktok';
 
