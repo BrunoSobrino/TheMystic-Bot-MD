@@ -7,7 +7,7 @@ import NodeID3 from 'node-id3';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
 // Inicializar CloudScraper
-const scraper = new CloudScraper({
+const scraper = await new CloudScraper({
     usePython3: true, // Usar Python 3
     timeoutInSeconds: 60, // Timeout más alto para generación de música
 });
