@@ -8,7 +8,7 @@ let handler = async (m, { conn, args, usedPrefix, command, text }) => {
         const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
         const tradutor = _translate.plugins.herramientas_chatgpt;
 
-        if (!text) return m.reply(tradutor.texto1[0] || 'Ingresa un texto');
+        if (!text) return m.reply(tradutor.texto1[0]);
 
         let mediax = null;
         let userID = m.sender;
