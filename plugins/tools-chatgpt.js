@@ -19,43 +19,41 @@ let handler = async (m, { conn, args, usedPrefix, command, text }) => {
             mediax = await q.download().catch(() => null);
             
             if (mediax) {
-                userID += '1';
-
-                const descPayload = {
-                    content: "Describe esta imagen en detalle",
-                    user: userID,
-                    prompt: "Describe objetivamente lo que ves en la imagen",
+                const descResponse = await axios.post("https://luminai.my.id", {
+                    content: "Analiza esta imagen en profundidad",
+                    user: userID + '1',
+                    prompt: "Extrae todos los detalles relevantes",
                     imageBuffer: mediax,
                     webSearchMode: false
-                };
-                
-                const descResponse = await axios.post("https://luminai.my.id", descPayload);
-                imageDescription = descResponse?.data?.result || "Imagen no identificada";
+                });
+                imageDescription = descResponse?.data?.result || "";
             }
         }
 
-        let context = `Eres The Mystic Bot (v3.0). Idioma: ${idioma.toUpperCase()}\n\n` + `Creador: Bruno Sobrino\n` + `Numero del creador: +52 1 999 612  5657\n` + `Repositorio: https://github.com/BrunoSobrino/TheMystic-Bot-MD\n\n`;
-        
-        if (imageDescription) {
-            context += `IMAGEN ACTUAL: ${imageDescription}\n\n`;
-        }
-        
-        context += `Instrucciones:\n` +
-                  `1. Responde en formato WhatsApp\n` +
-                  `2. No todos los Bruno son tu creador, no los trates como creadores.\n` +
-                  `3. No uses **markdown** doble`;
+        let context = `Eres The Mystic Bot (v3.0). Idioma: ${idioma.toUpperCase()}\n` +
+                     `Creador: Bruno Sobrino | Repositorio: https://github.com/BrunoSobrino/TheMystic-Bot-MD\n\n` +
+                     `POLÍTICA DE IMÁGENES:\n` +
+                     `1. Imagen actual: ${imageDescription ? imageDescription : 'No disponible, revisar historial.'}\n` +
+                     `2. Cuando el usuario pregunte sobre imágenes:\n` +
+                     `   - Si menciona "esta imagen" o "la foto": usa la imagen actual\n` +
+                     `   - Si pregunta por "la imagen anterior" o similar: verifica el historial\n` +
+                     `   - Si no especifica o no hay: pregunta qué imagen debe analizar\n\n` +
+                     `REGLAS DE INTERPRETACIÓN:\n` +
+                     `- Nunca repitas descripciones textualmente\n` +
+                     `- Desarrolla respuestas basadas en el análisis visual\n` +
+                     `- Para comparaciones: analiza cada imagen independientemente\n` +
+                     `- Si no hay imagen actual pero el usuario insiste: "Por favor envía la imagen a analizar"`;
 
         const payload = {
             content: text,
             user: userID,
             prompt: context,
             webSearchMode: false,
-            ...(mediax && { imageBuffer: mediax })
         };
         
         const response = await axios.post("https://luminai.my.id", payload);
-        const result = response?.data?.result;
-        
+        let result = response?.data?.result;
+                
         m.reply(result);
         
     } catch (error) {
@@ -64,7 +62,7 @@ let handler = async (m, { conn, args, usedPrefix, command, text }) => {
     }
 };
 
-handler.help = ['openai <texto> : IA de texto', 'imgia <texto> : Analiza imágenes'];
+handler.help = ['openai <texto>'];
 handler.tags = ['ai'];
-handler.command = /^(openai|chatgpt|ia|mystic|mysticbot|imgia)$/i;
+handler.command = /^(openai|chatgpt|ia|mystic|mysticbot)$/i;
 export default handler;
