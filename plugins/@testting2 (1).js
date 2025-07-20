@@ -1,9 +1,15 @@
 import { join } from 'path';
 import { writeFileSync, existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import got from 'got'; // Back to regular got with advanced strategies
+import CloudScraper from 'cloudscraper.js'; // Nuevo módulo para bypass de CloudFlare
 import NodeID3 from 'node-id3';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
+
+// Inicializar CloudScraper
+const scraper = new CloudScraper({
+    usePython3: true, // Usar Python 3
+    timeoutInSeconds: 60, // Timeout más alto para generación de música
+});
 
 const handler = async (m, { conn, args }) => {
     try {
@@ -30,8 +36,8 @@ const handler = async (m, { conn, args }) => {
         
         console.log('[HANDLER] Descargando archivos de audio e imagen...');
         const [audioBuffer, thumbnailBuffer] = await Promise.all([
-            got(song.audio_url).buffer(),
-            got(song.image_url).buffer()
+            downloadFile(song.audio_url),
+            downloadFile(song.image_url)
         ]);
         
         console.log('[HANDLER] Archivos descargados:', {
@@ -112,6 +118,39 @@ handler.tags = ['ai', 'music'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
 
+// Función para descargar archivos usando CloudScraper
+async function downloadFile(url) {
+    console.log(`[DOWNLOAD] Descargando archivo desde: ${url}`);
+    
+    try {
+        const response = await scraper.get(url, {
+            headers: {
+                'Accept': '*/*',
+                'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'DNT': '1',
+                'Connection': 'keep-alive',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Upgrade-Insecure-Requests': '1'
+            }
+        });
+
+        if (response.status !== 200) {
+            throw new Error(`Error HTTP ${response.status} al descargar archivo`);
+        }
+
+        const buffer = Buffer.from(response.buffer());
+        console.log(`[DOWNLOAD] Archivo descargado exitosamente. Tamaño: ${buffer.length} bytes`);
+        return buffer;
+
+    } catch (error) {
+        console.error(`[DOWNLOAD] Error descargando archivo desde ${url}:`, error.message);
+        throw error;
+    }
+}
+
 async function generateMusic(prompt) {
     console.log(`[GENERATE_MUSIC] Iniciando generación de música para prompt: "${prompt}"`);
     
@@ -136,11 +175,10 @@ async function generateMusic(prompt) {
 
     const strategies = [
         {
-            name: 'Estrategia Básica con Headers Modernos',
+            name: 'CloudScraper con Headers Modernos',
             config: () => {
                 const randomUA = userAgents[Math.floor(Math.random() * userAgents.length)];
                 return {
-                    json: requestData,
                     headers: {
                         'Content-Type': 'application/json',
                         'User-Agent': randomUA,
@@ -159,26 +197,16 @@ async function generateMusic(prompt) {
                         'Referer': 'https://suno.com/',
                         'Origin': 'https://suno.com'
                     },
-                    timeout: {
-                        request: 90000,
-                        connect: 15000
-                    },
-                    retry: {
-                        limit: 2,
-                        methods: ['POST']
-                    },
-                    followRedirect: true,
-                    maxRedirects: 3
+                    body: JSON.stringify(requestData)
                 };
             }
         },
         {
-            name: 'Estrategia con Headers Extendidos',
+            name: 'CloudScraper con Headers Extendidos',
             config: () => {
                 const randomUA = userAgents[Math.floor(Math.random() * userAgents.length)];
                 const randomIP = generateRandomIP();
                 return {
-                    json: requestData,
                     headers: {
                         'Content-Type': 'application/json',
                         'User-Agent': randomUA,
@@ -206,51 +234,30 @@ async function generateMusic(prompt) {
                         'X-Request-ID': generateRandomString(16),
                         'X-Session-ID': generateRandomString(32)
                     },
-                    timeout: {
-                        request: 120000,
-                        connect: 20000
-                    },
-                    retry: {
-                        limit: 3,
-                        methods: ['POST'],
-                        statusCodes: [408, 413, 429, 500, 502, 503, 504, 520, 521, 522, 524]
-                    },
-                    followRedirect: true,
-                    maxRedirects: 5,
-                    dnsCache: true,
-                    keepAlive: true
+                    body: JSON.stringify(requestData)
                 };
             }
         },
         {
-            name: 'Estrategia Minimalista (cURL-like)',
+            name: 'CloudScraper Minimalista',
             config: () => ({
-                json: requestData,
                 headers: {
                     'Content-Type': 'application/json',
-                    'User-Agent': 'curl/7.68.0',
+                    'User-Agent': 'Mozilla/5.0 (compatible; CloudScraper/1.0)',
                     'Accept': '*/*',
                     'Connection': 'keep-alive'
                 },
-                timeout: {
-                    request: 180000,
-                    connect: 30000
-                },
-                retry: {
-                    limit: 1
-                },
-                followRedirect: false
+                body: JSON.stringify(requestData)
             })
         },
         {
-            name: 'Estrategia con Delay y Headers Aleatorios',
+            name: 'CloudScraper con Delay Aleatorio',
             config: () => {
                 const randomUA = userAgents[Math.floor(Math.random() * userAgents.length)];
                 const platforms = ['"Windows"', '"macOS"', '"Linux"'];
                 const randomPlatform = platforms[Math.floor(Math.random() * platforms.length)];
                 
                 return {
-                    json: requestData,
                     headers: {
                         'Content-Type': 'application/json',
                         'User-Agent': randomUA,
@@ -270,14 +277,7 @@ async function generateMusic(prompt) {
                         'X-Timestamp': Date.now().toString(),
                         'X-Random': Math.random().toString(36).substring(2)
                     },
-                    timeout: {
-                        request: 150000,
-                        connect: 25000
-                    },
-                    retry: {
-                        limit: 2,
-                        methods: ['POST']
-                    }
+                    body: JSON.stringify(requestData)
                 };
             }
         }
@@ -286,7 +286,7 @@ async function generateMusic(prompt) {
     let generateResponse;
     let lastError;
 
-    // Intentar cada estrategia
+    // Intentar cada estrategia con CloudScraper
     for (let i = 0; i < strategies.length; i++) {
         const strategy = strategies[i];
         
@@ -305,16 +305,16 @@ async function generateMusic(prompt) {
             
             console.log(`[GENERATE_MUSIC] Headers configurados:`, Object.keys(config.headers || {}).join(', '));
             
-            generateResponse = await got.post('https://suno.exomlapi.com/generate', config);
+            // Usar CloudScraper para POST request
+            generateResponse = await scraper.post('https://suno.exomlapi.com/generate', config);
             
             const requestTime = Date.now() - startTime;
             console.log(`[GENERATE_MUSIC] ✅ ${strategy.name} exitosa en ${requestTime}ms`);
-            console.log(`[GENERATE_MUSIC] Status Code: ${generateResponse.statusCode}`);
+            console.log(`[GENERATE_MUSIC] Status Code: ${generateResponse.status}`);
             break;
             
         } catch (error) {
             console.log(`[GENERATE_MUSIC] ❌ ${strategy.name} falló: ${error.message}`);
-            console.log(`[GENERATE_MUSIC] Error code: ${error.code}, Status: ${error.response?.statusCode}`);
             lastError = error;
             
             // Si es el último intento, no continuar
@@ -325,12 +325,12 @@ async function generateMusic(prompt) {
         }
     }
 
-    if (!generateResponse || !generateResponse.body) {
+    if (!generateResponse) {
         console.error('[GENERATE_MUSIC] ERROR: Respuesta vacía después de todos los intentos');
         throw new Error('No se pudo obtener respuesta del servidor después de múltiples intentos');
     }
 
-    const responseBody = generateResponse.body;
+    const responseBody = generateResponse.json();
     console.log('[GENERATE_MUSIC] Respuesta del servidor:', JSON.stringify(responseBody, null, 2));
 
     if (!responseBody || responseBody.status !== 'initiated') {
@@ -362,8 +362,8 @@ async function generateMusic(prompt) {
         try {
             const checkStartTime = Date.now();
             
-            const statusResponse = await got.post('https://suno.exomlapi.com/check-status', {
-                json: { taskId: taskId, token: token },
+            // Usar CloudScraper para verificación de estado
+            const statusResponse = await scraper.post('https://suno.exomlapi.com/check-status', {
                 headers: {
                     'Content-Type': 'application/json',
                     'User-Agent': randomUA,
@@ -375,46 +375,33 @@ async function generateMusic(prompt) {
                     'X-Attempt': attempt.toString(),
                     'X-Timestamp': Date.now().toString()
                 },
-                timeout: {
-                    request: 90000,
-                    connect: 15000
-                },
-                retry: {
-                    limit: 2,
-                    statusCodes: [408, 413, 429, 500, 502, 503, 504, 520, 521, 522, 524]
-                },
-                followRedirect: true,
-                maxRedirects: 3
+                body: JSON.stringify({ taskId: taskId, token: token })
             });
 
             const checkTime = Date.now() - checkStartTime;
             console.log(`[CHECK_STATUS] Petición de estado completada en ${checkTime}ms`);
-            console.log(`[CHECK_STATUS] Status Code: ${statusResponse.statusCode}`);
+            console.log(`[CHECK_STATUS] Status Code: ${statusResponse.status}`);
 
-            if (!statusResponse.body) {
-                console.error('[CHECK_STATUS] ERROR: Respuesta vacía al verificar estado');
-                throw new Error('Respuesta vacía al verificar estado');
-            }
-
-            const status = statusResponse.body.status;
+            const statusData = statusResponse.json();
+            const status = statusData.status;
             console.log(`[CHECK_STATUS] Estado actual: "${status}" (Intento ${attempt})`);
             
             // Log additional data if available
-            if (statusResponse.body.message) {
-                console.log(`[CHECK_STATUS] Mensaje del servidor: ${statusResponse.body.message}`);
+            if (statusData.message) {
+                console.log(`[CHECK_STATUS] Mensaje del servidor: ${statusData.message}`);
             }
             
-            if (statusResponse.body.progress) {
-                console.log(`[CHECK_STATUS] Progreso: ${statusResponse.body.progress}`);
+            if (statusData.progress) {
+                console.log(`[CHECK_STATUS] Progreso: ${statusData.progress}`);
             }
 
             if (status === 'TEXT_SUCCESS') {
                 console.log('[CHECK_STATUS] ¡Generación completada exitosamente!');
-                console.log(`[CHECK_STATUS] Resultados obtenidos:`, statusResponse.body.results ? statusResponse.body.results.length : 0);
+                console.log(`[CHECK_STATUS] Resultados obtenidos:`, statusData.results ? statusData.results.length : 0);
                 
                 // Log details of results
-                if (statusResponse.body.results && statusResponse.body.results.length > 0) {
-                    statusResponse.body.results.forEach((result, index) => {
+                if (statusData.results && statusData.results.length > 0) {
+                    statusData.results.forEach((result, index) => {
                         console.log(`[CHECK_STATUS] Resultado ${index + 1}:`, {
                             title: result.title,
                             hasAudioUrl: !!result.audio_url,
@@ -425,17 +412,17 @@ async function generateMusic(prompt) {
                     });
                 }
                 
-                return statusResponse.body.results;
+                return statusData.results;
             }
 
             if (status === 'error') {
-                console.error('[CHECK_STATUS] ERROR: Error reportado por el servidor:', statusResponse.body.message);
-                throw new Error('Error al generar la canción: ' + (statusResponse.body.message || 'Error desconocido'));
+                console.error('[CHECK_STATUS] ERROR: Error reportado por el servidor:', statusData.message);
+                throw new Error('Error al generar la canción: ' + (statusData.message || 'Error desconocido'));
             }
 
             if (status === 'failed' || status === 'cancelled') {
-                console.error(`[CHECK_STATUS] ERROR: Generación ${status}:`, statusResponse.body.message);
-                throw new Error(`Generación ${status}: ${statusResponse.body.message || 'La generación no se completó'}`);
+                console.error(`[CHECK_STATUS] ERROR: Generación ${status}:`, statusData.message);
+                throw new Error(`Generación ${status}: ${statusData.message || 'La generación no se completó'}`);
             }
 
             // Limitar intentos para evitar bucles infinitos
@@ -455,14 +442,11 @@ async function generateMusic(prompt) {
 
         } catch (error) {
             console.error(`[CHECK_STATUS] Error en intento ${attempt}:`, error.message);
-            console.error(`[CHECK_STATUS] Error code: ${error.code}`);
-            console.error(`[CHECK_STATUS] Error response status: ${error.response?.statusCode}`);
             
             if (attempt < 5 && (
-                error.code === 'ETIMEDOUT' || 
-                error.code === 'ECONNRESET' || 
                 error.message.includes('timeout') ||
-                error.response?.statusCode >= 500
+                error.message.includes('connection') ||
+                error.message.includes('network')
             )) {
                 console.log(`[CHECK_STATUS] Error recuperable en intento ${attempt}, reintentando...`);
                 return checkStatus(attempt + 1);
