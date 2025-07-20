@@ -31,80 +31,72 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
       throw 'La API no devolvió un enlace directo de Google Video';
     }
 
-    // 3. Configuración del cliente GoogleVideo
-    const client = new GoogleVideo.ServerAbrStream({
-      fetch: async (url, options) => {
-        // Implementación personalizada de fetch para evitar bloqueos
-        const response = await fetch(url, {
-          ...options,
-          headers: {
-            'Referer': 'https://www.youtube.com',
-            'Origin': 'https://www.youtube.com',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Range': 'bytes=0-',
-            ...options?.headers
-          }
-        });
-        return response;
-      },
-      poToken: '', // Token opcional si es necesario
-      serverAbrStreamingUrl: streamingUrl,
-      videoPlaybackUstreamerConfig: {
-        // Configuración básica del reproductor
-        enableAdaptiveBitrate: true,
-        enableLowLatency: false
-      },
-      durationMs: duration * 1000
-    });
+    // 3. Método alternativo usando el módulo GoogleVideo sin ServerAbrStream
+    const videoBuffer = await downloadVideoDirectly(streamingUrl);
 
-    // 4. Procesar el stream
-    const tempFile = `temp_${Date.now()}.mp4`;
-    const writeStream = createWriteStream(tempFile);
-    const videoChunks = [];
-
-    client.on('data', (streamData) => {
-      for (const formatData of streamData.initializedFormats) {
-        for (const chunk of formatData.mediaChunks) {
-          videoChunks.push(chunk);
-          writeStream.write(chunk);
-        }
-      }
-    });
-
-    await new Promise((resolve, reject) => {
-      client.on('end', resolve);
-      client.on('error', reject);
-      client.init({
-        audioFormats: [],
-        videoFormats: [{
-          itag: media.itag || 18,
-          width: media.width || 640,
-          height: media.height || 360
-        }],
-        clientAbrState: {
-          playerTimeMs: 0,
-          enabledTrackTypesBitfield: 0
-        }
-      });
-    });
-
-    writeStream.end();
-
-    // 5. Enviar el video
+    // 4. Enviar el video
     await conn.sendMessage(m.chat, {
-      video: { url: `file://${tempFile}` },
+      video: videoBuffer,
       caption: `*${title}*\n⏱ ${duration}s | 👤 ${author}`,
       mimetype: 'video/mp4'
     }, { quoted: m });
-
-    // 6. Limpieza
-    unlink(tempFile, () => {});
 
   } catch (error) {
     console.error('Error en ytdl:', error);
     throw `*Error:* ${error.message || 'Falló la descarga'}`;
   }
 };
+
+// Función alternativa que evita el problema con base64
+async function downloadVideoDirectly(url) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // 1. Configurar headers para evitar bloqueos
+      const headers = {
+        'Referer': 'https://www.youtube.com',
+        'Origin': 'https://www.youtube.com',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Range': 'bytes=0-'
+      };
+
+      // 2. Obtener los datos del video
+      const response = await fetch(url, { headers });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      // 3. Procesar el stream con GoogleVideo
+      const dataBuffer = new GoogleVideo.ChunkedDataBuffer();
+      const ump = new GoogleVideo.UMP();
+      const videoChunks = [];
+
+      ump.on('data', (part) => {
+        if (part.type === PART.MEDIA) {
+          const mediaData = part.data.split(1).remainingBuffer;
+          videoChunks.push(mediaData.getBuffer());
+        }
+      });
+
+      // 4. Leer el stream en chunks
+      const reader = response.body.getReader();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        // Convertir Uint8Array a Buffer
+        const chunkBuffer = Buffer.from(value);
+        dataBuffer.append(new Uint8Array(chunkBuffer));
+        
+        // Parsear los datos
+        ump.parse(dataBuffer);
+      }
+
+      // 5. Devolver el video completo
+      resolve(Buffer.concat(videoChunks));
+
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 
 handler.help = ['ytdl <url>'];
 handler.tags = ['downloader'];
