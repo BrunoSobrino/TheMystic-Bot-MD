@@ -26,64 +26,58 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
       throw result?.message || 'La API no devolvió resultados válidos';
     }
 
-    // Manejar diferentes estructuras de respuesta
-    if (result.data?.media) { // Estructura simple (1 medio)
-      const media = result.data.media;
-      const caption = `*${result.source.toUpperCase()}*\n${result.data.title || ''}`;
-      await conn.sendFile(m.chat, media.url, `media.${media.ext || 'mp4'}`, caption, m);
+    // Verificar que hay medios disponibles
+    if (!result.medias || result.medias.length === 0) {
+      throw 'No se encontraron medios descargables en esta URL';
+    }
+
+    const medias = result.medias;
+    const isYouTube = result.source === 'youtube';
+    const isTikTok = result.source === 'tiktok';
+
+    // Seleccionar mejores formatos
+    const bestVideo = medias
+      .filter(m => m.type === 'video')
+      .sort((a, b) => {
+        // Ordenar por calidad/resolución (mayor primero)
+        return (b.width || 0) - (a.width || 0) || (b.bitrate || 0) - (a.bitrate || 0);
+      })[0];
+
+    const bestAudio = medias
+      .filter(m => m.type === 'audio')
+      .sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))[0];
+
+    // Construir caption base
+    let caption = `*${result.source.toUpperCase()}*\n`;
+    if (result.title) caption += `📌 *Título:* ${result.title}\n`;
+    if (result.author || result.unique_id) caption += `👤 *Autor:* ${result.author || '@'+result.unique_id}\n`;
+    if (bestVideo?.quality) caption += `🎥 *Calidad:* ${bestVideo.quality}\n`;
+    if (result.duration) caption += `⏱ *Duración:* ${Math.round(result.duration/1000)}s`;
+
+    // Enviar contenido según plataforma
+    if (isYouTube) {
+      // Para YouTube: enviar el mejor video y el mejor audio por separado
+      if (bestVideo) {
+        await conn.sendFile(m.chat, bestVideo.url, 'video.mp4', 
+          `${caption}\n📹 *Video:* ${bestVideo.label || bestVideo.quality}`, m);
+      }
+      
+      if (bestAudio) {
+        await conn.sendFile(m.chat, bestAudio.url, 'audio.m4a', 
+          `${caption}\n🎵 *Audio:* ${bestAudio.label || bestAudio.quality}`, m);
+      }
     } 
-    else if (result.data?.medias) { // Estructura múltiple (varios medios)
-      const medias = result.data.medias;
-      const isYouTube = result.source === 'youtube';
-      const isTikTok = result.source === 'tiktok';
-
-      // Seleccionar mejores formatos
-      const bestVideo = medias
-        .filter(m => m.type === 'video')
-        .sort((a, b) => {
-          // Priorizar sin watermark en TikTok
-          if (isTikTok) {
-            const aQuality = a.quality?.toLowerCase();
-            const bQuality = b.quality?.toLowerCase();
-            if (aQuality.includes('no_watermark')) return -1;
-            if (bQuality.includes('no_watermark')) return 1;
-            if (aQuality.includes('hd')) return -1;
-            if (bQuality.includes('hd')) return 1;
-          }
-          // Ordenar por calidad/resolución
-          return (b.width || 0) - (a.width || 0) || (b.bitrate || 0) - (a.bitrate || 0);
-        })[0];
-
-      const bestAudio = medias
-        .filter(m => m.type === 'audio')
-        .sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))[0];
-
-      // Construir caption base
-      let caption = `*${result.source.toUpperCase()}*\n`;
-      if (result.title) caption += `📌 *Título:* ${result.title}\n`;
-      if (result.author || result.unique_id) caption += `👤 *Autor:* ${result.author || '@'+result.unique_id}\n`;
-      if (bestVideo?.quality) caption += `🎥 *Calidad:* ${bestVideo.quality}\n`;
-      if (result.duration) caption += `⏱ *Duración:* ${Math.round(result.duration/1000)}s`;
-
-      // Enviar contenido según plataforma
-      if (isYouTube && bestVideo && bestAudio) {
-        await conn.sendFile(m.chat, bestVideo.url, 'video.mp4', caption, m);
-        await conn.sendFile(m.chat, bestAudio.url, 'audio.m4a', caption, m);
-      } 
-      else if (bestVideo) {
-        await conn.sendFile(m.chat, bestVideo.url, 'video.mp4', caption, m);
-      }
-      else if (bestAudio) {
-        await conn.sendFile(m.chat, bestAudio.url, 'audio.mp3', caption, m);
-      }
-      else {
-        throw 'No se encontraron medios descargables en esta URL';
+    else if (isTikTok) {
+      // Para TikTok: enviar solo el mejor video (ya incluye audio)
+      if (bestVideo) {
+        await conn.sendFile(m.chat, bestVideo.url, 'tiktok.mp4', caption, m);
       }
     }
     else {
-      // Si no coincide con ninguna estructura conocida
-      console.log('Respuesta completa de la API:', result);
-      throw 'La API respondió con una estructura no reconocida';
+      // Para otras plataformas
+      if (bestVideo) {
+        await conn.sendFile(m.chat, bestVideo.url, 'video.mp4', caption, m);
+      }
     }
 
   } catch (error) {
