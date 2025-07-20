@@ -1,7 +1,8 @@
 import { join } from 'path';
 import { writeFileSync, existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import { CloudScraper } from 'cloudscraper.js'; 
+import pkg from 'cloudscraper.js';
+const { CloudScraper } = pkg;
 import NodeID3 from 'node-id3';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
