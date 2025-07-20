@@ -1,4 +1,6 @@
 import GoogleVideo, { PART, Protos } from 'googlevideo';
+import { createWriteStream, unlink } from 'node:fs';
+import { pipeline } from 'stream/promises';
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
   if (!text) throw `*¡URL de YouTube requerida!*\nEjemplo: ${usedPrefix + command} https://youtu.be/...`;
@@ -29,67 +31,80 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
       throw 'La API no devolvió un enlace directo de Google Video';
     }
 
-    // 3. Descargar usando el módulo GoogleVideo CORRECTAMENTE
-    const videoBuffer = await downloadWithGoogleVideo(streamingUrl);
+    // 3. Configuración del cliente GoogleVideo
+    const client = new GoogleVideo.ServerAbrStream({
+      fetch: async (url, options) => {
+        // Implementación personalizada de fetch para evitar bloqueos
+        const response = await fetch(url, {
+          ...options,
+          headers: {
+            'Referer': 'https://www.youtube.com',
+            'Origin': 'https://www.youtube.com',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Range': 'bytes=0-',
+            ...options?.headers
+          }
+        });
+        return response;
+      },
+      poToken: '', // Token opcional si es necesario
+      serverAbrStreamingUrl: streamingUrl,
+      videoPlaybackUstreamerConfig: {
+        // Configuración básica del reproductor
+        enableAdaptiveBitrate: true,
+        enableLowLatency: false
+      },
+      durationMs: duration * 1000
+    });
 
-    // 4. Enviar el video
+    // 4. Procesar el stream
+    const tempFile = `temp_${Date.now()}.mp4`;
+    const writeStream = createWriteStream(tempFile);
+    const videoChunks = [];
+
+    client.on('data', (streamData) => {
+      for (const formatData of streamData.initializedFormats) {
+        for (const chunk of formatData.mediaChunks) {
+          videoChunks.push(chunk);
+          writeStream.write(chunk);
+        }
+      }
+    });
+
+    await new Promise((resolve, reject) => {
+      client.on('end', resolve);
+      client.on('error', reject);
+      client.init({
+        audioFormats: [],
+        videoFormats: [{
+          itag: media.itag || 18,
+          width: media.width || 640,
+          height: media.height || 360
+        }],
+        clientAbrState: {
+          playerTimeMs: 0,
+          enabledTrackTypesBitfield: 0
+        }
+      });
+    });
+
+    writeStream.end();
+
+    // 5. Enviar el video
     await conn.sendMessage(m.chat, {
-      video: videoBuffer,
+      video: { url: `file://${tempFile}` },
       caption: `*${title}*\n⏱ ${duration}s | 👤 ${author}`,
       mimetype: 'video/mp4'
     }, { quoted: m });
+
+    // 6. Limpieza
+    unlink(tempFile, () => {});
 
   } catch (error) {
     console.error('Error en ytdl:', error);
     throw `*Error:* ${error.message || 'Falló la descarga'}`;
   }
 };
-
-// Función CORRECTA para usar el módulo GoogleVideo
-async function downloadWithGoogleVideo(url) {
-  try {
-    // 1. Configurar los headers necesarios
-    const headers = {
-      'Referer': 'https://www.youtube.com',
-      'Origin': 'https://www.youtube.com',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-      'Range': 'bytes=0-'
-    };
-
-    // 2. Crear el buffer para los datos
-    const dataBuffer = new GoogleVideo.ChunkedDataBuffer();
-    const videoChunks = [];
-
-    // 3. Procesar el stream con UMP
-    const ump = new GoogleVideo.UMP();
-    
-    ump.on('data', (part) => {
-      if (part.type === PART.MEDIA) {
-        const mediaData = part.data.split(1).remainingBuffer;
-        videoChunks.push(mediaData.getBuffer());
-      }
-    });
-
-    // 4. Obtener los datos (simulando una conexión)
-    // NOTA: Aquí necesitarías implementar tu propia conexión TCP/HTTP
-    // ya que el módulo google-video no provee un cliente HTTP
-    
-    // Esta es una implementación simplificada:
-    const response = await fetch(url, { headers });
-    const arrayBuffer = await response.arrayBuffer();
-    dataBuffer.append(new Uint8Array(arrayBuffer));
-    
-    // 5. Parsear los datos
-    ump.parse(dataBuffer);
-
-    // 6. Devolver el video completo
-    return Buffer.concat(videoChunks);
-
-  } catch (error) {
-    console.error('Error en downloadWithGoogleVideo:', error);
-    throw error;
-  }
-}
 
 handler.help = ['ytdl <url>'];
 handler.tags = ['downloader'];
