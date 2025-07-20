@@ -1,8 +1,7 @@
 import { join } from 'path';
 import { writeFileSync, existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
-import got from 'got';
-import cloudscraper from 'cloudscraper';
+import got from 'cloudflare-scraper'; // Using cloudflare-scraper instead of regular got
 import NodeID3 from 'node-id3';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
@@ -17,6 +16,7 @@ const handler = async (m, { conn, args }) => {
         
         const song = generatedSongs[0];
         
+        // Use cloudflare-scraper for downloading files too
         const [audioBuffer, thumbnailBuffer] = await Promise.all([
             got(song.audio_url).buffer(),
             got(song.image_url).buffer()
@@ -47,28 +47,30 @@ const handler = async (m, { conn, args }) => {
         const audioPath = join(tmpDir, `${song.title.replace(/[^a-z0-9]/gi, '_')}.mp3`);
         writeFileSync(audioPath, taggedBuffer);
         
-const thumbnailMessage = await prepareWAMessageMedia({ image: { url: song.image_url } }, { upload: conn.waUploadToServer });
-const documentMessage = await prepareWAMessageMedia({ document: {
-            url: audioPath,
-            mimetype: 'audio/mpeg',
-            fileName: `${sanitizeFileName(song.title.substring(0, 64))}.mp3`, 
-            fileLength: taggedBuffer.length,
-            title: song.title.substring(0, 64), 
-            ptt: false 
-        }
-    }, { upload: conn.waUploadToServer, mediaType: 'document' }
-);
-const mesg = generateWAMessageFromContent(m.chat, {
-    documentMessage: {
-        ...documentMessage.documentMessage,
-        mimetype: 'audio/mpeg',
-        title: song.title.substring(0, 64),
-        fileName: `${sanitizeFileName(song.title.substring(0, 64))}.mp3`, 
-        jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-        mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-    }}, { userJid: conn.user.jid, quoted: m})
+        const thumbnailMessage = await prepareWAMessageMedia({ image: { url: song.image_url } }, { upload: conn.waUploadToServer });
+        const documentMessage = await prepareWAMessageMedia({ 
+            document: {
+                url: audioPath,
+                mimetype: 'audio/mpeg',
+                fileName: `${sanitizeFileName(song.title.substring(0, 64))}.mp3`, 
+                fileLength: taggedBuffer.length,
+                title: song.title.substring(0, 64), 
+                ptt: false 
+            }
+        }, { upload: conn.waUploadToServer, mediaType: 'document' });
+
+        const mesg = generateWAMessageFromContent(m.chat, {
+            documentMessage: {
+                ...documentMessage.documentMessage,
+                mimetype: 'audio/mpeg',
+                title: song.title.substring(0, 64),
+                fileName: `${sanitizeFileName(song.title.substring(0, 64))}.mp3`, 
+                jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+            }
+        }, { userJid: conn.user.jid, quoted: m });
                 
-await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+        await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
         
         setTimeout(() => {
             if (existsSync(audioPath)) unlinkSync(audioPath);
@@ -79,6 +81,7 @@ await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
         m.reply(`❌ Ocurrió un error al generar la canción: ${error.message || error}`);
     }
 };
+
 handler.help = ['musicaia <descripción>'];
 handler.tags = ['ai', 'music'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
@@ -94,10 +97,10 @@ async function generateMusic(prompt) {
     };
 
     try {
-        // Configuración de cloudscraper para bypass de Cloudflare
-        const options = {
-            uri: 'https://suno.exomlapi.com/generate',
-            method: 'POST',
+        console.log('Iniciando bypass de Cloudflare con cloudflare-scraper...');
+        
+        // Using cloudflare-scraper with modern async/await syntax
+        const generateResponse = await got.post('https://suno.exomlapi.com/generate', {
             json: requestData,
             headers: {
                 'Content-Type': 'application/json',
@@ -117,37 +120,22 @@ async function generateMusic(prompt) {
                 'Referer': 'https://suno.com/',
                 'Origin': 'https://suno.com'
             },
-            timeout: 90000,
-            gzip: true,
-            followRedirect: true,
-            maxRedirects: 5,
-            // Configuraciones específicas de cloudscraper
-            cloudflareTimeout: 30000,
-            cloudflareMaxTimeout: 180000,
-            challengesToSolve: 3
-        };
-
-        console.log('Iniciando bypass de Cloudflare...');
-        
-        // Usar cloudscraper para bypass automático de Cloudflare
-        const generateResponse = await new Promise((resolve, reject) => {
-            cloudscraper(options, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else if (response.statusCode !== 200) {
-                    reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
-                } else {
-                    resolve({ statusCode: response.statusCode, body: body });
-                }
-            });
+            timeout: {
+                request: 90000
+            },
+            retry: {
+                limit: 2,
+                methods: ['POST']
+            }
         });
 
-        if (!generateResponse.body || generateResponse.body.status !== 'initiated') {
+        const responseBody = generateResponse.body;
+        if (!responseBody || responseBody.status !== 'initiated') {
             throw new Error('No se pudo iniciar la generación de la canción');
         }
 
-        const taskId = generateResponse.body.taskId;
-        const token = generateResponse.body.token;
+        const taskId = responseBody.taskId;
+        const token = responseBody.token;
 
         console.log(`Generación iniciada. TaskID: ${taskId}`);
 
@@ -156,43 +144,25 @@ async function generateMusic(prompt) {
             const delay = Math.random() * 3000 + 3000 + (attempt * 1000); // 3-6s + incremento por intento
             await new Promise(resolve => setTimeout(resolve, delay));
             
-            const statusOptions = {
-                uri: 'https://suno.exomlapi.com/check-status',
-                method: 'POST',
-                json: { taskId: taskId, token: token },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-                    'Accept': 'application/json, text/plain, */*',
-                    'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
-                    'Referer': 'https://suno.com/',
-                    'X-Request-ID': Math.random().toString(36).substring(2, 15),
-                    'X-Attempt': attempt.toString()
-                },
-                timeout: 60000,
-                gzip: true,
-                cloudflareTimeout: 30000,
-                challengesToSolve: 3
-            };
-
             try {
-                const statusResponse = await new Promise((resolve, reject) => {
-                    cloudscraper(statusOptions, (error, response, body) => {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            resolve({ statusCode: response.statusCode, body: body });
-                        }
-                    });
-                });
-
-                if (statusResponse.statusCode !== 200) {
-                    if (attempt < 8) {
-                        console.log(`Intento ${attempt} falló con código ${statusResponse.statusCode}, reintentando...`);
-                        return checkStatus(attempt + 1);
+                const statusResponse = await got.post('https://suno.exomlapi.com/check-status', {
+                    json: { taskId: taskId, token: token },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+                        'Accept': 'application/json, text/plain, */*',
+                        'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
+                        'Referer': 'https://suno.com/',
+                        'X-Request-ID': Math.random().toString(36).substring(2, 15),
+                        'X-Attempt': attempt.toString()
+                    },
+                    timeout: {
+                        request: 60000
+                    },
+                    retry: {
+                        limit: 1
                     }
-                    throw new Error(`Error al verificar estado: HTTP ${statusResponse.statusCode}`);
-                }
+                });
 
                 const status = statusResponse.body.status;
                 console.log(`Estado actual: ${status} (Intento ${attempt})`);
@@ -205,10 +175,12 @@ async function generateMusic(prompt) {
                     throw new Error('Error al generar la canción: ' + (statusResponse.body.message || 'Error desconocido'));
                 }
 
+                // Limitar intentos para evitar bucles infinitos
                 if (attempt > 25) {
                     throw new Error('Tiempo de espera agotado para la generación de música');
                 }
 
+                // Continuar verificando el estado
                 return checkStatus(attempt + 1);
 
             } catch (error) {
@@ -225,11 +197,12 @@ async function generateMusic(prompt) {
     } catch (error) {
         console.error('Error en generateMusic:', error);
         
+        // Manejo específico de errores
         if (error.message.includes('captcha') || error.message.includes('challenge')) {
             throw new Error('Cloudflare requiere verificación manual. Intenta más tarde.');
-        } else if (error.message.includes('403') || error.message.includes('Forbidden')) {
+        } else if (error.response?.statusCode === 403 || error.message.includes('403') || error.message.includes('Forbidden')) {
             throw new Error('Acceso denegado. El servicio puede estar temporalmente bloqueado.');
-        } else if (error.message.includes('429') || error.message.includes('Too Many Requests')) {
+        } else if (error.response?.statusCode === 429 || error.message.includes('429') || error.message.includes('Too Many Requests')) {
             throw new Error('Demasiadas peticiones. Espera 10 minutos antes de intentar nuevamente.');
         } else if (error.code === 'ETIMEDOUT' || error.code === 'ECONNRESET') {
             throw new Error('Timeout de conexión. El servicio puede estar sobrecargado.');
