@@ -1,6 +1,5 @@
-import { createWriteStream, unlink, createReadStream } from 'node:fs';
+import { createWriteStream, unlink } from 'node:fs';
 import { pipeline } from 'stream/promises';
-import { Readable } from 'stream';
 import axios from 'axios';
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
@@ -20,40 +19,32 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
         'x-rapidapi-host': 'social-download-all-in-one.p.rapidapi.com',
         'Content-Type': 'application/json'
       },
-      data: { url: text },
-      timeout: 10000
+      data: { url: text }
     });
     
-    console.log('API Response:', JSON.stringify(apiResponse.data, null, 2));
-    
     const { medias, source, title, author, duration } = apiResponse.data;
-    if (source !== 'youtube') throw '❌ Solo soportamos YouTube con este método';
+    if (source !== 'youtube') throw '❌ Solo soportamos YouTube';
+    if (!medias || medias.length === 0) throw '❌ No se encontraron medios';
     
-    if (!medias || medias.length === 0) {
-      throw '❌ No se encontraron medios disponibles para descargar';
-    }
-    
-    // 2. Buscar el mejor formato de video
-    let selectedMedia;
-    
-    // Prioridad: video > video con audio > cualquier formato
-    selectedMedia = medias.find(m => m.type === 'video' && m.hasAudio === false) ||
-                   medias.find(m => m.type === 'video') ||
-                   medias.find(m => m.url && m.url.includes('googlevideo')) ||
-                   medias[0];
-    
-    if (!selectedMedia || !selectedMedia.url) {
-      throw '❌ No se encontró URL de descarga válida';
-    }
-    
-    console.log('Selected media:', selectedMedia);
+    // 2. Seleccionar media
+    const selectedMedia = medias.find(m => m.type === 'video') || medias[0];
+    if (!selectedMedia?.url) throw '❌ No se encontró URL válida';
     
     const downloadUrl = selectedMedia.url;
-    
     await m.reply('*📥 Descargando video...*');
     
     // 3. Descargar directamente usando axios con stream
     tempFile = `temp_video_${Date.now()}.mp4`;
+    
+    // ✅ Agrega tus cookies aquí (manualmente)
+    const cookieHeader = [
+      'SID=g.a000zQiP0ucezBUNsofbbmbBI6s_VKfNeSkleQpFhy7nP-GIf2GeFGulTzpyaOpseCs7obOQggACgYKAbkSARESFQHGX2MikZnsGN00L4gYLnv_r2Mb1hoVAUF8yKrM8eAuWTeBHsdMu3jvHGfC0076',
+      'SSID=AKKHkuzb7H_RtRo6d',
+      'SIDCC=AKEyXzVwhiUJIxHVEz4ZddVCGF2B1NjaowPbeHvtFtX5t7JJ6e3upva7dj8_E8l1hgijnQCVBqk',
+      'VISITOR_INFO1_LIVE=wUugjRyz06k',
+      'YSC=CHm_FDU_ejA',
+      'VISITOR_PRIVACY_METADATA=CgJNWBIEGgAgJQ%3D%3D'
+    ].join('; ');
     
     const downloadResponse = await axios({
       method: 'GET',
@@ -66,146 +57,36 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
         'Accept-Language': 'en-US,en;q=0.9',
         'Accept-Encoding': 'identity',
         'Range': 'bytes=0-',
-        'Connection': 'keep-alive'
+        'Connection': 'keep-alive',
+        'Cookie': cookieHeader // ✅ Aquí se añade la cabecera de cookies
       },
-      timeout: 60000, // 60 segundos
+      timeout: 60000,
       maxRedirects: 5
     });
     
-    if (!downloadResponse.data) {
-      throw '❌ No se pudo obtener el stream del video';
-    }
-    
-    // 4. Crear stream de escritura
+    // 4. Descargar usando pipeline
     const writeStream = createWriteStream(tempFile);
-    let downloadedBytes = 0;
-    
-    // Monitorear progreso
-    downloadResponse.data.on('data', (chunk) => {
-      downloadedBytes += chunk.length;
-      // Log cada MB descargado
-      if (downloadedBytes % (1024 * 1024) === 0) {
-        console.log(`Descargados: ${Math.round(downloadedBytes / (1024 * 1024))}MB`);
-      }
-    });
-    
-    // 5. Pipeline para descargar
     await pipeline(downloadResponse.data, writeStream);
     
-    console.log(`Descarga completada: ${downloadedBytes} bytes`);
-    
-    // Verificar que el archivo se descargó correctamente
-    if (downloadedBytes < 1000) { // Menos de 1KB
-      throw '❌ El archivo descargado es demasiado pequeño, posiblemente corrupto';
-    }
-    
-    await m.reply('*📤 Enviando video...*');
-    
-    // 6. Enviar el video
+    // 5. Enviar el video
     await conn.sendMessage(m.chat, {
       video: { url: `file://${process.cwd()}/${tempFile}` },
-      caption: `*${title || 'Video de YouTube'}*\n⏱ ${duration ? `${duration}s` : ''} | 👤 ${author || ''}\n📏 ${Math.round(downloadedBytes / (1024 * 1024))}MB`,
-      mimetype: selectedMedia.extension === 'webm' ? 'video/webm' : 'video/mp4'
-    }, { quoted: m });
-    
-    console.log('Video enviado exitosamente');
-    
-  } catch (error) {
-    console.error('Error completo:', error);
-    
-    // Mensajes de error más específicos
-    let errorMessage = 'Falló la descarga del video';
-    
-    if (error.response?.status) {
-      errorMessage = `Error HTTP ${error.response.status}: ${error.response.statusText || 'Error del servidor'}`;
-    } else if (error.code === 'ECONNABORTED') {
-      errorMessage = 'Timeout: La descarga tomó demasiado tiempo';
-    } else if (error.code === 'ENOTFOUND') {
-      errorMessage = 'Error de conexión: No se pudo conectar al servidor';
-    } else if (error.message?.includes('API')) {
-      errorMessage = 'Error en la API de YouTube';
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-    
-    throw `*Error:* ${errorMessage}`;
-    
-  } finally {
-    // 7. Limpieza garantizada
-    if (tempFile) {
-      setTimeout(() => {
-        unlink(tempFile, (err) => {
-          if (err && err.code !== 'ENOENT') {
-            console.error('Error eliminando archivo temporal:', err);
-          } else {
-            console.log('Archivo temporal eliminado:', tempFile);
-          }
-        });
-      }, 10000); // Esperar 10 segundos antes de eliminar
-    }
-  }
-};
-
-// Versión alternativa usando ytdl-core como fallback
-const handlerYTDL = async (m, {conn, text, usedPrefix, command}) => {
-  if (!text) throw `*¡URL de YouTube requerida!*\nEjemplo: ${usedPrefix + command} https://youtu.be/...`;
-  
-  try {
-    // Importar ytdl-core dinámicamente
-    const ytdl = await import('ytdl-core').catch(() => null);
-    
-    if (!ytdl) {
-      throw 'ytdl-core no está instalado. Instala con: npm install ytdl-core';
-    }
-    
-    await m.reply('*🔍 Obteniendo información del video (método alternativo)...*');
-    
-    if (!ytdl.validateURL(text)) {
-      throw '❌ URL de YouTube no válida';
-    }
-    
-    const info = await ytdl.getInfo(text);
-    const title = info.videoDetails.title;
-    const author = info.videoDetails.author.name;
-    const duration = info.videoDetails.lengthSeconds;
-    
-    // Buscar formato apropiado
-    const format = ytdl.chooseFormat(info.formats, {
-      quality: 'lowest',
-      filter: 'videoandaudio'
-    });
-    
-    if (!format) {
-      throw '❌ No se encontró formato compatible';
-    }
-    
-    await m.reply('*📥 Descargando video (método alternativo)...*');
-    
-    const tempFile = `temp_ytdl_${Date.now()}.mp4`;
-    const stream = ytdl(text, { format: format });
-    const writeStream = createWriteStream(tempFile);
-    
-    await pipeline(stream, writeStream);
-    
-    await conn.sendMessage(m.chat, {
-      video: { url: `file://${process.cwd()}/${tempFile}` },
-      caption: `*${title}*\n⏱ ${duration}s | 👤 ${author}`,
+      caption: `*${title || 'Video de YouTube'}*\n⏱ ${duration ? `${duration}s` : ''} | 👤 ${author || ''}`,
       mimetype: 'video/mp4'
     }, { quoted: m });
     
-    setTimeout(() => unlink(tempFile, () => {}), 5000);
-    
   } catch (error) {
-    console.error('Error en ytdl alternativo:', error);
-    throw `*Error (método alternativo):* ${error.message || 'Falló la descarga'}`;
+    console.error('Error:', error);
+    throw `*Error:* ${error.message || 'Falló la descarga'}`;
+  } finally {
+    // Limpieza
+    if (tempFile) {
+      setTimeout(() => unlink(tempFile, () => {}), 10000);
+    }
   }
 };
 
 handler.help = ['ytdl <url>'];
 handler.tags = ['downloader'];
-handler.command = ['ytdl', 'youtube'];
-
-// Exportar ambas versiones
-handler.alternative = handlerYTDL;
-
+handler.command = ['socialdl'];
 export default handler;
