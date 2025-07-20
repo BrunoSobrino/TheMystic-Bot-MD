@@ -17,6 +17,8 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
  const data = await q.download?.();
  const image = await uploadImage(data);
  try {
+  const testing = await jadianime(image)
+  console.log(testing)
  const anime = await fetch(`https://deliriusapi-official.vercel.app/api/toanime?url=${image}`);
  const json = await anime.json();  
  await conn.sendFile(m.chat, json.data.convert, 'error.jpg', null, m);
