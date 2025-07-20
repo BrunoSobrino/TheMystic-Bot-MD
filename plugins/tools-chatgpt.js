@@ -12,7 +12,7 @@ let handler = async (m, { conn, args, usedPrefix, command, text }) => {
         if (!text) return m.reply(tradutor.texto1[0]);
         
         let mediax = null;
-        let userID = m.sender + '3';
+        let userID = m.sender;
         let imageDescription = '';
         let hasImage = false;
         
