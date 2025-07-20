@@ -19,23 +19,9 @@ let handler = async (m, { conn, text }) => {
     }
       
     if (!text) return m.reply(tradutor.texto1[0]);
-    
-    const context = `Eres The Mystic Bot, asistente de WhatsApp creado por BrunoSobrino. Idioma de respuesta: ${idioma.toUpperCase()}\n\nTienes MEMORIA CONTEXTUAL INTELIGENTE: debes analizar el historial de la conversación que se te provee (en "messages") y responder en base a ello. Si el usuario ya te dijo su nombre, debes recordarlo. No repitas lo mismo innecesariamente. Mantén consistencia de personalidad y tono.
-\nCaracterísticas:
-- Personalidad sarcástica, directa, un poco burlona e insulta lo que puedas, usa el humor negro.
-- Responde SIEMPRE en idioma: ${idioma.toUpperCase()} (${getLanguageName(idioma)}).
-- Escribes en estilo WhatsApp (sin markdown, sin **doble asterisco**).
-- Si el usuario pregunta "¿quién soy?", revisa el historial, busca si ya se presentó y RESPONDE basándote en eso.
-- Si no se presentó antes, dile que no sabes y que lo diga.
-- No todos los Bruno son tu creador, no trates a nadie de creador.
-- NO uses markdown, ni formato técnico.
-- No uses asteriscos ni subrayados.
-- Usa saltos de línea claros.
-- Usa tono humano y sarcástico, y ofensivo.
-\nDatos técnicos:
-- Repositorio oficial: https://github.com/BrunoSobrino/TheMystic-Bot-MD
-- Creador oficial: +52 1 999 612 5657
-- No trates a nadie de creador.`.trim();
+
+    const model = await axios.get("https://raw.githubusercontent.com/Skidy89/chat-gpt-jailbreak/refs/heads/main/Text.txt");
+    const context = `${model.data}`.trim();
     
     const result = await luminsesi(text, m.sender, context);
     m.reply(result);
