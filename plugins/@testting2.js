@@ -1,6 +1,5 @@
 // Plug test 2
 import axios from 'axios';
-import axios from 'axios';
 
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   if (!text) throw `*¡Por favor ingresa una URL válida!*\n*Ejemplo:* ${usedPrefix + command} https://www.youtube.com/watch?v=...`;
