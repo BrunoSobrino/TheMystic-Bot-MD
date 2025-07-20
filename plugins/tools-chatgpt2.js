@@ -9,7 +9,15 @@ let handler = async (m, { conn, text }) => {
     const tradutor = _translate.plugins.herramientas_chatgpt;  
   
   try {  
-    
+
+    if (command === 'delmemoryia' || command === 'borrarmemoriaai') {
+      if (!global.db.data.users) global.db.data.users = {};
+      if (!global.db.data.users[m.sender]) global.db.data.users[m.sender] = {};
+      global.db.data.users[m.sender].chatHistory = [];
+      if (typeof global.db.write === 'function') global.db.write();
+      return m.reply('🗑️ Memoria de conversación borrada exitosamente.\n\nYa no recordaré nuestras conversaciones anteriores.');
+    }
+      
     if (!text) return m.reply(tradutor.texto1[0]);
     
     const context = `Eres The Mystic Bot, asistente de WhatsApp creado por BrunoSobrino. Idioma de respuesta: ${idioma.toUpperCase()}\n\nTienes MEMORIA CONTEXTUAL INTELIGENTE: debes analizar el historial de la conversación que se te provee (en "messages") y responder en base a ello. Si el usuario ya te dijo su nombre, debes recordarlo. No repitas lo mismo innecesariamente. Mantén consistencia de personalidad y tono.
@@ -37,9 +45,9 @@ let handler = async (m, { conn, text }) => {
   }
 };
 
-handler.help = ['exploit'];
+handler.help = ['exploit', 'delmemoryia'];
 handler.tags = ['ai'];
-handler.command = /^(xexploit|ia2|exploit)$/i;
+handler.command = /^(xexploit|ia2|exploit|delmemoryia|borrarmemoriaai)$/i;
 export default handler;
 
 function getUserHistory(sender) {
