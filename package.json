@@ -103,8 +103,7 @@
     "puppeteer": "*",
     "@xct007/frieren-scraper": "github:xct007/frieren-scraper",
     "wa-sticker-formatter": "^4.3.2",
-    "cloudscraper": "*",
-    "cloudflare-scraper": "*"
+    "cloudscraper.js": "*"
   },
   "devDependencies": {
     "eslint": "^8.45.0",
