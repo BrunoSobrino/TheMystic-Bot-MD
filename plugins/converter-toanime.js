@@ -17,12 +17,6 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
  const data = await q.download?.();
  const image = await uploadImage(data);
  try {
- const img = await conn.getFile(image);  
- const tuanime = await jadianime(img.data);
-  console.log(tuanime)
- await conn.sendFile(m.chat, tuanime.image_data, 'error.jpg', null, m);
- } catch (e) {
- try {
  const anime = await fetch(`https://deliriusapi-official.vercel.app/api/toanime?url=${image}`);
  const json = await anime.json();  
  await conn.sendFile(m.chat, json.data.convert, 'error.jpg', null, m);
@@ -40,13 +34,11 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
  await conn.sendFile(m.chat, anime3, 'error.jpg', null, m);
  } catch {
  throw `*${tradutor.texto3}*`;
-     }
     }
    } 
   }
  }
 };
-
 handler.help = ['toanime'];
 handler.tags = ['converter'];
 handler.command = ['jadianime', 'toanime'];
@@ -58,7 +50,7 @@ async function jadianime(image) {
         const requestId = Math.random().toString(36).substring(7); 
         const userAgent = getRandomUserAgent();
         const ipAddress = generateRandomIP();
-        axios("https://www.drawever.com/api/photo-to-anime", {
+        axios("https://www.drawever.com/ai/photo-to-anime", {
             headers: {
                 "content-type": "application/json",
                 "X-Request-ID": requestId,
