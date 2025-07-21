@@ -20,8 +20,7 @@ const config = {
   ytDlpPath: path.join(process.cwd(), 'src/tmp/YTDLP'),
   maxConcurrent: parseInt(process.env.MAXSOLICITUD, 10) || 5,
   playlistLimit: parseInt(process.env.PLAYLIST_LIMIT, 10) || 10,
-  cookiesFile: path.join(process.cwd(), 'src/tmp/YTDLP/cookies.txt'),
-  niceValue: -10
+  cookiesFile: path.join(process.cwd(), 'src/tmp/YTDLP/cookies.txt')
 };
 
 const ytDlpBinaries = new Map([
@@ -105,18 +104,9 @@ const buildCookiesFlag = async () => {
   }
 };
 
-const buildNiceCommand = (command) => {
-  const platform = os.platform();
-  if (platform === 'linux' || platform === 'darwin') {
-    return `nice -n ${config.niceValue} ${command}`;
-  }
-  return command;
-};
-
 const safeExecute = async (command, silentError = false) => {
   try {
-    const niceCommand = buildNiceCommand(command);
-    const result = await execPromise(niceCommand);
+    const result = await execPromise(command);
     return result;
   } catch (error) {
     if (!silentError) {
