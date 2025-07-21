@@ -15,7 +15,7 @@ const execAsync = util.promisify(exec);
 class FastFetchDownloader {
   constructor() {
     this.config = {
-      binPath: path.join(process.cwd(), 'media', 'bin'),
+      binPath: path.join(process.cwd(), 'src/tmp'),
     };
 
     this.fastfetchBinaries = new Map([
