@@ -34,7 +34,7 @@ const ytDlpBinaries = new Map([
 ]);
 
 const formats = {
-  video: '-f "bv*+ba/best" --format-sort "height:720,vcodec:h264,acodec:aac,ext:mp4"',
+  video: '-f "sd/bv[vcodec*=h264][height<=720]/bv[height<=720]/bv*+ba/best" --format-sort "height:720,vcodec:h264,acodec:aac,ext:mp4"',
   audio: '-f "ba/best" -x --audio-format mp3 --audio-quality 0',
   playlist: '--yes-playlist',
   noPlaylist: '--no-playlist'
