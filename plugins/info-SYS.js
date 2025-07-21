@@ -1,8 +1,9 @@
-// MR. De la Comunidad para la Comunidad. Prohibida su Venta.
-// El Software se proporciona bajo los términos de la Licencia MIT, excepto que usted no puede:
-// 1. Vender, revender o arrendar el Software.
-// 2. Cobrar a otros por el acceso, la distribución o cualquier otro uso comercial del Software.
-// 3. Usar el Software como parte de un producto comercial o una oferta de servicio.
+// dla.js
+// Copyright (C) 2025 Weskerty
+//
+// Este programa se distribuye bajo los términos de la Licencia Pública General Affero de GNU (AGPLv3).
+// Usted puede usarlo, modificarlo y redistribuirlo bajo esa licencia.
+// Licencia completa: https://www.gnu.org/licenses/agpl-3.0.html
 
 import os from 'os';
 import { exec } from 'child_process';
@@ -15,7 +16,7 @@ const execAsync = util.promisify(exec);
 class FastFetchDownloader {
   constructor() {
     this.config = {
-      binPath: path.join(process.cwd(), 'media', 'bin'),
+      binPath: path.join(process.cwd(), 'src/tmp'),
     };
 
     this.fastfetchBinaries = new Map([
