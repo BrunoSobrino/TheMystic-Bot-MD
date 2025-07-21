@@ -4,6 +4,7 @@
 // Este programa se distribuye bajo los términos de la Licencia Pública General Affero de GNU (AGPLv3).
 // Usted puede usarlo, modificarlo y redistribuirlo bajo esa licencia.
 // Licencia completa: https://www.gnu.org/licenses/agpl-3.0.html
+// Cambio Actualizar Automaticamente.
 
 import fs from "fs";
 import path, { join, basename } from "path";
@@ -33,8 +34,6 @@ const ytDlpBinaries = new Map([
   ['default', 'yt-dlp'],
 ]);
 
-
-//Calidad del Video. Trata de priorizar h264 compatible con whatsapp y la mayoria de dispositivos. Funciona con FB, Reddit, YT. mas detalles en: https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options
 const formats = {
   video: '-f "sd/18/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=aac]/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=mp4a]/bestvideo[height<=720][vcodec*=h264]+bestaudio/bestvideo[height<=720]+bestaudio/bestvideo[vcodec*=h264]+bestaudio/bestvideo+bestaudio/best"', 
   audio: '-f "ba/best" -x --audio-format mp3 --audio-quality 0',
@@ -191,6 +190,27 @@ const downloadYtDlp = async (m) => {
   }
 };
 
+const updateYtDlp = async (m, errorMsg = null) => {
+  try {
+    const ytDlpPath = await detectYtDlpBinary(m);
+    const updateCommand = `${ytDlpPath} --update-to nightly`;
+    
+    const result = await safeExecute(updateCommand);
+    
+    const updateOutput = result.stdout || result.stderr || 'yt-dlp actualizado exitosamente';
+    const finalMsg = errorMsg ? `Stderr: ${errorMsg}\n\n${updateOutput}` : updateOutput;
+    await m.reply(finalMsg);
+    
+    return true;
+  } catch (error) {
+    console.error(`Update error: ${error.message}`);
+    const errorOutput = error.stdout || error.stderr || `Error al actualizar: ${error.message}`;
+    const finalMsg = errorMsg ? `Stderr: ${errorMsg}\n\n${errorOutput}` : errorOutput;
+    await m.reply(finalMsg);
+    return false;
+  }
+};
+
 const processDownloadedFile = async (m, filePath, originalFileName, isVideo = false) => {
   try {
     await fs.promises.access(filePath);
@@ -235,84 +255,29 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
         `"${url}"`
       ].filter(Boolean).join(' ');
 
-      console.log(`Ejecutando comando: ${command}`);
-      console.log(`Directorio de salida: ${outputDir}`);
-
       try {
         await safeExecute(command);
         
-        try {
-          await fs.promises.access(outputDir);
-          const files = await fs.promises.readdir(outputDir);
-          console.log(`Archivos encontrados: ${files.length}`);
+        const files = await fs.promises.readdir(outputDir);
+        
+        for (const file of files) {
+          const fullPath = path.join(outputDir, file);
           
-          if (files.length === 0) {
-            console.log('No se descargaron archivos');
-            continue;
+          try {
+            await processDownloadedFile(m, fullPath, file, isVideo);
+          } catch (processError) {
+            console.error(`Error procesando archivo ${file}: ${processError.message}`);
           }
-          
-          for (const file of files) {
-            const fullPath = path.join(outputDir, file);
-            console.log(`Procesando archivo: ${fullPath}`);
-            
-            try {
-              await processDownloadedFile(m, fullPath, file, isVideo);
-            } catch (processError) {
-              console.error(`Error procesando archivo ${file}: ${processError.message}`);
-            }
-          }
-        } catch (dirError) {
-          console.error(`Error accediendo al directorio ${outputDir}: ${dirError.message}`);
         }
       } catch (error) {
-        console.error(`Descarga fallida para ${url}: ${error.message}`);
-        throw error;
+        const errorMsg = error.stderr || error.message || 'Error desconocido';
+        await updateYtDlp(m, errorMsg);
       }
     }
   } finally {
     await fs.promises.rm(outputDir, { recursive: true, force: true }).catch((err) => {
       console.error(`Error limpiando directorio temporal: ${err.message}`);
     });
-  }
-};
-
-const updateYtDlp = async (m, silent = false) => {
-  try {
-    const ytDlpPath = await detectYtDlpBinary(m);
-    
-    if (await isYtDlpAvailable()) {
-      if (!silent) {
-        await m.reply('ℹ️ yt-dlp instalado en sistema, no se actualiza automaticamente');
-      }
-      return;
-    } else {
-      const fileName = detectYtDlpBinaryName();
-      const filePath = path.join(config.ytDlpPath, fileName);
-      
-      try {
-        await safeExecute(`${ytDlpPath} --update-to nightly`);
-        if (!silent) {
-          await m.reply(`✅ yt-dlp auto-actualizado desde binario`);
-        }
-        return;
-      } catch {
-        try {
-          await fs.promises.unlink(filePath).catch(() => {});
-          const newPath = await downloadYtDlp(m);
-          if (!silent) {
-            await m.reply(`✅ yt-dlp actualizado descargando nuevo binario`);
-          }
-        } catch {
-          if (!silent) {
-            await m.reply('❌ Error actualizando yt-dlp');
-          }
-        }
-      }
-    }
-  } catch (error) {
-    if (!silent) {
-      await m.reply('⚠️ Actualizacion de yt-dlp intentada');
-    }
   }
 };
 
@@ -355,27 +320,21 @@ const searchAndDownload = async (m, searchQuery, isVideo = false) => {
           `"${source}10:${searchQuery}"`
         ].filter(Boolean).join(' ');
         
-        console.log(`Buscando en ${name}: ${command}`);
-        
         await safeExecute(command);
 
-        try {
-          await fs.promises.access(outputDir);
-          const files = await fs.promises.readdir(outputDir);
-          console.log(`Archivos encontrados en ${name}: ${files.length}`);
-          
-          if (files.length > 0) {
-            await Promise.all(
-              files.map(file => processDownloadedFile(m, path.join(outputDir, file), file, isVideo))
-            );
-            success = true;
-            break;
-          }
-        } catch (dirError) {
-          console.error(`Error accediendo al directorio despues de busqueda: ${dirError.message}`);
+        const files = await fs.promises.readdir(outputDir);
+        
+        if (files.length > 0) {
+          await Promise.all(
+            files.map(file => processDownloadedFile(m, path.join(outputDir, file), file, isVideo))
+          );
+          success = true;
+          break;
         }
       } catch (error) {
-        console.error(`Error buscando en ${name}: ${error.message}`);
+        const errorMsg = error.stderr || error.message || 'Error desconocido';
+        await updateYtDlp(m, errorMsg);
+        
         await fs.promises.rm(outputDir, { recursive: true, force: true }).catch(() => {});
         await fs.promises.mkdir(outputDir, { recursive: true });
       }
@@ -400,7 +359,6 @@ const handleRequest = async (m) => {
       '> 🎥Buscar y descargar video:\n`dla vd` <consulta>\n' +
       '> ⬇️Descargar todo tipo de media: \n`dla` <url> _YT-DLP FLAGS_ \n' +
       '> 🎵Descargar todo el audio de playlist: \n`dla mp3` <url> \n' +
-      '> 🆙Fallo en descarga? Actualizar YT-DLP: \n`dla update` \n' +
       '> 🌐Mas informacion:\ngithub.com/yt-dlp/yt-dlp/blob/master/README.md#usage-and-options'
     );
     return;
@@ -417,7 +375,7 @@ const handleRequest = async (m) => {
     const remainingArgs = args.slice(1);
     const urls = remainingArgs.filter(arg => isUrl(arg));
     
-    if (!urls.length && command !== 'update') {
+    if (!urls.length) {
       if (input.includes('://')) {
         const inputUrl = input.match(/(https?:\/\/[^\s]+)/)?.[1];
         if (inputUrl) {
@@ -435,10 +393,6 @@ const handleRequest = async (m) => {
     }
 
     switch (command) {
-      case 'update':
-        await updateYtDlp(m);
-        break;
-
       case 'mp3':
         if (urls.length) {
           const options = remainingArgs
@@ -465,7 +419,7 @@ let handler = (m) => {
   return downloadQueue.add(() => handleRequest(m));
 };
 
-handler.help = ['dla [OPTIONS] URL', 'dla update', 'dla vd <consulta>', 'dla mp3 <url>'];
+handler.help = ['dla [OPTIONS] URL', 'dla vd <consulta>', 'dla mp3 <url>'];
 handler.tags = ['tools'];
 handler.command = /^(dla)$/i;
 handler.owner = false;
