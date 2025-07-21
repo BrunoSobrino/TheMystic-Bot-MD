@@ -15,20 +15,20 @@ const execAsync = util.promisify(exec);
 class FastFetchDownloader {
   constructor() {
     this.config = {
-      binPath: path.join(process.cwd(), 'src/tmp'),
+      binPath: path.join(process.cwd(), 'media', 'bin'),
     };
 
     this.fastfetchBinaries = new Map([
       ['linux-x64', {
-        url: 'https://github.com/fastfetch-cli/fastfetch/releases/download/2.35.0/fastfetch-linux-amd64.tar.gz',
+        fileName: 'fastfetch-linux-amd64.tar.gz',
         relativePath: 'fastfetch-linux-amd64/usr/bin/fastfetch',
       }],
       ['linux-arm64', {
-        url: 'https://github.com/fastfetch-cli/fastfetch/releases/download/2.35.0/fastfetch-linux-aarch64.tar.gz',
+        fileName: 'fastfetch-linux-aarch64.tar.gz',
         relativePath: 'fastfetch-linux-aarch64/usr/bin/fastfetch',
       }],
       ['win32-x64', {
-        url: 'https://github.com/fastfetch-cli/fastfetch/releases/download/2.35.0/fastfetch-windows-amd64.zip',
+        fileName: 'fastfetch-windows-amd64.zip',
         relativePath: 'fastfetch-windows-amd64/fastfetch.exe',
       }],
     ]);
@@ -77,11 +77,12 @@ class FastFetchDownloader {
     }
 
     await fs.mkdir(this.config.binPath, { recursive: true });
-    const downloadPath = path.join(this.config.binPath, path.basename(binary.url));
+    const downloadUrl = `https://github.com/fastfetch-cli/fastfetch/releases/latest/download/${binary.fileName}`;
+    const downloadPath = path.join(this.config.binPath, binary.fileName);
     const extractPath = this.config.binPath;
 
     try {
-      await execAsync(`curl -fsSL -o "${downloadPath}" "${binary.url}"`);
+      await execAsync(`curl -fsSL -o "${downloadPath}" "${downloadUrl}"`);
       
       if (platform === 'win32') {
         await execAsync(`powershell -Command "Expand-Archive -Path '${downloadPath}' -DestinationPath '${extractPath}' -Force"`);
@@ -97,7 +98,31 @@ class FastFetchDownloader {
       await fs.unlink(downloadPath);
       return binaryPath;
     } catch (error) {
-      throw error;
+      try {
+        const fetch = (await import('node-fetch')).default;
+        
+        const response = await fetch(downloadUrl);
+        if (!response.ok) throw new Error(`Download failed: ${response.statusText}`);
+
+        const buffer = Buffer.from(await response.arrayBuffer());
+        await fs.writeFile(downloadPath, buffer);
+
+        if (platform === 'win32') {
+          await execAsync(`powershell -Command "Expand-Archive -Path '${downloadPath}' -DestinationPath '${extractPath}' -Force"`);
+        } else {
+          await execAsync(`tar xf "${downloadPath}" -C "${extractPath}"`);
+        }
+
+        const binaryPath = path.join(this.config.binPath, binary.relativePath);
+        if (platform !== 'win32') {
+          await fs.chmod(binaryPath, '755');
+        }
+
+        await fs.unlink(downloadPath);
+        return binaryPath;
+      } catch (fallbackError) {
+        throw fallbackError;
+      }
     }
   }
 
@@ -173,6 +198,26 @@ async function getSoftwareVersions() {
   return versions.join('\n');
 }
 
+async function runSpeedtest(m, extra) {
+  try {
+    const speedtestPath = './src/libraries/ookla-speedtest.py';
+    const { stdout, stderr } = await execAsync('python3 ' + speedtestPath + ' --secure --share');
+    
+    if (stdout.trim()) {
+      const match = stdout.match(/http[^"]+\.png/);
+      const urlImagen = match ? match[0] : null;
+      await extra.conn.sendMessage(m.chat, {image: {url: urlImagen}, caption: stdout.trim()});
+    }
+    if (stderr.trim()) { 
+      const match2 = stderr.match(/http[^"]+\.png/);
+      const urlImagen2 = match2 ? match2[0] : null;    
+      await extra.conn.sendMessage(m.chat, {image: {url: urlImagen2}, caption: stderr.trim()});
+    }
+  } catch (error) {
+    await extra.conn.sendMessage(m.chat, { text: '❌ Error en speedtest: ' + error.message });
+  }
+}
+
 async function systemInfoPlugin(m, extra) {
   try {
     const fastFetchPath = await new FastFetchDownloader().getFastFetchPath();
@@ -186,6 +231,8 @@ async function systemInfoPlugin(m, extra) {
 
     const softwareVersions = await getSoftwareVersions();
     await extra.conn.sendMessage(m.chat, { text: softwareVersions });
+
+    await runSpeedtest(m, extra);
 
   } catch (error) {
     console.error('Falla Plugin sysinfo:', error);
