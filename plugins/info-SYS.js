@@ -6,131 +6,187 @@
 
 import os from 'os';
 import { exec } from 'child_process';
+import fs from 'fs/promises';
+import util from 'util';
+import path from 'path';
 
-function formatUptime(uptime) {
-  const seconds = Math.floor(uptime % 60);
-  const minutes = Math.floor((uptime / 60) % 60);
-  const hours = Math.floor((uptime / 3600) % 24);
-  return `${hours} horas, ${minutes} minutos, ${seconds} segundos`;
-}
+const execAsync = util.promisify(exec);
 
-function getVersions(callback) {
-  exec('node -v', (err, nodeVersion) => {
-    if (err) nodeVersion = '✖️';
-    exec('npm -v', (err, npmVersion) => {
-      if (err) npmVersion = '✖️';
-      exec('ffmpeg -version', (err, ffmpegVersion) => {
-        if (err) ffmpegVersion = '✖️';
-        exec('python --version || python3 --version || py --version', (err, pythonVersion) => {
-          if (err) pythonVersion = '✖️';
-          exec('pip --version || pip3 --version', (err, pipVersion) => {
-            if (err) pipVersion = '✖️';
-            exec('choco -v', (err, chocoVersion) => {
-              if (err) chocoVersion = '✖️';
-              callback({ nodeVersion, npmVersion, ffmpegVersion, pythonVersion, pipVersion, chocoVersion });
-            });
-          });
-        });
-      });
-    });
-  });
-}
+class FastFetchDownloader {
+  constructor() {
+    this.config = {
+      binPath: path.join(process.cwd(), 'media', 'bin'),
+    };
 
-function getStorageInfo(callback) {
-  if (os.platform() === 'win32') {
-    exec('wmic logicaldisk get size,freespace,caption', (err, stdout) => {
-      if (err) return callback('✖️');
-      const lines = stdout.trim().split('\n').slice(1);
-      const storageInfo = lines.map(line => {
-        const [drive, free, total] = line.trim().split(/\s+/);
-        return `🖥️ ${drive}: ${(total / (1024 ** 3)).toFixed(2)} GB total, ${(free / (1024 ** 3)).toFixed(2)} GB libres`;
-      }).join('\n');
-      callback(storageInfo);
-    });
-  } else {
-    exec('df -h --output=source,size,avail,target', (err, stdout) => {
-      if (err) return callback('✖️');
-      const lines = stdout.trim().split('\n').slice(1);
-      const storageInfo = lines.map(line => {
-        const [device, total, free, mount] = line.trim().split(/\s+/);
-        return `🖥️ ${mount}: ${total} total, ${free} libres en ${device}`;
-      }).join('\n');
-      callback(storageInfo);
-    });
+    this.fastfetchBinaries = new Map([
+      ['linux-x64', {
+        url: 'https://github.com/fastfetch-cli/fastfetch/releases/download/2.35.0/fastfetch-linux-amd64.tar.gz',
+        relativePath: 'fastfetch-linux-amd64/usr/bin/fastfetch',
+      }],
+      ['linux-arm64', {
+        url: 'https://github.com/fastfetch-cli/fastfetch/releases/download/2.35.0/fastfetch-linux-aarch64.tar.gz',
+        relativePath: 'fastfetch-linux-aarch64/usr/bin/fastfetch',
+      }],
+      ['win32-x64', {
+        url: 'https://github.com/fastfetch-cli/fastfetch/releases/download/2.35.0/fastfetch-windows-amd64.zip',
+        relativePath: 'fastfetch-windows-amd64/fastfetch.exe',
+      }],
+    ]);
+  }
+
+  getPlatformInfo() {
+    let platform = os.platform();
+    let arch = os.arch();
+
+    if (platform === 'android') {
+      platform = 'android';
+      arch = arch === 'arm64' ? 'arm64' : 'x64';
+    } else if (platform === 'linux') {
+      arch = (arch === 'arm64' || arch === 'aarch64') ? 'arm64' : 'x64';
+    } else if (platform === 'win32') {
+      arch = 'x64';
+    }
+
+    return { platform, arch };
+  }
+
+  async tryInstallFromPackageManager() {
+    const { platform } = this.getPlatformInfo();
+    
+    try {
+      if (platform === 'android') {
+        await execAsync('pkg update -y && pkg install fastfetch -y');
+        return true;
+      } else if (platform === 'linux') {
+        await execAsync('sudo apt update && sudo apt install fastfetch -y');
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+    return false;
+  }
+
+  async downloadAndExtractFastFetch() {
+    const { platform, arch } = this.getPlatformInfo();
+    const key = `${platform === 'android' ? 'linux' : platform}-${arch}`;
+    const binary = this.fastfetchBinaries.get(key);
+
+    if (!binary) {
+      throw new Error(`Unsupported System: ${key}`);
+    }
+
+    await fs.mkdir(this.config.binPath, { recursive: true });
+    const downloadPath = path.join(this.config.binPath, path.basename(binary.url));
+    const extractPath = this.config.binPath;
+
+    try {
+      await execAsync(`curl -fsSL -o "${downloadPath}" "${binary.url}"`);
+      
+      if (platform === 'win32') {
+        await execAsync(`powershell -Command "Expand-Archive -Path '${downloadPath}' -DestinationPath '${extractPath}' -Force"`);
+      } else {
+        await execAsync(`tar xf "${downloadPath}" -C "${extractPath}"`);
+      }
+
+      const binaryPath = path.join(this.config.binPath, binary.relativePath);
+      if (platform !== 'win32') {
+        await fs.chmod(binaryPath, '755');
+      }
+
+      await fs.unlink(downloadPath);
+      return binaryPath;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getFastFetchPath() {
+    try {
+      const { stdout } = await execAsync('which fastfetch');
+      if (stdout.trim()) return 'fastfetch';
+    } catch {}
+
+    if (await this.tryInstallFromPackageManager()) {
+      return 'fastfetch';
+    }
+
+    const { platform, arch } = this.getPlatformInfo();
+    const key = `${platform === 'android' ? 'linux' : platform}-${arch}`;
+    const binary = this.fastfetchBinaries.get(key);
+    const localBinaryPath = path.join(this.config.binPath, binary.relativePath);
+
+    try {
+      await fs.access(localBinaryPath);
+      return localBinaryPath;
+    } catch {
+      return await this.downloadAndExtractFastFetch();
+    }
   }
 }
 
-function getLinuxInfo(callback) {
-  exec('cat /etc/os-release', (err, osInfo) => {
-    if (err) osInfo = '✖️';
-    callback(osInfo.trim());
-  });
+async function safeExec(command, fallbackCommand = null) {
+  try {
+    const { stdout } = await execAsync(command);
+    return stdout.trim();
+  } catch (error) {
+    if (fallbackCommand) {
+      try {
+        const { stdout } = await execAsync(fallbackCommand);
+        return stdout.trim();
+      } catch (err) {
+        return null;
+      }
+    }
+    return null;
+  }
 }
 
-function getBatteryInfo(callback) {
-  if (os.platform() === 'linux' || os.platform() === 'darwin') {
-    exec('upower -i $(upower -e | grep BAT)', (err, batteryInfo) => {
-      if (err) return callback('✖️');
-      callback(batteryInfo);
-    });
-  } else if (os.platform() === 'win32') {
-    exec('WMIC Path Win32_Battery Get EstimatedChargeRemaining', (err, batteryInfo) => {
-      if (err) return callback('✖️');
-      callback(`🔋 ${batteryInfo.trim()}%`);
-    });
-  } else {
-    callback('✖️');
+async function getSoftwareVersions() {
+  const versions = [];
+  
+  const sudoCheck = await safeExec('which sudo');
+  versions.push(`*Sudo* ${sudoCheck ? '✅' : '✖'}`);
+  
+  const checks = [
+    { name: 'Node.js', command: 'node -v', emoji: '🟢' },
+    { name: 'NPM', command: 'npm -v', emoji: '📦' },
+    { name: 'Python', command: 'python3 --version', fallback: 'python --version', emoji: '🐍' },
+    { name: 'Chocolatey', command: 'choco --version', emoji: '🍫' },
+    { name: 'FFmpeg', command: 'ffmpeg -version', emoji: '🎬', process: (out) => out.split('\n')[0] }
+  ];
+  
+  const pipOutput = await safeExec('pip3 --version', 'pip --version');
+  let pipVersion = '✖';
+  if (pipOutput) {
+    const pipMatch = pipOutput.match(/pip\s+(\d+\.\d+\.\d+)/);
+    pipVersion = pipMatch ? pipMatch[1] : pipOutput;
   }
+  versions.push(`📊 *PIP:* ${pipVersion}`);
+
+  for (const check of checks) {
+    const output = await safeExec(check.command, check.fallback);
+    let value = output ? (check.process ? check.process(output) : output) : '✖';
+    versions.push(`${check.emoji} *${check.name}:* ${value}`);
+  }
+
+  return versions.join('\n');
 }
 
 async function systemInfoPlugin(m, extra) {
   try {
-    const systemInfo = {
-      platform: os.platform(),
-      cpuArch: os.arch(),
-      cpus: os.cpus().length,
-      totalMemory: (os.totalmem() / (1024 ** 3)).toFixed(2) + ' GB', // Total RAM en GB
-      freeMemory: (os.freemem() / (1024 ** 3)).toFixed(2) + ' GB',   // RAM libre en GB
-      uptime: formatUptime(os.uptime()),                             // Tiempo de actividad
-      osVersion: os.release(),                                       // Versión del SO
-      loadAverage: os.loadavg().map(load => load.toFixed(2)).join(', ') // Carga promedio
-    };
+    const fastFetchPath = await new FastFetchDownloader().getFastFetchPath();
+    const sysInfo = await safeExec(`"${fastFetchPath}" -l none -c all`);
+    
+    if (sysInfo) {
+      await extra.conn.sendMessage(m.chat, { text: sysInfo });
+    } else {
+      throw new Error('No se pudo obtener información del sistema');
+    }
 
-    getVersions((versions) => {
-      getBatteryInfo((batteryStatus) => {
-        getStorageInfo((storageInfo) => {
-          getLinuxInfo((linuxInfo) => {
-            let infoMessage = `> *📊 Información del Sistema*\n\n`;
-            infoMessage += `- 🌐 *Plataforma*: _${systemInfo.platform}_\n`;
-            infoMessage += `- 💻 *Arquitectura CPU*: ${systemInfo.cpuArch}\n`;
-            infoMessage += `- 🧠 *Núcleos CPU*: ${systemInfo.cpus}\n`;
-            infoMessage += `- 🗄️ *Memoria Total*: ${systemInfo.totalMemory}\n`;
-            infoMessage += `- 🗃️ *Memoria Libre*: ${systemInfo.freeMemory}\n`;
-            infoMessage += `- ⏱️ *Tiempo de Actividad*: ${systemInfo.uptime}\n`;
-            infoMessage += `- 📀 *Versión del SO*: ${systemInfo.osVersion}\n`;
-            infoMessage += `- 📊 *Carga Promedio (1, 5, 15 min)*: ${systemInfo.loadAverage}\n`;
-            infoMessage += `- 🔋 *Energia*: ${batteryStatus}\n\n`;
+    const softwareVersions = await getSoftwareVersions();
+    await extra.conn.sendMessage(m.chat, { text: softwareVersions });
 
-            infoMessage += `> *💾 Almacenamiento*\n`;
-            infoMessage += `${storageInfo}\n\n`;
-
-            infoMessage += `> *🛠️ Version Herramientas*\n\n`;
-            infoMessage += `- ☕ *Node.js*: ${versions.nodeVersion.trim()}\n`;
-            infoMessage += `- 📦 *NPM*: ${versions.npmVersion.trim()}\n`;
-            infoMessage += `- 🎥 *FFmpeg*: ${versions.ffmpegVersion.split('\n')[0]}\n`; // Solo primera linea
-            infoMessage += `- 🐍 *Python*: ${versions.pythonVersion.trim()}\n`;
-            infoMessage += `- 📦 *PIP*: ${versions.pipVersion.trim()}\n`;
-            infoMessage += `- 🍫 *Chocolatey*: ${versions.chocoVersion.trim()}\n\n`;
-
-            if (os.platform() === 'linux') {
-              infoMessage += `> *🐧 Distribución Linux*\n${linuxInfo}\n`;
-            }
-
-            extra.conn.sendMessage(m.chat, { text: infoMessage });
-          });
-        });
-      });
-    });
   } catch (error) {
     console.error('Falla Plugin sysinfo:', error);
     await extra.conn.sendMessage(m.chat, { text: 'ERROR' });
