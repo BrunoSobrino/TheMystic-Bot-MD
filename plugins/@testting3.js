@@ -7,8 +7,6 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         conn.sendMessage(m.chat, { text: '⏳ *Procesando enlace...*'}, { quoted: m });
 
         const result = await unlockWithAllDebrid(url);
-
-        console.log(result)
         
         if (!result.success) {
             return await conn.sendMessage(m.chat, { 
@@ -16,32 +14,24 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
             }, { quoted: m });
         }
       
-        const documentContent = `
-📁 *Información del Archivo*
+        const documentContent = `📁 *Información del Archivo*
 
 🔹 *Nombre:* ${result.fileInfo.filename}
 🔹 *Tamaño:* ${result.fileInfo.sizeFormatted}
 🔹 *Host:* ${result.fileInfo.host}
 
 🔗 *Enlace de Descarga Directa:*
-${result.downloadUrl}
+—◉ ${result.downloadUrl}
 
-⚠ *Este enlace es temporal, descarga pronto!*
-        `.trim();
+⚠ *Este enlace es temporal!*`.trim();
 
         conn.sendMessage(m.chat, { text: documentContent }, { quoted: m });
 
-        conn.sendMessage(m.chat, {
-            document: { url: result.downloadUrl },
-            fileName: result.fileInfo.filename,
-            mimetype: 'video/mp4'  
-        }, { quoted: m });
+        await conn.sendMessage(m.chat, { document: { url: result.downloadUrl }, fileName: result.fileInfo.filename, mimetype: 'video/mp4' }, { quoted: m });
 
     } catch (error) {
         console.error('Error en el handler:', error);
-        await conn.sendMessage(m.chat, {
-            text: `⚠ *Ocurrió un error inesperado*\n\n${error.message}\n\nPor favor intenta nuevamente más tarde.`
-        }, { quoted: m });
+        await conn.sendMessage(m.chat, {text: `⚠ *Ocurrió un error inesperado*\n\n${error.message}\n\nPor favor intenta nuevamente más tarde.`}, { quoted: m });
     }
 };
 
