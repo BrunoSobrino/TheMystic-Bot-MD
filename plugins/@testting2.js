@@ -1,80 +1,125 @@
+// Si robas doname o deja creditos, rata!
 import axios from 'axios';
+import * as cheerio from 'cheerio';
 
-async function downloadVideoBuffer(videoUrl, cookies) {
+const handler = async (m, { conn, text, prefix: usedPrefix, command }) => {
+  if (!text) return m.reply(`🎬 *Proporciona un enlace de Cuevana3*\nEjemplo: ${usedPrefix + command} https://wwv.cuevana3.eu/ver-pelicula/cars`);
+  
   try {
-    const response = await axios({
-      method: 'get',
-      url: videoUrl,
-      responseType: 'arraybuffer',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Origin': 'https://www.youtube.com',
-        'Referer': 'https://www.youtube.com/',
-        'Cookie': cookies,
-        'X-Origin': 'https://www.youtube.com',
-        'X-Goog-Visitor-Id': 'CgtwU3B4WEdNNVlNRSiIm5uKBg%3D%3D', // Ejemplo, reemplaza con tu visitor ID real
-        'X-Youtube-Client-Name': '1',
-        'X-Youtube-Client-Version': '2.20210721.00.00'
-      },
-      maxRedirects: 5,
-      validateStatus: (status) => status === 200 || status === 302
-    });
+    const url = text.startsWith('https://wwv.cuevana3.eu') ? text : `https://wwv.cuevana3.eu${text}`;
+    const { title, image, info, sinopsis, onlineLink, downloads } = await getInfoCuevana(url);
 
-    return Buffer.from(response.data, 'binary');
-  } catch (error) {
-    console.error('❌ Error en downloadVideoBuffer:', error.message);
-    throw new Error(`Fallo en la descarga: ${error.response?.status || 'Sin conexión'}`);
-  }
-}
-
-const handler = async (m, { conn, args }) => {
-  try {
-    // Verificar URL
-    if (!args[0] || !args[0].includes('googlevideo.com')) {
-      return m.reply('❌ Proporciona una URL válida de googlevideo.com');
+    let imageUrl = image;
+    if (image && image.startsWith('/_next/image')) {
+      const match = image.match(/url=(.*?)&/);
+      imageUrl = match ? decodeURIComponent(match[1]) : 'https://www.poresto.net/u/fotografias/m/2023/7/5/f1280x720-305066_436741_5050.png';
     }
 
-    // Cookies COMPLETAS (actualízalas con tus cookies recientes)
-    const youtubeCookies = [
-      'VISITOR_INFO1_LIVE=wUugjRyz06k',
-      'VISITOR_PRIVACY_METADATA=CgJNWBIEGgAgJQ%3D%3D',
-      'LOGIN_INFO=AFmmF2swRQIhAPsZ7wVEHXqixaiMqnjwjO3romKnxQN1R_GdtxcNL5LZAiB5zmvqDM5KWSkCRwU4Thah6XIh2sraoZF8cSEf_kZN2g:QUQ3MjNmem1GUUQ3ai1yaGVCajVfRnJ2UlloMklZUFZlYnhxNC1rSXpuS3lZUU9LUHBDTEFBZW1Ga0tLa0xBendWdFBkQXV0aGtESWJ6ZEhxLUhnamRvYXZkVm9PVENkYUZGNVU5OEExZEdOTGFScThwVjNXNTY4bjVPMEE0ckNQY2NUYmFESkM5MEQ3eFlSdkNvVnRaVkpRazdPTkFZNjlB',
-      'PREF=tz=America.Mexico_City&f4=4000000&f6=40000000&f7=100',
-      'HSID=AvJSLUfwtUErH_HQX',
-      'SSID=AKKHkuzb7H_RtRo6d',
-      'APISID=OtKKcqwetIgtWs3I/Ab-7WQdIQWW8vgaqJ',
-      'SAPISID=PTSirvNL0pSiz_2Y/AR80b_-y3l6N-znFK',
-      '__Secure-1PAPISID=PTSirvNL0pSiz_2Y/AR80b_-y3l6N-znFK',
-      '__Secure-3PAPISID=PTSirvNL0pSiz_2Y/AR80b_-y3l6N-znFK',
-      'SID=g.a000zQiP0ucezBUNsofbbmbBI6s_VKfNeSkleQpFhy7nP-GIf2GeFGulTzpyaOpseCs7obOQggACgYKAbkSARESFQHGX2MikZnsGN00L4gYLnv_r2Mb1hoVAUF8yKrM8eAuWTeBHsdMu3jvHGfC0076',
-      '__Secure-1PSID=g.a000zQiP0ucezBUNsofbbmbBI6s_VKfNeSkleQpFhy7nP-GIf2Geonv-VBpePkgiVwgZ44QdNQACgYKAY8SARESFQHGX2MiPt6sgvRaMZJ1Z21loZsHjBoVAUF8yKpDfVKlUk3iuoSH_mVrVOU30076',
-      '__Secure-3PSID=g.a000zQiP0ucezBUNsofbbmbBI6s_VKfNeSkleQpFhy7nP-GIf2Ge6njvlDYHUKZwd2bnI3h18gACgYKAVgSARESFQHGX2MikpV5dWkayHmfdVqtUEg3_BoVAUF8yKpZVn41vnH8AsFRNOX_n84Z0076',
-      'YSC=CHm_FDU_ejA',
-      '__Secure-ROLLOUT_TOKEN=CK_Ik-OVnpbt9QEQkPPZodSejQMYuMb7r8zMjgM%3D',
-      '__Secure-1PSIDTS=sidts-CjIB5H03P5O9o9JPLGRKPpEz-UovpuEHhjB9EZSJn9G5RLkO3mKlbL9qb3WsWHuRUwePzBAA',
-      '__Secure-3PSIDTS=sidts-CjIB5H03P5O9o9JPLGRKPpEz-UovpuEHhjB9EZSJn9G5RLkO3mKlbL9qb3WsWHuRUwePzBAA',
-      'SIDCC=AKEyXzWwlsnsx40z588Qsom_OR7e8ZwnwL1c3kduUWSYkS3p_TSmpdgkhxV0MiOEpznd770fzt0',
-      '__Secure-1PSIDCC=AKEyXzXz8Za8i7IS-u3_yTfUKEoB5pr9Y-8kNQJsvvtypK9Tq0n5LVW8nbEY9LMdK7-fQTRYkBU',
-      '__Secure-3PSIDCC=AKEyXzWTtam-0q2Q1UjR0bEGGGq5W2e2bmKRxDjSTc6IZ3JOcauxUiXkZB7H6ZWo2EYGdMgX9xA'
-    ].join('; ');
-
-    // Descargar buffer
-    const videoBuffer = await downloadVideoBuffer(args[0], youtubeCookies);
+    let infoMsg = `🎬 *${title}*\n\n`;
+    infoMsg += `📋 *Información:*\n${info}\n\n`;
+    infoMsg += `📖 *Sinopsis:* ${sinopsis || 'No disponible'}\n\n`;
+    infoMsg += `🌐 *Ver online:* ${onlineLink}\n\n`;
     
-    // Enviar video
-    await conn.sendMessage(m.chat, {
-      video: videoBuffer,
-      caption: '⬇️ Video descargado desde YouTube',
-      mimetype: 'video/mp4'
+    if (downloads.length > 0) {
+      infoMsg += `📥 *Enlaces de descarga:*\n`;
+      downloads.forEach(d => {
+        infoMsg += `▸ *Servidor:* ${d.server}\n`;
+        infoMsg += `▸ *Idioma:* ${d.language}\n`;
+        infoMsg += `▸ *Calidad:* ${d.quality}\n`;
+        infoMsg += `🔗 ${d.link}\n\n`;
+      });
+    } else {
+      infoMsg += `⚠️ *No hay enlaces de descarga disponibles*`;
+    }
+
+    await conn.sendMessage(m.chat, { 
+      image: { url: imageUrl },
+      caption: infoMsg
     }, { quoted: m });
 
-  } catch (error) {
-    console.error('❌ Error en handler:', error);
-    await m.reply(`*Error:* ${error.message}\n\n⚠️ Posibles causas:\n• Cookies inválidas/vencidas\n• URL expirada\n• Bloqueo de Google`);
+  } catch (e) {
+    console.error('Error en getInfoCuevana:', e);
+    m.reply('❌ *Error al obtener la información, verifica el enlace o intenta más tarde*');
   }
 };
 
-handler.command = ['descargarvideo'];
-handler.help = ['descargarvideo <url>'];
-handler.tags = ['downloader'];
+handler.command = ['getinfocuevana', 'cuevanainfo'];
 export default handler;
+
+async function getInfoCuevana(url) {
+  const { data } = await axios.get(url);
+  const $ = cheerio.load(data);
+  
+  const title = $('h1.Title').text().trim();
+  const image = $('.TPost .Image img').attr('src') || $('meta[property="og:image"]').attr('content');
+  const sinopsis = $('.Description p').text().trim();
+  const onlineLink = url;
+
+  let info = '';
+  $('.TPost .InfoList li').each((i, el) => {
+    const label = $(el).find('strong').text().trim();
+    const value = $(el).text().replace(label, '').trim();
+    info += `• *${label}* ${value}\n`;
+  });
+
+  const downloads = [];
+  const rows = $('.TPTblCn tbody tr').toArray();
+
+  for (const row of rows) {
+    const $row = $(row);
+    const server = $row.find('td').eq(0).text().trim().replace(/#\d+\s*/, '');
+    const language = $row.find('td').eq(1).text().trim();
+    const quality = $row.find('td').eq(2).text().trim();
+    const link = $row.find('td a').attr('href');
+    const resolvedLink = await extraerRedireccionDesdeHTML(link);
+
+    if (resolvedLink) {
+      downloads.push({
+        server,
+        language,
+        quality,
+        link: resolvedLink 
+      });
+    }
+  }
+
+  const actors = [];
+  $('.CastList li').each((i, el) => {
+    actors.push($(el).text().trim());
+  });
+  
+  if (actors.length > 0) {
+    info += `🎭 *Actores:* ${actors.join(', ')}`;
+  }
+
+  return { 
+    title,
+    image, 
+    info, 
+    sinopsis, 
+    onlineLink, 
+    downloads 
+  };
+}
+
+async function extraerRedireccionDesdeHTML(url) {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      },
+      maxRedirects: 0
+    }).catch(e => e.response);
+    if ([301, 302].includes(response.status)) {
+      return response.headers.location;
+    }
+    const html = response.data;
+    const $ = cheerio.load(html);
+    const scriptContent = $('script:contains("let url")').text();
+    const match = scriptContent.match(/let\s+url\s*=\s*["']([^"']+)["']/);
+    return match ? match[1] : null;
+  } catch (error) {
+    console.error("Error en extraerRedireccionDesdeHTML:", error.message);
+    return null;
+  }
+}
