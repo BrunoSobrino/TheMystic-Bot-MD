@@ -107,6 +107,9 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
     if (!selectedMedia?.url) throw '❌ No se encontró URL válida';
     
     const downloadUrl = selectedMedia.url;
+
+    m.reply(downloadUrl)
+    
     console.log('URL de descarga:', downloadUrl);
     
     await m.reply('*📥 Descargando video con proxy...*');
