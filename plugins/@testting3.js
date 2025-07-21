@@ -4,11 +4,15 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     const url = args[0];
 
     try {
-        conn.sendMessage(m.chat, { text: '⏳ *Procesando enlace...*\nPor favor espera mientras desbloqueamos el archivo con AllDebrid'}, { quoted: m });
+        //await conn.sendMessage(m.chat, { text: '⏳ *Procesando enlace...*\nPor favor espera mientras desbloqueamos el archivo con AllDebrid'}, { quoted: m });
 
         const result = await unlockWithAllDebrid(url);
 
-        if (!result.success) return await conn.sendMessage(m.chat, { text: `❌ *Error al procesar el enlace*\n\n${result.error || 'Error desconocido'}\n\nEnlace: ${url}` }, { quoted: m });
+        if (!result.success) {
+            return await conn.sendMessage(m.chat, { 
+                text: `❌ *Error al procesar el enlace*\n\n${result.error || 'Error desconocido'}\n\nEnlace: ${url}` 
+            }, { quoted: m });
+        }
       
         const documentContent = `
 📁 *Información del Archivo*
@@ -23,16 +27,19 @@ ${result.downloadUrl}
 ⚠ *Este enlace es temporal, descarga pronto!*
         `.trim();
 
+        conn.sendMessage(m.chat, { text: documentContent }, { quoted: m });
+
         await conn.sendMessage(m.chat, {
             document: { url: result.downloadUrl },
             fileName: result.fileInfo.filename,
-            mimetype: 'application/octet-stream',
-            caption: documentContent,
+            mimetype: 'video/mp4'  
         }, { quoted: m });
 
     } catch (error) {
         console.error('Error en el handler:', error);
-        await conn.sendMessage(m.chat, {text: `⚠ *Ocurrió un error inesperado*\n\n${error.message}\n\nPor favor intenta nuevamente más tarde.`}, { quoted: m });
+        await conn.sendMessage(m.chat, {
+            text: `⚠ *Ocurrió un error inesperado*\n\n${error.message}\n\nPor favor intenta nuevamente más tarde.`
+        }, { quoted: m });
     }
 };
 
@@ -62,7 +69,7 @@ async function unlockWithAllDebrid(url, options = {}) {
     };
 
     try {
-        console.log('🔗 Procesando enlace con AllDebrid...');
+
         
         const params = new URLSearchParams();
         params.append('link', url);
@@ -100,8 +107,7 @@ async function unlockWithAllDebrid(url, options = {}) {
         };
         result.message = "Enlace desbloqueado correctamente";
 
-        console.log('✅ Enlace desbloqueado:', result.fileInfo.filename);
-        console.log('🔗 URL de descarga:', result.downloadUrl);
+
 
     } catch (error) {
         result.error = `Error de conexión: ${error.message}`;
@@ -109,26 +115,4 @@ async function unlockWithAllDebrid(url, options = {}) {
     }
 
     return result;
-}
-
-async function checkAllDebridAccount() {
-    try {
-        const response = await fetch("https://api.alldebrid.com/v4/user", {
-            headers: {
-                'Authorization': `Bearer ${ALL_DEBRID_API_KEY}`
-            }
-        });
-        
-        const data = await response.json();
-        
-        if (data.error) {
-            console.error('❌ Error al verificar cuenta:', data.error.message);
-            return null;
-        }
-        
-        return data.data;
-    } catch (error) {
-        console.error('❌ Error al verificar la cuenta:', error);
-        return null;
-    }
 }
