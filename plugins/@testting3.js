@@ -4,7 +4,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     const url = args[0];
 
     try {
-        await conn.sendMessage(m.chat, { text: '⏳ *Procesando enlace...*'}, { quoted: m });
+        conn.sendMessage(m.chat, { text: '⏳ *Procesando enlace...*'}, { quoted: m });
 
         const result = await unlockWithAllDebrid(url);
 
@@ -31,7 +31,7 @@ ${result.downloadUrl}
 
         conn.sendMessage(m.chat, { text: documentContent }, { quoted: m });
 
-        await conn.sendMessage(m.chat, {
+        conn.sendMessage(m.chat, {
             document: { url: result.downloadUrl },
             fileName: result.fileInfo.filename,
             mimetype: 'video/mp4'  
