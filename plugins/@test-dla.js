@@ -33,8 +33,10 @@ const ytDlpBinaries = new Map([
   ['default', 'yt-dlp'],
 ]);
 
+
+//Calidad del Video. Trata de priorizar h264 compatible con whatsapp y la mayoria de dispositivos. Funciona con FB, Reddit, YT. mas detalles en: https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options
 const formats = {
-  video: '-f "sd/bv[vcodec*=h264][height<=720]/bv[height<=720]/bv*+ba/best" --format-sort "height:720,vcodec:h264,acodec:aac,ext:mp4"',
+  video: '-f "sd/18/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=aac]/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=mp4a]/bestvideo[height<=720][vcodec*=h264]+bestaudio/bestvideo[height<=720]+bestaudio/bestvideo[vcodec*=h264]+bestaudio/bestvideo+bestaudio/best"', 
   audio: '-f "ba/best" -x --audio-format mp3 --audio-quality 0',
   playlist: '--yes-playlist',
   noPlaylist: '--no-playlist'
