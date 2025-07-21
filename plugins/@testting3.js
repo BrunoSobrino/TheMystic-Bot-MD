@@ -4,10 +4,12 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     const url = args[0];
 
     try {
-        //await conn.sendMessage(m.chat, { text: '⏳ *Procesando enlace...*\nPor favor espera mientras desbloqueamos el archivo con AllDebrid'}, { quoted: m });
+        await conn.sendMessage(m.chat, { text: '⏳ *Procesando enlace...*'}, { quoted: m });
 
         const result = await unlockWithAllDebrid(url);
 
+        console.log(result)
+        
         if (!result.success) {
             return await conn.sendMessage(m.chat, { 
                 text: `❌ *Error al procesar el enlace*\n\n${result.error || 'Error desconocido'}\n\nEnlace: ${url}` 
