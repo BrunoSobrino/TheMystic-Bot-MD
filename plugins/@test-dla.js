@@ -17,10 +17,11 @@ const __dirname = path.resolve();
 const config = {
   tempDir: process.env.TEMP_DOWNLOAD_DIR || path.join(process.cwd(), 'src/tmp/YTDLP'),
   maxFileSize: (parseInt(process.env.MAX_UPLOAD, 10) * 1048576) || 1500000000,
-  ytDlpPath: path.join(process.cwd(), 'media', 'bin'),
+  ytDlpPath: path.join(process.cwd(), 'src/tmp/YTDLP'),
   maxConcurrent: parseInt(process.env.MAXSOLICITUD, 10) || 5,
   playlistLimit: parseInt(process.env.PLAYLIST_LIMIT, 10) || 10,
-  cookies: process.env.COOKIES || null
+  cookiesFile: path.join(process.cwd(), 'src/tmp/YTDLP/cookies.txt'),
+  niceValue: -10
 };
 
 const ytDlpBinaries = new Map([
@@ -68,10 +69,6 @@ class DownloadQueue {
       return;
     }
 
-    if (this.activeDownloads >= this.maxConcurrent) {
-      return;
-    }
-
     this.activeDownloads++;
     const { task, resolve, reject } = this.queue.shift();
 
@@ -99,13 +96,27 @@ const isUrl = (string) => {
   }
 };
 
-const buildCookiesFlag = () => {
-  return config.cookies ? `--cookies "${config.cookies}"` : '';
+const buildCookiesFlag = async () => {
+  try {
+    await fs.promises.access(config.cookiesFile);
+    return `--cookies "${config.cookiesFile}"`;
+  } catch {
+    return '';
+  }
+};
+
+const buildNiceCommand = (command) => {
+  const platform = os.platform();
+  if (platform === 'linux' || platform === 'darwin') {
+    return `nice -n ${config.niceValue} ${command}`;
+  }
+  return command;
 };
 
 const safeExecute = async (command, silentError = false) => {
   try {
-    const result = await execPromise(command);
+    const niceCommand = buildNiceCommand(command);
+    const result = await execPromise(niceCommand);
     return result;
   } catch (error) {
     if (!silentError) {
@@ -209,7 +220,7 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
   const ytDlpPath = await detectYtDlpBinary(m);
   const sessionId = `yt-dlp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const outputDir = path.join(config.tempDir, sessionId);
-  const cookiesFlag = buildCookiesFlag();
+  const cookiesFlag = await buildCookiesFlag();
 
   await ensureDirectories();
   await fs.promises.mkdir(outputDir, { recursive: true });
@@ -275,20 +286,40 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
 
 const updateYtDlp = async (m, silent = false) => {
   try {
+    const ytDlpPath = await detectYtDlpBinary(m);
+    
     if (await isYtDlpAvailable()) {
-      await safeExecute('pip install -U --pre "yt-dlp[default]"');
       if (!silent) {
-        await m.reply('✅ yt-dlp actualizado pip');
+        await m.reply('ℹ️ yt-dlp instalado en sistema, no se actualiza automaticamente');
       }
+      return;
     } else {
-      const filePath = await downloadYtDlp(m);
-      if (!silent) {
-        await m.reply(`✅ yt-dlp actualizado bin _${filePath}_`);
+      const fileName = detectYtDlpBinaryName();
+      const filePath = path.join(config.ytDlpPath, fileName);
+      
+      try {
+        await safeExecute(`${ytDlpPath} --update-to nightly`);
+        if (!silent) {
+          await m.reply(`✅ yt-dlp auto-actualizado desde binario`);
+        }
+        return;
+      } catch {
+        try {
+          await fs.promises.unlink(filePath).catch(() => {});
+          const newPath = await downloadYtDlp(m);
+          if (!silent) {
+            await m.reply(`✅ yt-dlp actualizado descargando nuevo binario`);
+          }
+        } catch {
+          if (!silent) {
+            await m.reply('❌ Error actualizando yt-dlp');
+          }
+        }
       }
     }
   } catch (error) {
     if (!silent) {
-      await m.reply(`✅ yt-dlp actualizacion intentada`);
+      await m.reply('⚠️ Actualizacion de yt-dlp intentada');
     }
   }
 };
@@ -296,7 +327,7 @@ const updateYtDlp = async (m, silent = false) => {
 const searchAndDownload = async (m, searchQuery, isVideo = false) => {
   const sessionId = `yt-dlp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const outputDir = path.join(config.tempDir, sessionId);
-  const cookiesFlag = buildCookiesFlag();
+  const cookiesFlag = await buildCookiesFlag();
   
   await ensureDirectories();
   await fs.promises.mkdir(outputDir, { recursive: true });
@@ -349,7 +380,7 @@ const searchAndDownload = async (m, searchQuery, isVideo = false) => {
             break;
           }
         } catch (dirError) {
-          console.error(`Error accediendo al directorio después de búsqueda: ${dirError.message}`);
+          console.error(`Error accediendo al directorio despues de busqueda: ${dirError.message}`);
         }
       } catch (error) {
         console.error(`Error buscando en ${name}: ${error.message}`);
@@ -373,8 +404,8 @@ const handleRequest = async (m) => {
   
   if (!input) {
     await m.reply(
-      '> 🎶Buscar y descargar cancion:\n`dla` <query>\n' +
-      '> 🎥Buscar y descargar video:\n`dla vd` <query>\n' +
+      '> 🎶Buscar y descargar cancion:\n`dla` <consulta>\n' +
+      '> 🎥Buscar y descargar video:\n`dla vd` <consulta>\n' +
       '> ⬇️Descargar todo tipo de media: \n`dla` <url> _YT-DLP FLAGS_ \n' +
       '> 🎵Descargar todo el audio de playlist: \n`dla mp3` <url> \n' +
       '> 🆙Fallo en descarga? Actualizar YT-DLP: \n`dla update` \n' +
@@ -442,7 +473,7 @@ let handler = (m) => {
   return downloadQueue.add(() => handleRequest(m));
 };
 
-handler.help = ['dla [OPTIONS] URL', 'dla update', 'dla vd <query>', 'dla mp3 <url>'];
+handler.help = ['dla [OPTIONS] URL', 'dla update', 'dla vd <consulta>', 'dla mp3 <url>'];
 handler.tags = ['tools'];
 handler.command = /^(dla)$/i;
 handler.owner = false;
