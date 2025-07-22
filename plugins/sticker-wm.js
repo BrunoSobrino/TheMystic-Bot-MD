@@ -12,7 +12,7 @@ const handler = async (m, {conn, text}) => {
     let [packname, ...author] = text.split('|');
     author = (author || []).join('|');
     const mime = m.quoted.mimetype || '';
-    if (!/webp/.test(mime)) throw tradutor.texto2;
+    if (!/image\/webp/.test(mime)) throw tradutor.texto2;
     const img = await m.quoted.download();
     if (!img) throw tradutor.texto3;
     stiker = await addExif(img, packname || global.packname, author || global.author);
