@@ -20,7 +20,6 @@ export async function before(m, { conn, participants }) {
   };
 
   try {     
-    console.log(m)
     const idioma = global.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/_detectEvents.js.json`));
     const tradutor = _translate._detectevents;
