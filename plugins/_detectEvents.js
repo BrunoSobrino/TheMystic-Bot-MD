@@ -25,8 +25,6 @@ export async function before(m, { conn, participants }) {
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
     const tradutor = _translate._detectevents;
 
-    console.log(tradutor)
-
     let groupName = "el grupo";
     let groupMetadata = groupMetadataCache.get(m.chat);
     let pp = 'https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/avatar_contact.png';
@@ -54,6 +52,7 @@ export async function before(m, { conn, participants }) {
 
     if (chat?.detect2) {
       switch (m.messageStubType) {
+        console.log(tradutor)  
         case 29: // Promote
           await safeOperation(async () => {
             let txt = `${tradutor.promote.header}\n\n${tradutor.promote.group.replace('@group', groupName)}\n${tradutor.promote.new_admin.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.promote.executed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
