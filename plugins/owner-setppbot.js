@@ -1,27 +1,37 @@
 import Jimp from 'jimp';
 
-const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isROwner }) => {
+const handler = async (m, { conn, usedPrefix, command }) => {
   try {
-    const userJid = conn.user.jid;
-    const quoted = m.quoted ? m.quoted : m;
+    console.log('📥 Comando recibido:', command);
 
-    if (!m.quoted) {
-      throw `*[❗𝐈𝐍𝐅𝐎❗] NO SE ENCONTRO LA IMAGEN, POR FAVOR RESPONDE A UNA IMAGEN USANDO EL COMANDO ${usedPrefix + command}*`;
+    const userJid = conn.user?.jid;
+    console.log('🔎 JID del bot:', userJid);
+
+    const quoted = m.quoted ? m.quoted : m;
+    console.log('📸 ¿Tiene quoted?', !!m.quoted);
+    console.log('🧾 Mimetype:', quoted?.mimetype);
+
+    if (!m.quoted || !quoted.mimetype?.includes('image')) {
+      throw `*[❗INFO❗] NO SE ENCONTRÓ LA IMAGEN. RESPONDE A UNA IMAGEN USANDO EL COMANDO ${usedPrefix + command}*`;
     }
 
-    const mime = (quoted.mimetype || quoted.mimetype) || '';
     const imgData = await quoted.download();
-    const jid = await userJid;
+    console.log('📥 Imagen descargada (Buffer):', !!imgData);
 
     async function processImage(imgBuffer) {
       const image = await Jimp.read(imgBuffer);
+      console.log('🧠 Imagen leída con Jimp');
+
       const resized = image.getWidth() > image.getHeight()
         ? image.resize(720, Jimp.AUTO)
         : image.resize(Jimp.AUTO, 720);
 
-      return {
-        img: await resized.getBufferAsync(Jimp.MIME_JPEG)
-      };
+      console.log('📐 Imagen redimensionada');
+
+      const jpegBuffer = await resized.getBufferAsync(Jimp.MIME_JPEG);
+      console.log('🧪 Imagen convertida a JPEG');
+
+      return { img: jpegBuffer };
     }
 
     const { img } = await processImage(imgData);
@@ -29,7 +39,7 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, i
     await conn.query({
       tag: 'iq',
       attrs: {
-        to: jid,
+        to: userJid,
         type: 'set',
         xmlns: 'w:profile:picture'
       },
@@ -42,16 +52,20 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, i
       ]
     });
 
-    m.reply('*[❗𝐈𝐍𝐅𝐎❗] SE CAMBIO CON EXITO LA FOTO DE PERFIL DEL NUMERO DEL BOT*');
-  } catch {
-    throw `*[❗𝐈𝐍𝐅𝐎❗] NO SE ENCONTRO LA IMAGEN, POR FAVOR RESPONDE A UNA IMAGEN USANDO EL COMANDO ${usedPrefix + command}*`;
+    console.log('✅ Imagen de perfil actualizada exitosamente');
+    await m.reply('*[✅ INFO] SE CAMBIÓ CON ÉXITO LA FOTO DE PERFIL DEL BOT*');
+
+  } catch (err) {
+    console.error('❌ ERROR en setppbot:', err);
+    await m.reply(`*[❗ERROR❗] Ocurrió un error al intentar cambiar la foto de perfil:\n\n${err?.message || err}*`);
   }
 };
 
 handler.command = /^setppbot$/i;
-handler.rowner = true;
+handler.rowner = true; // Solo dueños reales del bot
 
 export default handler;
+
 
 
 /* let handler = async (m, { conn, usedPrefix, command }) => {
