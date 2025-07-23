@@ -128,7 +128,7 @@ ${tradutor.video_info.link.replace('@link', video.url)}
                     }, { userJid: conn.user.jid, quoted: m });
                     
                     await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    await m.reply(tradutor.success.audio);
+                    //await m.reply(tradutor.success.audio);
 
                     setTimeout(() => {
                         if (existsSync(audioPath)) unlinkSync(audioPath);
@@ -138,7 +138,7 @@ ${tradutor.video_info.link.replace('@link', video.url)}
                         audio: taggedBuffer,
                         fileName: `${sanitizeFileName(video.title)}.mp3`,
                         mimetype: 'audio/mpeg',
-                        contextInfo: {
+                        /*contextInfo: {
                             externalAdReply: {
                                 title: video.title,
                                 body: `${video.author.name}`,
@@ -147,9 +147,9 @@ ${tradutor.video_info.link.replace('@link', video.url)}
                                 mediaType: 1,
                                 renderLargerThumbnail: true
                             }
-                        }
+                        }*/
                     }, { quoted: m });
-                    await m.reply(tradutor.success.audio);
+                    //await m.reply(tradutor.success.audio);
                 }
 
             } catch (audioError) {
@@ -229,7 +229,7 @@ ${tradutor.video_info.link.replace('@link', video.url)}
                     }, { userJid: conn.user.jid, quoted: m });
                     
                     await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    await m.reply(tradutor.success.video);
+                    //await m.reply(tradutor.success.video);
                 } else {
                     await conn.sendMessage(m.chat, { 
                         video: fixedVideoBuffer, 
@@ -237,7 +237,7 @@ ${tradutor.video_info.link.replace('@link', video.url)}
                         mimetype: 'video/mp4', 
                         fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` 
                     }, { quoted: m });
-                    await m.reply(tradutor.success.video);
+                    //await m.reply(tradutor.success.video);
                 }
 
             } catch (ffmpegError) {
