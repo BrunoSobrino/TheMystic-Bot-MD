@@ -34,6 +34,7 @@ const ytDlpBinaries = new Map([
   ['default', 'yt-dlp'],
 ]);
 
+// Aqui se elige las banderas, Calidad de video etc. Ver documentacion yt-dlp 
 const formats = {
   video: '-f "sd/18/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=aac]/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=mp4a]/bestvideo[height<=720][vcodec*=h264]+bestaudio/bestvideo[height<=720]+bestaudio/bestvideo[vcodec*=h264]+bestaudio/bestvideo+bestaudio/best"', 
   audio: '-f "ba/best" -x --audio-format mp3 --audio-quality 0',
@@ -111,8 +112,8 @@ const safeExecute = async (command, silentError = false) => {
     return result;
   } catch (error) {
     if (!silentError) {
-      console.error(`Command: ${command}`);
-      console.error(`Error: ${error.message}`);
+      console.error(`PLUGIN DLA Command: ${command}`);
+      console.error(`PLUGIN DLA Error: ${error.message}`);
       if (error.stdout) console.error(`Stdout: ${error.stdout}`);
       if (error.stderr) console.error(`Stderr: ${error.stderr}`);
     }
@@ -203,11 +204,39 @@ const updateYtDlp = async (m, errorMsg = null) => {
     
     return true;
   } catch (error) {
-    console.error(`Update error: ${error.message}`);
+    console.error(`PLUGIN DLA Update error: ${error.message}`);
     const errorOutput = error.stdout || error.stderr || `Error al actualizar: ${error.message}`;
     const finalMsg = errorMsg ? `Stderr: ${errorMsg}\n\n${errorOutput}` : errorOutput;
     await m.reply(finalMsg);
     return false;
+  }
+};
+
+const uploadCookies = async (m, cookieText = null) => {
+  try {
+    let cookieContent = null;
+
+    if (cookieText) {
+      cookieContent = cookieText;
+    } else if (m.quoted && m.quoted.fileSha256) {
+      const media = await m.quoted.download();
+      if (!media) {
+        await m.reply('Error al descargar el archivo de cookies');
+        return;
+      }
+      cookieContent = media.toString();
+    } else {
+      await m.reply('Las cookies deben ser texto o citar un archivo de cookies');
+      return;
+    }
+
+    await ensureDirectories();
+    await fs.promises.writeFile(config.cookiesFile, cookieContent);
+    
+    await m.reply(`Cookies subidas exitosamente en ${config.cookiesFile}`);
+  } catch (error) {
+    console.error(`PLUGIN DLA Cookie upload error: ${error.message}`);
+    await m.reply(`Error subiendo cookies: ${error.message}`);
   }
 };
 
@@ -223,7 +252,7 @@ const processDownloadedFile = async (m, filePath, originalFileName, isVideo = fa
 
     await fs.promises.unlink(filePath).catch(() => {});
   } catch (error) {
-    console.error(`Error procesando archivo ${filePath}: ${error.message}`);
+    console.error(`PLUGIN DLA Error procesando archivo ${filePath}: ${error.message}`);
     throw error;
   }
 };
@@ -266,7 +295,7 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
           try {
             await processDownloadedFile(m, fullPath, file, isVideo);
           } catch (processError) {
-            console.error(`Error procesando archivo ${file}: ${processError.message}`);
+            console.error(`PLUGIN DLA Error procesando archivo ${file}: ${processError.message}`);
           }
         }
       } catch (error) {
@@ -276,7 +305,7 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
     }
   } finally {
     await fs.promises.rm(outputDir, { recursive: true, force: true }).catch((err) => {
-      console.error(`Error limpiando directorio temporal: ${err.message}`);
+      console.error(`PLUGIN DLA Error limpiando directorio temporal: ${err.message}`);
     });
   }
 };
@@ -341,11 +370,11 @@ const searchAndDownload = async (m, searchQuery, isVideo = false) => {
     }
 
     if (!success) {
-      console.error(`No se encontraron resultados para ${searchQuery}`);
+      console.error(`PLUGIN DLA No se encontraron resultados para ${searchQuery}`);
     }
   } finally {
     await fs.promises.rm(outputDir, { recursive: true, force: true }).catch((err) => {
-      console.error(`Error limpiando directorio temporal: ${err.message}`);
+      console.error(`PLUGIN DLA Error limpiando directorio temporal: ${err.message}`);
     });
   }
 };
@@ -359,12 +388,11 @@ const handleRequest = async (m) => {
       '> 🎥Buscar y descargar video:\n`dla vd` <consulta>\n' +
       '> ⬇️Descargar todo tipo de media: \n`dla` <url> _YT-DLP FLAGS_ \n' +
       '> 🎵Descargar todo el audio de playlist: \n`dla mp3` <url> \n' +
+      '> 🍪Subir cookies: \n`dla cookies` \n' +
       '> 🌐Mas informacion:\ngithub.com/yt-dlp/yt-dlp/blob/master/README.md#usage-and-options'
     );
     return;
   }
-
-  await m.reply('Descargando!');
 
   try {
     const args = input.match(/[^\s"]+|"([^"]*)"/g)?.map(arg => 
@@ -374,6 +402,19 @@ const handleRequest = async (m) => {
     const command = args[0];
     const remainingArgs = args.slice(1);
     const urls = remainingArgs.filter(arg => isUrl(arg));
+
+    if (command === 'cookies') {
+      const cookiesIndex = input.toLowerCase().indexOf('cookies');
+      if (cookiesIndex !== -1) {
+        const cookieText = input.substring(cookiesIndex + 'cookies'.length).trim();
+        await uploadCookies(m, cookieText || null);
+      } else {
+        await uploadCookies(m, null);
+      }
+      return;
+    }
+    
+    await m.reply('Descargando!');
     
     if (!urls.length) {
       if (input.includes('://')) {
@@ -410,7 +451,7 @@ const handleRequest = async (m) => {
         break;
     }
   } catch (error) {
-    console.error(`Error en comando dla: ${error.message}`);
+    console.error(`PLUGIN DLA Error en comando dla: ${error.message}`);
     await m.reply(`Error: ${error.message}`);
   }
 };
@@ -419,7 +460,7 @@ let handler = (m) => {
   return downloadQueue.add(() => handleRequest(m));
 };
 
-handler.help = ['dla [OPTIONS] URL', 'dla vd <consulta>', 'dla mp3 <url>'];
+handler.help = ['dla [OPTIONS] URL', 'dla vd <consulta>', 'dla mp3 <url>', 'dla cookies [texto]'];
 handler.tags = ['tools'];
 handler.command = /^(dla)$/i;
 handler.owner = false;
