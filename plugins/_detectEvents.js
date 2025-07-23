@@ -52,10 +52,10 @@ export async function before(m, { conn, participants }) {
 
     if (chat?.detect2) {
       switch (m.messageStubType) {
-        console.log(tradutor)  
         case 29: // Promote
           await safeOperation(async () => {
             let txt = `${tradutor.promote.header}\n\n${tradutor.promote.group.replace('@group', groupName)}\n${tradutor.promote.new_admin.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.promote.executed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
+            console.log(tradutor)  
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsString }, { quoted: fkontak2 });
           });
           break;
