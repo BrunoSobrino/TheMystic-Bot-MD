@@ -10,13 +10,6 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, i
 
     if (!m.isGroup) throw '*❗ Este comando solo puede usarse en grupos.*';
 
-    const groupMetadata = await conn.groupMetadata(m.chat);
-    const userIsAdmin = groupMetadata.participants.some(p => p.id === m.sender && p.admin);
-    const botIsAdmin = groupMetadata.participants.some(p => p.id === conn.user.jid && p.admin);
-
-    if (!botIsAdmin) throw '*🚫 El bot necesita ser administrador para cambiar la foto del grupo.*';
-    if (!userIsAdmin && !isOwner && !isROwner) throw '*🚫 Solo un administrador puede cambiar la foto del grupo.*';
-
     const image = await Jimp.read(imageBuffer);
     const resized = image.getWidth() > image.getHeight() ? image.resize(720, Jimp.AUTO) : image.resize(Jimp.AUTO, 720);
     const jpegBuffer = await resized.getBufferAsync(Jimp.MIME_JPEG);
