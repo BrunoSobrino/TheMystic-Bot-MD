@@ -8,7 +8,7 @@
             "large_video": "*[❗] Large video file detected*\n*Size:* @size MB\n*Sending as document (>100 MB)*\n\n⏳ *May take a moment...*"
         },
         "video_info": {
-            "header": "*[ 📺 ] VIDEO INFORMATION*",
+            "header": "_*< DESCARGAS - PLAY />*_",
             "title": "▢ *Title:* @title",
             "author": "▢ *Channel:* @author",
             "duration": "▢ *Duration:* @duration",
