@@ -22,8 +22,10 @@ export async function before(m, { conn, participants }) {
   try {
     const datas = global;
     const idioma = datas?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
-    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
-    const tradutor = _translate.plugins._detectevents;
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
+    const tradutor = _translate._detectevents;
+
+    console.log(tradutor)
 
     let groupName = "el grupo";
     let groupMetadata = groupMetadataCache.get(m.chat);
@@ -52,68 +54,68 @@ export async function before(m, { conn, participants }) {
 
     if (chat?.detect2) {
       switch (m.messageStubType) {
-        case 29:
+        case 29: // Promote
           await safeOperation(async () => {
-            let txt = `${tradutor.texto1}${tradutor.texto1_1} ${groupName}\n${tradutor.tetxo1_2} @${m.messageStubParameters[0].split`@`[0]}\n${tradutor.tetxo1_3} @${m.sender.split`@`[0]}`;
+            let txt = `${tradutor.promote.header}\n\n${tradutor.promote.group.replace('@group', groupName)}\n${tradutor.promote.new_admin.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.promote.executed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsString }, { quoted: fkontak2 });
           });
           break;
 
-        case 30:
+        case 30: // Demote
           await safeOperation(async () => {
-            let txt = `${tradutor.texto2}${tradutor.texto2_1} ${groupName}\n${tradutor.texto2_2} @${m.messageStubParameters[0].split`@`[0]}\n${tradutor.texto2_3} @${m.sender.split`@`[0]}`;
+            let txt = `${tradutor.demote.header}\n\n${tradutor.demote.group.replace('@group', groupName)}\n${tradutor.demote.removed_admin.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.demote.executed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsString }, { quoted: fkontak2 });
           });
           break;
 
-        case 27:
+        case 27: // Member add
           await safeOperation(async () => {
-            let txt = `${tradutor.texto3}${tradutor.texto3_1} ${groupName}\n`;
+            let txt = `${tradutor.member_add.header}\n\n${tradutor.member_add.group.replace('@group', groupName)}\n`;
             if (!m.sender.endsWith('@g.us')) {
-              txt += `${tradutor.texto3_2} @${m.messageStubParameters[0].split`@`[0]}\n${tradutor.texto3_3} @${m.sender.split`@`[0]}`;
+              txt += `${tradutor.member_add.added_user.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.member_add.added_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
             } else {
-              txt += `${tradutor.texto3_4} @${m.messageStubParameters[0].split`@`[0]}\n`;
+              txt += `${tradutor.member_add.self_added.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}`;
             }
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
           break;
 
-        case 28:
+        case 28: // Member remove
           await safeOperation(async () => {
-            let txt = `${tradutor.texto4}${tradutor.texto4_1} ${groupName}\n`;
+            let txt = `${tradutor.member_remove.header}\n\n${tradutor.member_remove.group.replace('@group', groupName)}\n`;
             if (!m.sender.endsWith('@g.us')) {
-              txt += `${tradutor.texto4_2} @${m.messageStubParameters[0].split`@`[0]}\n${tradutor.texto4_3} @${m.sender.split`@`[0]}`;
+              txt += `${tradutor.member_remove.removed_user.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.member_remove.removed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
             } else {
-              txt += `${tradutor.texto4_4} @${m.messageStubParameters[0].split`@`[0]}\n`;
+              txt += `${tradutor.member_remove.self_removed.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}`;
             }
             await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
           break;
 
-        case 32:
+        case 32: // Member leave or remove
           await safeOperation(async () => {
-            const ax = m.messageStubParameters[0] === m.sender ? 'salido' : 'eliminado';
-            let txt = `${tradutor.texto5} ${ax} ${tradutor.texto5_1}${tradutor.texto5_2} ${groupName}\n`;
-            if (ax === 'eliminado') {
-              txt += `${tradutor.texto5_3} @${m.messageStubParameters[0].split`@`[0]}\n${tradutor.texto5_4} @${m.sender.split`@`[0]}`;
+            const ax = m.messageStubParameters[0] === m.sender ? 'self_removed' : 'removed_user';
+            let txt = `${tradutor.member_remove.header}\n\n${tradutor.member_remove.group.replace('@group', groupName)}\n`;
+            if (ax === 'removed_user') {
+              txt += `${tradutor.member_remove.removed_user.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.member_remove.removed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
             } else {
-              txt += `${tradutor.texto5_5} @${m.messageStubParameters[0].split`@`[0]}\n`;
+              txt += `${tradutor.member_remove.self_removed.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}`;
             }
             await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
           break;
 
-        case 26:
+        case 26: // Group settings change
           await safeOperation(async () => {
-            const accion = m.messageStubParameters[0].split`@`[0] === 'on' ? 'cerrado' : 'abierto';
-            let txt = `${tradutor.texto6}${tradutor.texto6_1} ${groupName}\n${tradutor.texto6_2} ${'```' + accion + '```'}\n${tradutor.texto6_3} @${m.sender.split`@`[0]}`;
+            const accion = m.messageStubParameters[0].split('@')[0] === 'on' ? 'cerrado' : 'abierto';
+            let txt = `${tradutor.group_settings.header}\n\n${tradutor.group_settings.group.replace('@group', groupName)}\n${tradutor.group_settings.action.replace('@action', '```' + accion + '```')}\n${tradutor.group_settings.executed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
             await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
           break;
 
-        case 21:
+        case 21: // Group name change
           await safeOperation(async () => {
-            let txt = `${tradutor.texto7}${tradutor.texto7_1} ${'```' + groupName + '```'}\n${tradutor.texto7_2} @${m.sender.split`@`[0]}`;
+            let txt = `${tradutor.group_name.header}\n\n${tradutor.group_name.new_name.replace('@name', '```' + groupName + '```')}\n${tradutor.group_name.executed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
             await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
           break;
