@@ -22,6 +22,8 @@ export async function before(m, { conn, participants }) {
   try {
     const datas = global;
     const idioma = datas?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
+    console.log(`./src/languages/${idioma}/${m.plugin}.json`)
+    console.log(m.plugin)
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
     const tradutor = _translate._detectevents;
 
@@ -55,7 +57,6 @@ export async function before(m, { conn, participants }) {
         case 29: // Promote
           await safeOperation(async () => {
             let txt = `${tradutor.promote.header}\n\n${tradutor.promote.group.replace('@group', groupName)}\n${tradutor.promote.new_admin.replace('@user', `@${m.messageStubParameters[0].split('@')[0]}`)}\n${tradutor.promote.executed_by.replace('@user', `@${m.sender.split('@')[0]}`)}`;
-            console.log(tradutor)  
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsString }, { quoted: fkontak2 });
           });
           break;
