@@ -226,7 +226,7 @@ const uploadCookies = async (m, cookieText = null) => {
       }
       cookieContent = media.toString();
     } else {
-      await m.reply('Las cookies deben ser texto o citar un archivo de cookies');
+      await m.reply('Las cookies deben ser texto o archivo. Ver el tutorial aqui: https://youtu.be/KUk9nEf00_U');
       return;
     }
 
