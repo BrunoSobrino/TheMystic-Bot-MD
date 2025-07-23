@@ -37,16 +37,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
             video = videos[0];
         }
 
-        const videoInfoMsg = `
-${tradutor.video_info.header}
-${tradutor.video_info.title.replace('@title', video.title)}
-${tradutor.video_info.author.replace('@author', video.author.name)}
-${tradutor.video_info.duration.replace('@duration', video.duration?.timestamp || '00:00')}
-${tradutor.video_info.views.replace('@views', (video.views || 0).toLocaleString())}
-${tradutor.video_info.published.replace('@published', video.ago || 'Desconocido')}
-${tradutor.video_info.id.replace('@id', video.videoId)}
-${tradutor.video_info.link.replace('@link', video.url)}
-`.trim();
+        const videoInfoMsg = `${tradutor.video_info.header}\n\n${tradutor.video_info.title.replace('@title', video.title)}\n${tradutor.video_info.author.replace('@author', video.author.name)}\n${tradutor.video_info.duration.replace('@duration', video.duration?.timestamp || '00:00')}\n${tradutor.video_info.views.replace('@views', (video.views || 0).toLocaleString())}\n${tradutor.video_info.published.replace('@published', video.ago || 'Desconocido')}\n${tradutor.video_info.id.replace('@id', video.videoId)}\n${tradutor.video_info.link.replace('@link', video.url)}`.trim();
 
         conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m })
 
