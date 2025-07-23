@@ -388,7 +388,7 @@ const handleRequest = async (m) => {
       '> 🎥Buscar y descargar video:\n`dla vd` <consulta>\n' +
       '> ⬇️Descargar todo tipo de media: \n`dla` <url> _YT-DLP FLAGS_ \n' +
       '> 🎵Descargar todo el audio de playlist: \n`dla mp3` <url> \n' +
-      '> 🍪Subir cookies: \n`dla cookies` \n' +
+      '> 🍪Subir cookies: https://youtu.be/KUk9nEf00_U` \n' +
       '> 🌐Mas informacion:\ngithub.com/yt-dlp/yt-dlp/blob/master/README.md#usage-and-options'
     );
     return;
