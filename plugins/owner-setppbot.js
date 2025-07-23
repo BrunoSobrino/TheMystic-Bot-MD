@@ -31,28 +31,15 @@ const handler = async (m, { conn, usedPrefix, command }) => {
       const jpegBuffer = await resized.getBufferAsync(Jimp.MIME_JPEG);
       console.log('🧪 Imagen convertida a JPEG');
 
-      return { img: jpegBuffer };
+      return jpegBuffer;
     }
 
-    const { img } = await processImage(imgData);
+    const jpegBuffer = await processImage(imgData);
 
-    await conn.query({
-      tag: 'iq',
-      attrs: {
-        to: userJid,
-        type: 'set',
-        xmlns: 'w:profile:picture'
-      },
-      content: [
-        {
-          tag: 'picture',
-          attrs: { type: 'image' },
-          content: img
-        }
-      ]
-    });
+    // 🔁 Cambiar foto usando método oficial
+    await conn.updateProfilePicture(userJid, jpegBuffer);
+    console.log('✅ Imagen de perfil actualizada con updateProfilePicture');
 
-    console.log('✅ Imagen de perfil actualizada exitosamente');
     await m.reply('*[✅ INFO] SE CAMBIÓ CON ÉXITO LA FOTO DE PERFIL DEL BOT*');
 
   } catch (err) {
@@ -62,7 +49,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
 };
 
 handler.command = /^setppbot$/i;
-handler.rowner = true; // Solo dueños reales del bot
+handler.rowner = true;
 
 export default handler;
 
