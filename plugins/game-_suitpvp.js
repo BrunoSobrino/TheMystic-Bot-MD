@@ -3,17 +3,17 @@
 const handler = (m) => m;
 handler.before = async function(m) {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.game__suitpvp
 
   this.suit = this.suit ? this.suit : {};
-  if (db.data.users[m.sender].suit < 0) db.data.users[m.sender].suit = 0;
-  const room = Object.values(this.suit).find((room) => room.id && room.status && [room.p, room.p2].includes(m.sender));
+  if (db.data.users[await m.sender].suit < 0) db.data.users[await m.sender].suit = 0;
+  const room = Object.values(this.suit).find((room) => room.id && room.status && [room.p, room.p2].includes(await m.sender));
   if (room) {
     let win = '';
     let tie = false;
-    if (m.sender == room.p2 && /^(acc(ept)?|terima|aceptar|gas|aceptare?|nao|gamau|rechazar|ga(k.)?bisa)/i.test(m.text) && m.isGroup && room.status == 'wait') {
+    if (await m.sender == room.p2 && /^(acc(ept)?|terima|aceptar|gas|aceptare?|nao|gamau|rechazar|ga(k.)?bisa)/i.test(m.text) && m.isGroup && room.status == 'wait') {
       if (/^(tolak|gamau|rechazar|ga(k.)?bisa)/i.test(m.text)) {
         const textno = `*[❗] @${room.p2.split`@`[0]} ${tradutor.texto1}`;
         m.reply(textno, null, {mentions: this.parseMention(textno)});
@@ -53,8 +53,8 @@ ${tradutor.texto5[7]}`;
         return !0;
       }, room.timeout);
     }
-    const jwb = m.sender == room.p;
-    const jwb2 = m.sender == room.p2;
+    const jwb = await m.sender == room.p;
+    const jwb2 = await m.sender == room.p2;
     const g = /tijera/i;
     const b = /piedra/i;
     const k = /papel/i;

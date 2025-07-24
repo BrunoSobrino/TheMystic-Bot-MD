@@ -1,10 +1,10 @@
 const handler = async (m, {conn, text, args, usedPrefix, command}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.herramientas_encuesta
 
-  let name = await conn.getName(m.sender);
+  let name = await conn.getName(await m.sender);
   if (name == 'undefined') name = 'Indefinido';
   const b = text.split('|');
   if (!b[1]) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]}`;

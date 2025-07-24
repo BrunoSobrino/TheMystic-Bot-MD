@@ -48,7 +48,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 }, 
  interactiveMessage: proto.Message.InteractiveMessage.fromObject({ 
  body: proto.Message.InteractiveMessage.Body.create({ text: "*_< BUSQUEDAS - PINTEREST />_*" }), 
- footer: proto.Message.InteractiveMessage.Footer.create({ text: `□ *Busqueda:* ${text}\n□ *Solicitante:* ${global.db.data.users[m.sender].name}` }), 
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: `□ *Busqueda:* ${text}\n□ *Solicitante:* ${global.db.data.users[await m.sender].name}` }), 
  header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }), 
  carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: [ ...push ] }) 
   }) 

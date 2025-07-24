@@ -4,13 +4,13 @@ import { levelup } from '../src/libraries/canvas.js';
 
 const handler = async (m, { conn }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_levelup
 
-  const name = conn.getName(m.sender);
-  const usertag = '@' + m.sender.split('@s.whatsapp.net')[0];
-  const user = global.db.data.users[m.sender];
+  const name = conn.getName(await m.sender);
+  const usertag = '@' + await m.sender.split('@s.whatsapp.net')[0];
+  const user = global.db.data.users[await m.sender];
   if (!canLevelUp(user.level, user.exp, global.multiplier)) {
     const { min, xp, max } = xpRange(user.level, global.multiplier);
     const message = `
@@ -22,7 +22,7 @@ ${tradutor.texto1[3]} ${user.role}
 ${tradutor.texto1[4]} ${user.exp - min}/${xp}
 
 ${tradutor.texto1[5]} ${max - user.exp} ${tradutor.texto1[6]}`.trim();
-    return conn.sendMessage(m.chat, {text: message, mentions: [m.sender]}, {quoted: m});
+    return conn.sendMessage(m.chat, {text: message, mentions: [await m.sender]}, {quoted: m});
   }
   const before = user.level * 1;
   while (canLevelUp(user.level, user.exp, global.multiplier)) user.level++;
@@ -40,7 +40,7 @@ ${tradutor.texto3[4]}`.trim();
       const levelUpImage = await levelup(levelUpMessage, user.level);
       conn.sendFile(m.chat, levelUpImage, 'levelup.jpg', levelUpDetails, m);
     } catch (e) {
-      conn.sendMessage(m.chat, {text: levelUpDetails, mentions: [m.sender]}, {quoted: m});
+      conn.sendMessage(m.chat, {text: levelUpDetails, mentions: [await m.sender]}, {quoted: m});
     }
   }
 };

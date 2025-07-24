@@ -20,7 +20,7 @@ export async function all(m, chatUpdate) {
       pollCreatorJid: m.message.pollUpdateMessage.pollCreationMessageKey.participant,
       pollMsgId: m.message.pollUpdateMessage.pollCreationMessageKey.id,
       pollEncKey: authcode, //Uint8Array.from(authcode.split('').map(letter => letter.charCodeAt(0))),
-      voterJid: m.sender,
+      voterJid: await m.sender,
     })
     console.log(xds)
 }*/
@@ -104,11 +104,11 @@ export async function all(m, chatUpdate) {
     userJid: this.user.id,
     quoted: m.quoted && m.quoted.fakeObj,
   });
-  messages.key.fromMe = areJidsSameUser(m.sender, this.user.id);
+  messages.key.fromMe = areJidsSameUser(await m.sender, this.user.id);
   messages.key.id = m.key.id;
   messages.pushName = m.name;
   if (m.isGroup) {
-    messages.key.participant = messages.participant = m.sender;
+    messages.key.participant = messages.participant = await m.sender;
   }
   const msg = {
     ...chatUpdate,
@@ -196,11 +196,11 @@ export async function all(m, chatUpdate) {
     userJid: this.user.id,
     quoted: m.quoted && m.quoted.fakeObj,
   });
-  messages.key.fromMe = areJidsSameUser(m.sender, this.user.id);
+  messages.key.fromMe = areJidsSameUser(await m.sender, this.user.id);
   messages.key.id = m.key.id;
   messages.pushName = m.name;
   if (m.isGroup) {
-    messages.key.participant = messages.participant = m.sender;
+    messages.key.participant = messages.participant = await m.sender;
   }
   const msg = {
     ...chatUpdate,

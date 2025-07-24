@@ -4,7 +4,7 @@ import fs from 'fs';
 let handler = async (m, { conn, text, command }) => {
 
     const datas = global;
-    const idioma = datas.db.data.users[m.sender]?.language || global.defaultLenguaje;
+    const idioma = datas.db.data.users[await m.sender]?.language || global.defaultLenguaje;
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
     const tradutor = _translate.plugins.herramientas_chatgpt;  
   
@@ -12,8 +12,8 @@ let handler = async (m, { conn, text, command }) => {
 
     if (command === 'delmemoryia' || command === 'borrarmemoriaai') {
       if (!global.db.data.users) global.db.data.users = {};
-      if (!global.db.data.users[m.sender]) global.db.data.users[m.sender] = {};
-      global.db.data.users[m.sender].chatHistory = [];
+      if (!global.db.data.users[await m.sender]) global.db.data.users[await m.sender] = {};
+      global.db.data.users[await m.sender].chatHistory = [];
       if (typeof global.db.write === 'function') global.db.write();
       return m.reply('🗑️ Memoria de conversación borrada exitosamente.\n\nYa no recordaré nuestras conversaciones anteriores.');
     }
@@ -23,7 +23,7 @@ let handler = async (m, { conn, text, command }) => {
     const model = await axios.get("https://raw.githubusercontent.com/Skidy89/chat-gpt-jailbreak/refs/heads/main/Text.txt");
     const context = `${model.data}`.trim();
     
-    const result = await luminsesi(text, m.sender, context);
+    const result = await luminsesi(text, await m.sender, context);
     m.reply(result);
   } catch (error) {
     console.error('[❌ ERROR GENERAL]', error);

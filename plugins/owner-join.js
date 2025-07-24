@@ -4,7 +4,7 @@ const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
 let enviando;
 const handler = async (m, {conn, text, isMods, isOwner, isPrems}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.owner_join
 
@@ -22,7 +22,7 @@ const handler = async (m, {conn, text, isMods, isOwner, isPrems}) => {
       conn.sendMessage(m.chat, {text: tradutor.texto3}, {quoted: m});
       const data = global.owner.filter(([id]) => id)[0];
       const dataArray = Array.isArray(data) ? data : [data];
-      for (const entry of dataArray) await conn.sendMessage(entry + '@s.whatsapp.net', {text: tradutor.texto4 + '@' + m.sender.split('@')[0] + '\n*—◉ Link del grupo:* ' + link, mentions: [m.sender], contextInfo: {forwardingScore: 9999999, isForwarded: true, mentionedJid: [m.sender], "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": imagen6, "mediaUrl": `${link}`, "sourceUrl": `${link}`}}}, {quoted: m});
+      for (const entry of dataArray) await conn.sendMessage(entry + '@s.whatsapp.net', {text: tradutor.texto4 + '@' + await m.sender.split('@')[0] + '\n*—◉ Link del grupo:* ' + link, mentions: [await m.sender], contextInfo: {forwardingScore: 9999999, isForwarded: true, mentionedJid: [await m.sender], "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": imagen6, "mediaUrl": `${link}`, "sourceUrl": `${link}`}}}, {quoted: m});
       enviando = false 
     }
   } catch {

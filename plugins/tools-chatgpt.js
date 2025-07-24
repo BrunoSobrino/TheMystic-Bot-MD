@@ -4,7 +4,7 @@ import fs from 'fs';
 let handler = async (m, { conn, args, usedPrefix, command, text }) => {
     
         const datas = global;
-        const idioma = datas.db.data.users[m.sender]?.language || global.defaultLenguaje;
+        const idioma = datas.db.data.users[await m.sender]?.language || global.defaultLenguaje;
         const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
         const tradutor = _translate.plugins.herramientas_chatgpt;
     
@@ -12,7 +12,7 @@ let handler = async (m, { conn, args, usedPrefix, command, text }) => {
         if (!text) return m.reply(tradutor.texto1[0]);
         
         let mediax = null;
-        let userID = m.sender;
+        let userID = await m.sender;
         let imageDescription = '';
         let hasImage = false;
         

@@ -3,12 +3,12 @@ import {sticker} from '../src/libraries/sticker.js';
 const handler = (m) => m;
 
 handler.all = async function(m) {
-  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = global.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins._autosticker
 
   const chat = db.data.chats[m.chat];
-  const user = db.data.users[m.sender];
+  const user = db.data.users[await m.sender];
 
   if (chat.autosticker && m.isGroup) {
     const q = m;

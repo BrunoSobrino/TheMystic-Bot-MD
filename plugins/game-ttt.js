@@ -2,18 +2,18 @@ import TicTacToe from '../src/libraries/tictactoe.js';
 
 const handler = async (m, {conn, usedPrefix, command, text}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.game_ttt
 
   conn.game = conn.game ? conn.game : {};
-  if (Object.values(conn.game).find((room) => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))) throw tradutor.texto6;
+  if (Object.values(conn.game).find((room) => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(await m.sender))) throw tradutor.texto6;
   if (!text) throw `${tradutor.texto1[0]}\n*◉ ${usedPrefix + command} ${tradutor.texto1[1]}`;
   let room = Object.values(conn.game).find((room) => room.state === 'WAITING' && (text ? room.name === text : true));
   if (room) {
     await m.reply(tradutor.texto2);
     room.o = m.chat;
-    room.game.playerO = m.sender;
+    room.game.playerO = await m.sender;
     room.state = tradutor.texto3;
     const arr = room.game.render().map((v) => {
       return {
@@ -49,7 +49,7 @@ ${tradutor.texto4} @${room.game.currentTurn.split('@')[0]}
       id: 'tictactoe-' + (+new Date),
       x: m.chat,
       o: '',
-      game: new TicTacToe(m.sender, 'o'),
+      game: new TicTacToe(await m.sender, 'o'),
       state: 'WAITING'};
     if (text) room.name = text;
     const imgplay = `https://cope-cdnmed.agilecontent.com/resources/jpg/8/9/1590140413198.jpg`;

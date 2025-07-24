@@ -4,7 +4,7 @@
 const handler = (m) => m;
 handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwner }) {
   const datas = global
-  let idioma = datas.db.data.users[m.sender].language 
+  let idioma = datas.db.data.users[await m.sender].language 
   // todo: sometimes this trows undefined.json ill fix
   if (idioma === undefined || idioma === null) {
     idioma = 'es'
@@ -23,27 +23,27 @@ handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwn
   const chat = global.db.data.chats[m.chat];
   const bot = global.db.data.settings[conn.user.jid] || {};
   if (isBotAdmin && chat.antiArab2 && !isAdmin && !isOwner && !isROwner && bot.restrict) {
-    if (m.sender.startsWith('212' || '212')) {
+    if (await m.sender.startsWith('212' || '212')) {
       m.reply(tradutor.texto1);
-      const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+      const responseb = await conn.groupParticipantsUpdate(m.chat, [await m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }
 
-    if (m.sender.startsWith('265' || '265')) {
+    if (await m.sender.startsWith('265' || '265')) {
       m.reply(tradutor.texto2);
-      const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+      const responseb = await conn.groupParticipantsUpdate(m.chat, [await m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }
 
-    if (m.sender.startsWith('92' || '92')) {
+    if (await m.sender.startsWith('92' || '92')) {
       m.reply(tradutor.texto3);
-      const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+      const responseb = await conn.groupParticipantsUpdate(m.chat, [await m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }
 
-    if (m.sender.startsWith('234' || '234')) {
+    if (await m.sender.startsWith('234' || '234')) {
       m.reply(tradutor.texto3);
-      const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+      const responseb = await conn.groupParticipantsUpdate(m.chat, [await m.sender], 'remove');
       if (responseb[0].status === '404') return;
     }                                                       
   }

@@ -16,10 +16,10 @@ export async function all(m, chatUpdate) {
     userJid: this.user.id,
     quoted: m.quoted && m.quoted.fakeObj,
   });
-  messages.key.fromMe = m.isBaileys || (m.sender === m.conn?.user?.jid)
+  messages.key.fromMe = m.isBaileys || (await m.sender === m.conn?.user?.jid)
   messages.key.id = m.key.id; 
   messages.pushName = m.pushName;
-  if (m.isGroup) messages.participant = m.sender;
+  if (m.isGroup) messages.participant = await m.sender;
   const msg = {
     ...chatUpdate,
     messages: [proto.WebMessageInfo.fromObject(messages)],

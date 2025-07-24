@@ -1,6 +1,6 @@
 const handler = async (m, { conn, command, text }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.fun_love
 
@@ -13,7 +13,7 @@ const handler = async (m, { conn, command, text }) => {
   const loveMessage = isHighLove ? getRandomMessage(loveMessages) : getRandomMessage(notSoHighLoveMessages);
   const response =
     `━━━━━━━⬣ *LOVE* ⬣━━━━━━━\n` +
-    `${tradutor.texto4[0]}, ${text} ${tradutor.texto4[1]} @${m.sender.split('@')[0]} ${loveDescription} ${tradutor.texto4[2]} ${lovePercentage}% ${tradutor.texto4[3]}\n\n` +
+    `${tradutor.texto4[0]}, ${text} ${tradutor.texto4[1]} @${await m.sender.split('@')[0]} ${loveDescription} ${tradutor.texto4[2]} ${lovePercentage}% ${tradutor.texto4[3]}\n\n` +
     `*❥ ${loveMessage}*\n` +
     `━━━━━━━⬣ *LOVE* ⬣━━━━━━━`    
   

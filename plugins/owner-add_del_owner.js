@@ -1,13 +1,13 @@
 
 const handler = async (m, { conn, text, args, usedPrefix, command }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.owner_add_del_owner
 
-  const why = `${tradutor.texto1[0]} ${usedPrefix + command}* @${m.sender.split('@')[0]}\n*◉ ${usedPrefix + command}* ${m.sender.split('@')[0]}\n*◉ ${usedPrefix + command}* <responder>`;
+  const why = `${tradutor.texto1[0]} ${usedPrefix + command}* @${await m.sender.split('@')[0]}\n*◉ ${usedPrefix + command}* ${await m.sender.split('@')[0]}\n*◉ ${usedPrefix + command}* <responder>`;
   const who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : false;
-  if (!who) return conn.reply(m.chat, why, m, {mentions: [m.sender]});
+  if (!who) return conn.reply(m.chat, why, m, {mentions: [await m.sender]});
   switch (command) {
     case 'addowner':
       const nuevoNumero = who;

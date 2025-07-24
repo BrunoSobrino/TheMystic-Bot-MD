@@ -4,14 +4,14 @@ let fila, columna, sopaNube, sopaPalabra, sopaDir, userSP, cambioLetra, diamante
 let intentos = 0
 let handler = async (m, { conn, text, usedPrefix, command }) => {
     const datas = global
-    const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+    const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
     const tradutor = _translate.plugins.game_sopa_de_letras
 
 
     if (!userSP) {
-        userSP = m.sender.split("@")[0]
-        await conn.reply(m.chat, `*@${m.sender.split("@")[0]} ${tradutor.texto1}`, m, { mentions: [m.sender] })
+        userSP = await m.sender.split("@")[0]
+        await conn.reply(m.chat, `*@${await m.sender.split("@")[0]} ${tradutor.texto1}`, m, { mentions: [await m.sender] })
     }
 
     async function generarSopaDeLetras() {
@@ -114,7 +114,7 @@ ${tradutor.texto3[7]}
     // Condiciones del juego
     cambioLetra = sopaDir
     let tagUser = userSP + '@s.whatsapp.net'
-    if (userSP != m.sender.split("@")[0]) {
+    if (userSP != await m.sender.split("@")[0]) {
         await conn.reply(m.chat, `*@${tagUser.split("@")[0]} ${tradutor.texto4}`, m, { mentions: [tagUser] })
         return
     }
@@ -126,11 +126,11 @@ ${tradutor.texto3[7]}
         async function resetUserSP() {
             await new Promise((resolve) => setTimeout(resolve, 2 * 60 * 1000)) // 2 min
             if (intentos !== 0) {
-                await conn.reply(m.chat, `*@${m.sender.split("@")[0]} ${tradutor.texto5}`, m, { mentions: [m.sender] })
+                await conn.reply(m.chat, `*@${await m.sender.split("@")[0]} ${tradutor.texto5}`, m, { mentions: [await m.sender] })
             }
             await new Promise((resolve) => setTimeout(resolve, 3 * 60 * 1000)) // 3 min
             if (intentos !== 0) {
-                await conn.reply(m.chat, `*@${m.sender.split("@")[0]} ${tradutor.texto6[0]} _"${sopaPalabra}"_ ${tradutor.texto6[1]} _${sopaDir}_ ${tradutor.texto6[2]} _${fila}_ ${tradutor.texto6[2]} _${columna}_*`, m, { mentions: [m.sender] })
+                await conn.reply(m.chat, `*@${await m.sender.split("@")[0]} ${tradutor.texto6[0]} _"${sopaPalabra}"_ ${tradutor.texto6[1]} _${sopaDir}_ ${tradutor.texto6[2]} _${fila}_ ${tradutor.texto6[2]} _${columna}_*`, m, { mentions: [await m.sender] })
                 fila = null, columna = null, sopaNube = null, sopaPalabra = null, sopaDir = null, userSP = null, cambioLetra = null
                 intentos = 0
             }
@@ -146,7 +146,7 @@ ${tradutor.texto3[7]}
             } else {
                 diamante = 32
             }
-            global.db.data.users[m.sender].limit += diamante
+            global.db.data.users[await m.sender].limit += diamante
 
             await m.reply(`\`\`\`${tradutor.texto7[0]} ${diamante} ${rpgshop.emoticon('limit')}!!\`\`\`\n\n${tradutor.texto7[1]} _"${sopaPalabra}"_ ${tradutor.texto7[2]} _${cambioLetra}_ ${tradutor.texto7[3]} _${fila}_ ${tradutor.texto7} _${columna}_*`)
             fila = null, columna = null, sopaNube = null, sopaPalabra = null, sopaDir = null, userSP = null, cambioLetra = null

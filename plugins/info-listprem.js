@@ -2,17 +2,17 @@
 
 const handler = async (m, {conn, args, isPrems}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.info_listprem
 
-  const usuario = global.db.data.users[m.sender].premiumTime;
+  const usuario = global.db.data.users[await m.sender].premiumTime;
   const user = Object.entries(global.db.data.users).filter((user) => user[1].premiumTime).map(([key, value]) => {
     return {...value, jid: key};
   });
-  const premTime = global.db.data.users[m.sender].premiumTime;
-  const prem = global.db.data.users[m.sender].premium;
-  const userr = await '@' + m.sender.split`@`[0];
+  const premTime = global.db.data.users[await m.sender].premiumTime;
+  const prem = global.db.data.users[await m.sender].premium;
+  const userr = await '@' + await m.sender.split`@`[0];
   const waktu = clockString(`${premTime - new Date() * 1} `);
   const sortedP = user.map(toNumber('premiumTime')).sort(sort('premiumTime'));
   const len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length);
@@ -64,12 +64,12 @@ function toNumber(property, _default = 0) {
 
 
 /* let handler = async (m, { conn, args }) => {
-let usuario = global.db.data.users[m.sender].premiumTime
+let usuario = global.db.data.users[await m.sender].premiumTime
 let user = Object.entries(global.db.data.users).filter(user => user[1].premiumTime).map(([key, value]) => {
 return { ...value, jid: key }})
-let premTime = global.db.data.users[m.sender].premiumTime
-let prem = global.db.dat🧿 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝 🔮a.users[m.sender].premium
-let userr = await '@' + m.sender.split`@`[0]
+let premTime = global.db.data.users[await m.sender].premiumTime
+let prem = global.db.dat🧿 𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝 🔮a.users[await m.sender].premium
+let userr = await '@' + await m.sender.split`@`[0]
 let waktu = clockString(`${premTime - new Date() * 1} `)
 let sortedP = user.map(toNumber('premiumTime')).sort(sort('premiumTime'))
 let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length)

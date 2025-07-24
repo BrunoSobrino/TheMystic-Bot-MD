@@ -7,13 +7,13 @@ import {webp2png} from '../src/libraries/webp2mp4.js';
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.sticker_sticker
 
   if (usedPrefix == 'a' || usedPrefix == 'A') return;
   let stiker = false;
-  const user = db.data.users[m.sender];
+  const user = db.data.users[await m.sender];
   try {
     const q = m.quoted ? m.quoted : m;
     const mime = (q.msg || q).mimetype || q.mediaType || '';

@@ -14,7 +14,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     let minutoAtual = infoDataHora.getMinutes()
 
     let id
-    if (m.chat) { id = m.chat } else { id = m.sender } // define el id del chat en el que está conversando
+    if (m.chat) { id = m.chat } else { id = await m.sender } // define el id del chat en el que está conversando
 
     let argumento = args[0]
     if (argumento != null && argumento != undefined) { argumento.toLowerCase() }
@@ -26,7 +26,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     try {
 
         // Lectura de base de datos del Bot y el juego
-        let data = global.db.data.users[m.sender].gameglx
+        let data = global.db.data.users[await m.sender].gameglx
         let db = JSON.parse(fs.readFileSync(`./src/assets/glx/db/database.json`))
 
         setInterval(() => {
@@ -105,7 +105,7 @@ _Quieres dinero? Vamos a minar._
   🌞🌕🌠🌟⭐🌎🪐
 `
             let glx_menu = fs.readFileSync('./src/assets/images/menu/main/galaxiaMenu.png')
-            const selo1234 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
+            const selo1234 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${await m.sender.split('@')[0]}:${await m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
             const idmessage = await conn.sendMessage(m.chat, { image: glx_menu, caption: str.trim() }, { quoted: selo1234 });
             const reactionMessage = { react: { text: "👨‍🚀", key: idmessage.key } }
 
@@ -125,7 +125,7 @@ _Quieres dinero? Vamos a minar._
                         // Dados essenciais para o jogo rodar corretamente.
                         data.status = true; // Ativa o cadastro dos jogadores
                         data.perfil.nome = m.pushName // Salva o nome padrão do whatsapp no game
-                        data.perfil.id = m.sender // salva o id do whatsapp do gamer
+                        data.perfil.id = await m.sender // salva o id do whatsapp do gamer
 
                         // Defindo a casa como padrão
                         data.perfil.casa.id = db.planetas.terra.id // Id Planeta Padrão para novos Jogadores
@@ -133,7 +133,7 @@ _Quieres dinero? Vamos a minar._
                         data.perfil.casa.colonia.nome = db.planetas.terra.colonias.colonia1.nome // Colonia Padrão para novos Jogadores
                         data.perfil.casa.colonia.id = db.planetas.terra.colonias.colonia1.id //  Definir o id do grupo padrão
                         data.perfil.casa.idpelonome = db.planetas.terra.idpelonome // Defini o id pelo nome padrao do sistema
-                        db.planetas.terra.habitantes.push(m.sender) // Adiciona o usuario como habitante do planeta terra
+                        db.planetas.terra.habitantes.push(await m.sender) // Adiciona o usuario como habitante do planeta terra
 
                         // Alterando a Localização do usuario ndentro de Global
                         data.perfil.localizacao.status = true;
@@ -155,9 +155,9 @@ _Quieres dinero? Vamos a minar._
 
                         // Adiciona o usuario na lista de cadastrado no jogo, e como habitante da colonia na terra
                         // Somente se o usuario não estiver na lista. ele retorna false
-                        if (!db.user_cadastrado.lista.includes(m.sender)) {
-                            db.planetas.terra.colonias.colonia1.habitantes.push(m.sender)
-                            db.user_cadastrado.lista.push(m.sender)
+                        if (!db.user_cadastrado.lista.includes(await m.sender)) {
+                            db.planetas.terra.colonias.colonia1.habitantes.push(await m.sender)
+                            db.user_cadastrado.lista.push(await m.sender)
 
                             fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db)) // Escreve os dados no arquivo
                         }
@@ -172,7 +172,7 @@ _Quieres dinero? Vamos a minar._
                         let minY = db.planetas.terra.colonias.colonia1.localizacao.y - 1   // Define a area da colonia
 
                         cadastrarPosicaoNoMapa(maxX, minX, maxY, minY, 'terra', 'colonia1') // Sortea uma posição para o usuario no mapa e cadastra
-                        conn.groupParticipantsUpdate(db.planetas.terra.id, [m.sender], "add") // Adiciona o usuario no grupo terra pela primeira vez
+                        conn.groupParticipantsUpdate(db.planetas.terra.id, [await m.sender], "add") // Adiciona o usuario no grupo terra pela primeira vez
 
 
                         enviar(`*_⚔️ AHORA ERES UN MIEMBRO ESTELAR🪐_*
@@ -235,7 +235,7 @@ Use: ${usedPrefix}glx
                                 break;
                             case 'casa':
                                 data.perfil.localizacao.viajando = false;
-                                conn.groupParticipantsUpdate(data.perfil.casa.id, [m.sender], "add")
+                                conn.groupParticipantsUpdate(data.perfil.casa.id, [await m.sender], "add")
                                 enviar(` 😉 *Hola!!!* nuevamente ${m.pushName}`, null, data.perfil.casa.id)
                                 enviar(`${m.pushName} _Estás en la tierra nuevamente 😉!_ `, null, id)
                                 break;
@@ -430,7 +430,7 @@ Use: ${usedPrefix}glx
                                             Moradores1.push(numberr)
                                             Moradores2.push(habitantes[j])
 
-                                            if (habitantes[j] === m.sender) {
+                                            if (habitantes[j] === await m.sender) {
                                                 your = ` *Tú* `
                                             }
                                             Moradores += `➣ ${your}@${numberr}\n`
@@ -460,10 +460,10 @@ ${Moradores}
                                 if (!m.isGroup) return m.reply(` Solo puedes usar esto en grupos`)
                                 if (id != data.perfil.casa.id) {
                                     data.perfil.localizacao.viajando = false;
-                                    conn.groupParticipantsUpdate(id, [m.sender], "remove")
-                                    conn.groupParticipantsUpdate(data.perfil.casa.id, [m.sender], "add")
+                                    conn.groupParticipantsUpdate(id, [await m.sender], "remove")
+                                    conn.groupParticipantsUpdate(data.perfil.casa.id, [await m.sender], "add")
                                     conn.sendMessage(data.perfil.casa.id, { text: `_Bienvenido a tu casa!_` })
-                                    conn.sendMessage(m.sender, { text: `_Bienvenido a casa!_` })
+                                    conn.sendMessage(await m.sender, { text: `_Bienvenido a casa!_` })
                                 }
                                 break;
                             default: ''
@@ -817,7 +817,7 @@ Use: ${usedPrefix}glx
 
 
                 conn.sendMessage(id, { delete: messageId1 });
-                conn.groupParticipantsUpdate(db.planetas[nomeplaneta].id, [m.sender], "add") // replace this parameter with "remove", "demote" or "promote"
+                conn.groupParticipantsUpdate(db.planetas[nomeplaneta].id, [await m.sender], "add") // replace this parameter with "remove", "demote" or "promote"
 
 
                 setTimeout(() => {
@@ -840,7 +840,7 @@ Use: ${usedPrefix}glx
                     data.perfil.localizacao.idpelonome = data.perfil.casa.planeta;
                     setTimeout(() => {
 
-                        conn.groupParticipantsUpdate(db.planetas[nomeplaneta].id, [m.sender], "remove")
+                        conn.groupParticipantsUpdate(db.planetas[nomeplaneta].id, [await m.sender], "remove")
 
 
 
@@ -905,7 +905,7 @@ _Eliminación automática en 20 segundos_
 
             setTimeout(() => {
 
-                conn.sendMessage(m.sender, { delete: messageId });
+                conn.sendMessage(await m.sender, { delete: messageId });
             }, 15000)
         }
 
@@ -914,7 +914,7 @@ _Eliminación automática en 20 segundos_
         async function enviar10s(texto) {
             const messageId = await m.reply(texto + `\n\n_🔋 auto eliminación! 10s_`)
             setTimeout(() => {
-                conn.sendMessage(m.sender, { delete: messageId })
+                conn.sendMessage(await m.sender, { delete: messageId })
             }, 10000)
         }
 
@@ -927,7 +927,7 @@ _Eliminación automática en 20 segundos_
             if (img === null || img === undefined) { img = './src/assets/glx/img_padrao.png' }
 
             let glx_menu = fs.readFileSync(img)
-            const selo = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
+            const selo = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${await m.sender.split('@')[0]}:${await m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
             const messageId = await conn.sendMessage(aux_id, { image: glx_menu, caption: texto.trim() }, { quoted: selo })
             return messageId
 
@@ -1491,7 +1491,7 @@ Tu ganaste:
 
     async function notificacao() {
         let db1 = JSON.parse(fs.readFileSync(`./src/assets/glx/db/database.json`))
-        let data1 = global.db.data.users[m.sender].gameglx
+        let data1 = global.db.data.users[await m.sender].gameglx
         let api = await database_galaxia()
 
         if (db1.notificacao.status === true) {

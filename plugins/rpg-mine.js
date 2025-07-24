@@ -2,15 +2,15 @@
 
 const handler = async (m, {conn, isPrems}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_minar
 
   const hasil = Math.floor(Math.random() * 1000);
-  const time = global.db.data.users[m.sender].lastmiming + 600000;
-  if (new Date - global.db.data.users[m.sender].lastmiming < 600000) throw `${tradutor.texto1[0]} ${msToTime(time - new Date())} ${tradutor.texto1[1]}`;
+  const time = global.db.data.users[await m.sender].lastmiming + 600000;
+  if (new Date - global.db.data.users[await m.sender].lastmiming < 600000) throw `${tradutor.texto1[0]} ${msToTime(time - new Date())} ${tradutor.texto1[1]}`;
   m.reply(`${tradutor.texto2} ${hasil} 𝚇𝙿*`);
-  global.db.data.users[m.sender].lastmiming = new Date * 1;
+  global.db.data.users[await m.sender].lastmiming = new Date * 1;
 };
 handler.help = ['minar'];
 handler.tags = ['xp'];

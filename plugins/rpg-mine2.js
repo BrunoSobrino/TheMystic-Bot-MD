@@ -1,11 +1,11 @@
 
 const handler = async (m, {conn, isPrems}) => { // lastmiming
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_minar_mysticcoins
 
-  const user = global.db.data.users[m.sender];
+  const user = global.db.data.users[await m.sender];
   const premium = user.premium;
   const minar = `${pickRandom(tradutor.te)}`;
   const pp = 'https://png.pngtree.com/thumb_back/fw800/background/20220428/pngtree-cartoon-mining-game-design-composition-with-different-mining-equipment-inside-the-image_1108471.jpg';

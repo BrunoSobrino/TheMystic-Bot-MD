@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 const cooldown = 1500000; // 25 minutos
 const handler = async (m, {usedPrefix, conn}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_adventure
 
@@ -269,7 +269,7 @@ const handler = async (m, {usedPrefix, conn}) => {
     );
     const kt = await ke.json();
     // let imgr = flaaa.getRandom()
-    const user = global.db.data.users[m.sender];
+    const user = global.db.data.users[await m.sender];
     const timers = cooldown - (new Date() - user.lastadventure);
     if (user.health < 80) {
       return conn.reply(

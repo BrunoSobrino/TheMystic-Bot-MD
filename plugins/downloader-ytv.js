@@ -8,7 +8,7 @@ let enviando = false;
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
   const datas = global;
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.downloader_ytv;
 
@@ -24,7 +24,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     const index = parseInt(args[0]) - 1;
     if (index >= 0) {
       if (Array.isArray(global.videoList) && global.videoList.length > 0) {
-        const matchingItem = global.videoList.find((item) => item.from === m.sender);
+        const matchingItem = global.videoList.find((item) => item.from === await m.sender);
         if (matchingItem) {
           if (index < matchingItem.urls.length) {
             youtubeLink = matchingItem.urls[index];

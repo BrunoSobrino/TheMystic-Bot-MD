@@ -4,7 +4,7 @@
 
 const handler = async (m, {args, usedPrefix, command}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.game_slot
 
@@ -16,7 +16,7 @@ ${tradutor.texto2}
   if (!args[0]) throw fa;
   if (isNaN(args[0])) throw fa;
   const apuesta = parseInt(args[0]);
-  const users = global.db.data.users[m.sender];
+  const users = global.db.data.users[await m.sender];
   const time = users.lastslot + 10000;
   if (new Date - users.lastslot < 10000) throw `${tradutor.texto3[0]} ${msToTime(time - new Date())} ${tradutor.texto3[1]}`;
   if (apuesta < 100) throw tradutor.texto4;

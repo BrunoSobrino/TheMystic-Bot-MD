@@ -1,6 +1,6 @@
 const handler = async (m, {conn, participants, command, usedPrefix}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.grupos_eliminar
 
@@ -18,7 +18,7 @@ const handler = async (m, {conn, participants, command, usedPrefix}) => {
     if (responseb[0].status === '200') m.reply(exitoso1, m.chat, {mentions: conn.parseMention(exitoso1)});
     else if (responseb[0].status === '406') m.reply(error1, m.chat, {mentions: conn.parseMention(error1)});
     else if (responseb[0].status === '404') m.reply(error2, m.chat, {mentions: conn.parseMention(error2)});
-    else conn.sendMessage(m.chat, {text: `${tradutor.texto8}`, mentions: [m.sender], contextInfo: {forwardingScore: 999, isForwarded: true}}, {quoted: m});
+    else conn.sendMessage(m.chat, {text: `${tradutor.texto8}`, mentions: [await m.sender], contextInfo: {forwardingScore: 999, isForwarded: true}}, {quoted: m});
   } else if (m.message.extendedTextMessage.contextInfo.mentionedJid != null && m.message.extendedTextMessage.contextInfo.mentionedJid != undefined) {
     return;
   }
@@ -38,11 +38,11 @@ await sleep(100)
 let responseb2 = await conn.groupParticipantsUpdate(m.chat, [banned], 'remove')
 if (responseb2[0].status === "200") sexocomrato = sexocomrato + 1
 }
-conn.sendMessage(m.chat, {text: `${sexocomrato} participante elimanado del grupo.`, mentions: [m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
+conn.sendMessage(m.chat, {text: `${sexocomrato} participante elimanado del grupo.`, mentions: [await m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
 } else {
 let responseb3 = await conn.groupParticipantsUpdate(m.chat, [mentioned[0]], 'remove')
-if (responseb3[0].status === "200") conn.sendMessage(m.chat, {text: `@${mentioned[0].split("@")[0]} fue eliminado exitosamente del grupo.️`, mentions: [mentioned[0], m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
-else if (responseb3[0].status === "406") conn.sendMessage(m.chat, {text: `@${mentioned[0].split("@")[0]} creó este grupo y no puede ser eliminado.`, mentions: [mentioned[0], m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
-else if (responseb3[0].status === "404") conn.sendMessage(m.chat, {text: `@${mentioned[0].split("@")[0]} ya ha sido eliminado o abandonado el grupo`, mentions: [mentioned[0], m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
-else conn.sendMessage(m.chat, {text: `A ocurrido un error.`, mentions: [m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
+if (responseb3[0].status === "200") conn.sendMessage(m.chat, {text: `@${mentioned[0].split("@")[0]} fue eliminado exitosamente del grupo.️`, mentions: [mentioned[0], await m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
+else if (responseb3[0].status === "406") conn.sendMessage(m.chat, {text: `@${mentioned[0].split("@")[0]} creó este grupo y no puede ser eliminado.`, mentions: [mentioned[0], await m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
+else if (responseb3[0].status === "404") conn.sendMessage(m.chat, {text: `@${mentioned[0].split("@")[0]} ya ha sido eliminado o abandonado el grupo`, mentions: [mentioned[0], await m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
+else conn.sendMessage(m.chat, {text: `A ocurrido un error.`, mentions: [await m.sender], contextInfo:{forwardingScore:999, isForwarded:true}}, {quoted: m})
 }*/

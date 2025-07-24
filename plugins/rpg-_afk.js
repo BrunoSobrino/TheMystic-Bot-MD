@@ -1,10 +1,10 @@
 export function before(m) {
  const datas = global
- const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+ const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
  const tradutor = _translate.plugins.afk__afk
 
- const user = global.db.data.users[m.sender];
+ const user = global.db.data.users[await m.sender];
  if (user.afk > -1) {
  m.reply(`${tradutor.texto2[0]} ${user.afkReason ? `${tradutor.texto2[1]}` + user.afkReason : ''}*\n\n*${tradutor.texto2[2]} ${(new Date - user.afk).toTimeString()}*`.trim());
    user.afk = -1;

@@ -3,11 +3,11 @@ import fs from "fs"
 
 async function handler(m, {usedPrefix}) {
     const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.mipilot_serbotcode
 
-    const user = m.sender.split("@")[0]
+    const user = await m.sender.split("@")[0]
     if (fs.existsSync("./jadibts/" + user + "/creds.json")) {
         let token = Buffer.from(fs.readFileSync("./jadibts/" + user + "/creds.json"), "utf-8").toString("base64")
         await m.reply(tradutor.texto1)

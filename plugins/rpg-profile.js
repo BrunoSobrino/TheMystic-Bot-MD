@@ -4,10 +4,10 @@ import fetch from 'node-fetch';
 
 const handler = async (m, {conn, usedPrefix, participants, isPrems}) => {
  const datas = global
- const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+ const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
  const tradutor = _translate.plugins.rpg_perfil
- const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;
+ const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.jid : await m.sender;
  if (!(who in global.db.data.users)) throw tradutor.texto1;
  try {
  const pp = await conn.profilePictureUrl(who, 'image').catch(_ => 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60');

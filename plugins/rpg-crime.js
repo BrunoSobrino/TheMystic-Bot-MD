@@ -5,7 +5,7 @@ let crime = 500
 let diamante = 10
 const handler = async (m, { conn, usedPrefix, command, groupMetadata, participants, isPrems }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_crime
 
@@ -13,8 +13,8 @@ const handler = async (m, { conn, usedPrefix, command, groupMetadata, participan
   global.robmal = tradutor.texto5;
 
 
-  const date = global.db.data.users[m.sender].crime + 3600000; //3600000 = 1 hs
-  if (new Date - global.db.data.users[m.sender].crime < 3600000) return m.reply(`${tradutor.texto1} ${msToTime(date - new Date())}`)
+  const date = global.db.data.users[await m.sender].crime + 3600000; //3600000 = 1 hs
+  if (new Date - global.db.data.users[await m.sender].crime < 3600000) return m.reply(`${tradutor.texto1} ${msToTime(date - new Date())}`)
   let randow
   if (m.isGroup) randow = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false
   else randow = m.chat
@@ -27,12 +27,12 @@ const handler = async (m, { conn, usedPrefix, command, groupMetadata, participan
     const money = Math.floor(Math.random() * 9000)
     let or = ['text', 'text2', 'text3', 'text4', 'text5'];
     let media = or[Math.floor(Math.random() * 4)]
-    global.db.data.users[m.sender].crime = new Date * 1;
-    if (media === 'text') return m.reply(`《💰》${pickRandom(global.robar)} ${exp} XP`).catch(global.db.data.users[m.sender].exp += exp)
-    if (media === 'text2') return m.reply(`《🚓》${pickRandom(global.robmal)} ${exp} XP`).catch(global.db.data.users[m.sender].exp -= crime)
-    if (media === 'text3') return m.reply(`《💰》*${pickRandom(global.robar)}*\n\n${diamond} ${tradutor.texto2[0]}\n${money} ${tradutor.texto2[1]}`).catch(global.db.data.users[m.sender].limit += diamond).catch(global.db.data.users[m.sender].money += money)
-    if (media === 'text4') return m.reply(`《🚓》${pickRandom(global.robmal)}\n\n${diamond} ${tradutor.texto2[0]}n${money} ${tradutor.texto2[1]}`).catch(global.db.data.users[m.sender].limit -= diamante).catch(global.db.data.users[m.sender].money -= crime)
-    if (media === 'text5') return conn.reply(m.chat, `${tradutor.texto3[0]} @${randow.split`@`[0]} ${tradutor.texto3[1]} ${exp} XP`, m, { contextInfo: { mentionedJid: [randow] } }).catch(global.db.data.users[m.sender].exp += exp).catch(global.db.data.users[randow].exp -= crime)
+    global.db.data.users[await m.sender].crime = new Date * 1;
+    if (media === 'text') return m.reply(`《💰》${pickRandom(global.robar)} ${exp} XP`).catch(global.db.data.users[await m.sender].exp += exp)
+    if (media === 'text2') return m.reply(`《🚓》${pickRandom(global.robmal)} ${exp} XP`).catch(global.db.data.users[await m.sender].exp -= crime)
+    if (media === 'text3') return m.reply(`《💰》*${pickRandom(global.robar)}*\n\n${diamond} ${tradutor.texto2[0]}\n${money} ${tradutor.texto2[1]}`).catch(global.db.data.users[await m.sender].limit += diamond).catch(global.db.data.users[await m.sender].money += money)
+    if (media === 'text4') return m.reply(`《🚓》${pickRandom(global.robmal)}\n\n${diamond} ${tradutor.texto2[0]}n${money} ${tradutor.texto2[1]}`).catch(global.db.data.users[await m.sender].limit -= diamante).catch(global.db.data.users[await m.sender].money -= crime)
+    if (media === 'text5') return conn.reply(m.chat, `${tradutor.texto3[0]} @${randow.split`@`[0]} ${tradutor.texto3[1]} ${exp} XP`, m, { contextInfo: { mentionedJid: [randow] } }).catch(global.db.data.users[await m.sender].exp += exp).catch(global.db.data.users[randow].exp -= crime)
   } catch (e) {
     console.log(e)
   }
