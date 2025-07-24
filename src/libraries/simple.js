@@ -2146,7 +2146,7 @@ sender: {
     }
   },
   enumerable: true,
-}	  
+},	  
     /*sender: {
       get() {
         return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
