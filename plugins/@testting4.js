@@ -8,10 +8,15 @@ const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("b
 
 const handler = async (m, { conn, args }) => {
     try {
-        if (!args[0]) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*';
+        if (!args[0]) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*\n\n*Uso:* /musicaia descripción | tags opcionales\n*Ejemplo:* /musicaia canción de amor | pop, romántico, acústico';
+        
+        const input = args.join(' ');
+        const [prompt, customTags] = input.split('|').map(part => part.trim());
+        
+        if (!prompt) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*';
         
         m.reply("*[❗] Ey! Espera un poco, nuestra IA creativa está trabajando a todo ritmo para componer tu canción perfecta, esto puede demorar unos momentos, cuando esté lista se te enviará.*");
-        const generatedSongs = await generateMusic(args.join(' '));
+        const generatedSongs = await generateMusic(prompt, { tags: customTags || 'pop, romantic' });
         
         if (!generatedSongs || generatedSongs.length === 0) throw '❌ No se pudo generar la canción. Intenta con otro prompt.';
         
@@ -26,11 +31,20 @@ const handler = async (m, { conn, args }) => {
             title: song.title,
             artist: 'IA Musical',
             album: 'Generado por IA',
-            APIC: thumbnailBuffer,
+            APIC: {
+                mime: 'image/png',
+                type: {
+                    id: 3,
+                    name: 'front cover'
+                },
+                description: 'Cover Art',
+                imageBuffer: thumbnailBuffer
+            },
             year: new Date().getFullYear().toString(),
+            genre: song.tags,
             comment: {
                 language: 'spa',
-                text: `👑 By @BrunoSobrino 👑\n\nGénero: ${song.tags}}`
+                text: `👑 By @BrunoSobrino 👑\n\nGénero: ${song.tags}\nDuración: ${song.duration}s`
             }
         };
         
@@ -82,7 +96,7 @@ const handler = async (m, { conn, args }) => {
     }
 };
 
-handler.help = ['musicaia <descripción>'];
+handler.help = ['musicaia <descripción> | [tags opcionales]'];
 handler.tags = ['ai', 'music'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
