@@ -7,9 +7,11 @@ const handler = async (m, { conn }) => {
   const normalizeJid = (jid) => jid.split('@')[0];
   const thisBot = conn.user.jid;
 
-  if (m.mentionedJid && m.mentionedJid.length > 0) {
-    const mentionedBot = m.mentionedJid[0];
+  const testi = await m.mentionedJid
+  if (testi && testi.length > 0) {
+    const mentionedBot = testi[0];
     console.log(m)
+    console.log(mentionedBot)
     
     if (normalizeJid(mentionedBot) !== normalizeJid(thisBot)) return;
 
