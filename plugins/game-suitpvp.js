@@ -22,7 +22,7 @@ const handler = async (m, { conn, usedPrefix, text }) => {
     chat: await conn.sendMessage(m.chat, { text: caption }, { mentions: await conn.parseMention(caption) }),
     id: id,
     p: m.sender,
-    p2: await await m.mentionedJid[0],
+    p2: await m.mentionedJid[0],
     status: 'wait',
     waktu: setTimeout(() => {
       if (conn.suit[id]) conn.reply(m.chat, tradutor.texto5, m);
