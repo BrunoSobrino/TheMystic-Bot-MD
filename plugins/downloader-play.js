@@ -2,7 +2,7 @@ import yts from 'yt-search';
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 const datas = global;
-const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje;
+const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
 const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
 const tradutor = _translate.plugins.descargas_play
 

@@ -6,7 +6,7 @@ import path from 'path';
 const shazam = new Shazam();
 
 const handler = async (m, { conn }) => {
-  const idioma = global.db.data.users[await m.sender].language || global.defaultLenguaje;
+  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje;
   const traductor = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`)).plugins.herramientas_whatmusic;
 
   const q = m.quoted || m;
@@ -14,7 +14,7 @@ const handler = async (m, { conn }) => {
   if (/audio|video/.test(mime)) {
     const media = await q.download();
     const ext = mime.split('/')[1];
-    const baseFilePath = `./src/tmp/${await m.sender}`; 
+    const baseFilePath = `./src/tmp/${m.sender}`; 
     const tempPath = await getUniqueFileName(baseFilePath, ext); 
     fs.writeFileSync(tempPath, media);
 

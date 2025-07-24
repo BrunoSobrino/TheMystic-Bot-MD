@@ -6,7 +6,7 @@ const winScore = 4999;
 const playScore = 99;
 export async function before(m) {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.game__ttt
 
@@ -15,13 +15,13 @@ export async function before(m) {
   let isTie = !1;
   let isSurrender = !1;
   this.game = this.game ? this.game : {};
-  const room = Object.values(this.game).find((room) => room.id && room.game && room.state && room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(await m.sender) && room.state == 'PLAYING');
+  const room = Object.values(this.game).find((room) => room.id && room.game && room.state && room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender) && room.state == 'PLAYING');
   if (room) {
     if (!/^([1-9]|(me)?nyerah|\rendirse\|rendirse|RENDIRSE|surr?ender)$/i.test(m.text)) {
       return !0;
     }
     isSurrender = !/^[1-9]$/.test(m.text);
-    if (await m.sender !== room.game.currentTurn) {
+    if (m.sender !== room.game.currentTurn) {
       if (!isSurrender) {
         return !0;
       }
@@ -31,7 +31,7 @@ export async function before(m) {
         isSurrender,
         text: m.text}));
     }
-    if (!isSurrender && 1 > (ok = room.game.turn(await m.sender === room.game.playerO, parseInt(m.text) - 1))) {
+    if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
       m.reply({
         '-3': tradutor.texto1[0],
         '-2': tradutor.texto1[1],
@@ -40,7 +40,7 @@ export async function before(m) {
       }[ok]);
       return !0;
     }
-    if (await m.sender === room.game.winner) {
+    if (m.sender === room.game.winner) {
       isWin = true;
     } else if (room.game.board === 511) {
       isTie = true;
@@ -61,7 +61,7 @@ export async function before(m) {
       }[v];
     });
     if (isSurrender) {
-      room.game._currentTurn = await m.sender === room.game.playerX;
+      room.game._currentTurn = m.sender === room.game.playerX;
       isWin = true;
     }
     const winner = isSurrender ? room.game.currentTurn : room.game.winner;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 const handler = async (m, {command, conn}) => {
   const apikey = global.keysxxx;
-  const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.jid : await m.sender;
+  const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;
   const name = await conn.getName[who];
   const fgif = m;
 

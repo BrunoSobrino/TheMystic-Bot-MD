@@ -10,7 +10,7 @@ const { Spotify } = pkg2;
 
 const handler = async (m, { conn, text }) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.descargas_spotifypro
 
@@ -63,7 +63,7 @@ const handler = async (m, { conn, text }) => {
         await conn.sendMessage(m.chat, {text: spotifyi.trim(), contextInfo: {forwardingScore: 9999999, isForwarded: true, "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": img, "thumbnailUrl": img, "mediaUrl": playlistInfoByID.external_urls.spotify, "sourceUrl": playlistInfoByID.external_urls.spotify}}}, {quoted: m});
           let target = m.chat;
           if (m.isGroup && tracks.length > 20) {
-              target = await m.sender;
+              target = m.sender;
           }
 for (let i = 0; i < tracks.length; i++) {
     const track = await downloadTrack(tracks[i].track.external_urls.spotify);

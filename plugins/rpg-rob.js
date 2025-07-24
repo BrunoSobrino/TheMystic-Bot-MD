@@ -3,13 +3,13 @@
 const ro = 3000;
 const handler = async (m, {conn, usedPrefix, command}) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_rob
 
 
-  const time = global.db.data.users[await m.sender].lastrob + 7200000;
-  if (new Date - global.db.data.users[await m.sender].lastrob < 7200000) throw `${tradutor.texto1[0]} ${msToTime(time - new Date())} ${tradutor.texto1[1]}`;
+  const time = global.db.data.users[m.sender].lastrob + 7200000;
+  if (new Date - global.db.data.users[m.sender].lastrob < 7200000) throw `${tradutor.texto1[0]} ${msToTime(time - new Date())} ${tradutor.texto1[1]}`;
   let who;
   if (m.isGroup) who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false;
   else who = m.chat;
@@ -18,10 +18,10 @@ const handler = async (m, {conn, usedPrefix, command}) => {
   const users = global.db.data.users[who];
   const rob = Math.floor(Math.random() * ro);
   if (users.exp < rob) return m.reply(`😔 @${who.split`@`[0]} ${tradutor.texto4[0]} *${ro} ${tradutor.texto4[1]}":`, null, {mentions: [who]});
-  global.db.data.users[await m.sender].exp += rob;
+  global.db.data.users[m.sender].exp += rob;
   global.db.data.users[who].exp -= rob;
   m.reply(`${tradutor.texto5[0]} ${rob} ${tradutor.texto5[1]} @${who.split`@`[0]}*`, null, {mentions: [who]});
-  global.db.data.users[await m.sender].lastrob = new Date * 1;
+  global.db.data.users[m.sender].lastrob = new Date * 1;
 };
 handler.help = ['rob'];
 handler.tags = ['xp'];

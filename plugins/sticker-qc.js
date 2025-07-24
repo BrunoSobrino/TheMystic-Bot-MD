@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
     const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.sticker_qc
 
@@ -17,7 +17,7 @@ let text
         text = m.quoted.text;
     } else throw tradutor.texto1;
    if (!text) return m.reply(tradutor.texto2);
-    const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.jid : await m.sender; 
+    const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender; 
     const mentionRegex = new RegExp(`@${who.split('@')[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`, 'g');
     const mishi = text.replace(mentionRegex, '');
    if (mishi.length > 30) return m.reply(tradutor.texto3);

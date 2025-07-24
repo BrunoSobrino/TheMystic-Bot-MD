@@ -2,13 +2,13 @@
 
 const handler = async (m, {usedPrefix}) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_balance
 
   let who;
-  if (m.isGroup) who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : await m.sender;
-  else who = await m.sender;
+  if (m.isGroup) who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.sender;
+  else who = m.sender;
   const name = conn.getName(who);
   m.reply(`
 ${tradutor.texto1[0]}

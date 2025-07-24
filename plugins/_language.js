@@ -8,11 +8,11 @@
 const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
 try {
  const data = global
- const idioma = data.db.data.users[await m.sender].language
+ const idioma = data.db.data.users[m.sender].language
  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
  const tradutor = _translate.plugins._language
 
- data.db.data.users[await m.sender].language
+ data.db.data.users[m.sender].language
  let sigla // Args user
 
  //---- Transformar "cadena" en letras minúsculas
@@ -23,13 +23,13 @@ try {
  if (command === 'lang') {
  // ----- Opciones de lenguaje
  if (sigla === 'es') {
- global.db.data.users[await m.sender].language = 'es'
+ global.db.data.users[m.sender].language = 'es'
  m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Idioma definido a Español 🇪🇸_*`)
  } else if (sigla === 'en') {
- global.db.data.users[await m.sender].language = 'en'
+ global.db.data.users[m.sender].language = 'en'
  m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Idioma definido a Inglês 🇬🇧_*`)
  } else {
- m.reply(`${tradutor.texto1[2]}\n${tradutor.texto1[3]} *( ${data.db.data.users[await m.sender].language} )*\n${tradutor.texto1[0]}\n*${usedPrefix}lang* es\n\n${tradutor.texto1[1]}`)
+ m.reply(`${tradutor.texto1[2]}\n${tradutor.texto1[3]} *( ${data.db.data.users[m.sender].language} )*\n${tradutor.texto1[0]}\n*${usedPrefix}lang* es\n\n${tradutor.texto1[1]}`)
  }
 }
 
@@ -57,7 +57,7 @@ try {
  // Fim 
  } catch (error) {
  console.log(error);
- global.db.data.users[await m.sender].language = 'es'
+ global.db.data.users[m.sender].language = 'es'
  global.db.data.chats[m.chat].language = 'es'
  m.reply(`*[ERROR]* -  _Por defecto el idioma estaba configurado en español._\n\`\`\`contacta a los creadores del bot\`\`\``)
  }

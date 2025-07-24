@@ -33,7 +33,7 @@ export default async function(m, conn = { user: {} }) {
     m.text.length :
     0 :
     m.text ? m.text.length : 0) || 0;
-  const user = global.db.data.users[await await m.sender];
+  const user = global.db.data.users[await m.sender];
   const me = PhoneNumber('+' + (conn.user?.jid).replace('@s.whatsapp.net', '')).getNumber('international');
 
   console.log(

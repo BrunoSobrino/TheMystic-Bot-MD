@@ -5,7 +5,7 @@ import fs from 'fs';
 
 const handler = async (m, {conn, text, usedPrefix, command}) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_playlist
 
@@ -13,13 +13,13 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
   if (!text) throw `${tradutor.texto1} \n*${usedPrefix + command} Begin you*`;
   try {
     const vids_ = {
-      from: await m.sender,
+      from: m.sender,
       urls: [],
     };
     if (!global.videoList) {
       global.videoList = [];
     }
-    if (global.videoList[0]?.from == await m.sender) {
+    if (global.videoList[0]?.from == m.sender) {
       global.videoList.splice(0, global.videoList.length);
     }
     const results = await yts(text);

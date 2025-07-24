@@ -2,7 +2,7 @@
 
 const handler = async (m, {conn, args, participants}) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_leaderboard
 
@@ -22,17 +22,17 @@ const handler = async (m, {conn, args, participants}) => {
 ${tradutor.texto2[0]}
     
 ${tradutor.texto2[1]} ${len} ${tradutor.texto2[2]}
-${tradutor.texto2[3]} ${usersExp.indexOf(await m.sender) + 1} ${tradutor.texto2[4]} ${usersExp.length}
+${tradutor.texto2[3]} ${usersExp.indexOf(m.sender) + 1} ${tradutor.texto2[4]} ${usersExp.length}
 
 ${sortedExp.slice(0, len).map(({jid, exp}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp}  ${tradutor.texto2[6]}`).join`\n`}
 
 ${tradutor.texto2[9]}
-${tradutor.texto2[3]} ${usersLim.indexOf(await m.sender) + 1} ${tradutor.texto2[5]} ${usersLim.length}
+${tradutor.texto2[3]} ${usersLim.indexOf(m.sender) + 1} ${tradutor.texto2[5]} ${usersLim.length}
 
 ${sortedLim.slice(0, len).map(({jid, limit}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit}  ${tradutor.texto2[7]}`).join`\n`}
 
 ${tradutor.texto2[10]}
-${tradutor.texto2[3]} ${usersLevel.indexOf(await m.sender) + 1} ${tradutor.texto2[6]} ${usersLevel.length}
+${tradutor.texto2[3]} ${usersLevel.indexOf(m.sender) + 1} ${tradutor.texto2[6]} ${usersLevel.length}
 
 ${sortedLevel.slice(0, len).map(({jid, level}, i) => `${i + 1}. ${participants.some((p) => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]}  ${tradutor.texto2[8]} ${level}*`).join`\n`}
 

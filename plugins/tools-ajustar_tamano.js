@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 
 const handler = async (m, {conn, usedPrefix, command, args, text}) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.herramientas_ajustar_tamano
   
@@ -17,9 +17,9 @@ const handler = async (m, {conn, usedPrefix, command, args, text}) => {
   const url = await uploadImage(img);
 
   if (/image\/(jpe?g|png)/.test(mime)) {
-    conn.sendMessage(m.chat, {image: {url: url}, caption: tradutor.texto5, fileLength: `${text}`, mentions: [await m.sender]}, {ephemeralExpiration: 24*3600, quoted: m});
+    conn.sendMessage(m.chat, {image: {url: url}, caption: tradutor.texto5, fileLength: `${text}`, mentions: [m.sender]}, {ephemeralExpiration: 24*3600, quoted: m});
   } else if (/video/.test(mime)) {
-    return conn.sendMessage(m.chat, {video: {url: url}, caption: tradutor.texto5, fileLength: `${text}`, mentions: [await m.sender]}, {ephemeralExpiration: 24*3600, quoted: m});
+    return conn.sendMessage(m.chat, {video: {url: url}, caption: tradutor.texto5, fileLength: `${text}`, mentions: [m.sender]}, {ephemeralExpiration: 24*3600, quoted: m});
   }
 };
 handler.tags = ['tools'];

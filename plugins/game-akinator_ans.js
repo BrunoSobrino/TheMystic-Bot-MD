@@ -5,15 +5,15 @@ import translate from '@vitalets/google-translate-api';
 
 export async function before(m) {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.game_akinator_ans
   const teks = tradutor.texto1;
 
 
-  if (global.db.data.users[await m.sender].banned) return;
+  if (global.db.data.users[m.sender].banned) return;
   if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !m.text) return !0;
-  const aki = global.db.data.users[await m.sender].akinator;
+  const aki = global.db.data.users[m.sender].akinator;
   if (!aki.sesi || m.quoted.id != aki.soal.key.id) return;
   if (!somematch(['0', '1', '2', '3', '4', '5'], m.text)) return this.sendMessage(m.chat, {text: `${tradutor.texto2} \n\n${teks}`}, {quoted: aki.soal});
   const {server, frontaddr, session, signature, question, progression, step} = aki;
@@ -30,12 +30,12 @@ export async function before(m) {
     }
     anu = anu.result;
     if (anu.name) {
-      await this.sendMessage(m.chat, {image: {url: anu.image}, caption: `${tradutor.texto5} ${anu.name}*\n_${anu.description}_`, mentions: [await m.sender]}, {quoted: m});
+      await this.sendMessage(m.chat, {image: {url: anu.image}, caption: `${tradutor.texto5} ${anu.name}*\n_${anu.description}_`, mentions: [m.sender]}, {quoted: m});
       aki.sesi = false;
       aki.soal = null;
     } else {
       const resultes = await translate(`${anu.question}`, {to: 'es', autoCorrect: true});
-      soal = await this.sendMessage(m.chat, {text: `${tradutor.texto6[0]} ${anu.step} (${anu.progression.toFixed(2)} %)*\n\n${tradutor.texto6[1]} @${await m.sender.split('@')[0]}*\n${tradutor.texto6[2]} ${resultes.text}*\n\n${teks}`, mentions: [await m.sender]}, {quoted: m});
+      soal = await this.sendMessage(m.chat, {text: `${tradutor.texto6[0]} ${anu.step} (${anu.progression.toFixed(2)} %)*\n\n${tradutor.texto6[1]} @${m.sender.split('@')[0]}*\n${tradutor.texto6[2]} ${resultes.text}*\n\n${teks}`, mentions: [m.sender]}, {quoted: m});
       aki.soal = soal;
       aki.step = anu.step;
       aki.progression = anu.progression;

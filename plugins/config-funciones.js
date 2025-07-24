@@ -1,6 +1,6 @@
 const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, isROwner}) => {
 const datas = global
-const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
 const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
 const tradutor = _translate.plugins.config_funciones
 
@@ -177,7 +177,7 @@ ${tradutor.texto26[3]}`.trim();
 
   const isEnable = /true|enable|(turn)?on|1/i.test(command);
   const chat = global.db.data.chats[m.chat];
-  const user = global.db.data.users[await m.sender];
+  const user = global.db.data.users[m.sender];
   const bot = global.db.data.settings[conn.user.jid] || {};
   const type = (args[0] || '').toLowerCase();
   let isAll = false; const isUser = false;

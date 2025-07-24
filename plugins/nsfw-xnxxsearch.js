@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 const handler = async (m, {text, usedPrefix, command}) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.adult_xnxxsearch
 
@@ -11,13 +11,13 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `${tradutor.texto1} ${u
   if (!text) throw `${tradutor.texto2} ${usedPrefix + command} Con mi prima*`;
   try {
     const vids_ = {
-      from: await m.sender,
+      from: m.sender,
       urls: [],
     };
     if (!global.videoListXXX) {
       global.videoListXXX = [];
     }
-    if (global.videoListXXX[0]?.from == await m.sender) {
+    if (global.videoListXXX[0]?.from == m.sender) {
       global.videoListXXX.splice(0, global.videoListXXX.length);
     }
     const res = await xnxxsearch(text);

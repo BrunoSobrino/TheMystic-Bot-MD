@@ -2,11 +2,11 @@
 
 const handler = async (m, {conn}) => {
   const datas = global
-  const idioma = datas.db.data.users[await m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_berburu_casar
 
-  const user = global.db.data.users[await m.sender];
+  const user = global.db.data.users[m.sender];
   const randomaku1 = `${Math.floor(Math.random() * 5)}`;
   const randomaku2 = `${Math.floor(Math.random() * 5)}`;
   const randomaku4 = `${Math.floor(Math.random() * 5)}`;
@@ -56,7 +56,7 @@ const handler = async (m, {conn}) => {
   const ar11 = `${['🪚', '⛏️', '🧨', '💣', '🔫', '🔪', '🗡️', '🏹', '🦾', '🥊', '🧹', '🔨', '🛻'].getRandom()}`;
   const ar12 = `${['🪚', '⛏️', '🧨', '💣', '🔫', '🔪', '🗡️', '🏹', '🦾', '🥊', '🧹', '🔨', '🛻'].getRandom()}`;
   const hsl = `
-*✧ Resultados de la caza ${conn.getName(await m.sender)} ✧*
+*✧ Resultados de la caza ${conn.getName(m.sender)} ✧*
 
  *🐂 ${ar1} ${anti1}*			 *🐃 ${ar7} ${anti7}*
  *🐅 ${ar2} ${anti2}*			 *🐮 ${ar8} ${anti8}*
@@ -64,21 +64,21 @@ const handler = async (m, {conn}) => {
  *🐐 ${ar4} ${anti4}*			 *🐗 ${ar10} ${anti10}*
  *🐼 ${ar5} ${anti5}*			 *🐖 ${ar11} ${anti11}*
  *🐊 ${ar6} ${anti6}*		    *🐓 ${ar12} ${anti12}*`.trim();
-  global.db.data.users[await m.sender].banteng += rbrb1;
-  global.db.data.users[await m.sender].harimau += rbrb2;
-  global.db.data.users[await m.sender].gajah += rbrb3;
-  global.db.data.users[await m.sender].kambing += rbrb4;
-  global.db.data.users[await m.sender].panda += rbrb5;
-  global.db.data.users[await m.sender].buaya += rbrb6;
-  global.db.data.users[await m.sender].kerbau += rbrb7;
-  global.db.data.users[await m.sender].sapi += rbrb8;
-  global.db.data.users[await m.sender].monyet += rbrb9;
-  global.db.data.users[await m.sender].babihutan += rbrb10;
-  global.db.data.users[await m.sender].babi += rbrb11;
-  global.db.data.users[await m.sender].ayam += rbrb12;
+  global.db.data.users[m.sender].banteng += rbrb1;
+  global.db.data.users[m.sender].harimau += rbrb2;
+  global.db.data.users[m.sender].gajah += rbrb3;
+  global.db.data.users[m.sender].kambing += rbrb4;
+  global.db.data.users[m.sender].panda += rbrb5;
+  global.db.data.users[m.sender].buaya += rbrb6;
+  global.db.data.users[m.sender].kerbau += rbrb7;
+  global.db.data.users[m.sender].sapi += rbrb8;
+  global.db.data.users[m.sender].monyet += rbrb9;
+  global.db.data.users[m.sender].babihutan += rbrb10;
+  global.db.data.users[m.sender].babi += rbrb11;
+  global.db.data.users[m.sender].ayam += rbrb12;
 
-  const time = global.db.data.users[await m.sender].lastberburu + 2700000; // 45 Minutos
-  if (new Date - global.db.data.users[await m.sender].lastberburu < 2700000) return conn.reply(m.chat, `${tradutor.texto1} ${clockString(time - new Date())}\n${wm}`, m);
+  const time = global.db.data.users[m.sender].lastberburu + 2700000; // 45 Minutos
+  if (new Date - global.db.data.users[m.sender].lastberburu < 2700000) return conn.reply(m.chat, `${tradutor.texto1} ${clockString(time - new Date())}\n${wm}`, m);
   // conn.sendButton(m.chat, `𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁 𝙳𝙴𝚂𝙲𝙰𝙽𝚂𝙰 𝚄𝙽 𝙼𝙾𝙼𝙴𝙽𝚃𝙾 𝙿𝙰𝚁𝙰 𝚂𝙴𝙶𝚄𝙸𝚁 𝙲𝙰𝚉𝙰𝙽𝙳𝙾`, `⫹⫺ 𝚃𝙸𝙴𝙼𝙿𝙾 ${clockString(time - new Date())}\n${wm}`, null, [['🏞️ 𝙰𝙽𝙸𝙼𝙰𝙻𝙴𝚂 𝙲𝙰𝙿𝚃𝚄𝚁𝙰𝙳𝙾𝚂 ', '.kandang'],[`🎒 𝙸𝙽𝚅𝙴𝙽𝚃𝙰𝙴𝚁𝙸𝙾`, `.inventario`]], m)
 
   setTimeout(() => {
@@ -89,22 +89,22 @@ const handler = async (m, {conn}) => {
   }, 20000);
 
   setTimeout(() => {
-    conn.reply(m.chat, `@${await m.sender.split('@s.whatsapp.net')[0]} *${[tradutor.texto2[0], tradutor.texto2[1], tradutor.texto2[2], tradutor.texto2[3]].getRandom()}*`, null, {mentions: [await m.sender]});
+    conn.reply(m.chat, `@${m.sender.split('@s.whatsapp.net')[0]} *${[tradutor.texto2[0], tradutor.texto2[1], tradutor.texto2[2], tradutor.texto2[3]].getRandom()}*`, null, {mentions: [m.sender]});
   }, 18000);
-  // conn.sendHydrated(m.chat, `${conn.getName(await m.sender)} *${['OBJETIVO FIJADO`${conn.getName(await m.sender)} *${['OBJETIVO FIJADO 🎯','Carnada en Marcha 🍫 🍇 🍖','ANIMALES DETECTADOS!! 🐂 🐅 🐘 🐼','ANIMALES DETECTADOS!! 🐖 🐃 🐮 🐒'].getRandom()}*` 🎯','Carnada en Marcha 🍫 🍇 🍖','ANIMALES DETECTADOS!! 🐂 🐅 🐘 🐼','ANIMALES DETECTADOS!! 🐖 🐃 🐮 🐒'].getRandom()}*`, wm, null, null, null, null, null, [
+  // conn.sendHydrated(m.chat, `${conn.getName(m.sender)} *${['OBJETIVO FIJADO`${conn.getName(m.sender)} *${['OBJETIVO FIJADO 🎯','Carnada en Marcha 🍫 🍇 🍖','ANIMALES DETECTADOS!! 🐂 🐅 🐘 🐼','ANIMALES DETECTADOS!! 🐖 🐃 🐮 🐒'].getRandom()}*` 🎯','Carnada en Marcha 🍫 🍇 🍖','ANIMALES DETECTADOS!! 🐂 🐅 🐘 🐼','ANIMALES DETECTADOS!! 🐖 🐃 🐮 🐒'].getRandom()}*`, wm, null, null, null, null, null, [
   // [null, null]], null)}, 18000)
 
   setTimeout(() => {
-    conn.reply(m.chat, `@${await m.sender.split('@s.whatsapp.net')[0]} *${[tradutor.texto3[0], tradutor.texto3[1], tradutor.texto3[2], tradutor.texto3[3]].getRandom()}*`, null, {mentions: [await m.sender]});
+    conn.reply(m.chat, `@${m.sender.split('@s.whatsapp.net')[0]} *${[tradutor.texto3[0], tradutor.texto3[1], tradutor.texto3[2], tradutor.texto3[3]].getRandom()}*`, null, {mentions: [m.sender]});
   }, 15000);
-  // conn.sendHydrated(m.chat, `${conn.getName(await m.sender)} *${['Armas lista para la Caza!!','Probando Armas 🔫 💣 🪓 🏹','CARROS PARA LA CAZA!! 🚗 🏍️ 🚜','TIEMPO BUENO PARA LA CAZA 🧤'].getRandom()}*`, wm, null, null, null, null, null, [
+  // conn.sendHydrated(m.chat, `${conn.getName(m.sender)} *${['Armas lista para la Caza!!','Probando Armas 🔫 💣 🪓 🏹','CARROS PARA LA CAZA!! 🚗 🏍️ 🚜','TIEMPO BUENO PARA LA CAZA 🧤'].getRandom()}*`, wm, null, null, null, null, null, [
   // [null, null]], null)}, 15000)
 
   const mentionedJid = await m?.mentionedJid || null;
   setTimeout(() => {
-    conn.reply(m.chat, `@${await m.sender.split('@s.whatsapp.net')[0]} *${[tradutor.texto4[0], tradutor.texto4[1], tradutor.texto4[2], tradutor.texto4[3]].getRandom()}*`, m, mentionedJid ? {mentions: [await m.sender]} : {});
+    conn.reply(m.chat, `@${m.sender.split('@s.whatsapp.net')[0]} *${[tradutor.texto4[0], tradutor.texto4[1], tradutor.texto4[2], tradutor.texto4[3]].getRandom()}*`, m, mentionedJid ? {mentions: [m.sender]} : {});
   }, 0);
-  // conn.sendHydrated(m.chat, `${conn.getName(await m.sender)} *${['Buscando implementos de caza...','Alistando todo para la caza!!','Estableciendo Lugar de la Caza...','PREPARANDO LUGAR DE CAZA!!'].getRandom()}*`, wm, null, null, null, null, null, [
+  // conn.sendHydrated(m.chat, `${conn.getName(m.sender)} *${['Buscando implementos de caza...','Alistando todo para la caza!!','Estableciendo Lugar de la Caza...','PREPARANDO LUGAR DE CAZA!!'].getRandom()}*`, wm, null, null, null, null, null, [
   // [null, null]], null)}, 0)
   user.lastberburu = new Date * 1;
 };
