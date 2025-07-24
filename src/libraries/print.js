@@ -10,9 +10,8 @@ const urlRegex = (await import('url-regex-safe')).default({ strict: false });
 const MAX_MESSAGE_LENGTH = 400;
 
 export default async function(m, conn = { user: {} }) {
-  const testi = m.sender
-  const _name = await conn.getName(testi);
-  const sender = PhoneNumber('+' + testi.replace('@s.whatsapp.net', '')).getNumber('international') + (_name ? ' ~' + _name : '');
+  const _name = await conn.getName(m.sender);
+  const sender = PhoneNumber('+' + m.sender.replace('@s.whatsapp.net', '')).getNumber('international') + (_name ? ' ~' + _name : '');
   const chat = await conn.getName(m.chat);
   let img;
   try {
@@ -96,7 +95,7 @@ export default async function(m, conn = { user: {} }) {
     
     log = log.replace(mdRegex, mdFormat(4));
 
-    const testi = await await m.mentionedJid
+    const testi = await m.mentionedJid
     if (testi) {
       for (const user of testi) {
         const userString = typeof user === 'string' ? user : (user.jid || user.lid || user.id || '');
