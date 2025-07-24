@@ -9,9 +9,8 @@ const handler = async (m, { conn }) => {
 
   if (m.mentionedJid && m.mentionedJid.length > 0) {
     const mentionedBot = m.mentionedJid[0];
-    console.log(mentionedBot)
-    console.log(thisBot)
-
+    console.log(m)
+    
     if (normalizeJid(mentionedBot) !== normalizeJid(thisBot)) return;
 
     if (global.db.data.chats[m.chat].isBanned) {
