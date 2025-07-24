@@ -12,7 +12,7 @@ const MAX_MESSAGE_LENGTH = 400;
 export default async function(m, conn = { user: {} }) {
   const testi = m.sender
   const _name = await conn.getName(testi);
-  const sender = PhoneNumber('+' + await testi.replace('@s.whatsapp.net', '')).getNumber('international') + (_name ? ' ~' + _name : '');
+  const sender = PhoneNumber('+' + testi.replace('@s.whatsapp.net', '')).getNumber('international') + (_name ? ' ~' + _name : '');
   const chat = await conn.getName(m.chat);
   let img;
   try {
