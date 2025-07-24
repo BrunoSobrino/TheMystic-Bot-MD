@@ -118,14 +118,28 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
         });
         
         const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`);
-        console.log(data)
         
         let result;
         const lines = data.split('\n\n');
         for (const line of lines) {
             if (line.startsWith('data:')) {
                 const d = JSON.parse(line.substring(6));
-                if (d.msg === 'process_completed') result = d.output.data[0].url;
+                if (d.msg === 'process_completed') {
+                    const outputData = d.output.data;
+                    if (outputData && outputData.length >= 2) {
+                        const audioFile = outputData[0];
+                        const metadata = outputData[1];
+                        
+                        result = [{
+                            audio_url: audioFile.url,
+                            image_url: 'https://images.wondershare.es/dc/AI/Inteligencia_Artificial_Musical.png',
+                            title: prompt.substring(0, 64) || 'Cancion_IA',
+                            tags: metadata.prompt || tags,
+                            lyrics: metadata.lyrics || ai.response_content || null,
+                            duration: metadata.audio_duration || 240
+                        }];
+                    }
+                }
             }
         }
         
@@ -133,15 +147,7 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
             throw new Error('No se pudo generar la canción');
         }
         
-        const songData = [{
-            audio_url: result,
-            image_url: 'https://images.wondershare.es/dc/AI/Inteligencia_Artificial_Musical.png',
-            title: prompt.substring(0, 64) || 'Cancion_IA',
-            tags: tags,
-            lyrics: ai.response_content ? ai.response_content : null
-        }];
-        
-        return songData;
+        return result;
     } catch (error) {
         throw new Error(error.message);
     }
