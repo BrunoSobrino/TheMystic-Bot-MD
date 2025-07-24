@@ -36,7 +36,7 @@ const ytDlpBinaries = new Map([
 
 // Aqui se elige las banderas, Calidad de video etc. Ver documentacion yt-dlp 
 const formats = {
-  video: '-f "sd/18/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=aac]/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=mp4a]/bestvideo[height<=720][vcodec*=h264]+bestaudio/bestvideo[height<=720]+bestaudio/bestvideo[vcodec*=h264]+bestaudio/bestvideo+bestaudio/best"', 
+  video: '-f "sd/18/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=aac]/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=mp4a]/bestvideo[height<=720][vcodec*=h264]+bestaudio/bestvideo[height<=720]+bestaudio/bestvideo[vcodec*=h264]+bestaudio/bestvideo+bestaudio/best" --sponsorblock-mark all', 
   audio: '-f "ba/best" -x --audio-format mp3 --audio-quality 0',
   playlist: '--yes-playlist',
   noPlaylist: '--no-playlist'
