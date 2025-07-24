@@ -15,8 +15,7 @@ export async function before(m, {conn, isAdmin, isBotAdmin}) {
   const delet = m.key.participant;
   const bang = m.key.id;
   const bot = global.db.data.settings[this.user.jid] || {};
-  const testi = await m?.sender
-  const user = `@${testi.split`@`[0]}`;
+  const user = `@${await m.sender.split`@`[0]}`;
   const isGroupLink = linkRegex.exec(m.text);
   const grupo = `https://chat.whatsapp.com`;
   if (isAdmin && chat.antiLink && m.text.includes(grupo)) return m.reply(tradutor.texto1.replace('@user', '@' + user.split('@')[0]));
@@ -25,6 +24,7 @@ export async function before(m, {conn, isAdmin, isBotAdmin}) {
       const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`;
       if (m.text.includes(linkThisGroup)) return !0;
     }
+    const testi = await m.sender 
     await this.sendMessage(m.chat, {text: tradutor.texto2.replace('@user', '@' + user.split('@')[0]), mentions: [testi]}, {quoted: m});
     if (!isBotAdmin) return m.reply(tradutor.texto3);
     if (isBotAdmin && bot.restrict) {
