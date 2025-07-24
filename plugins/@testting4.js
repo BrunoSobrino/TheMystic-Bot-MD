@@ -133,10 +133,10 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
             trigger_id: 45,
             session_hash: session_hash
         }, {
-            headers: newRotationConfig.headers
+            headers: rotationConfig.headers
         });
         
-        const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`, { headers: finalRotationConfig.headers });
+        const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`, { headers: rotationConfig.headers });
 
         console.log(data)
         
