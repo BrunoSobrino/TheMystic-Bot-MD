@@ -9,7 +9,7 @@ const handler = async (m, {conn, text}) => {
 
   if (!text) throw tradutor.texto1;
   let who;
-  if (m.isGroup) who = m.mentionedJid[0];
+  if (m.isGroup) who = await await m.mentionedJid[0];
   else who = m.chat;
   if (!who) throw tradutor.texto2;
   const users = global.db.data.users;

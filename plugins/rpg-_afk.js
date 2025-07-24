@@ -19,7 +19,7 @@ const getQuotedSender = async () => {
   };
   (async () => {
     const quotedSender = await getQuotedSender();
-    const jids = [...new Set([...(m.mentionedJid || []), ...(quotedSender ? [quotedSender] : [])])];
+    const jids = [...new Set([...(await m.mentionedJid || []), ...(quotedSender ? [quotedSender] : [])])];
  for (const jid of jids) {
  const user = global.db.data.users[jid];
  if (!user) {

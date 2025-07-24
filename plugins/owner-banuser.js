@@ -7,9 +7,9 @@ const handler = async (m, {conn, participants, usedPrefix, command}) => {
   const tradutor = _translate.plugins.owner_banuser
 
   const BANtext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`;
-  if (!m.mentionedJid[0] && !m.quoted) return m.reply(BANtext, m.chat, {mentions: conn.parseMention(BANtext)});
+  if (!await await m.mentionedJid[0] && !m.quoted) return m.reply(BANtext, m.chat, {mentions: conn.parseMention(BANtext)});
   let who;
-  if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : await m?.quoted?.sender;
+  if (m.isGroup) who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : await m?.quoted?.sender;
   else who = m.chat;
   const users = global.db.data.users;
   users[who].banned = true;

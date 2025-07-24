@@ -95,7 +95,7 @@ export default async function(m, conn = { user: {} }) {
     
     log = log.replace(mdRegex, mdFormat(4));
 
-    const testi = await m.mentionedJid
+    const testi = await await m.mentionedJid
     if (testi) {
       for (const user of testi) {
         const userString = typeof user === 'string' ? user : (user.jid || user.lid || user.id || '');

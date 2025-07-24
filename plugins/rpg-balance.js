@@ -7,7 +7,7 @@ const handler = async (m, {usedPrefix}) => {
   const tradutor = _translate.plugins.rpg_balance
 
   let who;
-  if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
+  if (m.isGroup) who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.sender;
   else who = m.sender;
   const name = conn.getName(who);
   m.reply(`

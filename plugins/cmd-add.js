@@ -13,7 +13,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
   const sticker = global.db.data.sticker;
   const hash = m.quoted.fileSha256.toString('base64');
   if (sticker[hash] && sticker[hash].locked) throw `*${tradutor.texto4}*`;
-  sticker[hash] = {text, mentionedJid: m.mentionedJid, creator: m.sender, at: + new Date, locked: false};
+  sticker[hash] = {text, mentionedJid: await m.mentionedJid, creator: m.sender, at: + new Date, locked: false};
   m.reply(`*${tradutor.texto5}*`);
 };
 handler.command = ['setcmd', 'addcmd', 'cmdadd', 'cmdset'];
