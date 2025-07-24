@@ -2108,12 +2108,51 @@ export function serialize() {
       },
       enumerable: true,
     },
-    sender: {
+sender: {
+  async get() {
+    try {
+      const rawJid = this.conn?.decodeJid(
+        this.key?.fromMe && this.conn?.user.id || 
+        this.participant || 
+        this.key?.participant || 
+        this.chat || 
+        ''
+      );
+
+      if (!rawJid || !rawJid.endsWith('@lid')) {
+        return rawJid;
+      }
+
+      const groupChatId = this.isGroup ? this.chat : null;
+      if (groupChatId) {
+        const resolvedJid = await String.prototype.resolveLidToRealJid.call(
+          rawJid,
+          groupChatId,
+          this.conn
+        );
+        return resolvedJid || rawJid;
+      }
+
+      return rawJid;
+    } catch (e) {
+      console.error('Error in sender getter:', e);
+      return this.conn?.decodeJid(
+        this.key?.fromMe && this.conn?.user.id || 
+        this.participant || 
+        this.key?.participant || 
+        this.chat || 
+        ''
+      );
+    }
+  },
+  enumerable: true,
+}	  
+    /*sender: {
       get() {
         return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
       },
       enumerable: true,
-    },	  
+    },	 */ 
     /*sender: {
       get() {
         if (this.messageStubType) {
