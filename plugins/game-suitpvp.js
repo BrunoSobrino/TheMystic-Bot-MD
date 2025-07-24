@@ -13,16 +13,17 @@ const handler = async (m, { conn, usedPrefix, text }) => {
   conn.suit = conn.suit ? conn.suit : {};
   if (Object.values(conn.suit).find((room) => room.id.startsWith('suit') && [room.p, room.p2].includes(m.sender))) throw tradutor.texto1;
   const textquien = `${tradutor.texto2}\n${usedPrefix}suit @${global.suittag}`;
-  if (!await await m.mentionedJid[0]) return m.reply(textquien, m.chat, { mentions: conn.parseMention(textquien) });
-  if (Object.values(conn.suit).find((room) => room.id.startsWith('suit') && [room.p, room.p2].includes(await await m.mentionedJid[0]))) throw tradutor.texto4;
+  const testi = await m.mentionedJid[0]
+  if (!testi) return m.reply(textquien, m.chat, { mentions: conn.parseMention(textquien) });
+  if (Object.values(conn.suit).find((room) => room.id.startsWith('suit') && [room.p, room.p2].includes(testi))) throw tradutor.texto4;
   const id = 'suit_' + new Date() * 1;
-  const caption = `${tradutor.texto3[0]} @${m.sender.split`@`[0]} ${tradutor.texto3[1]} @${await m.mentionedJid[0].split`@`[0]} ${tradutor.texto3[1]}`;
+  const caption = `${tradutor.texto3[0]} @${m.sender.split`@`[0]} ${tradutor.texto3[1]} @${testi.split`@`[0]} ${tradutor.texto3[1]}`;
   const imgplaygame = `https://www.merca2.es/wp-content/uploads/2020/05/Piedra-papel-o-tijera-0003318_1584-825x259.jpeg`;
   conn.suit[id] = {
     chat: await conn.sendMessage(m.chat, { text: caption }, { mentions: await conn.parseMention(caption) }),
     id: id,
     p: m.sender,
-    p2: await m.mentionedJid[0],
+    p2: testi,
     status: 'wait',
     waktu: setTimeout(() => {
       if (conn.suit[id]) conn.reply(m.chat, tradutor.texto5, m);
