@@ -94,9 +94,10 @@ export default async function(m, conn = { user: {} }) {
     });
     
     log = log.replace(mdRegex, mdFormat(4));
-    
-    if (m.mentionedJid) {
-      for (const user of m.mentionedJid) {
+
+    const testi = await m.mentionedJid
+    if (testi) {
+      for (const user of testi) {
         const userString = typeof user === 'string' ? user : (user.jid || user.lid || user.id || '');
         if (userString) {
           const username = await conn.getName(userString);
