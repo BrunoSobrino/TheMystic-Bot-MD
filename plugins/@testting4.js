@@ -105,6 +105,8 @@ export default handler;
 async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
     try {
         if (!prompt) throw new Error('Prompt is required');
+
+        const rotationConfig = getRotationConfig();
         
         const { data: ai } = await axios.get('https://8pe3nv3qha.execute-api.us-east-1.amazonaws.com/default/llm_chat', {
             params: {
@@ -119,7 +121,8 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
                     }
                 ]),
                 link: 'writecream.com'
-            }
+            },
+            headers: rotationConfig.headers
         });
         
         const session_hash = Math.random().toString(36).substring(2);
@@ -129,9 +132,11 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
             fn_index: 11,
             trigger_id: 45,
             session_hash: session_hash
+        }, {
+            headers: newRotationConfig.headers
         });
         
-        const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`);
+        const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`, { headers: finalRotationConfig.headers });
 
         console.log(data)
         
@@ -168,6 +173,39 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
         throw new Error(error.message);
     }
 }
+
+function getRotationConfig() {
+    const userAgents = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.58'
+    ];
+    
+    const languages = ['es-ES', 'en-US', 'fr-FR', 'de-DE', 'pt-BR', 'it-IT'];
+    const timezones = ['America/New_York', 'Europe/Madrid', 'Asia/Tokyo', 'Australia/Sydney', 'America/Los_Angeles'];
+    
+    const fakeIp = Array(4).fill(0).map(() => Math.floor(Math.random() * 255)).join('.');
+    
+    return {
+        headers: {
+            'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
+            'Accept-Language': languages[Math.floor(Math.random() * languages.length)],
+            'X-Forwarded-For': fakeIp,
+            'X-Real-IP': fakeIp,
+            'X-Client-IP': fakeIp,
+            'X-Originating-IP': fakeIp,
+            'X-Timezone': timezones[Math.floor(Math.random() * timezones.length)],
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Sec-CH-UA': '"Not.A/Brand";v="8", "Chromium";v="114"',
+            'Sec-CH-UA-Mobile': Math.random() > 0.5 ? '?0' : '?1',
+            'Sec-CH-UA-Platform': Math.random() > 0.5 ? '"Windows"' : '"macOS"'
+        }
+    };
+}
+
 
 function sanitizeFileName(str) {
     return str.replace(/[\/\\|:*?"<>]/g, '').trim();
