@@ -2,7 +2,7 @@ const handler = async (m, { conn }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.owner.banchat
+  const tradutor = _translate.plugins.owner_banchat
 
   if (m.mentionedJid && m.mentionedJid.length > 0) {
     const mentionedBot = m.mentionedJid[0];
