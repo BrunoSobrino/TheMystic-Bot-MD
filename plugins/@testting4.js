@@ -124,7 +124,8 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
             },
             headers: rotationConfig.headers
         });
-        
+
+        const newRotationConfig = getRotationConfig();
         const session_hash = Math.random().toString(36).substring(2);
         const d = await axios.post(`https://ace-step-ace-step.hf.space/gradio_api/queue/join?`, {
             data: [ 240, tags, ai.response_content, 60, 15, 'euler', 'apg', 10, '', 0.5, 0, 3, true, false, true, '', 0, 0, false, 0.5, null, 'none' ],
@@ -133,10 +134,11 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
             trigger_id: 45,
             session_hash: session_hash
         }, {
-            headers: rotationConfig.headers
+            headers: newRotationConfig.headers
         });
-        
-        const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`, { headers: rotationConfig.headers });
+
+        const finalRotationConfig = getRotationConfig();
+        const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`, { headers: finalRotationConfig.headers });
 
         console.log(data)
         
