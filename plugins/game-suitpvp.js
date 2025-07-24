@@ -16,7 +16,7 @@ const handler = async (m, { conn, usedPrefix, text }) => {
   if (!await await m.mentionedJid[0]) return m.reply(textquien, m.chat, { mentions: conn.parseMention(textquien) });
   if (Object.values(conn.suit).find((room) => room.id.startsWith('suit') && [room.p, room.p2].includes(await await m.mentionedJid[0]))) throw tradutor.texto4;
   const id = 'suit_' + new Date() * 1;
-  const caption = `${tradutor.texto3[0]} @${m.sender.split`@`[0]} ${tradutor.texto3[1]} @${await await m.mentionedJid[0].split`@`[0]} ${tradutor.texto3[1]}`;
+  const caption = `${tradutor.texto3[0]} @${m.sender.split`@`[0]} ${tradutor.texto3[1]} @${await m.mentionedJid[0].split`@`[0]} ${tradutor.texto3[1]}`;
   const imgplaygame = `https://www.merca2.es/wp-content/uploads/2020/05/Piedra-papel-o-tijera-0003318_1584-825x259.jpeg`;
   conn.suit[id] = {
     chat: await conn.sendMessage(m.chat, { text: caption }, { mentions: await conn.parseMention(caption) }),
