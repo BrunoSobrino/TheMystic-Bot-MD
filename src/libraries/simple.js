@@ -1992,7 +1992,7 @@ export function smsg(conn, m, hasParent) {
           protocolMessageKey.participant === "status_me"
         ) {
           protocolMessageKey.participant =
-            typeof await m.sender === "string" ? await m.sender : "";
+            typeof m.sender === "string" ? m.sender : "";
         }
         const decodedParticipant =
           conn?.decodeJid?.(protocolMessageKey.participant) || "";
@@ -2003,7 +2003,7 @@ export function smsg(conn, m, hasParent) {
           protocolMessageKey.remoteJid === (conn?.user?.id || "")
         ) {
           protocolMessageKey.remoteJid =
-            typeof await m.sender === "string" ? await m.sender : "";
+            typeof m.sender === "string" ? m.sender : "";
         }
       }
       if (m.quoted && !m.quoted.mediaMessage) {
