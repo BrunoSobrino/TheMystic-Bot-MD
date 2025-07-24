@@ -2331,14 +2331,60 @@ export function serialize() {
                 },
                 enumerable: true,
               },
-              mentionedJid: {
+mentionedJid: {
+  get() {
+    const mentioned = 
+      q?.contextInfo?.mentionedJid ||
+      self.getQuotedObj()?.mentionedJid ||
+      [];
+    
+    // Función auxiliar para procesar cada JID
+    const processJid = async (user) => {
+      try {
+        if (user && typeof user === "object") {
+          user = user.lid || user.jid || user.id || "";
+        }
+        if (typeof user === "string" && user.includes("@lid")) {
+          // Necesitamos el groupChatId para resolver el LID
+          const groupChatId = this.chat?.endsWith("@g.us") ? this.chat : null;
+          if (groupChatId) {
+            const resolved = await String.prototype.resolveLidToRealJid.call(
+              user, 
+              groupChatId, 
+              self.conn
+            );
+            return typeof resolved === "string" ? resolved : user;
+          }
+          return user;
+        }
+        return user;
+      } catch (e) {
+        console.error("Error processing JID:", user, e);
+        return user;
+      }
+    };
+
+    // Procesamos todos los JIDs mencionados
+    const processedJids = mentioned.map(processJid);
+    
+    // Como no podemos hacer el getter async, devolvemos una Promise
+    // que será resuelta por el código que llame a esta propiedad
+    return Promise.all(processedJids)
+      .then(jids => jids.filter(jid => jid && typeof jid === "string"))
+      .catch(e => {
+        console.error("Error in mentionedJid processing:", e);
+        return mentioned.filter(jid => jid && typeof jid === "string");
+      });
+  },
+  enumerable: true,
+}		    
+/*              mentionedJid: {
                 get() {
                   const mentioned =
                     q?.contextInfo?.mentionedJid ||
                     self.getQuotedObj()?.mentionedJid ||
                     [];
-                  return mentioned
-                    .map((user) => {
+                  return mentioned.map((user) => {
                       if (user && typeof user === "object") {
                         user = user.lid || user.jid || user.id || "";
                       }
@@ -2350,11 +2396,11 @@ export function serialize() {
                         return typeof resolved === "string" ? resolved : user;
                       }
                       return user;
-                    })
-                    .filter((jid) => jid && typeof jid === "string");
+                    }).filter((jid) => jid && typeof jid === "string");
+			
                 },
                 enumerable: true,
-              },
+              },*/
               name: {
                 get() {
                   const sender = this.sender;
