@@ -10,8 +10,8 @@ const urlRegex = (await import('url-regex-safe')).default({ strict: false });
 const MAX_MESSAGE_LENGTH = 400;
 
 export default async function(m, conn = { user: {} }) {
-  const _name = await conn.getName(m.sender);
-  const sender = PhoneNumber('+' + m.sender.replace('@s.whatsapp.net', '')).getNumber('international') + (_name ? ' ~' + _name : '');
+  const _name = await conn.getName(await m.sender);
+  const sender = PhoneNumber('+' + await m.sender.replace('@s.whatsapp.net', '')).getNumber('international') + (_name ? ' ~' + _name : '');
   const chat = await conn.getName(m.chat);
   let img;
   try {
@@ -32,7 +32,7 @@ export default async function(m, conn = { user: {} }) {
     m.text.length :
     0 :
     m.text ? m.text.length : 0) || 0;
-  const user = global.db.data.users[m.sender];
+  const user = global.db.data.users[await m.sender];
   const me = PhoneNumber('+' + (conn.user?.jid).replace('@s.whatsapp.net', '')).getNumber('international');
 
   console.log(
