@@ -132,6 +132,8 @@ async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
         });
         
         const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`);
+
+        console.log(data)
         
         let result;
         const lines = data.split('\n\n');
