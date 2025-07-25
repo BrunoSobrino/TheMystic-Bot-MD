@@ -3,15 +3,15 @@
   
 const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
 export async function before(m, {conn, isAdmin, isBotAdmin}) {
+
+  if (m?.isBaileys && m.fromMe) return;
+  if (!m?.isGroup) return;
+  const chat = global.db.data.chats[m.chat];
+  if (!chat?.antiLink)
+  console.log(m.sender)  
   const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje 
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins._antilink
-
-  if (m.isBaileys && m.fromMe) {
-    return !0;
-  }
-  if (!m.isGroup) return !1;
-  const chat = global.db.data.chats[m.chat];
   const delet = m.key.participant;
   const bang = m.key.id;
   const bot = global.db.data.settings[this.user.jid] || {};
