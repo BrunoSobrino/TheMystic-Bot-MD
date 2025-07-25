@@ -31,7 +31,7 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
         await unlinkSync(media);
         if (err) throw `_*Error!*_`;
         const buff = await readFileSync(filename);
-        conn.sendMessage(m.chat, {audio: buff, filetype: 'audio/ogg', filename: ran }, {quoted: m})
+        conn.sendMessage(m.chat, {audio: buff, filename: ran }, {quoted: m})
       });
     } else throw `${tradutor.texto1} ${usedPrefix + command}*`;
   } catch (e) {
