@@ -1,11 +1,11 @@
+  const groupMetadataCache = new Map();
+  const lidCache = new Map();
+
 const handler = async (m, {conn, participants, command, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.grupos_eliminar
-
-  const groupMetadataCache = new Map();
-  const lidCache = new Map();
 
   if (!global.db.data.settings[conn.user.jid].restrict) throw `${tradutor.texto1[0]} (*_restrict_*), ${tradutor.texto1[1]}`;
   const kicktext = `${tradutor.texto2} _${usedPrefix + command} @${global.suittag}_`;
