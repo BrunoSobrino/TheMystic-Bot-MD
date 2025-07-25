@@ -27,8 +27,6 @@ export async function before(m, { conn, participants }) {
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/_detectEvents.js.json`));
     const tradutor = _translate._detectevents;
 
-    console.log(realSender)
-
     let groupName = "el grupo";
     let groupMetadata = groupMetadataCache.get(m.chat);
     let pp = 'https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/avatar_contact.png';
