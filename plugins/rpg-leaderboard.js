@@ -1,11 +1,11 @@
-
+const groupMetadataCache = new Map();
+const lidCache = new Map();
 
 const handler = async (m, {conn, args, participants}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_leaderboard
-
+  console.log(participants)
   const users = Object.entries(global.db.data.users).map(([key, value]) => {
     return {...value, jid: key};
   });
@@ -60,4 +60,39 @@ function toNumber(property, _default = 0) {
 
 function enumGetKey(a) {
   return a.jid;
+}
+
+async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
+    const inputJid = lid.toString();
+    if (!inputJid.endsWith("@lid") || !groupChatId?.endsWith("@g.us")) return inputJid.includes("@") ? inputJid : `${inputJid}@s.whatsapp.net`;
+    if (lidCache.has(inputJid)) return lidCache.get(inputJid);
+    const lidToFind = inputJid.split("@")[0];
+    let attempts = 0;
+    while (attempts < maxRetries) {
+        try {
+            const metadata = await conn?.groupMetadata(groupChatId);
+            if (!metadata?.participants) throw new Error("No se obtuvieron participantes");
+            for (const participant of metadata.participants) {
+                try {
+                    if (!participant?.jid) continue;
+                    const contactDetails = await conn?.onWhatsApp(participant.jid);
+                    if (!contactDetails?.[0]?.lid) continue;
+                    const possibleLid = contactDetails[0].lid.split("@")[0];
+                    if (possibleLid === lidToFind) {
+                        lidCache.set(inputJid, participant.jid);
+                        return participant.jid;
+                    }
+                } catch (e) { continue }
+            }
+            lidCache.set(inputJid, inputJid);
+            return inputJid;
+        } catch (e) {
+            if (++attempts >= maxRetries) {
+                lidCache.set(inputJid, inputJid);
+                return inputJid;
+            }
+            await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        }
+    }
+    return inputJid;
 }
