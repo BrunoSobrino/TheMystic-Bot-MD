@@ -55,8 +55,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 };
 
-handler.help = ['spotify'];
-handler.tags = ['download'];
+handler.help = ['spotify <text>'];
+handler.tags = ['downloader'];
 handler.command = ['spotify', 'music'];
 export default handler;
 
