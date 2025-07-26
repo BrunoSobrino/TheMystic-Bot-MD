@@ -4,6 +4,7 @@ const handler = async (m, {isOwner, isAdmin, conn, text, participants, args, com
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_tagall
 
+  console.log(participants)
   if (usedPrefix == 'a' || usedPrefix == 'A') return;
   if (!(isAdmin || isOwner)) {
     global.dfail('admin', m, conn);
