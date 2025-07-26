@@ -97,7 +97,7 @@ const handler = async (m, { conn, args }) => {
 };
 
 handler.help = ['musicaia <descripción> | [tags opcionales]'];
-handler.tags = ['ai', 'music'];
+handler.tags = ['ai'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
 
