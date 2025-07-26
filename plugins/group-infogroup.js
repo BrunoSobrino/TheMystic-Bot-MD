@@ -8,7 +8,7 @@ const handler = async (m, {conn, participants, groupMetadata}) => {
   const {antiToxic, antiTraba, antidelete, antiviewonce, isBanned, welcome, detect, detect2, sWelcome, sBye, sPromote, sDemote, antiLink, antiLink2, modohorny, autosticker, modoadmin, audios, delete: del} = global.db.data.chats[m.chat];
   const groupAdmins = participants.filter((p) => p.admin);
   const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n');
-  const owner = groupMetadata.ownerJid ? groupMetadata.ownerJid : groupMetadata.owner ? groupMetadata.owner : 'Desconocido';
+  const owner = groupMetadata.ownerJid || groupMetadata.owner
   const text = `${tradutor.texto1[0]}\n
   ${tradutor.texto1[1]}* 
 ${groupMetadata.id}
