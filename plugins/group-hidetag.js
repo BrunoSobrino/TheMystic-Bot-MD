@@ -75,7 +75,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
             await conn.sendMessage(m.chat, {document: mediax, mentions: users, mimetype: quoted.mimetype, fileName: quoted.fileName || 'Hidetag_document', caption: htextos}, {quoted: m});
         }
     } else {
-        await conn.relayMessage(m.chat, {extendedTextMessage: {text: `${htextos}`, ...{contextInfo: {mentionedJid: users, externalAdReply: {thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}}}}}, {});
+        await conn.relayMessage(m.chat, {extendedTextMessage: {text: htextos }}, { quoted: m});
     }
 };
 
