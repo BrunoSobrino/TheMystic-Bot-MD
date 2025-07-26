@@ -15,6 +15,6 @@ const handler = async (m, {conn, command}) => {
 };
 // conn.sendButton(m.chat, 'Nyaww~ 🐾💗', wm, neko, [['🔄 𝚂𝙸𝙶𝚄𝙸𝙴𝙽𝚃𝙴 🔄', `/${command}`]],m)}
 handler.command = /^(neko)$/i;
-handler.tags = ['anime'];
+handler.tags = ['random'];
 handler.help = ['neko'];
 export default handler;
