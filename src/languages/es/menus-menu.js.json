@@ -9,6 +9,8 @@
             "command_item": "┣ ඬ⃟  □ @cmd @islimit",
             "section_footer": "┗━━━━━━━━━━━━━━━━┛\n",
             
+            "error_message": "[ ❌ ] Ocurrió un error al generar el menú:",
+            
             "premium": {
                 "yes": "✅",
                 "no": "❌"
