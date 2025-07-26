@@ -3444,15 +3444,15 @@
             ],
             "texto2": [
                 "*< TABLA DE LOS AVENTUREROS MÁS DESTACADOS />*",
-                "—◉ *TOP",
-                "EXP 🌟*",
+                "—◉ *TOP", 
                 "*👤 Tú posición:*",
                 "de",
                 "exp*",
                 "diamantes*",
-                "*nivel",
-                "—◉ *TOP ${len} DIAMANTES 💎*",
-                "—◉ *TOP ${len} NIVEL 🎚️*"
+                "nivel*",
+                "EXP 🌟*",
+                "DIAMANTES 💎*",
+                "NIVEL🎚️*"
             ]
         },
         "rpg_levelup": {
