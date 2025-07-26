@@ -24,7 +24,7 @@ const handler = async (m, {conn, args: [effect], text: txt, usedPrefix, command,
   await conn.sendMessage(m.chat, {image: {url: res.image}, caption: `${tradutor.texto5} ${effect}*`}, {quoted: m});  
 };
 handler.help = ['logos'];
-handler.tags = ['nulis'];
+handler.tags = ['maker'];
 handler.command = /^(logo|logos|logos2)$/i;
 export default handler;
 
