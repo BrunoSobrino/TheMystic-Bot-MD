@@ -16,7 +16,7 @@ const handler = async (m, {isOwner, isAdmin, conn, text, participants, args, com
     teks += `┣➥ @${mem.jid.split('@')[0]}\n`;
   }
   teks += `*└* 𝐁𝐲 𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭\n\n*▌│█║▌║▌║║▌║▌║▌║█*`;
-  conn.sendMessage(m.chat, {text: teks, mentions: participants.map((a) => a.id)} );
+  conn.sendMessage(m.chat, {text: teks, mentions: participants.map((a) => a.jid)} );
 };
 handler.help = ['tagall <mesaje>', 'invocar <mesaje>'];
 handler.tags = ['group'];
