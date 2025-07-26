@@ -33,7 +33,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     throw tradutor.texto2;
   };
 };
-handler.help = ["slap"];
-handler.tags = ["General"];
+handler.help = ["slap <@tag>"];
+handler.tags = ['sticker'];
 handler.command = /^(slap|bofetada)$/i;
 export default handler;
