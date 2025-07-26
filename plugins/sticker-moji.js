@@ -24,7 +24,7 @@ const handler = async (m, { text }) => {
   }
 };
 handler.help = ["moji"].map((v) => v + " emoji");
-handler.tags = ["emoji"];
+handler.tags = ["sticker"];
 handler.command = /^(moji|mojit)$/i;
 //handler.rowner = true;
 export default handler;
