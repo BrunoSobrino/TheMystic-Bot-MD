@@ -75,7 +75,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
             await conn.sendMessage(m.chat, {document: mediax, mentions: users, mimetype: quoted.mimetype, fileName: quoted.fileName || 'Hidetag_document', caption: htextos}, {quoted: m});
         }
     } else {
-        await conn.relayMessage(m.chat, {extendedTextMessage: {text: htextos }}, { quoted: m});
+        await conn.sendMessage(m.chat, {text: {text: htextos }}, { quoted: m});
     }
 };
 
