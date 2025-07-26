@@ -7,7 +7,7 @@ const handler = async (m, { conn, command }) => {
     subBots.push(global.conn.user.jid);
   }
 
-  const who = m?.message?.extendedTextMessage?.contextInfo?.participant || m?.mentionedJid[0] || await m?.quoted?.sender;
+  const who = m.mentionedJid.length > 0 ? m.mentionedJid[0] : (m.quoted ? await m.quoted.sender : false)
   const chat = global.db.data.chats[m.chat];
 
   if (command === 'setprimary') {
