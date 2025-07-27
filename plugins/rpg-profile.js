@@ -18,7 +18,7 @@ const handler = async (m, {conn, usedPrefix, participants, isPrems}) => {
  const sn = createHash('md5').update(who).digest('hex');
  const str = `—◉ ${tradutor.texto2[0]} ${username} ${registered ? '(' + name + ') ': ''}
 —◉ ${tradutor.texto2[1]} ${PhoneNumber('+' + who.replace('@s.whatsapp.net', '')).getNumber('international')}
-—◉ ${tradutor.texto2[2]} wa.me/${who.split`@`[0]}${registered ? tradutor.texto2[7] + age + tradutor.texto2[8] : ''}
+—◉ ${tradutor.texto2[2]} wa.me/${who.split`@`[0]} ${registered ? tradutor.texto2[7] + age + tradutor.texto2[8] : ''}
 —◉ ${tradutor.texto2[3]} ${limit} ${tradutor.texto2[9]}
 —◉ ${tradutor.texto2[4]} ${registered ? tradutor.texto2[10] : tradutor.texto2[11]}
 —◉ ${tradutor.texto2[5]} ${premiumTime > 0 ? '𝚂𝙸' : (isPrems ? tradutor.texto2[10] : tradutor.texto2[11]) || ''}
