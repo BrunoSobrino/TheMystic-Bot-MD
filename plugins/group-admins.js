@@ -12,11 +12,12 @@ const handler = async (m, { conn, participants, groupMetadata, args }) => {
  const message = args.join(` `);
  const headers = `${tradutor.texto1[3]} ${message}`;
  const body = `${tradutor.texto1[0]}\n\n${headers ? headers : '-'}\n\n${tradutor.texto1[1]}\n${listAdmin}\n\n${tradutor.texto1[2]}`.trim();
- conn.sendFile(m.chat, pp, 'error.jpg', text, m, false, {mentions: [...groupAdmins.map((v) => v.jid), owner]});
+ conn.sendFile(m.chat, pp, 'error.jpg', body, m, false, { mentions: [...groupAdmins.map((v) => v.jid), owner] });
  } catch (error) {
  console.error(error);
  }
 };
+
 handler.help = ["admins"];
 handler.tags = ["group"];
 handler.command = ["admins", "staff"];
