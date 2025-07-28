@@ -5,7 +5,7 @@ import {createRequire} from 'module';
 import path, {join} from 'path';
 import {fileURLToPath, pathToFileURL} from 'url';
 import {platform} from 'process';
-import {readdirSync, statSync, unlinkSync, existsSync, readFileSync, watch} from 'fs';
+import fs, {readdirSync, statSync, unlinkSync, existsSync, readFileSync, watch} from 'fs';
 import yargs from 'yargs';
 import {spawn} from 'child_process';
 import lodash from 'lodash';
@@ -77,7 +77,6 @@ loadDatabase();
 
 /**
  * Interceptor global para resolver LIDs en mensajes
- * Procesa todos los mensajes entrantes y resuelve los LIDs antes de pasarlos al handler
  */
 class LidResolver {
   constructor(conn) {
@@ -86,21 +85,16 @@ class LidResolver {
     this.processingQueue = new Map();
   }
 
-  /**
-   * Resuelve un LID específico a su JID real
-   */
   async resolveLid(lidJid, groupChatId, maxRetries = 3) {
     if (!lidJid.endsWith('@lid') || !groupChatId?.endsWith('@g.us')) {
       return lidJid.includes('@') ? lidJid : `${lidJid}@s.whatsapp.net`;
     }
 
-    // Verificar caché
     const cacheKey = `${lidJid}_${groupChatId}`;
     if (this.lidCache.has(cacheKey)) {
       return this.lidCache.get(cacheKey);
     }
 
-    // Evitar múltiples solicitudes simultáneas para el mismo LID
     if (this.processingQueue.has(cacheKey)) {
       return await this.processingQueue.get(cacheKey);
     }
@@ -112,9 +106,7 @@ class LidResolver {
       while (attempts < maxRetries) {
         try {
           const metadata = await this.conn?.groupMetadata(groupChatId);
-          if (!metadata?.participants) {
-            throw new Error('No se obtuvieron participantes');
-          }
+          if (!metadata?.participants) throw new Error('No se obtuvieron participantes');
 
           for (const participant of metadata.participants) {
             try {
@@ -134,7 +126,6 @@ class LidResolver {
             }
           }
           
-          // Si no se encuentra, cachear el LID original
           this.lidCache.set(cacheKey, lidJid);
           this.processingQueue.delete(cacheKey);
           return lidJid;
@@ -154,9 +145,6 @@ class LidResolver {
     return await resolvePromise;
   }
 
-  /**
-   * Procesa recursivamente un objeto para encontrar y resolver LIDs
-   */
   async processObject(obj, groupChatId) {
     if (!obj || typeof obj !== 'object') return obj;
 
@@ -181,20 +169,15 @@ class LidResolver {
     return processed;
   }
 
-  /**
-   * Procesa un mensaje completo resolviendo todos los LIDs
-   */
   async processMessage(message) {
     try {
       if (!message || !message.key) return message;
 
       const groupChatId = message.key.remoteJid?.endsWith('@g.us') ? message.key.remoteJid : null;
-      if (!groupChatId) return message; // Solo procesar mensajes de grupo
+      if (!groupChatId) return message;
 
-      // Clonar el mensaje para no modificar el original
       const processedMessage = JSON.parse(JSON.stringify(message));
 
-      // Resolver LID en key.participant
       if (processedMessage.key?.participant?.endsWith('@lid')) {
         processedMessage.key.participant = await this.resolveLid(
           processedMessage.key.participant, 
@@ -202,7 +185,6 @@ class LidResolver {
         );
       }
 
-      // Resolver LID en participant (mensaje de grupo)
       if (processedMessage.participant?.endsWith('@lid')) {
         processedMessage.participant = await this.resolveLid(
           processedMessage.participant, 
@@ -210,7 +192,6 @@ class LidResolver {
         );
       }
 
-      // Procesar contextInfo.mentionedJid
       if (processedMessage.message) {
         const messageTypes = Object.keys(processedMessage.message);
         for (const msgType of messageTypes) {
@@ -227,7 +208,6 @@ class LidResolver {
             msgContent.contextInfo.mentionedJid = resolvedMentions;
           }
 
-          // Procesar quotedMessage.participant
           if (msgContent?.contextInfo?.quotedMessage) {
             if (msgContent.contextInfo.participant?.endsWith('@lid')) {
               msgContent.contextInfo.participant = await this.resolveLid(
@@ -242,16 +222,13 @@ class LidResolver {
       return processedMessage;
     } catch (error) {
       console.error('Error procesando mensaje para resolver LIDs:', error);
-      return message; // Retornar mensaje original en caso de error
+      return message;
     }
   }
 
-  /**
-   * Limpia la caché periódicamente
-   */
   clearCache() {
     const now = Date.now();
-    const maxAge = 1000 * 60 * 30; // 30 minutos
+    const maxAge = 1000 * 60 * 30;
     
     for (const [key, timestamp] of this.lidCache.entries()) {
       if (now - timestamp > maxAge) {
@@ -261,84 +238,39 @@ class LidResolver {
   }
 }
 
-const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
-
-const { version } = await fetchLatestBaileysVersion();
-let phoneNumber = global.botnumber || process.argv.find(arg => arg.startsWith('--phone='))?.split('=')[1];
-const methodCodeQR = process.argv.includes('--method=qr');
-const methodCode = !!phoneNumber || process.argv.includes('--method=code');
-
-const MethodMobile = process.argv.includes("mobile")
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-const question = (texto) => new Promise((resolver) => rl.question(texto, resolver))
-
-//Código adaptado para la compatibilidad de ser bot con el código de 8 digitos. Hecho por: https://github.com/GataNina-Li
-let opcion
-if (methodCodeQR) {
-opcion = '1'
+/**
+ * Procesa texto para resolver LIDs en menciones (@)
+ */
+async function processTextMentions(text, groupId) {
+  if (!text || !groupId || !text.includes('@')) return text;
+  
+  const mentionRegex = /@(\d{8,20})/g;
+  const mentions = [...text.matchAll(mentionRegex)];
+  
+  if (!mentions.length) return text;
+  
+  let processedText = text;
+  for (const mention of mentions) {
+    const [fullMatch, lidNumber] = mention;
+    const lidJid = `${lidNumber}@lid`;
+    
+    try {
+      const resolvedJid = await global.lidResolver.resolveLid(lidJid, groupId);
+      if (resolvedJid && resolvedJid !== lidJid) {
+        const resolvedNumber = resolvedJid.split('@')[0];
+        processedText = processedText.replace(fullMatch, `@${resolvedNumber}`);
+      }
+    } catch (error) {
+      console.error('Error procesando mención LID:', error);
+    }
+  }
+  
+  return processedText;
 }
-if (!methodCodeQR && !methodCode && !fs.existsSync(`./${authFile}/creds.json`)) {
-do {
-opcion = await question('[ ℹ️ ] Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n---> ')
-if (!/^[1-2]$/.test(opcion)) {
-console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n')
-}} while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${authFile}/creds.json`))
-}
 
-const filterStrings = [
-"Q2xvc2luZyBzdGFsZSBvcGVu", // "Closing stable open"
-"Q2xvc2luZyBvcGVuIHNlc3Npb24=", // "Closing open session"
-"RmFpbGVkIHRvIGRlY3J5cHQ=", // "Failed to decrypt"
-"U2Vzc2lvbiBlcnJvcg==", // "Session error"
-"RXJyb3I6IEJhZCBNQUM=", // "Error: Bad MAC" 
-"RGVjcnlwdGVkIG1lc3NhZ2U=" // "Decrypted message" 
-]
-
-console.info = () => { }
-console.debug = () => { }
-['log', 'warn', 'error'].forEach(methodName => redefineConsoleMethod(methodName, filterStrings))
-
-process.on('uncaughtException', (err) => {
-  if (filterStrings.includes(Buffer.from(err.message).toString('base64'))) return; 
-  console.error('Uncaught Exception:', err);
-});
-
-
-const connectionOptions = {
-logger: pino({ level: 'silent' }),
-printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
-mobile: MethodMobile, 
-browser: opcion === '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
-auth: {
-creds: state.creds,
-keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
-},
-markOnlineOnConnect: false, 
-generateHighQualityLinkPreview: true, 
-syncFullHistory: false,
-getMessage: async (key) => {
-try {
-let jid = jidNormalizedUser(key.remoteJid);
-let msg = await store.loadMessage(jid, key.id);
-return msg?.message || "";
-} catch (error) {
-return "";
-}},
-msgRetryCounterCache: msgRetryCounterCache || new Map(),
-userDevicesCache: userDevicesCache || new Map(),
-defaultQueryTimeoutMs: undefined,
-cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
-version: [2, 3000, 1023223821],
-keepAliveIntervalMs: 55000, 
-maxIdleTimeMs: 60000, 
-};
-
-global.conn = makeWASocket(connectionOptions);
-
-// Crear instancia global del resolver después de crear la conexión
-global.lidResolver = new LidResolver(global.conn);
-
-// Función para interceptear y procesar mensajes
+/**
+ * Intercepta y procesa mensajes antes del handler
+ */
 async function interceptMessages(messages) {
   if (!Array.isArray(messages)) return messages;
   
@@ -349,45 +281,124 @@ async function interceptMessages(messages) {
       processedMessages.push(processedMessage);
     } catch (error) {
       console.error('Error interceptando mensaje:', error);
-      processedMessages.push(message); // Usar mensaje original si falla
+      processedMessages.push(message);
     }
   }
   
   return processedMessages;
 }
 
-if (!fs.existsSync(`./${authFile}/creds.json`)) {
-if (opcion === '2' || methodCode) {
-opcion = '2'
-if (!conn.authState.creds.registered) {
-if (MethodMobile) throw new Error('No se puede usar un código de emparejamiento con la API móvil')
+const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
+const { version } = await fetchLatestBaileysVersion();
+let phoneNumber = global.botnumber || process.argv.find(arg => arg.startsWith('--phone='))?.split('=')[1];
+const methodCodeQR = process.argv.includes('--method=qr');
+const methodCode = !!phoneNumber || process.argv.includes('--method=code');
+const MethodMobile = process.argv.includes("mobile");
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+const question = (texto) => new Promise((resolver) => rl.question(texto, resolver));
 
-let numeroTelefono
+let opcion;
+if (methodCodeQR) opcion = '1';
+if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.authFile}/creds.json`)) {
+  do {
+    opcion = await question('[ ℹ️ ] Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n---> ');
+    if (!/^[1-2]$/.test(opcion)) {
+      console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n');
+    }
+  } while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${global.authFile}/creds.json`));
+}
 
-if (!!phoneNumber) {
-numeroTelefono = phoneNumber.replace(/[^0-9]/g, '')
-if (!Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
-console.log(chalk.bgBlack(chalk.bold.redBright("Comience con el código de país de su número de WhatsApp.\nEjemplo: +5219992095479\n")))
-process.exit(0)
-}} else {
-while (true) {
-numeroTelefono = await question(chalk.bgBlack(chalk.bold.yellowBright('Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479\n')))
-numeroTelefono = numeroTelefono.replace(/[^0-9]/g, '')
-if (numeroTelefono.match(/^\d+$/) && Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
-break 
-} else {
-console.log(chalk.bgBlack(chalk.bold.redBright("Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479.\n")))
-}}
-rl.close()  
-} 
+const filterStrings = [
+  "Q2xvc2luZyBzdGFsZSBvcGVu", 
+  "Q2xvc2luZyBvcGVuIHNlc3Npb24=",
+  "RmFpbGVkIHRvIGRlY3J5cHQ=",
+  "U2Vzc2lvbiBlcnJvcg==",
+  "RXJyb3I6IEJhZCBNQUM=",
+  "RGVjcnlwdGVkIG1lc3NhZ2U=" 
+];
 
-        setTimeout(async () => {
-            let codigo = await conn.requestPairingCode(numeroTelefono)
-            codigo = codigo?.match(/.{1,4}/g)?.join("-") || codigo
-            console.log(chalk.yellow('[ ℹ️ ] introduce el código de emparejamiento en WhatsApp.'));
-            console.log(chalk.black(chalk.bgGreen(`Su código de emparejamiento: `)), chalk.black(chalk.white(codigo)))
-        }, 3000)
-}}
+console.info = () => {};
+console.debug = () => {};
+['log', 'warn', 'error'].forEach(methodName => {
+  const originalMethod = console[methodName];
+  console[methodName] = function() {
+    const message = arguments[0];
+    if (typeof message === 'string' && filterStrings.some(filterString => message.includes(Buffer.from(filterString, 'base64').toString()))) {
+      arguments[0] = "";
+    }
+    originalMethod.apply(console, arguments);
+  };
+});
+
+process.on('uncaughtException', (err) => {
+  if (filterStrings.includes(Buffer.from(err.message).toString('base64'))) return; 
+  console.error('Uncaught Exception:', err);
+});
+
+const connectionOptions = {
+  logger: pino({ level: 'silent' }),
+  printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
+  mobile: MethodMobile, 
+  browser: opcion === '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
+  auth: {
+    creds: state.creds,
+    keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
+  },
+  markOnlineOnConnect: false, 
+  generateHighQualityLinkPreview: true, 
+  syncFullHistory: false,
+  getMessage: async (key) => {
+    try {
+      let jid = jidNormalizedUser(key.remoteJid);
+      let msg = await store.loadMessage(jid, key.id);
+      return msg?.message || "";
+    } catch (error) {
+      return "";
+    }
+  },
+  msgRetryCounterCache: msgRetryCounterCache || new Map(),
+  userDevicesCache: userDevicesCache || new Map(),
+  defaultQueryTimeoutMs: undefined,
+  cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
+  version: [2, 3000, 1023223821],
+  keepAliveIntervalMs: 55000, 
+  maxIdleTimeMs: 60000, 
+};
+
+global.conn = makeWASocket(connectionOptions);
+global.lidResolver = new LidResolver(global.conn);
+
+if (!fs.existsSync(`./${global.authFile}/creds.json`)) {
+  if (opcion === '2' || methodCode) {
+    opcion = '2';
+    if (!conn.authState.creds.registered) {
+      if (MethodMobile) throw new Error('No se puede usar un código de emparejamiento con la API móvil');
+
+      let numeroTelefono;
+      if (!!phoneNumber) {
+        numeroTelefono = phoneNumber.replace(/[^0-9]/g, '');
+        if (!Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
+          console.log(chalk.bgBlack(chalk.bold.redBright("Comience con el código de país de su número de WhatsApp.\nEjemplo: +5219992095479\n")));
+          process.exit(0);
+        }
+      } else {
+        while (true) {
+          numeroTelefono = await question(chalk.bgBlack(chalk.bold.yellowBright('Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479\n')));
+          numeroTelefono = numeroTelefono.replace(/[^0-9]/g, '');
+          if (numeroTelefono.match(/^\d+$/) && Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) break;
+          console.log(chalk.bgBlack(chalk.bold.redBright("Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479.\n")));
+        }
+        rl.close();  
+      } 
+
+      setTimeout(async () => {
+        let codigo = await conn.requestPairingCode(numeroTelefono);
+        codigo = codigo?.match(/.{1,4}/g)?.join("-") || codigo;
+        console.log(chalk.yellow('[ ℹ️ ] introduce el código de emparejamiento en WhatsApp.'));
+        console.log(chalk.black(chalk.bgGreen(`Su código de emparejamiento: `)), chalk.black(chalk.white(codigo)));
+      }, 3000);
+    }
+  }
 }
 
 conn.isInit = false;
@@ -398,31 +409,15 @@ if (!opts['test']) {
   if (global.db) {
     setInterval(async () => {
       if (global.db.data) await global.db.write();
-      if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 'tmp', 'jadibts'], tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
+      if (opts['autocleartmp'] && (global.support || {}).find) {
+        const tmp = [os.tmpdir(), 'tmp', 'jadibts'];
+        tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
+      }
     }, 30 * 1000);
   }
 }
 
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
-
-
-/* Y ese fue el momazo mas bueno del mundo
-        Aunque no dudara tan solo un segundo
-        Mas no me arrepiento de haberme reido
-        Por que la grasa es un sentimiento
-        Y ese fue el momazo mas bueno del mundo
-        Aunque no dudara tan solo un segundo
-        que me arrepiento de ser un grasoso
-        Por que la grasa es un sentimiento
-        - El waza 👻👻👻👻 (Aiden)            
-        
-   Yo tambien se hacer momazos Aiden...
-        ahi te va el ajuste de los borrados
-        inteligentes de las sesiones y de los sub-bot
-        By (Rey Endymion 👺👍🏼) 
-        
-   Ninguno es mejor que tilin god
-        - atte: sk1d             */
 
 function clearTmp() {
   const tmp = [join(__dirname, './src/tmp')];
@@ -430,23 +425,19 @@ function clearTmp() {
   tmp.forEach((dirname) => readdirSync(dirname).forEach((file) => filename.push(join(dirname, file))));
   return filename.map((file) => {
     const stats = statSync(file);
-    if (stats.isFile() && (Date.now() - stats.mtimeMs >= 1000 * 60 * 3)) return unlinkSync(file); // 3 minutes
+    if (stats.isFile() && (Date.now() - stats.mtimeMs >= 1000 * 60 * 3)) return unlinkSync(file);
     return false;
   });
 }
 
-// Función para eliminar archivos core.<numero>
 const dirToWatchccc = path.join(__dirname, './');
 function deleteCoreFiles(filePath) {
   const coreFilePattern = /^core\.\d+$/i;
   const filename = path.basename(filePath);
   if (coreFilePattern.test(filename)) {
     fs.unlink(filePath, (err) => {
-      if (err) {
-        console.error(`Error eliminando el archivo ${filePath}:`, err);
-      } else {
-        console.log(`Archivo eliminado: ${filePath}`);
-      }
+      if (err) console.error(`Error eliminando el archivo ${filePath}:`, err);
+      else console.log(`Archivo eliminado: ${filePath}`);
     });
   }
 }
@@ -454,63 +445,55 @@ fs.watch(dirToWatchccc, (eventType, filename) => {
   if (eventType === 'rename') {
     const filePath = path.join(dirToWatchccc, filename);
     fs.stat(filePath, (err, stats) => {
-      if (!err && stats.isFile()) {
-        deleteCoreFiles(filePath);
-      }
+      if (!err && stats.isFile()) deleteCoreFiles(filePath);
     });
   }
 });
 
 function purgeSession() {
-let prekey = []
-let directorio = readdirSync("./MysticSession")
-let filesFolderPreKeys = directorio.filter(file => {
-return file.startsWith('pre-key-') /*|| file.startsWith('session-') || file.startsWith('sender-') || file.startsWith('app-') */
-})
-prekey = [...prekey, ...filesFolderPreKeys]
-filesFolderPreKeys.forEach(files => {
-unlinkSync(`./MysticSession/${files}`)
-})
-} 
+  let prekey = [];
+  let directorio = readdirSync("./MysticSession");
+  let filesFolderPreKeys = directorio.filter(file => file.startsWith('pre-key-'));
+  prekey = [...prekey, ...filesFolderPreKeys];
+  filesFolderPreKeys.forEach(files => unlinkSync(`./MysticSession/${files}`));
+}
 
 function purgeSessionSB() {
-try {
-let listaDirectorios = readdirSync('./jadibts/');
-let SBprekey = []
-listaDirectorios.forEach(directorio => {
-if (statSync(`./jadibts/${directorio}`).isDirectory()) {
-let DSBPreKeys = readdirSync(`./jadibts/${directorio}`).filter(fileInDir => {
-return fileInDir.startsWith('pre-key-') /*|| fileInDir.startsWith('app-') || fileInDir.startsWith('session-')*/
-})
-SBprekey = [...SBprekey, ...DSBPreKeys]
-DSBPreKeys.forEach(fileInDir => {
-unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
-})
+  try {
+    let listaDirectorios = readdirSync('./jadibts/');
+    let SBprekey = [];
+    listaDirectorios.forEach(directorio => {
+      if (statSync(`./jadibts/${directorio}`).isDirectory()) {
+        let DSBPreKeys = readdirSync(`./jadibts/${directorio}`).filter(fileInDir => fileInDir.startsWith('pre-key-'));
+        SBprekey = [...SBprekey, ...DSBPreKeys];
+        DSBPreKeys.forEach(fileInDir => unlinkSync(`./jadibts/${directorio}/${fileInDir}`));
+      }
+    });
+  } catch (err) {
+    console.log(chalk.bold.red(`[ ℹ️ ] Algo salio mal durante la eliminación, archivos no eliminados`));
+  }
 }
-})
-if (SBprekey.length === 0) return; //console.log(chalk.cyanBright(`=> No hay archivos por eliminar.`))
-} catch (err) {
-console.log(chalk.bold.red(`[ ℹ️ ] Algo salio mal durante la eliminación, archivos no eliminados`))
-}}
 
 function purgeOldFiles() {
-const directories = ['./MysticSession/', './jadibts/']
-const oneHourAgo = Date.now() - (60 * 60 * 1000)
-directories.forEach(dir => {
-readdirSync(dir, (err, files) => {
-if (err) throw err
-files.forEach(file => {
-const filePath = path.join(dir, file)
-stat(filePath, (err, stats) => {
-if (err) throw err;
-if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') { 
-unlinkSync(filePath, err => {  
-if (err) throw err
-console.log(chalk.bold.green(`Archivo ${file} borrado con éxito`))
-})
-} else {  
-console.log(chalk.bold.red(`Archivo ${file} no borrado` + err))
-} }) }) }) })
+  const directories = ['./MysticSession/', './jadibts/'];
+  const oneHourAgo = Date.now() - (60 * 60 * 1000);
+  directories.forEach(dir => {
+    readdirSync(dir, (err, files) => {
+      if (err) throw err;
+      files.forEach(file => {
+        const filePath = path.join(dir, file);
+        stat(filePath, (err, stats) => {
+          if (err) throw err;
+          if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') { 
+            unlinkSync(filePath, err => {  
+              if (err) throw err;
+              console.log(chalk.bold.green(`Archivo ${file} borrado con éxito`));
+            });
+          }
+        });
+      });
+    });
+  });
 }
 
 async function connectionUpdate(update) {
@@ -526,15 +509,14 @@ async function connectionUpdate(update) {
     global.timestamp.connect = new Date;
   }
   if (global.db.data == null) loadDatabase();
-if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
-if (opcion == '1' || methodCodeQR) {
-    console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
-    qrAlreadyShown = true;
-     if (qrTimeout) clearTimeout(qrTimeout);
-        qrTimeout = setTimeout(() => {
-        qrAlreadyShown = false;
-    }, 60000); 
- }}
+  if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
+    if (opcion == '1' || methodCodeQR) {
+      console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
+      qrAlreadyShown = true;
+      if (qrTimeout) clearTimeout(qrTimeout);
+      qrTimeout = setTimeout(() => qrAlreadyShown = false, 60000); 
+    }
+  }
   if (connection == 'open') {
     console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
     isFirstConnection = true;
@@ -547,12 +529,12 @@ if (opcion == '1' || methodCodeQR) {
       }
     }
   }
-let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-const lastErrors = {};
-const errorTimers = {};
-const errorCounters = {};
-function shouldLogError(errorType) {
-  if (!errorCounters[errorType]) { errorCounters[errorType] = { count: 0, lastShown: 0 } }
+  let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
+  const lastErrors = {};
+  const errorTimers = {};
+  const errorCounters = {};
+  function shouldLogError(errorType) {
+    if (!errorCounters[errorType]) errorCounters[errorType] = { count: 0, lastShown: 0 };
     const now = Date.now();
     const errorData = errorCounters[errorType];
     if (errorData.count >= 5) return false;
@@ -560,72 +542,71 @@ function shouldLogError(errorType) {
     errorData.count++;
     errorData.lastShown = now;
     return true;
-}
-if (reason == 405) {
-await fs.unlinkSync("./MysticSession/" + "creds.json")
-console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`)) 
-process.send('reset')}
-if (connection === 'close') {
+  }
+  if (reason == 405) {
+    await fs.unlinkSync("./MysticSession/" + "creds.json");
+    console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`)); 
+    process.send('reset');
+  }
+  if (connection === 'close') {
     if (reason === DisconnectReason.badSession) {
       if (shouldLogError('badSession')) {
         conn.logger.error(`[ ⚠ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`); 
       }
-        await global.reloadHandler(true).catch(console.error);
+      await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionClosed) {
       if (shouldLogError('connectionClosed')) {
         conn.logger.warn(`[ ⚠ ] Conexión cerrada, reconectando...`);
       }
-        await global.reloadHandler(true).catch(console.error);
+      await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionLost) {
       if (shouldLogError('connectionLost')) {
         conn.logger.warn(`[ ⚠ ] Conexión perdida con el servidor, reconectando...`);
       }
-        await global.reloadHandler(true).catch(console.error);
+      await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionReplaced) {
       if (shouldLogError('connectionReplaced')) {
         conn.logger.error(`[ ⚠ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
       }
-        await global.reloadHandler(true).catch(console.error);
+      await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.loggedOut) {
       if (shouldLogError('loggedOut')) {
         conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
       }
     } else if (reason === DisconnectReason.restartRequired) {
-       if (isFirstConnection) {
+      if (isFirstConnection) {
         if (shouldLogError('restartRequired')) {
-            //conn.logger.info(`[ ⚠ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
+          //conn.logger.info(`[ ⚠ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
         }
         isFirstConnection = false; 
-    } else {
-         if (shouldLogError('restartRequired')) {
-            conn.logger.info(`[ ⚠ ] Reinicio necesario, reconectando...`);
+      } else {
+        if (shouldLogError('restartRequired')) {
+          conn.logger.info(`[ ⚠ ] Reinicio necesario, reconectando...`);
         }
         await global.reloadHandler(true).catch(console.error);
-    }
+      }
     } else if (reason === DisconnectReason.timedOut) {
       if (shouldLogError('timedOut')) {
         conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
       }
-        await global.reloadHandler(true).catch(console.error);
+      await global.reloadHandler(true).catch(console.error);
     } else {
       const unknownError = `unknown_${reason || ''}_${connection || ''}`;
       if (shouldLogError(unknownError)) {
         conn.logger.warn(`[ ⚠ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
       }
-        await global.reloadHandler(true).catch(console.error);
+      await global.reloadHandler(true).catch(console.error);
     }
-}
+  }
 }
 
 process.on('uncaughtException', console.error);
 
 let isInit = true;
-
 let handler = await import('./handler.js');
+
 global.reloadHandler = async function(restatConn) {
-  
   try {
-   
     const Handler = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
     if (Object.keys(Handler || {}).length) handler = Handler;
   } catch (e) {
@@ -639,8 +620,6 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.removeAllListeners();
     global.conn = makeWASocket(connectionOptions, {chats: oldChats});
     store?.bind(conn);
-    
-    // Recrear el resolver con la nueva conexión
     global.lidResolver = new LidResolver(global.conn);
     isInit = true;
   }
@@ -654,8 +633,6 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate);
   }
 
-  // Para cambiar estos mensajes, solo los archivos en la carpeta de language, 
-  // busque la clave "handler" dentro del json y cámbiela si es necesario
   conn.welcome = '👋 ¡Bienvenido/a!\n@user';
   conn.bye = '👋 ¡Hasta luego!\n@user';
   conn.spromote = '*[ ℹ️ ] @user Fue promovido a administrador.*';
@@ -665,19 +642,37 @@ global.reloadHandler = async function(restatConn) {
   conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
   conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
-  // Wrapper del handler original para interceptar mensajes
   const originalHandler = handler.handler.bind(global.conn);
   conn.handler = async function(chatUpdate) {
     try {
       if (chatUpdate.messages) {
-        // Interceptar y procesar mensajes antes de pasarlos al handler
         chatUpdate.messages = await interceptMessages(chatUpdate.messages);
+        
+        for (const message of chatUpdate.messages) {
+          if (message?.message && message.key?.remoteJid?.endsWith('@g.us')) {
+            const messageTypes = Object.keys(message.message);
+            for (const msgType of messageTypes) {
+              const msgContent = message.message[msgType];
+              if (msgContent?.text) {
+                msgContent.text = await processTextMentions(msgContent.text, message.key.remoteJid);
+              }
+              
+              if (msgContent?.contextInfo?.quotedMessage) {
+                const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
+                for (const quotedType of quotedTypes) {
+                  const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
+                  if (quotedContent?.text) {
+                    quotedContent.text = await processTextMentions(quotedContent.text, message.key.remoteJid);
+                  }
+                }
+              }
+            }
+          }
+        }
       }
-      // Llamar al handler original con los mensajes procesados
       return await originalHandler(chatUpdate);
     } catch (error) {
       console.error('Error en handler interceptor:', error);
-      // En caso de error, usar el handler original sin modificaciones
       return await originalHandler(chatUpdate);
     }
   };
@@ -708,10 +703,10 @@ global.reloadHandler = async function(restatConn) {
   return true;
 };
 
-
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 const pluginFilter = (filename) => /\.js$/.test(filename);
 global.plugins = {};
+
 async function filesInit() {
   for (const filename of readdirSync(pluginFolder).filter(pluginFilter)) {
     try {
@@ -782,16 +777,6 @@ async function _quickTest() {
   Object.freeze(global.support);
 }
 
-function redefineConsoleMethod(methodName, filterStrings) {
-const originalConsoleMethod = console[methodName]
-console[methodName] = function() {
-const message = arguments[0]
-if (typeof message === 'string' && filterStrings.some(filterString => message.includes(atob(filterString)))) {
-arguments[0] = ""
-}
-originalConsoleMethod.apply(console, arguments)
-}}
-
 // Limpiar caché del LidResolver cada 30 minutos
 setInterval(() => {
   global.lidResolver?.clearCache();
@@ -801,14 +786,6 @@ setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
   await clearTmp();
 }, 180000);
-
-/*
-setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn?.user) return; 
-  await purgeSessionSB();
-  await purgeOldFiles();
-  await purgeSession();
-}, 1000 * 60 * 60);*/
 
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
