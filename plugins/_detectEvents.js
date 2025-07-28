@@ -20,7 +20,14 @@ export async function before(m, { conn, participants }) {
   };
 
   try {     
+   console.log('=== DEBUG _detectEvents ===');
+   console.log('Original sender:', m?.sender);
+   console.log('Chat ID:', m?.chat);
+   console.log('MessageStubType:', m.messageStubType);
+   console.log('MessageStubParameters:', m.messageStubParameters);
+   
    const realSender = await resolveLidFromCache(m?.sender, m?.chat);
+   console.log('Resolved sender:', realSender);
     
     const idioma = global.db?.data?.users[realSender]?.language || global.defaultLenguaje;
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/_detectEvents.js.json`));
@@ -48,8 +55,13 @@ export async function before(m, { conn, participants }) {
     const chat = global?.db?.data?.chats[m.chat];
     const groupAdmins = participants.filter((p) => p.admin);
     
-    const resolvedStubParameters = (m.messageStubParameters || []).map(param => {
-      return resolveLidFromCache(param, m.chat);
+    const resolvedStubParameters = (m.messageStubParameters || []).map((param, index) => {
+      console.log(`=== Resolving parameter ${index} ===`);
+      console.log('Original param:', param);
+      const resolved = resolveLidFromCache(param, m.chat);
+      console.log('Resolved param:', resolved);
+      console.log('========================');
+      return resolved;
     });
     
     const mentionsString = [realSender, ...resolvedStubParameters, ...groupAdmins.map((v) => v.id)];
@@ -143,31 +155,62 @@ export async function before(m, { conn, participants }) {
 }
 
 function resolveLidFromCache(jid, groupChatId) {
+  console.log('=== resolveLidFromCache DEBUG ===');
+  console.log('Input jid:', jid);
+  console.log('GroupChatId:', groupChatId);
+  
   if (!jid || !jid.toString().endsWith('@lid')) {
-    return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
+    const result = jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
+    console.log('Not a LID, returning:', result);
+    return result;
   }
+  
   if (!global.lidResolver?.lidCache) {
     console.warn('LidResolver no está inicializado');
     return jid;
   }
+  
   const cacheKey = `${jid}_${groupChatId}`;
+  console.log('Cache key:', cacheKey);
+  console.log('Cache size:', global.lidResolver.lidCache.size);
+  console.log('Cache contents:', Array.from(global.lidResolver.lidCache.entries()));
+  
   const resolvedJid = global.lidResolver.lidCache.get(cacheKey);
+  console.log('Found in cache:', resolvedJid);
+  
   if (resolvedJid) {
+    console.log('Returning resolved JID:', resolvedJid);
     return resolvedJid;
   }
+  
   console.warn(`LID no encontrado en cache: ${jid}`);
+  console.log('Returning original LID:', jid);
   return jid;
 }
 
 function getUserDisplayName(jid) {
-  if (!jid) return '@undefined';
-  if (jid.includes('@') && !jid.includes('@lid')) {
-    return `@${jid.split('@')[0]}`;
+  console.log('=== getUserDisplayName DEBUG ===');
+  console.log('Input jid:', jid);
+  
+  if (!jid) {
+    console.log('No JID provided, returning @undefined');
+    return '@undefined';
   }
+  
+  if (jid.includes('@') && !jid.includes('@lid')) {
+    const result = `@${jid.split('@')[0]}`;
+    console.log('Valid JID, returning:', result);
+    return result;
+  }
+  
   if (jid.includes('@lid')) {
+    console.log('Still a LID, returning Usuario eliminado');
     return 'Usuario eliminado';
   }
-  return `@${jid}`;
+  
+  const result = `@${jid}`;
+  console.log('Fallback, returning:', result);
+  return result;
 }
 
 async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
