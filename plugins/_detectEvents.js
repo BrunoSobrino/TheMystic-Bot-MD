@@ -20,6 +20,12 @@ export async function before(m, { conn, participants }) {
   };
 
   try {     
+    if (m.messageStubType === 'GROUP_PARTICIPANT_REMOVE') {
+      m.messageStubType = 28;
+    } else if (m.messageStubType === 'GROUP_PARTICIPANT_LEAVE') {
+      m.messageStubType = 32;
+    }
+    
     const realSender = await resolveLidFromCache(m?.sender, m?.chat);
     
     const idioma = global.db?.data?.users[realSender]?.language || global.defaultLenguaje;
@@ -91,29 +97,27 @@ export async function before(m, { conn, participants }) {
           await safeOperation(async () => {
             const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
             let txt = `${tradutor.member_remove.header}\n\n${tradutor.member_remove.group.replace('@group', groupName)}\n`;
-            txt += `${tradutor.member_remove.removed_user.replace('@user', userDisplay)}\n${tradutor.member_remove.removed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+            const isSelfRemoval = resolvedStubParameters[0] === realSender;
+            if (!realSender.endsWith('@g.us')) {
+              if (isSelfRemoval) {
+                txt += `${tradutor.member_remove.self_removed.replace('@user', userDisplay)}`;
+              } else {
+                txt += `${tradutor.member_remove.removed_user.replace('@user', userDisplay)}\n${tradutor.member_remove.removed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+              }
+            } else {
+              txt += `${tradutor.member_remove.self_removed.replace('@user', userDisplay)}`;
+            }
             await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
           break;
 
         case 32:
-          const isRemove = m.messageStubParameters.length > 1 && m.messageStubParameters[1] === 'remove';
-          
-          if (isRemove) {
-            await safeOperation(async () => {
-              const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
-              let txt = `${tradutor.member_remove.header}\n\n${tradutor.member_remove.group.replace('@group', groupName)}\n`;
-              txt += `${tradutor.member_remove.removed_user.replace('@user', userDisplay)}\n${tradutor.member_remove.removed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
-              await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
-            });
-          } else {
-            await safeOperation(async () => {
-              const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
-              let txt = `${tradutor.member_leave.header}\n\n${tradutor.member_leave.group.replace('@group', groupName)}\n`;
-              txt += `${tradutor.member_leave.user_left.replace('@user', userDisplay)}`;
-              await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: [resolvedStubParameters[0]] }, { quoted: fkontak2 });
-            });
-          }
+          await safeOperation(async () => {
+            const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
+            let txt = `${tradutor.member_remove.header}\n\n${tradutor.member_remove.group.replace('@group', groupName)}\n`;
+            txt += `${tradutor.member_remove.self_removed.replace('@user', userDisplay)}`;
+            await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: [resolvedStubParameters[0]] }, { quoted: fkontak2 });
+          });
           break;
 
         case 26:
@@ -134,6 +138,7 @@ export async function before(m, { conn, participants }) {
     }
     return true;
   } catch (error) {
+    console.error('Error en _detectEvents:', error);
     return true;
   }
 }
@@ -149,6 +154,7 @@ function resolveLidFromCache(jid, groupChatId) {
 
   const cacheKey = `${jid}_${groupChatId}`;
   const directResolved = global.lidResolver.lidCache.get(cacheKey);
+  
   if (directResolved && !directResolved.endsWith('@lid')) {
     return directResolved;
   }
@@ -163,6 +169,7 @@ function resolveLidFromCache(jid, groupChatId) {
   }
 
   const shortNumber = lidNumber.slice(-10);
+  
   for (const [key, value] of global.lidResolver.lidCache.entries()) {
     if (value.endsWith(`${shortNumber}@s.whatsapp.net`)) {
       return value;
@@ -179,9 +186,18 @@ function resolveLidFromCache(jid, groupChatId) {
 }
 
 function getUserDisplayName(jid) {
-  if (!jid) return '@undefined';
-  if (jid.includes('@') && !jid.includes('@lid')) return `@${jid.split('@')[0]}`;
-  if (jid.includes('@lid')) return 'Usuario eliminado';
+  if (!jid) {
+    return '@undefined';
+  }
+  
+  if (jid.includes('@') && !jid.includes('@lid')) {
+    return `@${jid.split('@')[0]}`;
+  }
+  
+  if (jid.includes('@lid')) {
+    return 'Usuario eliminado';
+  }
+  
   return `@${jid}`;
 }
 
