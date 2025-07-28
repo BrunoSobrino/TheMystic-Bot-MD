@@ -7,7 +7,6 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 
 const groupMetadataCache = new Map();
-const lidCache = new Map();
 
 export async function before(m, { conn, participants }) {
   if (!m?.messageStubType || !m?.isGroup) return true;
@@ -21,7 +20,7 @@ export async function before(m, { conn, participants }) {
   };
 
   try {     
-   const realSender = await resolveLidToRealJid(m?.sender, conn, m?.chat);
+   const realSender = await resolveLidFromCache(m?.sender, m?.chat);
     
     const idioma = global.db?.data?.users[realSender]?.language || global.defaultLenguaje;
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/_detectEvents.js.json`));
@@ -49,11 +48,9 @@ export async function before(m, { conn, participants }) {
     const chat = global?.db?.data?.chats[m.chat];
     const groupAdmins = participants.filter((p) => p.admin);
     
-    const resolvedStubParameters = await Promise.all(
-      (m.messageStubParameters || []).map(async param => {
-        return await resolveLidToRealJid(param, conn, m.chat);
-      })
-    );
+    const resolvedStubParameters = (m.messageStubParameters || []).map(param => {
+      return resolveLidFromCache(param, m.chat);
+    });
     
     const mentionsString = [realSender, ...resolvedStubParameters, ...groupAdmins.map((v) => v.id)];
     const mentionsContentM = [realSender, ...resolvedStubParameters];
@@ -63,25 +60,28 @@ export async function before(m, { conn, participants }) {
       switch (m.messageStubType) {
         case 29: // Promote
           await safeOperation(async () => {
-            let txt = `${tradutor.promote.header}\n\n${tradutor.promote.group.replace('@group', groupName)}\n${tradutor.promote.new_admin.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}\n${tradutor.promote.executed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+            const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
+            let txt = `${tradutor.promote.header}\n\n${tradutor.promote.group.replace('@group', groupName)}\n${tradutor.promote.new_admin.replace('@user', userDisplay)}\n${tradutor.promote.executed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsString }, { quoted: fkontak2 });
           });
           break;
 
         case 30: // Demote
           await safeOperation(async () => {
-            let txt = `${tradutor.demote.header}\n\n${tradutor.demote.group.replace('@group', groupName)}\n${tradutor.demote.removed_admin.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}\n${tradutor.demote.executed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+            const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
+            let txt = `${tradutor.demote.header}\n\n${tradutor.demote.group.replace('@group', groupName)}\n${tradutor.demote.removed_admin.replace('@user', userDisplay)}\n${tradutor.demote.executed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsString }, { quoted: fkontak2 });
           });
           break;
 
         case 27: // Member add
           await safeOperation(async () => {
+            const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
             let txt = `${tradutor.member_add.header}\n\n${tradutor.member_add.group.replace('@group', groupName)}\n`;
             if (!realSender.endsWith('@g.us')) {
-              txt += `${tradutor.member_add.added_user.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}\n${tradutor.member_add.added_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+              txt += `${tradutor.member_add.added_user.replace('@user', userDisplay)}\n${tradutor.member_add.added_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
             } else {
-              txt += `${tradutor.member_add.self_added.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}`;
+              txt += `${tradutor.member_add.self_added.replace('@user', userDisplay)}`;
             }
             await conn.sendMessage(m.chat, { image: img || {url: pp}, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
@@ -89,11 +89,17 @@ export async function before(m, { conn, participants }) {
 
         case 28: // Member remove
           await safeOperation(async () => {
+            const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
             let txt = `${tradutor.member_remove.header}\n\n${tradutor.member_remove.group.replace('@group', groupName)}\n`;
+            const isSelfRemoval = resolvedStubParameters[0] === realSender;
             if (!realSender.endsWith('@g.us')) {
-              txt += `${tradutor.member_remove.removed_user.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}\n${tradutor.member_remove.removed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+              if (isSelfRemoval) {
+                txt += `${tradutor.member_remove.self_removed.replace('@user', userDisplay)}`;
+              } else {
+                txt += `${tradutor.member_remove.removed_user.replace('@user', userDisplay)}\n${tradutor.member_remove.removed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+              }
             } else {
-              txt += `${tradutor.member_remove.self_removed.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}`;
+              txt += `${tradutor.member_remove.self_removed.replace('@user', userDisplay)}`;
             }
             await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
@@ -101,12 +107,13 @@ export async function before(m, { conn, participants }) {
 
         case 32: // Member leave or remove
           await safeOperation(async () => {
-            const ax = resolvedStubParameters[0] === realSender ? 'self_removed' : 'removed_user';
+            const userDisplay = getUserDisplayName(resolvedStubParameters[0]);
+            const isSelfRemoval = resolvedStubParameters[0] === realSender;
             let txt = `${tradutor.member_remove.header}\n\n${tradutor.member_remove.group.replace('@group', groupName)}\n`;
-            if (ax === 'removed_user') {
-              txt += `${tradutor.member_remove.removed_user.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}\n${tradutor.member_remove.removed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
+            if (isSelfRemoval) {
+              txt += `${tradutor.member_remove.self_removed.replace('@user', userDisplay)}`;
             } else {
-              txt += `${tradutor.member_remove.self_removed.replace('@user', `@${resolvedStubParameters[0]?.split('@')[0] || 'undefined'}`)}`;
+              txt += `${tradutor.member_remove.removed_user.replace('@user', userDisplay)}\n${tradutor.member_remove.removed_by.replace('@user', `@${realSender.split('@')[0]}`)}`;
             }
             await conn.sendMessage(m.chat, { image: { url: pp }, caption: txt, mentions: mentionsContentM }, { quoted: fkontak2 });
           });
@@ -135,54 +142,34 @@ export async function before(m, { conn, participants }) {
   }
 }
 
-async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
-    const inputJid = lid.toString();
-    if (!inputJid.endsWith("@lid") || !groupChatId?.endsWith("@g.us")) {
-        return inputJid.includes("@") ? inputJid : `${inputJid}@s.whatsapp.net`;
-    }
-    
-    if (lidCache.has(inputJid)) {
-        return lidCache.get(inputJid);
-    }
-    
-    const lidToFind = inputJid.split("@")[0];
-    let attempts = 0;
-    
-    while (attempts < maxRetries) {
-        try {
-            const metadata = await conn?.groupMetadata(groupChatId);
-            if (!metadata?.participants) {
-                throw new Error("No se obtuvieron participantes");
-            }
-            
-            for (const participant of metadata.participants) {
-                try {
-                    if (!participant?.jid) continue;
-                    const contactDetails = await conn?.onWhatsApp(participant.jid);
-                    if (!contactDetails?.[0]?.lid) continue;
-                    
-                    const possibleLid = contactDetails[0].lid.split("@")[0];
-                    if (possibleLid === lidToFind) {
-                        lidCache.set(inputJid, participant.jid);
-                        return participant.jid;
-                    }
-                } catch (e) {
-                    continue;
-                }
-            }
-            
-            lidCache.set(inputJid, inputJid);
-            return inputJid;
-            
-        } catch (e) {
-            if (++attempts >= maxRetries) {
-                lidCache.set(inputJid, inputJid);
-                return inputJid;
-            }
-            await new Promise((resolve) => setTimeout(resolve, retryDelay));
-        }
-    }
-    
-    return inputJid;
+function resolveLidFromCache(jid, groupChatId) {
+  if (!jid || !jid.toString().endsWith('@lid')) {
+    return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
+  }
+  if (!global.lidResolver?.lidCache) {
+    console.warn('LidResolver no está inicializado');
+    return jid;
+  }
+  const cacheKey = `${jid}_${groupChatId}`;
+  const resolvedJid = global.lidResolver.lidCache.get(cacheKey);
+  if (resolvedJid) {
+    return resolvedJid;
+  }
+  console.warn(`LID no encontrado en cache: ${jid}`);
+  return jid;
 }
 
+function getUserDisplayName(jid) {
+  if (!jid) return '@undefined';
+  if (jid.includes('@') && !jid.includes('@lid')) {
+    return `@${jid.split('@')[0]}`;
+  }
+  if (jid.includes('@lid')) {
+    return 'Usuario eliminado';
+  }
+  return `@${jid}`;
+}
+
+async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
+    return resolveLidFromCache(lid, groupChatId);
+}
