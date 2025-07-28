@@ -7,6 +7,22 @@ import NodeID3 from 'node-id3';
 import { v4 as uuidv4 } from 'uuid';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
+// Solución para readline (alternativa simplificada)
+const createStatusUpdater = () => {
+  let lastMessage = '';
+  return {
+    update: (message) => {
+      process.stdout.write('\r' + ' '.repeat(lastMessage.length));
+      process.stdout.write('\r' + message);
+      lastMessage = message;
+    },
+    clear: () => {
+      process.stdout.write('\r' + ' '.repeat(lastMessage.length) + '\r');
+      lastMessage = '';
+    }
+  };
+};
+
 const handler = async (m, { conn, args }) => {
     try {
         if (!args[0]) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*\n\n*Uso:* /musicaia descripción | tags opcionales\n*Ejemplo:* /musicaia canción de amor | pop, romántico, acústico';
@@ -102,7 +118,7 @@ handler.tags = ['ai'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
 
-// Configuración exacta de la API Sonu como la proporcionaste
+// Configuración exacta de la API Sonu (corregida)
 const sonu = {
   api: {
     base: 'https://musicai.apihub.today/api/v1',
@@ -234,7 +250,7 @@ const sonu = {
     };
 
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const statusUpdater = createStatusUpdater();
 
     try {
       let attempt = 0;
@@ -256,7 +272,7 @@ const sonu = {
 
         found = response.data.datas.find(song => song.id === songId);
         if (!found) {
-          rl.close();
+          statusUpdater.clear();
           return {
             success: false,
             code: 404,
@@ -264,11 +280,10 @@ const sonu = {
           };
         }
 
-        readline.cursorTo(process.stdout, 0);
-        process.stdout.write(`🔄 [${++attempt}] Status: ${found.status} | Progreso: ${found.url ? '✅ Completado' : '⏳ En proceso...'}`);
+        statusUpdater.update(`🔄 [${++attempt}] Status: ${found.status} | Progreso: ${found.url ? '✅ Completado' : '⏳ En proceso...'}`);
 
         if (found.url) {
-          rl.close();
+          statusUpdater.clear();
           return {
             success: true,
             code: 200,
@@ -286,7 +301,7 @@ const sonu = {
         await delay(3000);
       }
     } catch (err) {
-      rl.close();
+      statusUpdater.clear();
       return {
         success: false,
         code: err.response?.status || 500,
