@@ -155,43 +155,84 @@ export async function before(m, { conn, participants }) {
 }
 
 function resolveLidFromCache(jid, groupChatId) {
+  console.log('\n=== INICIO resolveLidFromCache ===');
+  console.log('Input jid:', jid);
+  console.log('GroupChatId:', groupChatId);
+  
+  // 1. Verificar si no es un LID
   if (!jid || !jid.toString().endsWith('@lid')) {
-    return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
+    const result = jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
+    console.log('No es un LID, retornando:', result);
+    return result;
   }
 
+  // 2. Verificar si el cache está inicializado
   if (!global.lidResolver?.lidCache) {
+    console.warn('⚠️ LidResolver no está inicializado');
     return jid;
   }
 
-  // 1. Búsqueda directa
-  const cacheKey = `${jid}_${groupChatId}`;
-  const resolvedJid = global.lidResolver.lidCache.get(cacheKey);
+  console.log('\n🔍 Buscando en el cache...');
+  console.log('Tamaño del cache:', global.lidResolver.lidCache.size);
   
-  if (resolvedJid && !resolvedJid.endsWith('@lid')) {
-    return resolvedJid;
+  // 3. Búsqueda directa en el cache
+  const cacheKey = `${jid}_${groupChatId}`;
+  console.log('Clave de cache directa:', cacheKey);
+  
+  const directResolved = global.lidResolver.lidCache.get(cacheKey);
+  console.log('Resultado búsqueda directa:', directResolved);
+  
+  if (directResolved && !directResolved.endsWith('@lid')) {
+    console.log('✅ LID resuelto directamente:', directResolved);
+    return directResolved;
   }
 
-  // 2. Búsqueda por número de teléfono (sin país)
+  // 4. Extraer el número del LID
   const lidNumber = jid.split('@')[0];
-  const shortNumber = lidNumber.slice(-10); // Últimos 10 dígitos
+  console.log('Número del LID:', lidNumber);
   
-  // Buscar en todo el cache cualquier JID que termine con este número
+  // 5. Búsqueda por número completo en todo el cache
+  console.log('\n🔍 Buscando por número completo en cache...');
+  const possibleFullJid = `${lidNumber}@s.whatsapp.net`;
+  
   for (const [key, value] of global.lidResolver.lidCache.entries()) {
-    if (value.endsWith(shortNumber + '@s.whatsapp.net')) {
+    if (value === possibleFullJid) {
+      console.log(`✅ Encontrado JID completo en cache: ${key} -> ${value}`);
+      return possibleFullJid;
+    }
+  }
+
+  // 6. Búsqueda por coincidencia parcial (últimos 10 dígitos)
+  const shortNumber = lidNumber.slice(-10); // Últimos 10 dígitos
+  console.log('\n🔍 Buscando por últimos 10 dígitos:', shortNumber);
+  
+  for (const [key, value] of global.lidResolver.lidCache.entries()) {
+    if (value.endsWith(`${shortNumber}@s.whatsapp.net`)) {
+      console.log(`✅ Encontrado JID parcial en cache: ${key} -> ${value}`);
       return value;
     }
   }
 
-  // 3. Búsqueda inversa - encontrar si este número está asociado a otro LID
-  const possibleJid = `${lidNumber}@s.whatsapp.net`;
+  // 7. Búsqueda inversa - encontrar LIDs que apunten al mismo número
+  console.log('\n🔍 Buscando LIDs alternativos para el mismo número...');
   for (const [key, value] of global.lidResolver.lidCache.entries()) {
-    if (value === possibleJid) {
-      return possibleJid;
+    if (key.startsWith(`${lidNumber}@lid_`) && !value.endsWith('@lid')) {
+      console.log(`✅ Encontrado LID alternativo válido: ${key} -> ${value}`);
+      return value;
     }
   }
 
-  return jid; // Fallback al LID original
+  // 8. Mostrar contenido completo del cache para depuración
+  console.log('\n📊 Contenido completo del cache:');
+  Array.from(global.lidResolver.lidCache.entries()).forEach(([key, value]) => {
+    console.log(`${key.padEnd(50)} -> ${value}`);
+  });
+
+  console.warn('⚠️ No se pudo resolver el LID:', jid);
+  return jid;
 }
+
+
 
 function getUserDisplayName(jid) {
   console.log('=== getUserDisplayName DEBUG ===');
