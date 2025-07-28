@@ -1561,32 +1561,42 @@ parseMention: {
       console.log('[DEBUG] Iniciando parseMention con texto:', text);
 
       const esNumeroValido = (numero) => {
-        // Longitudes típicas de números internacionales (incluyendo código de país)
+        // Verificación básica de formato
+        if (!/^\d+$/.test(numero)) {
+          console.log(`[DEBUG] ${numero} contiene caracteres no numéricos`);
+          return false;
+        }
+
         const len = numero.length;
-        if (len < 8 || len > 15) { // Máximo 15 dígitos (código país + número)
-          console.log(`[DEBUG] Número ${numero} inválido por longitud (${len})`);
+        if (len < 8 || len > 15) {
+          console.log(`[DEBUG] ${numero} inválido por longitud (${len})`);
           return false;
         }
 
         const codigosValidos = ["1","7","20","27","30","31","32","33","34","36","39","40","41","43","44","45","46","47","48","49","51","52","53","54","55","56","57","58","60","61","62","63","64","65","66","81","82","84","86","90","91","92","93","94","95","98","211","212","213","216","218","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","248","249","250","251","252","253","254","255","256","257","258","260","261","262","263","264","265","266","267","268","269","290","291","297","298","299","350","351","352","353","354","355","356","357","358","359","370","371","372","373","374","375","376","377","378","379","380","381","382","383","385","386","387","389","420","421","423","500","501","502","503","504","505","506","507","508","509","590","591","592","593","594","595","596","597","598","599","670","672","673","674","675","676","677","678","679","680","681","682","683","685","686","687","688","689","690","691","692","850","852","853","855","856","880","886","960","961","962","963","964","965","966","967","968","970","971","972","973","974","975","976","977","978","979","992","993","994","995","996","998"];
         
-        // Verificar si comienza con un código de país válido
-        const valido = codigosValidos.some(codigo => numero.startsWith(codigo));
-        
-        if (!valido) {
-          console.log(`[DEBUG] Número ${numero} no comienza con código de país válido`);
+        // Verificación especial para México (52)
+        if (numero.startsWith("52")) {
+          const lenMX = numero.length;
+          if (lenMX === 12) { // 52 + 10 dígitos
+            console.log(`[DEBUG] Número mexicano válido: ${numero}`);
+            return true;
+          }
+          console.log(`[DEBUG] Número mexicano inválido (longitud ${lenMX})`);
           return false;
         }
 
-        // Verificar que el resto del número sean dígitos válidos
-        const numeroLimpio = numero.replace(/^(\d+)/, '');
-        if (!/^\d+$/.test(numeroLimpio)) {
-          console.log(`[DEBUG] Número ${numero} contiene caracteres no numéricos después del código de país`);
+        // Verificación para otros países
+        const valido = codigosValidos.some(codigo => {
+          if (numero.startsWith(codigo)) {
+            console.log(`[DEBUG] ${numero} válido (código ${codigo})`);
+            return true;
+          }
           return false;
-        }
+        });
 
-        console.log(`[DEBUG] Número validado correctamente: ${numero}`);
-        return true;
+        if (!valido) console.log(`[DEBUG] ${numero} no coincide con códigos de país`);
+        return valido;
       };
 
       const mencionesEncontradas = text.match(/@(\d{5,20})/g) || [];
@@ -1598,24 +1608,22 @@ parseMention: {
 
         if (esNumeroValido(numero)) {
           const jid = `${numero}@s.whatsapp.net`;
-          console.log(`[DEBUG] Número válido detectado: ${jid}`);
+          console.log(`[DEBUG] Número válido: ${jid}`);
           return jid;
         } else {
           console.log(`[DEBUG] Tratando como LID: ${numero}`);
           
-          // Búsqueda optimizada en el cache de LIDs
+          // Búsqueda optimizada en cache
           if (global.lidResolver?.lidCache) {
-            const cacheKey = Array.from(global.lidResolver.lidCache.keys())
-              .find(key => key.startsWith(`${numero}@lid`));
-            
-            if (cacheKey) {
-              const resolvedJid = global.lidResolver.lidCache.get(cacheKey);
-              console.log(`[DEBUG] LID resuelto: ${numero} -> ${resolvedJid}`);
-              return resolvedJid;
+            for (const [key, value] of global.lidResolver.lidCache) {
+              if (key.startsWith(`${numero}@lid`)) {
+                console.log(`[DEBUG] LID resuelto: ${key} -> ${value}`);
+                return value;
+              }
             }
           }
 
-          console.log(`[DEBUG] LID no encontrado en caché, usando formato LID`);
+          console.log(`[DEBUG] LID no resuelto, usando formato estándar`);
           return `${numero}@lid`;
         }
       });
