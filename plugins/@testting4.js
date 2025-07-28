@@ -102,7 +102,7 @@ handler.tags = ['ai'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
 
-// Credits for NB SCRIPT ~ Canal en WhatsApp: https://whatsapp.com/channel/0029Vb5EZCjIiRotHCI1213L 
+// Configuración exacta de la API Sonu como la proporcionaste
 const sonu = {
   api: {
     base: 'https://musicai.apihub.today/api/v1',
@@ -149,14 +149,43 @@ const sonu = {
         { headers: header }
       );
       this.userId = response.data.id;
-      return true;
+      return {
+        success: true,
+        code: 200,
+        result: { userId: this.userId }
+      };
     } catch (err) {
-      console.error('Error en registro Sonu:', err);
-      return false;
+      return {
+        success: false,
+        code: err.response?.status || 500,
+        result: { error: err.message }
+      };
     }
   },
 
-  create: async function({ title, genre, lyrics }) {
+  create: async function({ title, mood, genre, lyrics, gender }) {
+    if (!title || title.trim() === '') {
+      return {
+        success: false,
+        code: 400,
+        result: { error: "El título no puede estar vacío" }
+      };
+    }
+    if (!lyrics || lyrics.trim() === '') {
+      return {
+        success: false,
+        code: 400,
+        result: { error: "Se requieren letras para generar la canción" }
+      };
+    }
+    if (lyrics.length > 1500) {
+      return {
+        success: false,
+        code: 400,
+        result: { error: "Las letras no pueden exceder los 1500 caracteres"}
+      };
+    }
+
     const msgId = uuidv4();
     const time = Date.now().toString();
     const header = {
@@ -171,9 +200,11 @@ const sonu = {
     const body = {
       type: 'lyrics',
       name: title,
-      lyrics: lyrics || `Canción generada sobre: ${title}`,
-      genre: genre || 'pop'
+      lyrics: lyrics
     };
+    if (mood && mood.trim() !== '') body.mood = mood;
+    if (genre && genre.trim() !== '') body.genre = genre;
+    if (gender && gender.trim() !== '') body.gender = gender;
 
     try {
       const response = await axios.post(
@@ -181,80 +212,134 @@ const sonu = {
         body,
         { headers: header }
       );
-      return response.data.id;
+
+      return {
+        success: true,
+        code: 200,
+        result: { songId: response.data.id }
+      };
     } catch (err) {
-      console.error('Error al crear canción Sonu:', err);
-      throw err;
+      return {
+        success: false,
+        code: err.response?.status || 500,
+        result: { error: err.message }
+      };
     }
   },
 
-  checkStatus: async function(songId) {
+  task: async function(songId) {
     const header = {
       ...this.headers,
       'x-client-id': this.userId
     };
 
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
     try {
-      const response = await axios.get(
-        `${this.api.base}${this.api.endpoints.checkStatus}`,
-        {
-          params: {
-            userId: this.userId,
-            isFavorite: false,
-            page: 1,
-            searchText: ''
-          },
-          headers: header
+      let attempt = 0;
+      let found = null;
+
+      while (true) {
+        const response = await axios.get(
+          `${this.api.base}${this.api.endpoints.checkStatus}`,
+          {
+            params: {
+              userId: this.userId,
+              isFavorite: false,
+              page: 1,
+              searchText: ''
+            },
+            headers: header
+          }
+        );
+
+        found = response.data.datas.find(song => song.id === songId);
+        if (!found) {
+          rl.close();
+          return {
+            success: false,
+            code: 404,
+            result: { error: "No se encontró la canción generada" }
+          };
         }
-      );
 
-      const songData = response.data.datas.find(song => song.id === songId);
-      if (!songData) return null;
+        readline.cursorTo(process.stdout, 0);
+        process.stdout.write(`🔄 [${++attempt}] Status: ${found.status} | Progreso: ${found.url ? '✅ Completado' : '⏳ En proceso...'}`);
 
-      return {
-        url: songData.url,
-        thumbnail: songData.thumbnail_url,
-        status: songData.status
-      };
+        if (found.url) {
+          rl.close();
+          return {
+            success: true,
+            code: 200,
+            result: {
+              status: found.status,
+              songId: found.id,
+              title: found.name,
+              username: found.username,
+              url: found.url,
+              thumbnail: found.thumbnail_url
+            }
+          };
+        }
+
+        await delay(3000);
+      }
     } catch (err) {
-      console.error('Error al verificar estado Sonu:', err);
-      throw err;
+      rl.close();
+      return {
+        success: false,
+        code: err.response?.status || 500,
+        result: { error: err.message }
+      };
     }
   }
 };
 
+// Función para generar música usando solo la API Sonu
 async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
     try {
-        if (!sonu.userId && !await sonu.register()) throw new Error('No se pudo registrar en el servicio de música');
-
-        const songId = await sonu.create({
-            title: prompt.substring(0, 64) || 'Cancion_IA',
-            genre: tags,
-            lyrics: `Canción generada sobre: ${prompt}`
-        });
-
-        let attempts = 0;
-        let songData = null;
-        
-        while (attempts < 20) { 
-            songData = await sonu.checkStatus(songId);
-            if (songData && songData.url) break;
-            await new Promise(resolve => setTimeout(resolve, 3000));
-            attempts++;
+        // Registrar dispositivo si es necesario
+        if (!sonu.userId) {
+            const registration = await sonu.register();
+            if (!registration.success) {
+                throw new Error('No se pudo registrar en el servicio de música');
+            }
         }
 
-        if (!songData || !songData.url) throw new Error('La canción no se generó en el tiempo esperado');
+        // Crear letras básicas basadas en el prompt
+        const basicLyrics = `[verse]\nCanción generada sobre: ${prompt}\n\n[chorus]\nMelodía creada por IA\n\n[verse]\n${prompt}`;
+
+        // Crear la canción
+        const creation = await sonu.create({
+            title: prompt.substring(0, 64) || 'Cancion_IA',
+            genre: tags,
+            lyrics: basicLyrics,
+            mood: 'happy',
+            gender: 'male'
+        });
+
+        if (!creation.success) {
+            throw new Error(creation.result.error || 'Error al crear la canción');
+        }
+
+        // Verificar el estado de la canción
+        const taskResult = await sonu.task(creation.result.songId);
+        if (!taskResult.success) {
+            throw new Error(taskResult.result.error || 'Error al generar la canción');
+        }
 
         return {
-            audio_url: songData.url,
-            image_url: songData.thumbnail || 'https://images.wondershare.es/dc/AI/Inteligencia_Artificial_Musical.png',
+            audio_url: taskResult.result.url,
+            image_url: taskResult.result.thumbnail || 'https://images.wondershare.es/dc/AI/Inteligencia_Artificial_Musical.png',
             title: prompt.substring(0, 64) || 'Cancion_IA',
             tags: tags,
-            duration: 180
+            lyrics: basicLyrics,
+            duration: 180 // Duración estimada
         };
     } catch (error) {
         console.error('Error en generateMusicWithSonu:', error);
-        throw error;
+        throw new Error(error.message || 'Error al generar la canción');
     }
 }
 
