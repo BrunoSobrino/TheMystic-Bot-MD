@@ -83,6 +83,9 @@
 - [Comunidad de WhatsApp](https://cafirexos.com/whatsapp/comunidad)
 - [Soporte](https://cafirexos.com/submitticket.php)
 
+> [!IMPORTANT]\
+> El registro de usuarios solo es posible al comprar uno de nuestros productos en la [tienda](https://cafirexos.com/store).
+
 </details>
 
 > [!IMPORTANT]\
