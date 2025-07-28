@@ -1555,6 +1555,8 @@ END:VCARD
       },
       enumerable: true,
     },
+// Reemplaza la función parseMention en simple.js con esta versión mejorada
+
 parseMention: {
   value(text = "") {
     try {
@@ -1566,16 +1568,33 @@ parseMention: {
         return codigosValidos.some((codigo) => numero.startsWith(codigo));
       };
 
-      return (text.match(/@(\d{5,20})/g) || [])
+      const mentions = (text.match(/@(\d{5,20})/g) || [])
         .map((m) => m.substring(1))
         .map((numero) => {
           if (esNumeroValido(numero)) {
             return `${numero}@s.whatsapp.net`;
           } else {
-            // Para LIDs, simplemente usar el formato @lid pero intentar buscar en contactos conocidos
+            // Para LIDs, intentar resolver usando el contexto disponible
             const lidJid = `${numero}@lid`;
             
-            // Buscar en todos los chats conocidos
+            // Si tenemos acceso al contexto del mensaje y es un grupo
+            if (this._currentMessage && this._currentMessage.chat?.endsWith('@g.us')) {
+              // Usar el resolver global si está disponible
+              if (global.lidResolver) {
+                // Como parseMention debe ser síncrono, almacenamos la promesa para resolución posterior
+                const resolvePromise = global.lidResolver.resolveLid(lidJid, this._currentMessage.chat);
+                
+                // Marcar este JID para resolución asíncrona
+                if (!this._pendingLidResolutions) {
+                  this._pendingLidResolutions = new Map();
+                }
+                this._pendingLidResolutions.set(lidJid, resolvePromise);
+                
+                return lidJid; // Devolver el LID por ahora, se resolverá después
+              }
+            }
+            
+            // Búsqueda rápida en caché de chats conocidos
             for (const [chatId, chatData] of Object.entries(this.chats || {})) {
               if (chatData.metadata?.participants) {
                 for (const participant of chatData.metadata.participants) {
@@ -1589,10 +1608,78 @@ parseMention: {
             return lidJid;
           }
         });
+
+      return mentions;
         
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error en parseMention:", error);
       return [];
+    }
+  },
+  enumerable: true,
+},
+
+// Agregar función auxiliar para resolver menciones pendientes
+resolvePendingMentions: {
+  async value() {
+    if (!this._pendingLidResolutions || this._pendingLidResolutions.size === 0) {
+      return [];
+    }
+
+    const resolved = [];
+    const promises = Array.from(this._pendingLidResolutions.entries());
+    
+    for (const [lidJid, promise] of promises) {
+      try {
+        const resolvedJid = await promise;
+        if (resolvedJid !== lidJid) {
+          resolved.push({ original: lidJid, resolved: resolvedJid });
+        }
+      } catch (error) {
+        console.error(`Error resolviendo LID ${lidJid}:`, error);
+      }
+    }
+
+    // Limpiar el caché de pendientes
+    this._pendingLidResolutions.clear();
+    return resolved;
+  },
+  enumerable: true,
+},
+
+// Función mejorada para parsear menciones con resolución asíncrona
+parseMentionAsync: {
+  async value(text = "", messageContext = null) {
+    try {
+      if (messageContext) {
+        this._currentMessage = messageContext;
+      }
+
+      // Primero obtener las menciones básicas
+      const basicMentions = this.parseMention(text);
+      
+      // Si no hay LIDs pendientes, devolver las menciones básicas
+      if (!this._pendingLidResolutions || this._pendingLidResolutions.size === 0) {
+        return basicMentions;
+      }
+
+      // Resolver LIDs pendientes
+      const resolvedLids = await this.resolvePendingMentions();
+      
+      // Reemplazar LIDs resueltos en la lista de menciones
+      let finalMentions = [...basicMentions];
+      for (const { original, resolved } of resolvedLids) {
+        const index = finalMentions.indexOf(original);
+        if (index !== -1) {
+          finalMentions[index] = resolved;
+        }
+      }
+
+      return finalMentions;
+      
+    } catch (error) {
+      console.error("Error en parseMentionAsync:", error);
+      return this.parseMention(text); // Fallback a la versión síncrona
     }
   },
   enumerable: true,
