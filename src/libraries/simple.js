@@ -1565,28 +1565,39 @@ parseMention: {
         const codigosValidos = ["1","7","20","27","30","31","32","33","34","36","39","40","41","43","44","45","46","47","48","49","51","52","53","54","55","56","57","58","60","61","62","63","64","65","66","81","82","84","86","90","91","92","93","94","95","98","211","212","213","216","218","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","248","249","250","251","252","253","254","255","256","257","258","260","261","262","263","264","265","266","267","268","269","290","291","297","298","299","350","351","352","353","354","355","356","357","358","359","370","371","372","373","374","375","376","377","378","379","380","381","382","383","385","386","387","389","420","421","423","500","501","502","503","504","505","506","507","508","509","590","591","592","593","594","595","596","597","598","599","670","672","673","674","675","676","677","678","679","680","681","682","683","685","686","687","688","689","690","691","692","850","852","853","855","856","880","886","960","961","962","963","964","965","966","967","968","970","971","972","973","974","975","976","977","978","979","992","993","994","995","996","998"]; 
         return codigosValidos.some((codigo) => numero.startsWith(codigo));
       };
+
+      // Extraer menciones del texto
       const mentions = (text.match(/@(\d{5,20})/g) || []).map((m) => m.substring(1));
-      const processedMentions = mentions.map((numero) => {
+      
+      const result = [];
+      
+      for (const numero of mentions) {
         if (esNumeroValido(numero)) {
-          return `${numero}@s.whatsapp.net`;
+          result.push(`${numero}@s.whatsapp.net`);
         } else {
-          return `${numero}@lid`;
-        }
-      });
-      const hasLids = processedMentions.some(jid => jid.includes("@lid"));
-      if (hasLids) {
-        const currentChatId = this._currentChatContext || null;
-        if (currentChatId && currentChatId.endsWith("@g.us")) {
-          this._resolveLidsInBackground(processedMentions, currentChatId);
+          // Es un posible LID, intentar encontrar el JID real
+          const lidJid = `${numero}@lid`;
+          let realJid = null;
+          
+          // Buscar en los chats conocidos si ya tenemos una resolución
+          for (const [chatId, chatData] of Object.entries(this.chats || {})) {
+            if (chatId.endsWith("@g.us") && chatData.metadata?.participants) {
+              for (const participant of chatData.metadata.participants) {
+                if (participant.jid && participant.jid.includes(numero.substring(0, 8))) {
+                  realJid = participant.jid;
+                  break;
+                }
+              }
+              if (realJid) break;
+            }
+          }
+          
+          // Si no encontramos el JID real, usar el LID
+          result.push(realJid || lidJid);
         }
       }
-      return processedMentions.map(jid => {
-        if (jid.includes("@lid")) {
-          const cached = this._lidCache?.get(jid);
-          return cached || jid;
-        }
-        return jid;
-      });
+      
+      return result;
 
     } catch (error) {
       console.error("Error en parseMention:", error);
@@ -1595,70 +1606,6 @@ parseMention: {
   },
   enumerable: true,
 },
-_resolveLidsInBackground: {
-  value: async function(jids, groupChatId) {
-    if (!this._lidCache) {
-      this._lidCache = new Map();
-    }
-    const lidsToResolve = jids.filter(jid => 
-      jid.includes("@lid") && !this._lidCache.has(jid)
-    );
-    if (lidsToResolve.length === 0) return;
-    try {
-      const metadata = await this.groupMetadata(groupChatId);
-      if (!metadata?.participants) return;
-      for (const lidJid of lidsToResolve) {
-        const lidToFind = lidJid.split("@")[0];
-        for (const participant of metadata.participants) {
-          try {
-            if (!participant?.jid) continue;
-            const contactDetails = await this.onWhatsApp(participant.jid);
-            if (!contactDetails?.[0]?.lid) continue;
-            const possibleLid = contactDetails[0].lid.split("@")[0];
-            if (possibleLid === lidToFind) {
-              this._lidCache.set(lidJid, participant.jid);
-              break;
-            }
-          } catch (e) {
-            continue;
-          }
-        }
-        if (!this._lidCache.has(lidJid)) {
-          this._lidCache.set(lidJid, lidJid);
-        }
-      }
-    } catch (e) {
-      console.error("Error resolviendo LIDs en background:", e);
-    }
-  },
-  enumerable: false,
-  writable: true,
-},
-_setCurrentChatContext: {
-  value: function(chatId) {
-    this._currentChatContext = chatId;
-  },
-  enumerable: false,
-  writable: true,
-},
-_lidCache: {
-  value: new Map(),
-  enumerable: false,
-  writable: true,
-},
-_cleanLidCache: {
-  value: function() {
-    if (this._lidCache && this._lidCache.size > 1000) {
-      const entries = Array.from(this._lidCache.entries());
-      this._lidCache.clear();
-      entries.slice(-500).forEach(([key, value]) => {
-        this._lidCache.set(key, value);
-      });
-    }
-  },
-  enumerable: false,
-  writable: true,
-},	  
     /*parseMention: {
       value(text = "") {
         try {
