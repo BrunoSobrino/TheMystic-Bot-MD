@@ -1555,8 +1555,6 @@ END:VCARD
       },
       enumerable: true,
     },
-// Reemplaza la función parseMention en simple.js con esta versión mejorada
-
 parseMention: {
   value(text = "") {
     try {
@@ -1574,27 +1572,18 @@ parseMention: {
           if (esNumeroValido(numero)) {
             return `${numero}@s.whatsapp.net`;
           } else {
-            // Buscar en el caché de LIDs
+            // Buscar en el caché global de LIDs
             const lidJid = `${numero}@lid`;
             
-            // Si tenemos contexto de grupo, buscar en el caché con el groupId
-            if (this._currentMessage && this._currentMessage.chat?.endsWith('@g.us')) {
-              const groupId = this._currentMessage.chat.split('@')[0];
-              const cacheKey = `${numero}_${groupId}`;
-              
-              if (global.lidResolver?.lidCache.has(cacheKey)) {
-                return global.lidResolver.lidCache.get(cacheKey);
-              }
-            }
-            
-            // Si no encontramos en el caché específico del grupo, buscar en caché global
+            // Buscar en el caché global (coincidencia exacta o parcial)
             for (const [key, value] of global.lidResolver?.lidCache || new Map()) {
-              if (key.startsWith(`${numero}_`)) {
+              const [cachedLid] = key.split('_');
+              if (cachedLid === numero) {
                 return value;
               }
             }
             
-            // Si no se encuentra en ningún caché, devolver el LID original
+            // Si no se encuentra en el caché, devolver el LID original
             return lidJid;
           }
         });
@@ -1608,72 +1597,7 @@ parseMention: {
   },
   enumerable: true,
 },
-// Agregar función auxiliar para resolver menciones pendientes
-resolvePendingMentions: {
-  async value() {
-    if (!this._pendingLidResolutions || this._pendingLidResolutions.size === 0) {
-      return [];
-    }
-
-    const resolved = [];
-    const promises = Array.from(this._pendingLidResolutions.entries());
-    
-    for (const [lidJid, promise] of promises) {
-      try {
-        const resolvedJid = await promise;
-        if (resolvedJid !== lidJid) {
-          resolved.push({ original: lidJid, resolved: resolvedJid });
-        }
-      } catch (error) {
-        console.error(`Error resolviendo LID ${lidJid}:`, error);
-      }
-    }
-
-    // Limpiar el caché de pendientes
-    this._pendingLidResolutions.clear();
-    return resolved;
-  },
-  enumerable: true,
-},
-
-// Función mejorada para parsear menciones con resolución asíncrona
-parseMentionAsync: {
-  async value(text = "", messageContext = null) {
-    try {
-      if (messageContext) {
-        this._currentMessage = messageContext;
-      }
-
-      // Primero obtener las menciones básicas
-      const basicMentions = this.parseMention(text);
-      
-      // Si no hay LIDs pendientes, devolver las menciones básicas
-      if (!this._pendingLidResolutions || this._pendingLidResolutions.size === 0) {
-        return basicMentions;
-      }
-
-      // Resolver LIDs pendientes
-      const resolvedLids = await this.resolvePendingMentions();
-      
-      // Reemplazar LIDs resueltos en la lista de menciones
-      let finalMentions = [...basicMentions];
-      for (const { original, resolved } of resolvedLids) {
-        const index = finalMentions.indexOf(original);
-        if (index !== -1) {
-          finalMentions[index] = resolved;
-        }
-      }
-
-      return finalMentions;
-      
-    } catch (error) {
-      console.error("Error en parseMentionAsync:", error);
-      return this.parseMention(text); // Fallback a la versión síncrona
-    }
-  },
-  enumerable: true,
-},
-    /*parseMention: {
+	  /*parseMention: {
       value(text = "") {
         try {
           const esNumeroValido = (numero) => {
