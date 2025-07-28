@@ -4,6 +4,7 @@ import { tmpdir } from 'os';
 import axios from 'axios';
 import fetch from 'node-fetch';
 import NodeID3 from 'node-id3';
+import { v4 as uuidv4 } from 'uuid';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
 const handler = async (m, { conn, args }) => {
@@ -16,11 +17,11 @@ const handler = async (m, { conn, args }) => {
         if (!prompt) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*';
         
         m.reply("*[❗] Ey! Espera un poco, nuestra IA creativa está trabajando a todo ritmo para componer tu canción perfecta, esto puede demorar unos momentos, cuando esté lista se te enviará.*");
-        const generatedSongs = await generateMusic(prompt, { tags: customTags || 'pop, romantic' });
         
-        if (!generatedSongs || generatedSongs.length === 0) throw '❌ No se pudo generar la canción. Intenta con otro prompt.';
+        // Generar la canción con la API Sonu
+        const song = await generateMusicWithSonu(prompt, customTags || 'pop, romántico');
         
-        const song = generatedSongs[0];
+        if (!song) throw '❌ No se pudo generar la canción. Intenta con otro prompt.';
         
         const [audioBuffer, thumbnailBuffer] = await Promise.all([
             fetch(song.audio_url).then(res => res.buffer()),
@@ -48,7 +49,7 @@ const handler = async (m, { conn, args }) => {
             }
         };
         
-        if (song.lyrics !== null && song.lyrics) {
+        if (song.lyrics) {
             tags.unsynchronisedLyrics = {
                 language: 'spa',
                 text: `👑 By @BrunoSobrino 👑\n\nTítulo: ${song.title}\n\n${song.lyrics}`.substring(0, 5000)
@@ -101,113 +102,161 @@ handler.tags = ['ai'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
 
-// Credits for rynn-stuff.
-async function generateMusic(prompt, { tags = 'pop, romantic' } = {}) {
+// Credits for NB SCRIPT ~ Canal en WhatsApp: https://whatsapp.com/channel/0029Vb5EZCjIiRotHCI1213L 
+const sonu = {
+  api: {
+    base: 'https://musicai.apihub.today/api/v1',
+    endpoints: {
+      register: '/users',
+      create: '/song/create',
+      checkStatus: '/song/user'
+    }
+  },
+
+  headers: {
+    'user-agent': 'NB Android/1.0.0',
+    'content-type': 'application/json',
+    'accept': 'application/json',
+    'x-platform': 'android',
+    'x-app-version': '1.0.0',
+    'x-country': 'ID',
+    'accept-language': 'id-ID',
+    'x-client-timezone': 'Asia/Jakarta'
+  },
+
+  deviceId: uuidv4(),
+  userId: null,
+  fcmToken: 'eqnTqlxMTSKQL5NQz6r5aP:APA91bHa3CvL5Nlcqx2yzqTDAeqxm_L_vIYxXqehkgmTsCXrV29eAak6_jqXv5v1mQrdw4BGMLXl_BFNrJ67Em0vmdr3hQPVAYF8kR7RDtTRHQ08F3jLRRI',
+
+  register: async function() {
+    const msgId = uuidv4();
+    const time = Date.now().toString();
+    const header = {
+      ...this.headers,
+      'x-device-id': this.deviceId,
+      'x-request-id': msgId,
+      'x-message-id': msgId,
+      'x-request-time': time
+    };
+
     try {
-        if (!prompt) throw new Error('Prompt is required');
+      const response = await axios.put(
+        `${this.api.base}${this.api.endpoints.register}`,
+        {
+          deviceId: this.deviceId,
+          fcmToken: this.fcmToken
+        },
+        { headers: header }
+      );
+      this.userId = response.data.id;
+      return true;
+    } catch (err) {
+      console.error('Error en registro Sonu:', err);
+      return false;
+    }
+  },
 
-        const rotationConfig = getRotationConfig();
-        
-        const { data: ai } = await axios.get('https://8pe3nv3qha.execute-api.us-east-1.amazonaws.com/default/llm_chat', {
-            params: {
-                query: JSON.stringify([
-                    {
-                        role: 'system',
-                        content: 'Eres una IA letrista profesional entrenada para escribir letras de canciones poéticas y rítmicas en español. Responde únicamente con letras, usando las etiquetas [verse], [chorus], [bridge], e [instrumental] o [inst] para estructurar la canción. Usa solo la etiqueta (ej: [verse]) sin numeración o texto extra (no escribas [verse 1], [chorus x2], etc). No agregues explicaciones, títulos, ni otro texto fuera de las letras. Enfócate en imágenes vívidas, flujo emocional y ritmo lírico fuerte. Evita etiquetar géneros o dar comentarios. Responde en texto plano limpio, exactamente como una hoja de letras de canción en español.'
-                    },
-                    {
-                        role: 'user',
-                        content: `Escribe una canción en español sobre: ${prompt}`
-                    }
-                ]),
-                link: 'writecream.com'
-            },
-            headers: rotationConfig.headers
+  create: async function({ title, genre, lyrics }) {
+    const msgId = uuidv4();
+    const time = Date.now().toString();
+    const header = {
+      ...this.headers,
+      'x-device-id': this.deviceId,
+      'x-client-id': this.userId,
+      'x-request-id': msgId,
+      'x-message-id': msgId,
+      'x-request-time': time
+    };
+
+    const body = {
+      type: 'lyrics',
+      name: title,
+      lyrics: lyrics || `Canción generada sobre: ${title}`,
+      genre: genre || 'pop'
+    };
+
+    try {
+      const response = await axios.post(
+        `${this.api.base}${this.api.endpoints.create}`,
+        body,
+        { headers: header }
+      );
+      return response.data.id;
+    } catch (err) {
+      console.error('Error al crear canción Sonu:', err);
+      throw err;
+    }
+  },
+
+  checkStatus: async function(songId) {
+    const header = {
+      ...this.headers,
+      'x-client-id': this.userId
+    };
+
+    try {
+      const response = await axios.get(
+        `${this.api.base}${this.api.endpoints.checkStatus}`,
+        {
+          params: {
+            userId: this.userId,
+            isFavorite: false,
+            page: 1,
+            searchText: ''
+          },
+          headers: header
+        }
+      );
+
+      const songData = response.data.datas.find(song => song.id === songId);
+      if (!songData) return null;
+
+      return {
+        url: songData.url,
+        thumbnail: songData.thumbnail_url,
+        status: songData.status
+      };
+    } catch (err) {
+      console.error('Error al verificar estado Sonu:', err);
+      throw err;
+    }
+  }
+};
+
+async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
+    try {
+        if (!sonu.userId && !await sonu.register()) throw new Error('No se pudo registrar en el servicio de música');
+
+        const songId = await sonu.create({
+            title: prompt.substring(0, 64) || 'Cancion_IA',
+            genre: tags,
+            lyrics: `Canción generada sobre: ${prompt}`
         });
 
-        const newRotationConfig = getRotationConfig();
-        const session_hash = Math.random().toString(36).substring(2);
-        const d = await axios.post(`https://ace-step-ace-step.hf.space/gradio_api/queue/join?`, {
-            data: [ 40, tags, ai.response_content, 60, 15, 'euler', 'apg', 10, '', 0.5, 0, 3, true, false, true, '', 0, 0, false, 0.5, null, 'none' ],
-            event_data: null,
-            fn_index: 11,
-            trigger_id: 45,
-            session_hash: session_hash
-        }, {
-            headers: newRotationConfig.headers
-        });
-
-        const finalRotationConfig = getRotationConfig();
-        const { data } = await axios.get(`https://ace-step-ace-step.hf.space/gradio_api/queue/data?session_hash=${session_hash}`, { headers: finalRotationConfig.headers });
-
-        console.log(data)
+        let attempts = 0;
+        let songData = null;
         
-        let result;
-        const lines = data.split('\n\n');
-        for (const line of lines) {
-            if (line.startsWith('data:')) {
-                const d = JSON.parse(line.substring(6));
-                if (d.msg === 'process_completed') {
-                    const outputData = d.output.data;
-                    if (outputData && outputData.length >= 2) {
-                        const audioFile = outputData[0];
-                        const metadata = outputData[1];
-                        
-                        result = [{
-                            audio_url: audioFile.url,
-                            image_url: 'https://images.wondershare.es/dc/AI/Inteligencia_Artificial_Musical.png',
-                            title: prompt.substring(0, 64) || 'Cancion_IA',
-                            tags: metadata.prompt || tags,
-                            lyrics: metadata.lyrics || ai.response_content || null,
-                            duration: metadata.audio_duration || 240
-                        }];
-                    }
-                }
-            }
+        while (attempts < 20) { 
+            songData = await sonu.checkStatus(songId);
+            if (songData && songData.url) break;
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            attempts++;
         }
-        
-        if (!result) {
-            throw new Error('No se pudo generar la canción');
-        }
-        
-        return result;
+
+        if (!songData || !songData.url) throw new Error('La canción no se generó en el tiempo esperado');
+
+        return {
+            audio_url: songData.url,
+            image_url: songData.thumbnail || 'https://images.wondershare.es/dc/AI/Inteligencia_Artificial_Musical.png',
+            title: prompt.substring(0, 64) || 'Cancion_IA',
+            tags: tags,
+            duration: 180
+        };
     } catch (error) {
-        throw new Error(error.message);
+        console.error('Error en generateMusicWithSonu:', error);
+        throw error;
     }
 }
-
-function getRotationConfig() {
-    const userAgents = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.58'
-    ];
-    
-    const languages = ['es-ES', 'en-US', 'fr-FR', 'de-DE', 'pt-BR', 'it-IT'];
-    const timezones = ['America/New_York', 'Europe/Madrid', 'Asia/Tokyo', 'Australia/Sydney', 'America/Los_Angeles'];
-    
-    const fakeIp = Array(4).fill(0).map(() => Math.floor(Math.random() * 255)).join('.');
-    
-    return {
-        headers: {
-            'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
-            'Accept-Language': languages[Math.floor(Math.random() * languages.length)],
-            'X-Forwarded-For': fakeIp,
-            'X-Real-IP': fakeIp,
-            'X-Client-IP': fakeIp,
-            'X-Originating-IP': fakeIp,
-            'X-Timezone': timezones[Math.floor(Math.random() * timezones.length)],
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            'Sec-CH-UA': '"Not.A/Brand";v="8", "Chromium";v="114"',
-            'Sec-CH-UA-Mobile': Math.random() > 0.5 ? '?0' : '?1',
-            'Sec-CH-UA-Platform': Math.random() > 0.5 ? '"Windows"' : '"macOS"'
-        }
-    };
-}
-
 
 function sanitizeFileName(str) {
     return str.replace(/[\/\\|:*?"<>]/g, '').trim();
