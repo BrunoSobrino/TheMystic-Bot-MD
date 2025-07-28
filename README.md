@@ -83,28 +83,6 @@
 - [Comunidad de WhatsApp](https://cafirexos.com/whatsapp/comunidad)
 - [Soporte](https://cafirexos.com/submitticket.php)
 
-  <div style="
-    border-left: 4px solid #8250df;
-    background-color: #161b22;
-    padding: 12px 16px;
-    margin-top: 16px;
-    border-radius: 6px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    color: #c9d1d9;
-    font-size: 14px;
-  ">
-    <p style="margin: 0 0 8px 0; font-weight: 600; color: #8250df;">
-      <svg style="vertical-align: text-bottom; margin-right: 6px;" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 16 16" fill="#8250df">
-        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM7 4h2v2H7V4zm0 3h2v5H7V7z"/>
-      </svg>
-      Important
-    </p>
-    <p style="margin: 0;">
-      El registro de usuarios solo es posible al comprar uno de nuestros productos en la
-      <a href="https://cafirexos.com/store" style="color:#58a6ff;">tienda</a>.
-    </p>
-  </div>
-
 </details>
 
 > [!IMPORTANT]\
