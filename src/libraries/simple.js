@@ -1574,37 +1574,27 @@ parseMention: {
           if (esNumeroValido(numero)) {
             return `${numero}@s.whatsapp.net`;
           } else {
-            // Para LIDs, intentar resolver usando el contexto disponible
+            // Buscar en el caché de LIDs
             const lidJid = `${numero}@lid`;
             
-            // Si tenemos acceso al contexto del mensaje y es un grupo
+            // Si tenemos contexto de grupo, buscar en el caché con el groupId
             if (this._currentMessage && this._currentMessage.chat?.endsWith('@g.us')) {
-              // Usar el resolver global si está disponible
-              if (global.lidResolver) {
-                // Como parseMention debe ser síncrono, almacenamos la promesa para resolución posterior
-                const resolvePromise = global.lidResolver.resolveLid(lidJid, this._currentMessage.chat);
-                
-                // Marcar este JID para resolución asíncrona
-                if (!this._pendingLidResolutions) {
-                  this._pendingLidResolutions = new Map();
-                }
-                this._pendingLidResolutions.set(lidJid, resolvePromise);
-                
-                return lidJid; // Devolver el LID por ahora, se resolverá después
+              const groupId = this._currentMessage.chat.split('@')[0];
+              const cacheKey = `${numero}_${groupId}`;
+              
+              if (global.lidResolver?.lidCache.has(cacheKey)) {
+                return global.lidResolver.lidCache.get(cacheKey);
               }
             }
             
-            // Búsqueda rápida en caché de chats conocidos
-            for (const [chatId, chatData] of Object.entries(this.chats || {})) {
-              if (chatData.metadata?.participants) {
-                for (const participant of chatData.metadata.participants) {
-                  if (participant.jid && participant.jid.startsWith(numero.substring(0, 10))) {
-                    return participant.jid;
-                  }
-                }
+            // Si no encontramos en el caché específico del grupo, buscar en caché global
+            for (const [key, value] of global.lidResolver?.lidCache || new Map()) {
+              if (key.startsWith(`${numero}_`)) {
+                return value;
               }
             }
             
+            // Si no se encuentra en ningún caché, devolver el LID original
             return lidJid;
           }
         });
@@ -1618,7 +1608,6 @@ parseMention: {
   },
   enumerable: true,
 },
-
 // Agregar función auxiliar para resolver menciones pendientes
 resolvePendingMentions: {
   async value() {
