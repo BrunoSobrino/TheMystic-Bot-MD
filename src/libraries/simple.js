@@ -1571,7 +1571,7 @@ parseMention: {
         if (!valido) return false;
 
         // Verificar que el resto del número sean dígitos válidos
-        const numeroLimpio = numero.replace(/^(\d+)/, '');
+        const numeroLimpio = numero.replace(/^(\d+)/, '').replace('@', '');
         if (!/^\d+$/.test(numeroLimpio)) {
           console.log(`[DEBUG] Número ${numero} contiene caracteres no numéricos después del código de país`);
           return false;
