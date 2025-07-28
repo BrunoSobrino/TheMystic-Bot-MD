@@ -2287,7 +2287,39 @@ export function serialize() {
                 },
                 enumerable: true,
               },
-              sender: {
+sender: {
+  get() {
+    try {
+      const rawParticipant = contextInfo.participant;
+      if (!rawParticipant) {
+        const isFromMe =
+          this.key?.fromMe ||
+          areJidsSameUser(this.chat, self.conn?.user?.id || "");
+        return isFromMe
+          ? safeDecodeJid(self.conn?.user?.id, self.conn)
+          : this.chat;
+      }
+      const parsedJid = safeDecodeJid(rawParticipant, self.conn);
+      if (parsedJid && parsedJid.includes("@lid")) {
+        const groupChatId = this.chat?.endsWith("@g.us") ? this.chat : null;
+        if (groupChatId) {
+          return String.prototype.resolveLidToRealJid.call(
+            parsedJid,
+            groupChatId,
+            self.conn
+          );
+        }
+      }
+      
+      return parsedJid;
+    } catch (e) {
+      console.error("Error en quoted sender getter:", e);
+      return "";
+    }
+  },
+  enumerable: true,
+},		    
+              /*sender: {
                 get() {
                   try {
                     const rawParticipant = contextInfo.participant;
@@ -2310,7 +2342,7 @@ export function serialize() {
                   }
                 },
                 enumerable: true,
-              },
+              },*/
               fromMe: {
                 get() {
                   const sender = this.sender || "";
