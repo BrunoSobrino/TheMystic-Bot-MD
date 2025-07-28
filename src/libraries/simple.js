@@ -1558,23 +1558,14 @@ END:VCARD
 parseMention: {
   value(text = "") {
     try {
-      console.log('[DEBUG] Iniciando parseMention con texto:', text); // Log inicial
+      console.log('[DEBUG] Iniciando parseMention con texto:', text);
 
       const esNumeroValido = (numero) => {
-        const len = numero.length;
-        if (len < 8 || len > 13) {
-          console.log(`[DEBUG] Número ${numero} inválido por longitud (${len})`);
-          return false;
-        } 
-        if (len > 10 && numero.startsWith("9")) {
-          console.log(`[DEBUG] Número ${numero} inválido por empezar con 9 y tener longitud >10`);
-          return false;
-        }
-        
+        // Eliminamos restricciones de longitud específicas
         const codigosValidos = ["1","7","20","27","30","31","32","33","34","36","39","40","41","43","44","45","46","47","48","49","51","52","53","54","55","56","57","58","60","61","62","63","64","65","66","81","82","84","86","90","91","92","93","94","95","98","211","212","213","216","218","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","248","249","250","251","252","253","254","255","256","257","258","260","261","262","263","264","265","266","267","268","269","290","291","297","298","299","350","351","352","353","354","355","356","357","358","359","370","371","372","373","374","375","376","377","378","379","380","381","382","383","385","386","387","389","420","421","423","500","501","502","503","504","505","506","507","508","509","590","591","592","593","594","595","596","597","598","599","670","672","673","674","675","676","677","678","679","680","681","682","683","685","686","687","688","689","690","691","692","850","852","853","855","856","880","886","960","961","962","963","964","965","966","967","968","970","971","972","973","974","975","976","977","978","979","992","993","994","995","996","998"];
         
         const valido = codigosValidos.some((codigo) => numero.startsWith(codigo));
-        console.log(`[DEBUG] Número ${numero} ${valido ? 'válido' : 'inválido'} según códigos de país`);
+        console.log(`[DEBUG] Validación número ${numero}: ${valido ? 'VÁLIDO' : 'inválido'}`);
         return valido;
       };
 
@@ -1590,49 +1581,40 @@ parseMention: {
         .map((numero) => {
           if (esNumeroValido(numero)) {
             const jid = `${numero}@s.whatsapp.net`;
-            console.log(`[DEBUG] Número válido ${numero} -> JID: ${jid}`);
+            console.log(`[DEBUG] Número válido detectado: ${jid}`);
             return jid;
           } else {
-            console.log(`[DEBUG] Tratando ${numero} como LID`);
-            const lidJid = `${numero}@lid`;
+            console.log(`[DEBUG] Tratando como LID: ${numero}`);
             
-            // Verificar si existe el lidResolver y su cache
-            if (!global.lidResolver) {
-              console.log('[DEBUG] lidResolver no está definido en global');
-              return lidJid;
+            if (!global.lidResolver?.lidCache) {
+              console.log('[DEBUG] lidCache no disponible');
+              return `${numero}@lid`;
             }
 
-            if (!global.lidResolver.lidCache || global.lidResolver.lidCache.size === 0) {
-              console.log('[DEBUG] lidCache está vacío o no existe');
-              return lidJid;
+            // Búsqueda optimizada en el cache
+            const cacheEntries = Array.from(global.lidResolver.lidCache.entries());
+            const cachedJid = cacheEntries.find(([key]) => 
+              key.startsWith(`${numero}@lid_`) || 
+              key === `${numero}@lid`
+            )?.[1];
+
+            if (cachedJid) {
+              console.log(`[DEBUG] LID resuelto: ${numero} -> ${cachedJid}`);
+              return cachedJid;
             }
 
-            console.log(`[DEBUG] Buscando LID ${numero} en caché (tamaño: ${global.lidResolver.lidCache.size})`);
+            console.log(`[DEBUG] LID no encontrado en caché. Entradas disponibles:`, 
+              cacheEntries.slice(0, 3).map(([k]) => k));
             
-            let encontrado = false;
-            for (const [key, value] of global.lidResolver.lidCache) {
-              const [cachedLid] = key.split('_');
-              if (cachedLid === numero) {
-                console.log(`[DEBUG] LID encontrado en caché: ${numero} -> ${value}`);
-                encontrado = true;
-                return value;
-              }
-            }
-
-            if (!encontrado) {
-              console.log(`[DEBUG] LID ${numero} no encontrado en caché`);
-              console.log('[DEBUG] Muestra de claves en caché:', Array.from(global.lidResolver.lidCache.keys()).slice(0, 3));
-            }
-            
-            return lidJid;
+            return `${numero}@lid`;
           }
         });
 
-      console.log('[DEBUG] Resultado final de menciones:', mentions);
+      console.log('[DEBUG] Resultado final:', mentions);
       return mentions;
         
     } catch (error) {
-      console.error('[ERROR] En parseMention:', error);
+      console.error('[ERROR] En parseMention:', error, error.stack);
       return [];
     }
   },
