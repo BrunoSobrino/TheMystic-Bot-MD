@@ -75,6 +75,192 @@ loadDatabase();
 
 /* ------------------------------------------------*/
 
+/**
+ * Interceptor global para resolver LIDs en mensajes
+ * Procesa todos los mensajes entrantes y resuelve los LIDs antes de pasarlos al handler
+ */
+class LidResolver {
+  constructor(conn) {
+    this.conn = conn;
+    this.lidCache = new Map();
+    this.processingQueue = new Map();
+  }
+
+  /**
+   * Resuelve un LID específico a su JID real
+   */
+  async resolveLid(lidJid, groupChatId, maxRetries = 3) {
+    if (!lidJid.endsWith('@lid') || !groupChatId?.endsWith('@g.us')) {
+      return lidJid.includes('@') ? lidJid : `${lidJid}@s.whatsapp.net`;
+    }
+
+    // Verificar caché
+    const cacheKey = `${lidJid}_${groupChatId}`;
+    if (this.lidCache.has(cacheKey)) {
+      return this.lidCache.get(cacheKey);
+    }
+
+    // Evitar múltiples solicitudes simultáneas para el mismo LID
+    if (this.processingQueue.has(cacheKey)) {
+      return await this.processingQueue.get(cacheKey);
+    }
+
+    const lidToFind = lidJid.split('@')[0];
+    
+    const resolvePromise = (async () => {
+      let attempts = 0;
+      while (attempts < maxRetries) {
+        try {
+          const metadata = await this.conn?.groupMetadata(groupChatId);
+          if (!metadata?.participants) {
+            throw new Error('No se obtuvieron participantes');
+          }
+
+          for (const participant of metadata.participants) {
+            try {
+              if (!participant?.jid) continue;
+              
+              const contactDetails = await this.conn?.onWhatsApp(participant.jid);
+              if (!contactDetails?.[0]?.lid) continue;
+              
+              const possibleLid = contactDetails[0].lid.split('@')[0];
+              if (possibleLid === lidToFind) {
+                this.lidCache.set(cacheKey, participant.jid);
+                this.processingQueue.delete(cacheKey);
+                return participant.jid;
+              }
+            } catch (e) {
+              continue;
+            }
+          }
+          
+          // Si no se encuentra, cachear el LID original
+          this.lidCache.set(cacheKey, lidJid);
+          this.processingQueue.delete(cacheKey);
+          return lidJid;
+        } catch (e) {
+          if (++attempts >= maxRetries) {
+            this.lidCache.set(cacheKey, lidJid);
+            this.processingQueue.delete(cacheKey);
+            return lidJid;
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+        }
+      }
+      return lidJid;
+    })();
+
+    this.processingQueue.set(cacheKey, resolvePromise);
+    return await resolvePromise;
+  }
+
+  /**
+   * Procesa recursivamente un objeto para encontrar y resolver LIDs
+   */
+  async processObject(obj, groupChatId) {
+    if (!obj || typeof obj !== 'object') return obj;
+
+    if (Array.isArray(obj)) {
+      const results = [];
+      for (const item of obj) {
+        results.push(await this.processObject(item, groupChatId));
+      }
+      return results;
+    }
+
+    const processed = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (typeof value === 'string' && value.endsWith('@lid') && groupChatId) {
+        processed[key] = await this.resolveLid(value, groupChatId);
+      } else if (typeof value === 'object' && value !== null) {
+        processed[key] = await this.processObject(value, groupChatId);
+      } else {
+        processed[key] = value;
+      }
+    }
+    return processed;
+  }
+
+  /**
+   * Procesa un mensaje completo resolviendo todos los LIDs
+   */
+  async processMessage(message) {
+    try {
+      if (!message || !message.key) return message;
+
+      const groupChatId = message.key.remoteJid?.endsWith('@g.us') ? message.key.remoteJid : null;
+      if (!groupChatId) return message; // Solo procesar mensajes de grupo
+
+      // Clonar el mensaje para no modificar el original
+      const processedMessage = JSON.parse(JSON.stringify(message));
+
+      // Resolver LID en key.participant
+      if (processedMessage.key?.participant?.endsWith('@lid')) {
+        processedMessage.key.participant = await this.resolveLid(
+          processedMessage.key.participant, 
+          groupChatId
+        );
+      }
+
+      // Resolver LID en participant (mensaje de grupo)
+      if (processedMessage.participant?.endsWith('@lid')) {
+        processedMessage.participant = await this.resolveLid(
+          processedMessage.participant, 
+          groupChatId
+        );
+      }
+
+      // Procesar contextInfo.mentionedJid
+      if (processedMessage.message) {
+        const messageTypes = Object.keys(processedMessage.message);
+        for (const msgType of messageTypes) {
+          const msgContent = processedMessage.message[msgType];
+          if (msgContent?.contextInfo?.mentionedJid) {
+            const resolvedMentions = [];
+            for (const jid of msgContent.contextInfo.mentionedJid) {
+              if (typeof jid === 'string' && jid.endsWith('@lid')) {
+                resolvedMentions.push(await this.resolveLid(jid, groupChatId));
+              } else {
+                resolvedMentions.push(jid);
+              }
+            }
+            msgContent.contextInfo.mentionedJid = resolvedMentions;
+          }
+
+          // Procesar quotedMessage.participant
+          if (msgContent?.contextInfo?.quotedMessage) {
+            if (msgContent.contextInfo.participant?.endsWith('@lid')) {
+              msgContent.contextInfo.participant = await this.resolveLid(
+                msgContent.contextInfo.participant, 
+                groupChatId
+              );
+            }
+          }
+        }
+      }
+
+      return processedMessage;
+    } catch (error) {
+      console.error('Error procesando mensaje para resolver LIDs:', error);
+      return message; // Retornar mensaje original en caso de error
+    }
+  }
+
+  /**
+   * Limpia la caché periódicamente
+   */
+  clearCache() {
+    const now = Date.now();
+    const maxAge = 1000 * 60 * 30; // 30 minutos
+    
+    for (const [key, timestamp] of this.lidCache.entries()) {
+      if (now - timestamp > maxAge) {
+        this.lidCache.delete(key);
+      }
+    }
+  }
+}
+
 const {state, saveCreds} = await useMultiFileAuthState(global.authFile);
 
 const { version } = await fetchLatestBaileysVersion();
@@ -148,6 +334,27 @@ maxIdleTimeMs: 60000,
 };
 
 global.conn = makeWASocket(connectionOptions);
+
+// Crear instancia global del resolver después de crear la conexión
+global.lidResolver = new LidResolver(global.conn);
+
+// Función para interceptear y procesar mensajes
+async function interceptMessages(messages) {
+  if (!Array.isArray(messages)) return messages;
+  
+  const processedMessages = [];
+  for (const message of messages) {
+    try {
+      const processedMessage = await global.lidResolver.processMessage(message);
+      processedMessages.push(processedMessage);
+    } catch (error) {
+      console.error('Error interceptando mensaje:', error);
+      processedMessages.push(message); // Usar mensaje original si falla
+    }
+  }
+  
+  return processedMessages;
+}
 
 if (!fs.existsSync(`./${authFile}/creds.json`)) {
 if (opcion === '2' || methodCode) {
@@ -432,6 +639,9 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.removeAllListeners();
     global.conn = makeWASocket(connectionOptions, {chats: oldChats});
     store?.bind(conn);
+    
+    // Recrear el resolver con la nueva conexión
+    global.lidResolver = new LidResolver(global.conn);
     isInit = true;
   }
   if (!isInit) {
@@ -455,7 +665,23 @@ global.reloadHandler = async function(restatConn) {
   conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
   conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
-  conn.handler = handler.handler.bind(global.conn);
+  // Wrapper del handler original para interceptar mensajes
+  const originalHandler = handler.handler.bind(global.conn);
+  conn.handler = async function(chatUpdate) {
+    try {
+      if (chatUpdate.messages) {
+        // Interceptar y procesar mensajes antes de pasarlos al handler
+        chatUpdate.messages = await interceptMessages(chatUpdate.messages);
+      }
+      // Llamar al handler original con los mensajes procesados
+      return await originalHandler(chatUpdate);
+    } catch (error) {
+      console.error('Error en handler interceptor:', error);
+      // En caso de error, usar el handler original sin modificaciones
+      return await originalHandler(chatUpdate);
+    }
+  };
+
   conn.participantsUpdate = handler.participantsUpdate.bind(global.conn);
   conn.groupsUpdate = handler.groupsUpdate.bind(global.conn);
   conn.onDelete = handler.deleteUpdate.bind(global.conn);
@@ -530,6 +756,7 @@ global.reload = async (_ev, filename) => {
 Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
+
 async function _quickTest() {
   const test = await Promise.all([
     spawn('ffmpeg'),
@@ -554,6 +781,7 @@ async function _quickTest() {
   global.support = {ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find};
   Object.freeze(global.support);
 }
+
 function redefineConsoleMethod(methodName, filterStrings) {
 const originalConsoleMethod = console[methodName]
 console[methodName] = function() {
@@ -563,10 +791,17 @@ arguments[0] = ""
 }
 originalConsoleMethod.apply(console, arguments)
 }}
+
+// Limpiar caché del LidResolver cada 30 minutos
+setInterval(() => {
+  global.lidResolver?.clearCache();
+}, 1000 * 60 * 30);
+
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
   await clearTmp();
 }, 180000);
+
 /*
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return; 
@@ -582,6 +817,7 @@ setInterval(async () => {
   const bio = `• Activo: ${uptime} | TheMystic-Bot-MD`;
   await conn?.updateProfileStatus(bio).catch((_) => _);
 }, 60000);
+
 function clockString(ms) {
   const d = isNaN(ms) ? '--' : Math.floor(ms / 86400000);
   const h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24;
@@ -589,4 +825,5 @@ function clockString(ms) {
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
   return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
 }
+
 _quickTest().catch(console.error);
