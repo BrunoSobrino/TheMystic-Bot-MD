@@ -176,28 +176,30 @@ function resolveLidFromCache(jid, groupChatId) {
   const resolvedJid = global.lidResolver.lidCache.get(cacheKey);
   console.log('Found in cache:', resolvedJid);
   
+  // Si encontramos una resolución válida
   if (resolvedJid && !resolvedJid.endsWith('@lid')) {
     console.log('Returning resolved JID:', resolvedJid);
     return resolvedJid;
   }
   
-  // Si el LID se resolvió a sí mismo, intentar buscar un JID real con el mismo número
-  if (resolvedJid && resolvedJid.endsWith('@lid')) {
-    const lidNumber = jid.split('@')[0];
-    const possibleJid = `${lidNumber}@s.whatsapp.net`;
-    console.log('LID resolved to itself, trying possible JID:', possibleJid);
-    
-    // Verificar si existe el JID directo en algún lugar del cache
-    for (const [key, value] of global.lidResolver.lidCache.entries()) {
-      if (value === possibleJid) {
-        console.log('Found matching JID in cache:', possibleJid);
-        return possibleJid;
-      }
+  // Si el LID se resolvió a sí mismo, buscar por número en todo el cache
+  const lidNumber = jid.split('@')[0];
+  const possibleJid = `${lidNumber}@s.whatsapp.net`;
+  
+  // Buscar en todo el cache cualquier entrada que apunte al posible JID
+  for (const [key, value] of global.lidResolver.lidCache.entries()) {
+    if (value === possibleJid) {
+      console.log('Found indirect match:', key, '->', value);
+      return possibleJid;
     }
-    
-    // Si no se encuentra, usar el número como JID
-    console.log('Using LID number as JID:', possibleJid);
-    return possibleJid;
+  }
+  
+  // Buscar si el número coincide con algún otro LID en el mismo grupo
+  for (const [key, value] of global.lidResolver.lidCache.entries()) {
+    if (key.startsWith(lidNumber + '@lid_') && !value.endsWith('@lid')) {
+      console.log('Found matching number in group:', key, '->', value);
+      return value;
+    }
   }
   
   console.warn(`LID no encontrado en cache: ${jid}`);
