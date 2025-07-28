@@ -1566,41 +1566,32 @@ parseMention: {
         return codigosValidos.some((codigo) => numero.startsWith(codigo));
       };
 
-      // Extraer menciones del texto
-      const mentions = (text.match(/@(\d{5,20})/g) || []).map((m) => m.substring(1));
-      
-      const result = [];
-      
-      for (const numero of mentions) {
-        if (esNumeroValido(numero)) {
-          result.push(`${numero}@s.whatsapp.net`);
-        } else {
-          // Es un posible LID, intentar encontrar el JID real
-          const lidJid = `${numero}@lid`;
-          let realJid = null;
-          
-          // Buscar en los chats conocidos si ya tenemos una resolución
-          for (const [chatId, chatData] of Object.entries(this.chats || {})) {
-            if (chatId.endsWith("@g.us") && chatData.metadata?.participants) {
-              for (const participant of chatData.metadata.participants) {
-                if (participant.jid && participant.jid.includes(numero.substring(0, 8))) {
-                  realJid = participant.jid;
-                  break;
+      return (text.match(/@(\d{5,20})/g) || [])
+        .map((m) => m.substring(1))
+        .map((numero) => {
+          if (esNumeroValido(numero)) {
+            return `${numero}@s.whatsapp.net`;
+          } else {
+            // Para LIDs, simplemente usar el formato @lid pero intentar buscar en contactos conocidos
+            const lidJid = `${numero}@lid`;
+            
+            // Buscar en todos los chats conocidos
+            for (const [chatId, chatData] of Object.entries(this.chats || {})) {
+              if (chatData.metadata?.participants) {
+                for (const participant of chatData.metadata.participants) {
+                  if (participant.jid && participant.jid.startsWith(numero.substring(0, 10))) {
+                    return participant.jid;
+                  }
                 }
               }
-              if (realJid) break;
             }
+            
+            return lidJid;
           }
-          
-          // Si no encontramos el JID real, usar el LID
-          result.push(realJid || lidJid);
-        }
-      }
-      
-      return result;
-
+        });
+        
     } catch (error) {
-      console.error("Error en parseMention:", error);
+      console.error("Error:", error);
       return [];
     }
   },
