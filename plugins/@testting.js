@@ -18,10 +18,11 @@ const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024;
 const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024;
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
-    try {
         const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
         const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
         const tradutor = _translate._testting;
+    
+    try {
 
         const query = args.join(' ');
         if (!query) return m.reply(tradutor.errors.no_query.replace('@command', usedPrefix + command));
