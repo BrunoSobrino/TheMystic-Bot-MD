@@ -7,22 +7,6 @@ import NodeID3 from 'node-id3';
 import { v4 as uuidv4 } from 'uuid';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
-// Solución para readline (alternativa simplificada)
-const createStatusUpdater = () => {
-  let lastMessage = '';
-  return {
-    update: (message) => {
-      process.stdout.write('\r' + ' '.repeat(lastMessage.length));
-      process.stdout.write('\r' + message);
-      lastMessage = message;
-    },
-    clear: () => {
-      process.stdout.write('\r' + ' '.repeat(lastMessage.length) + '\r');
-      lastMessage = '';
-    }
-  };
-};
-
 const handler = async (m, { conn, args }) => {
     try {
         if (!args[0]) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*\n\n*Uso:* /musicaia descripción | tags opcionales\n*Ejemplo:* /musicaia canción de amor | pop, romántico, acústico';
@@ -118,7 +102,8 @@ handler.tags = ['ai'];
 handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
 export default handler;
 
-// Configuración exacta de la API Sonu (corregida)
+/* Credits to @NB_SCRIPT ~ en WhatsApp: https://whatsapp.com/channel/0029Vb5EZCjIiRotHCI1213L */
+
 const sonu = {
   api: {
     base: 'https://musicai.apihub.today/api/v1',
@@ -311,10 +296,8 @@ const sonu = {
   }
 };
 
-// Función para generar música usando solo la API Sonu
 async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
     try {
-        // Registrar dispositivo si es necesario
         if (!sonu.userId) {
             const registration = await sonu.register();
             if (!registration.success) {
@@ -322,10 +305,8 @@ async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
             }
         }
 
-        // Crear letras básicas basadas en el prompt
-        const basicLyrics = `[verse]\nCanción generada sobre: ${prompt}\n\n[chorus]\nMelodía creada por IA\n\n[verse]\n${prompt}`;
+        const basicLyrics = `Canción generada sobre: ${prompt}`;
 
-        // Crear la canción
         const creation = await sonu.create({
             title: prompt.substring(0, 64) || 'Cancion_IA',
             genre: tags,
@@ -338,7 +319,6 @@ async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
             throw new Error(creation.result.error || 'Error al crear la canción');
         }
 
-        // Verificar el estado de la canción
         const taskResult = await sonu.task(creation.result.songId);
         if (!taskResult.success) {
             throw new Error(taskResult.result.error || 'Error al generar la canción');
@@ -350,7 +330,7 @@ async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
             title: prompt.substring(0, 64) || 'Cancion_IA',
             tags: tags,
             lyrics: basicLyrics,
-            duration: 180 // Duración estimada
+            duration: 180
         };
     } catch (error) {
         console.error('Error en generateMusicWithSonu:', error);
@@ -361,3 +341,18 @@ async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
 function sanitizeFileName(str) {
     return str.replace(/[\/\\|:*?"<>]/g, '').trim();
 }
+
+const createStatusUpdater = () => {
+  let lastMessage = '';
+  return {
+    update: (message) => {
+      process.stdout.write('\r' + ' '.repeat(lastMessage.length));
+      process.stdout.write('\r' + message);
+      lastMessage = message;
+    },
+    clear: () => {
+      process.stdout.write('\r' + ' '.repeat(lastMessage.length) + '\r');
+      lastMessage = '';
+    }
+  };
+};
