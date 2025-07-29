@@ -97,9 +97,9 @@ const handler = async (m, { conn, args }) => {
     }
 };
 
-handler.help = ['musicaia <descripción> | [tags opcionales]'];
+handler.help = ['sunoai <descripción> | [tags opcionales]'];
 handler.tags = ['ai'];
-handler.command = /^(musicaia|musicaai|aimusic|genmusic)$/i;
+handler.command = /^(musicaia|musicaai|aimusic|genmusic|sunoai|sunoia)$/i;
 export default handler;
 
 /* Credits to @NB_SCRIPT ~ en WhatsApp: https://whatsapp.com/channel/0029Vb5EZCjIiRotHCI1213L */
