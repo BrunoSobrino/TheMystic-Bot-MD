@@ -33,7 +33,7 @@ ${premiumTime > 0 ? `${tradutor.texto1[7]} ${clockString(premiumTime - new Date(
 
   m.reply(infoprem, null, {mentions: conn.parseMention(infoprem)});
 };
-handler.help = ['premlist [angka]'];
+handler.help = ['premlist'];
 handler.tags = ['info'];
 handler.command = /^(listprem|premlist|listavip|viplista)$/i;
 export default handler;
