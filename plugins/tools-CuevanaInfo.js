@@ -43,7 +43,7 @@ const handler = async (m, { conn, text, prefix: usedPrefix, command }) => {
   }
 };
 handler.tags = ['tools']
-hanlder .helps = ['cuevanainfo <link>']
+hanlder .help = ['cuevanainfo <link>']
 handler.command = ['getinfocuevana', 'cuevanainfo'];
 export default handler;
 
