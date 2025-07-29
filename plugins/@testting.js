@@ -41,7 +41,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
         if (command !== 'ytmp3' || command !== 'ytmp4') { conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m }) }
 
-        const isAudio = command === 'test' || command === 'play' || || command === 'ytmp3';
+        const isAudio = command === 'test' || command === 'play' || command === 'ytmp3';
         //await m.reply(tradutor.video_info.processing.replace('@type', isAudio ? 'audio' : 'video'));
 
         const mediaUrl = await getY2MetaLink(video.url, isAudio);
