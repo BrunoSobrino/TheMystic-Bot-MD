@@ -42,7 +42,7 @@ const handler = async (m, { conn, text, prefix: usedPrefix, command }) => {
     m.reply('❌ *Error al obtener la información, verifica el enlace o intenta más tarde*');
   }
 };
-
+handler.tags = ['cuevanainfo <link>']
 handler.command = ['getinfocuevana', 'cuevanainfo'];
 export default handler;
 
