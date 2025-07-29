@@ -10,6 +10,9 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
         const username = '@' + m.sender.split('@s.whatsapp.net')[0];
         if (usedPrefix == 'a' || usedPrefix == 'A') return;
 
+        const more = String.fromCharCode(8206);
+        const readMore = more.repeat(4001); 
+            
         const d = new Date(new Date().getTime() + 3600000);
         
         const localeMap = {
@@ -291,6 +294,7 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
 
         let _text = [
             before,
+            readMore,    
             ...Object.keys(tags).map(tag => {
                 let pluginCommands = help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
                     return menu.help.map(help => {
