@@ -14,7 +14,7 @@ const handler = async function(m, {args}) {
   user.registered = false;
   m.reply(tradutor.texto3);
 };
-handler.help = ['', 'ister'].map((v) => 'unreg' + v + ' <numero de serie>');
+handler.help = ['', 'ister'].map((v) => 'unreg' + ' <numero de serie>');
 handler.tags = ['xp'];
 handler.command = /^unreg(ister)?$/i;
 handler.register = true;
