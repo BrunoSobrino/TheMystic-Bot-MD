@@ -258,7 +258,7 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
                 .replace('@rtotal', rtotal)
                 .replace('@rtotalreg', rtotalreg),
             
-            user_info: (tradutor.user_info || '')
+            user_info: '\n' + (tradutor.user_info || '')
                 .replace('@level', level)
                 .replace('@exp', exp)
                 .replace('@role', role || 'Nuevo')
