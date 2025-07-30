@@ -10,7 +10,7 @@
     "plugins": "plugins"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node --expose-gc index.js",
     "qr": "node index.js qr",
     "code": "node index.js code",
     "eslint": "eslint .",
