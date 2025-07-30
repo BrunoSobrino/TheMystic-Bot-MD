@@ -96,31 +96,42 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     const audioPath = join(tmpDir, `${video.videoId}.mp3`);
                     writeFileSync(audioPath, taggedBuffer);
 
-                    const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-                    const documentMessage = await prepareWAMessageMedia({ 
-                        document: {
-                            url: audioPath,
-                            mimetype: 'audio/mpeg',
-                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                            fileLength: taggedBuffer.length,
-                            title: video.title.substring(0, 64), 
-                            ptt: false 
-                        }
-                    }, { upload: conn.waUploadToServer, mediaType: 'document' });
+                    try {
+                        const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                        const documentMessage = await prepareWAMessageMedia({ 
+                            document: {
+                                url: audioPath,
+                                mimetype: 'audio/mpeg',
+                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                                fileLength: taggedBuffer.length,
+                                title: video.title.substring(0, 64), 
+                                ptt: false 
+                            }
+                        }, { upload: conn.waUploadToServer, mediaType: 'document' });
 
-                    const mesg = generateWAMessageFromContent(m.chat, {
-                        documentMessage: {
-                            ...documentMessage.documentMessage,
-                            mimetype: 'audio/mpeg',
-                            title: video.title.substring(0, 64),
-                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                            jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-                            mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                        const mesg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMessage.documentMessage,
+                                mimetype: 'audio/mpeg',
+                                title: video.title.substring(0, 64),
+                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                                jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                                mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                            }
+                        }, { userJid: conn.user.jid, quoted: m });
+                        
+                        await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                    } catch (mediaError) {
+                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed')) {
+                            await conn.sendMessage(m.chat, {
+                                document: readFileSync(audioPath),
+                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
+                                mimetype: 'audio/mpeg'
+                            }, { quoted: m });
+                        } else {
+                            throw mediaError;
                         }
-                    }, { userJid: conn.user.jid, quoted: m });
-                    
-                    await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    //await m.reply(tradutor.success.audio);
+                    }
 
                     setTimeout(() => {
                         if (existsSync(audioPath)) unlinkSync(audioPath);
@@ -198,30 +209,41 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 const fixedVideoBuffer = readFileSync(fixedPath);
 
                 if (shouldSendAsDocument) {
-                    const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-                    const documentMessage = await prepareWAMessageMedia({ 
-                        document: {
-                            url: fixedPath,
-                            mimetype: 'video/mp4',
-                            fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
-                            fileLength: videoSize,
-                            title: videoMetadata.title.substring(0, 64)
-                        }
-                    }, { upload: conn.waUploadToServer, mediaType: 'document' });
+                    try {
+                        const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                        const documentMessage = await prepareWAMessageMedia({ 
+                            document: {
+                                url: fixedPath,
+                                mimetype: 'video/mp4',
+                                fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
+                                fileLength: videoSize,
+                                title: videoMetadata.title.substring(0, 64)
+                            }
+                        }, { upload: conn.waUploadToServer, mediaType: 'document' });
 
-                    const mesg = generateWAMessageFromContent(m.chat, {
-                        documentMessage: {
-                            ...documentMessage.documentMessage,
-                            mimetype: 'video/mp4',
-                            title: videoMetadata.title.substring(0, 64),
-                            fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
-                            jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-                            mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                        const mesg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMessage.documentMessage,
+                                mimetype: 'video/mp4',
+                                title: videoMetadata.title.substring(0, 64),
+                                fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
+                                jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                                mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                            }
+                        }, { userJid: conn.user.jid, quoted: m });
+                        
+                        await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                    } catch (mediaError) {
+                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed')) {
+                            await conn.sendMessage(m.chat, {
+                                document: fixedVideoBuffer,
+                                fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`,
+                                mimetype: 'video/mp4'
+                            }, { quoted: m });
+                        } else {
+                            throw mediaError;
                         }
-                    }, { userJid: conn.user.jid, quoted: m });
-                    
-                    await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    //await m.reply(tradutor.success.video);
+                    }
                 } else {
                     await conn.sendMessage(m.chat, { 
                         video: fixedVideoBuffer, 
