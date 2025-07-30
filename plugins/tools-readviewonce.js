@@ -10,6 +10,7 @@ const handler = async (m, {conn}) => {
   if (!m.quoted.viewOnce) throw tradutor.texto2;
   const msg = m.quoted;
   //const type = Object.keys(msg);
+  const type = msg.mtype 
   const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : 'video');
   let buffer = Buffer.from([]);
   for await (const chunk of media) {
