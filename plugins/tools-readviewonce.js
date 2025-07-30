@@ -7,7 +7,7 @@ const handler = async (m, {conn}) => {
   const tradutor = _translate.plugins.herramientas_readviewonce
 
   if (!m.quoted) throw tradutor.texto1;
-  if (m.quoted.mtype !== 'viewOnceMessageV2') throw tradutor.texto2;
+  if (!m.quoted.viewOnce) throw tradutor.texto2;
   const msg = m.quoted.message;
   const type = Object.keys(msg)[0];
   const media = await downloadContentFromMessage(msg[type], type == 'imageMessage' ? 'image' : 'video');
