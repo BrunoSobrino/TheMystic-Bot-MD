@@ -174,9 +174,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
             }
 
         } else {
-            const rawPath = join(tmpDir, `${id}_raw.mp4`);
-            const fixedPath = join(tmpDir, `${id}_fixed.mp4`);
-
+            // VIDEO PROCESSING - MODIFICADO PARA NO USAR FFMPEG EN DOCUMENTOS
             try {
                 const [videoBuffer, videoMetadata, thumbnailBuffer] = await Promise.all([
                     fetch(mediaUrl).then(res => res.buffer()),
@@ -190,43 +188,22 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     fetch(video.thumbnail).then(res => res.buffer())
                 ]);
 
-                writeFileSync(rawPath, videoBuffer);
-
-                const stats = statSync(rawPath);
-                if (stats.size === 0) throw new Error("Empty file");
-
-                await new Promise((resolve, reject) => {
-                    ffmpeg(rawPath)
-                        .outputOptions([
-                            '-c copy',
-                            '-avoid_negative_ts make_zero',
-                            '-fflags +genpts',
-                            '-movflags +faststart',
-                            '-map_metadata -1',
-                            '-threads 0'
-                        ])
-                        .on('end', resolve)
-                        .on('error', reject)
-                        .save(fixedPath);
-                });
-
-                const fixedStats = statSync(fixedPath);
-                const videoSize = fixedStats.size;
+                const videoSize = videoBuffer.length;
                 const shouldSendAsDocument = videoSize > VIDEO_SIZE_LIMIT;
 
                 if (shouldSendAsDocument) {
                     const sizeMB = (videoSize / (1024 * 1024)).toFixed(2);
                     await m.reply(tradutor.errors.large_video.replace('@size', sizeMB));
-                }
+                    
+                    // ENVIAR COMO DOCUMENTO SIN PROCESAR CON FFMPEG
+                    const rawPath = join(tmpDir, `${id}_raw.mp4`);
+                    writeFileSync(rawPath, videoBuffer);
 
-                const fixedVideoBuffer = readFileSync(fixedPath);
-
-                if (shouldSendAsDocument) {
                     try {
                         const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
                         const documentMessage = await prepareWAMessageMedia({ 
                             document: {
-                                url: fixedPath,
+                                url: rawPath,
                                 mimetype: 'video/mp4',
                                 fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
                                 fileLength: videoSize,
@@ -250,7 +227,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                         cleanupResources();
                         if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed') || mediaError.message.includes('ENOSPC') || mediaError.code === 'ENOSPC') {
                             await conn.sendMessage(m.chat, {
-                                document: fixedVideoBuffer,
+                                document: videoBuffer,
                                 fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`,
                                 mimetype: 'video/mp4'
                             }, { quoted: m });
@@ -258,26 +235,57 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                             throw mediaError;
                         }
                     }
+
+                    setTimeout(() => {
+                        if (existsSync(rawPath)) unlinkSync(rawPath);
+                    }, 5000);
+                    
                 } else {
+                    // PARA VIDEOS PEQUEÑOS, USAR FFMPEG PARA OPTIMIZAR
+                    const rawPath = join(tmpDir, `${id}_raw.mp4`);
+                    const fixedPath = join(tmpDir, `${id}_fixed.mp4`);
+
+                    writeFileSync(rawPath, videoBuffer);
+
+                    const stats = statSync(rawPath);
+                    if (stats.size === 0) throw new Error("Empty file");
+
+                    await new Promise((resolve, reject) => {
+                        ffmpeg(rawPath)
+                            .outputOptions([
+                                '-c copy',
+                                '-avoid_negative_ts make_zero',
+                                '-fflags +genpts',
+                                '-movflags +faststart',
+                                '-map_metadata -1',
+                                '-threads 0'
+                            ])
+                            .on('end', resolve)
+                            .on('error', reject)
+                            .save(fixedPath);
+                    });
+
+                    const fixedVideoBuffer = readFileSync(fixedPath);
+
                     await conn.sendMessage(m.chat, { 
                         video: fixedVideoBuffer, 
                         caption: videoMetadata.title, 
                         mimetype: 'video/mp4', 
                         fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` 
                     }, { quoted: m });
-                    //await m.reply(tradutor.success.video);
+
+                    setTimeout(() => {
+                        [rawPath, fixedPath].forEach(path => {
+                            if (existsSync(path)) unlinkSync(path);
+                        });
+                    }, 1000);
                 }
 
-            } catch (ffmpegError) {
-                console.error('FFmpeg error:', ffmpegError);
-                await m.reply(tradutor.errors.generic.replace('@error', ffmpegError.message));
+            } catch (videoError) {
+                console.error('Video error:', videoError);
+                await m.reply(tradutor.errors.generic.replace('@error', videoError.message));
             } finally {
                 cleanupResources();
-                setTimeout(() => {
-                    [rawPath, fixedPath].forEach(path => {
-                        if (existsSync(path)) unlinkSync(path);
-                    });
-                }, 1000);
             }
         }
 
