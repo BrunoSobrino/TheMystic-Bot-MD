@@ -14,6 +14,16 @@ const ytDownloader = createYoutubeDownloader();
 const tmpDir = join(process.cwd(), './src/tmp');
 if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
 
+function cleanupResources() {
+    try {
+        if (global.gc) {
+            global.gc();
+        }
+    } catch (e) {
+        console.error('Cleanup error:', e);
+    }
+}
+
 const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024;
 const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024;
 
@@ -21,6 +31,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
         const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
         const tradutor = _translate._testting;
+    
+    cleanupResources();
     
     try {
 
@@ -122,7 +134,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                         
                         await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
                     } catch (mediaError) {
-                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed')) {
+                        cleanupResources();
+                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed') || mediaError.message.includes('ENOSPC') || mediaError.code === 'ENOSPC') {
                             await conn.sendMessage(m.chat, {
                                 document: readFileSync(audioPath),
                                 fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
@@ -234,7 +247,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                         
                         await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
                     } catch (mediaError) {
-                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed')) {
+                        cleanupResources();
+                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed') || mediaError.message.includes('ENOSPC') || mediaError.code === 'ENOSPC') {
                             await conn.sendMessage(m.chat, {
                                 document: fixedVideoBuffer,
                                 fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`,
@@ -258,6 +272,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 console.error('FFmpeg error:', ffmpegError);
                 await m.reply(tradutor.errors.generic.replace('@error', ffmpegError.message));
             } finally {
+                cleanupResources();
                 setTimeout(() => {
                     [rawPath, fixedPath].forEach(path => {
                         if (existsSync(path)) unlinkSync(path);
