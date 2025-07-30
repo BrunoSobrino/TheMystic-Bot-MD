@@ -17,9 +17,9 @@ const handler = async (m, {conn}) => {
     buffer = Buffer.concat([buffer, chunk]);
   }
   if (/video/.test(type)) {
-    return conn.sendFile(m.chat, buffer, 'error.mp4', msg[type].caption || '', m);
+    return conn.sendFile(m.chat, buffer, 'error.mp4', msg?.caption ? msg?.caption : '', m);
   } else if (/image/.test(type)) {
-    return conn.sendFile(m.chat, buffer, 'error.jpg', msg[type].caption || '', m);
+    return conn.sendFile(m.chat, buffer, 'error.jpg', msg?.caption ? msg?.caption : '', m);
   }
 };
 handler.help = ['readvo'];
