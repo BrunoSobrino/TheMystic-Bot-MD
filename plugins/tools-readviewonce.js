@@ -9,8 +9,8 @@ const handler = async (m, {conn}) => {
   if (!m.quoted) throw tradutor.texto1;
   if (!m.quoted.viewOnce) throw tradutor.texto2;
   const msg = m.quoted;
-  const type = Object.keys(msg)[0];
-  const media = await downloadContentFromMessage(msg[type], type == 'imageMessage' ? 'image' : 'video');
+  //const type = Object.keys(msg);
+  const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : 'video');
   let buffer = Buffer.from([]);
   for await (const chunk of media) {
     buffer = Buffer.concat([buffer, chunk]);
