@@ -2,309 +2,290 @@ const { downloadContentFromMessage } = (await import("baileys"));
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-// Cache para mensajes interceptados
-const viewOnceCache = new Map();
-const processedMessages = new Set();
-let baileysPatchApplied = false;
+// Cache global para ViewOnce
+const viewOnceInterceptCache = new Map();
+const processedMessageIds = new Set();
+let isInitialized = false;
 
-// Interceptar a nivel de Baileys - ANTES del procesamiento de mensajes
-function setupBaileysInterception() {
-  if (baileysPatchApplied) return;
+// Texto por defecto si no hay traducción
+const defaultTexts = {
+  texto1: "🔍 ViewOnce Anti-Delete - Contenido interceptado"
+};
+
+// Interceptar mensajes a nivel más profundo
+function initializeInterception() {
+  if (isInitialized) return;
   
   try {
-    const conn = global.conn;
-    if (!conn) return;
-    
-    // Interceptar el evento de mensajes RAW de Baileys
-    const originalUpsertMessage = conn.upsertMessage;
-    if (originalUpsertMessage) {
-      conn.upsertMessage = async function(message) {
-        try {
-          // Interceptar ANTES de upsert
-          await interceptBaileysMessage(message);
-        } catch (error) {
-          console.log('Error en interceptación Baileys:', error.message);
-        }
-        
-        // Llamar función original
-        return originalUpsertMessage.call(this, message);
-      };
-    }
-    
-    // Interceptar el procesamiento de mensajes
-    const originalProcessMessage = conn.ev?.process;
-    if (originalProcessMessage) {
-      const originalEmit = conn.ev.emit;
-      conn.ev.emit = function(event, ...args) {
-        if (event === 'messages.upsert') {
-          const messageUpdate = args[0];
-          if (messageUpdate?.messages) {
-            for (const msg of messageUpdate.messages) {
-              interceptBaileysMessage(msg);
-            }
-          }
-        }
-        return originalEmit.call(this, event, ...args);
-      };
-    }
-    
-    // Interceptar a nivel de WebSocket de Baileys
-    if (conn.ws) {
-      const originalOnMessage = conn.ws.onmessage;
-      conn.ws.onmessage = function(event) {
-        try {
-          interceptWebSocketMessage(event.data);
-        } catch (error) {
-          // Ignorar errores
-        }
-        
-        if (originalOnMessage) {
-          return originalOnMessage.call(this, event);
-        }
-      };
-      
-      // También interceptar eventos
-      if (conn.ws.addEventListener) {
-        conn.ws.addEventListener('message', (event) => {
-          try {
-            interceptWebSocketMessage(event.data);
-          } catch (error) {
-            // Ignorar errores
-          }
-        });
+    // Interceptar el flujo de mensajes antes del procesamiento
+    const originalConsoleLog = console.log;
+    console.log = function(...args) {
+      // Buscar mensajes ViewOnce en los logs de Baileys
+      const logString = args.join(' ');
+      if (logString.includes('viewOnce') || logString.includes('ViewOnce')) {
+        console.warn('🎯 ViewOnce detectado en logs:', logString);
       }
-    }
+      return originalConsoleLog.apply(console, arguments);
+    };
     
-    baileysPatchApplied = true;
-    console.log('✅ Interceptación de Baileys configurada correctamente');
+    isInitialized = true;
+    console.log('🎯 Interceptación inicializada');
   } catch (error) {
-    console.error('Error configurando interceptación de Baileys:', error);
+    console.error('Error inicializando interceptación:', error);
   }
 }
 
-// Interceptar mensajes de WebSocket
-function interceptWebSocketMessage(data) {
-  try {
-    let parsedData;
-    
-    if (typeof data === 'string') {
-      parsedData = JSON.parse(data);
-    } else if (Buffer.isBuffer(data)) {
-      parsedData = JSON.parse(data.toString());
-    } else {
-      return;
-    }
-    
-    if (hasViewOnceContent(parsedData)) {
-      console.log('🎯 ViewOnce detectado en WebSocket de Baileys');
-      
-      const messageId = extractMessageId(parsedData);
-      if (messageId) {
-        viewOnceCache.set(`ws_${messageId}`, {
-          data: JSON.parse(JSON.stringify(parsedData)),
-          timestamp: Date.now(),
-          source: 'websocket'
-        });
-        console.log(`📦 ViewOnce cacheado desde WebSocket: ${messageId}`);
-      }
-    }
-  } catch (error) {
-    // Ignorar errores de parsing
-  }
-}
-
-// Interceptar mensajes de Baileys
-async function interceptBaileysMessage(message) {
-  try {
-    if (!message || !message.message) return;
-    
-    if (hasViewOnceContent(message)) {
-      console.log('🔥 ViewOnce interceptado en mensaje de Baileys');
-      
-      const messageId = message.key?.id;
-      if (messageId) {
-        viewOnceCache.set(`baileys_${messageId}`, {
-          data: JSON.parse(JSON.stringify(message)),
-          timestamp: Date.now(),
-          source: 'baileys'
-        });
-        console.log(`📦 ViewOnce cacheado desde Baileys: ${messageId}`);
-      }
-    }
-  } catch (error) {
-    console.log('Error interceptando mensaje de Baileys:', error.message);
-  }
-}
-
-// Detectar contenido ViewOnce
-function hasViewOnceContent(data) {
-  if (!data || typeof data !== 'object') return false;
-  
-  const searchViewOnce = (obj, depth = 0) => {
-    if (depth > 6) return false;
-    
-    for (const [key, value] of Object.entries(obj)) {
-      // Búsqueda directa de ViewOnce
-      if (key === 'viewOnceMessage' || key === 'viewOnceMessageV2' || key === 'viewOnceMessageV2Extension') {
-        return true;
-      }
-      
-      // Búsqueda de propiedades viewOnce
-      if (key === 'viewOnce' && value === true) {
-        return true;
-      }
-      
-      // Búsqueda recursiva
-      if (typeof value === 'object' && value !== null) {
-        if (searchViewOnce(value, depth + 1)) return true;
-      }
-    }
-    
-    return false;
-  };
-  
-  return searchViewOnce(data);
-}
-
-// Extraer ID de mensaje
-function extractMessageId(data) {
-  if (data.key?.id) return data.key.id;
-  if (data.id) return data.id;
-  
-  // Búsqueda más profunda
-  const findId = (obj, depth = 0) => {
-    if (depth > 3) return null;
-    
-    for (const [key, value] of Object.entries(obj)) {
-      if (key === 'id' && typeof value === 'string' && value.length > 10) {
-        return value;
-      }
-      if (typeof value === 'object' && value !== null) {
-        const found = findId(value, depth + 1);
-        if (found) return found;
-      }
-    }
-    return null;
-  };
-  
-  return findId(data);
-}
-
-// Plugin principal
+// Función principal del plugin
 export async function before(m, { isAdmin, isBotAdmin }) {
-  // Configurar interceptación si no está activa
-  setupBaileysInterception();
+  // Inicializar interceptación
+  initializeInterception();
   
-  const datas = global;
-  const idioma = datas.db.data.users[m.sender]?.language || global.defaultLenguaje;
-  const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`));
-  const tradutor = _translate.plugins._antiviewonce;
+  // Obtener traductor de forma segura
+  let tradutor = defaultTexts;
+  try {
+    const datas = global;
+    const idioma = datas.db?.data?.users?.[m.sender]?.language || global.defaultLenguaje || 'es';
+    const translatePath = `./src/languages/${idioma}.json`;
+    
+    if (existsSync(translatePath)) {
+      const _translate = JSON.parse(readFileSync(translatePath));
+      tradutor = _translate.plugins?._antiviewonce || defaultTexts;
+    }
+  } catch (error) {
+    console.log('Usando textos por defecto para antiviewonce');
+  }
   
-  const chat = global.db.data.chats[m.chat];
+  const chat = global.db?.data?.chats?.[m.chat];
   if (/^[.~#/\$,](read)?viewonce/.test(m.text)) return;
   if (!chat?.antiviewonce || chat?.isBanned) return;
   
   const messageId = m.key?.id;
-  if (!messageId) return;
+  if (!messageId || processedMessageIds.has(messageId)) return;
   
-  // Evitar procesamiento duplicado
-  if (processedMessages.has(messageId)) return;
-  processedMessages.add(messageId);
+  processedMessageIds.add(messageId);
   
-  // PRIORIDAD 1: Verificar cache antes de procesar
-  for (const [cacheKey, cached] of viewOnceCache.entries()) {
-    if (cacheKey.includes(messageId)) {
-      console.log('🎯 Procesando desde cache interceptado');
-      const result = await processCachedViewOnce(cached, tradutor, m);
-      if (result) {
-        viewOnceCache.delete(cacheKey);
-        return result;
-      }
-    }
-  }
+  console.log('🔍 Analizando mensaje:', {
+    messageStubType: m.messageStubType,
+    hasMessage: !!m.message,
+    messageId: messageId,
+    keys: m.message ? Object.keys(m.message) : []
+  });
   
-  // PRIORIDAD 2: Interceptación directa del mensaje actual
+  // ESTRATEGIA 1: Interceptar mensaje normal con ViewOnce
   if (m.message && !m.messageStubType) {
-    const result = await processCurrentMessage(m, tradutor);
+    const result = await processViewOnceMessage(m, tradutor);
     if (result) return result;
   }
   
-  // PRIORIDAD 3: Manejo de mensaje "ausente"
-  if (m.messageStubType === 2) {
-    console.log('⚠️ Mensaje ausente detectado, buscando en cache...');
-    return await handleAbsentMessage(m, tradutor, messageId);
+  // ESTRATEGIA 2: Interceptar desde quoted si existe
+  if (m.quoted && m.quoted.message) {
+    console.log('📋 Verificando mensaje quoted...');
+    const quotedResult = await processViewOnceFromQuoted(m, tradutor);
+    if (quotedResult) return quotedResult;
   }
+  
+  // ESTRATEGIA 3: Analizar mensaje "ausente" y buscar datos residuales
+  if (m.messageStubType === 2) {
+    console.log('⚠️ Mensaje ausente - analizando estructura completa...');
+    return await analyzeAbsentMessage(m, tradutor);
+  }
+  
+  // ESTRATEGIA 4: Interceptar cualquier estructura que contenga ViewOnce
+  const viewOnceResult = await deepScanForViewOnce(m, tradutor);
+  if (viewOnceResult) return viewOnceResult;
 }
 
-// Procesar mensaje desde cache
-async function processCachedViewOnce(cached, tradutor, originalMessage) {
+// Procesar mensaje ViewOnce normal
+async function processViewOnceMessage(m, tradutor) {
   try {
-    const data = cached.data;
-    console.log(`🔄 Procesando ViewOnce desde ${cached.source}...`);
+    const viewOnceData = extractViewOnceFromMessage(m.message);
+    if (!viewOnceData) return false;
     
-    // Extraer datos de ViewOnce
-    const viewOnceContent = extractViewOnceContent(data);
-    if (!viewOnceContent) return false;
+    console.log('🔥 ViewOnce encontrado en mensaje normal');
+    console.log('📊 Estructura ViewOnce:', {
+      type: viewOnceData.messageType,
+      mediaType: viewOnceData.mediaType,
+      hasData: !!viewOnceData.data
+    });
     
-    // Intentar descarga
-    const buffer = await downloadViewOnceContent(viewOnceContent, data);
+    // Intentar descarga inmediata
+    const buffer = await attemptDownload(viewOnceData, m);
     
     if (buffer && buffer.length > 0) {
-      // Guardar backup
-      const filename = `cached_${Date.now()}_${originalMessage.key.id}.${getFileExtension(viewOnceContent.mediaType)}`;
-      await saveBackup(buffer, filename);
-      
-      // Enviar contenido
-      return await sendViewOnceContent(buffer, viewOnceContent, tradutor, originalMessage);
+      await saveToBackup(buffer, viewOnceData.mediaType, messageId);
+      return await sendInterceptedMedia(buffer, viewOnceData, tradutor, m);
     } else {
-      // Enviar información disponible
-      return await sendViewOnceInfo(viewOnceContent, tradutor, originalMessage, cached.source);
+      return await sendViewOnceDetectionInfo(viewOnceData, tradutor, m, 'normal');
     }
   } catch (error) {
-    console.error('Error procesando desde cache:', error);
+    console.error('Error procesando ViewOnce normal:', error);
     return false;
   }
 }
 
-// Extraer contenido ViewOnce de diferentes estructuras
-function extractViewOnceContent(data) {
-  const structures = [
-    // ViewOnce directo
-    () => data.message?.viewOnceMessage?.message,
-    () => data.message?.viewOnceMessageV2?.message,
-    () => data.message?.viewOnceMessageV2Extension?.message,
+// Procesar ViewOnce desde quoted
+async function processViewOnceFromQuoted(m, tradutor) {
+  try {
+    const quotedMessage = m.quoted.message;
+    const viewOnceData = extractViewOnceFromMessage(quotedMessage);
     
-    // ViewOnce en mensaje
-    () => data.viewOnceMessage?.message,
-    () => data.viewOnceMessageV2?.message,
-    () => data.viewOnceMessageV2Extension?.message,
+    if (!viewOnceData) return false;
     
-    // Mensaje directo con viewOnce
+    console.log('📋 ViewOnce encontrado en quoted');
+    
+    // Crear mensaje simulado para descarga
+    const simulatedMessage = {
+      key: m.quoted.key || m.key,
+      message: quotedMessage
+    };
+    
+    const buffer = await attemptDownload(viewOnceData, simulatedMessage);
+    
+    if (buffer && buffer.length > 0) {
+      await saveToBackup(buffer, viewOnceData.mediaType, m.quoted.key?.id || messageId);
+      return await sendInterceptedMedia(buffer, viewOnceData, tradutor, m);
+    } else {
+      return await sendViewOnceDetectionInfo(viewOnceData, tradutor, m, 'quoted');
+    }
+  } catch (error) {
+    console.error('Error procesando quoted ViewOnce:', error);
+    return false;
+  }
+}
+
+// Analizar mensaje ausente
+async function analyzeAbsentMessage(m, tradutor) {
+  try {
+    console.log('🔍 Analizando mensaje ausente completo...');
+    console.log('📊 Estructura completa del mensaje:', JSON.stringify(m, null, 2));
+    
+    // Buscar pistas de ViewOnce en cualquier parte del objeto
+    const viewOnceHints = findViewOnceHints(m);
+    
+    if (viewOnceHints.length > 0) {
+      let message = `🔍 ${tradutor.texto1}\n\n`;
+      message += `⚠️ **ViewOnce Detectado (Mensaje Ausente)**\n\n`;
+      message += `🔎 **Pistas encontradas:**\n`;
+      
+      viewOnceHints.forEach((hint, index) => {
+        message += `${index + 1}. ${hint}\n`;
+      });
+      
+      message += `\n💡 _El contenido fue marcado como ausente antes de poder interceptarlo_`;
+      message += `\n🔧 _Sistema de interceptación activo para futuros mensajes_`;
+      
+      return await global.conn.sendMessage(m.chat, { text: message }, { quoted: m });
+    } else {
+      // Mensaje genérico para ausente sin pistas
+      const message = `🔍 ${tradutor.texto1}\n\n⚠️ **Mensaje ViewOnce Ausente**\n\n💡 _No se encontraron pistas suficientes para recuperar el contenido_`;
+      return await global.conn.sendMessage(m.chat, { text: message }, { quoted: m });
+    }
+  } catch (error) {
+    console.error('Error analizando mensaje ausente:', error);
+    const message = `🔍 ${tradutor.texto1}\n\n❌ _Error analizando mensaje ausente_`;
+    return await global.conn.sendMessage(m.chat, { text: message }, { quoted: m });
+  }
+}
+
+// Escaneo profundo por ViewOnce
+async function deepScanForViewOnce(m, tradutor) {
+  try {
+    const deepScan = (obj, path = '', depth = 0) => {
+      if (depth > 5) return null;
+      
+      for (const [key, value] of Object.entries(obj)) {
+        const currentPath = path ? `${path}.${key}` : key;
+        
+        // Buscar palabras clave
+        if (key.toLowerCase().includes('viewonce') || key.toLowerCase().includes('view_once')) {
+          return { path: currentPath, value, key };
+        }
+        
+        // Buscar propiedades viewOnce
+        if (key === 'viewOnce' && value === true) {
+          return { path: currentPath, value, key, parent: obj };
+        }
+        
+        // Recursión
+        if (typeof value === 'object' && value !== null) {
+          const found = deepScan(value, currentPath, depth + 1);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    
+    const found = deepScan(m);
+    if (found) {
+      console.log(`🎯 ViewOnce encontrado en escaneo profundo: ${found.path}`);
+      
+      const message = `🔍 ${tradutor.texto1}\n\n🎯 **ViewOnce Detectado (Escaneo Profundo)**\n\n📍 **Ubicación:** ${found.path}\n🔑 **Clave:** ${found.key}\n📊 **Tipo:** ${typeof found.value}\n\n⚡ _Detectado mediante análisis profundo de estructura_`;
+      
+      return await global.conn.sendMessage(m.chat, { text: message }, { quoted: m });
+    }
+  } catch (error) {
+    console.error('Error en escaneo profundo:', error);
+  }
+  
+  return false;
+}
+
+// Extraer ViewOnce de mensaje
+function extractViewOnceFromMessage(message) {
+  if (!message) return null;
+  
+  // Diferentes estructuras de ViewOnce
+  const extractors = [
+    // ViewOnce estándar
     () => {
-      const msg = data.message || data;
-      for (const [key, value] of Object.entries(msg)) {
+      if (message.viewOnceMessage?.message) {
+        const content = message.viewOnceMessage.message;
+        const messageType = Object.keys(content)[0];
+        return {
+          content,
+          messageType,
+          mediaType: getMediaType(messageType),
+          data: content[messageType]
+        };
+      }
+      return null;
+    },
+    
+    // ViewOnceV2
+    () => {
+      if (message.viewOnceMessageV2?.message) {
+        const content = message.viewOnceMessageV2.message;
+        const messageType = Object.keys(content)[0];
+        return {
+          content,
+          messageType,
+          mediaType: getMediaType(messageType),
+          data: content[messageType]
+        };
+      }
+      return null;
+    },
+    
+    // ViewOnce directo en propiedades
+    () => {
+      for (const [key, value] of Object.entries(message)) {
         if (value && typeof value === 'object' && value.viewOnce === true) {
-          return { [key]: value };
+          return {
+            content: message,
+            messageType: key,
+            mediaType: getMediaType(key),
+            data: value
+          };
         }
       }
       return null;
     }
   ];
   
-  for (const extract of structures) {
+  for (const extractor of extractors) {
     try {
-      const content = extract();
-      if (content) {
-        const messageType = Object.keys(content)[0];
-        const mediaType = getMediaTypeFromMessage(messageType);
-        
-        return {
-          content,
-          messageType,
-          mediaType,
-          data: content[messageType]
-        };
-      }
+      const result = extractor();
+      if (result) return result;
     } catch (error) {
       continue;
     }
@@ -313,12 +294,12 @@ function extractViewOnceContent(data) {
   return null;
 }
 
-// Descargar contenido ViewOnce
-async function downloadViewOnceContent(viewOnceContent, originalData) {
+// Intentar descarga con múltiples métodos
+async function attemptDownload(viewOnceData, messageContext) {
   const methods = [
-    // Método 1: downloadContentFromMessage estándar
+    // Método 1: downloadContentFromMessage
     async () => {
-      const media = await downloadContentFromMessage(viewOnceContent.data, viewOnceContent.mediaType);
+      const media = await downloadContentFromMessage(viewOnceData.data, viewOnceData.mediaType);
       let buffer = Buffer.from([]);
       for await (const chunk of media) {
         buffer = Buffer.concat([buffer, chunk]);
@@ -326,9 +307,9 @@ async function downloadViewOnceContent(viewOnceContent, originalData) {
       return buffer;
     },
     
-    // Método 2: downloadContentFromMessage con mensaje completo
+    // Método 2: downloadContentFromMessage con contenido completo
     async () => {
-      const media = await downloadContentFromMessage(viewOnceContent.content, viewOnceContent.mediaType);
+      const media = await downloadContentFromMessage(viewOnceData.content, viewOnceData.mediaType);
       let buffer = Buffer.from([]);
       for await (const chunk of media) {
         buffer = Buffer.concat([buffer, chunk]);
@@ -336,9 +317,17 @@ async function downloadViewOnceContent(viewOnceContent, originalData) {
       return buffer;
     },
     
-    // Método 3: Acceso directo por URL
+    // Método 3: Usando función download si existe
     async () => {
-      const data = viewOnceContent.data;
+      if (messageContext.download && typeof messageContext.download === 'function') {
+        return await messageContext.download();
+      }
+      return null;
+    },
+    
+    // Método 4: Acceso directo por URL
+    async () => {
+      const data = viewOnceData.data;
       if (data.url) {
         const response = await fetch(data.url);
         if (response.ok) {
@@ -346,38 +335,15 @@ async function downloadViewOnceContent(viewOnceContent, originalData) {
         }
       }
       return null;
-    },
-    
-    // Método 4: Construcción de URL desde directPath
-    async () => {
-      const data = viewOnceContent.data;
-      if (data.directPath) {
-        const mediaUrl = `https://mmg.whatsapp.net${data.directPath}`;
-        const response = await fetch(mediaUrl);
-        if (response.ok) {
-          return Buffer.from(await response.arrayBuffer());
-        }
-      }
-      return null;
-    },
-    
-    // Método 5: Usar conn.getFile si está disponible
-    async () => {
-      const data = viewOnceContent.data;
-      if (data.url && global.conn.getFile) {
-        const fileData = await global.conn.getFile(data.url);
-        return fileData.data;
-      }
-      return null;
     }
   ];
   
   for (let i = 0; i < methods.length; i++) {
     try {
-      console.log(`Probando método de descarga ${i + 1}...`);
+      console.log(`🔄 Probando método de descarga ${i + 1}...`);
       const result = await methods[i]();
       if (result && result.length > 0) {
-        console.log(`✅ Método ${i + 1} exitoso (${result.length} bytes)`);
+        console.log(`✅ Descarga exitosa con método ${i + 1} (${result.length} bytes)`);
         return result;
       }
     } catch (error) {
@@ -388,99 +354,98 @@ async function downloadViewOnceContent(viewOnceContent, originalData) {
   return null;
 }
 
-// Procesar mensaje actual
-async function processCurrentMessage(m, tradutor) {
-  if (!hasViewOnceContent(m)) return false;
+// Buscar pistas de ViewOnce
+function findViewOnceHints(obj, hints = [], path = '', depth = 0) {
+  if (depth > 4) return hints;
   
-  console.log('🔍 ViewOnce detectado en mensaje actual');
-  
-  const viewOnceContent = extractViewOnceContent(m);
-  if (!viewOnceContent) return false;
-  
-  const buffer = await downloadViewOnceContent(viewOnceContent, m);
-  
-  if (buffer && buffer.length > 0) {
-    const filename = `current_${Date.now()}_${m.key.id}.${getFileExtension(viewOnceContent.mediaType)}`;
-    await saveBackup(buffer, filename);
-    return await sendViewOnceContent(buffer, viewOnceContent, tradutor, m);
-  }
-  
-  return false;
-}
-
-// Manejar mensaje ausente
-async function handleAbsentMessage(m, tradutor, messageId) {
-  // Buscar en todos los caches
-  for (const [cacheKey, cached] of viewOnceCache.entries()) {
-    if (cacheKey.includes(messageId)) {
-      console.log('📦 Encontrado en cache, procesando...');
-      const result = await processCachedViewOnce(cached, tradutor, m);
-      if (result) {
-        viewOnceCache.delete(cacheKey);
-        return result;
-      }
+  for (const [key, value] of Object.entries(obj)) {
+    const currentPath = path ? `${path}.${key}` : key;
+    
+    // Pistas directas
+    if (key.toLowerCase().includes('viewonce')) {
+      hints.push(`ViewOnce encontrado en: ${currentPath}`);
+    }
+    
+    if (key === 'viewOnce') {
+      hints.push(`Propiedad viewOnce: ${value} en ${currentPath}`);
+    }
+    
+    // Pistas de contenido media
+    if (key.includes('Message') && value && typeof value === 'object') {
+      hints.push(`Mensaje de tipo: ${key} en ${currentPath}`);
+    }
+    
+    // Pistas de parámetros
+    if (key === 'messageStubParameters' && Array.isArray(value)) {
+      hints.push(`Parámetros: ${value.join(', ')}`);
+    }
+    
+    // Recursión
+    if (typeof value === 'object' && value !== null) {
+      findViewOnceHints(value, hints, currentPath, depth + 1);
     }
   }
   
-  // Mensaje de fallo
-  const message = `🔍 ${tradutor.texto1}\n\n⚠️ **ViewOnce detectado como mensaje ausente**\n\n🎯 _Sistema de interceptación activo_\n💡 _Reenvía el ViewOnce para intentar interceptarlo_\n\n📊 _Cache actual: ${viewOnceCache.size} mensajes_`;
-  
-  return await global.conn.sendMessage(m.chat, { text: message }, { quoted: m });
+  return hints;
 }
 
-// Enviar contenido ViewOnce
-async function sendViewOnceContent(buffer, viewOnceContent, tradutor, m) {
+// Enviar media interceptada
+async function sendInterceptedMedia(buffer, viewOnceData, tradutor, m) {
   try {
-    const cap = `🔥 ${tradutor.texto1}\n\n${viewOnceContent.data?.caption || ''}`;
+    const caption = `🔥 ${tradutor.texto1}\n\n${viewOnceData.data?.caption || ''}`;
     const options = { quoted: m };
     
-    switch (viewOnceContent.mediaType) {
-      case 'video':
-        return await global.conn.sendMessage(m.chat, { 
-          video: buffer, 
-          caption: cap,
-          mimetype: viewOnceContent.data?.mimetype || 'video/mp4'
+    switch (viewOnceData.mediaType) {
+      case 'image':
+        return await global.conn.sendMessage(m.chat, {
+          image: buffer,
+          caption,
+          mimetype: viewOnceData.data?.mimetype || 'image/jpeg'
         }, options);
         
-      case 'image':
-        return await global.conn.sendMessage(m.chat, { 
-          image: buffer, 
-          caption: cap,
-          mimetype: viewOnceContent.data?.mimetype || 'image/jpeg'
+      case 'video':
+        return await global.conn.sendMessage(m.chat, {
+          video: buffer,
+          caption,
+          mimetype: viewOnceData.data?.mimetype || 'video/mp4'
         }, options);
         
       case 'audio':
-        return await global.conn.sendMessage(m.chat, { 
-          audio: buffer, 
-          ptt: viewOnceContent.data?.ptt || true,
-          mimetype: viewOnceContent.data?.mimetype || 'audio/ogg; codecs=opus'
+        return await global.conn.sendMessage(m.chat, {
+          audio: buffer,
+          ptt: viewOnceData.data?.ptt || true,
+          mimetype: viewOnceData.data?.mimetype || 'audio/ogg; codecs=opus'
         }, options);
         
       default:
-        return await global.conn.sendMessage(m.chat, { 
+        return await global.conn.sendMessage(m.chat, {
           document: buffer,
-          fileName: `viewonce.${getFileExtension(viewOnceContent.mediaType)}`,
-          caption: cap
+          fileName: `viewonce.${getFileExtension(viewOnceData.mediaType)}`,
+          caption
         }, options);
     }
   } catch (error) {
-    console.error('Error enviando contenido:', error);
+    console.error('Error enviando media:', error);
     return false;
   }
 }
 
-// Enviar información de ViewOnce
-async function sendViewOnceInfo(viewOnceContent, tradutor, m, source) {
+// Enviar información de detección
+async function sendViewOnceDetectionInfo(viewOnceData, tradutor, m, source) {
   try {
-    const data = viewOnceContent.data;
+    const data = viewOnceData.data;
     let message = `🔍 ${tradutor.texto1} (${source})\n\n`;
-    message += `📱 **ViewOnce Interceptado**\n`;
-    message += `📄 Tipo: ${viewOnceContent.mediaType}\n`;
+    message += `📱 **ViewOnce Detectado**\n`;
+    message += `📄 Tipo: ${viewOnceData.mediaType}\n`;
+    message += `🎭 Mensaje: ${viewOnceData.messageType}\n`;
+    
     if (data.mimetype) message += `🎭 MIME: ${data.mimetype}\n`;
     if (data.fileLength) message += `📏 Tamaño: ${data.fileLength} bytes\n`;
     if (data.seconds) message += `⏱️ Duración: ${data.seconds}s\n`;
     if (data.caption) message += `💬 Caption: ${data.caption}\n`;
-    message += `\n⚡ _Contenido no disponible para descarga_`;
+    
+    message += `\n⚠️ _Contenido no disponible para descarga_`;
+    message += `\n🔧 _Pero se detectó la estructura ViewOnce_`;
     
     return await global.conn.sendMessage(m.chat, { text: message }, { quoted: m });
   } catch (error) {
@@ -490,7 +455,7 @@ async function sendViewOnceInfo(viewOnceContent, tradutor, m, source) {
 }
 
 // Funciones auxiliares
-function getMediaTypeFromMessage(messageType) {
+function getMediaType(messageType) {
   if (messageType.includes('image')) return 'image';
   if (messageType.includes('video')) return 'video';
   if (messageType.includes('audio')) return 'audio';
@@ -508,13 +473,14 @@ function getFileExtension(mediaType) {
   return extensions[mediaType] || 'bin';
 }
 
-async function saveBackup(buffer, filename) {
+async function saveToBackup(buffer, mediaType, messageId) {
   try {
     const backupDir = './temp/viewonce_backup';
     if (!existsSync(backupDir)) {
       mkdirSync(backupDir, { recursive: true });
     }
     
+    const filename = `${Date.now()}_${messageId}.${getFileExtension(mediaType)}`;
     const filepath = join(backupDir, filename);
     writeFileSync(filepath, buffer);
     console.log(`💾 Backup guardado: ${filename}`);
@@ -523,28 +489,14 @@ async function saveBackup(buffer, filename) {
   }
 }
 
-// Limpieza periódica
+// Limpieza
 setInterval(() => {
-  const now = Date.now();
-  let cleaned = 0;
-  
-  for (const [key, value] of viewOnceCache.entries()) {
-    if (now - value.timestamp > 300000) { // 5 minutos
-      viewOnceCache.delete(key);
-      cleaned++;
-    }
+  if (processedMessageIds.size > 1000) {
+    processedMessageIds.clear();
   }
-  
-  if (processedMessages.size > 1000) {
-    processedMessages.clear();
-  }
-  
-  if (cleaned > 0) {
-    console.log(`🧹 ${cleaned} entradas de cache limpiadas`);
-  }
-}, 60000);
+}, 300000);
 
-// Configuración del plugin
+// Configuración
 export const disabled = false;
 export const priority = 1000;
 export const command = /^$/;
