@@ -60,7 +60,7 @@
         "megatron": {
             "idpelonome": "megatron",
             "nomeplaneta": "🌗 Megatron ",
-            "imgPerfil": "./src/glx/megatron.jpg",
+            "imgPerfil": "./src/assets/glx/megatron.jpg",
             "id": null,
             "poder": 13000,
             "habitantes": [],

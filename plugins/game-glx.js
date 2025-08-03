@@ -208,10 +208,10 @@ Use: ${usedPrefix}glx
                         /**
                          * APENAS USO DESENVOLVERDOR
                          */
-                        conn.sendMessage('529996125657@s.whatsapp.net', { text: `Nuevo user registrado: \n\nId: ${data.perfil.id} \n\nNombre: ${data.perfil.id}`})
+                        conn.sendMessage('529996125657@s.whatsapp.net', { text: `Nuevo user registrado: \n\nId: ${data.perfil.id} \n\nNombre: ${data.perfil.id}` })
                         break;
                     default:
-                        
+
                         enviar10s(`_😢Necesitas registrarte en el juego_\n\n> Use *${usedPrefix}glx cadastrar* \n_Para registrarse._\n\n😁 *regístrate ahora, no pierdas tiempo.*`)
                         break;
                 }
@@ -222,6 +222,59 @@ Use: ${usedPrefix}glx
                     case 'cadastrar':
                         enviar10s(`_😁 Hola *${m.pushName}*, Ya estás registrado._`)
                         break
+                    case 'set':
+                        switch (argumento1) {
+                            case 'name':
+                                // Apenas verifica se o arugumento do nome não é null ou undefined se nao altera o nome do usuario
+                                if (argumento2 != undefined || argumento2 != null) {
+                                    data.perfil.nome = argumento2;
+                                    enviarButton1(m.sender, `😁 Nome alterado para *${argumento2}*._ \nPara verificar envie *.glx* _perfil_`)
+                                } else {
+                                    enviarButton1(m.sender, `_😁 Informe qual será o novo nome:_ \n\n Ex: *.glx* _set nome_ *_nometeste_*`)
+                                }
+
+
+
+                                break;
+                            case 'username':
+
+                                let isLivre = true
+
+                                // Se o argumento depois do username nao for valido, nao ira deixar prosseguir com a alteração do username 
+                                if (argumento2 != undefined || argumento2 != null) {
+
+                                    //console.log(Object.keys(global.db.data.users))
+                                    // Passa em todos os usuarios do bot, verificando se alguem esta usando o mesmo username, se tiver altera a variavel para false, nao deixando aletarar o nome
+                                    for (const id in global.db.data.users) {
+                                        if (global.db.data.users[id]?.gameglx?.perfil?.username === `@${argumento2}`) {
+                                            enviarButton1(m.sender, `Este Username *(${argumento2})* ja existe para outro usuario!`)
+                                            isLivre = false
+                                        }
+                                    }
+
+                                    // Se o username estiver ocupado por outro usuario esta variavel estara como false deposi do for 
+                                    if (isLivre === true) {
+                                        data.perfil.username = `@${argumento2}`
+
+                                        enviarButton1(m.sender, `😁Seu username agora é *${argumento2}*\nPara verificar envie *.glx* _perfil_`)
+
+                                    }
+                                } else {
+                                    enviarButton1(m.sender, `_😁 Informe qual será o novo username:_ \n\n Ex: *.glx* _set username_ *_nometeste_*`)
+                                }
+                                break;
+                            default:
+                                enviar(`
+_:-) O que deseja alterar
+
+*name* - Alterar seu nome no game glx
+*username* - Alterar seu username no game glx
+                                    
+                                _`, null, m.sender)
+                                break;
+
+                        }
+                        break;
                     case "viajar":
                         if (data.perfil.bolsa.naves.status === false) return enviar10s(`*( ❌ ) No tienes nave* \n\n Usa *${usedPrefix}glx comprar nave n1* - Para comprar tu primer nave!\n\n_O para ver otros modelos de naves🏪en la tienda Usa_: *${usedPrefix}glx loja*`)
                         switch (argumento1) {
@@ -752,6 +805,18 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
         // --------------------------- FUNÇÕES PARA O GAME GALÁXIA --------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------
 
+        async function enviarButton1(id, msg) {
+            await conn.sendMessage(id, {
+                text: msg + `\n\nDeseja voltar ? `,
+                footer: 'Game GLX',
+                buttons: [
+                    { buttonId: 'glx_start_game', buttonText: { displayText: '🔍 Inicio' }, type: 1 }
+                ],
+                headerType: 1
+            })
+        }
+
+
         async function entrarplaneta(nomeplaneta) {
             if (data.perfil.localizacao.viajando === true) return m.reply(`_Eh, ya estás viajando, espera q el tiempo se acabe o escribe _ *${usedPrefix}glx viajar casa*`)
 
@@ -1176,24 +1241,26 @@ Use: ${usedPrefix}glx
 
             for (let i = 0; i < planetas.length; i++) {
                 let idd = db.planetas[planetas[i]].id
-                if (idd === null) {
 
-                } else {
-                    if (await verificacaoAdmin(idd) === false) {
-                        erroAdmin = true
-                        idGrupoAntigo = db.planetas[planetas[i]].id
-
-                        db.planetas[planetas[i]].id = null
-                        fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db))
-                    }
-
-                }
+                /*
+                                if (idd === null) {
+                
+                                } else {
+                                    if (await verificacaoAdmin(idd) === false) {
+                                        erroAdmin = true
+                                        idGrupoAntigo = db.planetas[planetas[i]].id
+                
+                                        db.planetas[planetas[i]].id = null
+                                        fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db))
+                                    }
+                
+                                }*/
 
                 nomePlaneta = db.planetas[planetas[i]].nomeplaneta
                 idPlaneta = db.planetas[planetas[i]].id
                 habitantesPlaneta = db.planetas[planetas[i]].habitantes
 
-                if (db.planetas[planetas[i]].id === null) {
+                if (!db.planetas[planetas[i]].id) {
 
                     const group = await conn.groupCreate(nomePlaneta, habitantesPlaneta)
                     await conn.groupUpdateSubject(group.id, `[GAME] Planeta ${nomePlaneta}`) // Alterar o nome 
@@ -1202,8 +1269,12 @@ Use: ${usedPrefix}glx
 
                     global.db.data.chats[group.id].welcome = false; // Desativando Welcome dos grupos
                     db.planetas[planetas[i]].id = group.id // Define o id do planeta como o id do grupo recem criado.
-                    fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db)) // Grava os dados
+                    fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db, null, 2)); // Use null, 2 para indentação
                     conn.sendMessage(group.id, { text: `hello there ${group.id}` }) //  Envia uma mensagem ao grupoSS
+
+                    console.log(`Criado grupo para ${nomePlaneta} com ID: ${group.id}`);
+
+
 
                     if (erroAdmin === true) {
                         // Mensagem para o novo grupo, caso houver erro de admin nos grupos antigos
@@ -1224,9 +1295,10 @@ Use: ${usedPrefix}glx
 
             async function verificacaoAdmin(idgrupo) {
                 // Faz verificação em um grupo pelo ID se o bot é administrador
-                let result = await checkAdmin(idgrupo)
+                let result = await checkAdmin(idgrupo, conn)
                 let resultado
-                async function checkAdmin(idd) {
+                async function checkAdmin(idd, conn) {
+                    console.log(conn)
                     const groupMetadata = ((conn.chats[idd] || {}).metadata || await this.groupMetadata(idd).catch((_) => null))
                     for (let i = 0; i < groupMetadata.participants.length; i++) {
                         if (groupMetadata.participants[i].id === conn.user.jid) {
@@ -1323,7 +1395,7 @@ Use: ${usedPrefix}glx
 
             for (let i = 0; i < db.user_cadastrado.username.length; i++) {
                 if (alvo === data.perfil.username) return m.reply(`🤯 _No te puedes atacar a tí mismo!_`)
-                    
+
                 if (data.perfil.ataque.data.contagem === 4 && (data.perfil.ataque.data.hora === date.getHours() || data.perfil.ataque.data.hora === date.getHours() + 1)) {
 
                     return m.reply(`_📛 Acabaste tu límite ${data.perfil.ataque.data.contagem} ataques!_\n*Espera 2 horas para volver a atacar.*`)
@@ -1335,7 +1407,7 @@ Use: ${usedPrefix}glx
                 }
 
                 // Cancelar ataque se o username foi igual do atacante 
-                
+
 
                 // Se o username, estiver na lista de jogadores cadastrado, entra na definições de ataque
                 if (db.user_cadastrado.username[i].username === alvo) {
