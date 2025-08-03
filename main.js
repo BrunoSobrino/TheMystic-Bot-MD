@@ -19,6 +19,9 @@ import {makeWASocket, protoType, serialize} from './src/libraries/simple.js';
 import {initializeSubBots} from './src/libraries/subBotManager.js';
 import {Low, JSONFile} from 'lowdb';
 import store from './src/libraries/store.js';
+// IMPORTAR LA NUEVA CLASE LidResolver
+import LidResolver from './src/libraries/LidResolver.js';
+
 const {DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC } = await import("baileys");
 import readline from 'readline';
 import NodeCache from 'node-cache';
@@ -74,169 +77,6 @@ global.loadDatabase = async function loadDatabase() {
 loadDatabase();
 
 /* ------------------------------------------------*/
-
-/**
- * Interceptor global para resolver LIDs en mensajes
- */
-class LidResolver {
-  constructor(conn) {
-    this.conn = conn;
-    this.lidCache = new Map();
-    this.processingQueue = new Map();
-  }
-
-  async resolveLid(lidJid, groupChatId, maxRetries = 3) {
-    if (!lidJid.endsWith('@lid') || !groupChatId?.endsWith('@g.us')) {
-      return lidJid.includes('@') ? lidJid : `${lidJid}@s.whatsapp.net`;
-    }
-
-    const cacheKey = `${lidJid}_${groupChatId}`;
-    if (this.lidCache.has(cacheKey)) {
-      return this.lidCache.get(cacheKey);
-    }
-
-    if (this.processingQueue.has(cacheKey)) {
-      return await this.processingQueue.get(cacheKey);
-    }
-
-    const lidToFind = lidJid.split('@')[0];
-    
-    const resolvePromise = (async () => {
-      let attempts = 0;
-      while (attempts < maxRetries) {
-        try {
-          const metadata = await this.conn?.groupMetadata(groupChatId);
-          if (!metadata?.participants) throw new Error('No se obtuvieron participantes');
-
-          for (const participant of metadata.participants) {
-            try {
-              if (!participant?.jid) continue;
-              
-              const contactDetails = await this.conn?.onWhatsApp(participant.jid);
-              if (!contactDetails?.[0]?.lid) continue;
-              
-              const possibleLid = contactDetails[0].lid.split('@')[0];
-              if (possibleLid === lidToFind) {
-                this.lidCache.set(cacheKey, participant.jid);
-                this.processingQueue.delete(cacheKey);
-                return participant.jid;
-              }
-            } catch (e) {
-              continue;
-            }
-          }
-          
-          this.lidCache.set(cacheKey, lidJid);
-          this.processingQueue.delete(cacheKey);
-          return lidJid;
-        } catch (e) {
-          if (++attempts >= maxRetries) {
-            this.lidCache.set(cacheKey, lidJid);
-            this.processingQueue.delete(cacheKey);
-            return lidJid;
-          }
-          await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
-        }
-      }
-      return lidJid;
-    })();
-
-    this.processingQueue.set(cacheKey, resolvePromise);
-    return await resolvePromise;
-  }
-
-  async processObject(obj, groupChatId) {
-    if (!obj || typeof obj !== 'object') return obj;
-
-    if (Array.isArray(obj)) {
-      const results = [];
-      for (const item of obj) {
-        results.push(await this.processObject(item, groupChatId));
-      }
-      return results;
-    }
-
-    const processed = {};
-    for (const [key, value] of Object.entries(obj)) {
-      if (typeof value === 'string' && value.endsWith('@lid') && groupChatId) {
-        processed[key] = await this.resolveLid(value, groupChatId);
-      } else if (typeof value === 'object' && value !== null) {
-        processed[key] = await this.processObject(value, groupChatId);
-      } else {
-        processed[key] = value;
-      }
-    }
-    return processed;
-  }
-
-  async processMessage(message) {
-    try {
-      if (!message || !message.key) return message;
-
-      const groupChatId = message.key.remoteJid?.endsWith('@g.us') ? message.key.remoteJid : null;
-      if (!groupChatId) return message;
-
-      const processedMessage = JSON.parse(JSON.stringify(message));
-
-      if (processedMessage.key?.participant?.endsWith('@lid')) {
-        processedMessage.key.participant = await this.resolveLid(
-          processedMessage.key.participant, 
-          groupChatId
-        );
-      }
-
-      if (processedMessage.participant?.endsWith('@lid')) {
-        processedMessage.participant = await this.resolveLid(
-          processedMessage.participant, 
-          groupChatId
-        );
-      }
-
-      if (processedMessage.message) {
-        const messageTypes = Object.keys(processedMessage.message);
-        for (const msgType of messageTypes) {
-          const msgContent = processedMessage.message[msgType];
-          if (msgContent?.contextInfo?.mentionedJid) {
-            const resolvedMentions = [];
-            for (const jid of msgContent.contextInfo.mentionedJid) {
-              if (typeof jid === 'string' && jid.endsWith('@lid')) {
-                resolvedMentions.push(await this.resolveLid(jid, groupChatId));
-              } else {
-                resolvedMentions.push(jid);
-              }
-            }
-            msgContent.contextInfo.mentionedJid = resolvedMentions;
-          }
-
-          if (msgContent?.contextInfo?.quotedMessage) {
-            if (msgContent.contextInfo.participant?.endsWith('@lid')) {
-              msgContent.contextInfo.participant = await this.resolveLid(
-                msgContent.contextInfo.participant, 
-                groupChatId
-              );
-            }
-          }
-        }
-      }
-
-      return processedMessage;
-    } catch (error) {
-      console.error('Error procesando mensaje para resolver LIDs:', error);
-      return message;
-    }
-  }
-
-  clearCache() {
-    const now = Date.now();
-    const maxAge = 1000 * 60 * 30;
-    
-    for (const [key, timestamp] of this.lidCache.entries()) {
-      if (now - timestamp > maxAge) {
-        this.lidCache.delete(key);
-      }
-    }
-  }
-}
 
 /**
  * Procesa texto para resolver LIDs en menciones (@)
@@ -752,6 +592,59 @@ Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
 
+// Limpiar caché del LidResolver cada 30 minutos (más completo)
+setInterval(() => {
+  if (global.lidResolver) {
+    global.lidResolver.clearCache();
+    if (global.lidResolver.isDirty) {
+      global.lidResolver.forceSave();
+    }
+  }
+}, 1000 * 60 * 30);
+
+setInterval(async () => {
+  if (stopped === 'close' || !conn || !conn?.user) return;
+  await clearTmp();
+}, 180000);
+
+setInterval(async () => {
+  if (stopped === 'close' || !conn || !conn?.user) return;
+  const _uptime = process.uptime() * 1000;
+  const uptime = clockString(_uptime);
+  const bio = `• Activo: ${uptime} | TheMystic-Bot-MD`;
+  await conn?.updateProfileStatus(bio).catch((_) => _);
+}, 60000);
+
+function clockString(ms) {
+  const d = isNaN(ms) ? '--' : Math.floor(ms / 86400000);
+  const h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24;
+  const m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60;
+  const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
+  return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
+}
+
+// Asegurar guardado al salir
+process.on('exit', () => {
+  if (global.lidResolver?.isDirty) {
+    global.lidResolver.forceSave();
+  }
+});
+
+process.on('SIGINT', () => {
+  console.log('\n📁 Guardando caché LID antes de salir...');
+  if (global.lidResolver?.isDirty) {
+    global.lidResolver.forceSave();
+  }
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  if (global.lidResolver?.isDirty) {
+    global.lidResolver.forceSave();
+  }
+  process.exit(0);
+});
+
 async function _quickTest() {
   const test = await Promise.all([
     spawn('ffmpeg'),
@@ -776,31 +669,3 @@ async function _quickTest() {
   global.support = {ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find};
   Object.freeze(global.support);
 }
-
-// Limpiar caché del LidResolver cada 30 minutos
-setInterval(() => {
-  global.lidResolver?.clearCache();
-}, 1000 * 60 * 30);
-
-setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn?.user) return;
-  await clearTmp();
-}, 180000);
-
-setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn?.user) return;
-  const _uptime = process.uptime() * 1000;
-  const uptime = clockString(_uptime);
-  const bio = `• Activo: ${uptime} | TheMystic-Bot-MD`;
-  await conn?.updateProfileStatus(bio).catch((_) => _);
-}, 60000);
-
-function clockString(ms) {
-  const d = isNaN(ms) ? '--' : Math.floor(ms / 86400000);
-  const h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24;
-  const m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60;
-  const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
-  return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
-}
-
-_quickTest().catch(console.error);
