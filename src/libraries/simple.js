@@ -2172,7 +2172,7 @@ export function serialize() {
                     }
                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
-                    const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId)
+	            const isHexPattern = /^[A-F0-9]{16,32}$/.test(messageId)
                     return hasKnownPrefix || isHexPattern || false;
                 } catch (e) {
                     console.error("Error en isBaileys getter:", e);
@@ -2373,7 +2373,7 @@ export function serialize() {
                                     }
                                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
-                                    const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId);
+				    const isHexPattern = /^[A-F0-9]{16,32}$/.test(messageId)
                                     return hasKnownPrefix || isHexPattern || false;
                                 },
                                 enumerable: true,
