@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 /**
- * Interceptor global para resolver LIDs en mensajes con almacenamiento local
+ * Global interceptor to resolve LIDs in messages with local storage
  */
 class LidResolver {
   constructor(conn) {
@@ -12,21 +12,21 @@ class LidResolver {
     this.cache = new Map();
     this.isDirty = false;
     this.saveTimeout = null;
-    this.maxCacheSize = 1000; // Máximo de entradas en caché
-    this.maxAge = 1000 * 60 * 60 * 24; // 24 horas
-    
-    // Asegurar que el directorio existe
+    this.maxCacheSize = 1000; // Maximum cache entries
+    this.maxAge = 1000 * 60 * 60 * 24; // 24 hours
+
+    // Ensure the directory exists
     this.ensureDirectoryExists();
-    
-    // Cargar caché desde archivo
+
+    // Load cache from file
     this.loadCache();
-    
-    // Configurar auto-guardado
+
+    // Set up autosave
     this.setupAutoSave();
   }
 
   /**
-   * Asegurar que el directorio src existe
+   * Ensure the src directory exists
    */
   ensureDirectoryExists() {
     const srcDir = path.dirname(this.cacheFile);
@@ -36,47 +36,47 @@ class LidResolver {
   }
 
   /**
-   * Cargar caché desde archivo JSON
+   * Load cache from JSON file
    */
   loadCache() {
     try {
       if (fs.existsSync(this.cacheFile)) {
         const data = fs.readFileSync(this.cacheFile, 'utf8');
         const parsed = JSON.parse(data);
-        
-        // Verificar estructura y limpiar entradas expiradas
+
+        // Verify structure and clean expired entries
         const now = Date.now();
         let validEntries = 0;
-        
+
         for (const [key, entry] of Object.entries(parsed)) {
           if (entry && typeof entry === 'object' && entry.jid && entry.timestamp) {
-            // Verificar si no está expirado
+            // Check if not expired
             if (now - entry.timestamp < this.maxAge) {
               this.cache.set(key, entry);
               validEntries++;
             }
           }
         }
-        
-        console.log(`📂 LID Cache cargado: ${validEntries} entradas válidas`);
-        
-        // Si hay muchas entradas expiradas, guardar el caché limpio
+
+        console.log(`📂 LID Cache loaded: ${validEntries} valid entries`);
+
+        // If there are many expired entries, save the clean cache
         if (validEntries !== Object.keys(parsed).length) {
           this.saveCache();
         }
       } else {
-        console.log('📂 Archivo de caché LID no existe, creando nuevo...');
+        console.log('📂 LID cache file does not exist, creating a new one...');
         this.saveCache();
       }
     } catch (error) {
-      console.error('❌ Error cargando caché LID:', error.message);
+      console.error('❌ Error loading LID cache:', error.message);
       this.cache = new Map();
       this.saveCache();
     }
   }
 
   /**
-   * Guardar caché a archivo JSON
+   * Save cache to JSON file
    */
   saveCache() {
     try {
@@ -84,27 +84,27 @@ class LidResolver {
       for (const [key, value] of this.cache.entries()) {
         data[key] = value;
       }
-      
+
       fs.writeFileSync(this.cacheFile, JSON.stringify(data, null, 2), 'utf8');
       this.isDirty = false;
-      console.log(`💾 LID Cache guardado: ${this.cache.size} entradas`);
+      console.log(`💾 LID Cache saved: ${this.cache.size} entries`);
     } catch (error) {
-      console.error('❌ Error guardando caché LID:', error.message);
+      console.error('❌ Error saving LID cache:', error.message);
     }
   }
 
   /**
-   * Configurar auto-guardado cuando hay cambios
+   * Set up autosave when there are changes
    */
   setupAutoSave() {
-    // Guardar cada 30 segundos si hay cambios
+    // Save every 30 seconds if there are changes
     setInterval(() => {
       if (this.isDirty) {
         this.saveCache();
       }
     }, 30000);
 
-    // Guardar al salir del proceso
+    // Save on process exit
     process.on('SIGINT', () => {
       if (this.isDirty) {
         this.saveCache();
@@ -119,59 +119,59 @@ class LidResolver {
   }
 
   /**
-   * Marcar para guardado diferido
+   * Mark for deferred saving
    */
   markDirty() {
     this.isDirty = true;
-    
-    // Guardado diferido para evitar I/O excesivo
+
+    // Deferred save to avoid excessive I/O
     if (this.saveTimeout) {
       clearTimeout(this.saveTimeout);
     }
-    
+
     this.saveTimeout = setTimeout(() => {
       if (this.isDirty) {
         this.saveCache();
       }
-    }, 5000); // Guardar después de 5 segundos de inactividad
+    }, 5000); // Save after 5 seconds of inactivity
   }
 
   /**
-   * Limpiar entradas expiradas del caché
+   * Clean expired entries from the cache
    */
   cleanExpiredEntries() {
     const now = Date.now();
     let removed = 0;
-    
+
     for (const [key, entry] of this.cache.entries()) {
       if (now - entry.timestamp > this.maxAge) {
         this.cache.delete(key);
         removed++;
       }
     }
-    
+
     if (removed > 0) {
-      console.log(`🧹 Limpieza automática: ${removed} entradas LID expiradas`);
+      console.log(`🧹 Automatic cleanup: ${removed} expired LID entries`);
       this.markDirty();
     }
   }
 
   /**
-   * Limpiar caché si excede el tamaño máximo
+   * Clean cache if it exceeds the maximum size
    */
   enforceMaxSize() {
     if (this.cache.size > this.maxCacheSize) {
-      // Obtener entradas ordenadas por timestamp (más antiguas primero)
+      // Get entries sorted by timestamp (oldest first)
       const entries = Array.from(this.cache.entries())
         .sort((a, b) => a[1].timestamp - b[1].timestamp);
-      
-      // Eliminar las más antiguas hasta llegar al límite
+
+      // Remove the oldest until at the limit
       const toRemove = this.cache.size - this.maxCacheSize;
       for (let i = 0; i < toRemove; i++) {
         this.cache.delete(entries[i][0]);
       }
-      
-      console.log(`📊 Cache LID: Eliminadas ${toRemove} entradas antiguas (límite: ${this.maxCacheSize})`);
+
+      console.log(`📊 LID Cache: Removed ${toRemove} old entries (limit: ${this.maxCacheSize})`);
       this.markDirty();
     }
   }
@@ -182,46 +182,46 @@ class LidResolver {
     }
 
     const cacheKey = `${lidJid}_${groupChatId}`;
-    
-    // Verificar caché local
+
+    // Check local cache
     if (this.cache.has(cacheKey)) {
       const entry = this.cache.get(cacheKey);
       const now = Date.now();
-      
-      // Verificar si no está expirado
+
+      // Check if not expired
       if (now - entry.timestamp < this.maxAge) {
         return entry.jid;
       } else {
-        // Eliminar entrada expirada
+        // Remove expired entry
         this.cache.delete(cacheKey);
         this.markDirty();
       }
     }
 
-    // Verificar si ya se está procesando
+    // Check if it's already being processed
     if (this.processingQueue.has(cacheKey)) {
       return await this.processingQueue.get(cacheKey);
     }
 
     const lidToFind = lidJid.split('@')[0];
-    
+
     const resolvePromise = (async () => {
       let attempts = 0;
       while (attempts < maxRetries) {
         try {
           const metadata = await this.conn?.groupMetadata(groupChatId);
-          if (!metadata?.participants) throw new Error('No se obtuvieron participantes');
+          if (!metadata?.participants) throw new Error('Could not get participants');
 
           for (const participant of metadata.participants) {
             try {
               if (!participant?.jid) continue;
-              
+
               const contactDetails = await this.conn?.onWhatsApp(participant.jid);
               if (!contactDetails?.[0]?.lid) continue;
-              
+
               const possibleLid = contactDetails[0].lid.split('@')[0];
               if (possibleLid === lidToFind) {
-                // Guardar en caché local
+                // Save to local cache
                 this.cache.set(cacheKey, {
                   jid: participant.jid,
                   timestamp: Date.now(),
@@ -229,21 +229,21 @@ class LidResolver {
                   lid: lidJid
                 });
                 this.markDirty();
-                
-                // Limpiar cola de procesamiento
+
+                // Clean processing queue
                 this.processingQueue.delete(cacheKey);
-                
-                // Aplicar limpieza y límites
+
+                // Apply cleanup and limits
                 this.enforceMaxSize();
-                
+
                 return participant.jid;
               }
             } catch (e) {
               continue;
             }
           }
-          
-          // No encontrado, guardar resultado negativo por menos tiempo
+
+          // Not found, save negative result for a shorter time
           this.cache.set(cacheKey, {
             jid: lidJid,
             timestamp: Date.now(),
@@ -254,7 +254,7 @@ class LidResolver {
           this.markDirty();
           this.processingQueue.delete(cacheKey);
           return lidJid;
-          
+
         } catch (e) {
           if (++attempts >= maxRetries) {
             this.cache.set(cacheKey, {
@@ -313,14 +313,14 @@ class LidResolver {
 
       if (processedMessage.key?.participant?.endsWith('@lid')) {
         processedMessage.key.participant = await this.resolveLid(
-          processedMessage.key.participant, 
+          processedMessage.key.participant,
           groupChatId
         );
       }
 
       if (processedMessage.participant?.endsWith('@lid')) {
         processedMessage.participant = await this.resolveLid(
-          processedMessage.participant, 
+          processedMessage.participant,
           groupChatId
         );
       }
@@ -344,7 +344,7 @@ class LidResolver {
           if (msgContent?.contextInfo?.quotedMessage) {
             if (msgContent.contextInfo.participant?.endsWith('@lid')) {
               msgContent.contextInfo.participant = await this.resolveLid(
-                msgContent.contextInfo.participant, 
+                msgContent.contextInfo.participant,
                 groupChatId
               );
             }
@@ -354,14 +354,14 @@ class LidResolver {
 
       return processedMessage;
     } catch (error) {
-      console.error('Error procesando mensaje para resolver LIDs:', error);
+      console.error('Error processing message to resolve LIDs:', error);
       return message;
     }
   }
 
   /**
-   * Mantener compatibilidad con la interfaz anterior
-   * Simula un Map para acceso externo
+   * Maintain compatibility with the previous interface
+   * Simulates a Map for external access
    */
   get lidCache() {
     return {
@@ -372,7 +372,7 @@ class LidResolver {
         return entry ? entry.jid : undefined;
       },
       set: (key, value) => {
-        // Si se pasa solo el JID, crear entrada completa
+        // If only JID is passed, create a complete entry
         if (typeof value === 'string') {
           this.cache.set(key, {
             jid: value,
@@ -411,31 +411,31 @@ class LidResolver {
   }
 
   /**
-   * Limpiar entradas expiradas manualmente
+   * Manually clean expired entries
    */
   clearCache() {
     const now = Date.now();
-    const maxAge = 1000 * 60 * 30; // 30 minutos para limpieza manual
+    const maxAge = 1000 * 60 * 30; // 30 minutes for manual cleanup
     let removed = 0;
-    
+
     for (const [key, entry] of this.cache.entries()) {
       if (now - entry.timestamp > maxAge) {
         this.cache.delete(key);
         removed++;
       }
     }
-    
+
     if (removed > 0) {
-      console.log(`🧹 Limpieza manual: ${removed} entradas LID eliminadas`);
+      console.log(`🧹 Manual cleanup: ${removed} LID entries removed`);
       this.markDirty();
     }
-    
-    // También ejecutar limpieza automática
+
+    // Also run automatic cleanup
     this.cleanExpiredEntries();
   }
 
   /**
-   * Obtener estadísticas del caché
+   * Get cache statistics
    */
   getStats() {
     const now = Date.now();
@@ -443,7 +443,7 @@ class LidResolver {
     let errors = 0;
     let valid = 0;
     let expired = 0;
-    
+
     for (const [key, entry] of this.cache.entries()) {
       if (now - entry.timestamp > this.maxAge) {
         expired++;
@@ -455,7 +455,7 @@ class LidResolver {
         valid++;
       }
     }
-    
+
     return {
       total: this.cache.size,
       valid,
@@ -470,7 +470,7 @@ class LidResolver {
   }
 
   /**
-   * Forzar guardado inmediato
+   * Force immediate save
    */
   forceSave() {
     if (this.saveTimeout) {
