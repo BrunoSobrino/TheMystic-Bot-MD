@@ -4,12 +4,13 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_warn
 
-  if (m.mentionedJid.includes(conn.user.jid)) return;
+  const testi = await m?.mentionedJid
+  if (testi.includes(conn.user.jid)) return;
   const pp = './src/assets/images/menu/main/warn.jpg';
   let who;
   if (m.isGroup) {
-    who = m.mentionedJid[0] ?
-      m.mentionedJid[0] :
+    who = await m.mentionedJid[0] ?
+      await m.mentionedJid[0] :
       m.quoted ?
       await m?.quoted?.sender :
       text;

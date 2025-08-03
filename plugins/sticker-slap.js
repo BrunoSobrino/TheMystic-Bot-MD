@@ -10,7 +10,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
     let who;
     if (m.isGroup) {
-      who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false;
+      who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false;
     } else { 
       who = m.chat;
     }
@@ -33,7 +33,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     throw tradutor.texto2;
   };
 };
-handler.help = ["slap"];
-handler.tags = ["General"];
+handler.help = ["slap <@tag>"];
+handler.tags = ['sticker'];
 handler.command = /^(slap|bofetada)$/i;
 export default handler;

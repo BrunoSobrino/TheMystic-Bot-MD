@@ -8,7 +8,7 @@ const handler = async (m, {conn, text}) => {
   const tradutor = _translate.plugins.onwer_anadirXP
 
   let who;
-  if (m.isGroup) who = m.mentionedJid[0];
+  if (m.isGroup) who = await await m.mentionedJid[0];
   else who = m.chat;
   if (!who) throw tradutor.texto1;
   const txt = text.replace('@' + who.split`@`[0], '').trim();

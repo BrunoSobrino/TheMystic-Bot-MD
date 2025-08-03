@@ -20,7 +20,7 @@ const handler = async (m, {conn, usedPrefix, text}) => {
       var user = number + '@s.whatsapp.net';
     } else if (await m?.quoted?.sender) {
       var user = await m?.quoted?.sender;
-    } else if (m.mentionedJid) {
+    } else if (await m.mentionedJid) {
       var user = number + '@s.whatsapp.net';
     }
   } catch (e) {

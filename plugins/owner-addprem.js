@@ -7,7 +7,7 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
   const tradutor = _translate.plugins.owner_addprem
 
   let who;
-  if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false;
+  if (m.isGroup) who = await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.quoted ? await m?.quoted?.sender : false;
   else who = m.chat;
   const textpremERROR = `${tradutor.texto1[0]} ${usedPrefix + command} @${m.sender.split`@`[0]} 1*\n*◉ ${usedPrefix + command} 1 ${tradutor.texto1[1]}`;
   if (!who) return m.reply(textpremERROR, null, {mentions: conn.parseMention(textpremERROR)});

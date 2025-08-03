@@ -1,3 +1,6 @@
+#Archivos temporales
+src/tmp/
+
 # Custom
 web
 MysticSession

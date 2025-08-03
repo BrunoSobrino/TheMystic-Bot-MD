@@ -132,9 +132,7 @@ En este espacio podrás encontrar diversas **comunidades de asistencia** donde p
 | Plataforma | Tipo | Idioma | Enlace |
 | --- | --- | --- |--- |
 | WhatsApp | Canal | Español | [¡Únete aquí!](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y) |
-| WhatsApp | Grupo | Español | [¡Únete aquí!](https://chat.whatsapp.com/Daa3Fe4A9JeFpRI2QtBS4s) |
-| WhatsApp | Group | English | [¡Join here!](https://chat.whatsapp.com/HTatrQokqODKx9eem0CKuY) |
-| WhatsApp | Grupo | Português | [¡Junte-se aqui!](https://chat.whatsapp.com/IqBnWyY0ikZ8BumuvleCzW) |
+| WhatsApp | Grupo | Español | [¡Únete aquí!](https://chat.whatsapp.com/HJnmHGjQG1w3kcgFcuPclo) |
 
 </table>
 

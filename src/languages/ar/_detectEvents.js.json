@@ -1,0 +1,41 @@
+{
+    "_detectevents": {
+        "promote": {
+            "header": "*تم ترقية عضو إلى مشرف*",
+            "group": "*◦ المجموعة:* @group",
+            "new_admin": "*◦ المشرف الجديد:* @user",
+            "executed_by": "*◦ تمت بواسطة:* @user"
+        },
+        "demote": {
+            "header": "*تم تخفيض مشرف إلى عضو*",
+            "group": "*◦ المجموعة:* @group",
+            "removed_admin": "*◦ المشرف المزال:* @user",
+            "executed_by": "*◦ تمت بواسطة:* @user"
+        },
+        "member_add": {
+            "header": "*تمت إضافة عضو جديد إلى المجموعة*",
+            "group": "*◦ المجموعة:* @group",
+            "added_user": "*◦ العضو المضاف:* @user",
+            "added_by": "*◦ تمت الإضافة بواسطة:* @user",
+            "self_added": "*◦ انضم:* @user"
+        },
+        "member_remove": {
+            "header": "*تم إزالة عضو من المجموعة*",
+            "group": "*◦ المجموعة:* @group",
+            "removed_user": "*◦ العضو المزال:* @user",
+            "removed_by": "*◦ تمت الإزالة بواسطة:* @user",
+            "self_removed": "*◦ غادر:* @user"
+        },
+        "group_settings": {
+            "header": "*تم تعديل إعدادات المجموعة*",
+            "group": "*◦ المجموعة:* @group",
+            "action": "*◦ الحالة الجديدة:* @action",
+            "executed_by": "*◦ تمت بواسطة:* @user"
+        },
+        "group_name": {
+            "header": "*تم تغيير اسم المجموعة*",
+            "new_name": "*◦ الاسم الجديد:* @name",
+            "executed_by": "*◦ تمت بواسطة:* @user"
+        }
+    }
+}
