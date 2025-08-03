@@ -1,8 +1,12 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
-    if (!text) return await conn.sendMessage(m.chat, { text: `*[❗] Ingresa un enlace!*\n\nEjemplo: ${usedPrefix + command} https://vt.tiktok.com/ZSBKKk4HS/` }, { quoted: m });
+let handler = async (m, { args, conn, text, usedPrefix, command }) => {
+    const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje;
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
+    const tradutor = _translate.plugins.descargas_facebook;
+
+  if (!text) throw `_*${tradutor.texto1[0]}*_\n\n*${tradutor.texto1[1]}*\n\n*${tradutor.texto1[2]}* _${usedPrefix + command} https://www.facebook.com/share/v/1E5R3gRuHk/`;
 
     const platform = 'facebook';
     
