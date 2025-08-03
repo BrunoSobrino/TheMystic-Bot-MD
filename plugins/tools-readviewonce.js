@@ -9,9 +9,8 @@ const handler = async (m, {conn}) => {
   if (!m.quoted) throw tradutor.texto1;
   if (!m.quoted.viewOnce) throw tradutor.texto2;
   const msg = m.quoted;
-  //const type = Object.keys(msg);
   const type = msg.mtype 
-  const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : 'video');
+  const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : type == 'videoMessage' ? 'video' : 'audio');
   let buffer = Buffer.from([]);
   for await (const chunk of media) {
     buffer = Buffer.concat([buffer, chunk]);
@@ -20,6 +19,8 @@ const handler = async (m, {conn}) => {
     return conn.sendFile(m.chat, buffer, 'error.mp4', msg?.caption ? msg?.caption : '', m);
   } else if (/image/.test(type)) {
     return conn.sendFile(m.chat, buffer, 'error.jpg', msg?.caption ? msg?.caption : '', m);
+  } else if (/audio/.test(type)) {
+    return conn.sendFile(m.chat, buffer, 'error.mp3', msg?.caption ? msg?.caption : '', m);
   }
 };
 handler.help = ['readvo'];
