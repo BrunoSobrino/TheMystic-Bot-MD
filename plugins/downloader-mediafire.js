@@ -12,6 +12,7 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
   
   try {
     const res = await mediafireDl(args[0]);
+    console.log(res)
     const {name, size, date, mime, link} = res;
     const caption = `${tradutor.texto2[0]}\n
     ${tradutor.texto2[1]} ${name}
