@@ -1,4 +1,4 @@
-const { downloadContentFromMessage } = (await import("baileys"));
+/*const { downloadContentFromMessage } = (await import("baileys"));
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -559,3 +559,4 @@ setInterval(() => {
 export const disabled = false;
 export const priority = 1000;
 export const command = /^$/;
+*/
