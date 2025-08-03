@@ -2167,9 +2167,7 @@ export function serialize() {
                     const sender = this.sender || "";
                     const messageId = this.id || "";
                     const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
-                    if (!isFromBot) {
-                        return false;
-                    }
+                    //if (!isFromBot) return false;
                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
 	            const isHexPattern = /^[A-F0-9]{16,32}$/.test(messageId)
@@ -2369,9 +2367,7 @@ export function serialize() {
                                     const sender = this.sender || "";
                                     const messageId = this.id || "";
                                     const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
-                                    if (!isFromBot) {
-                                        return false;
-                                    }
+                                    //if (!isFromBot) return false;
                                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
 				    const isHexPattern = /^[A-F0-9]{16,32}$/.test(messageId)
