@@ -32,7 +32,7 @@ function createHint(text) {
     if (/[aeiouáéíóúüAEIOUÁÉÍÓÚÜ\s'-]/.test(char)) {
       return char;
     } else if (/[a-zA-ZñÑ]/.test(char)) {
-      return '_';
+      return '▢';
     }
     return char;
   }).join('');
