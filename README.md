@@ -1,7 +1,7 @@
 <p align="center">
- <img width="180px" src="https://i.ibb.co/Qn1W6cP/image.png" align="center"/>
- <h2 align="center">TheMystic-Bot-MD</h2>
- <p align="center">Un bot para la plataforma de WhatsApp automatizado, basado especialmente en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.</p>
+  <img width="180px" src="https://i.ibb.co/Qn1W6cP/image.png" align="center"/>
+  <h2 align="center">TheMystic-Bot-MD</h2>
+  <p align="center">An automated WhatsApp bot built on Node.js, offering multiple customizable features for the platform.</p>
 </p>
 
 <p align="center">
@@ -26,88 +26,81 @@
 </p>
 
 <p align="center">
-  <a href="https://api.whatsapp.com/send?phone=+5219992843881&text=&text=.menu">Demostración</a>
+  <a href="https://api.whatsapp.com/send?phone=+5219992843881&text=.menu">Demo</a>
   ·
-  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=Bug">Reportar un error</a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=Bug">Report a Bug</a>
   ·
-  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=Enhancement">Solicitar una característica</a>
+  <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues/new?assignees=&labels=Enhancement">Request a Feature</a>
 </p>
 
-<!-- <p align="center">
-  <a href="/src/docs/README_en.md">English</a>
-  ·
-  <a href="/src/docs/README_pt-br.md">Português</a>
-</p> -->
+<p align="center">Help keep our project active with your <a href="https://www.paypal.me/BrunoSob">donation</a> and contribute to improving the bot’s features for everyone!</p>
 
-<p align="center">¡Ayuda a mantener nuestro proyecto activo con tu <a href="https://www.paypal.me/BrunoSob">donación</a> y contribuye la mejora de las funciones del bot para todos!</p>
+# Deployment, Support, and Community
+- [Deployment Options](#deployment-options)
+  - [Deploy on Cafirexos](#deploy-on-cafirexos)
+  - [Deploy on BoxMineWorld](#deploy-on-boxmineworld)
+  - [Deploy on Other Platforms](#deploy-on-other-platforms)
+- [Support and Community](#support-and-community)
+  - [Support Communities](#usage-guide)
+  - [Contributors](#contributors)
+  - [Acknowledgments](#acknowledgments)
+  - [Main Developer](#main-developer)
 
-# Despliegue, Soporte y Comunidad
-- [Opciones de Despliegue](#opciones-de-despliegue)
-  - [Despliegue en Cafirexos](#despliegue-en-cafirexos)
-  - [Despliegue en BoxMineWorld](#despliegue-en-boxmineworld)
-  - [Despliegue en Otros](#despliegue-en-otros)
-- [Soporte y Comunidad](#soporte-y-comunidad)
-  - [Comunidades de Ayuda](#guía-de-uso)
-  - [Colaboradores](#colaboradores)
-  - [Agradecimientos](#agradecimientos)
-  - [Desarollador Principal](#desarollador-principal)
+> ◇ **Note:** We are aware that **unofficial platforms** exist with **no affiliation** to our project. For **user safety**, we only share **official channels** where you can use the bot, receive support, and access its full functionality.
 
-> ◇ **Nota:** estamos conscientes de que **existen** diferentes lugares que **no son oficiales** o **no tienen relación ni participación** de nuestro proyecto, para mantener la **seguridad** de nuestros **usuarios**, compartimos los lugares **oficiales** donde podrás ser uso de **nuestro bot**, **recibir asistencia**, entre otros términos de **utilidad o funcionalidad** del bot.
-
-# Avisos Importantes
+# Important Notices
 
 > [!IMPORTANT]\
-> Este proyecto **no está afiliado, respaldado ni asociado de ninguna manera** con la plataforma de `WhatsApp`. la plataforma de `WhatsApp` es una subsidiaria registrada por `Meta Platforms Inc.`. Este bot es un **desarrollo independiente** y **no tiene ninguna relación oficial con la compañía**.
+> This project is **not affiliated with, endorsed by, or connected to** `WhatsApp` in any way. `WhatsApp` is a registered subsidiary of `Meta Platforms Inc.`. This bot is an **independent development** and has **no official ties** to the company.
 
 > [!IMPORTANT]\
-> se asegura que este **proyecto no funcione de manera correcta** debido a cuestiones de tiempo personales de [Bruno Sobrino](https://github.com/BrunoSobrino), por lo cual **este proyecto está en desarrollo por parte de los colaboradores** y usuarios que deseen aportar **actualizaciones**.
+> Due to personal time constraints of [Bruno Sobrino](https://github.com/BrunoSobrino), this project is **currently maintained by contributors** and users who wish to provide updates.
 
+# Deployment Options
 
-# Opciones de despliegue
-
-## Despliegue en Cafirexos
+## Deploy on Cafirexos
 
 <a href="https://cafirexos.com">
   <img width="180px" src="https://cdn.cafirexos.com/logos/logo_cfros_2000x2000.png"/>
 </a>
 
 <details>
- <summary><b>:paperclip: Enlaces Importantes</b></summary>
+ <summary><b>:paperclip: Important Links</b></summary>
 
-- [Sitio web](https://cafirexos.com)
-- [Área de clientes](https://cafirexos.com/clientarea.php)
-- [Panel de control](https://panel.cafirexos.com)
-- [Base de conocimientos](https://cafirexos.com/knowledgebase)
-- [Estado de los servicios](https://estado.cafirexos.com)
-- [Canal de WhatsApp](https://cafirexos.com/whatsapp/canal)
-- [Comunidad de WhatsApp](https://cafirexos.com/whatsapp/comunidad)
-- [Soporte](https://cafirexos.com/submitticket.php)
+- [Website](https://cafirexos.com)
+- [Client Area](https://cafirexos.com/clientarea.php)
+- [Control Panel](https://panel.cafirexos.com)
+- [Knowledge Base](https://cafirexos.com/knowledgebase)
+- [Service Status](https://estado.cafirexos.com)
+- [WhatsApp Channel](https://cafirexos.com/whatsapp/canal)
+- [WhatsApp Community](https://cafirexos.com/whatsapp/comunidad)
+- [Support](https://cafirexos.com/submitticket.php)
 
 </details>
 
 > [!IMPORTANT]\
-> El registro de usuarios solo es posible al comprar uno de nuestros productos en la [tienda](https://cafirexos.com/store).
+> User registration is only available after purchasing a product from the [store](https://cafirexos.com/store).
 
-## Despliegue en BoxMineWorld
+## Deploy on BoxMineWorld
 
 <a href="https://boxmineworld.com">
   <img width="180px" src="https://i.ibb.co/sFygw8p/favicon.png"/>
 </a>
 
 <details>
- <summary><b>:paperclip: Enlaces Importantes</b></summary>
+ <summary><b>:paperclip: Important Links</b></summary>
 
-- **Sitio Web:** [boxmineworld.com](https://boxmineworld.com)
-- **Área de Clientes:** [dash.boxmineworld.com](https://dash.boxmineworld.com)
-- **Panel de Control:** [panel.boxmineworld.com](https://panel.boxmineworld.com)
-- **Documentación:** [docs.boxmineworld.com](https://docs.boxmineworld.com)
-- **Comunidad de Discord:** [¡Únete aquí!](https://discord.gg/84qsr4v)
+- **Website:** [boxmineworld.com](https://boxmineworld.com)
+- **Client Area:** [dash.boxmineworld.com](https://dash.boxmineworld.com)
+- **Control Panel:** [panel.boxmineworld.com](https://panel.boxmineworld.com)
+- **Documentation:** [docs.boxmineworld.com](https://docs.boxmineworld.com)
+- **Discord Community:** [Join Here!](https://discord.gg/84qsr4v)
 
 </details>
 
-## Despliegue en otras plataformas
+## Deploy on Other Platforms
 
-En esta sección encontrarás **botones de despliegue** que te permitirán implementar el proyecto en distintos entornos con un solo clic. Este proceso es **automático** y no requiere configuraciones manuales adicionales. Simplemente selecciona la plataforma deseada y haz clic en el botón correspondiente para **desplegar** tu proyecto de manera rápida y sencilla.
+Use the buttons below to deploy the project on various platforms with **one click**. No manual configuration is needed.
 
 [![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?skip_quickstart=true&machine=basicLinux32gb&repo=514876515&ref=master&geo=EuropeWest)
 [![Deploy to Glitch](https://binbashbanana.github.io/deploy-buttons/buttons/remade/glitch.svg)](https://glitch.com/edit/#!/import/github/BrunoSobrino/TheMystic-Bot-MD)
@@ -119,38 +112,32 @@ En esta sección encontrarás **botones de despliegue** que te permitirán imple
 [![Deploy to Linux](https://img.shields.io/badge/Linux-black?style=for-the-badge&logo=linux&logoColor=white)](https://brunosobrino.github.io/TheMystic-Bot-MD/)
 [![Deploy to Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://brunosobrino.github.io/TheMystic-Bot-MD/)
 
-<!-- [![Deploy to Vercel](https://binbashbanana.github.io/deploy-buttons/buttons/remade/vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/BrunoSobrino/TheMystic-Bot-MD) -->
+# Support and Community
 
-# Soporte y Comunidad
+## Support Communities
 
-## Comunidades de Asistencia
+Join these communities for help, discussions, and collaboration:
 
-En este espacio podrás encontrar diversas **comunidades de asistencia** donde podrás **resolver tus dudas**, **compartir experiencias** y **colaborar** con otros usuarios. Únete a la comunidad que mejor se adapte a tus necesidades y forma parte de un **entorno de apoyo mutuo**.
+| Platform      | Type     | Language | Link |
+|--------------|----------|----------|------|
+| WhatsApp     | Channel  | Spanish  | [Join Here!](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y) |
+| WhatsApp     | Group    | Spanish  | [Join Here!](https://chat.whatsapp.com/HJnmHGjQG1w3kcgFcuPclo) |
 
-<table>
+## Contributors
 
-| Plataforma | Tipo | Idioma | Enlace |
-| --- | --- | --- |--- |
-| WhatsApp | Canal | Español | [¡Únete aquí!](https://whatsapp.com/channel/0029Vaein6eInlqIsCXpDs3y) |
-| WhatsApp | Grupo | Español | [¡Únete aquí!](https://chat.whatsapp.com/HJnmHGjQG1w3kcgFcuPclo) |
-
-</table>
-
-## Colaboradores
-
-Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. Su apoyo ha sido clave para **mejorar** y **expandir** las funcionalidades del proyecto.
+Meet the contributors who helped develop this project:
 
 <a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=BrunoSobrino/TheMystic-Bot-MD" /> 
 </a>
 
-## Agradecimientos
+## Acknowledgments
 
 <a href="https://github.com/BochilGaming/games-wabot-md/tree/multi-device">
   <img src="https://i.ibb.co/CMpM8pk/Bochil-Gaming.png" width="180px"/>
 </a>
 
-## Desarollador Principal
+## Main Developer
 
 <a href="https://github.com/BrunoSobrino">
   <img src="https://i.ibb.co/Qn1W6cP/image.png" width="180px"/>
