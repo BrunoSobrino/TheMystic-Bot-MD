@@ -11,6 +11,7 @@ export async function before(m, {isAdmin, isBotAdmin}) {
   if (!chat?.antiviewonce || chat?.isBanned) return;
   
   if (m.viewOnce) {
+    console.log(m)
     const msg = m;
     const type = msg.mtype;
     
