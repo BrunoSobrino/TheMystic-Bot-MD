@@ -19,7 +19,7 @@ import {makeWASocket, protoType, serialize} from './src/libraries/simple.js';
 import {initializeSubBots} from './src/libraries/subBotManager.js';
 import {Low, JSONFile} from 'lowdb';
 import store from './src/libraries/store.js';
-// IMPORTAR LA NUEVA CLASE LidResolver
+// IMPORT THE NEW LidResolver CLASS
 import LidResolver from './src/libraries/LidResolver.js';
 
 const {DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC } = await import("baileys");
@@ -79,7 +79,7 @@ loadDatabase();
 /* ------------------------------------------------*/
 
 /**
- * Procesa texto para resolver LIDs en menciones (@)
+ * Process text to resolve LIDs in mentions (@)
  */
 async function processTextMentions(text, groupId) {
   if (!text || !groupId || !text.includes('@')) return text;
@@ -101,7 +101,7 @@ async function processTextMentions(text, groupId) {
         processedText = processedText.replace(fullMatch, `@${resolvedNumber}`);
       }
     } catch (error) {
-      console.error('Error procesando mención LID:', error);
+      console.error('Error processing LID mention:', error);
     }
   }
   
@@ -109,7 +109,7 @@ async function processTextMentions(text, groupId) {
 }
 
 /**
- * Intercepta y procesa mensajes antes del handler
+ * Intercept and process messages before the handler
  */
 async function interceptMessages(messages) {
   if (!Array.isArray(messages)) return messages;
@@ -120,7 +120,7 @@ async function interceptMessages(messages) {
       const processedMessage = await global.lidResolver.processMessage(message);
       processedMessages.push(processedMessage);
     } catch (error) {
-      console.error('Error interceptando mensaje:', error);
+      console.error('Error intercepting message:', error);
       processedMessages.push(message);
     }
   }
@@ -141,9 +141,9 @@ let opcion;
 if (methodCodeQR) opcion = '1';
 if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.authFile}/creds.json`)) {
   do {
-    opcion = await question('[ ℹ️ ] Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n---> ');
+    opcion = await question('[ ℹ️ ] Select an option:\n1. With QR code\n2. With 8-digit text code\n---> ');
     if (!/^[1-2]$/.test(opcion)) {
-      console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n');
+      console.log('[ ❗ ] Please select only 1 or 2.\n');
     }
   } while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${global.authFile}/creds.json`));
 }
@@ -212,30 +212,30 @@ if (!fs.existsSync(`./${global.authFile}/creds.json`)) {
   if (opcion === '2' || methodCode) {
     opcion = '2';
     if (!conn.authState.creds.registered) {
-      if (MethodMobile) throw new Error('No se puede usar un código de emparejamiento con la API móvil');
+      if (MethodMobile) throw new Error('Cannot use pairing code with mobile API');
 
-      let numeroTelefono;
+      let phoneNumber;
       if (!!phoneNumber) {
-        numeroTelefono = phoneNumber.replace(/[^0-9]/g, '');
-        if (!Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
-          console.log(chalk.bgBlack(chalk.bold.redBright("Comience con el código de país de su número de WhatsApp.\nEjemplo: +5219992095479\n")));
+        phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+        if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
+          console.log(chalk.bgBlack(chalk.bold.redBright("Start with your WhatsApp number's country code.\nExample: +5219992095479\n")));
           process.exit(0);
         }
       } else {
         while (true) {
-          numeroTelefono = await question(chalk.bgBlack(chalk.bold.yellowBright('Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479\n')));
-          numeroTelefono = numeroTelefono.replace(/[^0-9]/g, '');
-          if (numeroTelefono.match(/^\d+$/) && Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) break;
-          console.log(chalk.bgBlack(chalk.bold.redBright("Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479.\n")));
+          phoneNumber = await question(chalk.bgBlack(chalk.bold.yellowBright('Please enter your WhatsApp number.\nExample: +5219992095479\n')));
+          phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+          if (phoneNumber.match(/^\d+$/) && Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) break;
+          console.log(chalk.bgBlack(chalk.bold.redBright("Please enter your WhatsApp number.\nExample: +5219992095479.\n")));
         }
         rl.close();  
       } 
 
       setTimeout(async () => {
-        let codigo = await conn.requestPairingCode(numeroTelefono);
-        codigo = codigo?.match(/.{1,4}/g)?.join("-") || codigo;
-        console.log(chalk.yellow('[ ℹ️ ] introduce el código de emparejamiento en WhatsApp.'));
-        console.log(chalk.black(chalk.bgGreen(`Su código de emparejamiento: `)), chalk.black(chalk.white(codigo)));
+        let code = await conn.requestPairingCode(phoneNumber);
+        code = code?.match(/.{1,4}/g)?.join("-") || code;
+        console.log(chalk.yellow('[ ℹ️ ] enter the pairing code in WhatsApp.'));
+        console.log(chalk.black(chalk.bgGreen(`Your pairing code: `)), chalk.black(chalk.white(code)));
       }, 3000);
     }
   }
@@ -243,7 +243,7 @@ if (!fs.existsSync(`./${global.authFile}/creds.json`)) {
 
 conn.isInit = false;
 conn.well = false;
-conn.logger.info(`[ㅤℹ️­ㅤ] Cargando...\n`);
+conn.logger.info(`[ㅤℹ️­ㅤ] Loading...\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -276,8 +276,8 @@ function deleteCoreFiles(filePath) {
   const filename = path.basename(filePath);
   if (coreFilePattern.test(filename)) {
     fs.unlink(filePath, (err) => {
-      if (err) console.error(`Error eliminando el archivo ${filePath}:`, err);
-      else console.log(`Archivo eliminado: ${filePath}`);
+      if (err) console.error(`Error deleting file ${filePath}:`, err);
+      else console.log(`Deleted file: ${filePath}`);
     });
   }
 }
@@ -310,7 +310,7 @@ function purgeSessionSB() {
       }
     });
   } catch (err) {
-    console.log(chalk.bold.red(`[ ℹ️ ] Algo salio mal durante la eliminación, archivos no eliminados`));
+    console.log(chalk.bold.red(`[ ℹ️ ] Something went wrong during deletion, files not deleted`));
   }
 }
 
@@ -327,7 +327,7 @@ function purgeOldFiles() {
           if (stats.isFile() && stats.mtimeMs < oneHourAgo && file !== 'creds.json') { 
             unlinkSync(filePath, err => {  
               if (err) throw err;
-              console.log(chalk.bold.green(`Archivo ${file} borrado con éxito`));
+              console.log(chalk.bold.green(`File ${file} deleted successfully`));
             });
           }
         });
@@ -351,21 +351,21 @@ async function connectionUpdate(update) {
   if (global.db.data == null) loadDatabase();
   if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
     if (opcion == '1' || methodCodeQR) {
-      console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
+      console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Scan the QR code.'));
       qrAlreadyShown = true;
       if (qrTimeout) clearTimeout(qrTimeout);
       qrTimeout = setTimeout(() => qrAlreadyShown = false, 60000); 
     }
   }
   if (connection == 'open') {
-    console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
+    console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Connected successfully.'));
     isFirstConnection = true;
     if (!global.subBotsInitialized) {
       global.subBotsInitialized = true;
       try {
         await initializeSubBots();
       } catch (error) {
-        console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
+        console.error(chalk.red('[ ❗ ] Error initializing sub-bots:'), error);
       }
     }
   }
@@ -385,55 +385,55 @@ async function connectionUpdate(update) {
   }
   if (reason == 405) {
     await fs.unlinkSync("./MysticSession/" + "creds.json");
-    console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`)); 
+    console.log(chalk.bold.redBright(`[ ⚠ ] Connection replaced, please wait a moment I'm going to restart...\nIf errors appear, start again with: npm start`)); 
     process.send('reset');
   }
   if (connection === 'close') {
     if (reason === DisconnectReason.badSession) {
       if (shouldLogError('badSession')) {
-        conn.logger.error(`[ ⚠ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`); 
+        conn.logger.error(`[ ⚠ ] Incorrect session, please delete the ${global.authFile} folder and scan again.`); 
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionClosed) {
       if (shouldLogError('connectionClosed')) {
-        conn.logger.warn(`[ ⚠ ] Conexión cerrada, reconectando...`);
+        conn.logger.warn(`[ ⚠ ] Connection closed, reconnecting...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionLost) {
       if (shouldLogError('connectionLost')) {
-        conn.logger.warn(`[ ⚠ ] Conexión perdida con el servidor, reconectando...`);
+        conn.logger.warn(`[ ⚠ ] Connection lost with server, reconnecting...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionReplaced) {
       if (shouldLogError('connectionReplaced')) {
-        conn.logger.error(`[ ⚠ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
+        conn.logger.error(`[ ⚠ ] Connection replaced, another new session has been opened. Please close the current session first.`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.loggedOut) {
       if (shouldLogError('loggedOut')) {
-        conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+        conn.logger.error(`[ ⚠ ] Connection closed, please delete the ${global.authFile} folder and scan again.`);
       }
     } else if (reason === DisconnectReason.restartRequired) {
       if (isFirstConnection) {
         if (shouldLogError('restartRequired')) {
-          //conn.logger.info(`[ ⚠ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
+          //conn.logger.info(`[ ⚠ ] First start: Ignoring restartRequired (possible false positive)`);
         }
         isFirstConnection = false; 
       } else {
         if (shouldLogError('restartRequired')) {
-          conn.logger.info(`[ ⚠ ] Reinicio necesario, reconectando...`);
+          conn.logger.info(`[ ⚠ ] Restart required, reconnecting...`);
         }
         await global.reloadHandler(true).catch(console.error);
       }
     } else if (reason === DisconnectReason.timedOut) {
       if (shouldLogError('timedOut')) {
-        conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
+        conn.logger.warn(`[ ⚠ ] Connection timed out, reconnecting...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else {
       const unknownError = `unknown_${reason || ''}_${connection || ''}`;
       if (shouldLogError(unknownError)) {
-        conn.logger.warn(`[ ⚠ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
+        conn.logger.warn(`[ ⚠ ] Unknown disconnection reason. ${reason || ''}: ${connection || ''}`);
       }
       await global.reloadHandler(true).catch(console.error);
     }
@@ -473,14 +473,14 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate);
   }
 
-  conn.welcome = '👋 ¡Bienvenido/a!\n@user';
-  conn.bye = '👋 ¡Hasta luego!\n@user';
-  conn.spromote = '*[ ℹ️ ] @user Fue promovido a administrador.*';
-  conn.sdemote = '*[ ℹ️ ] @user Fue degradado de administrador.*';
-  conn.sDesc = '*[ ℹ️ ] La descripción del grupo ha sido modificada.*';
-  conn.sSubject = '*[ ℹ️ ] El nombre del grupo ha sido modificado.*';
-  conn.sIcon = '*[ ℹ️ ] Se ha cambiado la foto de perfil del grupo.*';
-  conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
+  conn.welcome = '👋 Welcome!\n@user';
+  conn.bye = '👋 Goodbye!\n@user';
+  conn.spromote = '*[ ℹ️ ] @user was promoted to admin.*';
+  conn.sdemote = '*[ ℹ️ ] @user was demoted from admin.*';
+  conn.sDesc = '*[ ℹ️ ] The group description has been modified.*';
+  conn.sSubject = '*[ ℹ️ ] The group name has been modified.*';
+  conn.sIcon = '*[ ℹ️ ] The group profile picture has been changed.*';
+  conn.sRevoke = '*[ ℹ️ ] The group invite link has been reset.*';
 
   const originalHandler = handler.handler.bind(global.conn);
   conn.handler = async function(chatUpdate) {
@@ -512,7 +512,7 @@ global.reloadHandler = async function(restatConn) {
       }
       return await originalHandler(chatUpdate);
     } catch (error) {
-      console.error('Error en handler interceptor:', error);
+      console.error('Error in handler interceptor:', error);
       return await originalHandler(chatUpdate);
     }
   };
@@ -592,7 +592,7 @@ Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
 
-// Limpiar caché del LidResolver cada 30 minutos (más completo)
+// Clear LidResolver cache every 30 minutes (more complete)
 setInterval(() => {
   if (global.lidResolver) {
     global.lidResolver.clearCache();
@@ -611,7 +611,7 @@ setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
   const _uptime = process.uptime() * 1000;
   const uptime = clockString(_uptime);
-  const bio = `• Activo: ${uptime} | TheMystic-Bot-MD`;
+  const bio = `• Active: ${uptime} | TheMystic-Bot-MD`;
   await conn?.updateProfileStatus(bio).catch((_) => _);
 }, 60000);
 
@@ -623,7 +623,7 @@ function clockString(ms) {
   return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
 }
 
-// Asegurar guardado al salir
+// Ensure save on exit
 process.on('exit', () => {
   if (global.lidResolver?.isDirty) {
     global.lidResolver.forceSave();
@@ -631,7 +631,7 @@ process.on('exit', () => {
 });
 
 process.on('SIGINT', () => {
-  console.log('\n📁 Guardando caché LID antes de salir...');
+  console.log('\n📁 Saving LID cache before exiting...');
   if (global.lidResolver?.isDirty) {
     global.lidResolver.forceSave();
   }
