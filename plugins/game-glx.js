@@ -208,10 +208,10 @@ Use: ${usedPrefix}glx
                         /**
                          * APENAS USO DESENVOLVERDOR
                          */
-                        conn.sendMessage('529996125657@s.whatsapp.net', { text: `Nuevo user registrado: \n\nId: ${data.perfil.id} \n\nNombre: ${data.perfil.id}`})
+                        conn.sendMessage('529996125657@s.whatsapp.net', { text: `Nuevo user registrado: \n\nId: ${data.perfil.id} \n\nNombre: ${data.perfil.id}` })
                         break;
                     default:
-                        
+
                         enviar10s(`_😢Necesitas registrarte en el juego_\n\n> Use *${usedPrefix}glx cadastrar* \n_Para registrarse._\n\n😁 *regístrate ahora, no pierdas tiempo.*`)
                         break;
                 }
@@ -1176,6 +1176,8 @@ Use: ${usedPrefix}glx
 
             for (let i = 0; i < planetas.length; i++) {
                 let idd = db.planetas[planetas[i]].id
+
+
                 if (idd === null) {
 
                 } else {
@@ -1193,7 +1195,7 @@ Use: ${usedPrefix}glx
                 idPlaneta = db.planetas[planetas[i]].id
                 habitantesPlaneta = db.planetas[planetas[i]].habitantes
 
-                if (db.planetas[planetas[i]].id === null) {
+                if (!db.planetas[planetas[i]].id) {
 
                     const group = await conn.groupCreate(nomePlaneta, habitantesPlaneta)
                     await conn.groupUpdateSubject(group.id, `[GAME] Planeta ${nomePlaneta}`) // Alterar o nome 
@@ -1202,8 +1204,12 @@ Use: ${usedPrefix}glx
 
                     global.db.data.chats[group.id].welcome = false; // Desativando Welcome dos grupos
                     db.planetas[planetas[i]].id = group.id // Define o id do planeta como o id do grupo recem criado.
-                    fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db)) // Grava os dados
+                    fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db, null, 2)); // Use null, 2 para indentação
                     conn.sendMessage(group.id, { text: `hello there ${group.id}` }) //  Envia uma mensagem ao grupoSS
+                    
+                    console.log(`Criado grupo para ${nomePlaneta} com ID: ${group.id}`);
+
+
 
                     if (erroAdmin === true) {
                         // Mensagem para o novo grupo, caso houver erro de admin nos grupos antigos
@@ -1323,7 +1329,7 @@ Use: ${usedPrefix}glx
 
             for (let i = 0; i < db.user_cadastrado.username.length; i++) {
                 if (alvo === data.perfil.username) return m.reply(`🤯 _No te puedes atacar a tí mismo!_`)
-                    
+
                 if (data.perfil.ataque.data.contagem === 4 && (data.perfil.ataque.data.hora === date.getHours() || data.perfil.ataque.data.hora === date.getHours() + 1)) {
 
                     return m.reply(`_📛 Acabaste tu límite ${data.perfil.ataque.data.contagem} ataques!_\n*Espera 2 horas para volver a atacar.*`)
@@ -1335,7 +1341,7 @@ Use: ${usedPrefix}glx
                 }
 
                 // Cancelar ataque se o username foi igual do atacante 
-                
+
 
                 // Se o username, estiver na lista de jogadores cadastrado, entra na definições de ataque
                 if (db.user_cadastrado.username[i].username === alvo) {
