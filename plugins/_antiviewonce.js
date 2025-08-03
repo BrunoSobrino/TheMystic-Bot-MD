@@ -9,9 +9,10 @@ export async function before(m, {isAdmin, isBotAdmin}) {
   const chat = db.data.chats[m.chat];
   if (/^[.~#/\$,](read)?viewonce/.test(m.text)) return;
   if (!chat?.antiviewonce || chat?.isBanned) return;
+
+  console.log(m)
   
   if (m.viewOnce) {
-    console.log(m)
     const msg = m;
     const type = msg.mtype;
     
