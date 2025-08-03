@@ -222,6 +222,55 @@ Use: ${usedPrefix}glx
                     case 'cadastrar':
                         enviar10s(`_😁 Hola *${m.pushName}*, Ya estás registrado._`)
                         break
+                    case 'set':
+                        switch (argumento1) {
+                            case 'name':
+                                // Apenas verifica se o arugumento do nome não é null ou undefined se nao altera o nome do usuario
+                                if (argumento2 != undefined || argumento2 != null) {
+                                    data.perfil.nome = argumento2;
+                                    enviar10s(`_😁 Nome alterado para *${argumento2}*._ \nPara verificar envie *.glx* _perfil_`)
+                                } else {
+                                    enviar10s(`_😁 Informe qual será o novo nome:_ \n\n Ex: *.glx* _set nome_ *_nometeste_*`)
+                                }
+                                break;
+                            case 'username':
+                                let isLivre = true
+
+                                // Se o argumento depois do username nao for valido, nao ira deixar prosseguir com a alteração do username 
+                                if (argumento2 != undefined || argumento2 != null) {
+
+                                    //console.log(Object.keys(global.db.data.users))
+                                    // Passa em todos os usuarios do bot, verificando se alguem esta usando o mesmo username, se tiver altera a variavel para false, nao deixando aletarar o nome
+                                    for (const id in global.db.data.users) {
+                                        if (global.db.data.users[id]?.gameglx?.perfil?.username === `@${argumento2}`) {
+                                            enviar10s(`Este Username *(${argumento2})* ja existe para outro usuario!`)
+                                            isLivre = false
+                                        }
+                                    }
+
+                                    // Se o username estiver ocupado por outro usuario esta variavel estara como false deposi do for 
+                                    if (isLivre === true) {
+                                        data.perfil.username = `@${argumento2}`
+
+                                        enviar10s(`😁Seu username agora é *${argumento2}*\nPara verificar envie *.glx* _perfil_`)
+
+                                    }
+                                } else {
+                                    enviar10s(`_😁 Informe qual será o novo username:_ \n\n Ex: *.glx* _set username_ *_nometeste_*`)
+                                }
+                                break;
+                            default:
+                                enviar(`
+_:-) O que deseja alterar
+
+*name* - Alterar seu nome no game glx
+*username* - Alterar seu username no game glx
+                                    
+                                _`, null, m.sender)
+                                break;
+
+                        }
+                        break;
                     case "viajar":
                         if (data.perfil.bolsa.naves.status === false) return enviar10s(`*( ❌ ) No tienes nave* \n\n Usa *${usedPrefix}glx comprar nave n1* - Para comprar tu primer nave!\n\n_O para ver otros modelos de naves🏪en la tienda Usa_: *${usedPrefix}glx loja*`)
                         switch (argumento1) {
@@ -1206,7 +1255,7 @@ Use: ${usedPrefix}glx
                     db.planetas[planetas[i]].id = group.id // Define o id do planeta como o id do grupo recem criado.
                     fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db, null, 2)); // Use null, 2 para indentação
                     conn.sendMessage(group.id, { text: `hello there ${group.id}` }) //  Envia uma mensagem ao grupoSS
-                    
+
                     console.log(`Criado grupo para ${nomePlaneta} com ID: ${group.id}`);
 
 
