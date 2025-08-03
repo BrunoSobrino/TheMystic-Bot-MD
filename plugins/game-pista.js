@@ -8,8 +8,20 @@ const handler = async (m, {conn}) => {
   const hint = createHint(answer);
   const wordCount = answer.split(' ').length;
   const letterCount = answer.replace(/\s/g, '').length;
-  const hintMessage = `🎵 *PISTA:*\n\n${hint}\n\n🎤 *Artista:* ${artist}\n📝 *Palabras:* ${wordCount}\n📏 *Letras:* ${letterCount}\n\n💡 _Las vocales están visibles, adivina las consonantes_`;
-  m.reply(hintMessage);
+  
+  const hintMessage = `
+🎵 *PISTA ADIVINA LA CANCIÓN* 🎵
+
+${hint}
+
+🎤 *Artista:* ${artist}
+📝 *Palabras:* ${wordCount}
+📏 *Letras:* ${letterCount}
+
+💡 _Las vocales y números están visibles, adivina las consonantes_
+`.trim();
+
+  await conn.reply(m.chat, hintMessage, m);
 };
 
 handler.command = /^hint|pista$/i;
@@ -17,12 +29,10 @@ export default handler;
 
 function createHint(text) {
   return text.split('').map(char => {
-    if (/[aeiouAEIOU\s0-9]/.test(char)) {
-      return char;
-    }
-    else if (/[a-zA-ZñÑ]/.test(char)) {
-      return '_';
-    } else {
-      return char;
-    }}).join('');
+    if (/[aeiouáéíóúüAEIOUÁÉÍÓÚÜ\s0-9¿?¡!.,-]/.test(char)) return char;
+    } else if (/[a-zA-ZñÑ]/.test(char)) {
+      return '▢';
+    } 
+    return char;
+  }).join('');
 }
