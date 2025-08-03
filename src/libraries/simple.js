@@ -2125,24 +2125,27 @@ export function serialize() {
       },
       enumerable: true,
     },
-    isBaileys: {
-      get() {
-        try {
-          const userId = this.conn?.user?.id || "";
-          const sender = this.sender || "";
-          return (
-            ((this?.fromMe || areJidsSameUser(userId, sender)) &&
-              this.id?.startsWith?.("3EB0") &&
-              [20, 22, 12].includes(this.id?.length)) ||
-            false
-          );
-        } catch (e) {
-          console.error("Error en isBaileys getter:", e);
-          return false;
-        }
-      },
-      enumerable: true,
-    },
+isBaileys: {
+  get() {
+    try {
+      const userId = this.conn?.user?.id || "";
+      const sender = this.sender || "";
+      const messageId = this.id || "";
+      const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
+      if (!isFromBot) {
+        return false;
+      }
+      const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO'];
+      const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
+      const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId)
+      return hasKnownPrefix || isHexPattern || false;
+    } catch (e) {
+      console.error("Error en isBaileys getter:", e);
+      return false;
+    }
+  },
+  enumerable: true,
+},
     chat: {
       get() {
         try {
@@ -2338,19 +2341,22 @@ export function serialize() {
                 },
                 enumerable: true,
               },
-              isBaileys: {
-                get() {
-                  const userId = self.conn?.user?.id || "";
-                  const sender = this.sender || "";
-                  return (
-                    ((this?.fromMe || areJidsSameUser(userId, sender)) &&
-                      this.id?.startsWith?.("3EB0") &&
-                      [20, 22, 12].includes(this.id?.length)) ||
-                    false
-                  );
-                },
-                enumerable: true,
-              },
+isBaileys: {
+  get() {
+    const userId = self.conn?.user?.id || "";
+    const sender = this.sender || "";
+    const messageId = this.id || "";
+    const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
+    if (!isFromBot) {
+      return false;
+    }
+    const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO'];
+    const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
+    const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId);
+    return hasKnownPrefix || isHexPattern || false;
+  },
+  enumerable: true,
+},
 sender: {
   get() {
     try {
