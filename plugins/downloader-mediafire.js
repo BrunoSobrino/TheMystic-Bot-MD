@@ -12,7 +12,6 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
   
   try {
     const res = await mediafireDl(args[0]);
-    console.log(res)
     const {name, size, date, mime, link} = res;
     const caption = `${tradutor.texto2[0]}\n\n${tradutor.texto2[1]} ${name}\n${tradutor.texto2[2]} ${size}\n${tradutor.texto2[3]} ${mime}\n\n${tradutor.texto2[4]}`.trim();
     await m.reply(caption);
