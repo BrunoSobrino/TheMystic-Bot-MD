@@ -6,7 +6,7 @@ let handler = async (m, { args, conn, text, usedPrefix, command }) => {
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
     const tradutor = _translate.plugins.descargas_facebook;
 
-  if (!text) throw `_*${tradutor.texto1[0]}*_\n\n*${tradutor.texto1[1]}*\n\n*${tradutor.texto1[2]}* _${usedPrefix + command} https://www.facebook.com/share/v/1E5R3gRuHk/`;
+  if (!text) throw `_*${tradutor.texto1[0]}*_\n\n*${tradutor.texto1[1]}*\n\n*${tradutor.texto1[2]}* ${usedPrefix + command} https://www.facebook.com/share/v/1E5R3gRuHk/`;
 
     const platform = 'facebook';
     
