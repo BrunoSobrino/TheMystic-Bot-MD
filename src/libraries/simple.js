@@ -2217,7 +2217,7 @@ export function serialize() {
         fromMe: {
             get() {
                 try {
-                    const userId = this.conn?.user?.id || "";
+                    const userId = this.conn?.user?.jid || "";
                     const sender = this.sender || "";
                     return this.key?.fromMe || areJidsSameUser(userId, sender) || false;
                 } catch (e) {
