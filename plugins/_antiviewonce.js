@@ -9,21 +9,41 @@ export async function before(m, {isAdmin, isBotAdmin}) {
   const chat = db.data.chats[m.chat];
   if (/^[.~#/\$,](read)?viewonce/.test(m.text)) return;
   if (!chat?.antiviewonce || chat?.isBanned) return;
+  
   if (m.viewOnce) {
     const msg = m;
     const type = msg.mtype;
-    const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : type == 'videoMessage' ? 'video' : 'audio');
-    let buffer = Buffer.from([]);
-    for await (const chunk of media) {
-      buffer = Buffer.concat([buffer, chunk]);
-    }
-    const cap = tradutor.texto1
-    if (/video/.test(type)) {
-      return mconn.conn.sendFile(m.chat, buffer, 'error.mp4', `${msg?.caption ? msg?.caption + '\n\n' + cap : cap}`, m);
-    } else if (/image/.test(type)) {
-      return mconn.conn.sendFile(m.chat, buffer, 'error.jpg', `${msg?.caption ? msg?.caption + '\n\n' + cap : cap}`, m);
-    } else if (/audio/.test(type)) {
-      return mconn.conn.sendFile(m.chat, buffer, 'error.mp3', `${msg?.caption ? msg?.caption + '\n\n' + cap : cap}`, m);
+    
+    try {
+      const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : type == 'videoMessage' ? 'video' : 'audio');
+      let buffer = Buffer.from([]);
+      for await (const chunk of media) {
+        buffer = Buffer.concat([buffer, chunk]);
+      }
+      const cap = tradutor.texto1
+      
+      if (/video/.test(type)) {
+        return await mconn.conn.sendMessage(m.chat, { 
+          video: buffer, 
+          caption: `${msg?.caption ? msg?.caption + '\n\n' + cap : cap}`,
+          mimetype: 'video/mp4'
+        }, { quoted: m });
+      } else if (/image/.test(type)) {
+        return await mconn.conn.sendMessage(m.chat, { 
+          image: buffer, 
+          caption: `${msg?.caption ? msg?.caption + '\n\n' + cap : cap}`,
+          mimetype: 'image/jpeg'
+        }, { quoted: m });
+      } else if (/audio/.test(type)) {
+        return await mconn.conn.sendMessage(m.chat, { 
+          audio: buffer, 
+          ptt: true,
+          mimetype: 'audio/ogg; codecs=opus'
+        }, { quoted: m });
+      }
+    } catch (error) {
+      console.error('Error en antiviewonce:', error);
+      return;
     }
   }
 }
