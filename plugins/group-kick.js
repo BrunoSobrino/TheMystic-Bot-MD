@@ -1,7 +1,7 @@
 const groupMetadataCache = new Map();
 const lidCache = new Map();
 
-const handler = async (m, {conn, participants, command, usedPrefix}) => {
+const handler = async (m, {conn, participants, command, usedPrefix, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
@@ -11,30 +11,62 @@ const handler = async (m, {conn, participants, command, usedPrefix}) => {
   
   const kicktext = `${tradutor.texto2} _${usedPrefix + command} @${global.suittag}_`;
   
-  const getMentionedUser = async () => {
+  const getMentionedUserAndReason = async () => {
     let mentionedJid = null;
+    let reason = null;
     const mentionedJids = await m.mentionedJid;
     
     if (mentionedJids && mentionedJids.length > 0) {
       mentionedJid = mentionedJids[0];
+      if (text) {
+        const textAfterMention = text.replace(/@\d+/g, '').trim();
+        if (textAfterMention) {
+          reason = textAfterMention;
+        }
+      }
     } else if (m.quoted && m.quoted.sender) {
       mentionedJid = m.quoted.sender;
+      if (text && text.trim()) {
+        reason = text.trim();
+      }
     } else if (m.message?.extendedTextMessage?.contextInfo) {
       const contextInfo = m.message.extendedTextMessage.contextInfo;
       if (contextInfo.mentionedJid && contextInfo.mentionedJid.length > 0) {
         mentionedJid = contextInfo.mentionedJid[0];
+        if (text) {
+          const textAfterMention = text.replace(/@\d+/g, '').trim();
+          if (textAfterMention) {
+            reason = textAfterMention;
+          }
+        }
       } else if (contextInfo.participant) {
         mentionedJid = contextInfo.participant;
+        if (text && text.trim()) {
+          reason = text.trim();
+        }
       }
     }
     
-    if (!mentionedJid) return null;
-    return await resolveLidToRealJid(mentionedJid, conn, m.chat);
+    if (!mentionedJid) return { user: null, reason: null };
+    const resolvedJid = await resolveLidToRealJid(mentionedJid, conn, m.chat);
+    return { user: resolvedJid, reason: reason };
   };
   
-  const mentionedUser = await getMentionedUser();
+  const { user: mentionedUser, reason: kickReason } = await getMentionedUserAndReason();
   if (!mentionedUser) return m.reply(kicktext, m.chat, {mentions: conn.parseMention(kicktext)});
   if (conn.user.jid.includes(mentionedUser)) return m.reply(tradutor.texto4);
+  
+  if (kickReason) {
+    const userTag = mentionedUser.split('@')[0];
+    const reasonMessage = `╭─⬣「 🚫 *ADVERTENCIA* 🚫 」⬣\n│\n├❯ *Usuario:* @${userTag}\n├❯ *Acción:* Expulsión del grupo\n├❯ *Motivo:* ${kickReason}\n├❯ *Admin:* @${m.sender.split('@')[0]}\n│\n╰─⬣ *¡Hasta luego!* ⬣`;
+    
+    await conn.sendMessage(m.chat, {
+      text: reasonMessage,
+      mentions: [mentionedUser, m.sender]
+    });
+    
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
   
   try {
     const response = await conn.groupParticipantsUpdate(m.chat, [mentionedUser], 'remove');
