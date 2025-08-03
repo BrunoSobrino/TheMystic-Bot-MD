@@ -228,12 +228,16 @@ Use: ${usedPrefix}glx
                                 // Apenas verifica se o arugumento do nome não é null ou undefined se nao altera o nome do usuario
                                 if (argumento2 != undefined || argumento2 != null) {
                                     data.perfil.nome = argumento2;
-                                    enviar10s(`_😁 Nome alterado para *${argumento2}*._ \nPara verificar envie *.glx* _perfil_`)
+                                    enviarButton1(m.sender, `😁 Nome alterado para *${argumento2}*._ \nPara verificar envie *.glx* _perfil_`)
                                 } else {
-                                    enviar10s(`_😁 Informe qual será o novo nome:_ \n\n Ex: *.glx* _set nome_ *_nometeste_*`)
+                                    enviarButton1(m.sender, `_😁 Informe qual será o novo nome:_ \n\n Ex: *.glx* _set nome_ *_nometeste_*`)
                                 }
+
+
+
                                 break;
                             case 'username':
+
                                 let isLivre = true
 
                                 // Se o argumento depois do username nao for valido, nao ira deixar prosseguir com a alteração do username 
@@ -243,7 +247,7 @@ Use: ${usedPrefix}glx
                                     // Passa em todos os usuarios do bot, verificando se alguem esta usando o mesmo username, se tiver altera a variavel para false, nao deixando aletarar o nome
                                     for (const id in global.db.data.users) {
                                         if (global.db.data.users[id]?.gameglx?.perfil?.username === `@${argumento2}`) {
-                                            enviar10s(`Este Username *(${argumento2})* ja existe para outro usuario!`)
+                                            enviarButton1(m.sender, `Este Username *(${argumento2})* ja existe para outro usuario!`)
                                             isLivre = false
                                         }
                                     }
@@ -252,11 +256,11 @@ Use: ${usedPrefix}glx
                                     if (isLivre === true) {
                                         data.perfil.username = `@${argumento2}`
 
-                                        enviar10s(`😁Seu username agora é *${argumento2}*\nPara verificar envie *.glx* _perfil_`)
+                                        enviarButton1(m.sender, `😁Seu username agora é *${argumento2}*\nPara verificar envie *.glx* _perfil_`)
 
                                     }
                                 } else {
-                                    enviar10s(`_😁 Informe qual será o novo username:_ \n\n Ex: *.glx* _set username_ *_nometeste_*`)
+                                    enviarButton1(m.sender, `_😁 Informe qual será o novo username:_ \n\n Ex: *.glx* _set username_ *_nometeste_*`)
                                 }
                                 break;
                             default:
@@ -801,6 +805,18 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
         // --------------------------- FUNÇÕES PARA O GAME GALÁXIA --------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------
 
+        async function enviarButton1(id, msg) {
+            await conn.sendMessage(id, {
+                text: msg + `\n\nDeseja voltar ? `,
+                footer: 'Game GLX',
+                buttons: [
+                    { buttonId: 'glx_start_game', buttonText: { displayText: '🔍 Inicio' }, type: 1 }
+                ],
+                headerType: 1
+            })
+        }
+
+
         async function entrarplaneta(nomeplaneta) {
             if (data.perfil.localizacao.viajando === true) return m.reply(`_Eh, ya estás viajando, espera q el tiempo se acabe o escribe _ *${usedPrefix}glx viajar casa*`)
 
@@ -1226,19 +1242,19 @@ Use: ${usedPrefix}glx
             for (let i = 0; i < planetas.length; i++) {
                 let idd = db.planetas[planetas[i]].id
 
-
-                if (idd === null) {
-
-                } else {
-                    if (await verificacaoAdmin(idd) === false) {
-                        erroAdmin = true
-                        idGrupoAntigo = db.planetas[planetas[i]].id
-
-                        db.planetas[planetas[i]].id = null
-                        fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db))
-                    }
-
-                }
+                /*
+                                if (idd === null) {
+                
+                                } else {
+                                    if (await verificacaoAdmin(idd) === false) {
+                                        erroAdmin = true
+                                        idGrupoAntigo = db.planetas[planetas[i]].id
+                
+                                        db.planetas[planetas[i]].id = null
+                                        fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db))
+                                    }
+                
+                                }*/
 
                 nomePlaneta = db.planetas[planetas[i]].nomeplaneta
                 idPlaneta = db.planetas[planetas[i]].id
@@ -1279,9 +1295,10 @@ Use: ${usedPrefix}glx
 
             async function verificacaoAdmin(idgrupo) {
                 // Faz verificação em um grupo pelo ID se o bot é administrador
-                let result = await checkAdmin(idgrupo)
+                let result = await checkAdmin(idgrupo, conn)
                 let resultado
-                async function checkAdmin(idd) {
+                async function checkAdmin(idd, conn) {
+                    console.log(conn)
                     const groupMetadata = ((conn.chats[idd] || {}).metadata || await this.groupMetadata(idd).catch((_) => null))
                     for (let i = 0; i < groupMetadata.participants.length; i++) {
                         if (groupMetadata.participants[i].id === conn.user.jid) {
