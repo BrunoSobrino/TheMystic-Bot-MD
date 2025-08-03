@@ -2173,7 +2173,7 @@ export function serialize() {
                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
 	            const isHexPattern = /^[A-F0-9]{16,32}$/.test(messageId)
-		    const isSukiPattern = /^SUKI[A-F0-9]{16}$/.test(messageId)
+		    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
                     return isSukiPattern || hasKnownPrefix || isHexPattern || false;
                 } catch (e) {
                     console.error("Error en isBaileys getter:", e);
@@ -2375,7 +2375,7 @@ export function serialize() {
                                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
 				    const isHexPattern = /^[A-F0-9]{16,32}$/.test(messageId)
-				    const isSukiPattern = /^SUKI[A-F0-9]{16}$/.test(messageId)
+				    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
                                     return isSukiPattern || hasKnownPrefix || isHexPattern || false;
                                 },
                                 enumerable: true,
