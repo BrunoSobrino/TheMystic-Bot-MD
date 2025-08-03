@@ -2131,16 +2131,50 @@ isBaileys: {
       const userId = this.conn?.user?.id || "";
       const sender = this.sender || "";
       const messageId = this.id || "";
+      
+      console.log("🔍 DEBUG isBaileys:");
+      console.log("  - messageId:", messageId);
+      console.log("  - messageId length:", messageId.length);
+      console.log("  - userId:", userId);
+      console.log("  - sender:", sender);
+      console.log("  - this.fromMe:", this?.fromMe);
+      console.log("  - areJidsSameUser result:", areJidsSameUser(userId, sender));
+      
+      // Verificar si el mensaje es del bot
       const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
+      console.log("  - isFromBot:", isFromBot);
+      
       if (!isFromBot) {
+        console.log("  ❌ No es del bot, retornando false");
         return false;
       }
-      const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO'];
-      const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
-      const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId)
-      return hasKnownPrefix || isHexPattern || false;
+      
+      // Lista de prefijos conocidos de Baileys
+      const baileysStarts = [
+        'NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-',
+        'BAE5', '3EB0', 'B24E', '8SCO'
+      ];
+      
+      // Verificar prefijos conocidos
+      const hasKnownPrefix = baileysStarts.some(prefix => {
+        const matches = messageId.startsWith(prefix);
+        if (matches) console.log(`  ✅ Prefijo encontrado: ${prefix}`);
+        return matches;
+      });
+      console.log("  - hasKnownPrefix:", hasKnownPrefix);
+      
+      // Verificar si es un ID hexadecimal largo (típico de Baileys)
+      const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId);
+      console.log("  - isHexPattern:", isHexPattern);
+      console.log("  - Regex test result:", /^[A-F0-9]{28,32}$/.test(messageId));
+      
+      const result = hasKnownPrefix || isHexPattern || false;
+      console.log("  - RESULTADO FINAL:", result);
+      
+      return result;
+      
     } catch (e) {
-      console.error("Error en isBaileys getter:", e);
+      console.error("❌ Error en isBaileys getter:", e);
       return false;
     }
   },
@@ -2346,14 +2380,47 @@ isBaileys: {
     const userId = self.conn?.user?.id || "";
     const sender = this.sender || "";
     const messageId = this.id || "";
+    
+    console.log("🔍 DEBUG isBaileys (segundo):");
+    console.log("  - messageId:", messageId);
+    console.log("  - messageId length:", messageId.length);
+    console.log("  - userId:", userId);
+    console.log("  - sender:", sender);
+    console.log("  - this.fromMe:", this?.fromMe);
+    console.log("  - areJidsSameUser result:", areJidsSameUser(userId, sender));
+    
+    // Verificar si el mensaje es del bot
     const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
+    console.log("  - isFromBot:", isFromBot);
+    
     if (!isFromBot) {
+      console.log("  ❌ No es del bot, retornando false");
       return false;
     }
-    const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO'];
-    const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
+    
+    // Lista de prefijos conocidos de Baileys
+    const baileysStarts = [
+      'NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-',
+      'BAE5', '3EB0', 'B24E', '8SCO'
+    ];
+    
+    // Verificar prefijos conocidos
+    const hasKnownPrefix = baileysStarts.some(prefix => {
+      const matches = messageId.startsWith(prefix);
+      if (matches) console.log(`  ✅ Prefijo encontrado: ${prefix}`);
+      return matches;
+    });
+    console.log("  - hasKnownPrefix:", hasKnownPrefix);
+    
+    // Verificar si es un ID hexadecimal largo (típico de Baileys)
     const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId);
-    return hasKnownPrefix || isHexPattern || false;
+    console.log("  - isHexPattern:", isHexPattern);
+    console.log("  - Regex test result:", /^[A-F0-9]{28,32}$/.test(messageId));
+    
+    const result = hasKnownPrefix || isHexPattern || false;
+    console.log("  - RESULTADO FINAL:", result);
+    
+    return result;
   },
   enumerable: true,
 },
