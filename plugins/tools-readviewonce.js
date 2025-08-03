@@ -16,11 +16,11 @@ const handler = async (m, {conn}) => {
     buffer = Buffer.concat([buffer, chunk]);
   }
   if (/video/.test(type)) {
-    return conn.sendFile(m.chat, buffer, 'error.mp4', msg?.caption ? msg?.caption : '', m);
+    return conn.sendMessage(m.chat, { video: buffer, caption: msg?.caption ? msg?.caption : '' }, { quoted: m });
   } else if (/image/.test(type)) {
-    return conn.sendFile(m.chat, buffer, 'error.jpg', msg?.caption ? msg?.caption : '', m);
+    return conn.sendMessage(m.chat, { image: buffer, caption: msg?.caption ? msg?.caption : '' }, { quoted: m });
   } else if (/audio/.test(type)) {
-    return conn.sendFile(m.chat, buffer, 'error.mp3', msg?.caption ? msg?.caption : '', m);
+    return conn.sendMessage(m.chat, { audio: buffer, ptt: true }, { quoted: m });
   }
 };
 handler.help = ['readvo'];
