@@ -8,7 +8,7 @@ const handler = async (m, {conn}) => {
   const hint = createHint(answer);
   const wordCount = answer.split(' ').length;
   const letterCount = answer.replace(/\s/g, '').length;
-  const hintMessage = `🎵 *PISTA:*\n\n\`${hint}\`\n\n🎤 *Artista:* ${artist}\n📝 *Palabras:* ${wordCount}\n📏 *Letras:* ${letterCount}\n\n💡 _Las vocales están visibles, adivina las consonantes_`;
+  const hintMessage = `🎵 *PISTA:*\n\n${hint}\n\n🎤 *Artista:* ${artist}\n📝 *Palabras:* ${wordCount}\n📏 *Letras:* ${letterCount}\n\n💡 _Las vocales están visibles, adivina las consonantes_`;
   m.reply(hintMessage);
 };
 
