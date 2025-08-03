@@ -1556,7 +1556,7 @@ END:VCARD
       enumerable: true,
     },
 parseMention: {
-  value(text = "") {
+  value(text = "", groupChatId = null) {
     try {
       const esNumeroValido = (numero) => {
         const len = numero.length;
@@ -1568,24 +1568,50 @@ parseMention: {
         if (!/^\d+$/.test(numeroLimpio)) return false;
         return true;
       };
+      const resolveLidFromCache = (jid, groupChatId) => {
+        if (!jid || !jid.toString().endsWith('@lid')) return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
+        if (!global.lidResolver?.lidCache) return jid;
+        const cacheKey = `${jid}_${groupChatId}`;
+        const directResolved = global.lidResolver.lidCache.get(cacheKey);
+        if (directResolved && !directResolved.endsWith('@lid')) return directResolved;
+        const lidNumber = jid.split('@')[0];
+        const possibleFullJid = `${lidNumber}@s.whatsapp.net`;
+        for (const [key, value] of global.lidResolver.lidCache.entries()) {
+          if (value === possibleFullJid) return possibleFullJid;
+        }
+        const shortNumber = lidNumber.slice(-10);
+        for (const [key, value] of global.lidResolver.lidCache.entries()) {
+          if (value.endsWith(`${shortNumber}@s.whatsapp.net`)) return value;
+        }
+        for (const [key, value] of global.lidResolver.lidCache.entries()) {
+          if (key.startsWith(`${lidNumber}@lid_`) && !value.endsWith('@lid')) return value;
+        }
+        return jid;
+      };
       const mencionesEncontradas = text.match(/@(\d{5,20})/g) || [];
       const mentions = mencionesEncontradas.map((m) => {
         const numero = m.substring(1);
         if (esNumeroValido(numero)) {
-          const jid = `${numero}@s.whatsapp.net`;
-          return jid;
+          return `${numero}@s.whatsapp.net`;
         } else {
+          const lidJid = `${numero}@lid`;
+          if (groupChatId && global.lidResolver?.lidCache) {
+            const resolved = resolveLidFromCache(lidJid, groupChatId);
+            return resolved;
+          }
           if (global.lidResolver?.lidCache) {
-            const cacheKey = Array.from(global.lidResolver.lidCache.keys()).find(key => key.startsWith(`${numero}@s.whatsapp.net`));
-            if (cacheKey) {
-              const resolvedJid = global.lidResolver.lidCache.get(cacheKey);
-              return resolvedJid;
+            for (const [key, value] of global.lidResolver.lidCache.entries()) {
+              if (key.startsWith(`${numero}@`) && !value.endsWith('@lid')) return value;
+            }
+            const shortNumber = numero.slice(-10);
+            for (const [key, value] of global.lidResolver.lidCache.entries()) {
+              if (value.includes(shortNumber) && !value.endsWith('@lid')) return value;
             }
           }
-          return `${numero}@lid`;
+          return lidJid;
         }
       });
-      return mentions;
+      return [...new Set(mentions.filter(mention => mention && mention.length > 0))];
     } catch (error) {
       console.error('[ERROR] En parseMention:', error.stack || error);
       return [];
@@ -1593,7 +1619,7 @@ parseMention: {
   },
   enumerable: true,
 },
-	  /*parseMention: {
+	/*parseMention: {
       value(text = "") {
         try {
           const esNumeroValido = (numero) => {
