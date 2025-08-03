@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
     <link rel="stylesheet" href="web/estilo.css">
     <style>
-        /* Estilo de la pantalla de carga */
+        /* Loading screen style */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -21,13 +21,11 @@
             background-color: #232323; 
             z-index: 1000;
         }
-
         .loading-screen p {
             font-size: 2em;
             font-family: 'Comfortaa', sans-serif;
         }
-
-        /* Clase para ocultar elementos */
+        /* Class to hide elements */
         .hide {
             display: none;
         }
@@ -35,42 +33,42 @@
 </head>
 <body>
     <div class="loading-screen" id="loading-screen">
-        <p>⌛Cargando⏳</p>
+        <p>⌛Loading⏳</p>
     </div>
 
     <video autoplay muted loop id="bg-video" preload="auto">
         <source src="https://videos.pexels.com/video-files/7180356/7180356-hd_1366_720_25fps.mp4" type="video/mp4">
-        Error al cargar el video
+        Error loading video
     </video>
 
     <div class="content" id="content">
-        <p>⌛Cargando⏳</p>
+        <p>⌛Loading⏳</p>
     </div>
 
     <script>
-        // Oculta la pantalla de carga
+        // Hides the loading screen
         function hideLoadingScreen() {
             document.getElementById('loading-screen').classList.add('hide');
         }
 
-        // Carga el contenido de la URL proporcionada
+        // Loads content from the provided URL
         async function loadContent(url, fallbackUrl = null) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 document.getElementById('content').innerHTML = await response.text();
-                loadDisqus(); // Carga Disqus si el contenido se cargó correctamente
+                loadDisqus(); // Load Disqus if content loaded correctly
             } catch (error) {
-                console.error(`Error cargando contenido: ${error.message}`);
+                console.error(`Error loading content: ${error.message}`);
                 if (fallbackUrl) {
-                    loadContent(fallbackUrl); // Intenta cargar el fallback si hay error
+                    loadContent(fallbackUrl); // Try fallback if there's an error
                 } else {
-                    document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
+                    document.getElementById('content').innerHTML = `<p>Loading Error: ${error.message}</p>`;
                 }
             }
         }
 
-        // Carga Disqus para comentarios
+        // Loads Disqus for comments
         function loadDisqus() {
             const disqusDiv = document.createElement('div');
             disqusDiv.id = 'disqus_thread';
@@ -87,9 +85,9 @@
             document.body.appendChild(s);
         }
 
-        // Devuelve la URL localizada según el idioma del navegador
+        // Returns localized URL according to browser language
         function getLocalizedUrl(urlBase) {
-            const lang = navigator.language.slice(0, 2); // Obtener el código de idioma
+            const lang = navigator.language.slice(0, 2);
             const langMap = {
                 es: 'es.html',
                 pt: 'pt.html',
@@ -101,31 +99,31 @@
             return `${urlBase}${langMap[lang] || 'ingles.html'}`;
         }
 
-        // Carga el contenido localizado
+        // Loads localized content
         function loadLocalizedContent(urlBase) {
             const localizedUrl = getLocalizedUrl(urlBase);
             const fallbackUrl = `${urlBase}ingles.html`;
             loadContent(localizedUrl, fallbackUrl);
         }
 
-        // Inicialización al cargar el DOM
+        // Initialization on DOM load
         document.addEventListener("DOMContentLoaded", () => {
             const bgVideo = document.getElementById('bg-video');
 
-            // Ocultar pantalla de carga después de 5 segundos
+            // Hide loading screen after 5 seconds
             const timeoutId = setTimeout(hideLoadingScreen, 5000);
 
-            // Intentar cargar el contenido localizado inmediatamente
+            // Try loading localized content immediately
             loadLocalizedContent('web/');
 
-            // Ocultar la pantalla de carga cuando el video esté listo, si no se ha ocultado aún
+            // Hide loading screen when video is ready, if not hidden yet
             bgVideo.addEventListener('loadeddata', () => {
-                clearTimeout(timeoutId); // Cancelar el timeout si se ha cargado el video
-                hideLoadingScreen(); // Ocultar la pantalla de carga
+                clearTimeout(timeoutId);
+                hideLoadingScreen();
             });
         });
 
-        // Manejo de clics en enlaces internos
+        // Handle clicks on internal links
         document.addEventListener('click', (event) => {
             const anchor = event.target.closest('a');
             if (anchor && anchor.href.includes('web/')) {
@@ -135,11 +133,11 @@
             }
         });
 
-        // Recarga la página al cambiar el estado del historial
+        // Reload the page when history state changes
         window.onpopstate = () => location.reload();
     </script>
 
-    <!-- Widget de Discord -->
+    <!-- Discord Widget -->
     <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
         new Crate({
             server: '1278571215635877908',
@@ -147,6 +145,6 @@
         });
     </script>
 
-    <noscript>JavaScript OFF. Se requiere JS activado para visualizar esta página. Consulta el repositorio si tienes problemas.</noscript>
+    <noscript>JavaScript OFF. JS is required to view this page. See the repository if you have problems.</noscript>
 </body>
 </html>
