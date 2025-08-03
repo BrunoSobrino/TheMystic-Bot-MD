@@ -1,6 +1,7 @@
 const { downloadContentFromMessage } = (await import("baileys"));
-const { writeFileSync, existsSync, mkdirSync } = require('fs');
-const path = require('path');
+import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
+import { join } from 'path';
+
 
 // Cache para almacenar mensajes viewOnce
 const viewOnceCache = new Map();
