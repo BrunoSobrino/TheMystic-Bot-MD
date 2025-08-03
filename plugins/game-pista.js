@@ -3,10 +3,10 @@ const handler = async (m, {conn}) => {
   const id = m.chat;
   if (!(id in conn.tebaklagu)) throw false;
   const json = conn.tebaklagu[id][1];
-  const answer = json.jawaban;
+  const answer = json.jawaban.trim(); 
   const artist = json.artist;
   const hint = createHint(answer);
-  const wordCount = answer.split(' ').length;
+  const wordCount = answer.split(/\s+/).length;
   const letterCount = answer.replace(/\s/g, '').length;
   
   const hintMessage = `
@@ -18,7 +18,7 @@ ${hint}
 📝 *Palabras:* ${wordCount}
 📏 *Letras:* ${letterCount}
 
-💡 _Las vocales y números están visibles, adivina las consonantes_
+💡 _Las vocales están visibles, adivina las consonantes_
 `.trim();
 
   await conn.reply(m.chat, hintMessage, m);
@@ -29,10 +29,11 @@ export default handler;
 
 function createHint(text) {
   return text.split('').map(char => {
-    if (/[aeiouáéíóúüAEIOUÁÉÍÓÚÜ\s0-9¿?¡!.,-]/.test(char)) return char;
+    if (/[aeiouáéíóúüAEIOUÁÉÍÓÚÜ\s'-]/.test(char)) {
+      return char;
     } else if (/[a-zA-ZñÑ]/.test(char)) {
-      return '▢';
-    } 
+      return '_';
+    }
     return char;
   }).join('');
 }
