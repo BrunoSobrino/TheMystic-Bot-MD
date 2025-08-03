@@ -9,6 +9,7 @@ let handler = async (m, { args, conn, text, usedPrefix, command }) => {
   if (!text) throw `_*${tradutor.texto1[0]}*_\n\n*${tradutor.texto1[1]}*\n\n*${tradutor.texto1[2]}* ${usedPrefix + command} https://www.facebook.com/share/v/1E5R3gRuHk/`;
 
     const platform = 'facebook';
+    // Admite: ('tiktok' & 'instagram')
     
     try {
         const links = await fetchDownloadLinks(text, platform, conn, m);
