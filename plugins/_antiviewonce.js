@@ -10,31 +10,57 @@ export async function before(m, {isAdmin, isBotAdmin}) {
   if (/^[.~#/\$,](read)?viewonce/.test(m.text)) return;
   if (!chat?.antiviewonce || chat?.isBanned) return;
   
-  if (m.viewOnce) {
-    const msg = m;
-    const type = msg.mtype;
+  // Detectar viewOnce de diferentes maneras según la versión de WhatsApp
+  if (m.viewOnce || m.message?.viewOnceMessage || m.message?.viewOnceMessageV2 || 
+      (m.message && (m.message.imageMessage?.viewOnce || m.message.videoMessage?.viewOnce || m.message.audioMessage?.viewOnce))) {
+    
+    let msg, type;
+    
+    // Determinar la estructura del mensaje según el tipo
+    if (m.message?.viewOnceMessage) {
+      msg = m.message.viewOnceMessage.message;
+      type = Object.keys(msg)[0];
+    } else if (m.message?.viewOnceMessageV2) {
+      msg = m.message.viewOnceMessageV2.message;
+      type = Object.keys(msg)[0];
+    } else if (m.message?.imageMessage?.viewOnce) {
+      msg = m.message;
+      type = 'imageMessage';
+    } else if (m.message?.videoMessage?.viewOnce) {
+      msg = m.message;
+      type = 'videoMessage';
+    } else if (m.message?.audioMessage?.viewOnce) {
+      msg = m.message;
+      type = 'audioMessage';
+    } else {
+      // Fallback al método original
+      msg = m;
+      type = m.mtype;
+    }
     
     try {
-      const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : type == 'videoMessage' ? 'video' : 'audio');
+      const mediaType = type.includes('image') ? 'image' : type.includes('video') ? 'video' : 'audio';
+      const media = await downloadContentFromMessage(msg[type] || msg, mediaType);
       let buffer = Buffer.from([]);
       for await (const chunk of media) {
         buffer = Buffer.concat([buffer, chunk]);
       }
-      const cap = tradutor.texto1
+      const cap = tradutor.texto1;
+      const originalCaption = msg[type]?.caption || msg?.caption || '';
       
-      if (/video/.test(type)) {
+      if (mediaType === 'video') {
         return await mconn.conn.sendMessage(m.chat, { 
           video: buffer, 
-          caption: `${msg?.caption ? msg?.caption + '\n\n' + cap : cap}`,
+          caption: `${originalCaption ? originalCaption + '\n\n' + cap : cap}`,
           mimetype: 'video/mp4'
         }, { quoted: m });
-      } else if (/image/.test(type)) {
+      } else if (mediaType === 'image') {
         return await mconn.conn.sendMessage(m.chat, { 
           image: buffer, 
-          caption: `${msg?.caption ? msg?.caption + '\n\n' + cap : cap}`,
+          caption: `${originalCaption ? originalCaption + '\n\n' + cap : cap}`,
           mimetype: 'image/jpeg'
         }, { quoted: m });
-      } else if (/audio/.test(type)) {
+      } else if (mediaType === 'audio') {
         return await mconn.conn.sendMessage(m.chat, { 
           audio: buffer, 
           ptt: true,
@@ -43,7 +69,40 @@ export async function before(m, {isAdmin, isBotAdmin}) {
       }
     } catch (error) {
       console.error('Error en antiviewonce:', error);
-      return;
+      
+      // Método alternativo si falla el primero
+      try {
+        const mediaType = type.includes('image') ? 'image' : type.includes('video') ? 'video' : 'audio';
+        const media = await downloadContentFromMessage(m, mediaType);
+        let buffer = Buffer.from([]);
+        for await (const chunk of media) {
+          buffer = Buffer.concat([buffer, chunk]);
+        }
+        const cap = tradutor.texto1;
+        
+        if (mediaType === 'video') {
+          return await mconn.conn.sendMessage(m.chat, { 
+            video: buffer, 
+            caption: cap,
+            mimetype: 'video/mp4'
+          }, { quoted: m });
+        } else if (mediaType === 'image') {
+          return await mconn.conn.sendMessage(m.chat, { 
+            image: buffer, 
+            caption: cap,
+            mimetype: 'image/jpeg'
+          }, { quoted: m });
+        } else if (mediaType === 'audio') {
+          return await mconn.conn.sendMessage(m.chat, { 
+            audio: buffer, 
+            ptt: true,
+            mimetype: 'audio/ogg; codecs=opus'
+          }, { quoted: m });
+        }
+      } catch (secondError) {
+        console.error('Error en método alternativo:', secondError);
+        return;
+      }
     }
   }
 }
