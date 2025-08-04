@@ -13,6 +13,7 @@ package-lock.json
 src/glx/db/database.json
 datasecret
 database.json
+src/lidsresolve.json
 
 # Logs
 logs

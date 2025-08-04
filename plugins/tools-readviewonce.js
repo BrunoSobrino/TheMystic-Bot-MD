@@ -9,17 +9,37 @@ const handler = async (m, {conn}) => {
   if (!m.quoted) throw tradutor.texto1;
   if (!m.quoted.viewOnce) throw tradutor.texto2;
   const msg = m.quoted;
-  //const type = Object.keys(msg);
   const type = msg.mtype 
-  const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : 'video');
-  let buffer = Buffer.from([]);
-  for await (const chunk of media) {
-    buffer = Buffer.concat([buffer, chunk]);
-  }
-  if (/video/.test(type)) {
-    return conn.sendFile(m.chat, buffer, 'error.mp4', msg?.caption ? msg?.caption : '', m);
-  } else if (/image/.test(type)) {
-    return conn.sendFile(m.chat, buffer, 'error.jpg', msg?.caption ? msg?.caption : '', m);
+  
+  try {
+    const media = await downloadContentFromMessage(msg, type == 'imageMessage' ? 'image' : type == 'videoMessage' ? 'video' : 'audio');
+    let buffer = Buffer.from([]);
+    for await (const chunk of media) {
+      buffer = Buffer.concat([buffer, chunk]);
+    }
+    
+    if (/video/.test(type)) {
+      return await conn.sendMessage(m.chat, { 
+        video: buffer, 
+        caption: msg?.caption || '',
+        mimetype: 'video/mp4'
+      }, { quoted: m });
+    } else if (/image/.test(type)) {
+      return await conn.sendMessage(m.chat, { 
+        image: buffer, 
+        caption: msg?.caption || '',
+        mimetype: 'image/jpeg'
+      }, { quoted: m });
+    } else if (/audio/.test(type)) {
+      return await conn.sendMessage(m.chat, { 
+        audio: buffer, 
+        ptt: true,
+        mimetype: 'audio/ogg; codecs=opus'
+      }, { quoted: m });
+    }
+  } catch (error) {
+    console.error('Error en readviewonce:', error);
+    throw 'Error al procesar el archivo viewOnce';
   }
 };
 handler.help = ['readvo'];

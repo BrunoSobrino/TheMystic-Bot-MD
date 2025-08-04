@@ -2167,13 +2167,11 @@ export function serialize() {
                     const sender = this.sender || "";
                     const messageId = this.id || "";
                     const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
-                    if (!isFromBot) {
-                        return false;
-                    }
+                    //if (!isFromBot) return false;
                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
-                    const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId)
-                    return hasKnownPrefix || isHexPattern || false;
+		    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
+                    return isSukiPattern || hasKnownPrefix || false;
                 } catch (e) {
                     console.error("Error en isBaileys getter:", e);
                     return false;
@@ -2219,7 +2217,7 @@ export function serialize() {
         fromMe: {
             get() {
                 try {
-                    const userId = this.conn?.user?.id || "";
+                    const userId = this.conn?.user?.jid || "";
                     const sender = this.sender || "";
                     return this.key?.fromMe || areJidsSameUser(userId, sender) || false;
                 } catch (e) {
@@ -2368,13 +2366,11 @@ export function serialize() {
                                     const sender = this.sender || "";
                                     const messageId = this.id || "";
                                     const isFromBot = this?.fromMe || areJidsSameUser(userId, sender);
-                                    if (!isFromBot) {
-                                        return false;
-                                    }
+                                    //if (!isFromBot) return false;
                                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
-                                    const isHexPattern = /^[A-F0-9]{28,32}$/.test(messageId);
-                                    return hasKnownPrefix || isHexPattern || false;
+				    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
+                                    return isSukiPattern || hasKnownPrefix || false;
                                 },
                                 enumerable: true,
                             },
