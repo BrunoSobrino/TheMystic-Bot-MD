@@ -56,26 +56,9 @@ const handler = async (m, { conn }) => {
       imagen = null;
     }
     
-    await conn.sendMessage(m.chat, { 
-      text: texto.trim(), 
-      contextInfo: { 
-        forwardingScore: 9999999, 
-        isForwarded: true, 
-        externalAdReply: { 
-          showAdAttribution: true, 
-          containsAutoReply: true, 
-          renderLargerThumbnail: true, 
-          title: apiTitle, 
-          mediaType: 1, 
-          thumbnail: imagen, 
-          thumbnailUrl: imagen, 
-          mediaUrl: ytUrl, 
-          sourceUrl: ytUrl 
-        }
-      }
-    }, { quoted: m });
+    await conn.sendMessage(m.chat, { text: texto.trim(), contextInfo: { forwardingScore: 9999999, isForwarded: true }}, { quoted: m });
 
-    fs.unlinkSync(tempPath);
+    await fs.unlinkSync(tempPath);
 
     if (ytUrl !== 'https://github.com/BrunoSobrino') {
       try {
