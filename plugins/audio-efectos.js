@@ -1,12 +1,15 @@
 import {unlinkSync, readFileSync} from 'fs';
 import {join} from 'path';
 import {exec} from 'child_process';
+import {promisify} from 'util';
+
+const execAsync = promisify(exec);
 
 const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.audio_efectos
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
+  const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`));
+  const tradutor = _translate.plugins.audio_efectos;
   try {
     const q = m.quoted ? m.quoted : m;
     const mime = ((m.quoted ? m.quoted : m.msg).mimetype || '');
@@ -26,15 +29,50 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
     if (/audio/.test(mime)) {
       const ran = getRandom('.mp3');
       const filename = join(__dirname, '../src/tmp/' + ran);
-      const media = await q.download(true);
-      exec(`ffmpeg -i ${media} ${set} ${filename}`, async (err, stderr, stdout) => {
-        await unlinkSync(media);
-        if (err) throw `_*Error!*_`;
+      let media;
+      try {
+        media = await q.download(true);
+        if (!media) {
+          throw new Error('No se pudo descargar el archivo de audio');
+        }
+        const command_ffmpeg = `ffmpeg -i "${media}" ${set} "${filename}"`;
+        console.log('Ejecutando comando:', command_ffmpeg);
+        await execAsync(command_ffmpeg);
+        if (!require('fs').existsSync(filename)) {
+          throw new Error('El archivo procesado no se generó correctamente');
+        }
         const buff = await readFileSync(filename);
-        conn.sendMessage(m.chat, {audio: buff, filename: ran }, {quoted: m})
-      });
-    } else throw `${tradutor.texto1} ${usedPrefix + command}*`;
+        if (!buff || buff.length === 0) {
+          throw new Error('El archivo procesado está vacío');
+        }
+        console.log('Tamaño del buffer:', buff.length, 'bytes');
+        await conn.sendMessage(m.chat, {
+          audio: buff,
+          mimetype: 'audio/mpeg',
+          fileName: ran,
+          ptt: false
+        }, {quoted: m});
+        console.log('Audio enviado exitosamente');
+      } catch (error) {
+        console.error('Error en el procesamiento:', error);
+        throw `_*Error al procesar el audio:*_ ${error.message}`;
+      } finally {
+        try {
+          if (media && require('fs').existsSync(media)) {
+            await unlinkSync(media);
+          }
+          if (require('fs').existsSync(filename)) {
+            await unlinkSync(filename);
+          }
+        } catch (cleanupError) {
+          console.error('Error al limpiar archivos temporales:', cleanupError);
+        }
+      }
+    } else {
+      throw `${tradutor.texto1} ${usedPrefix + command}*`;
+    }
   } catch (e) {
+    console.error('Error general:', e);
     throw e;
   }
 };
@@ -42,9 +80,7 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
 handler.help = ['bass', 'blown', 'deep', 'earrape', 'fast', 'fat', 'nightcore', 'reverse', 'robot', 'slow', 'smooth', 'tupai'];
 handler.tags = ['effects'];
 handler.command = /^(bass|blown|deep|earrape|fas?t|nightcore|reverse|robot|slow|smooth|tupai|squirrel|chipmunk)$/i;
-
 export default handler;
-
 const getRandom = (ext) => {
   return `${Math.floor(Math.random() * 10000)}${ext}`;
 };
