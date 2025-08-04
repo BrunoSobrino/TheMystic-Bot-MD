@@ -1,4 +1,4 @@
-import {unlinkSync, readFileSync} from 'fs';
+import {unlinkSync, readFileSync, existsSync} from 'fs';
 import {join} from 'path';
 import {exec} from 'child_process';
 import {promisify} from 'util';
@@ -38,7 +38,7 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
         const command_ffmpeg = `ffmpeg -i "${media}" ${set} "${filename}"`;
         console.log('Ejecutando comando:', command_ffmpeg);
         await execAsync(command_ffmpeg);
-        if (!require('fs').existsSync(filename)) {
+        if (!existsSync(filename)) {
           throw new Error('El archivo procesado no se generó correctamente');
         }
         const buff = await readFileSync(filename);
@@ -58,10 +58,10 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
         throw `_*Error al procesar el audio:*_ ${error.message}`;
       } finally {
         try {
-          if (media && require('fs').existsSync(media)) {
+          if (media && existsSync(media)) {
             await unlinkSync(media);
           }
-          if (require('fs').existsSync(filename)) {
+          if (existsSync(filename)) {
             await unlinkSync(filename);
           }
         } catch (cleanupError) {
