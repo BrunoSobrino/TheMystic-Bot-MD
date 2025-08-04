@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import ytSearch from 'yt-search'; 
 import path from 'path';
+import CryptoJS from 'crypto-js';
 
 const shazam = new Shazam();
 
@@ -64,8 +65,8 @@ const handler = async (m, { conn }) => {
       try {
         const downloadResult = await yt.download(ytUrl);
         
-        if (downloadResult && downloadResult.download) {
-          const audiobuff = await conn.getFile(downloadResult.download);
+        if (downloadResult && downloadResult.url) {
+          const audiobuff = await conn.getFile(downloadResult.url);
           await conn.sendMessage(m.chat, { 
             audio: audiobuff.data, 
             fileName: `${title}.mp3`, 
@@ -95,110 +96,42 @@ async function getUniqueFileName(basePath, extension) {
 }
 
 /*
-  base   : https://ytmp3.fi/JSan/
-  fungsi : download audio dari youtube
-  node   : v24.2.0
-  note   : only support audio 60 menit
-           audio support untuk wa,
-           baypass captcha
-  update : 3 juli 2025 - 13:00
-  by     : wolep
+    base   : https://mp3dl.to
+    fungsi : download audio dari youtube
+    update : 3 Juli 2025 - 04:00 WITA
+    note   : kamu perlu library crypto-js
+    by     : wolep
 */
 
 const yt = {
-  download: async (youtubeUrl) => {
-    const id = youtubeUrl?.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/)?.[2];
-    if (!id) throw Error(`No se pudo obtener el ID del video de YouTube`);
+    generateToken: () => {
+        const payload = JSON.stringify({ timestamp: Date.now() });
+        const key = "dyhQjAtqAyTIf3PdsKcJ6nMX1suz8ksZ";
+        const token = CryptoJS.AES.encrypt(payload, key).toString();
+        return token;
+    },
 
-    const delay = (ms) => new Promise(re => setTimeout(re, ms));
-    const MAX_FETCH_ATTEMPT = 8;
-    const NEXT_FETCH_WAITING_TIME = 3000;
-    let fetchCount = 0;
-
-    const headers = {
-      "Referer": "https://ytmp3.fi/",
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    };
-
-    const handleCapcay = async (id) => {
-      try {
-        const randomCode = (Math.random() + "").substring(2, 6);
-
-        const captchaHeaders = {
-          "Origin": "https://cf.hn",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Referer": `https://cf.hn/captcha.php?id=${id}&page=ytmp3.fi`,
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    download: async (youtubeUrl) => {
+        const headers = {
+            "content-type": "application/json",
         };
 
-        const body = new URLSearchParams({
-          "userCaptcha": randomCode,
-          "generatedCaptcha": randomCode,
-          id,
-          "page": "ytmp3.fi"
-        }).toString();
-
-        await fetch("https://cf.hn/captcha_check.php", {
-          headers: captchaHeaders,
-          body,
-          method: "POST"
-        });
-      } catch (error) {
-        console.log("Error handling captcha:", error.message);
-      }
-    };
-
-    let json;
-    do {
-      try {
-        console.log(`Intento ${fetchCount + 1} de ${MAX_FETCH_ATTEMPT}`);
-
-        const r = await fetch(`https://cf.hn/z.php?id=${id}&t=${Date.now()}`, { 
-          headers,
-          timeout: 10000
+        const body = JSON.stringify({
+            "url": youtubeUrl,
+            "quality": 128,
+            "trim": false,
+            "startT": 0,
+            "endT": 0,
+            "token": yt.generateToken()
         });
         
-        if (!r.ok) {
-          throw Error(`Error HTTP ${r.status}: ${r.statusText}`);
-        }
+        const result = await fetch("https://ds1.ezsrv.net/api/convert", {
+            headers,
+            body,
+            "method": "POST"
+        });
         
-        const responseText = await r.text();
-        
-        try {
-          json = JSON.parse(responseText);
-        } catch (parseError) {
-          throw Error(`Respuesta no válida del servidor: ${responseText.substring(0, 100)}`);
-        }
-
-        if (json?.status == 0 || json?.status === "0") {
-          const errorMsg = json?.message || json?.error || "Error desconocido del servidor";
-          throw Error(`Error de la API: ${errorMsg}`);
-        } else if (json?.status == "captcha") {
-          console.log("Resolviendo captcha...");
-          await delay(2000);
-          await handleCapcay(id);
-          await delay(3000);
-        } else if (json?.status == 1 || json?.status === "1") {
-          if (json?.download) {
-            return json;
-          } else {
-            throw Error("No se encontró enlace de descarga en la respuesta");
-          }
-        }
-
-        await delay(NEXT_FETCH_WAITING_TIME);
-        fetchCount++;
-        
-      } catch (error) {
-        if (fetchCount >= MAX_FETCH_ATTEMPT - 1) {
-          throw error;
-        }
-        console.log(`Error en intento ${fetchCount + 1}: ${error.message}`);
-        await delay(NEXT_FETCH_WAITING_TIME);
-        fetchCount++;
-      }
-    } while (fetchCount < MAX_FETCH_ATTEMPT);
-    
-    throw Error(`Se agotaron los intentos de descarga. Último estado: ${json?.status || 'desconocido'}`);
-  }
+        const json = await result.json();
+        return json;
+    }
 };
