@@ -8,20 +8,80 @@ const handler = async (m, {conn, text}) => {
 
   if (!m.quoted) throw tradutor.texto1;
   
+  // Debug completo del objeto quoted
+  console.log('=== DEBUG STICKER ===');
+  console.log('m.quoted keys:', Object.keys(m.quoted));
+  console.log('mtype:', m.quoted.mtype);
+  console.log('mimetype:', m.quoted.mimetype);
+  console.log('mediaType:', m.quoted.mediaType);
+  console.log('hasDownload:', typeof m.quoted.download === 'function');
+  console.log('message keys:', m.quoted.message ? Object.keys(m.quoted.message) : 'no message');
+  console.log('====================');
+  
   let stiker = false;
   try {
     let [packname, ...author] = text.split('|');
     author = (author || []).join('|');
     
-    const isSticker = m.quoted.mtype === 'stickerMessage' || (m.quoted.mimetype && m.quoted.mimetype === 'image/webp') || m.quoted.mediaType === 'sticker';
+    // Verificación más exhaustiva
+    const isSticker = m.quoted.mtype === 'stickerMessage' || 
+                     (m.quoted.mimetype && m.quoted.mimetype === 'image/webp') ||
+                     m.quoted.mediaType === 'sticker' ||
+                     (m.quoted.message && m.quoted.message.stickerMessage) ||
+                     m.quoted.key?.remoteJid?.endsWith('@s.whatsapp.net');
     
-    if (!isSticker) throw tradutor.texto2;
-    if (!m.quoted.download) throw tradutor.texto3;
+    console.log('isSticker:', isSticker);
+    
+    if (!isSticker) {
+      throw tradutor.texto2;
+    }
+    
+    // Verificar si el mensaje tiene los datos necesarios para descargar
+    if (!m.quoted.download) {
+      throw tradutor.texto3;
+    }
+    
+    console.log('Descargando sticker...', {
+      mimetype: m.quoted.mimetype,
+      mediaType: m.quoted.mediaType,
+      mtype: m.quoted.mtype
+    });
+    
     const img = await m.quoted.download();
     if (!img) throw tradutor.texto3;
-    if (!Buffer.isBuffer(img) || img.length === 0) throw tradutor.texto3;
     
-    stiker = await addExif(img, packname || global.packname, author || global.author);
+    // Verificar que el buffer descargado sea válido
+    if (!Buffer.isBuffer(img) || img.length === 0) {
+      throw tradutor.texto3;
+    }
+    
+    console.log('Buffer descargado correctamente, tamaño:', img.length);
+    
+    // Intentar crear el sticker con manejo de error específico para packId
+    try {
+      stiker = await addExif(img, packname || global.packname, author || global.author);
+    } catch (exifError) {
+      console.log('Error en addExif:', exifError.message);
+      // Si el error es por packId, intentar con un objeto de metadatos más completo
+      if (exifError.message.includes('packId') || exifError.message.includes('Cannot read properties')) {
+        console.log('Intentando con metadatos alternativos...');
+        const metadata = {
+          packname: packname || global.packname || 'Bot',
+          author: author || global.author || 'TheMystic',
+          packId: '',
+          packPublisher: '',
+          packEmail: '',
+          packWebsite: '',
+          androidPlayStoreLink: '',
+          iOSAppStoreLink: ''
+        };
+        
+        // Intentar importar la función addExif con diferentes parámetros
+        stiker = await addExif(img, metadata.packname, metadata.author, metadata);
+      } else {
+        throw exifError;
+      }
+    }
     
   } catch (e) {
     console.error('Error en sticker-wm:', e);
