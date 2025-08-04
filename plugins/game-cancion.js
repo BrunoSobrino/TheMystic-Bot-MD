@@ -26,7 +26,9 @@ const handler = async (m, {conn, usedPrefix}) => {
 💡 Usa *${usedPrefix}pista* para obtener una pista
 🏆 Recompensa: ${poin} XP
 
-¡Escucha la canción y adivina el título!`.trim();
+> No olvides que tu respusta debe ser respondiendo a este mensaje para que sea detectada.
+
+*¡Escucha la canción y adivina el título!*`.trim();
 
   conn.tebaklagu[id] = [
     await m.reply(caption),
