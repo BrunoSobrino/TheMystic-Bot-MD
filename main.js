@@ -19,7 +19,6 @@ import { makeWASocket, protoType, serialize } from './src/libraries/simple.js';
 import { initializeSubBots } from './src/libraries/subBotManager.js';
 import { Low, JSONFile } from 'lowdb';
 import store from './src/libraries/store.js';
-// IMPORTAR LA NUEVA CLASE LidResolver
 import LidResolver from './src/libraries/LidResolver.js';
 
 const { DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC } = await import("baileys");
@@ -490,7 +489,7 @@ global.reloadHandler = async function (restatConn) {
         chatUpdate.messages = await interceptMessages(chatUpdate.messages);
 
 
-        /** INicio de configuração para buttons */
+        /** INicio de configuração para buttons 
         const msg = chatUpdate.messages[0]
         const body =
           msg?.message?.buttonsResponseMessage?.selectedButtonId ||
@@ -525,7 +524,7 @@ Agradecemos sua paciência e apoio. 🚀
             break
         }
 
-
+*/
         // ----------------------------------
 
         for (const message of chatUpdate.messages) {

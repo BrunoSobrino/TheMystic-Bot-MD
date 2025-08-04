@@ -57,15 +57,12 @@ class LidResolver {
             }
           }
         }
-        
-        console.log(`📂 LID Cache cargado: ${validEntries} entradas válidas`);
-        
+                
         // Si hay muchas entradas expiradas, guardar el caché limpio
         if (validEntries !== Object.keys(parsed).length) {
           this.saveCache();
         }
       } else {
-        console.log('📂 Archivo de caché LID no existe, creando nuevo...');
         this.saveCache();
       }
     } catch (error) {
@@ -87,7 +84,6 @@ class LidResolver {
       
       fs.writeFileSync(this.cacheFile, JSON.stringify(data, null, 2), 'utf8');
       this.isDirty = false;
-      console.log(`💾 LID Cache guardado: ${this.cache.size} entradas`);
     } catch (error) {
       console.error('❌ Error guardando caché LID:', error.message);
     }
@@ -151,7 +147,6 @@ class LidResolver {
     }
     
     if (removed > 0) {
-      console.log(`🧹 Limpieza automática: ${removed} entradas LID expiradas`);
       this.markDirty();
     }
   }
@@ -171,7 +166,6 @@ class LidResolver {
         this.cache.delete(entries[i][0]);
       }
       
-      console.log(`📊 Cache LID: Eliminadas ${toRemove} entradas antiguas (límite: ${this.maxCacheSize})`);
       this.markDirty();
     }
   }
@@ -426,7 +420,6 @@ class LidResolver {
     }
     
     if (removed > 0) {
-      console.log(`🧹 Limpieza manual: ${removed} entradas LID eliminadas`);
       this.markDirty();
     }
     
