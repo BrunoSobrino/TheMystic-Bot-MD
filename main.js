@@ -489,7 +489,7 @@ global.reloadHandler = async function (restatConn) {
         chatUpdate.messages = await interceptMessages(chatUpdate.messages);
 
 
-        /** INicio de configuração para buttons */
+        /** INicio de configuração para buttons 
         const msg = chatUpdate.messages[0]
         const body =
           msg?.message?.buttonsResponseMessage?.selectedButtonId ||
@@ -524,7 +524,7 @@ Agradecemos sua paciência e apoio. 🚀
             break
         }
 
-
+*/
         // ----------------------------------
 
         for (const message of chatUpdate.messages) {
