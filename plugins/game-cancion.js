@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 
 const timeout = 60000;
-const poin = 1000;
+const poin = Math.floor(Math.random() * (2000 - 500 + 1)) + 500;
 const handler = async (m, {conn, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
