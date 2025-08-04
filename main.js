@@ -19,7 +19,6 @@ import { makeWASocket, protoType, serialize } from './src/libraries/simple.js';
 import { initializeSubBots } from './src/libraries/subBotManager.js';
 import { Low, JSONFile } from 'lowdb';
 import store from './src/libraries/store.js';
-// IMPORTAR LA NUEVA CLASE LidResolver
 import LidResolver from './src/libraries/LidResolver.js';
 
 const { DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC } = await import("baileys");
