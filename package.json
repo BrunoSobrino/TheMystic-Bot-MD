@@ -79,7 +79,7 @@
     "node-fetch": "^3.2.0",
     "node-gtts": "^2.0.2",
     "node-id3": "^0.2.6",
-    "node-shazam": "*",
+    "node-shazam": "github:duckyies/Node-Shazam",
     "node-webpmux": "^3.1.1",
     "openai": "^3.3.0",
     "pdfkit": "^0.13.0",
