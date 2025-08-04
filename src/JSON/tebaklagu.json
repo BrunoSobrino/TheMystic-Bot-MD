@@ -1,5 +1,10 @@
 [
 {
+"link_song": "https://cdnt-preview.dzcdn.net/api/1/1/a/9/7/0/a97a4178099d4caa4c924cce1f168f5c.mp3?hdnea=exp=1754273358~acl=/api/1/1/a/9/7/0/a97a4178099d4caa4c924cce1f168f5c.mp3*~data=user_id=0,application_id=42~hmac=acb2469f79c69028a268ef29d810534400fcf88c221c7ba109400ca145a3d826",
+"jawaban": "Me tienes loca",
+"artist": "Grupo Ocobamba"
+},  
+{
 "link_song": "https://p.scdn.co/mp3-preview/807fbead013f8f87d805b26224304c79d7f19091",
 "jawaban": "Heat Waves",
 "artist": "Glass Animals"
@@ -255,24 +260,9 @@
 "artist": "NIKKI"
 },
 {
-"link_song": "https://p.scdn.co/mp3-preview/429efffe546a98f5c42ea3bf09bfb61727529677",
-"jawaban": "Merasa Indah",
-"artist": "Tiara Andini"
-},
-{
 "link_song": "https://p.scdn.co/mp3-preview/fd0fca9d5323c5637d8b92e3a90ddd44e9f93b7e",
 "jawaban": "Runtuh",
 "artist": "Feby Putri, Fiersa Bersari"
-},
-{
-"link_song": "https://p.scdn.co/mp3-preview/fe8ebc82d22d71bdc92736c30065c5e56c23dc2f",
-"jawaban": "Bagaimana Kalau Aku Tidak Baik Baik Saja",
-"artist": "Judika"
-},
-{
-"link_song": "https://p.scdn.co/mp3-preview/9267aade456bc6d599baaae630f9ecefc6d3a2a6",
-"jawaban": "Sisa Rasa",
-"artist": "Mahalini"
 },
 {
 "link_song": "https://p.scdn.co/mp3-preview/419fc8277ed14bb9f6d0b8e80cfce02f886cc47b",
@@ -290,29 +280,14 @@
 "artist": "GANGGA"
 },
 {
-"link_song": "https://p.scdn.co/mp3-preview/0b1661e20d43c83444a93f6ae23a7b56684b9815",
-"jawaban": "Pesan Terakhir",
-"artist": "Lyodra"
-},
-{
 "link_song": "https://p.scdn.co/mp3-preview/f631194408680475ab3ec8a91c461cc40d3990a0",
 "jawaban": "To the Bone",
 "artist": "Pamungkas"
 },
 {
-"link_song": "https://p.scdn.co/mp3-preview/2e7e92f103fe175a488c0dc670ee583fe9eeef64",
-"jawaban": "Melawan Restu",
-"artist": "Mahalini"
-},
-{
 "link_song": "https://p.scdn.co/mp3-preview/de039809a674d90a5ebe377c054556ecbcf8b9b1",
 "jawaban": "Dandelions",
 "artist": "Ruth B."
-},
-{
-"link_song": "https://p.scdn.co/mp3-preview/0bac4fb940d169abb673d11c277a63b2e7fbff5c",
-"jawaban": "Takut",
-"artist": "Idgitaf."
 },
 {
 "link_song": "https://p.scdn.co/mp3-preview/df0d46b0e4174bec0cb1827dcc901ccc9a000dc3",
@@ -350,16 +325,6 @@
 "artist": "Arash Buana, raissa anggiani"
 },
 {
-"link_song": "https://p.scdn.co/mp3-preview/2b4a06d3ac5bd1be8a15e83c33f9b2f3674c4322",
-"jawaban": "Sahabat Dulu",
-"artist": "Prinsa Mandagie"
-},
-{
-"link_song": "https://p.scdn.co/mp3-preview/ae518eec7008602c0f7f5bccfb187fa902429c9f",
-"jawaban": "Aku Bukan Jodohnya",
-"artist": "Tri Suaka"
-},
-{
 "link_song": "https://p.scdn.co/mp3-preview/883b0873177d43b71c310eed4768d0baee32ec98",
 "jawaban": "Roman Picisan",
 "artist": "Hanin Dhiya"
@@ -380,24 +345,9 @@
 "artist": "Juicy Luicy"
 },
 {
-"link_song": "https://p.scdn.co/mp3-preview/64704943bba8a66da9e4638aa9ca2eaa2a624040",
-"jawaban": "Mesin Waktu",
-"artist": "Budi Doremi"
-},
-{
 "link_song": "https://p.scdn.co/mp3-preview/ca35bcd1a2a6db73f4b22569d73779f803ccd841",
 "jawaban": "It's You",
 "artist": "Sezairi"
-},
-{
-"link_song": "https://p.scdn.co/mp3-preview/33b7c8479a65c6161473c77e4519fdb05c12149f",
-"jawaban": "Yang Terdalam",
-"artist": "Noah"
-},
-{
-"link_song": "https://p.scdn.co/mp3-preview/988f5f4d75312c76a5bf86c7c3a047ab83800048",
-"jawaban": "Chrismast Tree",
-"artist": "V"
 },
 {
 "link_song": "https://p.scdn.co/mp3-preview/1bb5566bd5f9de3b9ff00b583948768aa6d77fb9",
@@ -430,28 +380,13 @@
 "artist": "Arsy Widianto, Tiara Andini"
 },
 {
-"link_song": "https://p.scdn.co/mp3-preview/e3949567bac767ec4f60d50565aeff039e2c8fdb",
-"jawaban": "Terlukis Indah",
-"artist": "Rizky Febian, Ziva Magnolya"
-},
-{
 "link_song": "https://p.scdn.co/mp3-preview/4a54d9f484d0f8d4aa4c27fd193bda54817cb836",
 "jawaban": "ONLY",
 "artist": "LeeHi"
 },
 {
-"link_song": "https://p.scdn.co/mp3-preview/f2f6aaefc4073d86f5e32ada86bff9ca7cca02bb",
-"jawaban": "Mendong Tanpo Udan",
-"artist": "Ndarboy Genk"
-},
-{
 "link_song": "https://p.scdn.co/mp3-preview/c031db80203e17ce7603f50b542626e02c6ef638",
 "jawaban": "Sparkle",
-"artist": "RADWIMPS"
-},
-{
-"link_song": "https://p.scdn.co/mp3-preview/132c6d47dd920ca0ef8c8e35f6e94100ff47ae43",
-"jawaban": "Nandemonaiya",
 "artist": "RADWIMPS"
 },
 {

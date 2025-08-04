@@ -3,6 +3,8 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import ytSearch from 'yt-search'; 
 import path from 'path';
+import CryptoJS from 'crypto-js';
+
 const shazam = new Shazam();
 
 const handler = async (m, { conn }) => {
@@ -11,6 +13,7 @@ const handler = async (m, { conn }) => {
 
   const q = m.quoted || m;
   const mime = (q.msg || q).mimetype || '';
+  
   if (/audio|video/.test(mime)) {
     const media = await q.download();
     const ext = mime.split('/')[1];
@@ -26,7 +29,12 @@ const handler = async (m, { conn }) => {
     }
 
     const recognise = await recognisePromise;
-    if (!recognise || !recognise?.track) return m.reply('> *[❗] Error: Audio not found.*')
+    
+    if (!recognise || !recognise?.track) {
+      fs.unlinkSync(tempPath);
+      return m.reply('> *[❗] Error: Audio not found.*')
+    }
+    
     const { title, subtitle, artists, genres, images } = recognise.track;
     const apiTitle = `${title} - ${subtitle || ''}`.trim();
 
@@ -37,23 +45,38 @@ const handler = async (m, { conn }) => {
         ytUrl = searchResult.videos[0].url;
       }
     } catch (error) {
-      console.error(error);
+      console.log(error)
     }
 
     const texto = `${traductor.texto3[0]}\n\n${traductor.texto3[1]} ${title || traductor.texto2}\n${traductor.texto3[2]} ${subtitle || traductor.texto2}\n${traductor.texto3[4]} ${genres.primary || traductor.texto2}`;
-    const imagen = await (await fetch(images.coverart)).buffer();
     
-    conn.sendMessage(m.chat, { text: texto.trim(), contextInfo: { forwardingScore: 9999999, isForwarded: true, externalAdReply: { showAdAttribution: true, containsAutoReply: true, renderLargerThumbnail: true, title: apiTitle, mediaType: 1, thumbnail: imagen, thumbnailUrl: imagen, mediaUrl: ytUrl, sourceUrl: ytUrl }}}, { quoted: m });
-
+    let imagen;
     try {
-      const audiolink = `${global.MyApiRestBaseUrl}/api/v1/ytmp3?url=${encodeURIComponent(ytUrl)}&apikey=${global.MyApiRestApikey}`;
-      const audiobuff = await conn.getFile(audiolink);
-      await conn.sendMessage(m.chat, { audio: audiobuff.data, fileName: `${title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
+      imagen = await (await fetch(images.coverart)).buffer();
     } catch (error) {
-      console.error(error);
+      imagen = null;
     }
+    
+    await conn.sendMessage(m.chat, { text: texto.trim(), contextInfo: { forwardingScore: 9999999, isForwarded: true }}, { quoted: m });
 
-    fs.unlinkSync(tempPath);
+    await fs.unlinkSync(tempPath);
+
+    if (ytUrl !== 'https://github.com/BrunoSobrino') {
+      try {
+        const downloadResult = await yt.download(ytUrl);
+        
+        if (downloadResult && downloadResult.url) {
+          const audiobuff = await conn.getFile(downloadResult.url);
+          await conn.sendMessage(m.chat, { 
+            audio: audiobuff.data, 
+            fileName: `${title}.mp3`, 
+            mimetype: 'audio/mpeg' 
+          }, { quoted: m });
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   } else {
     throw traductor.texto4;
   }
@@ -70,4 +93,45 @@ async function getUniqueFileName(basePath, extension) {
     counter++;
   }
   return fileName;
+}
+
+/*
+    base   : https://mp3dl.to
+    fungsi : download audio dari youtube
+    update : 3 Juli 2025 - 04:00 WITA
+    note   : kamu perlu library crypto-js
+    by     : wolep
+*/
+
+const yt = {
+    generateToken: () => {
+        const payload = JSON.stringify({ timestamp: Date.now() });
+        const key = "dyhQjAtqAyTIf3PdsKcJ6nMX1suz8ksZ";
+        const token = CryptoJS.AES.encrypt(payload, key).toString();
+        return token;
+    },
+
+    download: async (youtubeUrl) => {
+        const headers = {
+            "content-type": "application/json",
+        };
+
+        const body = JSON.stringify({
+            "url": youtubeUrl,
+            "quality": 128,
+            "trim": false,
+            "startT": 0,
+            "endT": 0,
+            "token": yt.generateToken()
+        });
+        
+        const result = await fetch("https://ds1.ezsrv.net/api/convert", {
+            headers,
+            body,
+            "method": "POST"
+        });
+        
+        const json = await result.json();
+        return json;
+    }
 };

@@ -4,26 +4,27 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_config
 
-  const isClose = { // Switch Case Like :v
+  const isClose = { 
     'open': 'not_announcement',
     'close': 'announcement',
     'abierto': 'not_announcement',
     'cerrado': 'announcement',
     'abrir': 'not_announcement',
     'cerrar': 'announcement',
-  }[(args[0] || '')];
+  }[args[0]?.toLowerCase() || ''];
+
   if (isClose === undefined) {
-    throw `
-${tradutor.texto1[0]}
+    throw `${tradutor.texto1[0]}
 
 ${tradutor.texto1[1]}
 *┠┉↯ ${usedPrefix + command} abrir*
-*┠┉↯ ${usedPrefix + command} cerrar*
-`.trim();
+*┠┉↯ ${usedPrefix + command} cerrar*`.trim();
   }
+
   await conn.groupSettingUpdate(m.chat, isClose);
-  {m.reply(`${tradutor.texto1[0]}`);}
+  m.reply(`${tradutor.texto1[2] || 'Configuración del grupo actualizada correctamente'}`);
 };
+
 handler.help = ['group open / close'];
 handler.tags = ['group'];
 handler.command = ['group', 'grupo'];

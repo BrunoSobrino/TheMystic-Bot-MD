@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 
 const timeout = 60000;
-const poin = 1000;
+const poin = Math.floor(Math.random() * (2000 - 500 + 1)) + 500;
 const handler = async (m, {conn, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -26,7 +26,9 @@ const handler = async (m, {conn, usedPrefix}) => {
 💡 Usa *${usedPrefix}pista* para obtener una pista
 🏆 Recompensa: ${poin} XP
 
-¡Escucha la canción y adivina el título!`.trim();
+> No olvides que tu respusta debe ser respondiendo a este mensaje para que sea detectada.
+
+*¡Escucha la canción y adivina el título!*`.trim();
 
   conn.tebaklagu[id] = [
     await m.reply(caption),
