@@ -44,7 +44,7 @@ const handler = async (m, { conn }) => {
         ytUrl = searchResult.videos[0].url;
       }
     } catch (error) {
-      // Silent error
+      console.log(error)
     }
 
     const texto = `${traductor.texto3[0]}\n\n${traductor.texto3[1]} ${title || traductor.texto2}\n${traductor.texto3[2]} ${subtitle || traductor.texto2}\n${traductor.texto3[4]} ${genres.primary || traductor.texto2}`;
@@ -62,10 +62,10 @@ const handler = async (m, { conn }) => {
 
     if (ytUrl !== 'https://github.com/BrunoSobrino') {
       try {
-        const downloadResult = await yt.download(ytUrl, 'mp3');
+        const downloadResult = await yt.download(ytUrl);
         
-        if (downloadResult && downloadResult.url) {
-          const audiobuff = await conn.getFile(downloadResult.url);
+        if (downloadResult && downloadResult.download) {
+          const audiobuff = await conn.getFile(downloadResult.download);
           await conn.sendMessage(m.chat, { 
             audio: audiobuff.data, 
             fileName: `${title}.mp3`, 
@@ -95,121 +95,73 @@ async function getUniqueFileName(basePath, extension) {
 }
 
 /*
-  base    : https://ytmp3.lat/
-  update  : 4 agustus 2025
-  by      : wolep
-  url     : https://pastebin.com/dSqm6kj0
+  base   : https://ytmp3.fi/JSan/
+  fungsi : download audio dari youtube
+  node   : v24.2.0
+  note   : only support audio 60 menit
+           audio support untuk wa,
+           baypass captcha
+  update : 3 juli 2025 - 13:00
+  by     : wolep
 */
+
 const yt = {
-    _tools: {
-        genRandomHex: (length = 32) => {
-            const charSet = '0123456789abcdef'
-            return Array.from({ length }, _ => charSet.charAt(Math.floor(Math.random() * charSet.length))).join('')
-        },
-        enc1: (url) => url.split("").map(v => v.charCodeAt()).reverse().join(),
-        enc2: (url) => url.split("").map(v => String.fromCharCode(v.charCodeAt() ^ 1)).join(''),
-        validateString: (description, variable) => { if (typeof (variable) !== "string" || variable?.trim()?.length === 0) throw Error(`${description} harus string dan gak boleh kosong!`) },
-        mintaJson: async function (description, url, fetchOptions) {
-            try {
-                const response = await fetch(url, fetchOptions)
-                if (!response.ok) throw Error(`${response.status} ${response.statusText} ${(await response.text() || `(respond body kosong)`).substring(0, 150)}...`)
-                const json = await response.json()
-                return json
-            } catch (error) {
-                throw Error(`gagal minta json: ${description}\nerror: ${error.message}`)
-            }
-        },
-    },
-    get baseHeaders() {
-        return {
-            'content-type': 'application/json',
-            'Referer': 'https://ytmp3.lat/',
-            'accept-encoding': 'gzip, deflate, br, zstd',
-            'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0'
-        }
-    },
+  download: async (youtubeUrl) => {
+    const id = youtubeUrl?.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/)?.[2];
+    if (!id) throw Error(`gagal mendapatkan id video dari input. my bad regex. pastiin input nya bener`);
 
-    init: async function (ytUrl, format = 'mp3') {
-        this._tools.validateString(`url youtube`, ytUrl)
-        
-        const formatList = {
-            'mp3' : 0,
-            'mp4' : 1
-        }
-        const selectedFormat = formatList?.[format] + ""
-        if (selectedFormat === undefined) throw Error (`invalid format, format tersedia: ${Object.keys(formatList).join(', ')}`)
+    const delay = (ms) => new Promise(re => setTimeout(re, ms));
+    const MAX_FETCH_ATTEMPT = 12;
+    const NEXT_FETCH_WAITING_TIME = 5000;
+    let fetchCount = 0;
 
-        const encUrl = this._tools.enc1(ytUrl)
-        const encPayload = this._tools.enc2(ytUrl)
-        const hash1 = this._tools.genRandomHex()
-        const hash2 = this._tools.genRandomHex()
+    const headers = {
+      "Referer": "https://ytmp3.fi/"
+    };
 
-        const url = `https://ytmp3.lat/${hash1}/init/${encUrl}/${hash2}/`
-        const headers = {
-            ... this.baseHeaders
-        }
-        const body = JSON.stringify({
-            "data": encPayload,
-            "format": selectedFormat,
-        })
-        const json = await this._tools.mintaJson(`init`, url, { headers, body, method: 'post' })
-        json.format = format
-        return json
-    },
+    const handleCapcay = async (id) => {
+      const randomCode = (Math.random() + "").substring(2, 6);
 
-    cekStatus: async function (initObject) {
-        let wolep = initObject
-        let fetchCount = 1
-        const MAX_FETCH_ATTEMPT = 60
+      const headers = {
+        "Origin": "https://cf.hn",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Referer": `https://cf.hn/captcha.php?id=${id}&page=ytmp3.fi`,
+      };
 
-        if (wolep?.s == 'C') {
-            const url = this.createDownloadUrl(wolep)
-            const title = initObject?.t || `(no name)`
-            const format = initObject?.format
-            const result = {url, title, format}
-            return result
-        } else {
-            const hash1 = this._tools.genRandomHex()
-            const hash2 = this._tools.genRandomHex()
-            const { i } = wolep
-            const headers = { ... this.baseHeaders }
-            const url = `https://ytmp3.lat/${hash1}/status/${i}/${hash2}/`
-            const body = JSON.stringify({
-                data: i
-            })
+      const body = new URLSearchParams({
+        "userCaptcha": randomCode,
+        "generatedCaptcha": randomCode,
+        id,
+        "page": "ytmp3.fi"
+      }).toString();
 
-            do {
-                wolep = await this._tools.mintaJson(`status`, url, { headers, body, 'method': 'post' })
+      const r = await fetch("https://cf.hn/captcha_check.php", {
+        headers,
+        body,
+        "method": "post"
+      });
+    };
 
-                if (wolep.le) throw Error(`The video is longer than 30 minutes. Please select another video.`)
-                if (wolep.e) throw Error(`There was an error in converting video. Please try again.`)
-                if (wolep.i == 'invalid') throw Error(`Please enter a correct YouTube video URL.`)
-                if (wolep.s == 'C') {
-                    const url = this.createDownloadUrl(wolep)
-                    const title = wolep.t || `(no name)`
-                    const format = initObject.format
-                    const result = {url, title, format}
-                    return result
-                }
-                await new Promise(re => setTimeout(re, 3000))
-                fetchCount++
+    let json;
+    do {
+      console.log(`fetch ke ${(fetchCount + 1)}`);
 
-            } while (wolep?.s == 'P' && fetchCount < MAX_FETCH_ATTEMPT)
-            throw Error(`mencapai maksimal batas checking ${MAX_FETCH_ATTEMPT}`)
-        }
-    },
+      const r = await fetch(`https://cf.hn/z.php?id=${id}&t=${Date.now()}`, { headers });
+      if (!r.ok) throw Error(`fetch is not ok ${r.status} ${r.statusText}\n${await r.text() || null}`);
+      json = await r.json();
+      if (json?.status == 0) {
+        throw Error(`ada error : ${json?.message || null}`);
+      } else if (json?.status == "captcha") {
+        console.log("kena capcay, tunggu 5 detik gw solve");
+        delay(5000);
+        await handleCapcay(id);
+      } else if (json?.status == 1) {
+        return json;
+      }
 
-    createDownloadUrl: function (cekStatusObject) {
-        const hash1 = this._tools.genRandomHex()
-        const hash2 = this._tools.genRandomHex()
-        const encTaskId = this._tools.enc2(cekStatusObject.i)
-        const url = `https://ytmp3.lat/${hash1}/download/${encTaskId}/${hash2}/`
-        return url
-    },
-
-    download: async function (youtubeUrl, format = 'mp3') {
-        const initObject = await this.init(youtubeUrl, format)
-        const result = await this.cekStatus(initObject)
-        return result
-    }
-}
+      await delay(NEXT_FETCH_WAITING_TIME);
+      fetchCount++;
+    } while (fetchCount < MAX_FETCH_ATTEMPT && (json?.status == "captcha" || json?.status == "3" || json?.length == 0));
+    throw Error(`max fetch limit exceeded or unkown error. ${json.message || null}`);
+  }
+};
