@@ -108,60 +108,97 @@ async function getUniqueFileName(basePath, extension) {
 const yt = {
   download: async (youtubeUrl) => {
     const id = youtubeUrl?.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/)?.[2];
-    if (!id) throw Error(`gagal mendapatkan id video dari input. my bad regex. pastiin input nya bener`);
+    if (!id) throw Error(`No se pudo obtener el ID del video de YouTube`);
 
     const delay = (ms) => new Promise(re => setTimeout(re, ms));
-    const MAX_FETCH_ATTEMPT = 12;
-    const NEXT_FETCH_WAITING_TIME = 5000;
+    const MAX_FETCH_ATTEMPT = 8;
+    const NEXT_FETCH_WAITING_TIME = 3000;
     let fetchCount = 0;
 
     const headers = {
-      "Referer": "https://ytmp3.fi/"
+      "Referer": "https://ytmp3.fi/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     };
 
     const handleCapcay = async (id) => {
-      const randomCode = (Math.random() + "").substring(2, 6);
+      try {
+        const randomCode = (Math.random() + "").substring(2, 6);
 
-      const headers = {
-        "Origin": "https://cf.hn",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Referer": `https://cf.hn/captcha.php?id=${id}&page=ytmp3.fi`,
-      };
+        const captchaHeaders = {
+          "Origin": "https://cf.hn",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Referer": `https://cf.hn/captcha.php?id=${id}&page=ytmp3.fi`,
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        };
 
-      const body = new URLSearchParams({
-        "userCaptcha": randomCode,
-        "generatedCaptcha": randomCode,
-        id,
-        "page": "ytmp3.fi"
-      }).toString();
+        const body = new URLSearchParams({
+          "userCaptcha": randomCode,
+          "generatedCaptcha": randomCode,
+          id,
+          "page": "ytmp3.fi"
+        }).toString();
 
-      const r = await fetch("https://cf.hn/captcha_check.php", {
-        headers,
-        body,
-        "method": "post"
-      });
+        await fetch("https://cf.hn/captcha_check.php", {
+          headers: captchaHeaders,
+          body,
+          method: "POST"
+        });
+      } catch (error) {
+        console.log("Error handling captcha:", error.message);
+      }
     };
 
     let json;
     do {
-      console.log(`fetch ke ${(fetchCount + 1)}`);
+      try {
+        console.log(`Intento ${fetchCount + 1} de ${MAX_FETCH_ATTEMPT}`);
 
-      const r = await fetch(`https://cf.hn/z.php?id=${id}&t=${Date.now()}`, { headers });
-      if (!r.ok) throw Error(`fetch is not ok ${r.status} ${r.statusText}\n${await r.text() || null}`);
-      json = await r.json();
-      if (json?.status == 0) {
-        throw Error(`ada error : ${json?.message || null}`);
-      } else if (json?.status == "captcha") {
-        console.log("kena capcay, tunggu 5 detik gw solve");
-        delay(5000);
-        await handleCapcay(id);
-      } else if (json?.status == 1) {
-        return json;
+        const r = await fetch(`https://cf.hn/z.php?id=${id}&t=${Date.now()}`, { 
+          headers,
+          timeout: 10000
+        });
+        
+        if (!r.ok) {
+          throw Error(`Error HTTP ${r.status}: ${r.statusText}`);
+        }
+        
+        const responseText = await r.text();
+        
+        try {
+          json = JSON.parse(responseText);
+        } catch (parseError) {
+          throw Error(`Respuesta no válida del servidor: ${responseText.substring(0, 100)}`);
+        }
+
+        if (json?.status == 0 || json?.status === "0") {
+          const errorMsg = json?.message || json?.error || "Error desconocido del servidor";
+          throw Error(`Error de la API: ${errorMsg}`);
+        } else if (json?.status == "captcha") {
+          console.log("Resolviendo captcha...");
+          await delay(2000);
+          await handleCapcay(id);
+          await delay(3000);
+        } else if (json?.status == 1 || json?.status === "1") {
+          if (json?.download) {
+            return json;
+          } else {
+            throw Error("No se encontró enlace de descarga en la respuesta");
+          }
+        }
+
+        await delay(NEXT_FETCH_WAITING_TIME);
+        fetchCount++;
+        
+      } catch (error) {
+        if (fetchCount >= MAX_FETCH_ATTEMPT - 1) {
+          throw error;
+        }
+        console.log(`Error en intento ${fetchCount + 1}: ${error.message}`);
+        await delay(NEXT_FETCH_WAITING_TIME);
+        fetchCount++;
       }
-
-      await delay(NEXT_FETCH_WAITING_TIME);
-      fetchCount++;
-    } while (fetchCount < MAX_FETCH_ATTEMPT && (json?.status == "captcha" || json?.status == "3" || json?.length == 0));
-    throw Error(`max fetch limit exceeded or unkown error. ${json.message || null}`);
+    } while (fetchCount < MAX_FETCH_ATTEMPT);
+    
+    throw Error(`Se agotaron los intentos de descarga. Último estado: ${json?.status || 'desconocido'}`);
   }
 };
