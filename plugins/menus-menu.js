@@ -245,7 +245,12 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
         };
 
         let user = global.db.data.users[m.sender];
-        let { exp, limit, level, role, money, joincount } = user;
+        let exp = user.exp ?? 0;
+        let limit = user.limit ?? 0;
+        let level = user.level ?? 0;
+        let role = user.role ?? 'Nuevo';
+        let money = user.money ?? 0;
+        let joincount = user.joincount ?? 0;
 
         const defaultMenu = {
             before: (tradutor.menu_header || '')
