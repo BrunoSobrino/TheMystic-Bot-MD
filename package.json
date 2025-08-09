@@ -10,7 +10,7 @@
     "plugins": "plugins"
   },
   "scripts": {
-    "start": "node --expose-gc index.js",
+    "start": "node --trace-deprecation index.js",
     "qr": "node index.js qr",
     "code": "node index.js code",
     "eslint": "eslint .",
