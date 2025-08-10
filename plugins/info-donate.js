@@ -2,7 +2,7 @@
 
 const { generateWAMessageFromContent } = (await import("baileys")).default;
 
-let handler = async (m, { conn, usedPrefix, command }) => {
+const handler = async (m, { conn, usedPrefix, command }) => {
  try {   
    const donar = `╭─「 💖 *DONACIONES* 💖 」
 │
