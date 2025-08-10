@@ -1,5 +1,4 @@
 import translate from '@vitalets/google-translate-api';
-import chatsimsimi from 'chats-simsimi';
 import axios from 'axios';
 import fetch from 'node-fetch';
 const handler = (m) => m;
