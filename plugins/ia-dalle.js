@@ -1,3 +1,4 @@
+// Creditos a https://pastes.io/imagen-ai
 import axios from 'axios'
 import similarity from 'similarity'
 
