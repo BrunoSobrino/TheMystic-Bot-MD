@@ -34,12 +34,13 @@ const handler = async (m, { conn, usedPrefix, command }) => {
    const buttonMessage = {
      'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
      'mimetype': `application/${document}`,
-     'fileName': `「  💖 DONACIONES 💖 」`,
+     'fileName': `💖 DONACIONES 💖`,
      'fileLength': 99999999999999,
      'pageCount': 200,
      'contextInfo': {
        'forwardingScore': 200,
        'isForwarded': true,
+       'mentionedJid': conn.parseMention(donar),
        'externalAdReply': {
          'mediaUrl': 'https://github.com/BrunoSobrino/TheMystic-Bot-MD',
          'mediaType': 2,
