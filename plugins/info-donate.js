@@ -1,8 +1,6 @@
 /* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
 
-/* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
-
-import {generateWAMessageFromContent} from "baileys";
+const { generateWAMessageFromContent } = (await import("baileys")).default;
 
 const handler = async (m, {conn, usedPrefix, command}) => {
  try {
@@ -50,8 +48,6 @@ const handler = async (m, {conn, usedPrefix, command}) => {
    conn.relayMessage(m.chat, res.message, {});
    
  } catch (error) {
-   console.error('Error in donate handler:', error);
-   // Mensaje alternativo simple si falla el formato especial
    const name = await conn.getName(m.sender);
    const simpleMsg = `💖 *DONACIONES*
 
@@ -77,7 +73,7 @@ Contáctame: @5219996125657
  }
 };
 
-handler.help = ['donar'];
+handler.help = ['donate'];
 handler.tags = ['info'];
-handler.command = ['donate', 'donar', 'apoyar'];
+handler.command = /^(donate|donar|apoyar|donación|donacion|apoyo|ayuda|colaborar|contribuir)$/i
 export default handler;
