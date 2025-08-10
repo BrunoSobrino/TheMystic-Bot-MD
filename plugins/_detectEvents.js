@@ -9,7 +9,7 @@ import fs from 'fs';
 const groupMetadataCache = new Map();
 
 export async function before(m, { conn, participants }) {
-  if (!m?.messageStubType || !m?.isGroup) return true;
+  if (!m?.messageStubType || !m?.isGroup) return;
   console.log(m)
   
   const safeOperation = async (operation, fallback = null) => {
