@@ -1,6 +1,6 @@
 /* Creditos para https://pastes.io/imagen-ai */
 import axios from 'axios'
-import similarity from 'string-similarity'
+import similarity from 'similarity'
 
 let handler = async (m, { conn, command, args }) => {
     const input = args.join(' ').trim()
