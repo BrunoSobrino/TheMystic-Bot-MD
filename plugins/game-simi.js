@@ -24,7 +24,7 @@ export default handler;
 async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es") {
     if (!ask) return { status: false, resultado: { msg: "Debes ingresar un texto para hablar con simsimi." }};
     try {
-        const response11 = await chatsimsimi(ask, language, false);
+        const response11 = await chatsimsimi(ask, language);
         if (response11.result == 'indefinida' || response11 == '' || !response11.result) response11 = XD // Se usa "XD" para causar error y usar otra opción.  
         return { status: true, resultado: { simsimi: response11.result }};        
     } catch (error1) {  
