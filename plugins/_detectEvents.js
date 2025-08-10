@@ -10,6 +10,7 @@ const groupMetadataCache = new Map();
 
 export async function before(m, { conn, participants }) {
   if (!m?.messageStubType || !m?.isGroup) return true;
+  console.log(m)
   
   const safeOperation = async (operation, fallback = null) => {
     try {
@@ -152,75 +153,52 @@ export async function before(m, { conn, participants }) {
 // FUNCIÓN DE RESOLUCIÓN LID ADAPTADA A NUEVA ESTRUCTURA
 // ===============================
 async function resolveLidFromCache(jid, groupChatId) {
-  // Si no es un LID, normalizar y devolver
   if (!jid || !jid.toString().endsWith('@lid')) {
     return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
   }
-
-  // Verificar que el LidResolver esté disponible
   if (!global.lidResolver) {
     console.warn('[DETECT-EVENTS] LidResolver no disponible, devolviendo JID original');
     return jid;
   }
-
   try {
-    // Usar el método principal del LidResolver
     if (global.lidResolver.resolveLid) {
       const resolved = await global.lidResolver.resolveLid(jid, groupChatId);
       if (resolved && resolved !== jid) {
         return resolved;
       }
     }
-
-    // Fallback: usar el método getUserInfo para obtener el JID desde el caché directo
     const lidKey = jid.split('@')[0];
     const userInfo = global.lidResolver.getUserInfo(lidKey);
-    
     if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) {
       return userInfo.jid;
     }
-
-    // Fallback adicional: buscar en el mapeo inverso
     const cachedUsers = global.lidResolver.getAllUsers();
     for (const user of cachedUsers) {
       if (user.lid === jid && user.jid && !user.jid.endsWith('@lid')) {
         return user.jid;
       }
     }
-
-    // Si tenemos acceso al cache legacy (compatibilidad)
     if (global.lidResolver.lidCache) {
-      // Probar acceso directo por clave simple
       const directResolved = global.lidResolver.lidCache.get(lidKey);
       if (directResolved && !directResolved.endsWith('@lid')) {
         return directResolved;
       }
-
-      // Probar con clave compuesta legacy para compatibilidad
       const legacyCacheKey = `${jid}_${groupChatId}`;
       const legacyResolved = global.lidResolver.lidCache.get(legacyCacheKey);
       if (legacyResolved && !legacyResolved.endsWith('@lid')) {
         return legacyResolved;
       }
-
-      // Buscar por patrón en todas las entradas del caché
       for (const [key, value] of global.lidResolver.lidCache.entries()) {
-        // Buscar por LID exacto
         if (key === lidKey && value && !value.endsWith('@lid')) {
           return value;
         }
-        
-        // Buscar por LID con @lid
         if (key === jid && value && !value.endsWith('@lid')) {
           return value;
         }
       }
     }
-
-    // Si no se pudo resolver, devolver el LID original
     console.warn(`[DETECT-EVENTS] No se pudo resolver LID: ${jid}`);
     return jid;
-    
   } catch (error) {
     console.error('[DETECT-EVENTS] Error resolviendo LID:', error);
     return jid;
@@ -234,18 +212,12 @@ function getUserDisplayName(jid) {
   if (!jid) {
     return '@undefined';
   }
-  
-  // Si es un JID normal, mostrar el número
   if (jid.includes('@') && !jid.includes('@lid')) {
     return `@${jid.split('@')[0]}`;
   }
-  
-  // Si es un LID no resuelto, intentar obtener info del caché
   if (jid.includes('@lid')) {
     try {
       const lidKey = jid.split('@')[0];
-      
-      // Intentar obtener el nombre del caché del LidResolver
       if (global.lidResolver) {
         const userInfo = global.lidResolver.getUserInfo(lidKey);
         if (userInfo) {
@@ -257,58 +229,15 @@ function getUserDisplayName(jid) {
           }
         }
       }
-      
-      // Fallback: mostrar el número del LID
       return `@${lidKey}`;
     } catch (error) {
       console.error('[DETECT-EVENTS] Error obteniendo nombre de usuario:', error);
       return 'Usuario no identificado';
     }
   }
-  
-  // Para cualquier otro caso, intentar extraer el número
   return `@${jid}`;
 }
 
-// ===============================
-// FUNCIONES ADICIONALES PARA DEBUGGING
-// ===============================
-
-/**
- * Función para obtener estadísticas del sistema LID
- */
-function getLidSystemStats() {
-  if (!global.lidResolver) {
-    return { error: 'LidResolver no disponible' };
-  }
-  
-  try {
-    return global.lidResolver.getStats();
-  } catch (error) {
-    return { error: error.message };
-  }
-}
-
-/**
- * Función para listar usuarios conocidos (debugging)
- */
-function listKnownUsers() {
-  if (!global.lidResolver) {
-    return [];
-  }
-  
-  try {
-    return global.lidResolver.getAllUsers();
-  } catch (error) {
-    console.error('[DETECT-EVENTS] Error listando usuarios:', error);
-    return [];
-  }
-}
-
-// Exportar funciones adicionales para debugging si es necesario
-export { getLidSystemStats, listKnownUsers };
-
-// Función legacy mantenida por compatibilidad
 async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
     return resolveLidFromCache(lid, groupChatId);
 }
