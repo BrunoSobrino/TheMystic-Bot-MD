@@ -101,8 +101,6 @@
     "yt-search": "^2.10.3"
   },
   "optionalDependencies": {
-    "@xct007/frieren-scraper": "github:xct007/frieren-scraper",
-    "googlevideo": "*",
     "puppeteer": "*",
     "wa-sticker-formatter": "^4.3.2"
   },
