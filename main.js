@@ -365,16 +365,12 @@ const connectionOptions = {
 global.conn = makeWASocket(connectionOptions);
 global.lidResolver = new LidResolver(global.conn);
 
-// Ejecutar análisis y corrección automática al inicializar
+// Ejecutar análisis y corrección automática al inicializar (SILENCIOSO)
 setTimeout(async () => {
   try {
     if (global.lidResolver) {
-      // Ejecutar corrección automática de números telefónicos
-      const correctionResult = global.lidResolver.autoCorrectPhoneNumbers();
-      // Solo log si hay errores
-      
-      // Mostrar estadísticas del caché solo si hay errores
-      const stats = global.lidResolver.getStats();
+      // Ejecutar corrección automática de números telefónicos (sin logs)
+      global.lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
     console.error('❌ Error en análisis inicial:', error.message);
