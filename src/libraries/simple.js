@@ -1570,7 +1570,7 @@ END:VCARD
             },
             enumerable: true,
         },
-parseMention: {
+/*parseMention: {
     async value(text = "", groupChatId = null) {
         try {
             const esNumeroValido = (numero) => {
@@ -1642,8 +1642,8 @@ parseMention: {
         }
     },
     enumerable: true,
-},
-        /*parseMention: {
+},*/
+        parseMention: {
       value(text = "") {
         try {
           const esNumeroValido = (numero) => {
@@ -1660,7 +1660,7 @@ parseMention: {
         }
       },
       enumerable: true,
-    },*/
+    },
         getName: {
             /**
              * Get name from jid
