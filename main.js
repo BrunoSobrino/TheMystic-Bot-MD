@@ -127,6 +127,46 @@ async function interceptMessages(messages) {
   return processedMessages;
 }
 
+/**
+ * Obtener información de usuario por LID
+ */
+global.getUserInfoByLid = function(lidNumber) {
+  if (!global.lidResolver) return null;
+  return global.lidResolver.getUserInfo(lidNumber);
+};
+
+/**
+ * Obtener información de usuario por JID
+ */
+global.getUserInfoByJid = function(jid) {
+  if (!global.lidResolver) return null;
+  return global.lidResolver.getUserInfoByJid(jid);
+};
+
+/**
+ * Obtener LID de un JID (búsqueda inversa)
+ */
+global.findLidByJid = function(jid) {
+  if (!global.lidResolver) return null;
+  return global.lidResolver.findLidByJid(jid);
+};
+
+/**
+ * Listar todos los usuarios en caché
+ */
+global.getAllCachedUsers = function() {
+  if (!global.lidResolver) return [];
+  return global.lidResolver.getAllUsers();
+};
+
+/**
+ * Obtener estadísticas del caché LID
+ */
+global.getLidStats = function() {
+  if (!global.lidResolver) return null;
+  return global.lidResolver.getStats();
+};
+
 const { state, saveCreds } = await useMultiFileAuthState(global.authFile);
 const { version } = await fetchLatestBaileysVersion();
 let phoneNumber = global.botnumber || process.argv.find(arg => arg.startsWith('--phone='))?.split('=')[1];
@@ -487,45 +527,6 @@ global.reloadHandler = async function (restatConn) {
       if (chatUpdate.messages) {
         chatUpdate.messages = await interceptMessages(chatUpdate.messages);
 
-
-        /** INicio de configuração para buttons 
-        const msg = chatUpdate.messages[0]
-        const body =
-          msg?.message?.buttonsResponseMessage?.selectedButtonId ||
-          msg?.message?.templateButtonReplyMessage?.selectedId ||
-          msg?.message?.conversation ||
-          msg?.message?.extendedTextMessage?.text
-
-
-        console.log(body)
-
-        switch (body) {
-          case 'glx_start_game':
-            console.log(`ENTROUUUUU`)
-        
-            await conn.sendMessage(msg.key.remoteJid, {
-              text: `
-              
-🛠️ *Estamos trabalhando para melhorar o jogo GLX!*
-
-Enquanto isso, use o comando abaixo para voltar ao início do jogo:
-
-✨ *.glx*
-
-Agradecemos sua paciência e apoio. 🚀
-`,
-              footer: 'Game GLX',
-              buttons: [
-                { buttonId: 'glx_start_game', buttonText: { displayText: '🔍 Inicio' }, type: 1 }
-              ],
-              headerType: 1
-            })
-            break
-        }
-
-*/
-        // ----------------------------------
-
         for (const message of chatUpdate.messages) {
           if (message?.message && message.key?.remoteJid?.endsWith('@g.us')) {
             const messageTypes = Object.keys(message.message);
@@ -629,16 +630,6 @@ global.reload = async (_ev, filename) => {
 Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
-
-// Limpiar caché del LidResolver cada 30 minutos (más completo)
-setInterval(() => {
-  if (global.lidResolver) {
-    global.lidResolver.clearCache();
-    if (global.lidResolver.isDirty) {
-      global.lidResolver.forceSave();
-    }
-  }
-}, 1000 * 60 * 30);
 
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
