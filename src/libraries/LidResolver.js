@@ -778,6 +778,6 @@ class LidResolver {
     }
     this.saveCache();
   }
-
+}
 
 export default LidResolver;
