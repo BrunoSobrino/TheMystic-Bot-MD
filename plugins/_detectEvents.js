@@ -10,7 +10,6 @@ const groupMetadataCache = new Map();
 
 export async function before(m, { conn, participants }) {
   if (!m?.messageStubType || !m?.isGroup || m?.messageStubType == 2) return;
-  console.log(m?.messageStubType)
   
   const safeOperation = async (operation, fallback = null) => {
     try {
