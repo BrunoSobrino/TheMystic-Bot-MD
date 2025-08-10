@@ -3,6 +3,7 @@
 const { generateWAMessageFromContent } = (await import("baileys")).default;
 
 let handler = async (m, { conn, usedPrefix, command }) => {
+ console.log('hola')
  try {
    const name = await conn.getName(m.sender);
    
