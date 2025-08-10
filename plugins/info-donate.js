@@ -1,22 +1,83 @@
 /* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
 
-import {generateWAMessageFromContent} from "baileys";
-import fs from 'fs';
-const handler = async (m, {conn, usedPrefix, command}) => {
- const datas = global
- const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
- const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
- const tradutor = _translate.plugins.info_donar
+/* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
 
- const name = await conn.getName(m.sender);
- const donar =`*┏ ┅ ━━━━━━━━━━━━━━━━ ┅ ━**┇「 ${tradutor.texto1[0]} 」**┣ ┅ ━━━━━━━━━━━━━━━━ ┅ ━**┃ ${tradutor.texto1[1]} ${name}**┃*\n*┃ ${tradutor.texto1[2]}*\n*┃ ${tradutor.texto1[3]}*\n*┃*\n*┃ ${tradutor.texto1[4]}*\n*┃ ${tradutor.texto1[5]}*\n*┃ ${tradutor.texto1[6]}*\n*┃ ${tradutor.texto1[7]}*\n*┃ ${tradutor.texto1[8]}*\n*┃ ${tradutor.texto1[9]}*\n*┃*\n*┃ ${tradutor.texto1[10]}\n *┃ ${tradutor.texto1[11]}\n*┃ ${tradutor.texto1[12]}\n*┗ ┅ ━━━━━━━━━━━━━━━━ ┅ ━*`.trim();
- const aa = { quoted: m, userJid: conn.user.jid };
- const res = generateWAMessageFromContent(m.chat, { liveLocationMessage: { degreesLatitude: 0, degreesLongitude: 0, caption: donar, secuenceNumber: '0', contextInfo: { mentionedJid: conn.parseMention()}}}, aa);
- conn.relayMessage(m.chat, res.message, {});
+import {generateWAMessageFromContent} from "baileys";
+
+const handler = async (m, {conn, usedPrefix, command}) => {
+ try {
+   const name = await conn.getName(m.sender);
+   
+   const donar = `╭─「 💖 *DONACIONES* 💖 」
+│
+│ ¡Hola *${name}*! 👋
+│
+│ ¿Te gusta este bot? 🤖✨
+│ ¡Ayúdanos a mantenerlo activo!
+│
+├─「 🎯 *¿Por qué donar?* 」
+│
+│ • Mantener el servidor activo 🖥️
+│ • Agregar nuevas funciones 🆕
+│ • Mejorar la velocidad ⚡
+│ • Soporte 24/7 🕐
+│
+├─「 💳 *Métodos de donación* 」
+│
+│ • PayPal: paypal.me/BrunoSob 💰
+│
+│ 💬 *Otras formas:*
+│ Contáctame: @5219996125657
+│
+│ 📝 *Nota:* Toda donación
+│ nos ayuda a crecer juntos 🌱
+│
+╰─「 ¡Gracias por tu apoyo! 🙏 」`.trim();
+
+   const aa = { quoted: m, userJid: conn.user.jid };
+   const res = generateWAMessageFromContent(m.chat, { 
+     liveLocationMessage: { 
+       degreesLatitude: 0, 
+       degreesLongitude: 0, 
+       caption: donar, 
+       secuenceNumber: '0', 
+       contextInfo: { 
+         mentionedJid: conn.parseMention(donar)
+       }
+     }
+   }, aa);
+   
+   conn.relayMessage(m.chat, res.message, {});
+   
+ } catch (error) {
+   console.error('Error in donate handler:', error);
+   // Mensaje alternativo simple si falla el formato especial
+   const name = await conn.getName(m.sender);
+   const simpleMsg = `💖 *DONACIONES*
+
+¡Hola *${name}*! 
+
+¿Te gusta este bot? ¡Ayúdanos a mantenerlo activo!
+
+🎯 *¿Por qué donar?*
+• Mantener servidor activo
+• Nuevas funciones  
+• Mejor velocidad
+• Soporte 24/7
+
+💳 *Métodos:*
+• PayPal: paypal.me/BrunoSob
+
+💬 *Otras formas:*
+Contáctame: @5219996125657
+
+¡Gracias por tu apoyo! 🙏`;
+   
+   m.reply(simpleMsg);
+ }
 };
 
-handler.help = ['donate'];
+handler.help = ['donar'];
 handler.tags = ['info'];
 handler.command = ['donate', 'donar', 'apoyar'];
-
 export default handler;
