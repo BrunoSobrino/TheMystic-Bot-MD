@@ -66,8 +66,6 @@ class LidResolver {
           }
         }
         
-        console.log(`📱 Caché LID cargado: ${validEntries} entradas válidas`);
-        
         // Guardar cache si hay cambios en la estructura
       } else {
         this.saveCache();
@@ -96,8 +94,6 @@ class LidResolver {
         if (entry.notFound) {
           const correctJid = phoneDetection.jid;
           const countryInfo = this.phoneValidator.getCountryInfo(phoneDetection.phoneNumber);
-          
-          console.log(`🔧 Corrigiendo entrada: ${lidKey} -> ${correctJid} (${countryInfo?.country || 'País desconocido'})`);
           
           // Crear nueva entrada correcta
           const correctedEntry = {
@@ -132,7 +128,6 @@ class LidResolver {
     }
 
     if (cleanupCount > 0) {
-      console.log(`✅ Se corrigieron ${cleanupCount} números telefónicos mal categorizados`);
       this.markDirty();
     }
   }
@@ -248,7 +243,6 @@ class LidResolver {
     const phoneDetection = this.phoneValidator.detectPhoneInLid(lidKey);
     if (phoneDetection.isPhone) {
       const countryInfo = this.phoneValidator.getCountryInfo(phoneDetection.phoneNumber);
-      console.log(`📞 LID detectado como número telefónico: ${lidKey} -> ${phoneDetection.jid} (${countryInfo?.country || 'País desconocido'})`);
       
       // Actualizar caché con información correcta
       const phoneEntry = {
@@ -454,14 +448,8 @@ class LidResolver {
     const analysis = this.analyzePhoneNumbers();
     let correctionCount = 0;
 
-    console.log(`🔍 Analizando ${analysis.stats.totalEntries} entradas en caché...`);
-    console.log(`📞 Números telefónicos detectados: ${analysis.stats.phoneNumbersDetected}`);
-    console.log(`🔧 Entradas problemáticas: ${analysis.stats.problematicEntries}`);
-
     for (const phoneEntry of analysis.phoneNumbers) {
       if (phoneEntry.isProblematic) {
-        console.log(`🔧 Corrigiendo: ${phoneEntry.lidKey} (${phoneEntry.country || 'País desconocido'})`);
-        
         // Crear entrada corregida
         const correctedEntry = {
           jid: phoneEntry.correctJid,
@@ -488,10 +476,7 @@ class LidResolver {
     }
 
     if (correctionCount > 0) {
-      console.log(`✅ Se corrigieron ${correctionCount} entradas`);
       this.markDirty();
-    } else {
-      console.log(`✅ No se encontraron entradas que requieran corrección`);
     }
 
     return {
