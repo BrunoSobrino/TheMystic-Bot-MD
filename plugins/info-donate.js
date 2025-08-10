@@ -1,7 +1,5 @@
 /* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
 
-const { generateWAMessageFromContent } = (await import("baileys")).default;
-
 const handler = async (m, { conn, usedPrefix, command }) => {
  try {   
    const donar = `╭─「 💖 *DONACIONES* 💖 」
@@ -30,20 +28,32 @@ const handler = async (m, { conn, usedPrefix, command }) => {
 │
 ╰─「 ¡Gracias por tu apoyo! 🙏 」`.trim();
 
-   const aa = { quoted: m, userJid: conn.user.jid };
-   const res = generateWAMessageFromContent(m.chat, { 
-     liveLocationMessage: { 
-       degreesLatitude: 0, 
-       degreesLongitude: 0, 
-       caption: donar, 
-       secuenceNumber: '0', 
-       contextInfo: { 
-         mentionedJid: conn.parseMention(donar)
-       }
-     }
-   }, aa);
+   const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
+   const document = doc[Math.floor(Math.random() * doc.length)];
    
-   conn.relayMessage(m.chat, res.message, {});
+   const buttonMessage = {
+     'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
+     'mimetype': `application/${document}`,
+     'fileName': `「  💖 DONACIONES 💖 」`,
+     'fileLength': 99999999999999,
+     'pageCount': 200,
+     'contextInfo': {
+       'forwardingScore': 200,
+       'isForwarded': true,
+       'externalAdReply': {
+         'mediaUrl': 'https://github.com/BrunoSobrino/TheMystic-Bot-MD',
+         'mediaType': 2,
+         'previewType': 'pdf',
+         'title': '💖 DONACIONES - Apoya el proyecto',
+         'body': wm,
+         'thumbnail': imagen1,
+         'sourceUrl': 'https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA'}},
+     'caption': donar,
+     'footer': wm,
+     'headerType': 6
+   };
+   
+   conn.sendMessage(m.chat, buttonMessage, {quoted: m});
    
  } catch {
    const simpleMsg = `💖 *DONACIONES*
