@@ -298,8 +298,7 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
         let after = conn.menu.after || defaultMenu.after;
 
         let _text = [
-            before,
-            readMore,    
+            before + readMore,    
             ...Object.keys(tags).map(tag => {
                 let pluginCommands = help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
                     return menu.help.map(help => {
