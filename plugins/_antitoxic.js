@@ -8,7 +8,9 @@
 const toxicRegex = /\b(puto|puta|rata|estupido|imbecil|rctmre|mrd|verga|vrga|maricon)\b/i;
 
 export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
-
+ 
+const chat = global.db.data.chats[m.chat];
+ 
  if (!chat.antiToxic) {
   return !1;
  }
@@ -25,7 +27,6 @@ export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
     return !1;
   }
   const user = global.db.data.users[m.sender];
-  const chat = global.db.data.chats[m.chat];
   const bot = global.db.data.settings[mconn.conn.user.jid] || {};
   const isToxic = toxicRegex.exec(m.text);
 
