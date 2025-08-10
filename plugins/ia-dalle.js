@@ -14,8 +14,8 @@ let handler = async (m, { conn, command, args }) => {
  }
 
  case 'nowartimg': 
- case: 'dalle':
- case: 'dall-e': {
+ case 'dalle':
+ case 'dall-e': {
  if (!input) return m.reply('*[❗] Ingresa la descripción de la imagen que tienes en mente.*')
  const res = await nowart(input)
  for (const x of res.data) {
