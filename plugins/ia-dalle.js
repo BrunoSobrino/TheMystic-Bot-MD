@@ -1,4 +1,3 @@
-/* Creditos para https://pastes.io/imagen-ai */
 import axios from 'axios'
 import similarity from 'similarity'
 
@@ -13,14 +12,32 @@ let handler = async (m, { conn, command, args }) => {
         'Disney', '3D Model'
     ]
 
+    const normalizeText = (text) => {
+        return text.toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9 ]/g, "")
+            .trim()
+    }
+
+    const inputNormalizado = normalizeText(input)
     let estiloDetectado = 'No Style'
-    let mejorCoincidencia = similarity.findBestMatch(input, estilosDisponibles)
-    if (mejorCoincidencia.bestMatch.rating > 0.5) estiloDetectado = mejorCoincidencia.bestMatch.target
+    let maxSim = 0
+    const threshold = 0.5
+
+    for (const estilo of estilosDisponibles) {
+        const sim = similarity(inputNormalizado, normalizeText(estilo))
+        if (sim > maxSim && sim >= threshold) {
+            maxSim = sim
+            estiloDetectado = estilo
+        }
+    }
 
     let promptLimpio = input.replace(new RegExp(estiloDetectado, 'i'), '').trim()
 
     const res = await imagen.generate(promptLimpio, estiloDetectado, '', 'Max')
     if (!res.success) return m.reply(`❌ Error: ${res.result.error}`)
+
     await conn.sendMessage(m.chat, { image: { url: res.result.url }, caption: `🖼 Prompt: ${promptLimpio}\n🎨 Estilo: ${estiloDetectado}` }, { quoted: m })
 }
 
