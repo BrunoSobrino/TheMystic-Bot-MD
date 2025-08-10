@@ -3,13 +3,10 @@
 const { generateWAMessageFromContent } = (await import("baileys")).default;
 
 let handler = async (m, { conn, usedPrefix, command }) => {
- console.log('hola')
- try {
-   const name = await conn.getName(m.sender);
-   
+ try {   
    const donar = `╭─「 💖 *DONACIONES* 💖 」
 │
-│ ¡Hola *${name}*! 👋
+│ ¡Hola *${m?.name}*! 👋
 │
 │ ¿Te gusta este bot? 🤖✨
 │ ¡Ayúdanos a mantenerlo activo!
@@ -49,10 +46,9 @@ let handler = async (m, { conn, usedPrefix, command }) => {
    conn.relayMessage(m.chat, res.message, {});
    
  } catch {
-   const name = await conn.getName(m.sender);
    const simpleMsg = `💖 *DONACIONES*
 
-¡Hola *${name}*! 
+¡Hola *${m?.name}*! 
 
 ¿Te gusta este bot? ¡Ayúdanos a mantenerlo activo!
 
