@@ -10,9 +10,9 @@ const handler = async (m, {conn}) => {
   m.reply(global.terminos);
 };
 
-handler.help = ['tyc'];
+handler.help = ['T&C'];
 handler.tags = ['info'];
-handler.command = /^(términos y condiciones y privacidad|terminosycondicionesyprivacidad|terminosycondiciones|terminos y condiciones y privacidad|terminos y condiciones|terminos y condiciones|terminos de uso|Terminos de uso|Terminó se uso|términos de uso|Términos de uso|Términos y condiciones)$/i;
+handler.command = /^(terminosycondicionesyprivacidad|terminosycondiciones|tyc|t&c)$/i;
 export default handler;
 
 
