@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import PhoneValidator from './PhoneValidator.js';
 
 /**
  * Interceptor global para resolver LIDs en mensajes con almacenamiento local
+ * Incluye validación de números telefónicos para detectar LIDs que son números válidos
  */
 class LidResolver {
   constructor(conn) {
@@ -15,6 +17,9 @@ class LidResolver {
     this.saveTimeout = null;
     this.maxCacheSize = 1000; // Máximo de entradas en caché
     
+    // Inicializar validador de números telefónicos
+    this.phoneValidator = new PhoneValidator();
+    
     // Asegurar que el directorio existe
     this.ensureDirectoryExists();
     
@@ -23,6 +28,9 @@ class LidResolver {
     
     // Configurar auto-guardado
     this.setupAutoSave();
+
+    // Limpiar entradas problemáticas al inicializar
+    this.cleanupPhoneNumbers();
   }
 
   /**
@@ -51,12 +59,14 @@ class LidResolver {
           if (entry && typeof entry === 'object' && entry.jid && entry.lid && entry.timestamp) {
             this.cache.set(key, entry);
             // Crear mapeo inverso
-            if (entry.jid) {
+            if (entry.jid && entry.jid.includes('@s.whatsapp.net')) {
               this.jidToLidMap.set(entry.jid, entry.lid);
             }
             validEntries++;
           }
         }
+        
+        console.log(`📱 Caché LID cargado: ${validEntries} entradas válidas`);
         
         // Guardar cache si hay cambios en la estructura
       } else {
@@ -67,6 +77,63 @@ class LidResolver {
       this.cache = new Map();
       this.jidToLidMap = new Map();
       this.saveCache();
+    }
+  }
+
+  /**
+   * Limpia números telefónicos mal categorizados como LIDs
+   */
+  cleanupPhoneNumbers() {
+    let cleanupCount = 0;
+    const toCleanup = [];
+
+    for (const [lidKey, entry] of this.cache.entries()) {
+      // Detectar si el lidKey es realmente un número de teléfono
+      const phoneDetection = this.phoneValidator.detectPhoneInLid(lidKey);
+      
+      if (phoneDetection.isPhone) {
+        // Si es un número de teléfono y está marcado como "no encontrado"
+        if (entry.notFound) {
+          const correctJid = phoneDetection.jid;
+          const countryInfo = this.phoneValidator.getCountryInfo(phoneDetection.phoneNumber);
+          
+          console.log(`🔧 Corrigiendo entrada: ${lidKey} -> ${correctJid} (${countryInfo?.country || 'País desconocido'})`);
+          
+          // Crear nueva entrada correcta
+          const correctedEntry = {
+            jid: correctJid,
+            lid: `${lidKey}@lid`, // Mantener el LID original por compatibilidad
+            name: phoneDetection.phoneNumber,
+            timestamp: Date.now(),
+            corrected: true,
+            country: countryInfo?.country,
+            phoneNumber: phoneDetection.phoneNumber
+          };
+          
+          toCleanup.push({
+            oldKey: lidKey,
+            newEntry: correctedEntry,
+            correctJid: correctJid
+          });
+          
+          cleanupCount++;
+        }
+      }
+    }
+
+    // Aplicar las correcciones
+    for (const cleanup of toCleanup) {
+      // Remover entrada antigua
+      this.cache.delete(cleanup.oldKey);
+      
+      // Agregar entrada corregida
+      this.cache.set(cleanup.oldKey, cleanup.newEntry);
+      this.jidToLidMap.set(cleanup.correctJid, `${cleanup.oldKey}@lid`);
+    }
+
+    if (cleanupCount > 0) {
+      console.log(`✅ Se corrigieron ${cleanupCount} números telefónicos mal categorizados`);
+      this.markDirty();
     }
   }
 
@@ -164,7 +231,7 @@ class LidResolver {
   }
 
   /**
-   * Resolver LID a JID real
+   * Resolver LID a JID real con validación de números telefónicos
    */
   async resolveLid(lidJid, groupChatId, maxRetries = 3) {
     if (!lidJid.endsWith('@lid')) {
@@ -176,6 +243,30 @@ class LidResolver {
     }
 
     const lidKey = lidJid.split('@')[0];
+    
+    // NUEVA FUNCIONALIDAD: Verificar si el LID es realmente un número de teléfono
+    const phoneDetection = this.phoneValidator.detectPhoneInLid(lidKey);
+    if (phoneDetection.isPhone) {
+      const countryInfo = this.phoneValidator.getCountryInfo(phoneDetection.phoneNumber);
+      console.log(`📞 LID detectado como número telefónico: ${lidKey} -> ${phoneDetection.jid} (${countryInfo?.country || 'País desconocido'})`);
+      
+      // Actualizar caché con información correcta
+      const phoneEntry = {
+        jid: phoneDetection.jid,
+        lid: lidJid,
+        name: phoneDetection.phoneNumber,
+        timestamp: Date.now(),
+        phoneDetected: true,
+        country: countryInfo?.country,
+        phoneNumber: phoneDetection.phoneNumber
+      };
+      
+      this.cache.set(lidKey, phoneEntry);
+      this.jidToLidMap.set(phoneDetection.jid, lidJid);
+      this.markDirty();
+      
+      return phoneDetection.jid;
+    }
     
     // Verificar caché local por LID
     if (this.cache.has(lidKey)) {
@@ -301,6 +392,112 @@ class LidResolver {
       return this.cache.get(lidKey) || null;
     }
     return null;
+  }
+
+  /**
+   * Analizar y reportar números telefónicos mal categorizados
+   */
+  analyzePhoneNumbers() {
+    const phoneNumbers = [];
+    const realLids = [];
+    const problematic = [];
+
+    for (const [lidKey, entry] of this.cache.entries()) {
+      const phoneDetection = this.phoneValidator.detectPhoneInLid(lidKey);
+      
+      if (phoneDetection.isPhone) {
+        const countryInfo = this.phoneValidator.getCountryInfo(phoneDetection.phoneNumber);
+        phoneNumbers.push({
+          lidKey,
+          phoneNumber: phoneDetection.phoneNumber,
+          correctJid: phoneDetection.jid,
+          currentJid: entry.jid,
+          country: countryInfo?.country,
+          isProblematic: entry.notFound || entry.error || entry.jid.includes('@lid'),
+          entry
+        });
+      } else {
+        realLids.push({
+          lidKey,
+          entry
+        });
+      }
+
+      // Detectar entradas problemáticas adicionales
+      if (entry.jid && entry.jid.includes('@lid')) {
+        problematic.push({
+          lidKey,
+          issue: 'JID contiene @lid',
+          entry
+        });
+      }
+    }
+
+    return {
+      phoneNumbers,
+      realLids,
+      problematic,
+      stats: {
+        totalEntries: this.cache.size,
+        phoneNumbersDetected: phoneNumbers.length,
+        realLids: realLids.length,
+        problematicEntries: problematic.length,
+        phoneNumbersProblematic: phoneNumbers.filter(p => p.isProblematic).length
+      }
+    };
+  }
+
+  /**
+   * Corregir automáticamente números telefónicos mal categorizados
+   */
+  autoCorrectPhoneNumbers() {
+    const analysis = this.analyzePhoneNumbers();
+    let correctionCount = 0;
+
+    console.log(`🔍 Analizando ${analysis.stats.totalEntries} entradas en caché...`);
+    console.log(`📞 Números telefónicos detectados: ${analysis.stats.phoneNumbersDetected}`);
+    console.log(`🔧 Entradas problemáticas: ${analysis.stats.problematicEntries}`);
+
+    for (const phoneEntry of analysis.phoneNumbers) {
+      if (phoneEntry.isProblematic) {
+        console.log(`🔧 Corrigiendo: ${phoneEntry.lidKey} (${phoneEntry.country || 'País desconocido'})`);
+        
+        // Crear entrada corregida
+        const correctedEntry = {
+          jid: phoneEntry.correctJid,
+          lid: `${phoneEntry.lidKey}@lid`,
+          name: phoneEntry.phoneNumber,
+          timestamp: Date.now(),
+          corrected: true,
+          country: phoneEntry.country,
+          phoneNumber: phoneEntry.phoneNumber,
+          originalEntry: phoneEntry.entry
+        };
+
+        // Actualizar caché
+        this.cache.set(phoneEntry.lidKey, correctedEntry);
+        
+        // Actualizar mapeo inverso
+        if (phoneEntry.entry.jid && this.jidToLidMap.has(phoneEntry.entry.jid)) {
+          this.jidToLidMap.delete(phoneEntry.entry.jid);
+        }
+        this.jidToLidMap.set(phoneEntry.correctJid, `${phoneEntry.lidKey}@lid`);
+        
+        correctionCount++;
+      }
+    }
+
+    if (correctionCount > 0) {
+      console.log(`✅ Se corrigieron ${correctionCount} entradas`);
+      this.markDirty();
+    } else {
+      console.log(`✅ No se encontraron entradas que requieran corrección`);
+    }
+
+    return {
+      corrected: correctionCount,
+      analysis
+    };
   }
 
   async processObject(obj, groupChatId) {
@@ -481,14 +678,22 @@ class LidResolver {
   }
 
   /**
-   * Obtener estadísticas del caché
+   * Obtener estadísticas del caché con información de números telefónicos
    */
   getStats() {
     let notFound = 0;
     let errors = 0;
     let valid = 0;
+    let phoneNumbers = 0;
+    let corrected = 0;
     
     for (const [key, entry] of this.cache.entries()) {
+      if (entry.phoneDetected || entry.corrected) {
+        phoneNumbers++;
+      }
+      if (entry.corrected) {
+        corrected++;
+      }
       if (entry.notFound) {
         notFound++;
       } else if (entry.error) {
@@ -503,6 +708,8 @@ class LidResolver {
       valid,
       notFound,
       errors,
+      phoneNumbers,
+      corrected,
       processing: this.processingQueue.size,
       cacheFile: this.cacheFile,
       fileExists: fs.existsSync(this.cacheFile),
@@ -512,7 +719,7 @@ class LidResolver {
   }
 
   /**
-   * Listar todos los usuarios en caché
+   * Listar todos los usuarios en caché con información adicional
    */
   getAllUsers() {
     const users = [];
@@ -522,11 +729,43 @@ class LidResolver {
           lid: entry.lid,
           jid: entry.jid,
           name: entry.name,
+          country: entry.country,
+          phoneNumber: entry.phoneNumber,
+          isPhoneDetected: entry.phoneDetected || entry.corrected,
           timestamp: new Date(entry.timestamp).toLocaleString()
         });
       }
     }
     return users.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  /**
+   * Obtener usuarios por país
+   */
+  getUsersByCountry() {
+    const countries = {};
+    
+    for (const [lidKey, entry] of this.cache.entries()) {
+      if (!entry.notFound && !entry.error && entry.country) {
+        if (!countries[entry.country]) {
+          countries[entry.country] = [];
+        }
+        
+        countries[entry.country].push({
+          lid: entry.lid,
+          jid: entry.jid,
+          name: entry.name,
+          phoneNumber: entry.phoneNumber
+        });
+      }
+    }
+    
+    // Ordenar usuarios dentro de cada país
+    for (const country of Object.keys(countries)) {
+      countries[country].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    return countries;
   }
 
   /**
@@ -539,6 +778,6 @@ class LidResolver {
     }
     this.saveCache();
   }
-}
+
 
 export default LidResolver;
