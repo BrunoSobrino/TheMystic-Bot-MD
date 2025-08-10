@@ -9,11 +9,11 @@ class LidResolver {
     this.conn = conn;
     this.processingQueue = new Map();
     this.cacheFile = path.join(process.cwd(), 'src', 'lidsresolve.json');
-    this.cache = new Map();
+    this.cache = new Map(); // Ahora almacena por LID directamente
+    this.jidToLidMap = new Map(); // Mapeo inverso JID -> LID para búsquedas rápidas
     this.isDirty = false;
     this.saveTimeout = null;
     this.maxCacheSize = 1000; // Máximo de entradas en caché
-    this.maxAge = 1000 * 60 * 60 * 24; // 24 horas
     
     // Asegurar que el directorio existe
     this.ensureDirectoryExists();
@@ -44,30 +44,28 @@ class LidResolver {
         const data = fs.readFileSync(this.cacheFile, 'utf8');
         const parsed = JSON.parse(data);
         
-        // Verificar estructura y limpiar entradas expiradas
-        const now = Date.now();
+        // Verificar estructura
         let validEntries = 0;
         
         for (const [key, entry] of Object.entries(parsed)) {
-          if (entry && typeof entry === 'object' && entry.jid && entry.timestamp) {
-            // Verificar si no está expirado
-            if (now - entry.timestamp < this.maxAge) {
-              this.cache.set(key, entry);
-              validEntries++;
+          if (entry && typeof entry === 'object' && entry.jid && entry.lid && entry.timestamp) {
+            this.cache.set(key, entry);
+            // Crear mapeo inverso
+            if (entry.jid) {
+              this.jidToLidMap.set(entry.jid, entry.lid);
             }
+            validEntries++;
           }
         }
-                
-        // Si hay muchas entradas expiradas, guardar el caché limpio
-        if (validEntries !== Object.keys(parsed).length) {
-          this.saveCache();
-        }
+        
+        // Guardar cache si hay cambios en la estructura
       } else {
         this.saveCache();
       }
     } catch (error) {
       console.error('❌ Error cargando caché LID:', error.message);
       this.cache = new Map();
+      this.jidToLidMap = new Map();
       this.saveCache();
     }
   }
@@ -115,90 +113,81 @@ class LidResolver {
   }
 
   /**
-   * Marcar para guardado diferido
+   * Marcar para guardado inmediato
    */
   markDirty() {
     this.isDirty = true;
     
-    // Guardado diferido para evitar I/O excesivo
+    // Guardado inmediato
     if (this.saveTimeout) {
       clearTimeout(this.saveTimeout);
     }
     
-    this.saveTimeout = setTimeout(() => {
-      if (this.isDirty) {
-        this.saveCache();
-      }
-    }, 5000); // Guardar después de 5 segundos de inactividad
+    // Guardar inmediatamente
+    this.saveCache();
   }
 
   /**
-   * Limpiar entradas expiradas del caché
+   * Verificar si ya existe un JID o LID en el caché para evitar duplicados
    */
-  cleanExpiredEntries() {
-    const now = Date.now();
-    let removed = 0;
-    
-    for (const [key, entry] of this.cache.entries()) {
-      if (now - entry.timestamp > this.maxAge) {
-        this.cache.delete(key);
-        removed++;
-      }
+  isDuplicate(lidKey, jid) {
+    // Verificar si ya existe el LID
+    if (this.cache.has(lidKey)) {
+      return true;
     }
     
-    if (removed > 0) {
-      this.markDirty();
+    // Verificar si ya existe el JID
+    if (this.jidToLidMap.has(jid)) {
+      return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * Obtener nombre de usuario usando onWhatsApp
+   */
+  async getUserName(jid) {
+    try {
+      const contactDetails = await this.conn?.onWhatsApp(jid);
+      if (contactDetails?.[0]?.name) {
+        return contactDetails[0].name;
+      }
+      
+      // Fallback: intentar obtener del pushName si está disponible
+      const cleanJid = jid.replace('@s.whatsapp.net', '');
+      return cleanJid; // Si no hay nombre, usar el número
+    } catch (error) {
+      console.error('Error obteniendo nombre de usuario:', error);
+      return jid.replace('@s.whatsapp.net', ''); // Fallback al número
     }
   }
 
   /**
-   * Limpiar caché si excede el tamaño máximo
+   * Resolver LID a JID real
    */
-  enforceMaxSize() {
-    if (this.cache.size > this.maxCacheSize) {
-      // Obtener entradas ordenadas por timestamp (más antiguas primero)
-      const entries = Array.from(this.cache.entries())
-        .sort((a, b) => a[1].timestamp - b[1].timestamp);
-      
-      // Eliminar las más antiguas hasta llegar al límite
-      const toRemove = this.cache.size - this.maxCacheSize;
-      for (let i = 0; i < toRemove; i++) {
-        this.cache.delete(entries[i][0]);
-      }
-      
-      this.markDirty();
-    }
-  }
-
   async resolveLid(lidJid, groupChatId, maxRetries = 3) {
-    if (!lidJid.endsWith('@lid') || !groupChatId?.endsWith('@g.us')) {
+    if (!lidJid.endsWith('@lid')) {
       return lidJid.includes('@') ? lidJid : `${lidJid}@s.whatsapp.net`;
     }
 
-    const cacheKey = `${lidJid}_${groupChatId}`;
+    if (!groupChatId?.endsWith('@g.us')) {
+      return lidJid;
+    }
+
+    const lidKey = lidJid.split('@')[0];
     
-    // Verificar caché local
-    if (this.cache.has(cacheKey)) {
-      const entry = this.cache.get(cacheKey);
-      const now = Date.now();
-      
-      // Verificar si no está expirado
-      if (now - entry.timestamp < this.maxAge) {
-        return entry.jid;
-      } else {
-        // Eliminar entrada expirada
-        this.cache.delete(cacheKey);
-        this.markDirty();
-      }
+    // Verificar caché local por LID
+    if (this.cache.has(lidKey)) {
+      const entry = this.cache.get(lidKey);
+      return entry.jid;
     }
 
     // Verificar si ya se está procesando
-    if (this.processingQueue.has(cacheKey)) {
-      return await this.processingQueue.get(cacheKey);
+    if (this.processingQueue.has(lidKey)) {
+      return await this.processingQueue.get(lidKey);
     }
 
-    const lidToFind = lidJid.split('@')[0];
-    
     const resolvePromise = (async () => {
       let attempts = 0;
       while (attempts < maxRetries) {
@@ -213,22 +202,31 @@ class LidResolver {
               const contactDetails = await this.conn?.onWhatsApp(participant.jid);
               if (!contactDetails?.[0]?.lid) continue;
               
-              const possibleLid = contactDetails[0].lid.split('@')[0];
-              if (possibleLid === lidToFind) {
-                // Guardar en caché local
-                this.cache.set(cacheKey, {
+              const participantLid = contactDetails[0].lid.split('@')[0];
+              if (participantLid === lidKey) {
+                // Verificar duplicados antes de guardar
+                if (this.isDuplicate(lidKey, participant.jid)) {
+                  this.processingQueue.delete(lidKey);
+                  return this.cache.get(lidKey)?.jid || participant.jid;
+                }
+                
+                // Obtener nombre del usuario
+                const userName = await this.getUserName(participant.jid);
+                
+                // Guardar en caché global
+                const cacheEntry = {
                   jid: participant.jid,
-                  timestamp: Date.now(),
-                  groupId: groupChatId,
-                  lid: lidJid
-                });
-                this.markDirty();
+                  lid: lidJid,
+                  name: userName,
+                  timestamp: Date.now()
+                };
+                
+                this.cache.set(lidKey, cacheEntry);
+                this.jidToLidMap.set(participant.jid, lidJid);
+                this.markDirty(); // Guardado inmediato
                 
                 // Limpiar cola de procesamiento
-                this.processingQueue.delete(cacheKey);
-                
-                // Aplicar limpieza y límites
-                this.enforceMaxSize();
+                this.processingQueue.delete(lidKey);
                 
                 return participant.jid;
               }
@@ -238,28 +236,35 @@ class LidResolver {
           }
           
           // No encontrado, guardar resultado negativo por menos tiempo
-          this.cache.set(cacheKey, {
+          const notFoundEntry = {
             jid: lidJid,
-            timestamp: Date.now(),
-            groupId: groupChatId,
             lid: lidJid,
+            name: 'Usuario no encontrado',
+            timestamp: Date.now(),
             notFound: true
-          });
+          };
+          
+          this.cache.set(lidKey, notFoundEntry);
           this.markDirty();
-          this.processingQueue.delete(cacheKey);
+          this.processingQueue.delete(lidKey);
+          
           return lidJid;
           
         } catch (e) {
           if (++attempts >= maxRetries) {
-            this.cache.set(cacheKey, {
+            const errorEntry = {
               jid: lidJid,
-              timestamp: Date.now(),
-              groupId: groupChatId,
               lid: lidJid,
+              name: 'Error al resolver',
+              timestamp: Date.now(),
               error: true
-            });
+            };
+            
+            this.cache.set(lidKey, errorEntry);
             this.markDirty();
-            this.processingQueue.delete(cacheKey);
+            this.processingQueue.delete(lidKey);
+            
+            console.error(`❌ Error resolviendo LID ${lidKey}:`, e.message);
             return lidJid;
           }
           await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
@@ -268,8 +273,34 @@ class LidResolver {
       return lidJid;
     })();
 
-    this.processingQueue.set(cacheKey, resolvePromise);
+    this.processingQueue.set(lidKey, resolvePromise);
     return await resolvePromise;
+  }
+
+  /**
+   * Buscar LID por JID (búsqueda inversa)
+   */
+  findLidByJid(jid) {
+    return this.jidToLidMap.get(jid) || null;
+  }
+
+  /**
+   * Obtener información completa de un usuario por LID
+   */
+  getUserInfo(lidKey) {
+    return this.cache.get(lidKey) || null;
+  }
+
+  /**
+   * Obtener información completa de un usuario por JID
+   */
+  getUserInfoByJid(jid) {
+    const lid = this.findLidByJid(jid);
+    if (lid) {
+      const lidKey = lid.split('@')[0];
+      return this.cache.get(lidKey) || null;
+    }
+    return null;
   }
 
   async processObject(obj, groupChatId) {
@@ -360,87 +391,105 @@ class LidResolver {
   get lidCache() {
     return {
       size: this.cache.size,
-      has: (key) => this.cache.has(key),
+      has: (key) => {
+        // Soporte para clave antigua (lidJid_groupChatId) y nueva (lidKey)
+        const lidKey = key.includes('_') ? key.split('_')[0].replace('@lid', '') : key.replace('@lid', '');
+        return this.cache.has(lidKey);
+      },
       get: (key) => {
-        const entry = this.cache.get(key);
+        // Soporte para clave antigua (lidJid_groupChatId) y nueva (lidKey)
+        const lidKey = key.includes('_') ? key.split('_')[0].replace('@lid', '') : key.replace('@lid', '');
+        const entry = this.cache.get(lidKey);
         return entry ? entry.jid : undefined;
       },
       set: (key, value) => {
-        // Si se pasa solo el JID, crear entrada completa
+        // Soporte para clave antigua
+        const lidKey = key.includes('_') ? key.split('_')[0].replace('@lid', '') : key.replace('@lid', '');
+        
         if (typeof value === 'string') {
-          this.cache.set(key, {
+          // Verificar duplicados antes de agregar
+          const existingLid = this.findLidByJid(value);
+          
+          if (existingLid) {
+            return; // No agregar duplicado
+          }
+          
+          if (this.cache.has(lidKey)) {
+            return; // No agregar duplicado
+          }
+          
+          // Si se pasa solo el JID, crear entrada completa
+          this.cache.set(lidKey, {
             jid: value,
-            timestamp: Date.now(),
-            groupId: key.split('_')[1] || '',
-            lid: key.split('_')[0] || ''
+            lid: `${lidKey}@lid`,
+            name: 'Nombre pendiente',
+            timestamp: Date.now()
           });
+          this.jidToLidMap.set(value, `${lidKey}@lid`);
         } else {
-          this.cache.set(key, value);
+          // Verificar duplicados para objetos completos
+          
+          if (value.jid) {
+            const existingLid = this.findLidByJid(value.jid);
+            if (existingLid && existingLid !== value.lid) {
+              return; // No agregar duplicado
+            }
+          }
+          
+          if (this.cache.has(lidKey)) {
+            const existing = this.cache.get(lidKey);
+            if (existing.jid !== value.jid) {
+              return; // No agregar duplicado
+            }
+          }
+          
+          this.cache.set(lidKey, value);
+          if (value.jid) {
+            this.jidToLidMap.set(value.jid, value.lid);
+          }
         }
         this.markDirty();
-        this.enforceMaxSize();
       },
       delete: (key) => {
-        const result = this.cache.delete(key);
+        const lidKey = key.includes('_') ? key.split('_')[0].replace('@lid', '') : key.replace('@lid', '');
+        const entry = this.cache.get(lidKey);
+        if (entry && entry.jid && this.jidToLidMap.has(entry.jid)) {
+          this.jidToLidMap.delete(entry.jid);
+        }
+        const result = this.cache.delete(lidKey);
         if (result) this.markDirty();
         return result;
       },
       clear: () => {
         this.cache.clear();
+        this.jidToLidMap.clear();
         this.markDirty();
       },
       entries: () => {
         const entries = [];
         for (const [key, entry] of this.cache.entries()) {
-          entries.push([key, entry.jid]);
+          entries.push([`${key}@lid`, entry.jid]);
         }
         return entries;
       },
       forEach: (callback) => {
         for (const [key, entry] of this.cache.entries()) {
-          callback(entry.jid, key, this);
+          callback(entry.jid, `${key}@lid`, this);
         }
       }
     };
   }
 
   /**
-   * Limpiar entradas expiradas manualmente
-   */
-  clearCache() {
-    const now = Date.now();
-    const maxAge = 1000 * 60 * 30; // 30 minutos para limpieza manual
-    let removed = 0;
-    
-    for (const [key, entry] of this.cache.entries()) {
-      if (now - entry.timestamp > maxAge) {
-        this.cache.delete(key);
-        removed++;
-      }
-    }
-    
-    if (removed > 0) {
-      this.markDirty();
-    }
-    
-    // También ejecutar limpieza automática
-    this.cleanExpiredEntries();
-  }
-
-  /**
    * Obtener estadísticas del caché
    */
   getStats() {
-    const now = Date.now();
     let notFound = 0;
     let errors = 0;
     let valid = 0;
-    let expired = 0;
     
     for (const [key, entry] of this.cache.entries()) {
-      if (now - entry.timestamp > this.maxAge) {
-        expired++;
-      } else if (entry.notFound) {
+      if (entry.notFound) {
         notFound++;
       } else if (entry.error) {
         errors++;
@@ -452,14 +501,32 @@ class LidResolver {
     return {
       total: this.cache.size,
       valid,
-      expired,
       notFound,
       errors,
       processing: this.processingQueue.size,
       cacheFile: this.cacheFile,
       fileExists: fs.existsSync(this.cacheFile),
-      isDirty: this.isDirty
+      isDirty: this.isDirty,
+      jidMappings: this.jidToLidMap.size
     };
+  }
+
+  /**
+   * Listar todos los usuarios en caché
+   */
+  getAllUsers() {
+    const users = [];
+    for (const [lidKey, entry] of this.cache.entries()) {
+      if (!entry.notFound && !entry.error) {
+        users.push({
+          lid: entry.lid,
+          jid: entry.jid,
+          name: entry.name,
+          timestamp: new Date(entry.timestamp).toLocaleString()
+        });
+      }
+    }
+    return users.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   /**
