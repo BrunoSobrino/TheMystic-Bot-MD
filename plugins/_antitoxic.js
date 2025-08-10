@@ -8,6 +8,11 @@
 const toxicRegex = /\b(puto|puta|rata|estupido|imbecil|rctmre|mrd|verga|vrga|maricon)\b/i;
 
 export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
+
+ if (!chat.antiToxic) {
+  return !1;
+ }
+
   const datas = global
     const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
