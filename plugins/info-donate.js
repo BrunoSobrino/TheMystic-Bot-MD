@@ -6,15 +6,8 @@ const handler = async (m, { conn, usedPrefix, command }) => {
 │
 │ ¡Hola *${m?.name}*! 👋
 │
-│ ¿Te gusta este bot? 🤖✨
-│ ¡Ayúdanos a mantenerlo activo!
-│
-├─「 🎯 *¿Por qué donar?* 」
-│
-│ • Mantener el servidor activo 🖥️
-│ • Agregar nuevas funciones 🆕
-│ • Mejorar la velocidad ⚡
-│ • Soporte 24/7 🕐
+│ ¿Te gusta este proyecto? 🤖✨
+│ ¡Ayúdanos a mantenerlo!
 │
 ├─「 💳 *Métodos de donación* 」
 │
@@ -22,11 +15,12 @@ const handler = async (m, { conn, usedPrefix, command }) => {
 │
 │ 💬 *Otras formas:*
 │ Contáctame: @5219996125657
+│ Numero: wa.me/5219996125657
 │
 │ 📝 *Nota:* Toda donación
 │ nos ayuda a crecer juntos 🌱
 │
-╰─「 ¡Gracias por tu apoyo! 🙏 」`.trim();
+╰─「 *¡Gracias por tu apoyo!* 🙏 」`.trim();
 
    const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
    const document = doc[Math.floor(Math.random() * doc.length)];
