@@ -2,7 +2,7 @@
 
 const { generateWAMessageFromContent } = (await import("baileys")).default;
 
-const handler = async (m, {conn, usedPrefix, command}) => {
+let handler = async (m, { conn, usedPrefix, command }) => {
  try {
    const name = await conn.getName(m.sender);
    
@@ -47,7 +47,7 @@ const handler = async (m, {conn, usedPrefix, command}) => {
    
    conn.relayMessage(m.chat, res.message, {});
    
- } catch (error) {
+ } catch {
    const name = await conn.getName(m.sender);
    const simpleMsg = `💖 *DONACIONES*
 
@@ -72,7 +72,6 @@ Contáctame: @5219996125657
    m.reply(simpleMsg);
  }
 };
-
 handler.help = ['donate'];
 handler.tags = ['info'];
 handler.command = /^(donate|donar|apoyar|donación|donacion|apoyo|ayuda|colaborar|contribuir)$/i
