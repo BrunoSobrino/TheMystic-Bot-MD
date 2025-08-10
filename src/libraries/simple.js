@@ -1585,21 +1585,18 @@ END:VCARD
                     };
                     const resolveLidFromCache = (jid, groupChatId) => {
                         if (!jid || !jid.toString().endsWith('@lid')) return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
-                        if (!global.lidResolver?.lidCache) return jid;
-                        const cacheKey = `${jid}_${groupChatId}`;
-                        const directResolved = global.lidResolver.lidCache.get(cacheKey);
-                        if (directResolved && !directResolved.endsWith('@lid')) return directResolved;
-                        const lidNumber = jid.split('@')[0];
-                        const possibleFullJid = `${lidNumber}@s.whatsapp.net`;
-                        for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                            if (value === possibleFullJid) return possibleFullJid;
-                        }
-                        const shortNumber = lidNumber.slice(-10);
-                        for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                            if (value.endsWith(`${shortNumber}@s.whatsapp.net`)) return value;
-                        }
-                        for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                            if (key.startsWith(`${lidNumber}@lid_`) && !value.endsWith('@lid')) return value;
+                        if (!global.lidResolver?.getUserInfo) return jid;
+                        const lidKey = jid.split('@')[0];
+                        const userInfo = global.lidResolver.getUserInfo(lidKey);
+                        if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) return userInfo.jid;
+                        if (global.lidResolver?.lidCache) {
+                            const directResolved = global.lidResolver.lidCache.get(lidKey);
+                            if (directResolved && !directResolved.endsWith('@lid')) return directResolved;
+                            if (groupChatId) {
+                                const cacheKey = `${jid}_${groupChatId}`;
+                                const oldFormatResolved = global.lidResolver.lidCache.get(cacheKey);
+                                if (oldFormatResolved && !oldFormatResolved.endsWith('@lid')) return oldFormatResolved;
+                            }
                         }
                         return jid;
                     };
@@ -1610,7 +1607,7 @@ END:VCARD
                             return `${numero}@s.whatsapp.net`;
                         } else {
                             const lidJid = `${numero}@lid`;
-                            if (groupChatId && global.lidResolver?.lidCache) {
+                            if (global.lidResolver?.getUserInfo) {
                                 const resolved = resolveLidFromCache(lidJid, groupChatId);
                                 return resolved;
                             }
