@@ -1570,67 +1570,56 @@ END:VCARD
             },
             enumerable: true,
         },
-        parseMention: {
-            value(text = "", groupChatId = null) {
-                try {
-                    const esNumeroValido = (numero) => {
-                        const len = numero.length;
-                        if (len < 8 || len > 15) return false;
-                        const codigosValidos = ["521", "1", "7", "20", "27", "30", "31", "32", "33", "34", "36", "39", "40", "41", "43", "44", "45", "46", "47", "48", "49", "51", "52", "53", "54", "55", "56", "57", "58", "60", "61", "62", "63", "64", "65", "66", "81", "82", "84", "86", "90", "91", "92", "93", "94", "95", "98", "211", "212", "213", "216", "218", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "290", "291", "297", "298", "299", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "382", "383", "385", "386", "387", "389", "420", "421", "423", "500", "501", "502", "503", "504", "505", "506", "507", "508", "509", "590", "591", "592", "593", "594", "595", "596", "597", "598", "599", "670", "672", "673", "674", "675", "676", "677", "678", "679", "680", "681", "682", "683", "685", "686", "687", "688", "689", "690", "691", "692", "850", "852", "853", "855", "856", "880", "886", "960", "961", "962", "963", "964", "965", "966", "967", "968", "970", "971", "972", "973", "974", "975", "976", "977", "978", "979", "992", "993", "994", "995", "996", "998"];
-                        const valido = codigosValidos.some(codigo => numero.startsWith(codigo));
-                        if (!valido) return false;
-                        const numeroLimpio = numero.replace(/^(\d+)/, '').replace('@', '');
-                        if (!/^\d+$/.test(numeroLimpio)) return false;
-                        return true;
-                    };
-                    const resolveLidFromCache = (jid, groupChatId) => {
-                        if (!jid || !jid.toString().endsWith('@lid')) return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
-                        if (!global.lidResolver?.getUserInfo) return jid;
-                        const lidKey = jid.split('@')[0];
-                        const userInfo = global.lidResolver.getUserInfo(lidKey);
-                        if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) return userInfo.jid;
-                        if (global.lidResolver?.lidCache) {
-                            const directResolved = global.lidResolver.lidCache.get(lidKey);
-                            if (directResolved && !directResolved.endsWith('@lid')) return directResolved;
-                            if (groupChatId) {
-                                const cacheKey = `${jid}_${groupChatId}`;
-                                const oldFormatResolved = global.lidResolver.lidCache.get(cacheKey);
-                                if (oldFormatResolved && !oldFormatResolved.endsWith('@lid')) return oldFormatResolved;
-                            }
-                        }
-                        return jid;
-                    };
-                    const mencionesEncontradas = text.match(/@(\d{5,20})/g) || [];
-                    const mentions = mencionesEncontradas.map((m) => {
-                        const numero = m.substring(1);
-                        if (esNumeroValido(numero)) {
-                            return `${numero}@s.whatsapp.net`;
-                        } else {
-                            const lidJid = `${numero}@lid`;
-                            if (global.lidResolver?.getUserInfo) {
-                                const resolved = resolveLidFromCache(lidJid, groupChatId);
-                                return resolved;
-                            }
-                            if (global.lidResolver?.lidCache) {
-                                for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                                    if (key.startsWith(`${numero}@`) && !value.endsWith('@lid')) return value;
-                                }
-                                const shortNumber = numero.slice(-10);
-                                for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                                    if (value.includes(shortNumber) && !value.endsWith('@lid')) return value;
-                                }
-                            }
-                            return lidJid;
-                        }
-                    });
-                    return [...new Set(mentions.filter(mention => mention && mention.length > 0))];
-                } catch (error) {
-                    console.error('[ERROR] En parseMention:', error.stack || error);
-                    return [];
+parseMention: {
+    value(text = "", groupChatId = null) {
+        try {
+            const esNumeroValido = (numero) => {
+                const len = numero.length;
+                if (len < 8 || len > 15) return false;
+                const codigosValidos = ["521", "1", "7", "20", "27", "30", "31", "32", "33", "34", "36", "39", "40", "41", "43", "44", "45", "46", "47", "48", "49", "51", "52", "53", "54", "55", "56", "57", "58", "60", "61", "62", "63", "64", "65", "66", "81", "82", "84", "86", "90", "91", "92", "93", "94", "95", "98", "211", "212", "213", "216", "218", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "290", "291", "297", "298", "299", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "382", "383", "385", "386", "387", "389", "420", "421", "423", "500", "501", "502", "503", "504", "505", "506", "507", "508", "509", "590", "591", "592", "593", "594", "595", "596", "597", "598", "599", "670", "672", "673", "674", "675", "676", "677", "678", "679", "680", "681", "682", "683", "685", "686", "687", "688", "689", "690", "691", "692", "850", "852", "853", "855", "856", "880", "886", "960", "961", "962", "963", "964", "965", "966", "967", "968", "970", "971", "972", "973", "974", "975", "976", "977", "978", "979", "992", "993", "994", "995", "996", "998"];
+                const valido = codigosValidos.some(codigo => numero.startsWith(codigo));
+                if (!valido) return false;
+                const numeroLimpio = numero.replace(/^(\d+)/, '').replace('@', '');
+                if (!/^\d+$/.test(numeroLimpio)) return false;
+                return true;
+            };
+            const resolveLidFromCache = (lidNumber, groupChatId) => {
+                if (!groupChatId?.endsWith('@g.us') || !global.lidResolver) {
+                    return `${lidNumber}@lid`;
                 }
-            },
-            enumerable: true,
-        },
+                const lidKey = lidNumber.toString();
+                if (global.lidResolver.cache.has(lidKey)) {
+                    const entry = global.lidResolver.cache.get(lidKey);
+                    if (entry && entry.jid && !entry.jid.endsWith('@lid') && !entry.notFound && !entry.error) {
+                        return entry.jid;
+                    }
+                }
+                for (const [jid, lid] of global.lidResolver.jidToLidMap.entries()) {
+                    if (lid === `${lidNumber}@lid`) {
+                        return jid;
+                    }
+                }
+                return `${lidNumber}@lid`;
+            };
+            const mencionesEncontradas = text.match(/@(\d{5,20})/g) || [];
+            const mentions = mencionesEncontradas.map((m) => {
+                const numero = m.substring(1);
+                if (esNumeroValido(numero)) {
+                    return `${numero}@s.whatsapp.net`;
+                } else {
+                    const resolved = resolveLidFromCache(numero, groupChatId);
+                    return resolved;
+                }
+            });
+
+            return [...new Set(mentions.filter(mention => mention && mention.length > 0))];
+        } catch (error) {
+            console.error('[ERROR] En parseMention:', error.stack || error);
+            return [];
+        }
+    },
+    enumerable: true,
+},
         /*parseMention: {
       value(text = "") {
         try {
