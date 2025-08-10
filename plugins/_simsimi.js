@@ -25,7 +25,7 @@ export default handler;
 async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es") {
     if (!ask) return { status: false, resultado: { msg: "Debes ingresar un texto para hablar con simsimi." }};
     try {
-        const response11 = await chatsimsimi(ask, language, false);
+        const response11 = await chatsimsimi(ask, language);
         if (response11.result == 'indefinida' || response11 == '' || !response11.result) response11 = XD // Se usa "XD" para causar error y usar otra opción.  
         return { status: true, resultado: { simsimi: response11.result }};        
     } catch (error1) {  
@@ -43,3 +43,28 @@ async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es")
         }
     }
 }}
+
+async function chatsimsimi(ask, language) {
+    try {
+        const response = await axios.post(
+        'https://simi.anbuinfosec.live/api/chat',
+        {
+            'ask': ask,
+            'lc': language
+        },
+        {
+            headers: {
+            'sec-ch-ua-platform': '"Android"',
+            'Referer': 'https://simi.anbuinfosec.live/',
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36',
+            'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+            'Content-Type': 'application/json',
+            'sec-ch-ua-mobile': '?1'
+            }
+        }
+        );
+        return response.data;
+    } catch (error) {
+        return { success: false, message: 'An error occurred.', author: 'https://facebook.com/anbuinfosec' };
+    }
+}
