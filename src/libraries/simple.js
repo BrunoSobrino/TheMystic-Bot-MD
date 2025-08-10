@@ -2181,7 +2181,7 @@ export function serialize() {
                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
 		            const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
 					const isMysticPattern = /^MYSTIC[A-F0-9]+$/.test(messageId);
-                    return isMysticPattern | isSukiPattern || hasKnownPrefix || false;
+                    return isMysticPattern || isSukiPattern || hasKnownPrefix || false;
                 } catch (e) {
                     console.error("Error en isBaileys getter:", e);
                     return false;
@@ -2381,7 +2381,7 @@ export function serialize() {
                                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
 				                    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
 									const isMysticPattern = /^MYSTIC[A-F0-9]+$/.test(messageId);
-                                    return isMysticPattern | isSukiPattern || hasKnownPrefix || false;
+                                    return isMysticPattern || isSukiPattern || hasKnownPrefix || false;
                                 },
                                 enumerable: true,
                             },
