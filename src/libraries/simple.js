@@ -1571,7 +1571,7 @@ END:VCARD
             enumerable: true,
         },
 parseMention: {
-    value(text = "", groupChatId = null) {
+    async value(text = "", groupChatId = null) {
         try {
             const esNumeroValido = (numero) => {
                 const len = numero.length;
@@ -1583,35 +1583,58 @@ parseMention: {
                 if (!/^\d+$/.test(numeroLimpio)) return false;
                 return true;
             };
-            const resolveLidFromCache = (lidNumber, groupChatId) => {
-                if (!groupChatId?.endsWith('@g.us') || !global.lidResolver) {
-                    return `${lidNumber}@lid`;
+            const resolveLidFromCache = async (jid, groupChatId) => {
+                if (!jid || !jid.toString().endsWith('@lid')) {
+                    return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
                 }
-                const lidKey = lidNumber.toString();
-                if (global.lidResolver.cache.has(lidKey)) {
-                    const entry = global.lidResolver.cache.get(lidKey);
-                    if (entry && entry.jid && !entry.jid.endsWith('@lid') && !entry.notFound && !entry.error) {
-                        return entry.jid;
+                if (!groupChatId?.endsWith('@g.us')) {
+                    return jid;
+                }
+                const lidKey = jid.split('@')[0];
+                if (global.lidResolver) {
+                    const userInfo = global.lidResolver.getUserInfo(lidKey);
+                    if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid') && !userInfo.notFound && !userInfo.error) {
+                        return userInfo.jid;
+                    }
+                    try {
+                        const resolvedJid = await global.lidResolver.resolveLid(jid, groupChatId, 2);
+                        if (resolvedJid && !resolvedJid.endsWith('@lid')) {
+                            return resolvedJid;
+                        }
+                    } catch (error) {
+                        console.log(`[parseMention] Error resolviendo ${jid}:`, error.message);
                     }
                 }
-                for (const [jid, lid] of global.lidResolver.jidToLidMap.entries()) {
-                    if (lid === `${lidNumber}@lid`) {
-                        return jid;
+                if (typeof String.prototype.resolveLidToRealJid === 'function') {
+                    try {
+                        const resolved = await String.prototype.resolveLidToRealJid.call(
+                            jid, 
+                            groupChatId, 
+                            conn || this, 
+                            2, 
+                            1000
+                        );
+                        if (resolved && !resolved.endsWith('@lid')) {
+                            return resolved;
+                        }
+                    } catch (error) {
+                        console.log(`[parseMention] Error en fallback para ${jid}:`, error.message);
                     }
                 }
-                return `${lidNumber}@lid`;
+                return jid;
             };
             const mencionesEncontradas = text.match(/@(\d{5,20})/g) || [];
-            const mentions = mencionesEncontradas.map((m) => {
+            const mentions = [];
+            for (const m of mencionesEncontradas) {
                 const numero = m.substring(1);
                 if (esNumeroValido(numero)) {
-                    return `${numero}@s.whatsapp.net`;
+                    mentions.push(`${numero}@s.whatsapp.net`);
                 } else {
-                    const resolved = resolveLidFromCache(numero, groupChatId);
-                    return resolved;
+                    const lidJid = `${numero}@lid`;
+                    const resolved = await resolveLidFromCache(lidJid, groupChatId);
+                    mentions.push(resolved);
                 }
-            });
-
+            }
             return [...new Set(mentions.filter(mention => mention && mention.length > 0))];
         } catch (error) {
             console.error('[ERROR] En parseMention:', error.stack || error);
