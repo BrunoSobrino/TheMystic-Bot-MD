@@ -1,0 +1,41 @@
+{
+    "_detectevents": {
+        "promote": {
+            "header": "*Baru-baru ini seorang anggota telah dipromosikan menjadi administrator*",
+            "group": "*◦ Grup:* @group",
+            "new_admin": "*◦ Admin baru:* @user",
+            "executed_by": "*◦ Dilakukan oleh:* @user"
+        },
+        "demote": {
+            "header": "*Baru-baru ini seorang administrator telah diturunkan menjadi anggota*",
+            "group": "*◦ Grup:* @group",
+            "removed_admin": "*◦ Dihapus dari:* @user",
+            "executed_by": "*◦ Dilakukan oleh:* @user"
+        },
+        "member_add": {
+            "header": "*Baru-baru ini seorang anggota baru telah bergabung*",
+            "group": "*◦ Grup:* @group",
+            "added_user": "*◦ Ditambahkan ke:* @user",
+            "added_by": "*◦ Ditambahkan oleh:* @user",
+            "self_added": "*◦ Bergabung:* @user"
+        },
+        "member_remove": {
+            "header": "*Baru-baru ini seorang anggota telah dihapus dari grup*",
+            "group": "*◦ Grup:* @group",
+            "removed_user": "*◦ Dihapus:* @user",
+            "removed_by": "*◦ Dihapus oleh:* @user",
+            "self_removed": "*◦ Keluar:* @user"
+        },
+        "group_settings": {
+            "header": "*Baru-baru ini pengaturan grup telah diubah*",
+            "group": "*◦ Grup:* @group",
+            "action": "*◦ Grup telah:* @action",
+            "executed_by": "*◦ Dilakukan oleh:* @user"
+        },
+        "group_name": {
+            "header": "*Baru-baru ini nama grup telah diubah*",
+            "new_name": "*◦ Nama baru:* @name",
+            "executed_by": "*◦ Dilakukan oleh:* @user"
+        }
+    }
+}

@@ -1,0 +1,892 @@
+{
+    "___creditos": {
+        "___Contribuidor": "https://github.com/jeffersonalionco",
+        "___Criador": "https://github.com/BrunoSobrino"
+    },
+    "plugins": {
+        "_antiarab": {
+            "texto1": "_*< ANTI-ARAB />*_\n\n*[ ℹ️ ] Di grup ini, nomor yang dimulai dengan +212 tidak diizinkan. Oleh karena itu, Anda akan dihapus dari grup.*",
+            "texto2": "_*< ANTI-ARAB />*_\n\n*[ ℹ️ ] Di grup ini, nomor yang dimulai dengan +265 tidak diizinkan. Oleh karena itu, Anda akan dihapus dari grup.*",
+            "texto3": "_*< ANTI-ARAB />*_\n\n*[ ℹ️ ] Di grup ini, nomor yang dimulai dengan +92 tidak diizinkan. Oleh karena itu, Anda akan dihapus dari grup.*"
+        },
+        "_antilink": {
+            "texto1": "*< ANTI-LINK />*_\n\n*[ ℹ️ ] Anti-link diaktifkan, tetapi peserta yang mengirim tautan adalah seorang admin.*",
+            "texto2": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Peserta @user mengirim tautan grup WhatsApp, oleh karena itu akan dihapus.*",
+            "texto3": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Agar anti-link berfungsi dengan benar, bot harus menjadi admin grup.*",
+            "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Fitur ini dinonaktifkan karena fungsi* _restrict_ *dinonaktifkan.*"
+        },
+        "_antilink2": {
+            "texto1": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Peserta @user mengirim tautan grup WhatsApp, oleh karena itu akan dihapus.*",
+            "texto2": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Agar anti-link berfungsi dengan benar, bot harus menjadi admin grup.*",
+            "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Fitur ini dinonaktifkan karena fungsi* _restrict_ *dinonaktifkan.*"
+        },
+        "_antiprivado": {
+            "texto1": "_*< ANTI-PRIBADI />*_\n\n*[ ℹ️ ] Fitur anti-pribadi diaktifkan, oleh karena itu Anda akan diblokir.*"
+        },
+        "_antitoxic": {
+            "texto1": "_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] ",
+            "texto1_1": " mengirim kata ",
+            "texto1_2": " dilarang di grup ini.\n\n▢ *Peringatan:* ",
+            "texto2": "_*< ANTI-TOXIC />*_\n\n*[ ℹ️ ] Peserta ",
+            "texto2_1": "melebihi 5 peringatan, oleh karena itu akan dikeluarkan dari grup.* "
+        },
+        "_antitrabas": {
+            "texto1": "_*< ANTI-CRASH />*_\n\n*[ ℹ️ ] Admin ",
+            "texto1_1": " mengirim pesan yang berisi banyak karakter.* ",
+            "texto2": "*[ ! ] Terdeteksi pesan yang berisi banyak karakter [ ! ]*\n",
+            "texto2_1": "Saya bukan admin, tidak bisa berbuat apa-apa :/",
+            "texto3": "Tandai obrolan sebagai sudah dibaca ✓ ",
+            "texto3_1": " Nomor : ",
+            "texto3_2": " Alias ",
+            "texto3_3": "[ ! ] Baru saja mengirim teks yang berisi banyak karakter yang dapat menyebabkan kegagalan pada perangkat ",
+            "texto4": "[ ! ] Untuk melakukan tindakan penghapusan, pemilik saya harus mengaktifkan mode terbatas! "
+        },
+        "_antiviewonce": {
+            "texto1": "*- Di grup ini, tidak diizinkan menyembunyikan apa pun.*"
+        },
+        "_autosticker": {
+            "texto1": "_*< FUNGSI - AUTOSTICKER />*_\n\n*[ ℹ️ ] Durasi video tidak boleh lebih dari 7 detik.*\n\n*[ 💡 ] Untuk menonaktifkan fungsi* _autosticker_ *kirim perintah berikut:* _/disable autosticker_"
+        },
+        "_detectevents": {
+            "texto1": "*Baru-baru ini seorang anggota telah dipromosikan menjadi admin.*\n\n",
+            "texto1_1": "*◦  Grup:*",
+            "texto1_2": "*◦  Admin baru:*",
+            "texto1_3": "*◦  Dilakukan oleh:*",
+            "texto2": "*Baru-baru ini seorang admin telah diturunkan menjadi anggota.*\n\n",
+            "texto2_1": "*◦  Grup:*",
+            "texto2_2": "*◦  Diturunkan:*",
+            "texto2_3": "*◦  Dilakukan oleh:*",
+            "texto3": "*Baru-baru ini anggota baru telah bergabung ke grup.*\n\n",
+            "texto3_1": "*◦  Grup:*",
+            "texto3_2": "*◦  Ditambahkan:* ",
+            "texto3_3": "*◦  Dilakukan oleh:* ",
+            "texto3_4": "*◦  Ditambahkan:* ",
+            "texto4": "*Baru-baru ini seorang anggota telah dihapus dari grup.*\n\n",
+            "texto4_1": "*◦  Grup:* ",
+            "texto4_2": "*◦  Dihapus:* ",
+            "texto4_3": "*◦  Dilakukan oleh:*",
+            "texto4_4": "*◦  Dihapus:* ",
+            "texto5": "*Baru-baru ini seorang anggota telah ",
+            "texto5_1": "dari grup.*\n\n",
+            "texto5_2": "`*◦  Grup:* ",
+            "texto5_3": "*◦  Dihapus:* ",
+            "texto5_4": "*◦  Dilakukan oleh:* ",
+            "texto5_5": "*◦  Keluar:* ",
+            "texto6": "*Baru-baru ini pengaturan grup telah diubah.*\n\n",
+            "texto6_1": "*◦  Grup:* ",
+            "texto6_2": "*◦  Grup telah:* ",
+            "texto6_3": "*◦  Dilakukan oleh:* ",
+            "texto7": "*Baru-baru ini nama grup telah diubah.*\n\n",
+            "texto7_1": "*◦  Nama baru:* ",
+            "texto7_2": "*◦  Dilakukan oleh:* "
+        },
+        "_premium": {
+            "texto1": "WAKTU ANDA SEBAGAI PENGGUNA PREMIUM TELAH BERAKHIR, ANDA BUKAN LAGI PENGGUNA PREMIUM*"
+        },
+        "adult_hentaipdf": {
+            "texto1": "*[❗INFO❗] PERINTAH +18 DINONAKTIFKAN DI GRUP INI, JIKA ANDA ADMIN DAN INGIN MENGAKTIFKANNYA, GUNAKAN PERINTAH #enable modohorny*",
+            "texto2": "*[❗] MASUKKAN NAMA KATEGORI HENTAI, CONTOH:*",
+            "texto2_1": "miku*",
+            "texto3": "*[❗] KESALAHAN, COBA LAGI DAN/ATAU COBA KATEGORI LAIN*"
+        },
+        "adult_hentaisearch": {
+            "texto1": "*[❗INFO❗] PERINTAH +18 DINONAKTIFKAN DI GRUP INI, JIKA ANDA ADMIN DAN INGIN MENGAKTIFKANNYA, GUNAKAN PERINTAH #enable modohorny*",
+            "texto2": "*[❗] MASUKKAN NAMA HENTAI YANG AKAN DICARI*",
+            "texto3": "*[❗] TIDAK ADA HASIL YANG DITEMUKAN*"
+        },
+        "adult_pack_vid": {
+            "texto1": "*[❗INFO❗] PERINTAH +18 DINONAKTIFKAN DI GRUP INI, JIKA ANDA ADMIN DAN INGIN MENGAKTIFKANNYA, GUNAKAN PERINTAH #enable modohorny*",
+            "texto2": "*NIKMATI VIDEONYA "
+        },
+        "adult_xnxxdl": {
+            "texto1": "*[❗INFO❗] PERINTAH +18 DINONAKTIFKAN DI GRUP INI, JIKA ANDA ADMIN DAN INGIN MENGAKTIFKANNYA, GUNAKAN PERINTAH #enable modohorny*",
+            "texto2": "*[❗INFO❗] MASUKKAN TAUTAN XNXX YANG VALID, CONTOH:*",
+            "texto3": "[❗] Video sedang diproses, harap tunggu sebentar saat dikirim..\n\n﹣ WAKTU PENGIRIMAN TERGANTUNG PADA UKURAN DAN DURASI VIDEO",
+            "texto4": "*[❗] TIDAK DITEMUKAN TAUTAN UNTUK NOMOR ITU, SILAKAN MASUKKAN NOMOR ANTARA 1 DAN ",
+            "texto5": "*[❗] UNTUK MENGGUNAKAN PERINTAH INI DENGAN CARA INI",
+            "texto5_1": "<nomor>), SILAKAN LAKUKAN PENCARIAN VIDEO DENGAN PERINTAH",
+            "texto6": "*[❗] UNTUK MENGGUNAKAN PERINTAH INI DENGAN CARA INI",
+            "texto6_1": "<nomor>), SILAKAN LAKUKAN PENCARIAN VIDEO DENGAN PERINTAH",
+            "texto7": "*[❗INFO❗] KESALAHAN, SILAKAN COBA LAGI*\n\n*- PASTIKAN TAUTANNYA MIRIP DENGAN:*"
+        },
+        "adult_xnxxsearch": {
+            "texto1": "*[❗] Perintah +18 dinonaktifkan di grup ini, jika Anda admin dan ingin mengaktifkannya, gunakan",
+            "texto2": "*[❗INFO❗] CONTOH PENGGUNAAN PERINTAH ",
+            "texto3": "*🔍 HASIL PENCARIAN:*"
+        },
+        "adult_xvideosdl": {
+            "texto1": "*[❗INFO❗] PERINTAH +18 DINONAKTIFKAN DI GRUP INI, JIKA ANDA ADMIN DAN INGIN MENGAKTIFKANNYA, GUNAKAN PERINTAH",
+            "texto2": "*[❗INFO❗] MASUKKAN TAUTAN XVIDEOS YANG VALID, CONTOH: ",
+            "texto3": "[❗] Video sedang diproses, harap tunggu sebentar saat dikirim..\n\n﹣ WAKTU PENGIRIMAN TERGANTUNG PADA UKURAN DAN DURASI VIDEO",
+            "texto4": "*[❗INFO❗] KESALAHAN, SILAKAN COBA LAGI*\n\n*- PASTIKAN TAUTANNYA MIRIP DENGAN:*"
+        },
+        "afk__afk": {
+            "texto1": [
+                "*[❗] JANGAN TAG DIA [❗]*",
+                "*PENGGUNA YANG ANDA TAG SEDANG TIDAK AKTIF (AFK)",
+                "ALASAN TIDAK AKTIF (AFK): ",
+                "ALASAN TIDAK AKTIF (AFK): _PENGGUNA TIDAK MENYEBUTKAN ALASAN_",
+                "WAKTU TIDAK AKTIF (AFK) YANG TELAH BERLALU:"
+            ],
+            "texto2": [
+                "*[❗INFO❗] ANDA SUDAH TIDAK TIDAK AKTIF (AFK)",
+                "SETELAH TIDAK AKTIF (AFK) KARENA ALASAN:",
+                "—◉ WAKTU TIDAK AKTIF (AFK):"
+            ]
+        },
+        "afk_afk": {
+            "texto1": [
+                "*[❗INFO❗] PENGGUNA ",
+                "AKAN TIDAK AKTIF (AFK), MOHON JANGAN TAG DIA*\n\n*—◉ ALASAN TIDAK AKTIF (AFK)"
+            ]
+        },
+        "anonymous_chat": {
+            "texto1": "*[❗INFO❗] ANDA TIDAK DALAM OBROLAN ANONIM*\n\n*APAKAH ANDA INGIN MEMULAI SATU?*\nKETIK",
+            "texto2": "*[ ✔ ] BERHASIL KELUAR DARI OBROLAN ANONIM*",
+            "texto3": "*[❗INFO❗] PENGGUNA LAIN TELAH MENINGGALKAN OBROLAN ANONIM*\n\n*APAKAH ANDA INGIN PERGI KE OBROLAN ANONIM LAIN?*\nKETIK",
+            "texto4": "*[❗INFO❗] ANDA MASIH DALAM OBROLAN ANONIM ATAU MENUNGGU PENGGUNA LAIN BERGABUNG UNTUK MEMULAI*\n\n*APAKAH ANDA INGIN KELUAR DARI OBROLAN ANONIM?*\nKETIK",
+            "texto5": "*[ ✔ ] SESEORANG TELAH BERGABUNG DENGAN OBROLAN ANONIM, ANDA DAPAT MULAI MENGOBROL*",
+            "texto6": "*[ ✔ ] SESEORANG TELAH BERGABUNG DENGAN OBROLAN ANONIM, ANDA DAPAT MULAI MENGOBROL*\n\nPERGI KE OBROLAN LAIN KETIK",
+            "texto7": "*[❗INFO❗] MENUNGGU PENGGUNA LAIN UNTUK MEMULAI OBROLAN ANONIM*\n\n*APAKAH ANDA INGIN KELUAR DARI OBROLAN ANONIM?*\nKETIK"
+        },
+        "audio_efectos": {
+            "texto1": "*[❗INFO❗] BALAS AUDIO ATAU CATATAN SUARA YANG AKAN DIMODIFIKASI, MENGGUNAKAN PERINTAH "
+        },
+        "buscador_animeinfo": {
+            "texto1": "[❗INFO❗] MASUKKAN NAMA ANIME YANG AKAN DICARI",
+            "texto2": [
+                "🎀 • *Judul:*",
+                "🎋 • *Format:*",
+                "📈 • *Status:* ",
+                "🍥 • *Total episode:*",
+                "🎈 • *Durasi:",
+                "✨ • *Berdasarkan:* ",
+                "💫 • *Tayang perdana:* ",
+                "🎗 • *Selesai:*",
+                "🎐 • *Popularitas:* ",
+                "🎏 • *Favorit:* ",
+                "🎇 • *Klasifikasi:* ",
+                "🏅 • *Peringkat:* ",
+                "♦ • *Trailer:* ",
+                "🌐 • *URL:* ",
+                "🎆 • *Latar Belakang:* ",
+                "❄ • *Ringkasan:* "
+            ],
+            "texto3": "*[❗] KESALAHAN, COBA LAGI*"
+        },
+        "buscador_githubsearch": {
+            "texto1": [
+                "🔗 *Url:*",
+                "📅 *Dibuat pada:*",
+                "🔄 *Diperbarui pada:*",
+                "📥 *Clone:* $ git clone",
+                "*Deskripsi:*"
+            ]
+        },
+        "buscador_google": {
+            "texto1": "*[❗INFO❗] MASUKKAN TEKS ATAU TOPIK YANG INGIN ANDA CARI*",
+            "texto2": "HASIL DARI :"
+        },
+        "buscador_lyrics": {
+            "texto1": "[❗INFO❗] CONTOH PENGGUNAAN PERINTAH YANG BENAR:",
+            "texto2": [
+                "🎤 JUDUL:",
+                "👤 PENULIS:",
+                "📃🎵 LIRIK:",
+                "[❗INFO❗] KESALAHAN, SILAKAN COBA LAGI"
+            ]
+        },
+        "buscador_peliculas": {
+            "texto1": "[❗] MASUKKAN NAMA FILM YANG AKAN DICARI",
+            "texto2": "[❗] TIDAK DITEMUKAN FILM",
+            "texto3": [
+                "🎬 • Nama:",
+                "🍿 • Url:",
+                "💫 • Pemblokir iklan yang direkomendasikan:",
+                "Blokir Ini",
+                "⛨ • Tautan:"
+            ]
+        },
+        "buscador_playstore": {
+            "texto1": "[❗] MASUKKAN NAMA APK YANG INGIN ANDA CARI",
+            "texto2": "[❗] MASUKKAN NAMA APK YANG INGIN ANDA CARI",
+            "texto3": [
+                "*🔍 Hasil:*",
+                "*✍️ Pengembang:*",
+                "*💸 Harga:*",
+                "*📈 Skor:*",
+                "*⛓️ Tautan:*"
+            ]
+        },
+        "buscador_stickersearch": {
+            "texto1": "[❗] MASUKKAN NAMA PAKET YANG INGIN ANDA CARI",
+            "texto2": [
+                "🪴 • Hasil:",
+                "🌵 • Nama:",
+                "🍂 • Url:"
+            ],
+            "texto3": "[❗] KESALAHAN, SILAKAN COBA LAGI"
+        },
+        "buscador_stickersearch2": {
+            "texto1": "[❗] MASUKKAN NAMA PAKET YANG INGIN ANDA CARI",
+            "texto2": [
+                "🌅 • Hasil:",
+                "🥗 • Nama:",
+                "🐢 • Penulis:",
+                "🍂 • Url:"
+            ],
+            "texto3": "[❗] KESALAHAN, SILAKAN COBA LAGI"
+        },
+        "buscador_wikipedia": {
+            "texto1": [
+                "[❗️INFO❗️] ANDA MENGGUNAKAN PERINTAH DENGAN SALAH!!*\n*PENGGUNAAN YANG BENAR:*\n",
+                "Kata kunci untuk dicari*\n\n*CONTOH:*\n",
+                ""
+            ],
+            "texto2": "INI INFORMASI YANG DITEMUKAN:",
+            "texto3": "[❗️INFO❗️] TIDAK DITEMUKAN INFORMASI, COBA PASTIKAN ANDA MENULIS SATU KATA DAN MENULISNYA DENGAN BENAR"
+        },
+        "buscador_yts": {
+            "texto1": "_Apa yang ingin Anda cari di YouTube?_",
+            "texto2": [
+                "Tautan :",
+                "Durasi :",
+                "Diunggah :",
+                "Dilihat :"
+            ]
+        },
+        "cmd_add": {
+            "texto1": "[❗INFO❗] BALAS STIKER ATAU GAMBAR YANG INGIN ANDA TAMBAHKAN PERINTAH ATAU TEKS",
+            "texto2": "[❗INFO❗] ANDA HANYA DAPAT MENETAPKAN PERINTAH ATAU TEKS KE STIKER DAN GAMBAR",
+            "texto3": [
+                "[❗INFO❗] KESALAHAN PENGGUNAAN, TEKS HILANG*\n\n*PENGGUNAAN PERINTAH YANG BENAR:",
+                "<teks> <balas stiker atau gambar>",
+                "CONTOH PENGGUNAAN PERINTAH YANG BENAR:",
+                "<balas stiker atau gambar>"
+            ],
+            "texto4": "[❗INFO❗] HANYA PEMILIK YANG DAPAT MELAKUKAN MODIFIKASI",
+            "texto5": "[ ✔ ] TEKS/PERINTAH YANG DITETAPKAN KE STIKER/GAMBAR TELAH BERHASIL DITAMBAHKAN KE DATABASE"
+        },
+        "cmd_del": {
+            "texto1": "[❗INFO❗] HANYA TEKS ATAU PERINTAH YANG DITETAPKAN KE STIKER ATAU GAMBAR YANG DAPAT DIHAPUS, UNTUK MENDAPATKAN KODE YANG DITETAPKAN, GUNAKAN PERINTAH",
+            "texto2": "[❗INFO❗] HANYA PEMILIK YANG DAPAT MELAKUKAN PENGHAPUSAN",
+            "texto3": "[ ✔ ] TEKS/PERINTAH YANG DITETAPKAN KE STIKER/GAMBAR TELAH BERHASIL DIHAPUS DARI DATABASE"
+        },
+        "cmd_list": {
+            "texto1": "< DAFTAR PERINTAH / TEKS YANG DITETAPKAN />"
+        },
+        "config_funciones": {
+            "texto1": [
+                "< FUNGSI BOT />",
+                "▢ *Opsi:* ✨",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan selamat datang di grup."
+            ],
+            "texto2": [
+                "▢ *Opsi:* 🌎",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot menjadi publik dan/atau pribadi.",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto3": [
+                "▢ *Opsi:* 🥵",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan perintah +18 di grup."
+            ],
+            "texto4": [
+                "▢ *Opsi:* 🔗",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan anti-tautan WhatsApp.",
+                "▢ *Catatan:* Perlu mengaktifkan fungsi batasi."
+            ],
+            "texto5": [
+                "▢ *Opsi:* 🔗",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan anti-tautan yang dimulai dengan HTTPS.",
+                "▢ *Catatan:* Perlu mengaktifkan fungsi batasi."
+            ],
+            "texto6": [
+                "▢ *Opsi:* 🔎",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan notifikasi perubahan di grup."
+            ],
+            "texto7": [
+                "▢ *Opsi:* 🔎",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mendeteksi modifikasi di grup dan menjaga manajemen yang lebih baik."
+            ],
+            "texto8": [
+                "▢ *Opsi:* ❗ |",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan batasan Bot, seperti mengeluarkan atau menambahkan orang ke grup.",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto9": [
+                "▢ *Opsi:* ☑️",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Menandai pesan dan status sebagai sudah dibaca secara otomatis.",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto10": [
+                "▢ *Opsi:* 🔊",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan perintah audio tanpa awalan di grup."
+            ],
+            "texto11": [
+                "▢ *Opsi:* 👾",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Semua gambar atau video yang dikirim di grup akan diubah menjadi stiker. "
+            ],
+            "texto12": [
+                "▢ *Opsi:* 💬",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot hanya akan menanggapi perintah jika itu adalah obrolan pribadi.",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto13": [
+                "▢ *Opsi:* 🏢",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot hanya akan menanggapi perintah jika itu adalah grup. ",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto14": [
+                "▢ *Opsi:* ❌",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Gambar yang dikirim untuk dilihat sekali, akan dikirim ulang secara normal oleh Bot. "
+            ],
+            "texto15": [
+                "▢ *Opsi:* 📵",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot akan memblokir orang yang menelepon Bot. ",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik Bot."
+            ],
+            "texto16": [
+                "▢ *Opsi:* 🤬",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mendeteksi kata-kata kotor dan memperingatkan peserta grup, sebelum dihapus.",
+                "▢ *Catatan:* Perlu mengaktifkan fungsi batasi."
+            ],
+            "texto17": [
+                "▢ *Opsi:* 🕸️",
+                "▢ *Perintah:* ",
+                "▢ *Deskripsi:* Bot mendeteksi teks panjang yang bisa menjadi virus dan menyebabkan lag di obrolan dan menghapus pengguna.",
+                "▢ *Catatan:* Perlu mengaktifkan fungsi batasi."
+            ],
+            "texto18": [
+                "▢ *Opsi:* 👎",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Jika nomor Arab bergabung dengan grup, Bot akan menghapusnya secara otomatis.",
+                "▢ *Catatan:* Perlu mengaktifkan selamat datang dan batasi."
+            ],
+            "texto19": [
+                "▢ *Opsi:* 👎",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Jika nomor Arab menulis di grup, Bot akan menghapusnya secara otomatis.",
+                "▢ *Catatan:* Perlu mengaktifkan fungsi batasi."
+            ],
+            "texto20": [
+                "▢ *Opsi:* 👑",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot hanya akan menanggapi pesan yang dikirim oleh admin grup."
+            ],
+            "texto21": [
+                "▢ *Opsi:* 😃",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot akan mulai menanggapi pesan menggunakan AI SimSimi."
+            ],
+            "texto22": [
+                "▢ *Opsi:* 🛡️",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot mendeteksi saat pengguna menghapus pesan dan mengirimkannya kembali."
+            ],
+            "texto23": [
+                "▢ *Opsi:* 🔊",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Audio Bot dari menu audio dinonaktifkan untuk semua obrolan pribadi.",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto24": [
+                "▢ *Opsi:* ⏳",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot mendeteksi saat pengguna melakukan spam perintah dan memblokirnya selama 5 detik dan memperingatkannya.",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto25": [
+                "▢ *Opsi:* 🤖",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Mengaktifkan atau menonaktifkan penggunaan perintah untuk sub bot.",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto26": [
+                "▢ *Opsi:* 💬",
+                "▢ *Perintah:*",
+                "▢ *Deskripsi:* Bot akan memblokir orang yang menulis ke pribadi Bot. ",
+                "▢ *Catatan:* Perintah ini hanya dapat digunakan oleh pemilik bot."
+            ],
+            "texto27": [
+                "< FUNGSI BOT />",
+                "[ ℹ️ ] Opsi",
+                "berhasil untuk ini"
+            ]
+        },
+        "convertidor_toanime": {
+            "texto1": "[❗] BALAS ATAU TAG GAMBAR",
+            "texto2": "[❗] MENGUBAH GAMBAR MENJADI DESAIN ANIME, HARAP BERSABAR SAAT SAYA MENGIRIM HASILNYA",
+            "texto3": "[❗] KESALAHAN, PASTIKAN WAJAH SESEORANG TERLIHAT DI GAMBAR"
+        },
+        "convertidor_togifaud": {
+            "texto1": "[❗INFO❗] BALAS VIDEO YANG INGIN ANDA UBAH MENJADI GIF DENGAN AUDIO",
+            "texto2": [
+                "[❗] JENIS FILE",
+                "TIDAK BENAR, BALAS VIDEO YANG INGIN ANDA UBAH MENJADI GIF DENGAN AUDIO"
+            ],
+            "texto3:": "INI GIF ANDA DENGAN AUDIO, SAAT DIBUKA AKAN DIPUTAR DENGAN AUDIO"
+        },
+        "convertidor_toimg": {
+            "texto1": "[❗INFO❗] BALAS STIKER YANG INGIN ANDA UBAH MENJADI GAMBAR DENGAN PERINTAH"
+        },
+        "convertidor_tomp3": {
+            "texto1": "[❗INFO❗] BALAS VIDEO ATAU CATATAN SUARA YANG INGIN ANDA UBAH MENJADI AUDIO/MP3",
+            "texto2": "[❗INFO❗] MAAF, TERJADI KESALAHAN SAAT MENGUNDUH VIDEO ANDA, SILAKAN COBA LAGI",
+            "texto3": "[❗INFO❗] MAAF, TERJADI KESALAHAN SAAT MENGUBAH CATATAN SUARA ANDA MENJADI AUDIO/MP3, SILAKAN COBA LAGI"
+        },
+        "convertidor_toptt": {
+            "texto1": "[❗INFO❗] BALAS VIDEO ATAU AUDIO YANG INGIN ANDA UBAH MENJADI CATATAN SUARA",
+            "texto2": "[❗INFO❗] MAAF, TERJADI KESALAHAN SAAT MENGUNDUH VIDEO ANDA, SILAKAN COBA LAGI",
+            "texto3": "[❗INFO❗] MAAF, TERJADI KESALAHAN SAAT MENGUNDUH AUDIO ANDA, SILAKAN COBA LAGI",
+            "texto4": "[❗INFO❗] MAAF, TERJADI KESALAHAN SAAT MENGUBAH AUDIO ANDA MENJADI CATATAN SUARA, SILAKAN COBA LAGI",
+            "texto5": "[❗INFO❗] MAAF, TERJADI KESALAHAN SAAT MENGUBAH VIDEO ANDA MENJADI CATATAN SUARA, SILAKAN COBA LAGI"
+        },
+        "convertidor_tourl": {
+            "texto1": "[❗INFO❗] BALAS GAMBAR ATAU VIDEO YANG AKAN DIUBAH MENJADI TAUTAN",
+            "texto2": "TAUTAN KE FILE ANDA:"
+        },
+        "convertidor_tovideo": {
+            "texto1": "[❗INFO❗] BALAS STIKER YANG INGIN ANDA UBAH MENJADI VIDEO DENGAN PERINTAH",
+            "texto2": "[❗INFO❗] BALAS STIKER YANG INGIN ANDA UBAH MENJADI VIDEO DENGAN PERINTAH"
+        },
+        "convertidor_tts": {
+            "texto1": [
+                "[❗INFO❗] MASUKKAN TEKS YANG INGIN ANDA UBAH MENJADI CATATAN SUARA, CONTOH:",
+                "id Halo Dunia"
+            ]
+        },
+        "descargas_facebook": {
+            "texto1": [
+                "< UNDUHAN - FACEBOOK />",
+                "[ ℹ️ ] Masukkan tautan Facebook.",
+                "[ 💡 ] Contoh:"
+            ],
+            "texto2": [
+                "< UNDUHAN - FACEBOOK />",
+                "[ ℹ️ ] Masukkan tautan Facebook.",
+                "[ 💡 ] Contoh:"
+            ],
+            "texto3": "< UNDUHAN - FACEBOOK />*_\n\n*[ ℹ️ ] Mengirim video, harap tunggu...",
+            "texto4": "< UNDUHAN - FACEBOOK />",
+            "texto5": "< UNDUHAN - FACEBOOK />*_\n\n*[ ℹ️ ] Terjadi kesalahan. Silakan coba lagi nanti."
+        },
+        "descargas_instagram": {
+            "texto1": "_*< UNDUHAN - INSTAGRAM />*_\n\n*[ ℹ️ ] Masukkan tautan Instagram.*\n\n*[ 💡 ] Contoh:*",
+            "texto2": "_*< UNDUHAN - INSTAGRAM />*_\n\n▢ *URL:*",
+            "texto3": "_*< UNDUHAN - INSTAGRAM />*_\n\n*[ ℹ️ ] Terjadi kesalahan. Silakan coba lagi nanti.*"
+        },
+        "descargas_mediafire": {
+            "texto1": [
+                "_*< UNDUHAN - MEDIAFIRE />*_",
+                "▢ *Nama:* ",
+                "▢ *Ukuran:* ",
+                "▢ *Ekstensi:*",
+                "*[ ℹ️ ] Mengirim file, harap tunggu...*"
+            ],
+            "texto2": [
+                "*< UNDUHAN - MEDIAFIRE />*",
+                "▢ *Nama:*",
+                "▢ *Ukuran:*",
+                "▢ *Ekstensi:*",
+                "*[ ℹ️ ] Mengirim file, harap tunggu...*"
+            ],
+            "texto3": "_*< UNDUHAN - MEDIAFIRE />*_\n\n*[ ℹ️ ] Terjadi kesalahan. Silakan coba lagi nanti.*",
+            "texto4": "_*< UNDUHAN - MEDIAFIRE />*_\n\n*[ ℹ️ ] Masukkan tautan MediaFire.*\n\n*[ 💡 ] Contoh:*"
+        },
+        "descargas_play": {
+            "texto1": [
+                "_*< UNDUHAN - PLAY />*_\n\n*[ ℹ️ ] Judul atau tautan video YouTube diperlukan.*\n\n*[ 💡 ] Contoh:*",
+                "Good Feeling - Flo Rida_"
+            ],
+            "texto2": [
+                "_*< UNDUHAN - PLAY />*_\n\n▢ *Judul:*",
+                "▢ *Diterbitkan:*",
+                "▢ *Durasi:*",
+                "▢ *Dilihat:*",
+                "▢ *Penulis:*",
+                "▢ *ID:*",
+                "▢ *Tipe:*",
+                "▢ *Tautan:*",
+                "▢ *Saluran:*",
+                "*[ ℹ️ ] Mengirim",
+                "harap tunggu...*"
+            ],
+            "texto3": "*[ ℹ️ ] Unduh audio Anda di:*",
+            "texto4": "_*< UNDUHAN - PLAY />*_\n\n*[ ℹ️ ] Terjadi kesalahan. Silakan coba lagi nanti.*",
+            "texto5": "_*< UNDUHAN - PLAY />*_\n\n*[ ℹ️ ] Unduh video Anda di:*",
+            "texto6": "_*< UNDUHAN - PLAY />*_\n\n*[ ℹ️ ] Terjadi kesalahan. Silakan coba lagi nanti.*"
+        },
+        "descargas_tiktok": {
+            "texto1": "_*< UNDUHAN - TIKTOK />*_\n\n*[ ℹ️ ] Masukkan tautan TikTok.*\n\n*[ 💡 ] Contoh:*",
+            "texto2": "_*< UNDUHAN - TIKTOK />*_\n\n*[ ℹ️ ] Masukkan tautan TikTok.*\n\n*[ 💡 ] Contoh:*",
+            "texto3": "_*< UNDUHAN - TIKTOK />*_\n\n*[ ℹ️ ] Mengirim video, harap tunggu...*",
+            "texto4": [
+                "_*< UNDUHAN - TIKTOK />*_\n\n*[ 💡 ] Balas video ini dengan perintah*",
+                "*untuk mengubahnya menjadi audio.*"
+            ],
+            "texto5": [
+                "_*< UNDUHAN - TIKTOK />*_\n\n*[ 💡 ] Balas video ini dengan perintah*",
+                "*untuk mengubahnya menjadi audio.*"
+            ],
+            "texto6": [
+                "_*< UNDUHAN - TIKTOK />*_\n\n*[ 💡 ] Balas video ini dengan perintah*",
+                "*untuk mengubahnya menjadi audio.*"
+            ],
+            "texto7": [
+                "_*< UNDUHAN - TIKTOK />*_\n\n*[ 💡 ] Balas video ini dengan perintah*",
+                "*untuk mengubahnya menjadi audio.*"
+            ],
+            "texto8": [
+                "_*< UNDUHAN - TIKTOK />*_\n\n*[ 💡 ] Balas video ini dengan perintah*",
+                "*untuk mengubahnya menjadi audio.*"
+            ],
+            "texto9": "_*< UNDUHAN - TIKTOK />*_\n\n*[ ℹ️ ] Terjadi kesalahan. Silakan coba lagi nanti.*",
+            "texto10": "_*< UNDUHAN - TIKTOK />*_\n\n*[ ℹ️ ] Masukkan tautan TikTok.*\n\n*[ 💡 ] Contoh:*"
+        },
+        "downloader_imagen": {
+            "texto1": "*[❗INFO❗] CONTOH PENGGUNAAN PERINTAH",
+            "texto2": [
+                "🔎 *HASIL DARI:*",
+                "🔗 *TAUTAN*",
+                "🌎 *PENCARI:* Google"
+            ]
+        },
+        "downloader_pinterest": {
+            "texto1": "*[❗INFO❗] CONTOH PENGGUNAAN PERINTAH ",
+            "texto2": "*HASIL PENCARIAN*"
+        },
+        "downloader_playdoc": {
+            "texto1": "*[❗INFO❗] NAMA LAGU HILANG, SILAKAN MASUKKAN PERINTAH DITAMBAH NAMA/JUDUL LAGU*\n\n*—◉ CONTOH:*",
+            "texto2": [
+                "*◉——⌈🔊 YOUTUBE DOC 🔊⌋——◉*",
+                "❏ 📌 *Judul:*",
+                "❏ 📆 *Diterbitkan:*",
+                "❏ ⌚ *Durasi:*",
+                "❏ 👀 *Dilihat:*",
+                "❏ 👤 *Penulis:*",
+                "❏ ⏯️ *Saluran:*",
+                "❏ 🆔 *ID:*",
+                "❏ 🪬 *Tipe:*",
+                "❏ 🔗 *Tautan:*",
+                "❏ *_Mengirim",
+                "tunggu sebentar．．．_*"
+            ],
+            "texto3": "*[❗] KESALAHAN, TIDAK MUNGKIN MENGUNDUH AUDIO*",
+            "texto4": [
+                "▢ JUDUL:",
+                "▢ UKURAN VIDEO:"
+            ],
+            "texto5": "*[❗] KESALAHAN, TIDAK MUNGKIN MENGUNDUH VIDEO*",
+            "texto6": "*[❗INFO❗] KESALAHAN, SILAKAN COBA LAGI*"
+        },
+        "downloader_playlist": {
+            "texto1": "*[❗] Nama lagu hilang, silakan masukkan perintah ditambah nama/judul lagu*\n\n*—◉ Contoh:*",
+            "texto2": [
+                "*[❗] Anda dapat mengunduh video yang Anda inginkan dengan cara berikut:*",
+                "*—◉ Contoh:*",
+                "🫐 *_Tautan :_*",
+                "🕒 *_Durasi :_*",
+                "📥 *_Diunggah :_*",
+                "👁 *_Dilihat :_*"
+            ],
+            "texto3": "*[❗INFO❗] KESALAHAN, SILAKAN COBA LAGI DENGAN NAMA LAGU LAIN*"
+        },
+        "info_creador": {
+            "texto1": [
+                "*—◉ NOMOR PEMBUAT SAYA ADALAH wa.me/6281220670449*",
+                "*—◉ NOMOR KOLABORATOR 1 ADALAH wa.me/34642467703*",
+                "*—◉ NOMOR KOLABORATOR 2 ADALAH wa.me/50499698072*",
+                "*—◉ NOMOR KOLABORATOR 3 ADALAH wa.me/595986460945*",
+                "*—◉ NOMOR KOLABORATOR 4 ADALAH wa.me/51940617554*",
+                "*—◉ NOMOR KOLABORATOR 5 ADALAH wa.me/51995386439*",
+                "*—◉ NOMOR KOLABORATOR 6 ADALAH wa.me/593991398786*",
+                "*- NOMOR KOLABORATOR 7 ADALAH wa.me/51996089079*",
+                "*- NOMOR KOLABORATOR 8 ADALAH wa.me/573225236629*",
+                "*- NOMOR KOLABORATOR 9 ADALAH wa.me/593959425714*",
+                "*- NOMOR KOLABORATOR 10 ADALAH wa.me/50246028932*",
+                "*- KONTAK KOLABORATOR 11 ADALAH https://instagram.com/gata_dios*",
+                "*- NOMOR KOLABORATOR 12 ADALAH wa.me/5212412377467*",
+                "*- NOMOR KOLABORATOR 13 BR ADALAH wa.me/5545998331383*"
+            ],
+            "texto2": [
+                "「 Halo Dunia 」",
+                "bot whatsapp terbaik"
+            ]
+        },
+        "info_donar": {
+            "texto1": [
+                "DONASI",
+                "HALO",
+                "👉🏻 INI BEBERAPA DATA*",
+                "JIKA ANDA INGIN MENDUKUNG :3*",
+                "➤ KUNCI:*",
+                "646180192175788481*",
+                "➤ BANK: STP* ",
+                "➤ PENERIMA: Bruno Sobrino* ",
+                "➤ KONSEP: DUKUNGAN*",
+                "➤ PAYPAL: https://www.paypal.me/BrunoSob*",
+                "👉🏻 HUBUNGI SAYA JIKA ANDA MEMBUTUHKAN*",
+                "LEBIH BANYAK DATA DAN UNTUK BERTERIMA KASIH*",
+                "wa.me/5219992095479*"
+            ]
+        },
+        "info_estado": {
+            "texto1": [
+                "*< INFO - STATUS />*_",
+                "▢ *Pemilik:*",
+                "▢ *WA:*",
+                "▢ *PayPal:*",
+                "▢ *Ping:*",
+                "▢ *Waktu Aktif:*",
+                "▢ *Awalan:*",
+                "▢ *Mode:* ",
+                "▢ *Pengguna terdaftar:*",
+                "▢ *Total pengguna:*",
+                "▢ *Jenis bot:*",
+                "▢ *Obrolan pribadi:*",
+                "▢ *Grup:*",
+                "▢ *Total obrolan:*",
+                "▢ *Autoread:* ",
+                "▢ *Batasi:* ",
+                "▢ *Hanya PC:* ",
+                "▢ *Hanya GP:*",
+                "▢ *AntiPribadi:*",
+                "▢ *AntiPanggilan:*",
+                "▢ *ModeJadiBot:*"
+            ],
+            "texto2": "Repositori - GitHub"
+        },
+        "info_groupsofc": {
+            "texto1": [
+                "*HALO PENGGUNA 👋🏻, SAYA MENGAJAK ANDA UNTUK BERGABUNG DENGAN GRUP RESMI THE SHADOW BROKERS - TEAM UNTUK BERINTERAKSI DENGAN KOMUNITAS :D*",
+                "*➤ Grup resmi Bot:*",
+                "*1.-* https://chat.whatsapp.com/LjJbmdO0qSDEKgB60qivZj",
+                "*2.-* https://chat.whatsapp.com/DbXBmsydWBE1ZN3EoY0hRs",
+                "*3.-* https://chat.whatsapp.com/BW0P22xx7EGBTdH5IM851F",
+                "*4.-* https://chat.whatsapp.com/CjexkGVr37J6GuSdDVAHzC",
+                "*5.-* https://chat.whatsapp.com/DLrFJUPxEQ2IrOm7sJWJ0k"
+            ],
+            "texto2": "「 Halo Dunia 」",
+            "texto3": "bot whatsapp terbaik"
+        },
+        "info_instalarbot": {
+            "texto1": "*—◉ TUTORIAL BOXMINE HOST*\n> Tutorial: https://youtu.be/eC9TfKICpcY\n> Halaman Resmi: https://boxmineworld.com\n> Dasbor: https://dash.boxmineworld.com/home\n> Panel: https://panel.boxmineworld.com\n> Dukungan: https://discord.gg/84qsr4v \n\n------------------------------------\n—◉ TUTORIAL-TERMUX\n> https://youtu.be/yRS4m36Zwkw\n\n------------------------------------\n\n*—◉ PERINTAH TERMUX*\n> Perintah:\n- cd && termux-setup-storage\n- apt-get update -y && apt-get upgrade -y\n- pkg install -y git nodejs ffmpeg imagemagick && pkg install yarn \n- git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git && cd TheMystic-Bot-MD\n- yarn install\n- npm install\n- npm update\n- npm start\n\n------------------------------------\n\n—◉ ✔️ AKTIFKAN JIKA BERHENTI DI TERMUX ✔️\nKETIK PERINTAH BERIKUT SATU PER SATU:\n> cd TheMystic-Bot-MD\n> npm start\n\n------------------------------------\n\n—◉ 👽 DAPATKAN KODE QR LAIN DI TERMUX 👽\nKETIK PERINTAH BERIKUT SATU PER SATU:\n> cd TheMystic-Bot-MD\n> rm -rf MysticSession\n> npm start",
+            "texto2": "bot whatsapp terbaik"
+        },
+        "info_listprem": {
+            "texto1": [
+                "*「 INFO PENGGUNA 」*",
+                "—◉ Pengguna:",
+                "*◉ Waktu tersisa:*\n",
+                "*◉ Waktu tersisa:*\n- Anda adalah pengguna premium untuk waktu yang tidak terbatas`",
+                "- Ini adalah pengguna non-premium ❌",
+                "*「 PENGGUNA PREMIUM 」*",
+                "—◉ Pengguna:",
+                "*◉ Waktu tersisa:*\n",
+                "- Ini adalah pengguna non-premium ❌"
+            ],
+            "texto2": [
+                "*「 INFO PENGGUNA 」*\n\n—◉ Pengguna:",
+                "*◉ Waktu tersisa:*\n",
+                "- Anda bukan pengguna premium ❌",
+                "*「 PENGGUNA PREMIUM 」*\n\n- Tidak ada pengguna premium ❌"
+            ],
+            "texto3": [
+                "- Tahun:",
+                "- Bulan:",
+                "- Minggu: ",
+                "- Hari: ",
+                "- Jam:",
+                "- Menit: ",
+                "- Detik:"
+            ]
+        },
+        "info_repositorio": {
+            "texto1": [
+                "_*< INFO - REPOSITORI />*_",
+                "▢ *Nama:*",
+                "TheMystic-Bot-MD",
+                "▢ *Pengunjung:*",
+                "▢ *Ukuran:*",
+                "▢ *Pembaruan:*",
+                "▢ *URL:*",
+                "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
+                "Fork ·",
+                "Bintang ·",
+                "Masalah\n\n",
+                "*[ ℹ️ ] Anda dapat mengunduh repositori ini dengan mengirimkan perintah:*"
+            ]
+        },
+        "owner_banchat": {
+            "texto1": "*[❗INFO❗] OBROLAN INI TELAH DIBLOKIR BERHASIL*\n\n*—◉ BOT TIDAK AKAN MENANGGAPI PERINTAH APAPUN SAMPAI OBROLAN INI DIBUKA BLOKIRNYA*"
+        },
+        "owner_banlist": {
+            "texto1": "〔 PENGGUNA DIBLOKIR 〕",
+            "texto2": "〔 OBROLAN DIBLOKIR 〕"
+        },
+        "owner_banuser": {
+            "texto1": "[❗] TAG SESEORANG ATAU BALAS PESAN YANG DIKIRIM OLEH PENGGUNA YANG INGIN ANDA BLOKIR\n\n*—◉ CONTOH:*",
+            "texto2": "*[❗INFO❗] PENGGUNA BERHASIL DIBLOKIR*\n*—◉ PENGGUNA TIDAK AKAN DAPAT MENGGUNAKAN BOT SAMPAI DIBUKA BLOKIRNYA*"
+        },
+        "owner_bcgc": {
+            "texto1": "*[❗INFO❗] MASUKKAN PESAN YANG INGIN ANDA SIARKAN*",
+            "texto2": [
+                "\n\nINI ADALAH PENGUMUMAN RESMI",
+                "[❗PENGUMUMAN❗]\n\n"
+            ],
+            "texto3": [
+                "*[❗INFO❗] PESAN DIKIRIM KE",
+                "GRUP*\n\n*CATATAN: MUNGKIN ADA KEGAGALAN DENGAN PERINTAH INI DAN TIDAK DIKIRIM KE SEMUA OBROLAN, MAAF UNTUK SAAT INI*"
+            ]
+        },
+        "owner_block_unblock": {
+            "texto1": "*[❗] PENGGUNAAN SALAH, CONTOH:*\n*—◉",
+            "texto2": [
+                "*[❗] PERINTAH BERHASIL DIGUNAKAN",
+                "UNTUK PENGGUNA",
+                ""
+            ]
+        },
+        "owner_blocklist": {
+            "texto1": "*≡ Daftar blokir*\n\n*Total :*",
+            "texto2": "Tidak ada nomor yang diblokir"
+        },
+        "owner_broadcast": {
+            "texto1": "*[❗INFO❗] MASUKKAN PESAN YANG INGIN ANDA SIARKAN*",
+            "texto2": "*[❗INFO❗] PESAN DIKIRIM KE SEMUA OBROLAN*\n\n*CATATAN: MUNGKIN ADA KEGAGALAN DENGAN PERINTAH INI DAN TIDAK DIKIRIM KE SEMUA OBROLAN, MAAF UNTUK SAAT INI*",
+            "texto3": [
+                "*╔══❰ PENGUMUMAN ❱══╗*\n\n",
+                "*╔══❰ PENGUMUMAN ❱══╗*\n\n"
+            ],
+            "texto4": [
+                "PESAN DIKIRIM KE:",
+                "OBROLAN PRIBADI >>",
+                "OBROLAN GRUP >>",
+                "TOTAL OBROLAN >>",
+                "*TOTAL WAKTU PENGIRIMAN",
+                "\n*CATATAN: MUNGKIN ADA KEGAGALAN DENGAN PERINTAH INI DAN TIDAK DIKIRIM KE SEMUA OBROLAN, MAAF UNTUK SAAT INI*"
+            ]
+        },
+        "owner_cleartmp": {
+            "texto1": "*[ ✔ ] FILE DARI FOLDER TMP BERHASIL DIHAPUS!!*"
+        },
+        "owner_delprem": {
+            "texto1": "*[❗] MASUKKAN @tag ORANG ATAU BALAS PESAN ORANG YANG INGIN ANDA HAPUS DARI PENGGUNA PREMIUM*",
+            "texto2": "*[❗] PENGGUNA TIDAK DITEMUKAN DI DATABASE SAYA*",
+            "texto3": "*[❗] PENGGUNA YANG DIMASUKKAN BUKAN PENGGUNA PREMIUM*",
+            "texto4": "SEKARANG ANDA BUKAN LAGI BAGIAN DARI PENGGUNA PREMIUM*"
+        },
+        "owner_exec2": {
+            "texto1": "*[❗] Menjalankan perintah...*"
+        },
+        "owner_unbanchat": {
+            "texto1": "*[❗INFO❗] OBROLAN INI BERHASIL DIBUKA BLOKIRNYA*"
+        },
+        "owner_unbanuser": {
+            "texto1": "*[❗INFO❗] MASUKKAN @tag PENGGUNA*",
+            "texto2": "*[❗INFO❗] MASUKKAN @tag PENGGUNA*",
+            "texto3": "*[❗INFO❗] PENGGUNA BERHASIL DIBUKA BLOKIRNYA*\n*—◉ PENGGUNA SEKARANG DAPAT MENGGUNAKAN BOT*"
+        },
+        "sticker_sticker": {
+            "texto1": "*[❗INFO❗] BALAS VIDEO, GAMBAR, ATAU MASUKKAN TAUTAN GAMBAR YANG BERAKHIRAN .jpg YANG AKAN DIUBAH MENJADI STIKER, ANDA HARUS MEMBALAS ATAU MENGGUNAKAN PERINTAH",
+            "texto2": "*[❗INFO❗] TAUTAN / URL / LINK TIDAK VALID, AKHIRAN TAUTAN / URL / LINK HARUS .jpg, CONTOH",
+            "texto3": "*[❗] FILE MULTIMEDIA HILANG*\n\n*—◉ Balas video atau gambar yang akan diubah menjadi stiker, Anda harus membalas file multimedia atau mengirimkannya menggunakan perintah:*\n*◉"
+        },
+        "sticker_wm": {
+            "texto1": "*[❗INFO❗] BALAS STIKER YANG INGIN ANDA TAMBAHKAN PAKET DAN NAMA*",
+            "texto2": "*[❗INFO❗] BALAS STIKER YANG INGIN ANDA TAMBAHKAN PAKET DAN NAMA*",
+            "texto3": "*[❗INFO❗] BALAS STIKER YANG INGIN ANDA TAMBAHKAN PAKET DAN NAMA*",
+            "texto4": "*[❗INFO❗] MAAF, ADA YANG SALAH.. PASTIKAN ANDA TELAH MEMBALAS STIKER DAN MENAMBAHKAN NAMA PAKET DAN NAMA PENGGUNA*"
+        },
+        "adult_comandos": {
+            "texto1": "*[❗INFO❗] PERINTAH +18 DINONAKTIFKAN DI GRUP INI, JIKA ANDA ADMIN DAN INGIN MENGAKTIFKANNYA, GUNAKAN PERINTAH #enable modohorny*"
+        }
+    },
+    "handler": {
+        "handler": {
+            "texto1": [
+                "_*< PENGGUNA DITANGGUHKAN />*_\n",
+                "▢ *Pemberitahuan:*",
+                "\n▢ *Alasan:*",
+                "▢ *Alasan:* Tidak ditentukan",
+                "*[ ℹ️ ] Jika Anda menganggap ini adalah kesalahan dan memiliki bukti, Anda dapat menghubungi pemilik bot untuk mengajukan banding atas penangguhan tersebut.*"
+            ],
+            "texto2": "*[ ℹ️ ] Berlian Anda telah habis, Anda dapat memperoleh lebih banyak dengan perintah:*",
+            "texto3": [
+                "*[ ℹ️ ] Diperlukan level",
+                "untuk dapat menggunakan perintah. Level Anda saat ini adalah",
+                "gunakan perintah",
+                "untuk menaikkan level Anda dengan XP.*"
+            ],
+            "texto4": [
+                "*[ ℹ️ ] Digunakan",
+                "berlian (batas).*"
+            ]
+        },
+        "dfail": {
+            "texto1": "*[ ℹ️ ] Perintah ini hanya dapat digunakan oleh pemilik bot.*",
+            "texto2": "*[ ℹ️ ] Perintah ini hanya dapat digunakan oleh pemilik bot.*",
+            "texto3": "*[ ℹ️ ] Perintah ini hanya dapat digunakan oleh moderator dan pemilik bot.*",
+            "texto4": "*[ ℹ️ ] Perintah ini hanya dapat digunakan oleh pengguna premium dan pemilik bot.*",
+            "texto5": "*[ ℹ️ ] Perintah ini hanya dapat digunakan di grup.*",
+            "texto6": "*[ ℹ️ ] Perintah ini hanya dapat digunakan di obrolan pribadi bot.*",
+            "texto7": "*[ ℹ️ ] Perintah ini hanya dapat digunakan oleh admin grup.*",
+            "texto8": "*[ ℹ️ ] Untuk menggunakan perintah ini, bot harus menjadi admin grup.*",
+            "texto9": "*[ ℹ️ ] Untuk menggunakan perintah ini, Anda harus terdaftar.*\n\n*[ 💡 ] Gunakan perintah:* _/verifikasi nama.umur_ *untuk mendaftar.*",
+            "texto10": "*[ ℹ️ ] Perintah ini dinonaktifkan oleh pemilik bot.*",
+            "texto11": [
+                "*[ ⚠ ] Peringatan*",
+                "*[ ⚠ ] Peringatan*",
+                "https://github.com/BrunoSobrino/TheMystic-Bot-MD"
+            ]
+        },
+        "participantsUpdate": {
+            "texto1": "👋 Selamat datang!\n@user",
+            "texto2": "👋 Sampai jumpa!\n@user",
+            "texto3": "*[ ℹ️ ] @user Dipromosikan menjadi admin.*",
+            "texto4": "*[ ℹ️ ] @user Diturunkan dari admin.*",
+            "texto5": "*[ ℹ️ ] Deskripsi grup telah diubah.*",
+            "texto6": "*[ ℹ️ ] Nama grup telah diubah.*",
+            "texto7": "*[ ℹ️ ] Foto profil grup telah diubah.*",
+            "texto8": "*[ ℹ️ ] Tautan undangan grup telah diatur ulang.*"
+        },
+        "deleteUpdate": {
+            "texto1": [
+                "_*< ANTI-HAPUS />*_\n",
+                " ▢ *Pengguna:*",
+                " ▢ *Waktu:*",
+                "▢ *Tanggal:*",
+                "▢ *Mengirim pesan yang dihapus...*\n",
+                "*[ ℹ️ ] Untuk menonaktifkan fungsi* _antidelete_*, kirim perintah berikut:* _/disable antidelete_"
+            ]
+        }
+    },
+    "BK9": {
+        "BK9": {
+            "bk9dalletext": "Silakan masukkan teks, misalnya\n .bk9img Sebuah rumah biru di alam yang indah",
+            "bk9dallewait": "memuat ...",
+            "bk9dalleerr": "Tidak dapat membuat gambar. Silakan coba lagi nanti.",
+            "bk9text": "Silakan masukkan teks, contoh: \n.bk9 Halo, apa kabar?",
+            "bk9err": "Terjadi kesalahan saat memproses permintaan Anda.",
+            "bk9imgtext": "Balas gambar dan tulis pertanyaan Anda\n\nContoh: .bk9img siapa (jangan lupa balas gambar)",
+            "bk9LText_T": "Jika Anda menginginkannya tanpa kustomisasi,:\n.bk9short dan beri tautan\nContoh:\n.bk9short https://bk9.site/\nJika Anda menginginkannya disesuaikan:\n.Short, beri tautan + kata\nContoh:\n.bk9short https://bk9.site/ + Suii",
+            "bk9LTaked_T": "Kustomisasi ini telah dilakukan, coba yang lain."
+        }
+    }
+}

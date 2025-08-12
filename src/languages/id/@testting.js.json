@@ -1,0 +1,26 @@
+{
+    "_testting": {
+        "errors": {
+            "no_query": "*[❗] Contoh: @command Beggin You*",
+            "no_results": "*[❗] Tidak ada hasil yang ditemukan.*",
+            "generic": "*[❗] Kesalahan: @error*",
+            "large_audio": "*[❗] File audio besar terdeteksi.*\n*Ukuran:* @size MB\n*Mengirim sebagai dokumen (>50 MB)*\n\n⏳ *Mungkin perlu beberapa saat...*",
+            "large_video": "*[❗] File video besar terdeteksi.*\n*Ukuran:* @size MB\n*Mengirim sebagai dokumen (>100 MB)*\n\n⏳ *Mungkin perlu beberapa saat...*"
+        },
+        "video_info": {
+            "header": "_*< UNDUHAN - PLAY />*_",
+            "title": "▢ *Judul:* @title",
+            "author": "▢ *Saluran:* @author",
+            "duration": "▢ *Durasi:* @duration",
+            "views": "▢ *Dilihat:* @views",
+            "published": "▢ *Diterbitkan:* @published",
+            "id": "▢ *ID:* @id",
+            "link": "▢ *Tautan:* @link",
+            "processing": "*[ ℹ️ ] Memproses @type...*"
+        },
+        "success": {
+            "audio": "*[ 🔊 ] AUDIO DIUNDUH*",
+            "video": "*[ 🎥 ] VIDEO DIUNDUH*"
+        }
+    }
+}

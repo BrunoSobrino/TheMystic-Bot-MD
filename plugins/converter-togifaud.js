@@ -1,4 +1,4 @@
-/* Desarrollado y Creado por: https://github.com/BrunoSobrino */
+/* Dikembangkan dan Dibuat oleh: https://github.com/BrunoSobrino */
 
 const handler = async (m, {conn, usedPrefix, command}) => {
  const datas = global

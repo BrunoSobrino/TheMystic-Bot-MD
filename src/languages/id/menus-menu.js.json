@@ -1,0 +1,52 @@
+{
+    "plugins": {
+        "menu": {
+            "menu_header": "╭═══〘 ✯✯✯✯✯✯✯✯✯ 〙══╮\n║ ◉— *𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭* —◉\n║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║\n║➤ *Halo,* @username\n║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║\n║➤ *Pemilik:* @author\n║➤ *Nomor:* wa.me/@owner\n║➤ *PayPal:* paypal.me/BrunoSob\n║➤ *Tanggal:* @week, @date\n║➤ *Waktu aktif:* @uptime\n║➤ *Pengguna:* @rtotal\n║➤ *Terdaftar:* @rtotalreg\n╰═══╡✯✯✯✯✯✯✯✯✯╞═══╯",
+
+            "user_info": "┏━━━━━━━━━━━━━━━━┓\n┃ *< INFO PENGGUNA />*\n┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃\n┣ ✯ *Level:* @level\n┣ ✯ *Pengalaman:* @exp\n┣ ✯ *Peringkat:* @role\n┣ ✯ *Berlian:* @limit\n┣ ✯ *MysticCoins:* @money\n┣ ✯ *Token:* @joincount\n┣ ✯ *Premium:* @premium\n┗━━━━━━━━━━━━━━━━┛\n",
+
+            "section_header": "┏━━━━━━━━━━━━━━━━┓\n┃ @category\n┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃",
+            "command_item": "┣ ඬ⃟  □ @cmd @islimit",
+            "section_footer": "┗━━━━━━━━━━━━━━━━┛\n",
+
+            "error_message": "[ ❌ ] Terjadi kesalahan saat membuat menu:",
+
+            "premium": {
+                "yes": "✅",
+                "no": "❌"
+            },
+
+            "tags": {
+                "info": "<INFORMASI>",
+                "jadibot": "<SUBBOTS>",
+                "xp": "<XP>",
+                "tools": "<ALAT>",
+                "search": "<PENCARIAN>",
+                "downloader": "<UNDUHAN>",
+                "converter": "<KONVERTER>",
+                "effects": "<EFEK>",
+                "game": "<PERMAINAN>",
+                "group": "<GRUP>",
+                "nsfw": "<DEWASA>",
+                "owner": "<PEMILIK>",
+                "sticker": "<STIKER>",
+                "img": "<GAMBAR>",
+                "ai": "<KECERDASAN BUATAN>",
+                "music": "<MUSIK>",
+                "internet": "<INTERNET>",
+                "download": "<UNDUH>",
+                "tyc": "<SYARAT DAN KETENTUAN>",
+                "maker": "<PEMBUAT>",
+                "nulis": "<MENULIS>",
+                "emoji": "<EMOJI>",
+                "database": "<DATABASE>",
+                "premium": "<PREMIUM>",
+                "random": "<ACAK>",
+                "anime": "<ANIME>",
+                "fun": "<HIBURAN>",
+                "general": "<UMUM>",
+                "herramientas": "<ALAT>"
+            }
+        }
+    }
+}

@@ -8,12 +8,12 @@ global.botnumber = ""
 global.confirmCode = ""
 global.authFile = `MysticSession`;
 
-// Cambiar a true si el Bot responde a sus comandos con otros comandos.
-// Cambiar a false para usar el Bot desde el mismo numero del Bot.
-// Error de m.isBaileys marcado como false fix temporal
+// Ubah ke true jika Bot merespons perintah Anda dengan perintah lain.
+// Ubah ke false untuk menggunakan Bot dari nomor Bot yang sama.
+// Kesalahan m.isBaileys ditandai sebagai perbaikan sementara palsu
 global.isBaileysFail = false;
 
-global.defaultLenguaje = 'en';
+global.defaultLenguaje = 'id';
 
 global.owner = [
   ['6287751840200', 'VQA', true],
@@ -27,13 +27,13 @@ global.prems = ['6287751840200'];
 // Base Rest Api
 global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
 
-global.packname = 'Sticker';
+global.packname = 'Stiker';
 global.author = 'VQA';
 global.wm = 'The Mystic - Bot';
 global.titulowm = 'Mystic Bot';
 global.titulowm2 = `Mystic Bot`
 global.igfg = 'The Mystic';
-global.wait = '*_[ ⏳ ] Wait..._*';
+global.wait = '*_[ ⏳ ] Tunggu..._*';
 
 global.imagen1 = fs.readFileSync('./src/assets/images/menu/languages/es/menu.png');
 global.imagen2 = fs.readFileSync('./src/assets/images/menu/languages/pt/menu.png');
@@ -43,13 +43,13 @@ global.imagen5 = fs.readFileSync('./src/assets/images/menu/languages/ru/menu.png
 
 global.mods = [];
 
-//* *******Tiempo***************
+//* *******Waktu***************
 global.d = new Date(new Date + 3600000);
-global.locale = 'es';
+global.locale = 'id';
 global.dia = d.toLocaleDateString(locale, {weekday: 'long'});
-global.fecha = d.toLocaleDateString('es', {day: 'numeric', month: 'numeric', year: 'numeric'});
-global.mes = d.toLocaleDateString('es', {month: 'long'});
-global.año = d.toLocaleDateString('es', {year: 'numeric'});
+global.fecha = d.toLocaleDateString('id', {day: 'numeric', month: 'numeric', year: 'numeric'});
+global.mes = d.toLocaleDateString('id', {month: 'long'});
+global.año = d.toLocaleDateString('id', {year: 'numeric'});
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
 //* ****************************
 global.wm2 = `${dia} ${fecha}\nThe Mystic - Bot`;
@@ -58,9 +58,9 @@ global.mysticbot = 'The Mystic - Bot';
 global.channel = 'https://chat.whatsapp.com/E3Zi07JMM8hIehnIu0lbAR?mode=ac_t';
 global.md = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
 global.mysticbot = 'https://github.com/BrunoSobrino/TheMystic-Bot-MD';
-global.waitt = '*_[ ⏳ ] Cargando..._*';
-global.waittt = '*_[ ⏳ ] Cargando..._*';
-global.waitttt = '*_[ ⏳ ] Cargando..._*';
+global.waitt = '*_[ ⏳ ] Memuat..._*';
+global.waittt = '*_[ ⏳ ] Memuat..._*';
+global.waitttt = '*_[ ⏳ ] Memuat..._*';
 global.nomorown = '6287751840200';
 global.pdoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/msword', 'application/pdf', 'text/rtf'];
 global.cmenut = '❖––––––『';
@@ -92,6 +92,6 @@ global.flaaa = [
 const file = fileURLToPath(import.meta.url);
 watchFile(file, () => {
   unwatchFile(file);
-  console.log(chalk.redBright('Update \'config.js\''));
+  console.log(chalk.redBright('Memperbarui \'config.js\''));
   import(`${file}?update=${Date.now()}`);
 });

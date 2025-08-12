@@ -36,7 +36,7 @@ const handler = async (m, {conn, text, args, usedPrefix, command}) => {
     const response = await fetch('https://phototoanime1.p.rapidapi.com/photo-to-anime', options);
     const json = await response.json();
     
-    if (!response.ok) throw new Error(json.message || 'Error al convertir la imagen');
+    if (!response.ok) throw new Error(json.message || 'Gagal mengonversi gambar');
     
     await conn.sendFile(m.chat, json.body.imageUrl, 'anime.jpg', null, m);
     

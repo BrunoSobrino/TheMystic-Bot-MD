@@ -46,16 +46,16 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
       let media;
       try {
         media = await q.download(true);
-        if (!media) throw new Error('No se pudo descargar el archivo de audio');
+        if (!media) throw new Error('Gagal mengunduh file audio');
         const command_ffmpeg = `ffmpeg -i "${media}" ${set} "${filename}"`;
         await execAsync(command_ffmpeg);
-        if (!existsSync(filename)) throw new Error('El archivo procesado no se generó correctamente');
+        if (!existsSync(filename)) throw new Error('File yang diproses tidak dibuat dengan benar');
         const buff = await readFileSync(filename);
-        if (!buff || buff.length === 0) throw new Error('El archivo procesado está vacío');
+        if (!buff || buff.length === 0) throw new Error('File yang diproses kosong');
         await conn.sendMessage(m.chat, { audio: buff, mimetype: 'audio/mpeg', fileName: ran, ptt: false }, {quoted: m});
       } catch (error) {
-        console.error('Error en el procesamiento:', error);
-        throw `_*Error al procesar el audio:*_ ${error.message}`;
+        console.error('Kesalahan saat memproses:', error);
+        throw `_*Kesalahan saat memproses audio:*_ ${error.message}`;
       } finally {
         try {
           if (media && existsSync(media)) {
@@ -65,14 +65,14 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
             await unlinkSync(filename);
           }
         } catch (cleanupError) {
-          console.error('Error al limpiar archivos temporales:', cleanupError);
+          console.error('Kesalahan saat membersihkan file sementara:', cleanupError);
         }
       }
     } else {
       throw `${tradutor.texto1} ${usedPrefix + command}*`;
     }
   } catch (e) {
-    console.error('Error general:', e);
+    console.error('Kesalahan umum:', e);
     throw e;
   }
 };

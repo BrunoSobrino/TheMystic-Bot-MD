@@ -18,7 +18,7 @@ let childProcess = null;
 
 const question = (texto) => new Promise((resolver) => rl.question(texto, resolver));
 
-console.log(chalk.yellow.bold('—◉ㅤIniciando sistema...'));
+console.log(chalk.yellow.bold('—◉ㅤMemulai sistem...'));
 
 function verificarOCrearCarpetaAuth() {
   const authPath = join(__dirname, global.authFile);
@@ -61,7 +61,7 @@ async function start(file) {
     gradient: ['red', 'magenta'],
   });
 
-  say(`Bot creado por Bruno Sobrino`, {
+  say(`Bot dibuat oleh Bruno Sobrino`, {
     font: 'console',
     align: 'center',
     gradient: ['red', 'magenta'],
@@ -76,14 +76,14 @@ async function start(file) {
     return;
   }
 
-  const opcion = await question(chalk.yellowBright.bold('—◉ㅤSeleccione una opción (solo el numero):\n') + chalk.white.bold('1. Con código QR\n2. Con código de texto de 8 dígitos\n—> '));
+  const opcion = await question(chalk.yellowBright.bold('—◉ㅤPilih salah satu opsi (hanya nomor):\n') + chalk.white.bold('1. Dengan kode QR\n2. Dengan kode teks 8 digit\n—> '));
 
   if (opcion === '2') {
-    const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤEscriba su número de WhatsApp:\n') + chalk.white.bold('◉ㅤEjemplo: +5219992095479\n—> '));
+    const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤMasukkan nomor WhatsApp Anda:\n') + chalk.white.bold('◉ㅤContoh: +5219992095479\n—> '));
     const numeroTelefono = formatearNumeroTelefono(phoneNumber);
     
     if (!esNumeroValido(numeroTelefono)) {
-      console.log(chalk.bgRed(chalk.white.bold('[ ERROR ] Número inválido. Asegúrese de haber escrito su numero en formato internacional y haber comenzado con el código de país.\n—◉ㅤEjemplo:\n◉ +5219992095479\n')));
+      console.log(chalk.bgRed(chalk.white.bold('[ KESALAHAN ] Nomor tidak valid. Pastikan Anda telah menulis nomor Anda dalam format internasional dan dimulai dengan kode negara.\n—◉ㅤContoh:\n◉ +5219992095479\n')));
       process.exit(0);
     }
     
@@ -102,10 +102,10 @@ function forkProcess(file) {
   childProcess = fork();
 
   childProcess.on('message', (data) => {
-    console.log(chalk.green.bold('—◉ㅤRECIBIDO:'), data);
+    console.log(chalk.green.bold('—◉ㅤDITERIMA:'), data);
     switch (data) {
       case 'reset':
-        console.log(chalk.yellow.bold('—◉ㅤSolicitud de reinicio recibida...'));
+        console.log(chalk.yellow.bold('—◉ㅤPermintaan restart diterima...'));
         childProcess.removeAllListeners();
         childProcess.kill('SIGTERM');
         isRunning = false;
@@ -118,12 +118,12 @@ function forkProcess(file) {
   });
 
   childProcess.on('exit', (code, signal) => {
-    console.log(chalk.yellow.bold(`—◉ㅤProceso secundario terminado (${code || signal})`));
+    console.log(chalk.yellow.bold(`—◉ㅤProses sekunder selesai (${code || signal})`));
     isRunning = false;
     childProcess = null;
     
     if (code !== 0 || signal === 'SIGTERM') {
-      console.log(chalk.yellow.bold('—◉ㅤReiniciando proceso...'));
+      console.log(chalk.yellow.bold('—◉ㅤMemulai ulang proses...'));
       setTimeout(() => start(file), 1000);
     }
   });
@@ -139,6 +139,6 @@ function forkProcess(file) {
 try {
   start('main.js');
 } catch (error) {
-  console.error(chalk.red.bold('[ ERROR CRÍTICO ]:'), error);
+  console.error(chalk.red.bold('[ KESALAHAN KRITIS ]:'), error);
   process.exit(1);
 }
