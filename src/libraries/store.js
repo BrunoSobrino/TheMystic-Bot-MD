@@ -4,7 +4,6 @@
  * - intercept pino (stdout/stderr) para detectar "error in handling message"
  * - espera robusta por ws y múltiple reintento de sendRetryRequest
  * - logs [LID-DEBUG] siempre activos
- * - NUEVO: Procesamiento de texto para reemplazar LIDs en menciones, textos y captions
  *
  * Reemplaza tu store.js con este archivo y reinicia el bot.
  */
@@ -120,47 +119,6 @@ function makeInMemoryStore() {
     } catch (e) {
       return jid;
     }
-  }
-
-  // -------------------------
-  // NUEVO: Procesamiento de texto para resolver LIDs en menciones
-  // -------------------------
-  async function processTextMentions(text, groupId) {
-    if (!text || !groupId || !text.includes('@')) return text;
-
-    const mentionRegex = /@(\d{8,20})/g;
-    const mentions = [...text.matchAll(mentionRegex)];
-
-    if (!mentions.length) return text;
-
-    let processedText = text;
-    const processedMentions = new Set(); // Evitar procesar la misma mención múltiples veces
-
-    for (const mention of mentions) {
-      const [fullMatch, lidNumber] = mention;
-      
-      // Evitar duplicados
-      if (processedMentions.has(lidNumber)) continue;
-      processedMentions.add(lidNumber);
-      
-      const lidJid = `${lidNumber}@lid`;
-
-      try {
-        const resolvedJid = await resolveLidFromCache(lidJid, groupId);
-        if (resolvedJid && resolvedJid !== lidJid && !resolvedJid.endsWith('@lid')) {
-          const resolvedNumber = resolvedJid.split('@')[0];
-          
-          // Reemplazar TODAS las ocurrencias de esta mención en el texto
-          const globalRegex = new RegExp(`@${lidNumber}`, 'g');
-          processedText = processedText.replace(globalRegex, `@${resolvedNumber}`);
-          console.log(`[LID-DEBUG] processTextMentions: reemplazado @${lidNumber} -> @${resolvedNumber}`);
-        }
-      } catch (error) {
-        console.error(`[LID-DEBUG] Error procesando mención LID ${lidNumber}:`, error?.message || error);
-      }
-    }
-
-    return processedText;
   }
 
   // -------------------------
@@ -436,7 +394,7 @@ function makeInMemoryStore() {
   }
 
   // -------------------------
-  // processMessageLids (resolver LIDs dentro de mensajes descifrados) - MEJORADO CON TEXTO
+  // processMessageLids (resolver LIDs dentro de mensajes descifrados)
   // -------------------------
   async function processMessageLids(message) {
     try {
@@ -460,40 +418,6 @@ function makeInMemoryStore() {
           const msgContent = processedMessage.message[msgType];
           if (!msgContent) continue;
 
-          // -------------------------
-          // NUEVO: Procesar texto principal (conversation, text)
-          // -------------------------
-          if (msgType === 'conversation') {
-            const originalText = processedMessage.message[msgType];
-            const processedText = await processTextMentions(originalText, groupChatId);
-            if (processedText !== originalText) {
-              processedMessage.message[msgType] = processedText;
-              console.log(`[LID-DEBUG] Procesado texto conversation: menciones LID reemplazadas`);
-            }
-          }
-
-          if (msgContent?.text) {
-            const originalText = msgContent.text;
-            const processedText = await processTextMentions(originalText, groupChatId);
-            if (processedText !== originalText) {
-              msgContent.text = processedText;
-              console.log(`[LID-DEBUG] Procesado texto text: menciones LID reemplazadas`);
-            }
-          }
-
-          // -------------------------
-          // NUEVO: Procesar caption
-          // -------------------------
-          if (msgContent?.caption) {
-            const originalCaption = msgContent.caption;
-            const processedCaption = await processTextMentions(originalCaption, groupChatId);
-            if (processedCaption !== originalCaption) {
-              msgContent.caption = processedCaption;
-              console.log(`[LID-DEBUG] Procesado caption: menciones LID reemplazadas`);
-            }
-          }
-
-          // Procesar contextInfo existente
           if (msgContent?.contextInfo?.mentionedJid) {
             const resolvedMentions = [];
             for (const jid of msgContent.contextInfo.mentionedJid) {
@@ -510,47 +434,6 @@ function makeInMemoryStore() {
             const r = await resolveLidFromCache(msgContent.contextInfo.participant, groupChatId);
             msgContent.contextInfo.participant = r;
             console.log(`[LID-DEBUG] Resuelto contextInfo.participant -> ${r}`);
-          }
-
-          // -------------------------
-          // NUEVO: Procesar mensajes citados (quotedMessage)
-          // -------------------------
-          if (msgContent?.contextInfo?.quotedMessage) {
-            const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
-            
-            for (const quotedType of quotedTypes) {
-              const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
-              if (!quotedContent) continue;
-
-              // Procesar texto en mensaje citado
-              if (quotedType === 'conversation') {
-                const originalQuotedText = msgContent.contextInfo.quotedMessage[quotedType];
-                const processedQuotedText = await processTextMentions(originalQuotedText, groupChatId);
-                if (processedQuotedText !== originalQuotedText) {
-                  msgContent.contextInfo.quotedMessage[quotedType] = processedQuotedText;
-                  console.log(`[LID-DEBUG] Procesado texto quotedMessage.conversation: menciones LID reemplazadas`);
-                }
-              }
-
-              if (quotedContent?.text) {
-                const originalQuotedText = quotedContent.text;
-                const processedQuotedText = await processTextMentions(originalQuotedText, groupChatId);
-                if (processedQuotedText !== originalQuotedText) {
-                  quotedContent.text = processedQuotedText;
-                  console.log(`[LID-DEBUG] Procesado texto quotedMessage.text: menciones LID reemplazadas`);
-                }
-              }
-
-              // Procesar caption en mensaje citado
-              if (quotedContent?.caption) {
-                const originalQuotedCaption = quotedContent.caption;
-                const processedQuotedCaption = await processTextMentions(originalQuotedCaption, groupChatId);
-                if (processedQuotedCaption !== originalQuotedCaption) {
-                  quotedContent.caption = processedQuotedCaption;
-                  console.log(`[LID-DEBUG] Procesado caption quotedMessage: menciones LID reemplazadas`);
-                }
-              }
-            }
           }
         }
       }
@@ -598,7 +481,58 @@ function makeInMemoryStore() {
         try {
           const metadata = await groupMetadataFunc?.(jid);
           if (metadata) Object.assign(chats[jid], { subject: metadata.subject, lastfetch: Date.now(), metadata });
-        } catch (err) { console.error('[STORE] Error al sobreescribir conn.ev.emit:', err && err.message ? err.message : err); }
+        } catch (err) { console.error('[STORE] Error fetchGroupMetadata:', err && err.message ? err.message : err); }
+      }
+      return chats[jid].metadata;
+    } catch (err) { console.error('[STORE] Error fetchGroupMetadata outer:', err && err.message ? err.message : err); }
+  }
+
+  function upsertMessage(jid, message, type = 'append') {
+    try {
+      jid = decodeJidSafe(jid);
+      if (!jid) return;
+      if (!(jid in messages)) messages[jid] = [];
+
+      delete message.message?.messageContextInfo;
+      delete message.message?.senderKeyDistributionMessage;
+
+      const existing = loadMessage(jid, message.key.id);
+      if (existing) {
+        if ((existing._isLidWebMessage || existing._lidDecryptError) && !message._isLidWebMessage && message.message && !message._finalError) {
+          console.log(`[LID-DEBUG] Reemplazando placeholder LID con mensaje real: ${message.key.id}`);
+          Object.assign(existing, message);
+          delete existing._isLidWebMessage; delete existing._lidDecryptError; delete existing._retryCount; delete existing._originalNode;
+          pendingDecryption.delete(message.key.id); errorStats.successfulRetries++;
+        } else Object.assign(existing, message);
+      } else {
+        if (type === 'append') messages[jid].push(message); else messages[jid].unshift(message);
+      }
+    } catch (err) { console.error('[STORE] Error upsertMessage:', err && err.message ? err.message : err); }
+  }
+
+  // -------------------------
+  // bind(connection)
+  // -------------------------
+  function bind(connection) {
+    conn = connection;
+    if (!conn.chats) conn.chats = {};
+
+    loadLidCache();
+
+    // intercept conn.ev.emit only for extra logs, do not suppress
+    try {
+      if (conn.ev && typeof conn.ev.emit === 'function') {
+        const originalEmit = conn.ev.emit.bind(conn.ev);
+        conn.ev.emit = function (event, ...args) {
+          try {
+            if (event === 'connection.update' && args[0]?.lastDisconnect?.error?.message?.includes?.('error in handling message')) {
+              console.log('[LID-DEBUG] connection.update interceptado: error in handling message (registrado extra)');
+            }
+          } catch (e) {}
+          return originalEmit(event, ...args);
+        };
+      }
+    } catch (err) { console.error('[STORE] Error al sobreescribir conn.ev.emit:', err && err.message ? err.message : err); }
 
     // envolver conn.ws.on (CB:message / message)
     try {
@@ -897,64 +831,11 @@ function makeInMemoryStore() {
         return retriedCount;
       },
       clearErrors() { const cleared = { pendingDecryption: pendingDecryption.size, errorStats: { ...errorStats } }; pendingDecryption.clear(); errorStats = { lidDecryptionErrors: 0, webDesktopErrors: 0, successfulRetries: 0, totalRetries: 0 }; return cleared; },
-      getStatus() { return { lidCache: lidCache.size, jidMappings: jidToLidMap.size, pendingDecryption: pendingDecryption.size, errorStats, isDirty, cacheFile }; },
-      // NUEVA FUNCIONALIDAD: Exponer función de procesamiento de texto
-      async processTextMentions(text, groupId) { return await processTextMentions(text, groupId); }
+      getStatus() { return { lidCache: lidCache.size, jidMappings: jidToLidMap.size, pendingDecryption: pendingDecryption.size, errorStats, isDirty, cacheFile }; }
     },
     getErrorStats,
     cleanupPendingMessages
   };
 } // makeInMemoryStore
 
-export default makeInMemoryStore();.error('[STORE] Error fetchGroupMetadata:', err && err.message ? err.message : err); }
-      }
-      return chats[jid].metadata;
-    } catch (err) { console.error('[STORE] Error fetchGroupMetadata outer:', err && err.message ? err.message : err); }
-  }
-
-  function upsertMessage(jid, message, type = 'append') {
-    try {
-      jid = decodeJidSafe(jid);
-      if (!jid) return;
-      if (!(jid in messages)) messages[jid] = [];
-
-      delete message.message?.messageContextInfo;
-      delete message.message?.senderKeyDistributionMessage;
-
-      const existing = loadMessage(jid, message.key.id);
-      if (existing) {
-        if ((existing._isLidWebMessage || existing._lidDecryptError) && !message._isLidWebMessage && message.message && !message._finalError) {
-          console.log(`[LID-DEBUG] Reemplazando placeholder LID con mensaje real: ${message.key.id}`);
-          Object.assign(existing, message);
-          delete existing._isLidWebMessage; delete existing._lidDecryptError; delete existing._retryCount; delete existing._originalNode;
-          pendingDecryption.delete(message.key.id); errorStats.successfulRetries++;
-        } else Object.assign(existing, message);
-      } else {
-        if (type === 'append') messages[jid].push(message); else messages[jid].unshift(message);
-      }
-    } catch (err) { console.error('[STORE] Error upsertMessage:', err && err.message ? err.message : err); }
-  }
-
-  // -------------------------
-  // bind(connection)
-  // -------------------------
-  function bind(connection) {
-    conn = connection;
-    if (!conn.chats) conn.chats = {};
-
-    loadLidCache();
-
-    // intercept conn.ev.emit only for extra logs, do not suppress
-    try {
-      if (conn.ev && typeof conn.ev.emit === 'function') {
-        const originalEmit = conn.ev.emit.bind(conn.ev);
-        conn.ev.emit = function (event, ...args) {
-          try {
-            if (event === 'connection.update' && args[0]?.lastDisconnect?.error?.message?.includes?.('error in handling message')) {
-              console.log('[LID-DEBUG] connection.update interceptado: error in handling message (registrado extra)');
-            }
-          } catch (e) {}
-          return originalEmit(event, ...args);
-        };
-      }
-    } catch (err) { console
+export default makeInMemoryStore();
