@@ -2,13 +2,14 @@
  * store.js
  * Enhanced WhatsApp Store with specialized LID handling + always-on debug logs
  * Reemplaza directamente tu store.js con este archivo (todo incluido)
+ *
+ * Nota: usa import dinámico de baileys (await import('baileys')).default como pediste.
  */
 
 import fs from 'fs';
 import path from 'path';
 
-// Nota: usamos import dinámico para compatibilidad con entornos ESM / baileys
-const baileysMod = (await import('baileys')).default;
+const baileys = (await import('baileys')).default;
 const {
   BufferJSON,
   proto,
@@ -17,7 +18,7 @@ const {
   updateMessageWithReceipt,
   updateMessageWithReaction,
   jidNormalizedUser
-} = baileysMod;
+} = baileys;
 
 const TIME_TO_DATA_STALE = 5 * 60 * 1000;
 const RETRY_DELAY = 3000; // ms
@@ -501,6 +502,37 @@ function makeInMemoryStore() {
       if (conn.ws && typeof conn.ws.on === 'function') {
         const originalOn = conn.ws.on.bind(conn.ws);
         conn.ws.on = function (event, handler) {
+          // Interceptar CB:message (Baileys internal) y message
+          if (event === 'CB:message') {
+            const wrappedCBHandler = async function (node) {
+              try {
+                // node puede venir como objeto con .attrs
+                if (node && node.attrs && node.attrs.addressing_mode === 'lid') {
+                  console.log('[LID-DEBUG] Mensaje con addressing_mode=lid detectado (CB:message)');
+                  try {
+                    const placeholder = await handleLidMessage(node);
+                    if (placeholder) {
+                      const jid = node.attrs.from;
+                      upsertMessage(jid, proto.WebMessageInfo.fromObject(placeholder), 'append');
+
+                      // Registrar en pendingDecryption
+                      pendingDecryption.set(node.attrs.id, { originalNode: node, retryCount: 0, lastRetry: Date.now() });
+
+                      // Iniciar retries
+                      setTimeout(() => retryLidDecryption(node.attrs.id, node, 0), 1000);
+                    }
+                  } catch (inner) {
+                    console.error('[LID-DEBUG] Error creando placeholder desde CB:message:', inner && inner.message ? inner.message : inner);
+                  }
+                }
+              } catch (e) {
+                console.error('[LID-DEBUG] Error en wrapped CB:message handler:', e && e.message ? e.message : e);
+              }
+              return handler(node);
+            };
+            return originalOn(event, wrappedCBHandler);
+          }
+
           if (event === 'message') {
             const wrappedHandler = async function (data) {
               try {
@@ -534,6 +566,7 @@ function makeInMemoryStore() {
             };
             return originalOn(event, wrappedHandler);
           }
+
           return originalOn(event, handler);
         };
       }
@@ -929,4 +962,3 @@ function makeInMemoryStore() {
 }
 
 export default makeInMemoryStore();
-
