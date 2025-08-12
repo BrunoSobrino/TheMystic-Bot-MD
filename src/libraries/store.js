@@ -40,7 +40,7 @@ function makeInMemoryStore() {
   let state = { connection: 'close' };
   let conn = null;
 
-  const cacheFile = path.join(process.cwd(), 'lidsresolve.json');
+  const cacheFile = path.join(process.cwd(), 'src/lidsresolve.json');
   let lidCache = new Map();
   let jidToLidMap = new Map();
   let isDirty = false;
