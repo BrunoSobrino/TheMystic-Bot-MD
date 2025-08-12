@@ -73,6 +73,25 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 if (shouldSendAsDocument) {
                     const sizeMB = (audioSize / (1024 * 1024)).toFixed(2);
                     await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
+                    
+                    // ENVÍO DIRECTO COMO DOCUMENTO - SIN prepareWAMessageMedia
+                    await conn.sendMessage(m.chat, {
+                        document: taggedBuffer,
+                        fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
+                        mimetype: 'audio/mpeg',
+                        contextInfo: {
+                            externalAdReply: {
+                                title: video.title.substring(0, 64),
+                                body: `${video.author.name} • Audio de YouTube`,
+                                thumbnailUrl: video.thumbnail,
+                                sourceUrl: video.url,
+                                mediaType: 2,
+                                renderLargerThumbnail: false
+                            }
+                        }
+                    }, { quoted: m });
+                    
+                    return; // IMPORTANTE: Salir aquí para evitar el código de abajo
                 }
 
                 let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
@@ -120,53 +139,51 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                             }
                         }
                     }, { quoted: m });
-                } else {
-                    // ENVÍO NORMAL PARA ARCHIVOS PEQUEÑOS (SIN CAMBIOS)
-                    const audioPath = join(tmpDir, `${video.videoId}.mp3`);
-                    writeFileSync(audioPath, taggedBuffer);
+                // ENVÍO NORMAL PARA ARCHIVOS PEQUEÑOS (CÓDIGO ORIGINAL)
+                const audioPath = join(tmpDir, `${video.videoId}.mp3`);
+                writeFileSync(audioPath, taggedBuffer);
 
-                    try {
-                        const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-                        const documentMessage = await prepareWAMessageMedia({ 
-                            document: {
-                                url: audioPath,
-                                mimetype: 'audio/mpeg',
-                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                                fileLength: taggedBuffer.length,
-                                title: video.title.substring(0, 64), 
-                                ptt: false 
-                            }
-                        }, { upload: conn.waUploadToServer, mediaType: 'document' });
-
-                        const mesg = generateWAMessageFromContent(m.chat, {
-                            documentMessage: {
-                                ...documentMessage.documentMessage,
-                                mimetype: 'audio/mpeg',
-                                title: video.title.substring(0, 64),
-                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                                jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-                                mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-                            }
-                        }, { userJid: conn.user.jid, quoted: m });
-                        
-                        await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    } catch (mediaError) {
-                        cleanupResources();
-                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed') || mediaError.message.includes('ENOSPC') || mediaError.code === 'ENOSPC') {
-                            await conn.sendMessage(m.chat, {
-                                document: readFileSync(audioPath),
-                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
-                                mimetype: 'audio/mpeg'
-                            }, { quoted: m });
-                        } else {
-                            throw mediaError;
+                try {
+                    const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                    const documentMessage = await prepareWAMessageMedia({ 
+                        document: {
+                            url: audioPath,
+                            mimetype: 'audio/mpeg',
+                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                            fileLength: taggedBuffer.length,
+                            title: video.title.substring(0, 64), 
+                            ptt: false 
                         }
-                    }
+                    }, { upload: conn.waUploadToServer, mediaType: 'document' });
 
-                    setTimeout(() => {
-                        if (existsSync(audioPath)) unlinkSync(audioPath);
-                    }, 5000);
+                    const mesg = generateWAMessageFromContent(m.chat, {
+                        documentMessage: {
+                            ...documentMessage.documentMessage,
+                            mimetype: 'audio/mpeg',
+                            title: video.title.substring(0, 64),
+                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
+                            jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
+                            mediaKeyTimestamp: Math.floor(Date.now() / 1000),
+                        }
+                    }, { userJid: conn.user.jid, quoted: m });
+                    
+                    await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
+                } catch (mediaError) {
+                    cleanupResources();
+                    if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed') || mediaError.message.includes('ENOSPC') || mediaError.code === 'ENOSPC') {
+                        await conn.sendMessage(m.chat, {
+                            document: readFileSync(audioPath),
+                            fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
+                            mimetype: 'audio/mpeg'
+                        }, { quoted: m });
+                    } else {
+                        throw mediaError;
+                    }
                 }
+
+                setTimeout(() => {
+                    if (existsSync(audioPath)) unlinkSync(audioPath);
+                }, 5000);
 
             } catch (audioError) {
                 console.error('Audio error:', audioError);
@@ -213,45 +230,44 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     }, { quoted: m });
                     
                 } else {
-                    // ENVÍO NORMAL PARA VIDEOS PEQUEÑOS (CON FFMPEG)
-                    const rawPath = join(tmpDir, `${id}_raw.mp4`);
-                    const fixedPath = join(tmpDir, `${id}_fixed.mp4`);
+                // ENVÍO NORMAL PARA VIDEOS PEQUEÑOS (CON FFMPEG) - CÓDIGO ORIGINAL
+                const rawPath = join(tmpDir, `${id}_raw.mp4`);
+                const fixedPath = join(tmpDir, `${id}_fixed.mp4`);
 
-                    writeFileSync(rawPath, videoBuffer);
+                writeFileSync(rawPath, videoBuffer);
 
-                    const stats = statSync(rawPath);
-                    if (stats.size === 0) throw new Error("Empty file");
+                const stats = statSync(rawPath);
+                if (stats.size === 0) throw new Error("Empty file");
 
-                    await new Promise((resolve, reject) => {
-                        ffmpeg(rawPath)
-                            .outputOptions([
-                                '-c copy',
-                                '-avoid_negative_ts make_zero',
-                                '-fflags +genpts',
-                                '-movflags +faststart',
-                                '-map_metadata -1',
-                                '-threads 0'
-                            ])
-                            .on('end', resolve)
-                            .on('error', reject)
-                            .save(fixedPath);
+                await new Promise((resolve, reject) => {
+                    ffmpeg(rawPath)
+                        .outputOptions([
+                            '-c copy',
+                            '-avoid_negative_ts make_zero',
+                            '-fflags +genpts',
+                            '-movflags +faststart',
+                            '-map_metadata -1',
+                            '-threads 0'
+                        ])
+                        .on('end', resolve)
+                        .on('error', reject)
+                        .save(fixedPath);
+                });
+
+                const fixedVideoBuffer = readFileSync(fixedPath);
+
+                await conn.sendMessage(m.chat, { 
+                    video: fixedVideoBuffer, 
+                    caption: videoMetadata.title, 
+                    mimetype: 'video/mp4', 
+                    fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` 
+                }, { quoted: m });
+
+                setTimeout(() => {
+                    [rawPath, fixedPath].forEach(path => {
+                        if (existsSync(path)) unlinkSync(path);
                     });
-
-                    const fixedVideoBuffer = readFileSync(fixedPath);
-
-                    await conn.sendMessage(m.chat, { 
-                        video: fixedVideoBuffer, 
-                        caption: videoMetadata.title, 
-                        mimetype: 'video/mp4', 
-                        fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` 
-                    }, { quoted: m });
-
-                    setTimeout(() => {
-                        [rawPath, fixedPath].forEach(path => {
-                            if (existsSync(path)) unlinkSync(path);
-                        });
-                    }, 1000);
-                }
+                }, 1000);
 
             } catch (videoError) {
                 console.error('Video error:', videoError);
