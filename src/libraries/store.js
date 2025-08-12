@@ -1,17 +1,17 @@
 /*
- * store.js completo
- * - Intercepta logs JSON (pino) de Baileys para detectar "error in handling message"
- * - Registra siempre [LID-DEBUG] cuando el nodo tiene addressing_mode='lid'
- * - Crea placeholder y ejecuta reintentos automáticos
- * - No exporta funciones internas de debugging
+ * store.js completo (listo para copiar/pegar)
+ * - Usa await import('baileys').default
+ * - Intercepta pino (stdout/stderr) para detectar "error in handling message"
+ * - Detecta CB:message y message
+ * - Prefiere participant_pn siempre que exista
+ * - Retry robusto esperando ws listo
  *
- * Reemplaza tu store.js con este archivo.
+ * Reemplaza tu store.js por este archivo.
  */
 
 import fs from 'fs';
 import path from 'path';
 
-// importar baileys como pediste (await import(...).default)
 const baileys = (await import('baileys')).default;
 const {
   BufferJSON,
@@ -24,19 +24,21 @@ const {
 } = baileys;
 
 const TIME_TO_DATA_STALE = 5 * 60 * 1000;
-const RETRY_DELAY = 3000; // ms
+const RETRY_DELAY = 3000; // ms base
 const MAX_RETRIES = 5;
+const WS_WAIT_TIMEOUT = 10000; // ms máximo a esperar por ws ready
+const WS_WAIT_STEP = 300; // ms poll interval
 
 function makeInMemoryStore() {
-  /**********************
-   * Estado interno
-   **********************/
+  // -------------------------
+  // Estado interno
+  // -------------------------
   let chats = {};
   let messages = {};
   let contacts = {};
   let state = { connection: 'close' };
-
   let conn = null;
+
   const cacheFile = path.join(process.cwd(), 'lidsresolve.json');
   let lidCache = new Map();
   let jidToLidMap = new Map();
@@ -50,33 +52,29 @@ function makeInMemoryStore() {
     totalRetries: 0
   };
 
-  /**********************
-   * Wrapper de stdout/stderr para capturar logs JSON (pino)
-   * Llega antes o después de que Baileys los imprima; los reimprimimos y además
-   * disparamos nuestro flujo de debug cuando detectemos "error in handling message"
-   **********************/
+  // -------------------------
+  // pino / stdout intercept (captura logs JSON de Baileys)
+  // -------------------------
   let stdoutBuffer = '';
   let stderrBuffer = '';
-  let pinoLineHandler = null; // se asigna más abajo, cuando handleLidMessage esté definido
+  let pinoLineHandler = null;
 
   const origStdoutWrite = process.stdout.write.bind(process.stdout);
   process.stdout.write = (chunk, ...args) => {
     try {
       const s = chunk instanceof Buffer ? chunk.toString('utf8') : String(chunk);
       stdoutBuffer += s;
-      // procesar línea por línea
       let newlineIndex;
       while ((newlineIndex = stdoutBuffer.indexOf('\n')) >= 0) {
         const line = stdoutBuffer.slice(0, newlineIndex);
         stdoutBuffer = stdoutBuffer.slice(newlineIndex + 1);
-        // intentar parsear JSON (pino suele imprimir una línea JSON por log)
         try {
           const obj = JSON.parse(line);
           if (pinoLineHandler) {
             try { pinoLineHandler(obj, line); } catch (_) {}
           }
         } catch (e) {
-          // no JSON: ignorar
+          // no JSON
         }
         origStdoutWrite(line + '\n', ...args);
       }
@@ -109,9 +107,9 @@ function makeInMemoryStore() {
     }
   };
 
-  /**********************
-   * Utilidades básicas
-   **********************/
+  // -------------------------
+  // Utilidades
+  // -------------------------
   function decodeJidSafe(jid) {
     try {
       if (!jid) return jid;
@@ -122,9 +120,9 @@ function makeInMemoryStore() {
     }
   }
 
-  /**********************
-   * Cache LID persistente
-   **********************/
+  // -------------------------
+  // Cache LID persistente
+  // -------------------------
   function loadLidCache() {
     try {
       if (fs.existsSync(cacheFile)) {
@@ -160,9 +158,9 @@ function makeInMemoryStore() {
   }
   setInterval(() => { if (isDirty) saveLidCache(); }, 30 * 1000);
 
-  /**********************
-   * Resolver LID
-   **********************/
+  // -------------------------
+  // Resolver LID (usa cache, jidToLidMap, groupMetadata fallback)
+  // -------------------------
   async function resolveLidFromCache(lidJid, groupChatId) {
     try {
       console.log(`[LID-DEBUG] Resolviendo LID: ${lidJid} (group: ${groupChatId})`);
@@ -206,6 +204,7 @@ function makeInMemoryStore() {
             } catch (_) { continue; }
           }
         } catch (e) {
+          // many setups show "forbidden" here (bot not allowed to fetch metadata) — lo registramos y seguimos
           console.error(`[LID-DEBUG] Error consultando metadata: ${e && e.message ? e.message : e}`);
         }
       }
@@ -218,17 +217,9 @@ function makeInMemoryStore() {
     }
   }
 
-  /**********************
-   * Detectores y extractores
-   **********************/
-  function isWebDesktopMessage(messageNode) {
-    if (!messageNode || !messageNode.attrs) return false;
-    const a = messageNode.attrs;
-    const res = a.addressing_mode === 'lid' && a.participant?.includes?.('@lid');
-    console.log(`[LID-DEBUG] isWebDesktopMessage(${a.id}) => ${res}`);
-    return res;
-  }
-
+  // -------------------------
+  // Extract real JID (participant_pn priority)
+  // -------------------------
   function extractRealJid(messageAttrs) {
     try {
       if (!messageAttrs) return null;
@@ -247,13 +238,13 @@ function makeInMemoryStore() {
       return messageAttrs.participant;
     } catch (err) {
       console.error('[LID-DEBUG] Error en extractRealJid:', err && err.message ? err.message : err);
-      return messageAttrs.participant;
+      return messageAttrs?.participant;
     }
   }
 
-  /**********************
-   * Crear placeholder y reintentos
-   **********************/
+  // -------------------------
+  // Crear placeholder (AHORA: prefiere participant_pn si resolve falla)
+  // -------------------------
   async function handleLidMessage(messageNode, isRetry = false) {
     if (!messageNode || !messageNode.attrs) return null;
     const attrs = messageNode.attrs;
@@ -264,16 +255,23 @@ function makeInMemoryStore() {
 
     console.log(`[LID-DEBUG] handleLidMessage: id=${messageId} group=${groupJid} lidParticipant=${lidParticipant} realJid=${realJid} retry=${isRetry}`);
 
-    let resolvedJid = realJid;
+    // Intentar resolver LID
+    let resolved = lidParticipant;
     if (lidParticipant?.endsWith?.('@lid')) {
-      resolvedJid = await resolveLidFromCache(lidParticipant, groupJid);
-      console.log(`[LID-DEBUG] handleLidMessage: resolvedJid=${resolvedJid}`);
+      const maybe = await resolveLidFromCache(lidParticipant, groupJid);
+      // Si la resolución devolvió un fallback que aún es @lid, preferimos usar participant_pn (si existe)
+      if (maybe && !maybe.endsWith?.('@lid')) resolved = maybe;
+      else if (realJid) resolved = realJid;
+      else resolved = maybe;
+      console.log(`[LID-DEBUG] handleLidMessage: resolvedCandidate=${maybe} finalResolved=${resolved}`);
+    } else {
+      resolved = realJid || lidParticipant;
     }
 
     const messageTimestamp = parseInt(attrs.t || `${Math.floor(Date.now() / 1000)}`);
 
     const placeholder = {
-      key: { remoteJid: groupJid, fromMe: false, id: messageId, participant: resolvedJid || realJid },
+      key: { remoteJid: groupJid, fromMe: false, id: messageId, participant: resolved || realJid },
       messageTimestamp,
       pushName: attrs.notify || 'Usuario Web',
       message: {
@@ -285,7 +283,7 @@ function makeInMemoryStore() {
       status: proto.WebMessageInfo.Status?.PENDING || 0,
       _isLidWebMessage: true,
       _originalNode: messageNode,
-      _resolvedJid: resolvedJid,
+      _resolvedJid: resolved,
       _realJid: realJid,
       _retryCount: isRetry ? (pendingDecryption.get(messageId)?.retryCount || 0) + 1 : 0
     };
@@ -294,6 +292,28 @@ function makeInMemoryStore() {
     return placeholder;
   }
 
+  // -------------------------
+  // Esperar ws ready con timeout
+  // -------------------------
+  function waitForWsReady(timeout = WS_WAIT_TIMEOUT) {
+    return new Promise((resolve) => {
+      const start = Date.now();
+      const check = () => {
+        try {
+          if (conn && conn.ws && conn.ws.readyState === 1) return resolve(true);
+          if (Date.now() - start > timeout) return resolve(false);
+          setTimeout(check, WS_WAIT_STEP);
+        } catch (e) {
+          return resolve(false);
+        }
+      };
+      check();
+    });
+  }
+
+  // -------------------------
+  // Retry robusto: espera ws, intenta sendRetryRequest si disponible
+  // -------------------------
   async function retryLidDecryption(messageId, originalNode, retryCount = 0) {
     try {
       console.log(`[LID-DEBUG] retryLidDecryption: id=${messageId} retry=${retryCount}`);
@@ -322,28 +342,37 @@ function makeInMemoryStore() {
 
       setTimeout(async () => {
         try {
-          if (conn && conn.ws && conn.ws.readyState === 1) {
-            const groupJid = originalNode.attrs.from;
-            const participantJid = extractRealJid(originalNode.attrs);
-            console.log(`[LID-DEBUG] Enviando retry request (sendRetryRequest) para id=${messageId} group=${groupJid} participant=${participantJid}`);
-            try {
-              if (typeof conn.sendRetryRequest === 'function') {
-                await conn.sendRetryRequest(groupJid, messageId, participantJid);
-                console.log(`[LID-DEBUG] Retry request enviado para id=${messageId}`);
-              } else {
-                console.log('[LID-DEBUG] conn.sendRetryRequest no disponible en esta versión de baileys');
-              }
-            } catch (retryErr) {
-              console.error(`[LID-DEBUG] Error enviando retry request: ${retryErr && retryErr.message ? retryErr.message : retryErr}`);
-            }
-          } else {
-            console.log('[LID-DEBUG] Conexión no disponible o ws no lista para enviar retry');
+          // esperar ws listo (hasta WS_WAIT_TIMEOUT)
+          const wsReady = await waitForWsReady();
+          if (!wsReady) {
+            console.log(`[LID-DEBUG] ws no listo después de esperar; reintentando schedule para id=${messageId}`);
+            // reprogramar el retry más adelante (incremental)
+            setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), RETRY_DELAY * (retryCount + 2));
+            return;
           }
 
+          // ahora intentar enviar retry request
+          const groupJid = originalNode.attrs.from;
+          const participantJid = extractRealJid(originalNode.attrs);
+          console.log(`[LID-DEBUG] ws listo — intentando sendRetryRequest para id=${messageId} group=${groupJid} participant=${participantJid}`);
+
+          try {
+            if (typeof conn.sendRetryRequest === 'function') {
+              await conn.sendRetryRequest(groupJid, messageId, participantJid);
+              console.log(`[LID-DEBUG] Retry request enviado para id=${messageId}`);
+            } else {
+              console.log('[LID-DEBUG] conn.sendRetryRequest no disponible en esta versión de baileys — no se pudo enviar retry request');
+            }
+          } catch (retryErr) {
+            console.error(`[LID-DEBUG] Error enviando retry request: ${retryErr && retryErr.message ? retryErr.message : retryErr}`);
+          }
+
+          // schedule next incremental attempt
           setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), RETRY_DELAY * (retryCount + 2));
         } catch (err) {
           console.error('[LID-DEBUG] Error en setTimeout de retryLidDecryption:', err && err.message ? err.message : err);
-          retryLidDecryption(messageId, originalNode, retryCount + 1);
+          // intentar siguiente retry
+          setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), RETRY_DELAY * (retryCount + 2));
         }
       }, waitMs);
 
@@ -354,9 +383,9 @@ function makeInMemoryStore() {
     }
   }
 
-  /**********************
-   * Procesar mensajes ya descifrados (resolver LID internamente)
-   **********************/
+  // -------------------------
+  // Resolver LIDs dentro de mensajes ya decifrados
+  // -------------------------
   async function processMessageLids(message) {
     try {
       if (!message || !message.key) return message;
@@ -370,6 +399,8 @@ function makeInMemoryStore() {
         if (resolved && resolved !== processedMessage.key.participant) {
           console.log(`[LID-DEBUG] processMessageLids: reemplazando participant ${processedMessage.key.participant} -> ${resolved}`);
           processedMessage.key.participant = resolved;
+        } else if (processedMessage.key?.participant && processedMessage.key.participant.endsWith('@lid')) {
+          // fallback: si participant_pn está en context info / pushName, dejarlo
         }
       }
 
@@ -406,9 +437,9 @@ function makeInMemoryStore() {
     }
   }
 
-  /**********************
-   * Manejo en memoria (load/upsert/fetch)
-   **********************/
+  // -------------------------
+  // Mensajes en memoria
+  // -------------------------
   function loadMessage(jid, id = null) {
     try {
       if (!jid) return null;
@@ -462,56 +493,45 @@ function makeInMemoryStore() {
         if ((existing._isLidWebMessage || existing._lidDecryptError) && !message._isLidWebMessage && message.message && !message._finalError) {
           console.log(`[LID-DEBUG] Reemplazando placeholder LID con mensaje real: ${message.key.id}`);
           Object.assign(existing, message);
-          delete existing._isLidWebMessage;
-          delete existing._lidDecryptError;
-          delete existing._retryCount;
-          delete existing._originalNode;
-          pendingDecryption.delete(message.key.id);
-          errorStats.successfulRetries++;
+          delete existing._isLidWebMessage; delete existing._lidDecryptError; delete existing._retryCount; delete existing._originalNode;
+          pendingDecryption.delete(message.key.id); errorStats.successfulRetries++;
         } else Object.assign(existing, message);
       } else {
-        if (type === 'append') messages[jid].push(message);
-        else messages[jid].unshift(message);
+        if (type === 'append') messages[jid].push(message); else messages[jid].unshift(message);
       }
     } catch (err) { console.error('[STORE] Error upsertMessage:', err && err.message ? err.message : err); }
   }
 
-  /**********************
-   * bind(connection)
-   * - instala wrappers de ws.on (CB:message / message)
-   * - registra eventos 'messages.upsert' etc.
-   **********************/
+  // -------------------------
+  // bind: conectar store a la conexión
+  // -------------------------
   function bind(connection) {
     conn = connection;
     if (!conn.chats) conn.chats = {};
 
-    // cargar cache de lids
+    // cargar cache
     loadLidCache();
 
-    // 1) interceptar conn.ev.emit para suprimir/loguear ciertos errores (opcional)
+    // intercept conn.ev.emit para log extra (no lo bloqueamos)
     try {
       if (conn.ev && typeof conn.ev.emit === 'function') {
         const originalEmit = conn.ev.emit.bind(conn.ev);
         conn.ev.emit = function (event, ...args) {
           try {
             if (event === 'connection.update' && args[0]?.lastDisconnect?.error?.message?.includes?.('error in handling message')) {
-              console.log('[LID-DEBUG] connection.update interceptado: error in handling message (suppressing propagation)');
-              // no return; queremos que la app se comporte igual, sólo logueamos extra
+              console.log('[LID-DEBUG] connection.update interceptado: error in handling message (registrado extra)');
             }
-          } catch (e) { /* ignore */ }
+          } catch (e) {}
           return originalEmit(event, ...args);
         };
       }
-    } catch (err) {
-      console.error('[STORE] Error al sobreescribir conn.ev.emit:', err && err.message ? err.message : err);
-    }
+    } catch (err) { console.error('[STORE] Error al sobreescribir conn.ev.emit:', err && err.message ? err.message : err); }
 
-    // 2) envolver conn.ws.on para CB:message y message
+    // envolver conn.ws.on para CB:message y message
     try {
       if (conn.ws && typeof conn.ws.on === 'function') {
         const originalOn = conn.ws.on.bind(conn.ws);
         conn.ws.on = function (event, handler) {
-          // CB:message
           if (event === 'CB:message') {
             const wrappedCBHandler = async function (node) {
               try {
@@ -523,7 +543,8 @@ function makeInMemoryStore() {
                       const jid = node.attrs.from;
                       upsertMessage(jid, proto.WebMessageInfo.fromObject(placeholder), 'append');
                       pendingDecryption.set(node.attrs.id, { originalNode: node, retryCount: 0, lastRetry: Date.now() });
-                      setTimeout(() => retryLidDecryption(node.attrs.id, node, 0), 1000);
+                      setTimeout(() => retryLidDecryption(node.attrs.id, node, 0), 500);
+                      console.log(`[LID-DEBUG] Placeholder insertado y retry iniciado para id=${node.attrs.id}`);
                     }
                   } catch (inner) { console.error('[LID-DEBUG] Error creando placeholder desde CB:message:', inner && inner.message ? inner.message : inner); }
                 }
@@ -533,7 +554,6 @@ function makeInMemoryStore() {
             return originalOn(event, wrappedCBHandler);
           }
 
-          // message (raw)
           if (event === 'message') {
             const wrappedHandler = async function (data) {
               try {
@@ -548,7 +568,8 @@ function makeInMemoryStore() {
                       const jid = data.attrs.from;
                       upsertMessage(jid, proto.WebMessageInfo.fromObject(placeholder), 'append');
                       pendingDecryption.set(data.attrs.id, { originalNode: data, retryCount: 0, lastRetry: Date.now() });
-                      setTimeout(() => retryLidDecryption(data.attrs.id, data, 0), 1000);
+                      setTimeout(() => retryLidDecryption(data.attrs.id, data, 0), 500);
+                      console.log(`[LID-DEBUG] Placeholder insertado y retry iniciado para id=${data.attrs.id}`);
                     }
                     return;
                   }
@@ -562,13 +583,11 @@ function makeInMemoryStore() {
           return originalOn(event, handler);
         };
       }
-    } catch (err) {
-      console.error('[STORE] Error al envolver conn.ws.on:', err && err.message ? err.message : err);
-    }
+    } catch (err) { console.error('[STORE] Error al envolver conn.ws.on:', err && err.message ? err.message : err); }
 
-    /**********************
-     * Eventos de Baileys (messages.upsert etc.)
-     **********************/
+    // -------------------------
+    // eventos de baileys
+    // -------------------------
     try {
       conn.ev.on('messages.upsert', async ({ messages: newMessages, type }) => {
         try {
@@ -632,7 +651,7 @@ function makeInMemoryStore() {
         } catch (e) { console.error('[STORE] Error message-receipt.update:', e && e.message ? e.message : e); }
       });
 
-      // otros eventos (contacts,chats,groups,participants...) se mantienen
+      // other events (contacts, chats, groups, participants) - same as usual
       conn.ev.on('chats.set', ({ chats: newChats }) => {
         for (const chat of newChats) { const jid = decodeJidSafe(chat.id); if (!(jid in chats)) chats[jid] = { id: jid }; Object.assign(chats[jid], chat); conn.chats[jid] = chats[jid]; }
       });
@@ -667,14 +686,12 @@ function makeInMemoryStore() {
         conn.chats[jid] = chats[jid];
       });
 
-    } catch (e) {
-      console.error('[STORE] Error en bind - setup de eventos:', e && e.message ? e.message : e);
-    }
+    } catch (e) { console.error('[STORE] Error en bind - setup de eventos:', e && e.message ? e.message : e); }
   } // end bind
 
-  /**********************
-   * Update cache desde metadata de grupo
-   **********************/
+  // -------------------------
+  // updateLidCacheFromMetadata
+  // -------------------------
   async function updateLidCacheFromMetadata(metadata, groupJid) {
     try {
       if (!metadata?.participants || !conn) return;
@@ -685,21 +702,17 @@ function makeInMemoryStore() {
           const possibleLid = `${phoneNumber}:13@lid`;
           if (!lidCache.has(phoneNumber)) {
             const entry = { jid: participant.jid, lid: possibleLid, name: participant.jid.split('@')[0], timestamp: Date.now(), groupJid, inferred: true };
-            lidCache.set(phoneNumber, entry);
-            jidToLidMap.set(participant.jid, possibleLid);
-            isDirty = true;
+            lidCache.set(phoneNumber, entry); jidToLidMap.set(participant.jid, possibleLid); isDirty = true;
             console.log(`[LID-DEBUG] updateLidCacheFromMetadata: inferido ${possibleLid} -> ${participant.jid}`);
           }
         } catch (e) { /* ignore */ }
       }
-    } catch (err) {
-      console.error('[LID-DEBUG] Error updateLidCacheFromMetadata:', err && err.message ? err.message : err);
-    }
+    } catch (err) { console.error('[LID-DEBUG] Error updateLidCacheFromMetadata:', err && err.message ? err.message : err); }
   }
 
-  /**********************
-   * Estadísticas / limpieza
-   **********************/
+  // -------------------------
+  // Estadísticas y limpieza
+  // -------------------------
   function getErrorStats() {
     return { ...errorStats, pendingDecryption: pendingDecryption.size, cacheSize: lidCache.size, jidMappings: jidToLidMap.size, pendingMessages: Array.from(pendingDecryption.entries()).map(([id, data]) => ({ id, retryCount: data.retryCount, lastRetry: data.lastRetry })) };
   }
@@ -710,39 +723,35 @@ function makeInMemoryStore() {
     for (const [messageId, data] of pendingDecryption.entries()) {
       if (data.lastRetry && data.lastRetry < oneHourAgo) { pendingDecryption.delete(messageId); cleaned++; }
     }
-    if (cleaned) console.log(`[LID-DEBUG] cleanupPendingMessages limpió ${cleaned} entradas`);
+    if (cleaned) console.log(`[LID-DEBUG] cleanupPendingMessages limpió ${cleaned} entries`);
     return cleaned;
   }
   setInterval(cleanupPendingMessages, 30 * 60 * 1000);
 
-  /**********************
-   * Serialización
-   **********************/
+  // -------------------------
+  // Serialización
+  // -------------------------
   function toJSON() { return { chats, messages, contacts }; }
   function fromJSON(json) {
     Object.assign(chats, json.chats || {}); Object.assign(contacts, json.contacts || {});
     for (const jid in json.messages || {}) messages[jid] = (json.messages[jid] || []).map(m => m && proto.WebMessageInfo.fromObject(m)).filter(Boolean);
   }
 
-  /**********************
-   * Pino line handler: capta logs JSON de Baileys
-   * y dispara nuestro flujo cuando detecta "error in handling message"
-   **********************/
+  // -------------------------
+  // pino handler: detecta "error in handling message" y hace placeholder+retry
+  // -------------------------
   pinoLineHandler = async function (obj, rawLine) {
     try {
       if (!obj) return;
-      // detectar el caso que nos interesa
       const msgText = obj.msg || obj.message || '';
       if (typeof msgText === 'string' && msgText.includes('error in handling message') && obj.node) {
         try {
           const node = obj.node;
-          // imprimir datos claros
           const attrs = node.attrs || {};
           if (attrs.addressing_mode === 'lid' || attrs.participant?.includes?.('@lid') || attrs.participant_pn) {
             console.log('[LID-DEBUG] >>> pinoIntercept: error in handling message detectado por pino log');
             console.log('[LID-DEBUG] node.attrs:', JSON.stringify(attrs));
             try {
-              // Crear placeholder y lanzar retry automáticamente
               const placeholder = await handleLidMessage(node);
               if (placeholder && conn) {
                 const jid = attrs.from;
@@ -755,18 +764,14 @@ function makeInMemoryStore() {
               console.error('[LID-DEBUG] Error al crear placeholder desde pinoIntercept:', inner && inner.message ? inner.message : inner);
             }
           }
-        } catch (e) {
-          console.error('[LID-DEBUG] Error procesando obj.node en pinoLineHandler:', e && e.message ? e.message : e);
-        }
+        } catch (e) { console.error('[LID-DEBUG] Error procesando obj.node en pinoLineHandler:', e && e.message ? e.message : e); }
       }
-    } catch (e) {
-      // no bloquear
-    }
+    } catch (e) { /* no bloquear */ }
   };
 
-  /**********************
-   * API pública de la store (no exportamos funciones internas de debug)
-   **********************/
+  // -------------------------
+  // API pública
+  // -------------------------
   return {
     bind,
     loadMessage,
