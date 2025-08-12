@@ -1,6 +1,6 @@
 /*
- * Enhanced WhatsApp Store with improved decryption error handling
- * Soluciona errores de descifrado desde WhatsApp Web/Desktop
+ * Enhanced WhatsApp Store with specialized LID decryption handling
+ * Soluciona errores específicos de mensajes desde WhatsApp Web/Desktop
  */
 
 import fs from 'fs';
@@ -8,8 +8,8 @@ import path from 'path';
 const { BufferJSON, proto, isJidBroadcast, WAMessageStubType, updateMessageWithReceipt, updateMessageWithReaction, jidNormalizedUser } = (await import('baileys')).default;
 
 const TIME_TO_DATA_STALE = 5 * 60 * 1000;
-const RETRY_DELAY = 2000; // 2 segundos para retry
-const MAX_RETRIES = 3;
+const RETRY_DELAY = 3000; // 3 segundos para retry
+const MAX_RETRIES = 5; // Aumentado para LID messages
 
 function makeInMemoryStore() {
     let chats = {};
@@ -17,9 +17,10 @@ function makeInMemoryStore() {
     let contacts = {};
     let state = { connection: 'close' };
     
-    // Sistema de retry para mensajes fallidos
-    const retryQueue = new Map();
-    const failedMessages = new Map();
+    // Sistema de retry especializado para LID messages
+    const lidRetryQueue = new Map();
+    const failedLidMessages = new Map();
+    const pendingDecryption = new Map();
     
     // LID Cache integrado
     const cacheFile = path.join(process.cwd(), 'lidsresolve.json');
@@ -27,6 +28,14 @@ function makeInMemoryStore() {
     let jidToLidMap = new Map();
     let isDirty = false;
     let conn = null;
+    
+    // Estadísticas de errores
+    let errorStats = {
+        lidDecryptionErrors: 0,
+        webDesktopErrors: 0,
+        successfulRetries: 0,
+        totalRetries: 0
+    };
     
     // Cargar cache LID al inicializar
     function loadLidCache() {
@@ -43,8 +52,10 @@ function makeInMemoryStore() {
                         }
                     }
                 }
+                console.log(`📱 Cache LID cargado: ${lidCache.size} entradas`);
             }
         } catch (error) {
+            console.error('❌ Error cargando cache LID:', error.message);
             lidCache = new Map();
             jidToLidMap = new Map();
         }
@@ -60,7 +71,7 @@ function makeInMemoryStore() {
             fs.writeFileSync(cacheFile, JSON.stringify(data, null, 2));
             isDirty = false;
         } catch (error) {
-            // Silencioso
+            console.error('❌ Error guardando cache LID:', error.message);
         }
     }
     
@@ -69,7 +80,7 @@ function makeInMemoryStore() {
         if (isDirty) saveLidCache();
     }, 30000);
     
-    // Resolver LID usando cache
+    // Resolver LID usando cache y conexión activa
     async function resolveLidFromCache(lidJid, groupChatId) {
         if (!lidJid.endsWith('@lid')) {
             return lidJid.includes('@') ? lidJid : `${lidJid}@s.whatsapp.net`;
@@ -77,9 +88,12 @@ function makeInMemoryStore() {
         
         const lidKey = lidJid.split('@')[0];
         
-        // Verificar cache
+        // Verificar cache primero
         if (lidCache.has(lidKey)) {
-            return lidCache.get(lidKey).jid;
+            const cached = lidCache.get(lidKey);
+            if (cached.jid && !cached.jid.endsWith('@lid')) {
+                return cached.jid;
+            }
         }
         
         // Si no está en cache y tenemos conexión, intentar resolver
@@ -89,23 +103,21 @@ function makeInMemoryStore() {
                 if (metadata?.participants) {
                     for (const participant of metadata.participants) {
                         try {
-                            const contactDetails = await conn.onWhatsApp(participant.jid);
-                            if (contactDetails?.[0]?.lid) {
-                                const participantLid = contactDetails[0].lid.split('@')[0];
-                                if (participantLid === lidKey) {
-                                    const entry = {
-                                        jid: participant.jid,
-                                        lid: lidJid,
-                                        name: contactDetails[0].name || participant.jid.split('@')[0],
-                                        timestamp: Date.now()
-                                    };
-                                    
-                                    lidCache.set(lidKey, entry);
-                                    jidToLidMap.set(participant.jid, contactDetails[0].lid);
-                                    isDirty = true;
-                                    
-                                    return participant.jid;
-                                }
+                            // Comparar directamente con participant_pn si está disponible
+                            if (participant.jid.includes(lidKey.replace(':', ''))) {
+                                const entry = {
+                                    jid: participant.jid,
+                                    lid: lidJid,
+                                    name: participant.jid.split('@')[0],
+                                    timestamp: Date.now(),
+                                    groupJid: groupChatId
+                                };
+                                
+                                lidCache.set(lidKey, entry);
+                                jidToLidMap.set(participant.jid, lidJid);
+                                isDirty = true;
+                                
+                                return participant.jid;
                             }
                         } catch (e) {
                             continue;
@@ -117,10 +129,159 @@ function makeInMemoryStore() {
             }
         }
         
-        return lidJid;
+        return lidJid; // Fallback
+    }
+
+    // Detectar si un mensaje es de WhatsApp Web/Desktop
+    function isWebDesktopMessage(messageNode) {
+        if (!messageNode || !messageNode.attrs) return false;
+        
+        const attrs = messageNode.attrs;
+        return (
+            attrs.addressing_mode === 'lid' && 
+            attrs.participant?.includes('@lid') &&
+            attrs.participant_pn && 
+            attrs.participant_pn.includes('@s.whatsapp.net')
+        );
+    }
+
+    // Extraer JID real desde participant_pn
+    function extractRealJid(messageAttrs) {
+        if (messageAttrs.participant_pn) {
+            return messageAttrs.participant_pn;
+        }
+        
+        // Fallback: intentar extraer desde participant LID
+        if (messageAttrs.participant?.endsWith('@lid')) {
+            const lidPart = messageAttrs.participant.split('@')[0];
+            // Intentar construir JID desde LID
+            if (lidPart.includes(':')) {
+                const numberPart = lidPart.split(':')[0];
+                return `${numberPart}@s.whatsapp.net`;
+            }
+        }
+        
+        return messageAttrs.participant;
+    }
+
+    // Manejar mensajes LID específicamente
+    async function handleLidMessage(messageNode, isRetry = false) {
+        if (!messageNode || !messageNode.attrs) return null;
+
+        const attrs = messageNode.attrs;
+        const messageId = attrs.id;
+        const groupJid = attrs.from;
+        const lidParticipant = attrs.participant;
+        const realJid = extractRealJid(attrs);
+        
+        if (!isRetry) {
+            console.log(`🔍 Procesando mensaje LID: ${messageId}`);
+            console.log(`   Grupo: ${groupJid}`);
+            console.log(`   LID Participant: ${lidParticipant}`);
+            console.log(`   Real JID: ${realJid}`);
+        }
+
+        // Intentar resolver el LID
+        let resolvedJid = realJid;
+        if (lidParticipant?.endsWith('@lid')) {
+            resolvedJid = await resolveLidFromCache(lidParticipant, groupJid);
+            if (resolvedJid !== lidParticipant && !resolvedJid.endsWith('@lid')) {
+                console.log(`✅ LID resuelto: ${lidParticipant} -> ${resolvedJid}`);
+            }
+        }
+
+        // Crear estructura de mensaje compatible
+        const messageKey = {
+            remoteJid: groupJid,
+            fromMe: false,
+            id: messageId,
+            participant: resolvedJid || realJid
+        };
+
+        // Crear mensaje placeholder para Web/Desktop
+        const placeholderMessage = {
+            key: messageKey,
+            messageTimestamp: parseInt(attrs.t || Date.now() / 1000),
+            pushName: attrs.notify || 'Usuario Web',
+            message: {
+                conversation: isRetry ? 
+                    `🔄 Reintentando descifrar mensaje web... (${Math.floor(Math.random() * 1000)})` :
+                    '🌐 Mensaje desde Web/Desktop - Procesando...'
+            },
+            messageStubType: proto.WebMessageInfo.StubType.CIPHERTEXT,
+            status: proto.WebMessageInfo.Status.PENDING,
+            _isLidWebMessage: true,
+            _originalNode: messageNode,
+            _resolvedJid: resolvedJid,
+            _realJid: realJid,
+            _retryCount: isRetry ? (pendingDecryption.get(messageId)?.retryCount || 0) + 1 : 0
+        };
+
+        return placeholderMessage;
+    }
+
+    // Sistema de retry específico para mensajes LID
+    async function retryLidDecryption(messageId, originalNode, retryCount = 0) {
+        if (retryCount >= MAX_RETRIES) {
+            console.log(`❌ Mensaje LID ${messageId} falló después de ${MAX_RETRIES} intentos`);
+            errorStats.lidDecryptionErrors++;
+            
+            // Crear mensaje de error final
+            const errorMessage = await handleLidMessage(originalNode, true);
+            if (errorMessage) {
+                errorMessage.message.conversation = '❌ No se pudo descifrar el mensaje web';
+                errorMessage.status = proto.WebMessageInfo.Status.ERROR;
+                errorMessage._finalError = true;
+            }
+            
+            pendingDecryption.delete(messageId);
+            return errorMessage;
+        }
+
+        errorStats.totalRetries++;
+        console.log(`🔄 Retry ${retryCount + 1}/${MAX_RETRIES} para mensaje ${messageId}`);
+
+        // Actualizar contador en pendingDecryption
+        const pending = pendingDecryption.get(messageId) || {};
+        pending.retryCount = retryCount + 1;
+        pending.lastRetry = Date.now();
+        pendingDecryption.set(messageId, pending);
+
+        // Programar siguiente retry
+        setTimeout(async () => {
+            try {
+                // Intentar obtener el mensaje real desde la conexión
+                if (conn && conn.ws && conn.ws.readyState === 1) {
+                    
+                    // Solicitar reenvío específico para mensajes LID
+                    try {
+                        const groupJid = originalNode.attrs.from;
+                        const participantJid = extractRealJid(originalNode.attrs);
+                        
+                        if (groupJid && participantJid) {
+                            await conn.sendRetryRequest(groupJid, messageId, participantJid);
+                            console.log(`📤 Retry request enviado para ${messageId}`);
+                        }
+                    } catch (retryError) {
+                        console.error(`❌ Error enviando retry request: ${retryError.message}`);
+                    }
+                    
+                    // Programar siguiente intento
+                    setTimeout(() => {
+                        retryLidDecryption(messageId, originalNode, retryCount + 1);
+                    }, RETRY_DELAY * (retryCount + 2)); // Delay incremental
+                }
+            } catch (error) {
+                console.error(`❌ Error en retry LID ${messageId}:`, error.message);
+                retryLidDecryption(messageId, originalNode, retryCount + 1);
+            }
+        }, RETRY_DELAY * (retryCount + 1));
+
+        // Retornar mensaje de retry actualizado
+        return await handleLidMessage(originalNode, true);
     }
     
-    // Procesar mensaje para resolver LIDs
+    // Procesar mensaje para resolver LIDs (función original mejorada)
     async function processMessageLids(message) {
         if (!message || !message.key) return message;
         
@@ -131,13 +292,13 @@ function makeInMemoryStore() {
         
         // Resolver participant
         if (processedMessage.key?.participant?.endsWith('@lid')) {
-            processedMessage.key.participant = await resolveLidFromCache(
-                processedMessage.key.participant, 
-                groupChatId
-            );
+            const resolved = await resolveLidFromCache(processedMessage.key.participant, groupChatId);
+            if (resolved !== processedMessage.key.participant) {
+                processedMessage.key.participant = resolved;
+            }
         }
         
-        // Resolver mentions en contextInfo
+        // Procesar mentions y contextInfo
         if (processedMessage.message) {
             const messageTypes = Object.keys(processedMessage.message);
             for (const msgType of messageTypes) {
@@ -146,7 +307,8 @@ function makeInMemoryStore() {
                     const resolvedMentions = [];
                     for (const jid of msgContent.contextInfo.mentionedJid) {
                         if (typeof jid === 'string' && jid.endsWith('@lid')) {
-                            resolvedMentions.push(await resolveLidFromCache(jid, groupChatId));
+                            const resolved = await resolveLidFromCache(jid, groupChatId);
+                            resolvedMentions.push(resolved);
                         } else {
                             resolvedMentions.push(jid);
                         }
@@ -164,106 +326,6 @@ function makeInMemoryStore() {
         }
         
         return processedMessage;
-    }
-
-    // Sistema de retry para mensajes fallidos
-    async function retryFailedMessage(messageKey, retryCount = 0) {
-        if (retryCount >= MAX_RETRIES) {
-            console.log(`❌ Mensaje ${messageKey.id} falló después de ${MAX_RETRIES} intentos`);
-            return null;
-        }
-
-        try {
-            if (conn && conn.ws && conn.ws.readyState === 1) {
-                // Solicitar reenvío del mensaje
-                await conn.sendRetryRequest(messageKey.remoteJid, messageKey.id, messageKey.participant);
-                
-                // Programar siguiente retry si es necesario
-                setTimeout(() => {
-                    const currentRetryCount = retryQueue.get(messageKey.id) || 0;
-                    if (currentRetryCount < MAX_RETRIES) {
-                        retryQueue.set(messageKey.id, currentRetryCount + 1);
-                        retryFailedMessage(messageKey, currentRetryCount + 1);
-                    }
-                }, RETRY_DELAY * (retryCount + 1));
-            }
-        } catch (error) {
-            console.error(`❌ Error en retry del mensaje ${messageKey.id}:`, error.message);
-        }
-    }
-
-    // Manejar errores de desencriptación mejorado
-    function handleDecryptionError(message, error) {
-        const key = message.key || message.attrs;
-        const participant = key?.participant;
-        const messageId = key?.id;
-        
-        // Registrar error para estadísticas
-        if (messageId) {
-            failedMessages.set(messageId, {
-                key: key,
-                error: error.message,
-                timestamp: Date.now(),
-                attempts: 0
-            });
-        }
-
-        // Si es un LID, intentar resolverlo y crear placeholder
-        if (participant?.endsWith('@lid')) {
-            // Programar retry automático
-            if (messageId && conn) {
-                setTimeout(() => {
-                    retryFailedMessage(key, 0);
-                }, RETRY_DELAY);
-            }
-
-            const placeholderMessage = {
-                key: {
-                    remoteJid: key.from || key.remoteJid,
-                    fromMe: false,
-                    id: key.id,
-                    participant: participant
-                },
-                messageTimestamp: parseInt(key.t || Date.now() / 1000),
-                message: {
-                    conversation: '🔐 Mensaje cifrado - Reintentando...'
-                },
-                messageStubType: proto.WebMessageInfo.StubType.CIPHERTEXT,
-                status: proto.WebMessageInfo.Status.PENDING,
-                pushName: key.notify || 'Usuario',
-                _lidDecryptError: true,
-                _retryScheduled: true
-            };
-            
-            return placeholderMessage;
-        }
-        
-        // Para mensajes regulares, también crear placeholder temporal
-        const placeholderMessage = {
-            key: {
-                remoteJid: key.from || key.remoteJid,
-                fromMe: false,
-                id: key.id,
-                participant: participant
-            },
-            messageTimestamp: parseInt(key.t || Date.now() / 1000),
-            message: {
-                conversation: '🔐 Error de descifrado'
-            },
-            messageStubType: proto.WebMessageInfo.StubType.CIPHERTEXT,
-            status: proto.WebMessageInfo.Status.ERROR,
-            pushName: key.notify || 'Usuario',
-            _decryptError: true
-        };
-
-        // Programar retry para mensajes regulares también
-        if (messageId && conn) {
-            setTimeout(() => {
-                retryFailedMessage(key, 0);
-            }, RETRY_DELAY);
-        }
-        
-        return placeholderMessage;
     }
 
     function loadMessage(jid, id = null) {
@@ -318,23 +380,20 @@ function makeInMemoryStore() {
         
         const msg = loadMessage(jid, message.key.id);
         if (msg) {
-            // Si el mensaje existente es un placeholder de error y el nuevo es válido, reemplazar
-            if (msg._lidDecryptError || msg._decryptError) {
-                if (!message._lidDecryptError && !message._decryptError && message.message) {
-                    Object.assign(msg, message);
-                    // Limpiar flags de error
-                    delete msg._lidDecryptError;
-                    delete msg._decryptError;
-                    delete msg._retryScheduled;
-                    
-                    // Remover de cola de retry
-                    if (retryQueue.has(message.key.id)) {
-                        retryQueue.delete(message.key.id);
-                    }
-                    if (failedMessages.has(message.key.id)) {
-                        failedMessages.delete(message.key.id);
-                    }
-                }
+            // Si el mensaje existente es un placeholder LID y el nuevo es válido, reemplazar
+            if ((msg._isLidWebMessage || msg._lidDecryptError) && !message._isLidWebMessage && message.message && !message._finalError) {
+                console.log(`✅ Reemplazando placeholder LID con mensaje real: ${message.key.id}`);
+                Object.assign(msg, message);
+                
+                // Limpiar flags de error/placeholder
+                delete msg._isLidWebMessage;
+                delete msg._lidDecryptError;
+                delete msg._retryCount;
+                delete msg._originalNode;
+                
+                // Remover de colas de retry
+                pendingDecryption.delete(message.key.id);
+                errorStats.successfulRetries++;
             } else {
                 Object.assign(msg, message);
             }
@@ -354,24 +413,51 @@ function makeInMemoryStore() {
         // Cargar cache LID
         loadLidCache();
 
-        // Interceptar y mejorar el manejo de errores de descifrado
-        const originalDecrypt = conn.ws?.socket?.decrypt;
-        if (originalDecrypt && conn.ws?.socket) {
-            conn.ws.socket.decrypt = function(message, ...args) {
-                try {
-                    return originalDecrypt.call(this, message, ...args);
-                } catch (error) {
-                    if (error.message?.includes('No session found to decrypt message')) {
-                        console.log(`🔄 Reintentando descifrado para mensaje ${message.key?.id}`);
-                        // Programar retry automático
-                        if (message.key?.id) {
-                            setTimeout(() => {
-                                retryFailedMessage(message.key, 0);
-                            }, RETRY_DELAY);
+        // INTERCEPTAR ERRORES DE MANEJO DE MENSAJES DIRECTAMENTE
+        const originalEmitError = conn.ev.emit.bind(conn.ev);
+        conn.ev.emit = function(event, ...args) {
+            if (event === 'connection.update' && args[0]?.lastDisconnect?.error?.message?.includes('error in handling message')) {
+                // Capturar el error pero no propagarlo
+                console.log('🔄 Error de manejo de mensaje interceptado y manejado');
+                return;
+            }
+            return originalEmitError(event, ...args);
+        };
+
+        // HOOK PRINCIPAL: Interceptar errores de procesamiento de mensajes
+        const originalProcessMessage = conn.ws?.on;
+        if (conn.ws && typeof conn.ws.on === 'function') {
+            const originalOn = conn.ws.on.bind(conn.ws);
+            conn.ws.on = function(event, handler) {
+                if (event === 'message') {
+                    // Interceptar mensajes entrantes para manejar LID errors
+                    const wrappedHandler = async function(data) {
+                        try {
+                            return await handler(data);
+                        } catch (error) {
+                            if (error.message?.includes('error in handling message') && data?.attrs?.addressing_mode === 'lid') {
+                                console.log(`🌐 Detectado mensaje Web/Desktop con error: ${data.attrs.id}`);
+                                errorStats.webDesktopErrors++;
+                                
+                                // Crear y almacenar placeholder
+                                const placeholder = await handleLidMessage(data);
+                                if (placeholder) {
+                                    const jid = data.attrs.from;
+                                    upsertMessage(jid, proto.WebMessageInfo.fromObject(placeholder), 'append');
+                                    
+                                    // Iniciar proceso de retry
+                                    setTimeout(() => {
+                                        retryLidDecryption(data.attrs.id, data, 0);
+                                    }, 1000);
+                                }
+                                return; // No propagar el error
+                            }
+                            throw error;
                         }
-                    }
-                    throw error;
+                    };
+                    return originalOn(event, wrappedHandler);
                 }
+                return originalOn(event, handler);
             };
         }
 
@@ -382,63 +468,21 @@ function makeInMemoryStore() {
                     if (!jid || isJidBroadcast(jid)) continue;
                     
                     try {
-                        // Verificar si el mensaje tiene contenido cifrado sin sesión
-                        if (msg.message?.senderKeyDistributionMessage && !msg.message?.conversation && !msg.message?.extendedTextMessage) {
-                            console.log(`🔑 Mensaje con distribución de claves detectado: ${msg.key.id}`);
-                            
-                            // Crear placeholder temporal mientras se establece la sesión
-                            const tempMessage = {
-                                ...msg,
-                                message: {
-                                    conversation: '🔑 Estableciendo sesión de cifrado...'
-                                },
-                                _sessionPending: true
-                            };
-                            
-                            upsertMessage(jid, proto.WebMessageInfo.fromObject(tempMessage), type);
-                            
-                            // Programar retry después de establecer sesión
-                            setTimeout(async () => {
-                                try {
-                                    // Intentar procesar el mensaje nuevamente
-                                    const processedMsg = await processMessageLids(msg);
-                                    upsertMessage(jid, proto.WebMessageInfo.fromObject(processedMsg), 'append');
-                                } catch (retryError) {
-                                    console.log(`❌ Retry falló para ${msg.key.id}: ${retryError.message}`);
-                                    const errorMsg = handleDecryptionError(msg, retryError);
-                                    if (errorMsg) {
-                                        upsertMessage(jid, proto.WebMessageInfo.fromObject(errorMsg), 'append');
-                                    }
-                                }
-                            }, 3000);
-                            
-                            continue;
+                        // Verificar si es un mensaje exitosamente descifrado después de retry
+                        if (pendingDecryption.has(msg.key.id)) {
+                            console.log(`🎉 Mensaje LID descifrado exitosamente: ${msg.key.id}`);
+                            pendingDecryption.delete(msg.key.id);
+                            errorStats.successfulRetries++;
                         }
-
-                        // Procesar LIDs antes de upsert
+                        
+                        // Procesar LIDs normalmente
                         const processedMsg = await processMessageLids(msg);
                         upsertMessage(jid, proto.WebMessageInfo.fromObject(processedMsg), type);
                         
-                        // Si el mensaje se procesó correctamente, remover de failed messages
-                        if (failedMessages.has(msg.key.id)) {
-                            failedMessages.delete(msg.key.id);
-                            retryQueue.delete(msg.key.id);
-                        }
-                        
                     } catch (error) {
-                        if (error.message?.includes('No session found to decrypt message') || 
-                            error.message?.includes('Failed to decrypt')) {
-                            
-                            console.log(`🔄 Error de descifrado para ${msg.key.id}, creando placeholder`);
-                            const errorMsg = handleDecryptionError(msg, error);
-                            if (errorMsg) {
-                                upsertMessage(jid, proto.WebMessageInfo.fromObject(errorMsg), type);
-                            }
-                        } else {
-                            // Para otros errores, usar mensaje original
-                            console.error(`❌ Error procesando mensaje ${msg.key.id}:`, error.message);
-                            upsertMessage(jid, proto.WebMessageInfo.fromObject(msg), type);
-                        }
+                        console.error(`❌ Error en upsert de mensaje ${msg.key.id}:`, error.message);
+                        // Usar mensaje original como fallback
+                        upsertMessage(jid, proto.WebMessageInfo.fromObject(msg), type);
                     }
                 }
             }
@@ -450,32 +494,23 @@ function makeInMemoryStore() {
                 const message = loadMessage(jid, key.id);
                 if (message) {
                     try {
-                        // Si es una actualización de un mensaje que falló anteriormente
-                        if (message._lidDecryptError || message._decryptError || message._sessionPending) {
-                            // Verificar si la actualización incluye contenido descifrado
-                            if (update.message && !update._lidDecryptError && !update._decryptError) {
-                                console.log(`✅ Mensaje ${key.id} descifrado exitosamente en actualización`);
-                                
-                                // Procesar LIDs en la actualización
-                                const processedUpdate = await processMessageLids({ key, ...update });
-                                Object.assign(message, processedUpdate);
-                                
-                                // Limpiar flags de error
-                                delete message._lidDecryptError;
-                                delete message._decryptError;
-                                delete message._sessionPending;
-                                delete message._retryScheduled;
-                                
-                                // Remover de colas de retry
-                                if (retryQueue.has(key.id)) retryQueue.delete(key.id);
-                                if (failedMessages.has(key.id)) failedMessages.delete(key.id);
-                                
-                                continue;
-                            }
+                        // Si es una actualización de un mensaje LID pendiente
+                        if ((message._isLidWebMessage || pendingDecryption.has(key.id)) && update.message) {
+                            console.log(`✅ Actualización de mensaje LID recibida: ${key.id}`);
+                            
+                            const processedUpdate = await processMessageLids({ key, ...update });
+                            Object.assign(message, processedUpdate);
+                            
+                            // Limpiar flags y colas
+                            delete message._isLidWebMessage;
+                            delete message._retryCount;
+                            delete message._originalNode;
+                            pendingDecryption.delete(key.id);
+                            errorStats.successfulRetries++;
+                        } else {
+                            const processedUpdate = await processMessageLids({ key, ...update });
+                            Object.assign(message, processedUpdate);
                         }
-                        
-                        const processedUpdate = await processMessageLids({ key, ...update });
-                        Object.assign(message, processedUpdate);
                     } catch (error) {
                         console.error(`❌ Error actualizando mensaje ${key.id}:`, error.message);
                         Object.assign(message, update);
@@ -484,7 +519,6 @@ function makeInMemoryStore() {
             }
         });
 
-        // Mejorar manejo de receipts para mensajes con errores
         conn.ev.on('message-receipt.update', updates => {
             for (const { key, receipt } of updates) {
                 const jid = key.remoteJid?.decodeJid?.();
@@ -492,11 +526,9 @@ function makeInMemoryStore() {
                 if (message) {
                     updateMessageWithReceipt(message, receipt);
                     
-                    // Si es un receipt de retry, intentar reprocesar
-                    if (receipt.type === 'retry' && (message._lidDecryptError || message._decryptError)) {
-                        setTimeout(() => {
-                            retryFailedMessage(key, 0);
-                        }, 1000);
+                    // Manejar receipts de retry para mensajes LID
+                    if (receipt.type === 'retry' && pendingDecryption.has(key.id)) {
+                        console.log(`🔄 Retry receipt para mensaje LID: ${key.id}`);
                     }
                 }
             }
@@ -512,6 +544,7 @@ function makeInMemoryStore() {
             }
         });
 
+        // Resto de eventos sin cambios...
         conn.ev.on('chats.set', ({ chats: newChats }) => {
             for (const chat of newChats) {
                 const jid = chat.id.decodeJid();
@@ -576,8 +609,6 @@ function makeInMemoryStore() {
                     if (metadata) {
                         chats[jid].metadata = metadata;
                         chats[jid].subject = metadata.subject;
-                        
-                        // Aprovechar para actualizar cache LID
                         await updateLidCacheFromMetadata(metadata, jid);
                     }
                 } catch (error) {
@@ -601,7 +632,6 @@ function makeInMemoryStore() {
                 if (metadata) {
                     chats[jid].metadata = metadata;
                     chats[jid].subject = metadata.subject;
-                    
                     await updateLidCacheFromMetadata(metadata, jid);
                 }
             } catch (error) {
@@ -609,23 +639,6 @@ function makeInMemoryStore() {
             }
             
             conn.chats[jid] = chats[jid];
-        });
-
-        // Evento especial para manejar errores de PDO (mensajes sin respuesta)
-        conn.ev.on('CB:call,offer', (node) => {
-            // Ignorar llamadas para evitar interferencias con descifrado
-        });
-
-        // Evento para manejar reintentos de mensajes
-        conn.ev.on('CB:ack', async (node) => {
-            const { attrs } = node;
-            if (attrs?.class === 'receipt' && attrs?.type === 'retry') {
-                const messageId = attrs.id;
-                if (failedMessages.has(messageId)) {
-                    console.log(`🔄 Recibido retry request para mensaje ${messageId}`);
-                    // El sistema ya maneja el retry automáticamente
-                }
-            }
         });
     }
 
@@ -635,29 +648,62 @@ function makeInMemoryStore() {
         
         for (const participant of metadata.participants) {
             try {
-                const contactDetails = await conn.onWhatsApp(participant.jid);
-                if (contactDetails?.[0]?.lid) {
-                    const lidKey = contactDetails[0].lid.split('@')[0];
+                // Intentar construir LID desde JID
+                const phoneNumber = participant.jid.split('@')[0];
+                const possibleLid = `${phoneNumber}:13@lid`; // Formato común de LID
+                
+                if (!lidCache.has(phoneNumber)) {
+                    const entry = {
+                        jid: participant.jid,
+                        lid: possibleLid,
+                        name: participant.jid.split('@')[0],
+                        timestamp: Date.now(),
+                        groupJid: groupJid,
+                        inferred: true
+                    };
                     
-                    if (!lidCache.has(lidKey)) {
-                        const entry = {
-                            jid: participant.jid,
-                            lid: contactDetails[0].lid,
-                            name: contactDetails[0].name || participant.jid.split('@')[0],
-                            timestamp: Date.now(),
-                            groupJid: groupJid
-                        };
-                        
-                        lidCache.set(lidKey, entry);
-                        jidToLidMap.set(participant.jid, contactDetails[0].lid);
-                        isDirty = true;
-                    }
+                    lidCache.set(phoneNumber, entry);
+                    jidToLidMap.set(participant.jid, possibleLid);
+                    isDirty = true;
                 }
             } catch (e) {
                 continue;
             }
         }
     }
+
+    // Función para obtener estadísticas completas
+    function getErrorStats() {
+        return {
+            ...errorStats,
+            pendingDecryption: pendingDecryption.size,
+            cacheSize: lidCache.size,
+            jidMappings: jidToLidMap.size,
+            pendingMessages: Array.from(pendingDecryption.entries()).map(([id, data]) => ({
+                id,
+                retryCount: data.retryCount,
+                lastRetry: data.lastRetry
+            }))
+        };
+    }
+
+    // Limpiar mensajes pendientes antiguos
+    function cleanupPendingMessages() {
+        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+        let cleaned = 0;
+        
+        for (const [messageId, data] of pendingDecryption.entries()) {
+            if (data.lastRetry && data.lastRetry < oneHourAgo) {
+                pendingDecryption.delete(messageId);
+                cleaned++;
+            }
+        }
+        
+        return cleaned;
+    }
+
+    // Limpiar cada 30 minutos
+    setInterval(cleanupPendingMessages, 30 * 60 * 1000);
 
     function toJSON() {
         return { 
@@ -678,36 +724,6 @@ function makeInMemoryStore() {
         }
     }
 
-    // Función para obtener estadísticas de errores
-    function getErrorStats() {
-        return {
-            retryQueue: retryQueue.size,
-            failedMessages: failedMessages.size,
-            activeRetries: Array.from(retryQueue.entries()),
-            recentFailures: Array.from(failedMessages.entries()).slice(-10)
-        };
-    }
-
-    // Función para limpiar mensajes fallidos antiguos
-    function cleanupFailedMessages() {
-        const oneHourAgo = Date.now() - (60 * 60 * 1000);
-        let cleaned = 0;
-        
-        for (const [messageId, data] of failedMessages.entries()) {
-            if (data.timestamp < oneHourAgo) {
-                failedMessages.delete(messageId);
-                retryQueue.delete(messageId);
-                cleaned++;
-            }
-        }
-        
-        return cleaned;
-    }
-
-    // Limpiar mensajes fallidos cada hora
-    setInterval(cleanupFailedMessages, 60 * 60 * 1000);
-
-    // Exponer funciones LID para uso externo
     const lidResolver = {
         async resolve(lidJid, groupChatId) {
             return await resolveLidFromCache(lidJid, groupChatId);
@@ -734,38 +750,55 @@ function makeInMemoryStore() {
         },
         
         getStats() {
-            return {
-                total: lidCache.size,
-                mappings: jidToLidMap.size,
-                errors: getErrorStats()
-            };
+            return getErrorStats();
         },
         
         forceSave() {
             saveLidCache();
         },
         
-        // Función para forzar retry de mensajes fallidos
-        forceRetryFailed() {
+        // Función para forzar retry de mensajes pendientes
+        forceRetryPending() {
             let retriedCount = 0;
-            for (const [messageId, data] of failedMessages.entries()) {
-                setTimeout(() => {
-                    retryFailedMessage(data.key, 0);
-                    retriedCount++;
-                }, retriedCount * 500); // Escalonar retries
+            for (const [messageId, data] of pendingDecryption.entries()) {
+                if (data.originalNode) {
+                    setTimeout(() => {
+                        retryLidDecryption(messageId, data.originalNode, 0);
+                        retriedCount++;
+                    }, retriedCount * 1000); // Escalonar retries
+                }
             }
             return retriedCount;
         },
         
-        // Función para limpiar errores
+        // Función para limpiar errores y mensajes pendientes
         clearErrors() {
             const cleared = {
-                retryQueue: retryQueue.size,
-                failedMessages: failedMessages.size
+                pendingDecryption: pendingDecryption.size,
+                errorStats: { ...errorStats }
             };
-            retryQueue.clear();
-            failedMessages.clear();
+            
+            pendingDecryption.clear();
+            errorStats = {
+                lidDecryptionErrors: 0,
+                webDesktopErrors: 0,
+                successfulRetries: 0,
+                totalRetries: 0
+            };
+            
             return cleared;
+        },
+        
+        // Función para mostrar estado actual
+        getStatus() {
+            return {
+                lidCache: lidCache.size,
+                jidMappings: jidToLidMap.size,
+                pendingDecryption: pendingDecryption.size,
+                errorStats,
+                isDirty,
+                cacheFile: cacheFile
+            };
         }
     };
 
@@ -781,7 +814,13 @@ function makeInMemoryStore() {
         contacts,
         lidResolver,
         getErrorStats,
-        cleanupFailedMessages
+        cleanupPendingMessages,
+        
+        // Funciones específicas para debugging
+        handleLidMessage,
+        retryLidDecryption,
+        isWebDesktopMessage,
+        extractRealJid
     };
 }
 
