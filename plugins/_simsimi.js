@@ -1,5 +1,4 @@
 import translate from '@vitalets/google-translate-api';
-import chatsimsimi from 'chats-simsimi';
 import axios from 'axios';
 import fetch from 'node-fetch';
 const handler = (m) => m;
@@ -25,12 +24,12 @@ export default handler;
 async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es") {
     if (!ask) return { status: false, resultado: { msg: "Debes ingresar un texto para hablar con simsimi." }};
     try {
-        const response11 = await chatsimsimi(ask, language, false);
-        if (response11.result == 'indefinida' || response11 == '' || !response11.result) response11 = XD // Se usa "XD" para causar error y usar otra opción.  
-        return { status: true, resultado: { simsimi: response11.result }};        
+        const response11 = await chatsimsimi(ask, language);
+        if (response11.message == 'indefinida' || response11.message == '' || !response11.message) response11 = XD // Se usa "XD" para causar error y usar otra opción.  
+        return { status: true, resultado: { simsimi: response11.message }};        
     } catch (error1) {  
     try {
-        const response1 = await axios.get(`https://deliriusapi-official.vercel.app/tools/simi?text=${encodeURIComponent(ask)}`);
+        const response1 = await axios.get(`https://delirius-apiofc.vercel.app/tools/simi?text=${encodeURIComponent(ask)}`);
         const trad1 = await translate(`${response1.data.data.message}`, {to: language, autoCorrect: true});
         if (trad1.text == 'indefinida' || response1 == '' || !response1.data) trad1 = XD // Se usa "XD" para causar error y usar otra opción.  
         return { status: true, resultado: { simsimi: trad1.text }};        
@@ -43,3 +42,28 @@ async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es")
         }
     }
 }}
+
+async function chatsimsimi(ask, language) {
+    try {
+        const response = await axios.post(
+        'https://simi.anbuinfosec.live/api/chat',
+        {
+            'ask': ask,
+            'lc': language
+        },
+        {
+            headers: {
+            'sec-ch-ua-platform': '"Android"',
+            'Referer': 'https://simi.anbuinfosec.live/',
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36',
+            'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+            'Content-Type': 'application/json',
+            'sec-ch-ua-mobile': '?1'
+            }
+        }
+        );
+        return response.data;
+    } catch (error) {
+        return { success: false, message: 'An error occurred.', author: 'https://facebook.com/anbuinfosec' };
+    }
+}

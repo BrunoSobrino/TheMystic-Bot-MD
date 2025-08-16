@@ -1,5 +1,5 @@
 
-// TheMystic-Bot-MD@BrunoSobrino - _antitoxic.js
+// TheMystic-Bot-MD@BrunoSobrino - _antitoxic
 
  // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
   // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
@@ -8,6 +8,18 @@
 
 const toxicRegex = /\b(cp|cepe|pornoinfantil|childporn|child porn|porno infantil)\b/i;
 
+export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
+ 
+const chat = global.db.data.chats[m.chat];
+ 
+ if (!chat.antiToxic) {
+  return !1;
+ }
+
+  const datas = global
+    const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+    const tradutor = _translate.plugins._antitoxic
 
 export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
   if (m.isBaileys && m.fromMe) {
@@ -17,7 +29,6 @@ export async function before(m, {isAdmin, isBotAdmin, isOwner}) {
     return !1;
   }
   const user = global.db.data.users[m.sender];
-  const chat = global.db.data.chats[m.chat];
   const bot = global.db.data.settings[mconn.conn.user.jid] || {};
   const isToxic = toxicRegex.exec(m.text);
 

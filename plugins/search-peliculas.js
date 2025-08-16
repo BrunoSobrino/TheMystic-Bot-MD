@@ -13,7 +13,7 @@ const handler = async (m, {text, usedPrefix, command, conn}) => {
     aaaa = await searchC(text);
     const randomIndex = Math.floor(Math.random() * aaaa.length);
     try {
-        img = 'https://wwv.cuevana8.com' + aaaa[randomIndex].image;
+        img = 'https://wwv.cuevana3.eu' + aaaa[randomIndex].image;
     } catch {
         img = 'https://www.poresto.net/u/fotografias/m/2023/7/5/f1280x720-305066_436741_5050.png';
     }    
@@ -25,17 +25,17 @@ const handler = async (m, {text, usedPrefix, command, conn}) => {
    return conn.sendMessage(m.chat, {text: '*[❗] Error, no se obtuvieron resultados.'}, {quoted: m});   
  }    
 };   
-handler.command = ['cuevana', 'pelisplus'];
+handler.command = ['cuevana', 'pelisplus', 'peliculas'];
 export default handler;
 
 async function searchC(query) {
-  const response = await axios.get(`https://wwv.cuevana8.com/search?q=${query}`);
+  const response = await axios.get(`https://wwv.cuevana3.eu/search?q=${query}`);
   const $ = cheerio.load(response.data);
   const resultSearch = [];
   $('.MovieList .TPostMv').each((_, e) => {
     const element = $(e);
     const title = element.find('.TPostMv .Title').first().text();  
-    const link = element.find('a').attr('href');
+    const link = 'https://wwv.cuevana3.eu' + element.find('a').attr('href');
     const image = element.find('img').attr('src');
     resultSearch.push({ title, link, image });
   });

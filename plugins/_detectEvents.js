@@ -9,7 +9,7 @@ import fs from 'fs';
 const groupMetadataCache = new Map();
 
 export async function before(m, { conn, participants }) {
-  if (!m?.messageStubType || !m?.isGroup) return true;
+  if (!m?.messageStubType || !m?.isGroup || m?.messageStubType == 2) return;
   
   const safeOperation = async (operation, fallback = null) => {
     try {
@@ -149,62 +149,55 @@ export async function before(m, { conn, participants }) {
 }
 
 // ===============================
-// FUNCIÓN DE RESOLUCIÓN LID MEJORADA
+// FUNCIÓN DE RESOLUCIÓN LID ADAPTADA A NUEVA ESTRUCTURA
 // ===============================
 async function resolveLidFromCache(jid, groupChatId) {
   if (!jid || !jid.toString().endsWith('@lid')) {
     return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
   }
-
-  if (!global.lidResolver?.lidCache) {
+  if (!global.lidResolver) {
     console.warn('[DETECT-EVENTS] LidResolver no disponible, devolviendo JID original');
     return jid;
   }
-
   try {
-    // Intentar resolución directa usando el método del LidResolver
     if (global.lidResolver.resolveLid) {
       const resolved = await global.lidResolver.resolveLid(jid, groupChatId);
       if (resolved && resolved !== jid) {
         return resolved;
       }
     }
-
-    // Fallback a resolución manual del caché
-    const cacheKey = `${jid}_${groupChatId}`;
-    const directResolved = global.lidResolver.lidCache.get(cacheKey);
-    
-    if (directResolved && !directResolved.endsWith('@lid')) {
-      return directResolved;
+    const lidKey = jid.split('@')[0];
+    const userInfo = global.lidResolver.getUserInfo(lidKey);
+    if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) {
+      return userInfo.jid;
     }
-
-    const lidNumber = jid.split('@')[0];
-    const possibleFullJid = `${lidNumber}@s.whatsapp.net`;
-    
-    // Buscar por valor exacto
-    for (const [key, value] of global.lidResolver.lidCache.entries()) {
-      if (value === possibleFullJid) {
-        return possibleFullJid;
+    const cachedUsers = global.lidResolver.getAllUsers();
+    for (const user of cachedUsers) {
+      if (user.lid === jid && user.jid && !user.jid.endsWith('@lid')) {
+        return user.jid;
       }
     }
-
-    // Buscar por últimos 10 dígitos
-    const shortNumber = lidNumber.slice(-10);
-    for (const [key, value] of global.lidResolver.lidCache.entries()) {
-      if (value.endsWith(`${shortNumber}@s.whatsapp.net`)) {
-        return value;
+    if (global.lidResolver.lidCache) {
+      const directResolved = global.lidResolver.lidCache.get(lidKey);
+      if (directResolved && !directResolved.endsWith('@lid')) {
+        return directResolved;
+      }
+      const legacyCacheKey = `${jid}_${groupChatId}`;
+      const legacyResolved = global.lidResolver.lidCache.get(legacyCacheKey);
+      if (legacyResolved && !legacyResolved.endsWith('@lid')) {
+        return legacyResolved;
+      }
+      for (const [key, value] of global.lidResolver.lidCache.entries()) {
+        if (key === lidKey && value && !value.endsWith('@lid')) {
+          return value;
+        }
+        if (key === jid && value && !value.endsWith('@lid')) {
+          return value;
+        }
       }
     }
-
-    // Buscar por prefijo de LID
-    for (const [key, value] of global.lidResolver.lidCache.entries()) {
-      if (key.startsWith(`${lidNumber}@lid_`) && !value.endsWith('@lid')) {
-        return value;
-      }
-    }
-
+    console.warn(`[DETECT-EVENTS] No se pudo resolver LID: ${jid}`);
     return jid;
-    
   } catch (error) {
     console.error('[DETECT-EVENTS] Error resolviendo LID:', error);
     return jid;
@@ -212,25 +205,38 @@ async function resolveLidFromCache(jid, groupChatId) {
 }
 
 // ===============================
-// FUNCIÓN PARA MOSTRAR NOMBRES DE USUARIO
+// FUNCIÓN PARA MOSTRAR NOMBRES DE USUARIO MEJORADA
 // ===============================
 function getUserDisplayName(jid) {
   if (!jid) {
     return '@undefined';
   }
-  
   if (jid.includes('@') && !jid.includes('@lid')) {
     return `@${jid.split('@')[0]}`;
   }
-  
   if (jid.includes('@lid')) {
-    return 'Usuario eliminado';
+    try {
+      const lidKey = jid.split('@')[0];
+      if (global.lidResolver) {
+        const userInfo = global.lidResolver.getUserInfo(lidKey);
+        if (userInfo) {
+          if (userInfo.name && userInfo.name !== 'Nombre pendiente' && userInfo.name !== 'Usuario no encontrado') {
+            return userInfo.name;
+          }
+          if (userInfo.jid && !userInfo.jid.endsWith('@lid')) {
+            return `@${userInfo.jid.split('@')[0]}`;
+          }
+        }
+      }
+      return `@${lidKey}`;
+    } catch (error) {
+      console.error('[DETECT-EVENTS] Error obteniendo nombre de usuario:', error);
+      return 'Usuario no identificado';
+    }
   }
-  
   return `@${jid}`;
 }
 
-// Función legacy mantenida por compatibilidad
 async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
     return resolveLidFromCache(lid, groupChatId);
 }

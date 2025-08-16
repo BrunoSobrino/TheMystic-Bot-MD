@@ -6,7 +6,7 @@ const handler = async (m, { conn, text, prefix: usedPrefix, command }) => {
   if (!text) return m.reply(`🎬 *Proporciona un enlace de Cuevana3*\nEjemplo: ${usedPrefix + command} https://wwv.cuevana3.eu/ver-pelicula/cars`);
   
   try {
-    const url = text.startsWith('https://www.cuevana3.eu') ? text : `https://www.cuevana3.eu${text}`;
+    const url = text;
     const { title, image, info, sinopsis, onlineLink, downloads } = await getInfoCuevana(url);
 
     let imageUrl = image;

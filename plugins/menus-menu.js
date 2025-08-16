@@ -245,7 +245,12 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
         };
 
         let user = global.db.data.users[m.sender];
-        let { exp, limit, level, role, money, joincount } = user;
+        let exp = user.exp ? user.exp : 0
+        let limit = user.limit ? user.limit : 0;
+        let level = user.level ? user.level : 0;
+        let role = user.role ? user.role : 'Nuevo';
+        let money = user.money ? user.money : 0;
+        let joincount = user.joincount ? user.joincount : 0;
 
         const defaultMenu = {
             before: (tradutor.menu_header || '')
@@ -293,8 +298,7 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
         let after = conn.menu.after || defaultMenu.after;
 
         let _text = [
-            before,
-            readMore,    
+            before + readMore,    
             ...Object.keys(tags).map(tag => {
                 let pluginCommands = help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
                     return menu.help.map(help => {

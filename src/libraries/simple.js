@@ -1570,71 +1570,80 @@ END:VCARD
             },
             enumerable: true,
         },
-        parseMention: {
-            value(text = "", groupChatId = null) {
-                try {
-                    const esNumeroValido = (numero) => {
-                        const len = numero.length;
-                        if (len < 8 || len > 15) return false;
-                        const codigosValidos = ["521", "1", "7", "20", "27", "30", "31", "32", "33", "34", "36", "39", "40", "41", "43", "44", "45", "46", "47", "48", "49", "51", "52", "53", "54", "55", "56", "57", "58", "60", "61", "62", "63", "64", "65", "66", "81", "82", "84", "86", "90", "91", "92", "93", "94", "95", "98", "211", "212", "213", "216", "218", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "290", "291", "297", "298", "299", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "382", "383", "385", "386", "387", "389", "420", "421", "423", "500", "501", "502", "503", "504", "505", "506", "507", "508", "509", "590", "591", "592", "593", "594", "595", "596", "597", "598", "599", "670", "672", "673", "674", "675", "676", "677", "678", "679", "680", "681", "682", "683", "685", "686", "687", "688", "689", "690", "691", "692", "850", "852", "853", "855", "856", "880", "886", "960", "961", "962", "963", "964", "965", "966", "967", "968", "970", "971", "972", "973", "974", "975", "976", "977", "978", "979", "992", "993", "994", "995", "996", "998"];
-                        const valido = codigosValidos.some(codigo => numero.startsWith(codigo));
-                        if (!valido) return false;
-                        const numeroLimpio = numero.replace(/^(\d+)/, '').replace('@', '');
-                        if (!/^\d+$/.test(numeroLimpio)) return false;
-                        return true;
-                    };
-                    const resolveLidFromCache = (jid, groupChatId) => {
-                        if (!jid || !jid.toString().endsWith('@lid')) return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
-                        if (!global.lidResolver?.lidCache) return jid;
-                        const cacheKey = `${jid}_${groupChatId}`;
-                        const directResolved = global.lidResolver.lidCache.get(cacheKey);
-                        if (directResolved && !directResolved.endsWith('@lid')) return directResolved;
-                        const lidNumber = jid.split('@')[0];
-                        const possibleFullJid = `${lidNumber}@s.whatsapp.net`;
-                        for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                            if (value === possibleFullJid) return possibleFullJid;
-                        }
-                        const shortNumber = lidNumber.slice(-10);
-                        for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                            if (value.endsWith(`${shortNumber}@s.whatsapp.net`)) return value;
-                        }
-                        for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                            if (key.startsWith(`${lidNumber}@lid_`) && !value.endsWith('@lid')) return value;
-                        }
-                        return jid;
-                    };
-                    const mencionesEncontradas = text.match(/@(\d{5,20})/g) || [];
-                    const mentions = mencionesEncontradas.map((m) => {
-                        const numero = m.substring(1);
-                        if (esNumeroValido(numero)) {
-                            return `${numero}@s.whatsapp.net`;
-                        } else {
-                            const lidJid = `${numero}@lid`;
-                            if (groupChatId && global.lidResolver?.lidCache) {
-                                const resolved = resolveLidFromCache(lidJid, groupChatId);
-                                return resolved;
-                            }
-                            if (global.lidResolver?.lidCache) {
-                                for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                                    if (key.startsWith(`${numero}@`) && !value.endsWith('@lid')) return value;
-                                }
-                                const shortNumber = numero.slice(-10);
-                                for (const [key, value] of global.lidResolver.lidCache.entries()) {
-                                    if (value.includes(shortNumber) && !value.endsWith('@lid')) return value;
-                                }
-                            }
-                            return lidJid;
-                        }
-                    });
-                    return [...new Set(mentions.filter(mention => mention && mention.length > 0))];
-                } catch (error) {
-                    console.error('[ERROR] En parseMention:', error.stack || error);
-                    return [];
+/*parseMention: {
+    async value(text = "", groupChatId = null) {
+        try {
+            const esNumeroValido = (numero) => {
+                const len = numero.length;
+                if (len < 8 || len > 15) return false;
+                const codigosValidos = ["521", "1", "7", "20", "27", "30", "31", "32", "33", "34", "36", "39", "40", "41", "43", "44", "45", "46", "47", "48", "49", "51", "52", "53", "54", "55", "56", "57", "58", "60", "61", "62", "63", "64", "65", "66", "81", "82", "84", "86", "90", "91", "92", "93", "94", "95", "98", "211", "212", "213", "216", "218", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "290", "291", "297", "298", "299", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "382", "383", "385", "386", "387", "389", "420", "421", "423", "500", "501", "502", "503", "504", "505", "506", "507", "508", "509", "590", "591", "592", "593", "594", "595", "596", "597", "598", "599", "670", "672", "673", "674", "675", "676", "677", "678", "679", "680", "681", "682", "683", "685", "686", "687", "688", "689", "690", "691", "692", "850", "852", "853", "855", "856", "880", "886", "960", "961", "962", "963", "964", "965", "966", "967", "968", "970", "971", "972", "973", "974", "975", "976", "977", "978", "979", "992", "993", "994", "995", "996", "998"];
+                const valido = codigosValidos.some(codigo => numero.startsWith(codigo));
+                if (!valido) return false;
+                const numeroLimpio = numero.replace(/^(\d+)/, '').replace('@', '');
+                if (!/^\d+$/.test(numeroLimpio)) return false;
+                return true;
+            };
+            const resolveLidFromCache = async (jid, groupChatId) => {
+                if (!jid || !jid.toString().endsWith('@lid')) {
+                    return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
                 }
-            },
-            enumerable: true,
-        },
-        /*parseMention: {
+                if (!groupChatId?.endsWith('@g.us')) {
+                    return jid;
+                }
+                const lidKey = jid.split('@')[0];
+                if (global.lidResolver) {
+                    const userInfo = global.lidResolver.getUserInfo(lidKey);
+                    if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid') && !userInfo.notFound && !userInfo.error) {
+                        return userInfo.jid;
+                    }
+                    try {
+                        const resolvedJid = await global.lidResolver.resolveLid(jid, groupChatId, 2);
+                        if (resolvedJid && !resolvedJid.endsWith('@lid')) {
+                            return resolvedJid;
+                        }
+                    } catch (error) {
+                        console.log(`[parseMention] Error resolviendo ${jid}:`, error.message);
+                    }
+                }
+                if (typeof String.prototype.resolveLidToRealJid === 'function') {
+                    try {
+                        const resolved = await String.prototype.resolveLidToRealJid.call(
+                            jid, 
+                            groupChatId, 
+                            conn || this, 
+                            2, 
+                            1000
+                        );
+                        if (resolved && !resolved.endsWith('@lid')) {
+                            return resolved;
+                        }
+                    } catch (error) {
+                        console.log(`[parseMention] Error en fallback para ${jid}:`, error.message);
+                    }
+                }
+                return jid;
+            };
+            const mencionesEncontradas = text.match(/@(\d{5,20})/g) || [];
+            const mentions = [];
+            for (const m of mencionesEncontradas) {
+                const numero = m.substring(1);
+                if (esNumeroValido(numero)) {
+                    mentions.push(`${numero}@s.whatsapp.net`);
+                } else {
+                    const lidJid = `${numero}@lid`;
+                    const resolved = await resolveLidFromCache(lidJid, groupChatId);
+                    mentions.push(resolved);
+                }
+            }
+            return [...new Set(mentions.filter(mention => mention && mention.length > 0))];
+        } catch (error) {
+            console.error('[ERROR] En parseMention:', error.stack || error);
+            return [];
+        }
+    },
+    enumerable: true,
+},*/
+        parseMention: {
       value(text = "") {
         try {
           const esNumeroValido = (numero) => {
@@ -1651,7 +1660,7 @@ END:VCARD
         }
       },
       enumerable: true,
-    },*/
+    },
         getName: {
             /**
              * Get name from jid
@@ -2170,8 +2179,9 @@ export function serialize() {
                     //if (!isFromBot) return false;
                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
-		    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
-                    return isSukiPattern || hasKnownPrefix || false;
+		            const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
+					const isMysticPattern = /^MYSTIC[A-F0-9]+$/.test(messageId);
+                    return isMysticPattern || isSukiPattern || hasKnownPrefix || false;
                 } catch (e) {
                     console.error("Error en isBaileys getter:", e);
                     return false;
@@ -2369,8 +2379,9 @@ export function serialize() {
                                     //if (!isFromBot) return false;
                                     const baileysStarts = ['NJX-', 'Lyru-', 'META-', 'EvoGlobalBot-', 'FizzxyTheGreat-', 'BAE5', '3EB0', 'B24E', '8SCO', 'SUKI', 'MYSTIC-'];
                                     const hasKnownPrefix = baileysStarts.some(prefix => messageId.startsWith(prefix));
-				    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
-                                    return isSukiPattern || hasKnownPrefix || false;
+				                    const isSukiPattern = /^SUKI[A-F0-9]+$/.test(messageId);
+									const isMysticPattern = /^MYSTIC[A-F0-9]+$/.test(messageId);
+                                    return isMysticPattern || isSukiPattern || hasKnownPrefix || false;
                                 },
                                 enumerable: true,
                             },

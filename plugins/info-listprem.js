@@ -5,6 +5,17 @@ const handler = async (m, {conn, args, isPrems}) => {
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.info_listprem
+  
+function clockString(ms) {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const weeks = Math.floor(days / 7);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
+  return `${tradutor.texto3[0]} ${years}\n${tradutor.texto3[1]} ${months}\n${tradutor.texto3[2]} ${weeks}\n${tradutor.texto3[3]} ${days}\n${tradutor.texto3[4]}${hours % 24}\n${tradutor.texto3[5]} ${minutes % 60}\n${tradutor.texto3[6]} ${seconds % 60}`;
+}
 
   const usuario = global.db.data.users[m.sender].premiumTime;
   const user = Object.entries(global.db.data.users).filter((user) => user[1].premiumTime).map(([key, value]) => {
@@ -37,17 +48,6 @@ handler.help = ['premlist'];
 handler.tags = ['info'];
 handler.command = /^(listprem|premlist|listavip|viplista)$/i;
 export default handler;
-
-function clockString(ms) {
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  const weeks = Math.floor(days / 7);
-  const months = Math.floor(days / 30);
-  const years = Math.floor(days / 365);
-  return `${tradutor.texto3[0]} ${years}\n${tradutor.texto3[1]} ${months}\n${tradutor.texto3[2]} ${weeks}\n${tradutor.texto3[3]} ${days}\n${tradutor.texto3[4]}${hours % 24}\n${tradutor.texto3[5]} ${minutes % 60}\n${tradutor.texto3[6]} ${seconds % 60}`;
-}
 
 function sort(property, ascending = true) {
   if (property) return (...args) => args[ascending & 1][property] - args[!ascending & 1][property];
