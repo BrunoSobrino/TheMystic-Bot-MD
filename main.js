@@ -858,7 +858,7 @@ global.reloadHandler = async function (restatConn) {
     try {
       if (chatUpdate.messages) {
         // DEBUG: Log para rastrear el procesamiento
-        console.log(`🔄 Procesando ${chatUpdate.messages.length} mensajes...`);
+        //console.log(`🔄 Procesando ${chatUpdate.messages.length} mensajes...`);
         
         // Interceptar y procesar mensajes para resolver LIDs
         chatUpdate.messages = await interceptMessages(chatUpdate.messages, lidResolver);
@@ -878,7 +878,7 @@ global.reloadHandler = async function (restatConn) {
               if (messageText && messageText.includes('@') && /(@\d{8,20})/.test(messageText)) {
                 const lidMatches = messageText.match(/@(\d{8,20})/g);
                 if (lidMatches) {
-                  console.log(`⚠️ Posibles LIDs sin resolver: ${lidMatches.join(', ')}`);
+                  //console.log(`⚠️ Posibles LIDs sin resolver: ${lidMatches.join(', ')}`);
                 }
               }
             } catch (error) {
