@@ -78,9 +78,154 @@ loadDatabase();
 /* ------------------------------------------------*/
 
 /**
+ * Clase auxiliar para acceso a datos LID desde JSON
+ */
+class LidDataManager {
+  constructor(cacheFile = './src/lidsresolve.json') {
+    this.cacheFile = cacheFile;
+  }
+
+  /**
+   * Cargar datos del archivo JSON
+   */
+  loadData() {
+    try {
+      if (fs.existsSync(this.cacheFile)) {
+        const data = fs.readFileSync(this.cacheFile, 'utf8');
+        return JSON.parse(data);
+      }
+      return {};
+    } catch (error) {
+      console.error('❌ Error cargando cache LID:', error.message);
+      return {};
+    }
+  }
+
+  /**
+   * Obtener información de usuario por LID
+   */
+  getUserInfo(lidNumber) {
+    const data = this.loadData();
+    return data[lidNumber] || null;
+  }
+
+  /**
+   * Obtener información de usuario por JID
+   */
+  getUserInfoByJid(jid) {
+    const data = this.loadData();
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && entry.jid === jid) {
+        return entry;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Encontrar LID por JID
+   */
+  findLidByJid(jid) {
+    const data = this.loadData();
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && entry.jid === jid) {
+        return entry.lid;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Listar todos los usuarios válidos
+   */
+  getAllUsers() {
+    const data = this.loadData();
+    const users = [];
+    
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && !entry.notFound && !entry.error) {
+        users.push({
+          lid: entry.lid,
+          jid: entry.jid,
+          name: entry.name,
+          country: entry.country,
+          phoneNumber: entry.phoneNumber,
+          isPhoneDetected: entry.phoneDetected || entry.corrected,
+          timestamp: new Date(entry.timestamp).toLocaleString()
+        });
+      }
+    }
+    
+    return users.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  /**
+   * Obtener estadísticas
+   */
+  getStats() {
+    const data = this.loadData();
+    let valid = 0, notFound = 0, errors = 0, phoneNumbers = 0, corrected = 0;
+    
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry) {
+        if (entry.phoneDetected || entry.corrected) phoneNumbers++;
+        if (entry.corrected) corrected++;
+        if (entry.notFound) notFound++;
+        else if (entry.error) errors++;
+        else valid++;
+      }
+    }
+    
+    return {
+      total: Object.keys(data).length,
+      valid,
+      notFound,
+      errors,
+      phoneNumbers,
+      corrected,
+      cacheFile: this.cacheFile,
+      fileExists: fs.existsSync(this.cacheFile)
+    };
+  }
+
+  /**
+   * Obtener usuarios por país
+   */
+  getUsersByCountry() {
+    const data = this.loadData();
+    const countries = {};
+    
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && !entry.notFound && !entry.error && entry.country) {
+        if (!countries[entry.country]) {
+          countries[entry.country] = [];
+        }
+        
+        countries[entry.country].push({
+          lid: entry.lid,
+          jid: entry.jid,
+          name: entry.name,
+          phoneNumber: entry.phoneNumber
+        });
+      }
+    }
+    
+    // Ordenar usuarios dentro de cada país
+    for (const country of Object.keys(countries)) {
+      countries[country].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    return countries;
+  }
+}
+
+// Instancia del manejador de datos LID
+const lidDataManager = new LidDataManager();
+
+/**
  * Procesa texto para resolver LIDs en menciones (@) - VERSION MEJORADA
  */
-async function processTextMentions(text, groupId) {
+async function processTextMentions(text, groupId, lidResolver) {
   if (!text || !groupId || !text.includes('@')) return text;
 
   const mentionRegex = /@(\d{8,20})/g;
@@ -101,7 +246,7 @@ async function processTextMentions(text, groupId) {
     const lidJid = `${lidNumber}@lid`;
 
     try {
-      const resolvedJid = await global.lidResolver.resolveLid(lidJid, groupId);
+      const resolvedJid = await lidResolver.resolveLid(lidJid, groupId);
       if (resolvedJid && resolvedJid !== lidJid) {
         const resolvedNumber = resolvedJid.split('@')[0];
         
@@ -120,13 +265,13 @@ async function processTextMentions(text, groupId) {
 /**
  * Intercepta y procesa mensajes antes del handler
  */
-async function interceptMessages(messages) {
+async function interceptMessages(messages, lidResolver) {
   if (!Array.isArray(messages)) return messages;
 
   const processedMessages = [];
   for (const message of messages) {
     try {
-      const processedMessage = await global.lidResolver.processMessage(message);
+      const processedMessage = await lidResolver.processMessage(message);
       processedMessages.push(processedMessage);
     } catch (error) {
       console.error('❌ Error interceptando mensaje:', error);
@@ -136,154 +281,6 @@ async function interceptMessages(messages) {
 
   return processedMessages;
 }
-
-/**
- * Obtener información de usuario por LID
- */
-global.getUserInfoByLid = function(lidNumber) {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.getUserInfo(lidNumber);
-};
-
-/**
- * Obtener información de usuario por JID
- */
-global.getUserInfoByJid = function(jid) {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.getUserInfoByJid(jid);
-};
-
-/**
- * Obtener LID de un JID (búsqueda inversa)
- */
-global.findLidByJid = function(jid) {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.findLidByJid(jid);
-};
-
-/**
- * Listar todos los usuarios en caché
- */
-global.getAllCachedUsers = function() {
-  if (!global.lidResolver) return [];
-  return global.lidResolver.getAllUsers();
-};
-
-/**
- * Obtener estadísticas del caché LID
- */
-global.getLidStats = function() {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.getStats();
-};
-
-/**
- * Analizar y corregir números telefónicos en caché
- */
-global.analyzePhoneNumbers = function() {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.analyzePhoneNumbers();
-};
-
-/**
- * Corregir automáticamente números telefónicos
- */
-global.autoCorrectPhoneNumbers = function() {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.autoCorrectPhoneNumbers();
-};
-
-/**
- * Obtener usuarios por país
- */
-global.getUsersByCountry = function() {
-  if (!global.lidResolver) return {};
-  return global.lidResolver.getUsersByCountry();
-};
-
-/**
- * Validar si un string es un número telefónico
- */
-global.validatePhoneNumber = function(phoneNumber) {
-  if (!global.lidResolver) return false;
-  return global.lidResolver.phoneValidator.isValidPhoneNumber(phoneNumber);
-};
-
-/**
- * Detectar si un LID es realmente un número telefónico
- */
-global.detectPhoneInLid = function(lidString) {
-  if (!global.lidResolver) return { isPhone: false };
-  return global.lidResolver.phoneValidator.detectPhoneInLid(lidString);
-};
-
-/**
- * Forzar guardado del caché LID
- */
-global.forceSaveLidCache = function() {
-  if (!global.lidResolver) return false;
-  global.lidResolver.forceSave();
-  return true;
-};
-
-/**
- * Función para mostrar estadísticas del caché LID
- */
-global.getLidCacheInfo = function() {
-  if (!global.lidResolver) {
-    return 'Sistema LID no inicializado';
-  }
-  
-  const stats = global.lidResolver.getStats();
-  const analysis = global.lidResolver.analyzePhoneNumbers();
-  
-  return `📱 *ESTADÍSTICAS DEL CACHÉ LID*
-
-📊 *General:*
-• Total de entradas: ${stats.total}
-• Entradas válidas: ${stats.valid}
-• No encontradas: ${stats.notFound}
-• Con errores: ${stats.errors}
-• En procesamiento: ${stats.processing}
-
-📞 *Números telefónicos:*
-• Detectados: ${stats.phoneNumbers}
-• Corregidos: ${stats.corrected}
-• Problemáticos: ${analysis.stats.phoneNumbersProblematic}
-
-🗂️ *Caché:*
-• Archivo: ${stats.cacheFile}
-• Existe: ${stats.fileExists ? 'Sí' : 'No'}
-• Cambios pendientes: ${stats.isDirty ? 'Sí' : 'No'}
-• Mapeos JID: ${stats.jidMappings}
-
-🌍 *Países detectados:*
-${Object.entries(global.lidResolver.getUsersByCountry())
-  .slice(0, 5)
-  .map(([country, users]) => `• ${country}: ${users.length} usuarios`)
-  .join('\n')}`;
-};
-
-/**
- * Función para forzar corrección de números telefónicos
- */
-global.forcePhoneCorrection = function() {
-  if (!global.lidResolver) {
-    return 'Sistema LID no inicializado';
-  }
-  
-  try {
-    const result = global.lidResolver.autoCorrectPhoneNumbers();
-    
-    if (result.corrected > 0) {
-      return `✅ Se corrigieron ${result.corrected} números telefónicos automáticamente.`;
-    } else {
-      return '✅ No se encontraron números telefónicos que requieran corrección.';
-    }
-  } catch (error) {
-    return `❌ Error en corrección automática: ${error.message}`;
-  }
-};
 
 const { state, saveCreds } = await useMultiFileAuthState(global.authFile);
 const { version } = await fetchLatestBaileysVersion();
@@ -363,14 +360,14 @@ const connectionOptions = {
 };
 
 global.conn = makeWASocket(connectionOptions);
-global.lidResolver = new LidResolver(global.conn);
+const lidResolver = new LidResolver(global.conn);
 
 // Ejecutar análisis y corrección automática al inicializar (SILENCIOSO)
 setTimeout(async () => {
   try {
-    if (global.lidResolver) {
+    if (lidResolver) {
       // Ejecutar corrección automática de números telefónicos (sin logs)
-      global.lidResolver.autoCorrectPhoneNumbers();
+      lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
     console.error('❌ Error en análisis inicial:', error.message);
@@ -412,7 +409,7 @@ if (!fs.existsSync(`./${global.authFile}/creds.json`)) {
 
 conn.isInit = false;
 conn.well = false;
-conn.logger.info(`[ㅤℹ️­ㅤ] Cargando...\n`);
+conn.logger.info(`[　ℹ️　] Cargando...\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -518,14 +515,14 @@ async function connectionUpdate(update) {
   if (global.db.data == null) loadDatabase();
   if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
     if (opcion == '1' || methodCodeQR) {
-      console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
+      console.log(chalk.yellow('[　ℹ️　　] Escanea el código QR.'));
       qrAlreadyShown = true;
       if (qrTimeout) clearTimeout(qrTimeout);
       qrTimeout = setTimeout(() => qrAlreadyShown = false, 60000);
     }
   }
   if (connection == 'open') {
-    console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
+    console.log(chalk.yellow('[　ℹ️　　] Conectado correctamente.'));
     isFirstConnection = true;
     if (!global.subBotsInitialized) {
       global.subBotsInitialized = true;
@@ -627,7 +624,8 @@ global.reloadHandler = async function (restatConn) {
     conn.ev.removeAllListeners();
     global.conn = makeWASocket(connectionOptions, { chats: oldChats });
     store?.bind(conn);
-    global.lidResolver = new LidResolver(global.conn);
+    // Reinicializar lidResolver con la nueva conexión
+    lidResolver.conn = global.conn;
     isInit = true;
   }
   if (!isInit) {
@@ -654,7 +652,7 @@ global.reloadHandler = async function (restatConn) {
     try {
       if (chatUpdate.messages) {
         // Interceptar y procesar mensajes para resolver LIDs
-        chatUpdate.messages = await interceptMessages(chatUpdate.messages);
+        chatUpdate.messages = await interceptMessages(chatUpdate.messages, lidResolver);
 
         for (const message of chatUpdate.messages) {
           if (message?.message && message.key?.remoteJid?.endsWith('@g.us')) {
@@ -665,12 +663,12 @@ global.reloadHandler = async function (restatConn) {
               
               // Procesar texto principal
               if (msgContent?.text) {
-                msgContent.text = await processTextMentions(msgContent.text, message.key.remoteJid);
+                msgContent.text = await processTextMentions(msgContent.text, message.key.remoteJid, lidResolver);
               }
               
               // Procesar caption si existe
               if (msgContent?.caption) {
-                msgContent.caption = await processTextMentions(msgContent.caption, message.key.remoteJid);
+                msgContent.caption = await processTextMentions(msgContent.caption, message.key.remoteJid, lidResolver);
               }
 
               // Procesar mensajes citados
@@ -681,11 +679,11 @@ global.reloadHandler = async function (restatConn) {
                   const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
                   
                   if (quotedContent?.text) {
-                    quotedContent.text = await processTextMentions(quotedContent.text, message.key.remoteJid);
+                    quotedContent.text = await processTextMentions(quotedContent.text, message.key.remoteJid, lidResolver);
                   }
                   
                   if (quotedContent?.caption) {
-                    quotedContent.caption = await processTextMentions(quotedContent.caption, message.key.remoteJid);
+                    quotedContent.caption = await processTextMentions(quotedContent.caption, message.key.remoteJid, lidResolver);
                   }
                 }
               }
@@ -725,6 +723,132 @@ global.reloadHandler = async function (restatConn) {
   conn.ev.on('creds.update', conn.credsUpdate);
   isInit = false;
   return true;
+};
+
+// Agregar funciones de utilidad al conn para acceso desde plugins
+conn.lid = {
+  /**
+   * Obtener información de usuario por LID
+   */
+  getUserInfo: (lidNumber) => lidDataManager.getUserInfo(lidNumber),
+  
+  /**
+   * Obtener información de usuario por JID
+   */
+  getUserInfoByJid: (jid) => lidDataManager.getUserInfoByJid(jid),
+  
+  /**
+   * Encontrar LID por JID
+   */
+  findLidByJid: (jid) => lidDataManager.findLidByJid(jid),
+  
+  /**
+   * Listar todos los usuarios
+   */
+  getAllUsers: () => lidDataManager.getAllUsers(),
+  
+  /**
+   * Obtener estadísticas
+   */
+  getStats: () => lidDataManager.getStats(),
+  
+  /**
+   * Obtener usuarios por país
+   */
+  getUsersByCountry: () => lidDataManager.getUsersByCountry(),
+  
+  /**
+   * Validar número telefónico
+   */
+  validatePhoneNumber: (phoneNumber) => {
+    if (!lidResolver.phoneValidator) return false;
+    return lidResolver.phoneValidator.isValidPhoneNumber(phoneNumber);
+  },
+  
+  /**
+   * Detectar si un LID es un número telefónico
+   */
+  detectPhoneInLid: (lidString) => {
+    if (!lidResolver.phoneValidator) return { isPhone: false };
+    return lidResolver.phoneValidator.detectPhoneInLid(lidString);
+  },
+  
+  /**
+   * Forzar guardado del caché
+   */
+  forceSave: () => {
+    try {
+      lidResolver.forceSave();
+      return true;
+    } catch (error) {
+      console.error('Error guardando caché LID:', error);
+      return false;
+    }
+  },
+  
+  /**
+   * Mostrar información completa del caché
+   */
+  getCacheInfo: () => {
+    try {
+      const stats = lidDataManager.getStats();
+      const analysis = lidResolver.analyzePhoneNumbers();
+      
+      return `📱 *ESTADÍSTICAS DEL CACHÉ LID*
+
+📊 *General:*
+• Total de entradas: ${stats.total}
+• Entradas válidas: ${stats.valid}
+• No encontradas: ${stats.notFound}
+• Con errores: ${stats.errors}
+
+📞 *Números telefónicos:*
+• Detectados: ${stats.phoneNumbers}
+• Corregidos: ${stats.corrected}
+• Problemáticos: ${analysis.stats.phoneNumbersProblematic}
+
+🗂️ *Caché:*
+• Archivo: ${stats.cacheFile}
+• Existe: ${stats.fileExists ? 'Sí' : 'No'}
+
+🌍 *Países detectados:*
+${Object.entries(lidDataManager.getUsersByCountry())
+  .slice(0, 5)
+  .map(([country, users]) => `• ${country}: ${users.length} usuarios`)
+  .join('\n')}`;
+    } catch (error) {
+      return `❌ Error obteniendo información: ${error.message}`;
+    }
+  },
+  
+  /**
+   * Corregir números telefónicos automáticamente
+   */
+  forcePhoneCorrection: () => {
+    try {
+      const result = lidResolver.autoCorrectPhoneNumbers();
+      
+      if (result.corrected > 0) {
+        return `✅ Se corrigieron ${result.corrected} números telefónicos automáticamente.`;
+      } else {
+        return '✅ No se encontraron números telefónicos que requieran corrección.';
+      }
+    } catch (error) {
+      return `❌ Error en corrección automática: ${error.message}`;
+    }
+  },
+  
+  /**
+   * Resolver LID manualmente
+   */
+  resolveLid: async (lidJid, groupChatId) => {
+    try {
+      return await lidResolver.resolveLid(lidJid, groupChatId);
+    } catch (error) {
+      console.error('Error resolviendo LID:', error);
+      return lidJid;
+    }
+  }
 };
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
@@ -791,10 +915,10 @@ setInterval(async () => {
 
 // Limpiar y optimizar caché LID cada 30 minutos
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn?.user || !global.lidResolver) return;
+  if (stopped === 'close' || !conn || !conn?.user || !lidResolver) return;
   
   try {
-    const stats = global.lidResolver.getStats();
+    const stats = lidDataManager.getStats();
     
     // Si el caché tiene más de 800 entradas, hacer limpieza
     if (stats.total > 800) {
@@ -802,24 +926,24 @@ setInterval(async () => {
       const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
       let cleanedCount = 0;
       
-      for (const [key, entry] of global.lidResolver.cache.entries()) {
+      for (const [key, entry] of lidResolver.cache.entries()) {
         if (entry.timestamp < sevenDaysAgo && (entry.notFound || entry.error)) {
-          global.lidResolver.cache.delete(key);
-          if (entry.jid && global.lidResolver.jidToLidMap.has(entry.jid)) {
-            global.lidResolver.jidToLidMap.delete(entry.jid);
+          lidResolver.cache.delete(key);
+          if (entry.jid && lidResolver.jidToLidMap.has(entry.jid)) {
+            lidResolver.jidToLidMap.delete(entry.jid);
           }
           cleanedCount++;
         }
       }
       
       if (cleanedCount > 0) {
-        global.lidResolver.markDirty();
+        lidResolver.markDirty();
       }
     }
     
     // Ejecutar corrección automática ocasionalmente
     if (Math.random() < 0.1) { // 10% de probabilidad
-      const correctionResult = global.lidResolver.autoCorrectPhoneNumbers();
+      const correctionResult = lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
     console.error('❌ Error en limpieza de caché LID:', error.message);
@@ -831,14 +955,14 @@ function clockString(ms) {
   const h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24;
   const m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60;
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
-  return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
+  return [d, 'd ', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
 }
 
 // Manejo mejorado de salida del proceso
 const gracefulShutdown = () => {
-  if (global.lidResolver?.isDirty) {
+  if (lidResolver?.isDirty) {
     try {
-      global.lidResolver.forceSave();
+      lidResolver.forceSave();
     } catch (error) {
       console.error('❌ Error guardando caché LID:', error.message);
     }
