@@ -149,55 +149,45 @@ export async function before(m, { conn, participants }) {
 }
 
 // ===============================
-// FUNCIÓN DE RESOLUCIÓN LID ADAPTADA A NUEVA ESTRUCTURA
+// FUNCIÓN DE RESOLUCIÓN LID ADAPTADA A NUEVA ESTRUCTURA (conn.lid)
 // ===============================
-async function resolveLidFromCache(jid, groupChatId) {
+async function resolveLidFromCache(jid, groupChatId, conn) {
   if (!jid || !jid.toString().endsWith('@lid')) {
     return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
   }
-  if (!global.lidResolver) {
-    console.warn('[DETECT-EVENTS] LidResolver no disponible, devolviendo JID original');
+  
+  if (!conn?.lid) {
+    console.warn('[DETECT-EVENTS] conn.lid no disponible, devolviendo JID original');
     return jid;
   }
+
   try {
-    if (global.lidResolver.resolveLid) {
-      const resolved = await global.lidResolver.resolveLid(jid, groupChatId);
+    // Método principal: usar resolveLid de conn.lid
+    if (conn.lid.resolveLid) {
+      const resolved = await conn.lid.resolveLid(jid, groupChatId);
       if (resolved && resolved !== jid) {
         return resolved;
       }
     }
+
+    // Método alternativo: buscar en caché por LID
     const lidKey = jid.split('@')[0];
-    const userInfo = global.lidResolver.getUserInfo(lidKey);
+    const userInfo = conn.lid.getUserInfo(lidKey);
     if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) {
       return userInfo.jid;
     }
-    const cachedUsers = global.lidResolver.getAllUsers();
+
+    // Búsqueda en todos los usuarios del caché
+    const cachedUsers = conn.lid.getAllUsers();
     for (const user of cachedUsers) {
       if (user.lid === jid && user.jid && !user.jid.endsWith('@lid')) {
         return user.jid;
       }
     }
-    if (global.lidResolver.lidCache) {
-      const directResolved = global.lidResolver.lidCache.get(lidKey);
-      if (directResolved && !directResolved.endsWith('@lid')) {
-        return directResolved;
-      }
-      const legacyCacheKey = `${jid}_${groupChatId}`;
-      const legacyResolved = global.lidResolver.lidCache.get(legacyCacheKey);
-      if (legacyResolved && !legacyResolved.endsWith('@lid')) {
-        return legacyResolved;
-      }
-      for (const [key, value] of global.lidResolver.lidCache.entries()) {
-        if (key === lidKey && value && !value.endsWith('@lid')) {
-          return value;
-        }
-        if (key === jid && value && !value.endsWith('@lid')) {
-          return value;
-        }
-      }
-    }
+
     console.warn(`[DETECT-EVENTS] No se pudo resolver LID: ${jid}`);
     return jid;
+
   } catch (error) {
     console.error('[DETECT-EVENTS] Error resolviendo LID:', error);
     return jid;
@@ -205,38 +195,197 @@ async function resolveLidFromCache(jid, groupChatId) {
 }
 
 // ===============================
-// FUNCIÓN PARA MOSTRAR NOMBRES DE USUARIO MEJORADA
+// FUNCIÓN PARA MOSTRAR NOMBRES DE USUARIO MEJORADA (conn.lid)
 // ===============================
-function getUserDisplayName(jid) {
+function getUserDisplayName(jid, conn) {
   if (!jid) {
     return '@undefined';
   }
+
+  // Si es un JID normal (no LID)
   if (jid.includes('@') && !jid.includes('@lid')) {
     return `@${jid.split('@')[0]}`;
   }
+
+  // Si es un LID, intentar obtener información del caché
   if (jid.includes('@lid')) {
     try {
       const lidKey = jid.split('@')[0];
-      if (global.lidResolver) {
-        const userInfo = global.lidResolver.getUserInfo(lidKey);
+      
+      if (conn?.lid) {
+        const userInfo = conn.lid.getUserInfo(lidKey);
         if (userInfo) {
-          if (userInfo.name && userInfo.name !== 'Nombre pendiente' && userInfo.name !== 'Usuario no encontrado') {
+          // Priorizar nombre real si está disponible y es válido
+          if (userInfo.name && 
+              userInfo.name !== 'Nombre pendiente' && 
+              userInfo.name !== 'Usuario no encontrado' &&
+              userInfo.name !== 'Error al resolver') {
             return userInfo.name;
           }
+          
+          // Si no hay nombre válido, usar el JID resuelto
           if (userInfo.jid && !userInfo.jid.endsWith('@lid')) {
             return `@${userInfo.jid.split('@')[0]}`;
           }
         }
       }
+      
+      // Fallback: mostrar el número LID
       return `@${lidKey}`;
+
     } catch (error) {
       console.error('[DETECT-EVENTS] Error obteniendo nombre de usuario:', error);
       return 'Usuario no identificado';
     }
   }
+
+  // Fallback para cualquier otro caso
   return `@${jid}`;
 }
 
+// ===============================
+// FUNCIÓN DE RESOLUCIÓN SIMPLIFICADA (conn.lid)
+// ===============================
 async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
-    return resolveLidFromCache(lid, groupChatId);
+  return await resolveLidFromCache(lid, groupChatId, conn);
+}
+
+// ===============================
+// FUNCIÓN AUXILIAR: VERIFICAR SI UN JID ES LID
+// ===============================
+function isLidJid(jid) {
+  return jid && typeof jid === 'string' && jid.endsWith('@lid');
+}
+
+// ===============================
+// FUNCIÓN AUXILIAR: OBTENER INFORMACIÓN COMPLETA DE USUARIO
+// ===============================
+function getUserCompleteInfo(jid, conn) {
+  if (!conn?.lid || !jid) {
+    return null;
+  }
+
+  try {
+    // Si es un LID, buscar por LID
+    if (isLidJid(jid)) {
+      const lidKey = jid.split('@')[0];
+      return conn.lid.getUserInfo(lidKey);
+    }
+    
+    // Si es un JID normal, buscar por JID
+    return conn.lid.getUserInfoByJid(jid);
+
+  } catch (error) {
+    console.error('[DETECT-EVENTS] Error obteniendo información completa:', error);
+    return null;
+  }
+}
+
+// ===============================
+// FUNCIÓN AUXILIAR: ENCONTRAR LID POR JID
+// ===============================
+function findLidByJid(jid, conn) {
+  if (!conn?.lid || !jid || isLidJid(jid)) {
+    return null;
+  }
+
+  try {
+    return conn.lid.findLidByJid(jid);
+  } catch (error) {
+    console.error('[DETECT-EVENTS] Error encontrando LID:', error);
+    return null;
+  }
+}
+
+// ===============================
+// FUNCIÓN DE PROCESAMIENTO BATCH PARA MÚLTIPLES LIDS
+// ===============================
+async function resolveMultipleLids(lids, conn, groupChatId) {
+  if (!Array.isArray(lids) || !conn?.lid) {
+    return lids;
+  }
+
+  const resolved = [];
+  
+  for (const lid of lids) {
+    try {
+      if (isLidJid(lid)) {
+        const resolvedJid = await resolveLidFromCache(lid, groupChatId, conn);
+        resolved.push(resolvedJid);
+      } else {
+        resolved.push(lid);
+      }
+    } catch (error) {
+      console.error(`[DETECT-EVENTS] Error resolviendo LID ${lid}:`, error);
+      resolved.push(lid); // Mantener original si falla
+    }
+  }
+
+  return resolved;
+}
+
+// ===============================
+// FUNCIÓN PARA FORMATEAR MENCIONES EN TEXTO
+// ===============================
+function formatMentionsInText(text, conn) {
+  if (!text || !conn?.lid) {
+    return text;
+  }
+
+  try {
+    // Buscar patrones de LID en el texto (@numeroLID)
+    const lidPattern = /@(\d{8,20})/g;
+    
+    return text.replace(lidPattern, (match, lidNumber) => {
+      const userInfo = conn.lid.getUserInfo(lidNumber);
+      
+      if (userInfo && userInfo.name && 
+          userInfo.name !== 'Nombre pendiente' && 
+          userInfo.name !== 'Usuario no encontrado') {
+        return `@${userInfo.name}`;
+      }
+      
+      // Si no hay nombre, intentar usar el JID resuelto
+      if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) {
+        return `@${userInfo.jid.split('@')[0]}`;
+      }
+      
+      // Fallback: mantener el número original
+      return match;
+    });
+
+  } catch (error) {
+    console.error('[DETECT-EVENTS] Error formateando menciones:', error);
+    return text;
+  }
+}
+
+// ===============================
+// FUNCIÓN PARA VALIDAR ESTADO DEL CACHE LID
+// ===============================
+function validateLidCacheStatus(conn) {
+  if (!conn?.lid) {
+    return {
+      available: false,
+      message: 'conn.lid no está disponible'
+    };
+  }
+
+  try {
+    const stats = conn.lid.getStats();
+    
+    return {
+      available: true,
+      stats: stats,
+      healthy: stats.total > 0 && stats.fileExists,
+      message: `Caché disponible: ${stats.total} entradas`
+    };
+
+  } catch (error) {
+    return {
+      available: false,
+      error: error.message,
+      message: 'Error verificando estado del caché'
+    };
+  }
 }
