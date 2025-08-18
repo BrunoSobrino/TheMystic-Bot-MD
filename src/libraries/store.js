@@ -1,8 +1,9 @@
 /*
- * store.js optimizado - Sin logs debug excesivos
+ * store.js optimizado - Versión mejorada con procesamiento robusto de LIDs
  * - Trabaja directamente con cache LID del archivo JSON
- * - Aplica reemplazo de menciones en textos como main.js
- * - Integración con LidResolver.js para resolver LIDs faltantes
+ * - Aplica reemplazo de menciones en textos de forma más segura
+ * - Integración mejorada con LidResolver.js para resolver LIDs faltantes
+ * - Procesamiento recursivo y exhaustivo de mensajes
  */
 
 import fs from 'fs';
@@ -28,6 +29,47 @@ const WS_WAIT_TIMEOUT = 30000;
 const WS_WAIT_STEP = 300;
 const SEND_RETRY_ATTEMPTS_PER_CYCLE = 3;
 
+/**
+ * Función auxiliar: Escapar caracteres especiales en regex
+ */
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Función auxiliar: Extraer todo el texto de un mensaje
+ */
+function extractAllTextFromMessage(message) {
+  if (!message?.message) return '';
+  
+  let allText = '';
+  
+  const extractFromContent = (content) => {
+    if (!content || typeof content !== 'object') return '';
+    let text = '';
+    
+    if (typeof content.text === 'string') text += content.text + ' ';
+    if (typeof content.caption === 'string') text += content.caption + ' ';
+    
+    if (content.contextInfo?.quotedMessage) {
+      const quotedTypes = Object.keys(content.contextInfo.quotedMessage);
+      for (const quotedType of quotedTypes) {
+        const quotedContent = content.contextInfo.quotedMessage[quotedType];
+        text += extractFromContent(quotedContent);
+      }
+    }
+    
+    return text;
+  };
+  
+  const messageTypes = Object.keys(message.message);
+  for (const msgType of messageTypes) {
+    allText += extractFromContent(message.message[msgType]);
+  }
+  
+  return allText.trim();
+}
+
 function makeInMemoryStore() {
   // Estado interno
   let chats = {};
@@ -45,7 +87,7 @@ function makeInMemoryStore() {
     totalRetries: 0
   };
 
-  // Gestión del cache LID
+  // Gestión del cache LID mejorada
   class LidCacheManager {
     constructor() {
       this.cacheFile = path.join(process.cwd(), 'src', 'lidsresolve.json');
@@ -125,6 +167,7 @@ function makeInMemoryStore() {
       return this.jidToLidMap.get(jid) || null;
     }
 
+    // Método mejorado de resolución de LIDs con múltiples fallbacks
     async resolveLid(lidJid, groupChatId) {
       if (!lidJid.endsWith('@lid')) {
         return lidJid.includes('@') ? lidJid : `${lidJid}@s.whatsapp.net`;
@@ -132,7 +175,7 @@ function makeInMemoryStore() {
 
       const lidKey = lidJid.split('@')[0];
       
-      // Buscar en cache primero
+      // 1. Buscar en cache local primero
       if (this.cache.has(lidKey)) {
         const entry = this.cache.get(lidKey);
         if (entry.jid && !entry.notFound && !entry.error) {
@@ -140,14 +183,59 @@ function makeInMemoryStore() {
         }
       }
 
-      // Si no está en cache o falló antes, usar LidResolver
+      // 2. Buscar por mapeo JID->LID inverso
+      for (const [cachedLid, cachedEntry] of this.cache.entries()) {
+        if (cachedEntry && cachedEntry.jid && !cachedEntry.notFound && !cachedEntry.error) {
+          const cachedNumber = cachedEntry.jid.split('@')[0];
+          if (cachedNumber === lidKey) {
+            return cachedEntry.jid;
+          }
+        }
+      }
+
+      // 3. Intentar con LidResolver si está disponible y es un grupo
       if (lidResolver && groupChatId?.endsWith('@g.us')) {
         try {
           const resolved = await lidResolver.resolveLid(lidJid, groupChatId);
-          return resolved;
+          if (resolved && resolved !== lidJid && !resolved.endsWith('@lid')) {
+            // Actualizar cache con el resultado
+            const resolvedNumber = resolved.split('@')[0];
+            const newEntry = {
+              jid: resolved,
+              lid: lidJid,
+              name: resolvedNumber,
+              timestamp: Date.now(),
+              fromStore: true
+            };
+            this.cache.set(lidKey, newEntry);
+            this.jidToLidMap.set(resolved, lidJid);
+            this.isDirty = true;
+            
+            return resolved;
+          }
         } catch (error) {
-          return lidJid;
+          // Error silencioso, continuar con otros métodos
         }
+      }
+
+      // 4. Como último recurso, intentar formato estándar si el LID parece un número de teléfono
+      if (/^\d{10,15}$/.test(lidKey)) {
+        const standardJid = `${lidKey}@s.whatsapp.net`;
+        
+        // Marcar como tentativo en cache
+        const tentativeEntry = {
+          jid: standardJid,
+          lid: lidJid,
+          name: lidKey,
+          timestamp: Date.now(),
+          tentative: true,
+          fromStore: true
+        };
+        this.cache.set(lidKey, tentativeEntry);
+        this.jidToLidMap.set(standardJid, lidJid);
+        this.isDirty = true;
+        
+        return standardJid;
       }
 
       return lidJid;
@@ -169,39 +257,190 @@ function makeInMemoryStore() {
     }
   }
 
-  // Procesar texto para reemplazar menciones LID (como en main.js)
+  // Función mejorada para procesar texto y reemplazar menciones LID
   async function processTextMentions(text, groupId) {
     if (!text || !groupId || !text.includes('@')) return text;
 
-    const mentionRegex = /@(\d{8,20})/g;
-    const mentions = [...text.matchAll(mentionRegex)];
+    try {
+      // Regex más específica para capturar menciones LID
+      const mentionRegex = /@(\d{8,20})/g;
+      const mentions = [...text.matchAll(mentionRegex)];
 
-    if (!mentions.length) return text;
+      if (!mentions.length) return text;
 
-    let processedText = text;
-    const processedMentions = new Set();
+      let processedText = text;
+      const processedMentions = new Set();
+      const replacements = new Map();
 
-    for (const mention of mentions) {
-      const [fullMatch, lidNumber] = mention;
-      
-      if (processedMentions.has(lidNumber)) continue;
-      processedMentions.add(lidNumber);
-      
-      const lidJid = `${lidNumber}@lid`;
+      // Procesar todas las menciones y preparar reemplazos
+      for (const mention of mentions) {
+        const [fullMatch, lidNumber] = mention;
+        
+        if (processedMentions.has(lidNumber)) continue;
+        processedMentions.add(lidNumber);
+        
+        const lidJid = `${lidNumber}@lid`;
 
+        try {
+          const resolvedJid = await lidCacheManager.resolveLid(lidJid, groupId);
+          
+          if (resolvedJid && resolvedJid !== lidJid && !resolvedJid.endsWith('@lid')) {
+            const resolvedNumber = resolvedJid.split('@')[0];
+            
+            // Validar que el número resuelto sea válido y diferente
+            if (resolvedNumber && resolvedNumber !== lidNumber && /^\d+$/.test(resolvedNumber)) {
+              replacements.set(lidNumber, resolvedNumber);
+            }
+          }
+        } catch (error) {
+          // Error silencioso, continuar con otros LIDs
+        }
+      }
+
+      // Aplicar reemplazos de forma segura
+      for (const [lidNumber, resolvedNumber] of replacements.entries()) {
+        // Usar regex con límites de palabra para evitar reemplazos parciales
+        const safeRegex = new RegExp(`@${escapeRegExp(lidNumber)}\\b`, 'g');
+        processedText = processedText.replace(safeRegex, `@${resolvedNumber}`);
+      }
+
+      return processedText;
+    } catch (error) {
+      return text; // Retornar texto original en caso de error
+    }
+  }
+
+  // Función auxiliar para procesar contextInfo de forma recursiva
+  async function processContextInfo(contextInfo, groupChatId) {
+    if (!contextInfo || typeof contextInfo !== 'object') return;
+
+    // Procesar mentionedJid en contextInfo
+    if (contextInfo.mentionedJid && Array.isArray(contextInfo.mentionedJid)) {
+      const resolvedMentions = [];
+      for (const jid of contextInfo.mentionedJid) {
+        if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+          try {
+            const resolved = await lidCacheManager.resolveLid(jid, groupChatId);
+            resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+          } catch (error) {
+            resolvedMentions.push(jid);
+          }
+        } else {
+          resolvedMentions.push(jid);
+        }
+      }
+      contextInfo.mentionedJid = resolvedMentions;
+    }
+
+    // Procesar participant en contextInfo
+    if (typeof contextInfo.participant === 'string' && contextInfo.participant.endsWith?.('@lid')) {
       try {
-        const resolvedJid = await lidCacheManager.resolveLid(lidJid, groupId);
-        if (resolvedJid && resolvedJid !== lidJid) {
-          const resolvedNumber = resolvedJid.split('@')[0];
-          const globalRegex = new RegExp(`@${lidNumber}`, 'g');
-          processedText = processedText.replace(globalRegex, `@${resolvedNumber}`);
+        const resolved = await lidCacheManager.resolveLid(contextInfo.participant, groupChatId);
+        if (resolved && !resolved.endsWith('@lid')) {
+          contextInfo.participant = resolved;
         }
       } catch (error) {
         // Error silencioso
       }
     }
 
-    return processedText;
+    // Procesar mensajes citados de forma recursiva
+    if (contextInfo.quotedMessage) {
+      await processMessageContent(contextInfo.quotedMessage, groupChatId);
+    }
+  }
+
+  // Función auxiliar para procesar contenido de mensaje de forma recursiva
+  async function processMessageContent(messageContent, groupChatId) {
+    if (!messageContent || typeof messageContent !== 'object') return;
+
+    const messageTypes = Object.keys(messageContent);
+    
+    for (const msgType of messageTypes) {
+      const msgContent = messageContent[msgType];
+      if (!msgContent || typeof msgContent !== 'object') continue;
+
+      // Procesar texto principal
+      if (typeof msgContent.text === 'string' && msgContent.text.trim()) {
+        try {
+          const processedText = await processTextMentions(msgContent.text, groupChatId);
+          if (processedText !== msgContent.text) {
+            msgContent.text = processedText;
+          }
+        } catch (error) {
+          // Error silencioso
+        }
+      }
+
+      // Procesar caption
+      if (typeof msgContent.caption === 'string' && msgContent.caption.trim()) {
+        try {
+          const processedCaption = await processTextMentions(msgContent.caption, groupChatId);
+          if (processedCaption !== msgContent.caption) {
+            msgContent.caption = processedCaption;
+          }
+        } catch (error) {
+          // Error silencioso
+        }
+      }
+
+      // Procesar contextInfo
+      if (msgContent.contextInfo) {
+        await processContextInfo(msgContent.contextInfo, groupChatId);
+      }
+    }
+  }
+
+  // Función mejorada para procesar mensajes y resolver todos los LIDs
+  async function processMessageLids(message) {
+    try {
+      if (!message || !message.key) return message;
+      
+      const groupChatId = message.key.remoteJid?.endsWith?.('@g.us') ? message.key.remoteJid : null;
+      if (!groupChatId) return message;
+
+      // Crear copia profunda para evitar mutaciones no deseadas
+      const processedMessage = JSON.parse(JSON.stringify(message));
+
+      // 1. Resolver participant LID en la clave del mensaje
+      if (processedMessage.key?.participant?.endsWith?.('@lid')) {
+        try {
+          const resolved = await lidCacheManager.resolveLid(processedMessage.key.participant, groupChatId);
+          if (resolved && resolved !== processedMessage.key.participant && !resolved.endsWith('@lid')) {
+            processedMessage.key.participant = resolved;
+          }
+        } catch (error) {
+          // Error silencioso
+        }
+      }
+
+      // 2. Procesar mentionedJid a nivel raíz del mensaje
+      if (processedMessage.mentionedJid && Array.isArray(processedMessage.mentionedJid)) {
+        const resolvedMentions = [];
+        for (const jid of processedMessage.mentionedJid) {
+          if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+            try {
+              const resolved = await lidCacheManager.resolveLid(jid, groupChatId);
+              resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+            } catch (error) {
+              resolvedMentions.push(jid);
+            }
+          } else {
+            resolvedMentions.push(jid);
+          }
+        }
+        processedMessage.mentionedJid = resolvedMentions;
+      }
+
+      // 3. Procesar contenido del mensaje recursivamente
+      if (processedMessage.message) {
+        await processMessageContent(processedMessage.message, groupChatId);
+      }
+
+      return processedMessage;
+    } catch (err) {
+      return message;
+    }
   }
 
   // Extraer JID real de atributos de mensaje
@@ -297,7 +536,7 @@ function makeInMemoryStore() {
         errorStats.lidDecryptionErrors++;
         const errorMessage = await handleLidMessage(originalNode, true);
         if (errorMessage) {
-          errorMessage.message.conversation = '⚠ No se pudo descifrar el mensaje web';
+          errorMessage.message.conversation = '⚠️ No se pudo descifrar el mensaje web';
           errorMessage.status = proto.WebMessageInfo.Status?.ERROR || 0;
           errorMessage._finalError = true;
         }
@@ -352,88 +591,6 @@ function makeInMemoryStore() {
       return await handleLidMessage(originalNode, true);
     } catch (err) {
       return null;
-    }
-  }
-
-  // Procesar mensajes para resolver LIDs y aplicar reemplazo de menciones
-  async function processMessageLids(message) {
-    try {
-      if (!message || !message.key) return message;
-      
-      const groupChatId = message.key.remoteJid?.endsWith?.('@g.us') ? message.key.remoteJid : null;
-      if (!groupChatId) return message;
-
-      const processedMessage = { ...message };
-
-      // Resolver participant LID
-      if (processedMessage.key?.participant?.endsWith?.('@lid')) {
-        const resolved = await lidCacheManager.resolveLid(processedMessage.key.participant, groupChatId);
-        if (resolved && resolved !== processedMessage.key.participant) {
-          processedMessage.key.participant = resolved;
-        }
-      }
-
-      // Procesar mensaje para reemplazar menciones en texto
-      if (processedMessage.message) {
-        const messageTypes = Object.keys(processedMessage.message);
-        
-        for (const msgType of messageTypes) {
-          const msgContent = processedMessage.message[msgType];
-          if (!msgContent) continue;
-
-          // Procesar texto principal
-          if (msgContent.text) {
-            msgContent.text = await processTextMentions(msgContent.text, groupChatId);
-          }
-
-          // Procesar caption
-          if (msgContent.caption) {
-            msgContent.caption = await processTextMentions(msgContent.caption, groupChatId);
-          }
-
-          // Resolver menciones en contextInfo
-          if (msgContent?.contextInfo?.mentionedJid) {
-            const resolvedMentions = [];
-            for (const jid of msgContent.contextInfo.mentionedJid) {
-              if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
-                const resolved = await lidCacheManager.resolveLid(jid, groupChatId);
-                resolvedMentions.push(resolved);
-              } else {
-                resolvedMentions.push(jid);
-              }
-            }
-            msgContent.contextInfo.mentionedJid = resolvedMentions;
-          }
-
-          // Resolver participant en contextInfo
-          if (msgContent?.contextInfo?.participant?.endsWith?.('@lid')) {
-            const resolved = await lidCacheManager.resolveLid(msgContent.contextInfo.participant, groupChatId);
-            msgContent.contextInfo.participant = resolved;
-          }
-
-          // Procesar mensajes citados
-          if (msgContent?.contextInfo?.quotedMessage) {
-            const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
-            
-            for (const quotedType of quotedTypes) {
-              const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
-              if (!quotedContent) continue;
-              
-              if (quotedContent.text) {
-                quotedContent.text = await processTextMentions(quotedContent.text, groupChatId);
-              }
-              
-              if (quotedContent.caption) {
-                quotedContent.caption = await processTextMentions(quotedContent.caption, groupChatId);
-              }
-            }
-          }
-        }
-      }
-
-      return processedMessage;
-    } catch (err) {
-      return message;
     }
   }
 
@@ -600,34 +757,76 @@ function makeInMemoryStore() {
       // Error silencioso
     }
 
-    // Eventos de Baileys
+    // Event handler mejorado para messages.upsert
     try {
       conn.ev.on('messages.upsert', async ({ messages: newMessages, type }) => {
         try {
           if (!['append', 'notify'].includes(type)) return;
+          
+          const processedMessages = [];
+          
           for (const msg of newMessages) {
             try {
               const jid = decodeJidSafe(msg.key.remoteJid);
               if (!jid || isJidBroadcast(jid)) continue;
 
+              // Limpiar mensajes pendientes si se resuelven
               if (pendingDecryption.has(msg.key.id)) {
                 pendingDecryption.delete(msg.key.id);
                 errorStats.successfulRetries++;
               }
 
-              const processed = await processMessageLids(msg);
+              // Procesar mensaje para LIDs de forma más exhaustiva
+              let processed = msg;
+              
+              // Primer paso: procesamiento básico
+              try {
+                processed = await processMessageLids(msg);
+              } catch (mErr) {
+                console.error('❌ Error en processMessageLids:', mErr);
+              }
+              
+              // Segundo paso: verificación adicional para grupos
+              if (jid.endsWith('@g.us')) {
+                try {
+                  // Verificar si quedan menciones LID sin resolver
+                  const messageText = extractAllTextFromMessage(processed);
+                  if (messageText && /(@\d{8,20})/.test(messageText)) {
+                    console.log(`⚠️ Mensaje con posibles LIDs sin resolver en ${jid}`);
+                    
+                    // Intento adicional de procesamiento
+                    const additionalProcessed = await processMessageLids(processed);
+                    if (JSON.stringify(additionalProcessed) !== JSON.stringify(processed)) {
+                      processed = additionalProcessed;
+                    }
+                  }
+                } catch (verifyErr) {
+                  // Error silencioso en verificación
+                }
+              }
+
               upsertMessage(jid, proto.WebMessageInfo.fromObject(processed), type);
+              processedMessages.push(processed);
             } catch (mErr) {
               try {
                 const jid = decodeJidSafe(msg.key.remoteJid);
                 upsertMessage(jid, proto.WebMessageInfo.fromObject(msg), type);
+                processedMessages.push(msg);
               } catch (_) {
-                // Error silencioso
+                // Error silencioso final
               }
             }
           }
+          
+          // Debug info
+          if (processedMessages.length > 0) {
+            const groupMessages = processedMessages.filter(m => m.key?.remoteJid?.endsWith('@g.us'));
+            if (groupMessages.length > 0) {
+              console.log(`📨 Procesados ${groupMessages.length} mensajes de grupo`);
+            }
+          }
         } catch (outer) {
-          // Error silencioso
+          console.error('❌ Error en messages.upsert handler:', outer);
         }
       });
 
@@ -885,7 +1084,12 @@ function makeInMemoryStore() {
       }
     },
     getErrorStats,
-    cleanupPendingMessages
+    cleanupPendingMessages,
+    
+    // Nuevas funciones expuestas para debugging y control manual
+    processTextMentions,
+    processMessageLids,
+    extractAllTextFromMessage
   };
 }
 
