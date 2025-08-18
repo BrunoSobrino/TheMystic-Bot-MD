@@ -96,7 +96,7 @@ class LidDataManager {
       }
       return {};
     } catch (error) {
-      console.error('❌ Error cargando cache LID:', error.message);
+      console.error('⌐ Error cargando cache LID:', error.message);
       return {};
     }
   }
@@ -255,11 +255,90 @@ async function processTextMentions(text, groupId, lidResolver) {
         processedText = processedText.replace(globalRegex, `@${resolvedNumber}`);
       }
     } catch (error) {
-      console.error(`❌ Error procesando mención LID ${lidNumber}:`, error.message);
+      console.error(`⌐ Error procesando mención LID ${lidNumber}:`, error.message);
     }
   }
 
   return processedText;
+}
+
+/**
+ * Procesar mensaje completo para resolver todos los LIDs - NUEVA FUNCIÓN
+ */
+async function processMessageForDisplay(message, lidResolver) {
+  if (!message || !lidResolver) return message;
+  
+  try {
+    const processedMessage = { ...message };
+    const groupChatId = message.key?.remoteJid?.endsWith?.('@g.us') ? message.key.remoteJid : null;
+    
+    if (!groupChatId) return processedMessage;
+
+    // Resolver participant LID
+    if (processedMessage.key?.participant?.endsWith?.('@lid')) {
+      const resolved = await lidResolver.resolveLid(processedMessage.key.participant, groupChatId);
+      if (resolved && resolved !== processedMessage.key.participant) {
+        processedMessage.key.participant = resolved;
+      }
+    }
+
+    // Procesar el texto del mensaje para mostrar en consola
+    if (processedMessage.message) {
+      const messageTypes = Object.keys(processedMessage.message);
+      
+      for (const msgType of messageTypes) {
+        const msgContent = processedMessage.message[msgType];
+        if (!msgContent) continue;
+
+        // Procesar texto principal
+        if (msgContent.text) {
+          msgContent.text = await processTextMentions(msgContent.text, groupChatId, lidResolver);
+        }
+
+        // Procesar caption
+        if (msgContent.caption) {
+          msgContent.caption = await processTextMentions(msgContent.caption, groupChatId, lidResolver);
+        }
+
+        // Procesar mensajes citados
+        if (msgContent?.contextInfo?.quotedMessage) {
+          const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
+          
+          for (const quotedType of quotedTypes) {
+            const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
+            if (!quotedContent) continue;
+            
+            if (quotedContent.text) {
+              quotedContent.text = await processTextMentions(quotedContent.text, groupChatId, lidResolver);
+            }
+            
+            if (quotedContent.caption) {
+              quotedContent.caption = await processTextMentions(quotedContent.caption, groupChatId, lidResolver);
+            }
+          }
+        }
+      }
+    }
+
+    // Procesar mentionedJid para la consola
+    if (processedMessage.mentionedJid) {
+      const resolvedMentions = [];
+      for (const jid of processedMessage.mentionedJid) {
+        if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+          const resolved = await lidResolver.resolveLid(jid, groupChatId);
+          resolvedMentions.push(resolved);
+        } else {
+          resolvedMentions.push(jid);
+        }
+      }
+      processedMessage.mentionedJid = resolvedMentions;
+    }
+
+    return processedMessage;
+  } catch (error) {
+    console.error('⌐ Error procesando mensaje para display:', error);
+    return message;
+  }
 }
 
 /**
@@ -274,7 +353,7 @@ async function interceptMessages(messages, lidResolver) {
       const processedMessage = await lidResolver.processMessage(message);
       processedMessages.push(processedMessage);
     } catch (error) {
-      console.error('❌ Error interceptando mensaje:', error);
+      console.error('⌐ Error interceptando mensaje:', error);
       processedMessages.push(message);
     }
   }
@@ -297,7 +376,7 @@ if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.authFile}/creds.j
   do {
     opcion = await question('[ ℹ️ ] Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n---> ');
     if (!/^[1-2]$/.test(opcion)) {
-      console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n');
+      console.log('[ ⚠ ] Por favor, seleccione solo 1 o 2.\n');
     }
   } while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${global.authFile}/creds.json`));
 }
@@ -370,7 +449,7 @@ setTimeout(async () => {
       lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
-    console.error('❌ Error en análisis inicial:', error.message);
+    console.error('⌐ Error en análisis inicial:', error.message);
   }
 }, 5000);
 
@@ -529,7 +608,7 @@ async function connectionUpdate(update) {
       try {
         await initializeSubBots();
       } catch (error) {
-        console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
+        console.error(chalk.red('[ ⚠ ] Error al inicializar sub-bots:'), error);
       }
     }
   }
@@ -654,47 +733,62 @@ global.reloadHandler = async function (restatConn) {
         // Interceptar y procesar mensajes para resolver LIDs
         chatUpdate.messages = await interceptMessages(chatUpdate.messages, lidResolver);
 
+        // NUEVA SECCIÓN: Procesar mensajes para mostrar correctamente en consola
+        const processedForDisplay = [];
         for (const message of chatUpdate.messages) {
-          if (message?.message && message.key?.remoteJid?.endsWith('@g.us')) {
-            const messageTypes = Object.keys(message.message);
+          try {
+            // Procesar mensaje completo para display (consola y logs)
+            const displayMessage = await processMessageForDisplay(message, lidResolver);
+            processedForDisplay.push(displayMessage);
             
-            for (const msgType of messageTypes) {
-              const msgContent = message.message[msgType];
+            // Procesar contenido de mensajes específicamente para LIDs
+            if (displayMessage?.message && displayMessage.key?.remoteJid?.endsWith('@g.us')) {
+              const messageTypes = Object.keys(displayMessage.message);
               
-              // Procesar texto principal
-              if (msgContent?.text) {
-                msgContent.text = await processTextMentions(msgContent.text, message.key.remoteJid, lidResolver);
-              }
-              
-              // Procesar caption si existe
-              if (msgContent?.caption) {
-                msgContent.caption = await processTextMentions(msgContent.caption, message.key.remoteJid, lidResolver);
-              }
-
-              // Procesar mensajes citados
-              if (msgContent?.contextInfo?.quotedMessage) {
-                const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
+              for (const msgType of messageTypes) {
+                const msgContent = displayMessage.message[msgType];
                 
-                for (const quotedType of quotedTypes) {
-                  const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
+                // Procesar texto principal
+                if (msgContent?.text) {
+                  msgContent.text = await processTextMentions(msgContent.text, displayMessage.key.remoteJid, lidResolver);
+                }
+                
+                // Procesar caption si existe
+                if (msgContent?.caption) {
+                  msgContent.caption = await processTextMentions(msgContent.caption, displayMessage.key.remoteJid, lidResolver);
+                }
+
+                // Procesar mensajes citados
+                if (msgContent?.contextInfo?.quotedMessage) {
+                  const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
                   
-                  if (quotedContent?.text) {
-                    quotedContent.text = await processTextMentions(quotedContent.text, message.key.remoteJid, lidResolver);
-                  }
-                  
-                  if (quotedContent?.caption) {
-                    quotedContent.caption = await processTextMentions(quotedContent.caption, message.key.remoteJid, lidResolver);
+                  for (const quotedType of quotedTypes) {
+                    const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
+                    
+                    if (quotedContent?.text) {
+                      quotedContent.text = await processTextMentions(quotedContent.text, displayMessage.key.remoteJid, lidResolver);
+                    }
+                    
+                    if (quotedContent?.caption) {
+                      quotedContent.caption = await processTextMentions(quotedContent.caption, displayMessage.key.remoteJid, lidResolver);
+                    }
                   }
                 }
               }
             }
+          } catch (error) {
+            console.error('⌐ Error procesando mensaje para display:', error);
+            processedForDisplay.push(message);
           }
         }
+        
+        // Reemplazar los mensajes originales con los procesados para display
+        chatUpdate.messages = processedForDisplay;
       }
       
       return await originalHandler(chatUpdate);
     } catch (error) {
-      console.error('❌ Error en handler interceptor:', error);
+      console.error('⌐ Error en handler interceptor:', error);
       return await originalHandler(chatUpdate);
     }
   };
@@ -817,7 +911,7 @@ ${Object.entries(lidDataManager.getUsersByCountry())
   .map(([country, users]) => `• ${country}: ${users.length} usuarios`)
   .join('\n')}`;
     } catch (error) {
-      return `❌ Error obteniendo información: ${error.message}`;
+      return `⌐ Error obteniendo información: ${error.message}`;
     }
   },
   
@@ -834,7 +928,7 @@ ${Object.entries(lidDataManager.getUsersByCountry())
         return '✅ No se encontraron números telefónicos que requieran corrección.';
       }
     } catch (error) {
-      return `❌ Error en corrección automática: ${error.message}`;
+      return `⌐ Error en corrección automática: ${error.message}`;
     }
   },
   
@@ -847,6 +941,18 @@ ${Object.entries(lidDataManager.getUsersByCountry())
     } catch (error) {
       console.error('Error resolviendo LID:', error);
       return lidJid;
+    }
+  },
+  
+  /**
+   * Procesar texto para resolver menciones (función auxiliar para plugins)
+   */
+  processTextMentions: async (text, groupId) => {
+    try {
+      return await processTextMentions(text, groupId, lidResolver);
+    } catch (error) {
+      console.error('Error procesando menciones en texto:', error);
+      return text;
     }
   }
 };
@@ -946,7 +1052,7 @@ setInterval(async () => {
       const correctionResult = lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
-    console.error('❌ Error en limpieza de caché LID:', error.message);
+    console.error('⌐ Error en limpieza de caché LID:', error.message);
   }
 }, 30 * 60 * 1000); // Cada 30 minutos
 
@@ -964,7 +1070,7 @@ const gracefulShutdown = () => {
     try {
       lidResolver.forceSave();
     } catch (error) {
-      console.error('❌ Error guardando caché LID:', error.message);
+      console.error('⌐ Error guardando caché LID:', error.message);
     }
   }
 };
@@ -984,7 +1090,7 @@ process.on('SIGTERM', () => {
 // Manejo de errores no capturadas relacionadas con LID
 process.on('unhandledRejection', (reason, promise) => {
   if (reason && reason.message && reason.message.includes('lid')) {
-    console.error('❌ Error no manejado relacionado con LID:', reason);
+    console.error('⌐ Error no manejado relacionado con LID:', reason);
   }
 });
 
