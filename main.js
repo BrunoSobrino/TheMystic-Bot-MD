@@ -96,7 +96,7 @@ class LidDataManager {
       }
       return {};
     } catch (error) {
-      console.error('⌐ Error cargando cache LID:', error.message);
+      console.error('❌ Error cargando cache LID:', error.message);
       return {};
     }
   }
@@ -223,110 +223,182 @@ class LidDataManager {
 const lidDataManager = new LidDataManager();
 
 /**
- * Procesa texto para resolver LIDs en menciones (@) - VERSION MEJORADA
+ * FUNCIÓN MEJORADA: Procesar texto para resolver LIDs - VERSION MÁS ROBUSTA
  */
 async function processTextMentions(text, groupId, lidResolver) {
   if (!text || !groupId || !text.includes('@')) return text;
+  
+  try {
+    // Regex más completa para capturar diferentes formatos de mención
+    const mentionRegex = /@(\d{8,20})/g;
+    const mentions = [...text.matchAll(mentionRegex)];
 
-  const mentionRegex = /@(\d{8,20})/g;
-  const mentions = [...text.matchAll(mentionRegex)];
+    if (!mentions.length) return text;
 
-  if (!mentions.length) return text;
+    let processedText = text;
+    const processedMentions = new Set();
+    const replacements = new Map(); // Cache de reemplazos para este texto
 
-  let processedText = text;
-  const processedMentions = new Set(); // Evitar procesar la misma mención múltiples veces
+    // Procesar todas las menciones primero
+    for (const mention of mentions) {
+      const [fullMatch, lidNumber] = mention;
+      
+      if (processedMentions.has(lidNumber)) continue;
+      processedMentions.add(lidNumber);
+      
+      const lidJid = `${lidNumber}@lid`;
 
-  for (const mention of mentions) {
-    const [fullMatch, lidNumber] = mention;
-    
-    // Evitar duplicados
-    if (processedMentions.has(lidNumber)) continue;
-    processedMentions.add(lidNumber);
-    
-    const lidJid = `${lidNumber}@lid`;
-
-    try {
-      const resolvedJid = await lidResolver.resolveLid(lidJid, groupId);
-      if (resolvedJid && resolvedJid !== lidJid) {
-        const resolvedNumber = resolvedJid.split('@')[0];
+      try {
+        const resolvedJid = await lidResolver.resolveLid(lidJid, groupId);
         
-        // Reemplazar TODAS las ocurrencias de esta mención en el texto
-        const globalRegex = new RegExp(`@${lidNumber}`, 'g');
-        processedText = processedText.replace(globalRegex, `@${resolvedNumber}`);
+        if (resolvedJid && resolvedJid !== lidJid && !resolvedJid.endsWith('@lid')) {
+          const resolvedNumber = resolvedJid.split('@')[0];
+          
+          // Validar que el número resuelto sea diferente al LID original
+          if (resolvedNumber && resolvedNumber !== lidNumber) {
+            replacements.set(lidNumber, resolvedNumber);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ Error procesando mención LID ${lidNumber}:`, error.message);
       }
-    } catch (error) {
-      console.error(`⌐ Error procesando mención LID ${lidNumber}:`, error.message);
     }
-  }
 
-  return processedText;
+    // Aplicar todos los reemplazos
+    for (const [lidNumber, resolvedNumber] of replacements.entries()) {
+      // Usar regex global para reemplazar TODAS las ocurrencias
+      const globalRegex = new RegExp(`@${lidNumber}\\b`, 'g'); // \\b para límite de palabra
+      processedText = processedText.replace(globalRegex, `@${resolvedNumber}`);
+    }
+
+    return processedText;
+  } catch (error) {
+    console.error('❌ Error en processTextMentions:', error);
+    return text;
+  }
 }
 
 /**
- * Procesar mensaje completo para resolver todos los LIDs - NUEVA FUNCIÓN
+ * FUNCIÓN AUXILIAR: Procesar contenido de mensaje recursivamente
+ */
+async function processMessageContent(messageContent, groupChatId, lidResolver) {
+  if (!messageContent || typeof messageContent !== 'object') return;
+
+  const messageTypes = Object.keys(messageContent);
+  
+  for (const msgType of messageTypes) {
+    const msgContent = messageContent[msgType];
+    if (!msgContent || typeof msgContent !== 'object') continue;
+
+    // Procesar texto principal
+    if (typeof msgContent.text === 'string') {
+      try {
+        const originalText = msgContent.text;
+        msgContent.text = await processTextMentions(originalText, groupChatId, lidResolver);
+      } catch (error) {
+        console.error('❌ Error procesando texto:', error);
+      }
+    }
+
+    // Procesar caption
+    if (typeof msgContent.caption === 'string') {
+      try {
+        const originalCaption = msgContent.caption;
+        msgContent.caption = await processTextMentions(originalCaption, groupChatId, lidResolver);
+      } catch (error) {
+        console.error('❌ Error procesando caption:', error);
+      }
+    }
+
+    // Procesar contextInfo
+    if (msgContent.contextInfo) {
+      await processContextInfo(msgContent.contextInfo, groupChatId, lidResolver);
+    }
+  }
+}
+
+/**
+ * FUNCIÓN AUXILIAR: Procesar contextInfo recursivamente
+ */
+async function processContextInfo(contextInfo, groupChatId, lidResolver) {
+  if (!contextInfo || typeof contextInfo !== 'object') return;
+
+  // Procesar mentionedJid en contextInfo
+  if (contextInfo.mentionedJid && Array.isArray(contextInfo.mentionedJid)) {
+    const resolvedMentions = [];
+    for (const jid of contextInfo.mentionedJid) {
+      if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+        try {
+          const resolved = await lidResolver.resolveLid(jid, groupChatId);
+          resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+        } catch (error) {
+          resolvedMentions.push(jid);
+        }
+      } else {
+        resolvedMentions.push(jid);
+      }
+    }
+    contextInfo.mentionedJid = resolvedMentions;
+  }
+
+  // Procesar participant en contextInfo
+  if (typeof contextInfo.participant === 'string' && contextInfo.participant.endsWith?.('@lid')) {
+    try {
+      const resolved = await lidResolver.resolveLid(contextInfo.participant, groupChatId);
+      if (resolved && !resolved.endsWith('@lid')) {
+        contextInfo.participant = resolved;
+      }
+    } catch (error) {
+      console.error('❌ Error resolviendo participant en contextInfo:', error);
+    }
+  }
+
+  // Procesar mensajes citados recursivamente
+  if (contextInfo.quotedMessage) {
+    await processMessageContent(contextInfo.quotedMessage, groupChatId, lidResolver);
+  }
+
+  // Procesar otros campos que puedan contener texto
+  if (typeof contextInfo.stanzaId === 'string') {
+    contextInfo.stanzaId = await processTextMentions(contextInfo.stanzaId, groupChatId, lidResolver);
+  }
+}
+
+/**
+ * FUNCIÓN MEJORADA: Procesar mensaje completo de forma más exhaustiva
  */
 async function processMessageForDisplay(message, lidResolver) {
   if (!message || !lidResolver) return message;
   
   try {
-    const processedMessage = { ...message };
+    const processedMessage = JSON.parse(JSON.stringify(message)); // Deep copy
     const groupChatId = message.key?.remoteJid?.endsWith?.('@g.us') ? message.key.remoteJid : null;
     
     if (!groupChatId) return processedMessage;
 
-    // Resolver participant LID
+    // 1. Resolver participant LID
     if (processedMessage.key?.participant?.endsWith?.('@lid')) {
-      const resolved = await lidResolver.resolveLid(processedMessage.key.participant, groupChatId);
-      if (resolved && resolved !== processedMessage.key.participant) {
-        processedMessage.key.participant = resolved;
+      try {
+        const resolved = await lidResolver.resolveLid(processedMessage.key.participant, groupChatId);
+        if (resolved && resolved !== processedMessage.key.participant && !resolved.endsWith('@lid')) {
+          processedMessage.key.participant = resolved;
+        }
+      } catch (error) {
+        console.error('❌ Error resolviendo participant:', error);
       }
     }
 
-    // Procesar el texto del mensaje para mostrar en consola
-    if (processedMessage.message) {
-      const messageTypes = Object.keys(processedMessage.message);
-      
-      for (const msgType of messageTypes) {
-        const msgContent = processedMessage.message[msgType];
-        if (!msgContent) continue;
-
-        // Procesar texto principal
-        if (msgContent.text) {
-          msgContent.text = await processTextMentions(msgContent.text, groupChatId, lidResolver);
-        }
-
-        // Procesar caption
-        if (msgContent.caption) {
-          msgContent.caption = await processTextMentions(msgContent.caption, groupChatId, lidResolver);
-        }
-
-        // Procesar mensajes citados
-        if (msgContent?.contextInfo?.quotedMessage) {
-          const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
-          
-          for (const quotedType of quotedTypes) {
-            const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
-            if (!quotedContent) continue;
-            
-            if (quotedContent.text) {
-              quotedContent.text = await processTextMentions(quotedContent.text, groupChatId, lidResolver);
-            }
-            
-            if (quotedContent.caption) {
-              quotedContent.caption = await processTextMentions(quotedContent.caption, groupChatId, lidResolver);
-            }
-          }
-        }
-      }
-    }
-
-    // Procesar mentionedJid para la consola
-    if (processedMessage.mentionedJid) {
+    // 2. Procesar mentionedJid a nivel raíz
+    if (processedMessage.mentionedJid && Array.isArray(processedMessage.mentionedJid)) {
       const resolvedMentions = [];
       for (const jid of processedMessage.mentionedJid) {
         if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
-          const resolved = await lidResolver.resolveLid(jid, groupChatId);
-          resolvedMentions.push(resolved);
+          try {
+            const resolved = await lidResolver.resolveLid(jid, groupChatId);
+            resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+          } catch (error) {
+            resolvedMentions.push(jid);
+          }
         } else {
           resolvedMentions.push(jid);
         }
@@ -334,26 +406,80 @@ async function processMessageForDisplay(message, lidResolver) {
       processedMessage.mentionedJid = resolvedMentions;
     }
 
+    // 3. Procesar el contenido del mensaje
+    if (processedMessage.message) {
+      await processMessageContent(processedMessage.message, groupChatId, lidResolver);
+    }
+
     return processedMessage;
   } catch (error) {
-    console.error('⌐ Error procesando mensaje para display:', error);
+    console.error('❌ Error procesando mensaje para display:', error);
     return message;
   }
 }
 
 /**
- * Intercepta y procesa mensajes antes del handler
+ * FUNCIÓN AUXILIAR: Extraer todo el texto de un mensaje para debugging
+ */
+function extractAllText(message) {
+  if (!message?.message) return '';
+  
+  let allText = '';
+  
+  const extractFromContent = (content) => {
+    if (!content) return '';
+    let text = '';
+    
+    if (content.text) text += content.text + ' ';
+    if (content.caption) text += content.caption + ' ';
+    
+    if (content.contextInfo?.quotedMessage) {
+      const quotedTypes = Object.keys(content.contextInfo.quotedMessage);
+      for (const quotedType of quotedTypes) {
+        const quotedContent = content.contextInfo.quotedMessage[quotedType];
+        text += extractFromContent(quotedContent);
+      }
+    }
+    
+    return text;
+  };
+  
+  const messageTypes = Object.keys(message.message);
+  for (const msgType of messageTypes) {
+    allText += extractFromContent(message.message[msgType]);
+  }
+  
+  return allText.trim();
+}
+
+/**
+ * FUNCIÓN MEJORADA: Interceptar mensajes con mejor manejo de errores
  */
 async function interceptMessages(messages, lidResolver) {
   if (!Array.isArray(messages)) return messages;
 
   const processedMessages = [];
+  
   for (const message of messages) {
     try {
-      const processedMessage = await lidResolver.processMessage(message);
+      // Procesar con lidResolver si existe
+      let processedMessage = message;
+      
+      if (lidResolver && typeof lidResolver.processMessage === 'function') {
+        try {
+          processedMessage = await lidResolver.processMessage(message);
+        } catch (error) {
+          console.error('❌ Error en lidResolver.processMessage:', error);
+          // Continuar con el procesamiento manual
+        }
+      }
+      
+      // Procesamiento adicional para display
+      processedMessage = await processMessageForDisplay(processedMessage, lidResolver);
+      
       processedMessages.push(processedMessage);
     } catch (error) {
-      console.error('⌐ Error interceptando mensaje:', error);
+      console.error('❌ Error interceptando mensaje:', error);
       processedMessages.push(message);
     }
   }
@@ -376,7 +502,7 @@ if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.authFile}/creds.j
   do {
     opcion = await question('[ ℹ️ ] Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n---> ');
     if (!/^[1-2]$/.test(opcion)) {
-      console.log('[ ⚠ ] Por favor, seleccione solo 1 o 2.\n');
+      console.log('[ ⚠️ ] Por favor, seleccione solo 1 o 2.\n');
     }
   } while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${global.authFile}/creds.json`));
 }
@@ -449,7 +575,7 @@ setTimeout(async () => {
       lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
-    console.error('⌐ Error en análisis inicial:', error.message);
+    console.error('❌ Error en análisis inicial:', error.message);
   }
 }, 5000);
 
@@ -608,7 +734,7 @@ async function connectionUpdate(update) {
       try {
         await initializeSubBots();
       } catch (error) {
-        console.error(chalk.red('[ ⚠ ] Error al inicializar sub-bots:'), error);
+        console.error(chalk.red('[ ⚠️ ] Error al inicializar sub-bots:'), error);
       }
     }
   }
@@ -628,55 +754,55 @@ async function connectionUpdate(update) {
   }
   if (reason == 405) {
     await fs.unlinkSync("./MysticSession/" + "creds.json");
-    console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`));
+    console.log(chalk.bold.redBright(`[ ⚠️ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`));
     process.send('reset');
   }
   if (connection === 'close') {
     if (reason === DisconnectReason.badSession) {
       if (shouldLogError('badSession')) {
-        conn.logger.error(`[ ⚠ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+        conn.logger.error(`[ ⚠️ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionClosed) {
       if (shouldLogError('connectionClosed')) {
-        conn.logger.warn(`[ ⚠ ] Conexión cerrada, reconectando...`);
+        conn.logger.warn(`[ ⚠️ ] Conexión cerrada, reconectando...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionLost) {
       if (shouldLogError('connectionLost')) {
-        conn.logger.warn(`[ ⚠ ] Conexión perdida con el servidor, reconectando...`);
+        conn.logger.warn(`[ ⚠️ ] Conexión perdida con el servidor, reconectando...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionReplaced) {
       if (shouldLogError('connectionReplaced')) {
-        conn.logger.error(`[ ⚠ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
+        conn.logger.error(`[ ⚠️ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.loggedOut) {
       if (shouldLogError('loggedOut')) {
-        conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+        conn.logger.error(`[ ⚠️ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
       }
     } else if (reason === DisconnectReason.restartRequired) {
       if (isFirstConnection) {
         if (shouldLogError('restartRequired')) {
-          //conn.logger.info(`[ ⚠ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
+          //conn.logger.info(`[ ⚠️ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
         }
         isFirstConnection = false;
       } else {
         if (shouldLogError('restartRequired')) {
-          conn.logger.info(`[ ⚠ ] Reinicio necesario, reconectando...`);
+          conn.logger.info(`[ ⚠️ ] Reinicio necesario, reconectando...`);
         }
         await global.reloadHandler(true).catch(console.error);
       }
     } else if (reason === DisconnectReason.timedOut) {
       if (shouldLogError('timedOut')) {
-        conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
+        conn.logger.warn(`[ ⚠️ ] Tiempo de conexión agotado, reconectando...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else {
       const unknownError = `unknown_${reason || ''}_${connection || ''}`;
       if (shouldLogError(unknownError)) {
-        conn.logger.warn(`[ ⚠ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
+        conn.logger.warn(`[ ⚠️ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
       }
       await global.reloadHandler(true).catch(console.error);
     }
@@ -727,68 +853,44 @@ global.reloadHandler = async function (restatConn) {
   conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
   const originalHandler = handler.handler.bind(global.conn);
+  // HANDLER MEJORADO con procesamiento LID robusto
   conn.handler = async function (chatUpdate) {
     try {
       if (chatUpdate.messages) {
+        // DEBUG: Log para rastrear el procesamiento
+        console.log(`🔄 Procesando ${chatUpdate.messages.length} mensajes...`);
+        
         // Interceptar y procesar mensajes para resolver LIDs
         chatUpdate.messages = await interceptMessages(chatUpdate.messages, lidResolver);
 
-        // NUEVA SECCIÓN: Procesar mensajes para mostrar correctamente en consola
-        const processedForDisplay = [];
-        for (const message of chatUpdate.messages) {
-          try {
-            // Procesar mensaje completo para display (consola y logs)
-            const displayMessage = await processMessageForDisplay(message, lidResolver);
-            processedForDisplay.push(displayMessage);
-            
-            // Procesar contenido de mensajes específicamente para LIDs
-            if (displayMessage?.message && displayMessage.key?.remoteJid?.endsWith('@g.us')) {
-              const messageTypes = Object.keys(displayMessage.message);
+        // Procesamiento adicional específico para LIDs en grupos
+        for (let i = 0; i < chatUpdate.messages.length; i++) {
+          const message = chatUpdate.messages[i];
+          
+          if (message?.key?.remoteJid?.endsWith('@g.us')) {
+            try {
+              // Procesar mensaje completo una vez más para asegurar que todo esté resuelto
+              const fullyProcessedMessage = await processMessageForDisplay(message, lidResolver);
+              chatUpdate.messages[i] = fullyProcessedMessage;
               
-              for (const msgType of messageTypes) {
-                const msgContent = displayMessage.message[msgType];
-                
-                // Procesar texto principal
-                if (msgContent?.text) {
-                  msgContent.text = await processTextMentions(msgContent.text, displayMessage.key.remoteJid, lidResolver);
-                }
-                
-                // Procesar caption si existe
-                if (msgContent?.caption) {
-                  msgContent.caption = await processTextMentions(msgContent.caption, displayMessage.key.remoteJid, lidResolver);
-                }
-
-                // Procesar mensajes citados
-                if (msgContent?.contextInfo?.quotedMessage) {
-                  const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
-                  
-                  for (const quotedType of quotedTypes) {
-                    const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
-                    
-                    if (quotedContent?.text) {
-                      quotedContent.text = await processTextMentions(quotedContent.text, displayMessage.key.remoteJid, lidResolver);
-                    }
-                    
-                    if (quotedContent?.caption) {
-                      quotedContent.caption = await processTextMentions(quotedContent.caption, displayMessage.key.remoteJid, lidResolver);
-                    }
-                  }
+              // DEBUG: Verificar si hay menciones LID sin resolver
+              const messageText = extractAllText(fullyProcessedMessage);
+              if (messageText && messageText.includes('@') && /(@\d{8,20})/.test(messageText)) {
+                const lidMatches = messageText.match(/@(\d{8,20})/g);
+                if (lidMatches) {
+                  console.log(`⚠️ Posibles LIDs sin resolver: ${lidMatches.join(', ')}`);
                 }
               }
+            } catch (error) {
+              console.error('❌ Error en procesamiento final de mensaje:', error);
             }
-          } catch (error) {
-            console.error('⌐ Error procesando mensaje para display:', error);
-            processedForDisplay.push(message);
           }
         }
-        
-        // Reemplazar los mensajes originales con los procesados para display
-        chatUpdate.messages = processedForDisplay;
       }
       
       return await originalHandler(chatUpdate);
     } catch (error) {
-      console.error('⌐ Error en handler interceptor:', error);
+      console.error('❌ Error en handler interceptor:', error);
       return await originalHandler(chatUpdate);
     }
   };
@@ -911,7 +1013,7 @@ ${Object.entries(lidDataManager.getUsersByCountry())
   .map(([country, users]) => `• ${country}: ${users.length} usuarios`)
   .join('\n')}`;
     } catch (error) {
-      return `⌐ Error obteniendo información: ${error.message}`;
+      return `❌ Error obteniendo información: ${error.message}`;
     }
   },
   
@@ -928,7 +1030,7 @@ ${Object.entries(lidDataManager.getUsersByCountry())
         return '✅ No se encontraron números telefónicos que requieran corrección.';
       }
     } catch (error) {
-      return `⌐ Error en corrección automática: ${error.message}`;
+      return `❌ Error en corrección automática: ${error.message}`;
     }
   },
   
@@ -1052,7 +1154,7 @@ setInterval(async () => {
       const correctionResult = lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
-    console.error('⌐ Error en limpieza de caché LID:', error.message);
+    console.error('❌ Error en limpieza de caché LID:', error.message);
   }
 }, 30 * 60 * 1000); // Cada 30 minutos
 
@@ -1070,7 +1172,7 @@ const gracefulShutdown = () => {
     try {
       lidResolver.forceSave();
     } catch (error) {
-      console.error('⌐ Error guardando caché LID:', error.message);
+      console.error('❌ Error guardando caché LID:', error.message);
     }
   }
 };
@@ -1090,7 +1192,7 @@ process.on('SIGTERM', () => {
 // Manejo de errores no capturadas relacionadas con LID
 process.on('unhandledRejection', (reason, promise) => {
   if (reason && reason.message && reason.message.includes('lid')) {
-    console.error('⌐ Error no manejado relacionado con LID:', reason);
+    console.error('❌ Error no manejado relacionado con LID:', reason);
   }
 });
 
