@@ -1,15 +1,14 @@
 /*
- * store.js completo (lista para copiar/pegar)
- * - await import('baileys').default
- * - intercept pino (stdout/stderr) para detectar "error in handling message"
- * - espera robusta por ws y múltiple reintento de sendRetryRequest
- * - logs [LID-DEBUG] siempre activos
- *
- * Reemplaza tu store.js con este archivo y reinicia el bot.
+ * store.js optimizado - Versión mejorada con procesamiento robusto de LIDs
+ * - Trabaja directamente con cache LID del archivo JSON
+ * - Aplica reemplazo de menciones en textos de forma más segura
+ * - Integración mejorada con LidResolver.js para resolver LIDs faltantes
+ * - Procesamiento recursivo y exhaustivo de mensajes
  */
 
 import fs from 'fs';
 import path from 'path';
+import LidResolver from './LidResolver.js';
 
 const baileys = (await import('baileys')).default;
 const {
@@ -22,30 +21,65 @@ const {
   jidNormalizedUser
 } = baileys;
 
-// Timeouts / retries
+// Configuración
 const TIME_TO_DATA_STALE = 5 * 60 * 1000;
-const RETRY_DELAY = 3000; // ms base
+const RETRY_DELAY = 3000;
 const MAX_RETRIES = 6;
-const WS_WAIT_TIMEOUT = 30000; // ms máximo a esperar por ws ready (aumentado)
-const WS_WAIT_STEP = 300; // ms poll interval
-const SEND_RETRY_ATTEMPTS_PER_CYCLE = 3; // intentar varias veces cuando ws esté listo
+const WS_WAIT_TIMEOUT = 30000;
+const WS_WAIT_STEP = 300;
+const SEND_RETRY_ATTEMPTS_PER_CYCLE = 3;
+
+/**
+ * Función auxiliar: Escapar caracteres especiales en regex
+ */
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Función auxiliar: Extraer todo el texto de un mensaje
+ */
+function extractAllTextFromMessage(message) {
+  if (!message?.message) return '';
+  
+  let allText = '';
+  
+  const extractFromContent = (content) => {
+    if (!content || typeof content !== 'object') return '';
+    let text = '';
+    
+    if (typeof content.text === 'string') text += content.text + ' ';
+    if (typeof content.caption === 'string') text += content.caption + ' ';
+    
+    if (content.contextInfo?.quotedMessage) {
+      const quotedTypes = Object.keys(content.contextInfo.quotedMessage);
+      for (const quotedType of quotedTypes) {
+        const quotedContent = content.contextInfo.quotedMessage[quotedType];
+        text += extractFromContent(quotedContent);
+      }
+    }
+    
+    return text;
+  };
+  
+  const messageTypes = Object.keys(message.message);
+  for (const msgType of messageTypes) {
+    allText += extractFromContent(message.message[msgType]);
+  }
+  
+  return allText.trim();
+}
 
 function makeInMemoryStore() {
-  // -------------------------
   // Estado interno
-  // -------------------------
   let chats = {};
   let messages = {};
   let contacts = {};
   let state = { connection: 'close' };
   let conn = null;
+  let lidResolver = null;
 
-  const cacheFile = path.join(process.cwd(), 'src/lidsresolve.json');
-  let lidCache = new Map();
-  let jidToLidMap = new Map();
-  let isDirty = false;
   const pendingDecryption = new Map();
-
   let errorStats = {
     lidDecryptionErrors: 0,
     webDesktopErrors: 0,
@@ -53,198 +87,383 @@ function makeInMemoryStore() {
     totalRetries: 0
   };
 
-  // -------------------------
-  // pino / stdout intercept
-  // -------------------------
-  let stdoutBuffer = '';
-  let stderrBuffer = '';
-  let pinoLineHandler = null;
-
-  const origStdoutWrite = process.stdout.write.bind(process.stdout);
-  process.stdout.write = (chunk, ...args) => {
-    try {
-      const s = chunk instanceof Buffer ? chunk.toString('utf8') : String(chunk);
-      stdoutBuffer += s;
-      let newlineIndex;
-      while ((newlineIndex = stdoutBuffer.indexOf('\n')) >= 0) {
-        const line = stdoutBuffer.slice(0, newlineIndex);
-        stdoutBuffer = stdoutBuffer.slice(newlineIndex + 1);
-        try {
-          const obj = JSON.parse(line);
-          if (pinoLineHandler) {
-            try { pinoLineHandler(obj, line); } catch (_) {}
-          }
-        } catch (e) {
-          // not JSON
-        }
-        origStdoutWrite(line + '\n', ...args);
-      }
-    } catch (e) {
-      try { origStdoutWrite(chunk, ...args); } catch (_) {}
+  // Gestión del cache LID mejorada
+  class LidCacheManager {
+    constructor() {
+      this.cacheFile = path.join(process.cwd(), 'src', 'lidsresolve.json');
+      this.cache = new Map();
+      this.jidToLidMap = new Map();
+      this.isDirty = false;
+      this.loadCache();
+      this.setupAutoSave();
     }
-  };
 
-  const origStderrWrite = process.stderr.write.bind(process.stderr);
-  process.stderr.write = (chunk, ...args) => {
-    try {
-      const s = chunk instanceof Buffer ? chunk.toString('utf8') : String(chunk);
-      stderrBuffer += s;
-      let newlineIndex;
-      while ((newlineIndex = stderrBuffer.indexOf('\n')) >= 0) {
-        const line = stderrBuffer.slice(0, newlineIndex);
-        stderrBuffer = stderrBuffer.slice(newlineIndex + 1);
-        try {
-          const obj = JSON.parse(line);
-          if (pinoLineHandler) {
-            try { pinoLineHandler(obj, line); } catch (_) {}
+    loadCache() {
+      try {
+        if (fs.existsSync(this.cacheFile)) {
+          const data = fs.readFileSync(this.cacheFile, 'utf8');
+          const parsed = JSON.parse(data);
+          
+          for (const [key, entry] of Object.entries(parsed)) {
+            if (entry && entry.jid && entry.lid && entry.timestamp) {
+              this.cache.set(key, entry);
+              if (entry.jid && entry.jid.includes('@s.whatsapp.net')) {
+                this.jidToLidMap.set(entry.jid, entry.lid);
+              }
+            }
           }
-        } catch (e) {
-          // not JSON
         }
-        origStderrWrite(line + '\n', ...args);
+      } catch (error) {
+        this.cache = new Map();
+        this.jidToLidMap = new Map();
       }
-    } catch (e) {
-      try { origStderrWrite(chunk, ...args); } catch (_) {}
     }
-  };
 
-  // -------------------------
+    saveCache() {
+      try {
+        const data = {};
+        for (const [key, value] of this.cache.entries()) {
+          data[key] = value;
+        }
+        fs.writeFileSync(this.cacheFile, JSON.stringify(data, null, 2));
+        this.isDirty = false;
+      } catch (error) {
+        // Error silencioso
+      }
+    }
+
+    setupAutoSave() {
+      setInterval(() => {
+        if (this.isDirty) {
+          this.saveCache();
+        }
+      }, 30000);
+
+      const gracefulSave = () => {
+        if (this.isDirty) {
+          this.saveCache();
+        }
+      };
+
+      process.on('SIGINT', gracefulSave);
+      process.on('SIGTERM', gracefulSave);
+      process.on('exit', gracefulSave);
+    }
+
+    getUserInfo(lidKey) {
+      return this.cache.get(lidKey) || null;
+    }
+
+    getUserInfoByJid(jid) {
+      for (const [key, entry] of this.cache.entries()) {
+        if (entry && entry.jid === jid) {
+          return entry;
+        }
+      }
+      return null;
+    }
+
+    findLidByJid(jid) {
+      return this.jidToLidMap.get(jid) || null;
+    }
+
+    // Método mejorado de resolución de LIDs con múltiples fallbacks
+    async resolveLid(lidJid, groupChatId) {
+      if (!lidJid.endsWith('@lid')) {
+        return lidJid.includes('@') ? lidJid : `${lidJid}@s.whatsapp.net`;
+      }
+
+      const lidKey = lidJid.split('@')[0];
+      
+      // 1. Buscar en cache local primero
+      if (this.cache.has(lidKey)) {
+        const entry = this.cache.get(lidKey);
+        if (entry.jid && !entry.notFound && !entry.error) {
+          return entry.jid;
+        }
+      }
+
+      // 2. Buscar por mapeo JID->LID inverso
+      for (const [cachedLid, cachedEntry] of this.cache.entries()) {
+        if (cachedEntry && cachedEntry.jid && !cachedEntry.notFound && !cachedEntry.error) {
+          const cachedNumber = cachedEntry.jid.split('@')[0];
+          if (cachedNumber === lidKey) {
+            return cachedEntry.jid;
+          }
+        }
+      }
+
+      // 3. Intentar con LidResolver si está disponible y es un grupo
+      if (lidResolver && groupChatId?.endsWith('@g.us')) {
+        try {
+          const resolved = await lidResolver.resolveLid(lidJid, groupChatId);
+          if (resolved && resolved !== lidJid && !resolved.endsWith('@lid')) {
+            // Actualizar cache con el resultado
+            const resolvedNumber = resolved.split('@')[0];
+            const newEntry = {
+              jid: resolved,
+              lid: lidJid,
+              name: resolvedNumber,
+              timestamp: Date.now(),
+              fromStore: true
+            };
+            this.cache.set(lidKey, newEntry);
+            this.jidToLidMap.set(resolved, lidJid);
+            this.isDirty = true;
+            
+            return resolved;
+          }
+        } catch (error) {
+          // Error silencioso, continuar con otros métodos
+        }
+      }
+
+      // 4. Como último recurso, intentar formato estándar si el LID parece un número de teléfono
+      if (/^\d{10,15}$/.test(lidKey)) {
+        const standardJid = `${lidKey}@s.whatsapp.net`;
+        
+        // Marcar como tentativo en cache
+        const tentativeEntry = {
+          jid: standardJid,
+          lid: lidJid,
+          name: lidKey,
+          timestamp: Date.now(),
+          tentative: true,
+          fromStore: true
+        };
+        this.cache.set(lidKey, tentativeEntry);
+        this.jidToLidMap.set(standardJid, lidJid);
+        this.isDirty = true;
+        
+        return standardJid;
+      }
+
+      return lidJid;
+    }
+  }
+
+  const lidCacheManager = new LidCacheManager();
+
   // Utilidades
-  // -------------------------
   function decodeJidSafe(jid) {
     try {
       if (!jid) return jid;
-      if (typeof jid === 'object' && typeof jid.decodeJid === 'function') return jid.decodeJid();
+      if (typeof jid === 'object' && typeof jid.decodeJid === 'function') {
+        return jid.decodeJid();
+      }
       return jid;
     } catch (e) {
       return jid;
     }
   }
 
-  // -------------------------
-  // Cache LID persistente
-  // -------------------------
-  function loadLidCache() {
+  // Función mejorada para procesar texto y reemplazar menciones LID
+  async function processTextMentions(text, groupId) {
+    if (!text || !groupId || !text.includes('@')) return text;
+
     try {
-      if (fs.existsSync(cacheFile)) {
-        const data = fs.readFileSync(cacheFile, 'utf8');
-        const parsed = JSON.parse(data);
-        for (const [key, entry] of Object.entries(parsed)) {
-          if (entry && entry.jid && entry.lid) {
-            lidCache.set(key, entry);
-            jidToLidMap.set(entry.jid, entry.lid);
-          }
-        }
-        console.log(`[LID-DEBUG] Cache LID cargado: ${lidCache.size} entradas (${cacheFile})`);
-      } else {
-        console.log(`[LID-DEBUG] No existe ${cacheFile}, iniciando cache vacía`);
-      }
-    } catch (err) {
-      console.error('[LID-DEBUG] Error cargando cache LID:', err && err.message ? err.message : err);
-      lidCache = new Map();
-      jidToLidMap = new Map();
-    }
-  }
+      // Regex más específica para capturar menciones LID
+      const mentionRegex = /@(\d{8,20})/g;
+      const mentions = [...text.matchAll(mentionRegex)];
 
-  function saveLidCache() {
-    try {
-      const data = {};
-      for (const [key, value] of lidCache.entries()) data[key] = value;
-      fs.writeFileSync(cacheFile, JSON.stringify(data, null, 2));
-      isDirty = false;
-      console.log(`[LID-DEBUG] Cache LID guardado (${lidCache.size} entradas) -> ${cacheFile}`);
-    } catch (err) {
-      console.error('[LID-DEBUG] Error guardando cache LID:', err && err.message ? err.message : err);
-    }
-  }
-  setInterval(() => { if (isDirty) saveLidCache(); }, 30 * 1000);
+      if (!mentions.length) return text;
 
-  // -------------------------
-  // Resolver LID
-  // -------------------------
-  async function resolveLidFromCache(lidJid, groupChatId) {
-    try {
-      console.log(`[LID-DEBUG] Resolviendo LID: ${lidJid} (group: ${groupChatId})`);
-      if (!lidJid || !lidJid.endsWith?.('@lid')) {
-        console.log(`[LID-DEBUG] No parece LID, retorno: ${lidJid}`);
-        return lidJid && lidJid.includes('@') ? lidJid : (lidJid ? `${lidJid}@s.whatsapp.net` : lidJid);
-      }
-      const lidKey = lidJid.split('@')[0];
+      let processedText = text;
+      const processedMentions = new Set();
+      const replacements = new Map();
 
-      if (lidCache.has(lidKey)) {
-        const cached = lidCache.get(lidKey);
-        console.log(`[LID-DEBUG] Encontrado en cache: ${JSON.stringify(cached)}`);
-        if (cached.jid && !cached.jid.endsWith('@lid')) return cached.jid;
-      } else console.log(`[LID-DEBUG] No hay entrada de cache para lidKey=${lidKey}`);
+      // Procesar todas las menciones y preparar reemplazos
+      for (const mention of mentions) {
+        const [fullMatch, lidNumber] = mention;
+        
+        if (processedMentions.has(lidNumber)) continue;
+        processedMentions.add(lidNumber);
+        
+        const lidJid = `${lidNumber}@lid`;
 
-      for (const [jid, lid] of jidToLidMap.entries()) {
-        if (lid === lidJid) {
-          console.log(`[LID-DEBUG] Encontrado en jidToLidMap: ${jid} -> ${lid}`);
-          return jid;
-        }
-      }
-
-      if (conn && groupChatId && groupChatId.endsWith?.('@g.us')) {
         try {
-          console.log(`[LID-DEBUG] Intentando groupMetadata(${groupChatId}) para resolver LID...`);
-          const metadata = await conn.groupMetadata(groupChatId).catch(e => { throw e; });
-          const participants = metadata?.participants || [];
-          console.log(`[LID-DEBUG] metadata.participants length=${participants.length}`);
-          for (const p of participants) {
-            try {
-              const numberFromParticipant = p.jid?.split?.('@')?.[0];
-              if (!numberFromParticipant) continue;
-              if (lidKey.includes(numberFromParticipant) || numberFromParticipant.includes(lidKey.split(':')[0])) {
-                const entry = { jid: p.jid, lid: lidJid, name: p.jid.split('@')[0], timestamp: Date.now(), groupJid };
-                lidCache.set(lidKey, entry);
-                jidToLidMap.set(p.jid, lidJid);
-                isDirty = true;
-                console.log(`[LID-DEBUG] Resuelto por metadata: ${lidJid} -> ${p.jid}`);
-                return p.jid;
-              }
-            } catch (_) { continue; }
+          const resolvedJid = await lidCacheManager.resolveLid(lidJid, groupId);
+          
+          if (resolvedJid && resolvedJid !== lidJid && !resolvedJid.endsWith('@lid')) {
+            const resolvedNumber = resolvedJid.split('@')[0];
+            
+            // Validar que el número resuelto sea válido y diferente
+            if (resolvedNumber && resolvedNumber !== lidNumber && /^\d+$/.test(resolvedNumber)) {
+              replacements.set(lidNumber, resolvedNumber);
+            }
           }
-        } catch (e) {
-          console.error(`[LID-DEBUG] Error consultando metadata: ${e && e.message ? e.message : e}`);
+        } catch (error) {
+          // Error silencioso, continuar con otros LIDs
         }
       }
 
-      console.log(`[LID-DEBUG] No resuelto, fallback -> ${lidJid}`);
-      return lidJid;
-    } catch (err) {
-      console.error('[LID-DEBUG] Error en resolveLidFromCache:', err && err.message ? err.message : err);
-      return lidJid;
+      // Aplicar reemplazos de forma segura
+      for (const [lidNumber, resolvedNumber] of replacements.entries()) {
+        // Usar regex con límites de palabra para evitar reemplazos parciales
+        const safeRegex = new RegExp(`@${escapeRegExp(lidNumber)}\\b`, 'g');
+        processedText = processedText.replace(safeRegex, `@${resolvedNumber}`);
+      }
+
+      return processedText;
+    } catch (error) {
+      return text; // Retornar texto original en caso de error
     }
   }
 
-  // -------------------------
-  // extractRealJid (participant_pn priority)
-  // -------------------------
+  // Función auxiliar para procesar contextInfo de forma recursiva
+  async function processContextInfo(contextInfo, groupChatId) {
+    if (!contextInfo || typeof contextInfo !== 'object') return;
+
+    // Procesar mentionedJid en contextInfo
+    if (contextInfo.mentionedJid && Array.isArray(contextInfo.mentionedJid)) {
+      const resolvedMentions = [];
+      for (const jid of contextInfo.mentionedJid) {
+        if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+          try {
+            const resolved = await lidCacheManager.resolveLid(jid, groupChatId);
+            resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+          } catch (error) {
+            resolvedMentions.push(jid);
+          }
+        } else {
+          resolvedMentions.push(jid);
+        }
+      }
+      contextInfo.mentionedJid = resolvedMentions;
+    }
+
+    // Procesar participant en contextInfo
+    if (typeof contextInfo.participant === 'string' && contextInfo.participant.endsWith?.('@lid')) {
+      try {
+        const resolved = await lidCacheManager.resolveLid(contextInfo.participant, groupChatId);
+        if (resolved && !resolved.endsWith('@lid')) {
+          contextInfo.participant = resolved;
+        }
+      } catch (error) {
+        // Error silencioso
+      }
+    }
+
+    // Procesar mensajes citados de forma recursiva
+    if (contextInfo.quotedMessage) {
+      await processMessageContent(contextInfo.quotedMessage, groupChatId);
+    }
+  }
+
+  // Función auxiliar para procesar contenido de mensaje de forma recursiva
+  async function processMessageContent(messageContent, groupChatId) {
+    if (!messageContent || typeof messageContent !== 'object') return;
+
+    const messageTypes = Object.keys(messageContent);
+    
+    for (const msgType of messageTypes) {
+      const msgContent = messageContent[msgType];
+      if (!msgContent || typeof msgContent !== 'object') continue;
+
+      // Procesar texto principal
+      if (typeof msgContent.text === 'string' && msgContent.text.trim()) {
+        try {
+          const processedText = await processTextMentions(msgContent.text, groupChatId);
+          if (processedText !== msgContent.text) {
+            msgContent.text = processedText;
+          }
+        } catch (error) {
+          // Error silencioso
+        }
+      }
+
+      // Procesar caption
+      if (typeof msgContent.caption === 'string' && msgContent.caption.trim()) {
+        try {
+          const processedCaption = await processTextMentions(msgContent.caption, groupChatId);
+          if (processedCaption !== msgContent.caption) {
+            msgContent.caption = processedCaption;
+          }
+        } catch (error) {
+          // Error silencioso
+        }
+      }
+
+      // Procesar contextInfo
+      if (msgContent.contextInfo) {
+        await processContextInfo(msgContent.contextInfo, groupChatId);
+      }
+    }
+  }
+
+  // Función mejorada para procesar mensajes y resolver todos los LIDs
+  async function processMessageLids(message) {
+    try {
+      if (!message || !message.key) return message;
+      
+      const groupChatId = message.key.remoteJid?.endsWith?.('@g.us') ? message.key.remoteJid : null;
+      if (!groupChatId) return message;
+
+      // Crear copia profunda para evitar mutaciones no deseadas
+      const processedMessage = JSON.parse(JSON.stringify(message));
+
+      // 1. Resolver participant LID en la clave del mensaje
+      if (processedMessage.key?.participant?.endsWith?.('@lid')) {
+        try {
+          const resolved = await lidCacheManager.resolveLid(processedMessage.key.participant, groupChatId);
+          if (resolved && resolved !== processedMessage.key.participant && !resolved.endsWith('@lid')) {
+            processedMessage.key.participant = resolved;
+          }
+        } catch (error) {
+          // Error silencioso
+        }
+      }
+
+      // 2. Procesar mentionedJid a nivel raíz del mensaje
+      if (processedMessage.mentionedJid && Array.isArray(processedMessage.mentionedJid)) {
+        const resolvedMentions = [];
+        for (const jid of processedMessage.mentionedJid) {
+          if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+            try {
+              const resolved = await lidCacheManager.resolveLid(jid, groupChatId);
+              resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+            } catch (error) {
+              resolvedMentions.push(jid);
+            }
+          } else {
+            resolvedMentions.push(jid);
+          }
+        }
+        processedMessage.mentionedJid = resolvedMentions;
+      }
+
+      // 3. Procesar contenido del mensaje recursivamente
+      if (processedMessage.message) {
+        await processMessageContent(processedMessage.message, groupChatId);
+      }
+
+      return processedMessage;
+    } catch (err) {
+      return message;
+    }
+  }
+
+  // Extraer JID real de atributos de mensaje
   function extractRealJid(messageAttrs) {
     try {
       if (!messageAttrs) return null;
       if (messageAttrs.participant_pn) {
-        console.log(`[LID-DEBUG] extractRealJid: usando participant_pn = ${messageAttrs.participant_pn}`);
         return messageAttrs.participant_pn;
       }
       if (messageAttrs.participant && messageAttrs.participant.endsWith?.('@lid')) {
         const lidPart = messageAttrs.participant.split('@')[0];
         if (lidPart.includes(':')) {
           const numberPart = lidPart.split(':')[0];
-          console.log(`[LID-DEBUG] extractRealJid: construido desde lidPart => ${numberPart}@s.whatsapp.net`);
           return `${numberPart}@s.whatsapp.net`;
         }
       }
       return messageAttrs.participant;
-    } catch (err) {
-      console.error('[LID-DEBUG] Error en extractRealJid:', err && err.message ? err.message : err);
+    } catch (error) {
       return messageAttrs?.participant;
     }
   }
 
-  // -------------------------
-  // handleLidMessage - crea placeholder (prefiere participant_pn cuando sea necesario)
-  // -------------------------
+  // Crear placeholder para mensajes LID
   async function handleLidMessage(messageNode, isRetry = false) {
     if (!messageNode || !messageNode.attrs) return null;
     const attrs = messageNode.attrs;
@@ -253,29 +472,33 @@ function makeInMemoryStore() {
     const lidParticipant = attrs.participant;
     const realJid = extractRealJid(attrs);
 
-    console.log(`[LID-DEBUG] handleLidMessage: id=${messageId} group=${groupJid} lidParticipant=${lidParticipant} realJid=${realJid} retry=${isRetry}`);
-
-    // Intentar resolver LID
     let resolved = lidParticipant;
     if (lidParticipant?.endsWith?.('@lid')) {
-      const maybe = await resolveLidFromCache(lidParticipant, groupJid);
-      // Preferir una JID real conocida (participant_pn) si resolve falla
-      if (maybe && !maybe.endsWith?.('@lid')) resolved = maybe;
-      else if (realJid) resolved = realJid;
-      else resolved = maybe;
-      console.log(`[LID-DEBUG] handleLidMessage: resolvedCandidate=${maybe} finalResolved=${resolved}`);
+      const maybe = await lidCacheManager.resolveLid(lidParticipant, groupJid);
+      if (maybe && !maybe.endsWith?.('@lid')) {
+        resolved = maybe;
+      } else if (realJid) {
+        resolved = realJid;
+      } else {
+        resolved = maybe;
+      }
     } else {
       resolved = realJid || lidParticipant;
     }
 
     const messageTimestamp = parseInt(attrs.t || `${Math.floor(Date.now() / 1000)}`);
 
-    const placeholder = {
-      key: { remoteJid: groupJid, fromMe: false, id: messageId, participant: resolved || realJid },
+    return {
+      key: { 
+        remoteJid: groupJid, 
+        fromMe: false, 
+        id: messageId, 
+        participant: resolved || realJid 
+      },
       messageTimestamp,
       pushName: attrs.notify || 'Usuario Web',
       message: {
-        conversation: isRetry
+        conversation: isRetry 
           ? `🔄 Reintentando descifrar mensaje web... (${(pendingDecryption.get(messageId)?.retryCount || 0)})`
           : '🌐 Mensaje desde Web/Desktop - Procesando...'
       },
@@ -287,14 +510,9 @@ function makeInMemoryStore() {
       _realJid: realJid,
       _retryCount: isRetry ? (pendingDecryption.get(messageId)?.retryCount || 0) + 1 : 0
     };
-
-    console.log(`[LID-DEBUG] Creado placeholder para id=${messageId} participant=${placeholder.key.participant}`);
-    return placeholder;
   }
 
-  // -------------------------
-  // waitForWsReady (espera por ws.readyState === 1)
-  // -------------------------
+  // Esperar por WebSocket listo
   function waitForWsReady(timeout = WS_WAIT_TIMEOUT) {
     return new Promise((resolve) => {
       const start = Date.now();
@@ -311,18 +529,14 @@ function makeInMemoryStore() {
     });
   }
 
-  // -------------------------
-  // retryLidDecryption: espera ws, intenta sendRetryRequest varias veces por ciclo
-  // -------------------------
+  // Reintentar descifrado de LID
   async function retryLidDecryption(messageId, originalNode, retryCount = 0) {
     try {
-      console.log(`[LID-DEBUG] retryLidDecryption: id=${messageId} retry=${retryCount}`);
       if (retryCount >= MAX_RETRIES) {
-        console.log(`[LID-DEBUG] Max retries alcanzado para ${messageId}`);
         errorStats.lidDecryptionErrors++;
         const errorMessage = await handleLidMessage(originalNode, true);
         if (errorMessage) {
-          errorMessage.message.conversation = '❌ No se pudo descifrar el mensaje web';
+          errorMessage.message.conversation = '⚠️ No se pudo descifrar el mensaje web';
           errorMessage.status = proto.WebMessageInfo.Status?.ERROR || 0;
           errorMessage._finalError = true;
         }
@@ -338,116 +552,49 @@ function makeInMemoryStore() {
       pendingDecryption.set(messageId, pending);
 
       const waitMs = RETRY_DELAY * (retryCount + 1);
-      console.log(`[LID-DEBUG] Programando retry en ${waitMs}ms para id=${messageId}`);
 
       setTimeout(async () => {
         try {
           const wsReady = await waitForWsReady();
           if (!wsReady) {
-            console.log(`[LID-DEBUG] ws no listo después de esperar; reintentando schedule para id=${messageId}`);
-            setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), RETRY_DELAY * (retryCount + 2));
+            setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), 
+              RETRY_DELAY * (retryCount + 2));
             return;
           }
 
           const groupJid = originalNode.attrs.from;
           const participantJid = extractRealJid(originalNode.attrs);
-          console.log(`[LID-DEBUG] ws listo — intentando sendRetryRequest para id=${messageId} group=${groupJid} participant=${participantJid}`);
 
-          // intentar múltiples envíos por ciclo, con logs
           let attemptOk = false;
           for (let attempt = 1; attempt <= SEND_RETRY_ATTEMPTS_PER_CYCLE; attempt++) {
             try {
               if (typeof conn.sendRetryRequest === 'function') {
-                console.log(`[LID-DEBUG] sendRetryRequest: intento ${attempt}/${SEND_RETRY_ATTEMPTS_PER_CYCLE} para id=${messageId}`);
                 await conn.sendRetryRequest(groupJid, messageId, participantJid);
                 attemptOk = true;
-                console.log(`[LID-DEBUG] sendRetryRequest ok (int ${attempt}) para id=${messageId}`);
                 break;
               } else {
-                console.log('[LID-DEBUG] conn.sendRetryRequest no disponible en esta versión de baileys');
                 break;
               }
             } catch (retryErr) {
-              console.error(`[LID-DEBUG] Error en sendRetryRequest intento ${attempt}:`, retryErr && retryErr.message ? retryErr.message : retryErr);
-              // pequeña espera antes del siguiente intento
               await new Promise(r => setTimeout(r, 300));
             }
           }
 
-          if (!attemptOk) {
-            console.log(`[LID-DEBUG] Ningún intento de sendRetryRequest tuvo éxito para id=${messageId} en este ciclo`);
-          }
-
-          // programar próximo intento incremental
-          setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), RETRY_DELAY * (retryCount + 2));
+          setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), 
+            RETRY_DELAY * (retryCount + 2));
         } catch (err) {
-          console.error('[LID-DEBUG] Error en setTimeout de retryLidDecryption:', err && err.message ? err.message : err);
-          setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), RETRY_DELAY * (retryCount + 2));
+          setTimeout(() => retryLidDecryption(messageId, originalNode, retryCount + 1), 
+            RETRY_DELAY * (retryCount + 2));
         }
       }, waitMs);
 
       return await handleLidMessage(originalNode, true);
     } catch (err) {
-      console.error('[LID-DEBUG] Exception en retryLidDecryption:', err && err.message ? err.message : err);
       return null;
     }
   }
 
-  // -------------------------
-  // processMessageLids (resolver LIDs dentro de mensajes descifrados)
-  // -------------------------
-  async function processMessageLids(message) {
-    try {
-      if (!message || !message.key) return message;
-      const groupChatId = message.key.remoteJid && message.key.remoteJid.endsWith?.('@g.us') ? message.key.remoteJid : null;
-      if (!groupChatId) return message;
-
-      const processedMessage = { ...message };
-
-      if (processedMessage.key?.participant?.endsWith?.('@lid')) {
-        const resolved = await resolveLidFromCache(processedMessage.key.participant, groupChatId);
-        if (resolved && resolved !== processedMessage.key.participant) {
-          console.log(`[LID-DEBUG] processMessageLids: reemplazando participant ${processedMessage.key.participant} -> ${resolved}`);
-          processedMessage.key.participant = resolved;
-        }
-      }
-
-      if (processedMessage.message) {
-        const messageTypes = Object.keys(processedMessage.message);
-        for (const msgType of messageTypes) {
-          const msgContent = processedMessage.message[msgType];
-          if (!msgContent) continue;
-
-          if (msgContent?.contextInfo?.mentionedJid) {
-            const resolvedMentions = [];
-            for (const jid of msgContent.contextInfo.mentionedJid) {
-              if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
-                const r = await resolveLidFromCache(jid, groupChatId);
-                resolvedMentions.push(r);
-                console.log(`[LID-DEBUG] Resuelto mention ${jid} -> ${r}`);
-              } else resolvedMentions.push(jid);
-            }
-            msgContent.contextInfo.mentionedJid = resolvedMentions;
-          }
-
-          if (msgContent?.contextInfo?.participant && msgContent.contextInfo.participant.endsWith?.('@lid')) {
-            const r = await resolveLidFromCache(msgContent.contextInfo.participant, groupChatId);
-            msgContent.contextInfo.participant = r;
-            console.log(`[LID-DEBUG] Resuelto contextInfo.participant -> ${r}`);
-          }
-        }
-      }
-
-      return processedMessage;
-    } catch (err) {
-      console.error('[LID-DEBUG] Error en processMessageLids:', err && err.message ? err.message : err);
-      return message;
-    }
-  }
-
-  // -------------------------
-  // loadMessage / upsertMessage / fetchGroupMetadata
-  // -------------------------
+  // Funciones de store
   function loadMessage(jid, id = null) {
     try {
       if (!jid) return null;
@@ -461,7 +608,6 @@ function makeInMemoryStore() {
         return messages[realJid]?.find(m => m.key.id === id) || null;
       }
     } catch (err) {
-      console.error('[STORE] Error loadMessage:', err && err.message ? err.message : err);
       return null;
     }
   }
@@ -480,11 +626,21 @@ function makeInMemoryStore() {
       if (isRequiredToUpdate) {
         try {
           const metadata = await groupMetadataFunc?.(jid);
-          if (metadata) Object.assign(chats[jid], { subject: metadata.subject, lastfetch: Date.now(), metadata });
-        } catch (err) { console.error('[STORE] Error fetchGroupMetadata:', err && err.message ? err.message : err); }
+          if (metadata) {
+            Object.assign(chats[jid], { 
+              subject: metadata.subject, 
+              lastfetch: Date.now(), 
+              metadata 
+            });
+          }
+        } catch (err) {
+          // Error silencioso
+        }
       }
       return chats[jid].metadata;
-    } catch (err) { console.error('[STORE] Error fetchGroupMetadata outer:', err && err.message ? err.message : err); }
+    } catch (err) {
+      // Error silencioso
+    }
   }
 
   function upsertMessage(jid, message, type = 'append') {
@@ -499,42 +655,37 @@ function makeInMemoryStore() {
       const existing = loadMessage(jid, message.key.id);
       if (existing) {
         if ((existing._isLidWebMessage || existing._lidDecryptError) && !message._isLidWebMessage && message.message && !message._finalError) {
-          console.log(`[LID-DEBUG] Reemplazando placeholder LID con mensaje real: ${message.key.id}`);
           Object.assign(existing, message);
-          delete existing._isLidWebMessage; delete existing._lidDecryptError; delete existing._retryCount; delete existing._originalNode;
-          pendingDecryption.delete(message.key.id); errorStats.successfulRetries++;
-        } else Object.assign(existing, message);
+          delete existing._isLidWebMessage;
+          delete existing._lidDecryptError;
+          delete existing._retryCount;
+          delete existing._originalNode;
+          pendingDecryption.delete(message.key.id);
+          errorStats.successfulRetries++;
+        } else {
+          Object.assign(existing, message);
+        }
       } else {
-        if (type === 'append') messages[jid].push(message); else messages[jid].unshift(message);
+        if (type === 'append') {
+          messages[jid].push(message);
+        } else {
+          messages[jid].unshift(message);
+        }
       }
-    } catch (err) { console.error('[STORE] Error upsertMessage:', err && err.message ? err.message : err); }
+    } catch (err) {
+      // Error silencioso
+    }
   }
 
-  // -------------------------
-  // bind(connection)
-  // -------------------------
+  // Función bind principal
   function bind(connection) {
     conn = connection;
     if (!conn.chats) conn.chats = {};
 
-    loadLidCache();
+    // Inicializar LidResolver
+    lidResolver = new LidResolver(conn);
 
-    // intercept conn.ev.emit only for extra logs, do not suppress
-    try {
-      if (conn.ev && typeof conn.ev.emit === 'function') {
-        const originalEmit = conn.ev.emit.bind(conn.ev);
-        conn.ev.emit = function (event, ...args) {
-          try {
-            if (event === 'connection.update' && args[0]?.lastDisconnect?.error?.message?.includes?.('error in handling message')) {
-              console.log('[LID-DEBUG] connection.update interceptado: error in handling message (registrado extra)');
-            }
-          } catch (e) {}
-          return originalEmit(event, ...args);
-        };
-      }
-    } catch (err) { console.error('[STORE] Error al sobreescribir conn.ev.emit:', err && err.message ? err.message : err); }
-
-    // envolver conn.ws.on (CB:message / message)
+    // Envolver conn.ws.on para interceptar mensajes LID
     try {
       if (conn.ws && typeof conn.ws.on === 'function') {
         const originalOn = conn.ws.on.bind(conn.ws);
@@ -543,19 +694,25 @@ function makeInMemoryStore() {
             const wrappedCBHandler = async function (node) {
               try {
                 if (node && node.attrs && node.attrs.addressing_mode === 'lid') {
-                  console.log('[LID-DEBUG] Mensaje con addressing_mode=lid detectado (CB:message)');
                   try {
                     const placeholder = await handleLidMessage(node);
                     if (placeholder) {
                       const jid = node.attrs.from;
                       upsertMessage(jid, proto.WebMessageInfo.fromObject(placeholder), 'append');
-                      pendingDecryption.set(node.attrs.id, { originalNode: node, retryCount: 0, lastRetry: Date.now() });
+                      pendingDecryption.set(node.attrs.id, { 
+                        originalNode: node, 
+                        retryCount: 0, 
+                        lastRetry: Date.now() 
+                      });
                       setTimeout(() => retryLidDecryption(node.attrs.id, node, 0), 500);
-                      console.log(`[LID-DEBUG] Placeholder insertado y retry iniciado para id=${node.attrs.id}`);
                     }
-                  } catch (inner) { console.error('[LID-DEBUG] Error creando placeholder desde CB:message:', inner && inner.message ? inner.message : inner); }
+                  } catch (inner) {
+                    // Error silencioso
+                  }
                 }
-              } catch (e) { console.error('[LID-DEBUG] Error en wrapped CB:message handler:', e && e.message ? e.message : e); }
+              } catch (e) {
+                // Error silencioso
+              }
               return handler(node);
             };
             return originalOn(event, wrappedCBHandler);
@@ -567,20 +724,26 @@ function makeInMemoryStore() {
                 return await handler(data);
               } catch (error) {
                 try {
-                  if (error && typeof error.message === 'string' && error.message.includes('error in handling message') && data?.attrs?.addressing_mode === 'lid') {
-                    console.log(`[LID-DEBUG] Mensaje Web/Desktop con fallo en handler: id=${data.attrs.id}`);
+                  if (error && typeof error.message === 'string' && 
+                      error.message.includes('error in handling message') && 
+                      data?.attrs?.addressing_mode === 'lid') {
                     errorStats.webDesktopErrors++;
                     const placeholder = await handleLidMessage(data);
                     if (placeholder) {
                       const jid = data.attrs.from;
                       upsertMessage(jid, proto.WebMessageInfo.fromObject(placeholder), 'append');
-                      pendingDecryption.set(data.attrs.id, { originalNode: data, retryCount: 0, lastRetry: Date.now() });
+                      pendingDecryption.set(data.attrs.id, { 
+                        originalNode: data, 
+                        retryCount: 0, 
+                        lastRetry: Date.now() 
+                      });
                       setTimeout(() => retryLidDecryption(data.attrs.id, data, 0), 500);
-                      console.log(`[LID-DEBUG] Placeholder insertado y retry iniciado para id=${data.attrs.id}`);
                     }
                     return;
                   }
-                } catch (inner) { console.error('[LID-DEBUG] Error dentro del wrapper de ws.on:', inner && inner.message ? inner.message : inner); }
+                } catch (inner) {
+                  // Error silencioso
+                }
                 throw error;
               }
             };
@@ -590,34 +753,81 @@ function makeInMemoryStore() {
           return originalOn(event, handler);
         };
       }
-    } catch (err) { console.error('[STORE] Error al envolver conn.ws.on:', err && err.message ? err.message : err); }
+    } catch (err) {
+      // Error silencioso
+    }
 
-    // -------------------------
-    // Eventos de Baileys
-    // -------------------------
+    // Event handler mejorado para messages.upsert
     try {
       conn.ev.on('messages.upsert', async ({ messages: newMessages, type }) => {
         try {
           if (!['append', 'notify'].includes(type)) return;
+          
+          const processedMessages = [];
+          
           for (const msg of newMessages) {
             try {
               const jid = decodeJidSafe(msg.key.remoteJid);
               if (!jid || isJidBroadcast(jid)) continue;
 
+              // Limpiar mensajes pendientes si se resuelven
               if (pendingDecryption.has(msg.key.id)) {
-                console.log(`[LID-DEBUG] Mensaje LID descifrado exitosamente (upsert): ${msg.key.id}`);
                 pendingDecryption.delete(msg.key.id);
                 errorStats.successfulRetries++;
               }
 
-              const processed = await processMessageLids(msg);
+              // Procesar mensaje para LIDs de forma más exhaustiva
+              let processed = msg;
+              
+              // Primer paso: procesamiento básico
+              try {
+                processed = await processMessageLids(msg);
+              } catch (mErr) {
+                console.error('❌ Error en processMessageLids:', mErr);
+              }
+              
+              // Segundo paso: verificación adicional para grupos
+              if (jid.endsWith('@g.us')) {
+                try {
+                  // Verificar si quedan menciones LID sin resolver
+                  const messageText = extractAllTextFromMessage(processed);
+                  if (messageText && /(@\d{8,20})/.test(messageText)) {
+                    console.log(`⚠️ Mensaje con posibles LIDs sin resolver en ${jid}`);
+                    
+                    // Intento adicional de procesamiento
+                    const additionalProcessed = await processMessageLids(processed);
+                    if (JSON.stringify(additionalProcessed) !== JSON.stringify(processed)) {
+                      processed = additionalProcessed;
+                    }
+                  }
+                } catch (verifyErr) {
+                  // Error silencioso en verificación
+                }
+              }
+
               upsertMessage(jid, proto.WebMessageInfo.fromObject(processed), type);
+              processedMessages.push(processed);
             } catch (mErr) {
-              console.error('[STORE] Error procesando message.upsert:', mErr && mErr.message ? mErr.message : mErr);
-              try { const jid = decodeJidSafe(msg.key.remoteJid); upsertMessage(jid, proto.WebMessageInfo.fromObject(msg), type); } catch (_) {}
+              try {
+                const jid = decodeJidSafe(msg.key.remoteJid);
+                upsertMessage(jid, proto.WebMessageInfo.fromObject(msg), type);
+                processedMessages.push(msg);
+              } catch (_) {
+                // Error silencioso final
+              }
             }
           }
-        } catch (outer) { console.error('[STORE] Exception en messages.upsert handler:', outer && outer.message ? outer.message : outer); }
+          
+          // Debug info
+          if (processedMessages.length > 0) {
+            const groupMessages = processedMessages.filter(m => m.key?.remoteJid?.endsWith('@g.us'));
+            if (groupMessages.length > 0) {
+              console.log(`📨 Procesados ${groupMessages.length} mensajes de grupo`);
+            }
+          }
+        } catch (outer) {
+          console.error('❌ Error en messages.upsert handler:', outer);
+        }
       });
 
       conn.ev.on('messages.update', async updates => {
@@ -628,19 +838,25 @@ function makeInMemoryStore() {
               const message = loadMessage(jid, key.id);
               if (message) {
                 if ((message._isLidWebMessage || pendingDecryption.has(key.id)) && update.message) {
-                  console.log(`[LID-DEBUG] Actualización de mensaje LID recibida: ${key.id}`);
                   const processedUpdate = await processMessageLids({ key, ...update });
                   Object.assign(message, processedUpdate);
-                  delete message._isLidWebMessage; delete message._retryCount; delete message._originalNode;
-                  pendingDecryption.delete(key.id); errorStats.successfulRetries++;
+                  delete message._isLidWebMessage;
+                  delete message._retryCount;
+                  delete message._originalNode;
+                  pendingDecryption.delete(key.id);
+                  errorStats.successfulRetries++;
                 } else {
                   const processedUpdate = await processMessageLids({ key, ...update });
                   Object.assign(message, processedUpdate);
                 }
               }
-            } catch (e) { console.error('[STORE] Error en messages.update inner:', e && e.message ? e.message : e); }
+            } catch (e) {
+              // Error silencioso
+            }
           }
-        } catch (e) { console.error('[STORE] Error manejando messages.update:', e && e.message ? e.message : e); }
+        } catch (e) {
+          // Error silencioso
+        }
       });
 
       conn.ev.on('message-receipt.update', updates => {
@@ -651,157 +867,150 @@ function makeInMemoryStore() {
               const message = loadMessage(jid, key.id);
               if (message) {
                 updateMessageWithReceipt(message, receipt);
-                if (receipt.type === 'retry' && pendingDecryption.has(key.id)) console.log(`[LID-DEBUG] Retry receipt para mensaje LID: ${key.id}`);
               }
-            } catch (e) { console.error('[STORE] Error message-receipt.update inner:', e && e.message ? e.message : e); }
+            } catch (e) {
+              // Error silencioso
+            }
           }
-        } catch (e) { console.error('[STORE] Error message-receipt.update:', e && e.message ? e.message : e); }
+        } catch (e) {
+          // Error silencioso
+        }
       });
 
-      // contacts/chats/groups handlers (mantener)
+      // Eventos de chats y contactos
       conn.ev.on('chats.set', ({ chats: newChats }) => {
-        for (const chat of newChats) { const jid = decodeJidSafe(chat.id); if (!(jid in chats)) chats[jid] = { id: jid }; Object.assign(chats[jid], chat); conn.chats[jid] = chats[jid]; }
+        for (const chat of newChats) {
+          const jid = decodeJidSafe(chat.id);
+          if (!(jid in chats)) chats[jid] = { id: jid };
+          Object.assign(chats[jid], chat);
+          conn.chats[jid] = chats[jid];
+        }
       });
+
       conn.ev.on('contacts.set', ({ contacts: newContacts }) => {
-        for (const contact of newContacts) { const jid = decodeJidSafe(contact.id); if (!(jid in contacts)) contacts[jid] = { id: jid }; Object.assign(contacts[jid], contact); if (!(jid in chats)) chats[jid] = { id: jid }; Object.assign(chats[jid], contact); conn.chats[jid] = chats[jid]; }
+        for (const contact of newContacts) {
+          const jid = decodeJidSafe(contact.id);
+          if (!(jid in contacts)) contacts[jid] = { id: jid };
+          Object.assign(contacts[jid], contact);
+          if (!(jid in chats)) chats[jid] = { id: jid };
+          Object.assign(chats[jid], contact);
+          conn.chats[jid] = chats[jid];
+        }
       });
+
       conn.ev.on('chats.upsert', newChats => {
-        for (const chat of newChats) { const jid = decodeJidSafe(chat.id); if (!(jid in chats)) chats[jid] = { id: jid }; Object.assign(chats[jid], chat); conn.chats[jid] = chats[jid]; }
+        for (const chat of newChats) {
+          const jid = decodeJidSafe(chat.id);
+          if (!(jid in chats)) chats[jid] = { id: jid };
+          Object.assign(chats[jid], chat);
+          conn.chats[jid] = chats[jid];
+        }
       });
+
       conn.ev.on('chats.update', updates => {
-        for (const update of updates) { const jid = decodeJidSafe(update.id); if (!(jid in chats)) chats[jid] = { id: jid }; Object.assign(chats[jid], update); conn.chats[jid] = chats[jid]; }
+        for (const update of updates) {
+          const jid = decodeJidSafe(update.id);
+          if (!(jid in chats)) chats[jid] = { id: jid };
+          Object.assign(chats[jid], update);
+          conn.chats[jid] = chats[jid];
+        }
       });
+
       conn.ev.on('presence.update', ({ id, presences: updates }) => {
-        const jid = decodeJidSafe(id); if (!(jid in chats)) chats[jid] = { id: jid }; Object.assign(chats[jid], { presences: { ...(chats[jid].presences || {}), ...updates } }); conn.chats[jid] = chats[jid];
+        const jid = decodeJidSafe(id);
+        if (!(jid in chats)) chats[jid] = { id: jid };
+        Object.assign(chats[jid], { 
+          presences: { 
+            ...(chats[jid].presences || {}), 
+            ...updates 
+          } 
+        });
+        conn.chats[jid] = chats[jid];
       });
 
       conn.ev.on('groups.update', async (updates) => {
         for (const update of updates) {
-          const jid = decodeJidSafe(update.id); if (!jid || !isJidGroup(jid)) continue; if (!(jid in chats)) chats[jid] = { id: jid }; Object.assign(chats[jid], update);
-          try { const metadata = await conn.groupMetadata(jid).catch(() => null); if (metadata) { chats[jid].metadata = metadata; chats[jid].subject = metadata.subject; await updateLidCacheFromMetadata(metadata, jid); } } catch (_) {}
+          const jid = decodeJidSafe(update.id);
+          if (!jid || !isJidGroup(jid)) continue;
+          if (!(jid in chats)) chats[jid] = { id: jid };
+          Object.assign(chats[jid], update);
+          try {
+            const metadata = await conn.groupMetadata(jid).catch(() => null);
+            if (metadata) {
+              chats[jid].metadata = metadata;
+              chats[jid].subject = metadata.subject;
+            }
+          } catch (_) {
+            // Error silencioso
+          }
           conn.chats[jid] = chats[jid];
         }
       });
 
       conn.ev.on('group-participants.update', async ({ id, participants, action }) => {
-        if (!id) return; const jid = decodeJidSafe(id); if (!isJidGroup(jid)) return; if (!(jid in chats)) chats[jid] = { id: jid }; chats[jid].isChats = true;
-        try { const metadata = await conn.groupMetadata(jid).catch(() => null); if (metadata) { chats[jid].metadata = metadata; chats[jid].subject = metadata.subject; await updateLidCacheFromMetadata(metadata, jid); } } catch (_) {}
+        if (!id) return;
+        const jid = decodeJidSafe(id);
+        if (!isJidGroup(jid)) return;
+        if (!(jid in chats)) chats[jid] = { id: jid };
+        chats[jid].isChats = true;
+        try {
+          const metadata = await conn.groupMetadata(jid).catch(() => null);
+          if (metadata) {
+            chats[jid].metadata = metadata;
+            chats[jid].subject = metadata.subject;
+          }
+        } catch (_) {
+          // Error silencioso
+        }
         conn.chats[jid] = chats[jid];
       });
 
-    } catch (e) { console.error('[STORE] Error en bind - setup de eventos:', e && e.message ? e.message : e); }
-  } // end bind
-
-  // -------------------------
-  // updateLidCacheFromMetadata
-  // -------------------------
-  async function updateLidCacheFromMetadata(metadata, groupJid) {
-    try {
-      if (!metadata?.participants || !conn) return;
-      for (const participant of metadata.participants) {
-        try {
-          const phoneNumber = participant.jid.split('@')[0];
-          if (!phoneNumber) continue;
-          const possibleLid = `${phoneNumber}:13@lid`;
-          if (!lidCache.has(phoneNumber)) {
-            const entry = { jid: participant.jid, lid: possibleLid, name: participant.jid.split('@')[0], timestamp: Date.now(), groupJid, inferred: true };
-            lidCache.set(phoneNumber, entry); jidToLidMap.set(participant.jid, possibleLid); isDirty = true;
-            console.log(`[LID-DEBUG] updateLidCacheFromMetadata: inferido ${possibleLid} -> ${participant.jid}`);
-          }
-        } catch (e) { /* ignore */ }
-      }
-    } catch (err) { console.error('[LID-DEBUG] Error updateLidCacheFromMetadata:', err && err.message ? err.message : err); }
+    } catch (e) {
+      // Error silencioso
+    }
   }
 
-  // -------------------------
-  // Estadísticas y limpieza
-  // -------------------------
+  // Funciones de limpieza
   function getErrorStats() {
-    return { ...errorStats, pendingDecryption: pendingDecryption.size, cacheSize: lidCache.size, jidMappings: jidToLidMap.size, pendingMessages: Array.from(pendingDecryption.entries()).map(([id, data]) => ({ id, retryCount: data.retryCount, lastRetry: data.lastRetry })) };
+    return {
+      ...errorStats,
+      pendingDecryption: pendingDecryption.size,
+      cacheSize: lidCacheManager.cache.size,
+      jidMappings: lidCacheManager.jidToLidMap.size
+    };
   }
 
   function cleanupPendingMessages() {
     const oneHourAgo = Date.now() - (60 * 60 * 1000);
     let cleaned = 0;
     for (const [messageId, data] of pendingDecryption.entries()) {
-      if (data.lastRetry && data.lastRetry < oneHourAgo) { pendingDecryption.delete(messageId); cleaned++; }
+      if (data.lastRetry && data.lastRetry < oneHourAgo) {
+        pendingDecryption.delete(messageId);
+        cleaned++;
+      }
     }
-    if (cleaned) console.log(`[LID-DEBUG] cleanupPendingMessages limpió ${cleaned} entries`);
     return cleaned;
   }
+
+  // Limpiar mensajes pendientes cada 30 minutos
   setInterval(cleanupPendingMessages, 30 * 60 * 1000);
 
-  // -------------------------
   // Serialización
-  // -------------------------
-  function toJSON() { return { chats, messages, contacts }; }
-  function fromJSON(json) {
-    Object.assign(chats, json.chats || {}); Object.assign(contacts, json.contacts || {});
-    for (const jid in json.messages || {}) messages[jid] = (json.messages[jid] || []).map(m => m && proto.WebMessageInfo.fromObject(m)).filter(Boolean);
+  function toJSON() {
+    return { chats, messages, contacts };
   }
 
-  // -------------------------
-  // pino handler: detecta "error in handling message" y SessionError
-  // -------------------------
-  pinoLineHandler = async function (obj, rawLine) {
-    try {
-      if (!obj) return;
-      const msgText = obj.msg || obj.message || '';
-      // caso 1: "error in handling message"
-      if (typeof msgText === 'string' && msgText.includes('error in handling message') && obj.node) {
-        try {
-          const node = obj.node;
-          const attrs = node.attrs || {};
-          if (attrs.addressing_mode === 'lid' || attrs.participant?.includes?.('@lid') || attrs.participant_pn) {
-            console.log('[LID-DEBUG] >>> pinoIntercept: error in handling message detectado por pino log');
-            console.log('[LID-DEBUG] node.attrs:', JSON.stringify(attrs));
-            try {
-              const placeholder = await handleLidMessage(node);
-              if (placeholder && conn) {
-                const jid = attrs.from;
-                upsertMessage(jid, proto.WebMessageInfo.fromObject(placeholder), 'append');
-                pendingDecryption.set(attrs.id, { originalNode: node, retryCount: 0, lastRetry: Date.now(), sessionErrorObserved: false });
-                setTimeout(() => retryLidDecryption(attrs.id, node, 0), 500);
-                console.log(`[LID-DEBUG] Placeholder insertado y retry iniciado para id=${attrs.id}`);
-              }
-            } catch (inner) {
-              console.error('[LID-DEBUG] Error al crear placeholder desde pinoIntercept:', inner && inner.message ? inner.message : inner);
-            }
-          }
-        } catch (e) { console.error('[LID-DEBUG] Error procesando obj.node en pinoLineHandler:', e && e.message ? e.message : e); }
-      }
+  function fromJSON(json) {
+    Object.assign(chats, json.chats || {});
+    Object.assign(contacts, json.contacts || {});
+    for (const jid in json.messages || {}) {
+      messages[jid] = (json.messages[jid] || [])
+        .map(m => m && proto.WebMessageInfo.fromObject(m))
+        .filter(Boolean);
+    }
+  }
 
-      // caso 2: detectar errores de sesión (SessionError / No matching sessions)
-      if (obj.err || (obj.msg && typeof obj.msg === 'string' && obj.msg.includes('No matching sessions found for message'))) {
-        try {
-          const errObj = obj.err || {};
-          const stack = errObj.stack || obj.stack || obj.msg;
-          // extraer message id y clave si está disponible en obj.key / obj.node
-          const node = obj.node || {};
-          const attrs = node.attrs || {};
-          if (attrs && (attrs.addressing_mode === 'lid' || attrs.participant_pn || attrs.participant?.includes?.('@lid'))) {
-            console.log('[LID-DEBUG] >>> pinoIntercept: SessionError / No matching sessions detectado');
-            console.log('[LID-DEBUG] node.attrs (session error):', JSON.stringify(attrs));
-            console.log('[LID-DEBUG] session error stack snippet:', typeof stack === 'string' ? stack.split('\n')[0] : stack);
-
-            // marcar pendingDecryption con sessionErrorObserved para diagnóstico
-            const pending = pendingDecryption.get(attrs.id) || {};
-            pending.sessionErrorObserved = true;
-            pending.sessionErrorInfo = { observedAt: Date.now(), snippet: typeof stack === 'string' ? stack.split('\n')[0] : stack };
-            pendingDecryption.set(attrs.id, pending);
-            console.log(`[LID-DEBUG] pendingDecryption[${attrs.id}] marcado sessionErrorObserved=true`);
-          }
-        } catch (e) {
-          console.error('[LID-DEBUG] Error procesando SessionError en pinoLineHandler:', e && e.message ? e.message : e);
-        }
-      }
-
-    } catch (e) { /* no bloquear */ }
-  };
-
-  // -------------------------
   // API pública
-  // -------------------------
   return {
     bind,
     loadMessage,
@@ -813,29 +1022,75 @@ function makeInMemoryStore() {
     messages,
     contacts,
     lidResolver: {
-      async resolve(lidJid, groupChatId) { return await resolveLidFromCache(lidJid, groupChatId); },
-      add(lidKey, jid, name = null) {
-        if (lidCache.has(lidKey)) return;
-        const entry = { jid, lid: `${lidKey}@lid`, name: name || jid.split('@')[0], timestamp: Date.now(), manual: true };
-        lidCache.set(lidKey, entry); jidToLidMap.set(jid, `${lidKey}@lid`); isDirty = true;
-        console.log(`[LID-DEBUG] lidResolver.add: ${lidKey} -> ${jid}`);
+      async resolve(lidJid, groupChatId) { 
+        return await lidCacheManager.resolveLid(lidJid, groupChatId);
       },
-      get cache() { return lidCache; },
-      getStats() { return getErrorStats(); },
-      forceSave() { saveLidCache(); },
+      add(lidKey, jid, name = null) {
+        if (lidCacheManager.cache.has(lidKey)) return;
+        const entry = { 
+          jid, 
+          lid: `${lidKey}@lid`, 
+          name: name || jid.split('@')[0], 
+          timestamp: Date.now(), 
+          manual: true 
+        };
+        lidCacheManager.cache.set(lidKey, entry);
+        lidCacheManager.jidToLidMap.set(jid, `${lidKey}@lid`);
+        lidCacheManager.isDirty = true;
+      },
+      get cache() { 
+        return lidCacheManager.cache; 
+      },
+      getStats() { 
+        return getErrorStats(); 
+      },
+      forceSave() { 
+        lidCacheManager.saveCache(); 
+      },
       forceRetryPending() {
         let retriedCount = 0;
         for (const [messageId, data] of pendingDecryption.entries()) {
-          if (data.originalNode) { setTimeout(() => retryLidDecryption(messageId, data.originalNode, 0), retriedCount * 1000); retriedCount++; }
+          if (data.originalNode) {
+            setTimeout(() => retryLidDecryption(messageId, data.originalNode, 0), 
+              retriedCount * 1000);
+            retriedCount++;
+          }
         }
         return retriedCount;
       },
-      clearErrors() { const cleared = { pendingDecryption: pendingDecryption.size, errorStats: { ...errorStats } }; pendingDecryption.clear(); errorStats = { lidDecryptionErrors: 0, webDesktopErrors: 0, successfulRetries: 0, totalRetries: 0 }; return cleared; },
-      getStatus() { return { lidCache: lidCache.size, jidMappings: jidToLidMap.size, pendingDecryption: pendingDecryption.size, errorStats, isDirty, cacheFile }; }
+      clearErrors() {
+        const cleared = {
+          pendingDecryption: pendingDecryption.size,
+          errorStats: { ...errorStats }
+        };
+        pendingDecryption.clear();
+        errorStats = {
+          lidDecryptionErrors: 0,
+          webDesktopErrors: 0,
+          successfulRetries: 0,
+          totalRetries: 0
+        };
+        return cleared;
+      },
+      getStatus() {
+        return {
+          lidCache: lidCacheManager.cache.size,
+          jidMappings: lidCacheManager.jidToLidMap.size,
+          pendingDecryption: pendingDecryption.size,
+          errorStats,
+          isDirty: lidCacheManager.isDirty,
+          cacheFile: lidCacheManager.cacheFile
+        };
+      }
     },
     getErrorStats,
-    cleanupPendingMessages
+    cleanupPendingMessages,
+    
+    // Nuevas funciones expuestas para debugging y control manual
+    processTextMentions,
+    processMessageLids,
+    extractAllTextFromMessage
   };
-} // makeInMemoryStore
+}
 
 export default makeInMemoryStore();

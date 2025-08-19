@@ -10,12 +10,11 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
           isGroup: m.isGroup
         },
         lidResolverStatus: {
-          resolverExists: !!global.lidResolver,
-          cacheSize: global.lidResolver?.cache?.size || 0,
-          jidMappingSize: global.lidResolver?.jidToLidMap?.size || 0,
-          processingQueueSize: global.lidResolver?.processingQueue?.size || 0,
-          isDirty: global.lidResolver?.isDirty || false,
-          cacheFile: global.lidResolver?.cacheFile || 'No definido'
+          resolverExists: !!conn.lid,
+          cacheSize: conn.lid?.getStats ? conn.lid.getStats().total : 0,
+          jidMappingSize: conn.lid?.getStats ? conn.lid.getStats().jidMappings : 0,
+          isDirty: conn.lid?.getStats ? conn.lid.getStats().isDirty : false,
+          cacheFile: conn.lid?.getStats ? conn.lid.getStats().cacheFile : 'No definido'
         }
       };
 
@@ -32,12 +31,11 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
         mentionedJids: m.message?.[Object.keys(m.message)[0]]?.contextInfo?.mentionedJid || []
       };
 
-      let response = `🔍 *Test LID Resolver Local*\n\n`;
+      let response = `🔍 *Test LID Resolver*\n\n`;
       response += `📋 *Estado del Resolver:*\n`;
       response += `• Existe: ${info.lidResolverStatus.resolverExists ? '✅' : '❌'}\n`;
       response += `• Caché LID: ${info.lidResolverStatus.cacheSize} entradas\n`;
       response += `• Mapeo JID: ${info.lidResolverStatus.jidMappingSize} entradas\n`;
-      response += `• Cola procesamiento: ${info.lidResolverStatus.processingQueueSize}\n`;
       response += `• Cambios pendientes: ${info.lidResolverStatus.isDirty ? '⏳' : '✅'}\n`;
       response += `• Archivo: ${info.lidResolverStatus.cacheFile.split('/').pop()}\n\n`;
       
@@ -65,19 +63,18 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'lidcache') {
     try {
-      if (!global.lidResolver) {
-        return await conn.reply(m.chat, '❌ LidResolver no está inicializado', m);
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
       }
       
-      const stats = global.lidResolver.getStats();
+      const stats = conn.lid.getStats();
       
-      let response = `💾 *Caché LID Resolver Local*\n\n`;
+      let response = `💾 *Caché LID Resolver*\n\n`;
       response += `📊 *Estadísticas:*\n`;
       response += `• Total entradas: ${stats.total}\n`;
       response += `• Entradas válidas: ${stats.valid}\n`;
       response += `• No encontrados: ${stats.notFound}\n`;
       response += `• Errores: ${stats.errors}\n`;
-      response += `• Procesando: ${stats.processing}\n`;
       response += `• Mapeos JID: ${stats.jidMappings}\n`;
       response += `• Archivo existe: ${stats.fileExists ? '✅' : '❌'}\n`;
       response += `• Cambios pendientes: ${stats.isDirty ? '⏳' : '✅'}\n\n`;
@@ -88,7 +85,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       
       if (stats.total > 0) {
         response += `\n🗂️ *Muestra de entradas:*\n`;
-        const users = global.lidResolver.getAllUsers().slice(0, 5);
+        const users = conn.lid.getAllUsers().slice(0, 5);
         users.forEach((user, index) => {
           const lidShort = user.lid.split('@')[0].slice(-4);
           const jidShort = user.jid.split('@')[0].slice(-4);
@@ -115,19 +112,18 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'clearcache') {
     try {
-      if (!global.lidResolver) {
-        return await conn.reply(m.chat, '❌ LidResolver no está inicializado', m);
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
       }
       
-      const oldStats = global.lidResolver.getStats();
+      const oldStats = conn.lid.getStats();
       
-      // Limpiar usando la nueva interfaz
-      global.lidResolver.cache.clear();
-      global.lidResolver.jidToLidMap.clear();
-      global.lidResolver.processingQueue.clear();
-      
-      // Marcar como modificado y forzar guardado
-      global.lidResolver.markDirty();
+      // Limpiar usando conn.lid (que internamente maneja el caché)
+      if (typeof conn.lid.forceSave === 'function') {
+        // Si existe una función para limpiar, úsala
+        // Como no hay una función clear directa en conn.lid, necesitaremos acceder internamente
+        // Esto requiere modificación en la implementación
+      }
       
       let response = `🧹 *Caché LID Limpiado*\n\n`;
       response += `• Entradas eliminadas: ${oldStats.total}\n`;
@@ -137,7 +133,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       response += `• Mapeos JID eliminados: ${oldStats.jidMappings}\n`;
       response += `• Archivo actualizado: ✅\n`;
       
-      await conn.reply(m.chat, response, m);
+      await conn.reply(m.chat, 'ℹ️ Para limpiar el caché completamente, usa el comando desde el main.js o reinicia el bot', m);
     } catch (error) {
       console.error('[TEST-LID] Error en clearcache:', error);
       await conn.reply(m.chat, `❌ Error: ${error.message}`, m);
@@ -149,11 +145,11 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'lidstats') {
     try {
-      if (!global.lidResolver) {
-        return await conn.reply(m.chat, '❌ LidResolver no está inicializado', m);
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
       }
       
-      const stats = global.lidResolver.getStats();
+      const stats = conn.lid.getStats();
       const fs = await import('fs');
       
       let fileSize = 0;
@@ -178,13 +174,12 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       response += `• Válidas: ${stats.valid}\n`;
       response += `• No encontrados: ${stats.notFound}\n`;
       response += `• Errores: ${stats.errors}\n`;
-      response += `• Procesando: ${stats.processing}\n`;
       response += `• Mapeos JID: ${stats.jidMappings}\n\n`;
       
       const efficiency = stats.total > 0 ? ((stats.valid / stats.total) * 100).toFixed(1) : 0;
       response += `⚡ *Eficiencia:* ${efficiency}%\n`;
       
-      const memoryEstimate = stats.total * 200; // ~200 bytes por entrada (incluye nombre y timestamps)
+      const memoryEstimate = stats.total * 200; // ~200 bytes por entrada
       response += `💾 *Memoria estimada:* ${(memoryEstimate / 1024).toFixed(2)} KB\n`;
       
       await conn.reply(m.chat, response, m);
@@ -199,24 +194,24 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'forcesave') {
     try {
-      if (!global.lidResolver) {
-        return await conn.reply(m.chat, '❌ LidResolver no está inicializado', m);
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
       }
       
-      const beforeStats = global.lidResolver.getStats();
+      const beforeStats = conn.lid.getStats();
       
       if (!beforeStats.isDirty) {
         return await conn.reply(m.chat, '💾 No hay cambios pendientes para guardar', m);
       }
       
-      global.lidResolver.forceSave();
+      const saveResult = conn.lid.forceSave();
       
       let response = `💾 *Guardado Forzado Completado*\n\n`;
       response += `• Entradas guardadas: ${beforeStats.total}\n`;
       response += `• Válidas: ${beforeStats.valid}\n`;
       response += `• Mapeos JID: ${beforeStats.jidMappings}\n`;
       response += `• Archivo: src/lidsresolve.json\n`;
-      response += `• Estado: ✅ Guardado\n`;
+      response += `• Estado: ${saveResult ? '✅ Guardado' : '❌ Error'}\n`;
       
       await conn.reply(m.chat, response, m);
     } catch (error) {
@@ -259,9 +254,9 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
           if (lid) {
             response += `• LID: ...${lid.split('@')[0].slice(-6)}\n`;
             
-            // Test resolver
+            // Test resolver usando conn.lid
             const startTime = Date.now();
-            const resolved = await global.lidResolver.resolveLid(lid, m.chat);
+            const resolved = await conn.lid.resolveLid(lid, m.chat);
             const resolveTime = Date.now() - startTime;
             
             const success = resolved === (participant.jid || participant.id);
@@ -270,7 +265,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
             if (success) resolvedCount++;
           } else {
             response += `• LID: No disponible\n`;
-            response += `• Resolución: ⏭️ Omitido\n`;
+            response += `• Resolución: ⭕ Omitido\n`;
           }
           response += `\n`;
           
@@ -283,7 +278,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       response += `📈 *Resumen del Test:*\n`;
       response += `• Exitosos: ${resolvedCount}/${testCount}\n`;
       response += `• Errores: ${errorCount}\n`;
-      response += `• Caché actual: ${global.lidResolver.cache.size} entradas\n`;
+      response += `• Caché actual: ${conn.lid.getStats().total} entradas\n`;
       
       await conn.reply(m.chat, response, m);
       
@@ -312,15 +307,14 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       }
       
       const lidJid = `${numberToSearch}@lid`;
-      const lidKey = numberToSearch; // En la nueva estructura, la clave es solo el número
       
       let response = `🔍 *Información de LID*\n\n`;
       response += `📱 *Número:* ${numberToSearch}\n`;
       response += `🆔 *LID:* ${lidJid}\n`;
       response += `👥 *Grupo:* ${m.chat}\n\n`;
       
-      // Verificar en caché usando la nueva estructura
-      const userInfo = global.lidResolver.getUserInfo(lidKey);
+      // Verificar en caché usando conn.lid
+      const userInfo = conn.lid.getUserInfo(numberToSearch);
       if (userInfo) {
         response += `💾 *En Caché:* ✅\n`;
         response += `📞 *Resuelto a:* ${userInfo.jid}\n`;
@@ -341,7 +335,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
         response += `🔄 *Intentando resolver...*\n`;
         
         const startTime = Date.now();
-        const resolved = await global.lidResolver.resolveLid(lidJid, m.chat);
+        const resolved = await conn.lid.resolveLid(lidJid, m.chat);
         const resolveTime = Date.now() - startTime;
         
         response += `⏱️ *Tiempo de resolución:* ${resolveTime}ms\n`;
@@ -349,7 +343,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
         response += `✅ *Resuelto:* ${resolved !== lidJid ? 'Sí' : 'No'}\n`;
         
         // Mostrar información actualizada del caché
-        const updatedInfo = global.lidResolver.getUserInfo(lidKey);
+        const updatedInfo = conn.lid.getUserInfo(numberToSearch);
         if (updatedInfo) {
           response += `👤 *Nombre obtenido:* ${updatedInfo.name}\n`;
         }
@@ -368,11 +362,11 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'listallusers') {
     try {
-      if (!global.lidResolver) {
-        return await conn.reply(m.chat, '❌ LidResolver no está inicializado', m);
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
       }
       
-      const users = global.lidResolver.getAllUsers();
+      const users = conn.lid.getAllUsers();
       
       if (users.length === 0) {
         return await conn.reply(m.chat, '📝 No hay usuarios en el caché', m);
@@ -414,12 +408,12 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
     }
     
     try {
-      if (!global.lidResolver) {
-        return await conn.reply(m.chat, '❌ LidResolver no está inicializado', m);
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
       }
       
       const searchTerm = text.toLowerCase();
-      const users = global.lidResolver.getAllUsers();
+      const users = conn.lid.getAllUsers();
       
       const matches = users.filter(user => 
         user.name.toLowerCase().includes(searchTerm) ||
@@ -457,10 +451,63 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   }
   
   // ========================================
+  // COMANDO: phonevalidation - Validar números telefónicos
+  // ========================================
+  if (command === 'phonevalidation') {
+    if (!text) {
+      return await conn.reply(m.chat, `❓ *Uso:* ${usedPrefix}phonevalidation <número>\n\n*Ejemplo:* ${usedPrefix}phonevalidation +5219991234567`, m);
+    }
+    
+    try {
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+      }
+      
+      const phoneNumber = text.trim();
+      const isValid = conn.lid.validatePhoneNumber(phoneNumber);
+      const detection = conn.lid.detectPhoneInLid(phoneNumber.replace(/[^0-9]/g, ''));
+      
+      let response = `📞 *Validación de Número Telefónico*\n\n`;
+      response += `📱 *Número:* ${phoneNumber}\n`;
+      response += `✅ *Válido:* ${isValid ? 'Sí' : 'No'}\n`;
+      response += `🔍 *Es teléfono en LID:* ${detection.isPhone ? 'Sí' : 'No'}\n`;
+      
+      if (detection.isPhone) {
+        response += `📞 *Número detectado:* ${detection.phoneNumber}\n`;
+        response += `🆔 *JID correcto:* ${detection.jid}\n`;
+      }
+      
+      await conn.reply(m.chat, response, m);
+      
+    } catch (error) {
+      console.error('[TEST-LID] Error en phonevalidation:', error);
+      await conn.reply(m.chat, `❌ Error validando número: ${error.message}`, m);
+    }
+  }
+  
+  // ========================================
+  // COMANDO: phonecorrection - Corrección automática de teléfonos
+  // ========================================
+  if (command === 'phonecorrection') {
+    try {
+      if (!conn.lid) {
+        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+      }
+      
+      const result = conn.lid.forcePhoneCorrection();
+      await conn.reply(m.chat, result, m);
+      
+    } catch (error) {
+      console.error('[TEST-LID] Error en phonecorrection:', error);
+      await conn.reply(m.chat, `❌ Error en corrección: ${error.message}`, m);
+    }
+  }
+  
+  // ========================================
   // COMANDO: lidhelp - Ayuda completa
   // ========================================
   if (command === 'lidhelp') {
-    let response = `📚 *Ayuda - LID Resolver Local*\n\n`;
+    let response = `📚 *Ayuda - LID Resolver*\n\n`;
     
     response += `🔍 *Comandos de Información:*\n`;
     response += `• \`${usedPrefix}testlid\` - Estado general\n`;
@@ -471,8 +518,11 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
     response += `• \`${usedPrefix}searchuser <nombre>\` - Buscar usuario\n\n`;
     
     response += `🧹 *Comandos de Mantenimiento:*\n`;
-    response += `• \`${usedPrefix}clearcache\` - Limpiar todo\n`;
-    response += `• \`${usedPrefix}forcesave\` - Forzar guardado\n\n`;
+    response += `• \`${usedPrefix}forcesave\` - Forzar guardado\n`;
+    response += `• \`${usedPrefix}phonecorrection\` - Corregir números telefónicos\n\n`;
+    
+    response += `📞 *Comandos de Validación:*\n`;
+    response += `• \`${usedPrefix}phonevalidation <número>\` - Validar teléfono\n\n`;
     
     response += `🧪 *Comandos de Testing:*\n`;
     response += `• \`${usedPrefix}lidtest\` - Test con participantes\n\n`;
@@ -480,14 +530,14 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
     response += `📋 *Notas Importantes:*\n`;
     response += `• Solo administradores y owner\n`;
     response += `• El caché se guarda en \`src/lidsresolve.json\`\n`;
-    response += `• Los LIDs son únicos globalmente (no por grupo)\n`;
-    response += `• Máximo 1000 entradas en caché\n`;
-    response += `• Auto-guardado cada 30 segundos si hay cambios\n`;
+    response += `• Los LIDs son únicos globalmente\n`;
+    response += `• Auto-guardado cada 30 segundos\n`;
+    response += `• Validación automática de números telefónicos\n`;
     
     await conn.reply(m.chat, response, m);
   }
 };
 
-handler.command = /^(testlid|lidcache|clearcache|lidstats|forcesave|lidtest|lidinfo|lidhelp|listallusers|searchuser)$/i;
-handler.rowner = true
+handler.command = /^(testlid|lidcache|clearcache|lidstats|forcesave|lidtest|lidinfo|lidhelp|listallusers|searchuser|phonevalidation|phonecorrection)$/i;
+handler.rowner = true;
 export default handler;

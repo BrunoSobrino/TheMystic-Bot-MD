@@ -79,55 +79,405 @@ loadDatabase();
 /* ------------------------------------------------*/
 
 /**
- * Procesa texto para resolver LIDs en menciones (@) - VERSION MEJORADA
+ * Clase auxiliar para acceso a datos LID desde JSON
  */
-async function processTextMentions(text, groupId) {
-  if (!text || !groupId || !text.includes('@')) return text;
+class LidDataManager {
+  constructor(cacheFile = './src/lidsresolve.json') {
+    this.cacheFile = cacheFile;
+  }
 
-  const mentionRegex = /@(\d{8,20})/g;
-  const mentions = [...text.matchAll(mentionRegex)];
-
-  if (!mentions.length) return text;
-
-  let processedText = text;
-  const processedMentions = new Set(); // Evitar procesar la misma mención múltiples veces
-
-  for (const mention of mentions) {
-    const [fullMatch, lidNumber] = mention;
-    
-    // Evitar duplicados
-    if (processedMentions.has(lidNumber)) continue;
-    processedMentions.add(lidNumber);
-    
-    const lidJid = `${lidNumber}@lid`;
-
+  /**
+   * Cargar datos del archivo JSON
+   */
+  loadData() {
     try {
-      const resolvedJid = await global.lidResolver.resolveLid(lidJid, groupId);
-      if (resolvedJid && resolvedJid !== lidJid) {
-        const resolvedNumber = resolvedJid.split('@')[0];
-        
-        // Reemplazar TODAS las ocurrencias de esta mención en el texto
-        const globalRegex = new RegExp(`@${lidNumber}`, 'g');
-        processedText = processedText.replace(globalRegex, `@${resolvedNumber}`);
+      if (fs.existsSync(this.cacheFile)) {
+        const data = fs.readFileSync(this.cacheFile, 'utf8');
+        return JSON.parse(data);
       }
+      return {};
     } catch (error) {
-      console.error(`❌ Error procesando mención LID ${lidNumber}:`, error.message);
+      console.error('❌ Error cargando cache LID:', error.message);
+      return {};
     }
   }
 
-  return processedText;
+  /**
+   * Obtener información de usuario por LID
+   */
+  getUserInfo(lidNumber) {
+    const data = this.loadData();
+    return data[lidNumber] || null;
+  }
+
+  /**
+   * Obtener información de usuario por JID
+   */
+  getUserInfoByJid(jid) {
+    const data = this.loadData();
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && entry.jid === jid) {
+        return entry;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Encontrar LID por JID
+   */
+  findLidByJid(jid) {
+    const data = this.loadData();
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && entry.jid === jid) {
+        return entry.lid;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Listar todos los usuarios válidos
+   */
+  getAllUsers() {
+    const data = this.loadData();
+    const users = [];
+    
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && !entry.notFound && !entry.error) {
+        users.push({
+          lid: entry.lid,
+          jid: entry.jid,
+          name: entry.name,
+          country: entry.country,
+          phoneNumber: entry.phoneNumber,
+          isPhoneDetected: entry.phoneDetected || entry.corrected,
+          timestamp: new Date(entry.timestamp).toLocaleString()
+        });
+      }
+    }
+    
+    return users.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  /**
+   * Obtener estadísticas
+   */
+  getStats() {
+    const data = this.loadData();
+    let valid = 0, notFound = 0, errors = 0, phoneNumbers = 0, corrected = 0;
+    
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry) {
+        if (entry.phoneDetected || entry.corrected) phoneNumbers++;
+        if (entry.corrected) corrected++;
+        if (entry.notFound) notFound++;
+        else if (entry.error) errors++;
+        else valid++;
+      }
+    }
+    
+    return {
+      total: Object.keys(data).length,
+      valid,
+      notFound,
+      errors,
+      phoneNumbers,
+      corrected,
+      cacheFile: this.cacheFile,
+      fileExists: fs.existsSync(this.cacheFile)
+    };
+  }
+
+  /**
+   * Obtener usuarios por país
+   */
+  getUsersByCountry() {
+    const data = this.loadData();
+    const countries = {};
+    
+    for (const [key, entry] of Object.entries(data)) {
+      if (entry && !entry.notFound && !entry.error && entry.country) {
+        if (!countries[entry.country]) {
+          countries[entry.country] = [];
+        }
+        
+        countries[entry.country].push({
+          lid: entry.lid,
+          jid: entry.jid,
+          name: entry.name,
+          phoneNumber: entry.phoneNumber
+        });
+      }
+    }
+    
+    // Ordenar usuarios dentro de cada país
+    for (const country of Object.keys(countries)) {
+      countries[country].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    return countries;
+  }
+}
+
+// Instancia del manejador de datos LID
+const lidDataManager = new LidDataManager();
+
+/**
+ * FUNCIÓN MEJORADA: Procesar texto para resolver LIDs - VERSION MÁS ROBUSTA
+ */
+async function processTextMentions(text, groupId, lidResolver) {
+  if (!text || !groupId || !text.includes('@')) return text;
+  
+  try {
+    // Regex más completa para capturar diferentes formatos de mención
+    const mentionRegex = /@(\d{8,20})/g;
+    const mentions = [...text.matchAll(mentionRegex)];
+
+    if (!mentions.length) return text;
+
+    let processedText = text;
+    const processedMentions = new Set();
+    const replacements = new Map(); // Cache de reemplazos para este texto
+
+    // Procesar todas las menciones primero
+    for (const mention of mentions) {
+      const [fullMatch, lidNumber] = mention;
+      
+      if (processedMentions.has(lidNumber)) continue;
+      processedMentions.add(lidNumber);
+      
+      const lidJid = `${lidNumber}@lid`;
+
+      try {
+        const resolvedJid = await lidResolver.resolveLid(lidJid, groupId);
+        
+        if (resolvedJid && resolvedJid !== lidJid && !resolvedJid.endsWith('@lid')) {
+          const resolvedNumber = resolvedJid.split('@')[0];
+          
+          // Validar que el número resuelto sea diferente al LID original
+          if (resolvedNumber && resolvedNumber !== lidNumber) {
+            replacements.set(lidNumber, resolvedNumber);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ Error procesando mención LID ${lidNumber}:`, error.message);
+      }
+    }
+
+    // Aplicar todos los reemplazos
+    for (const [lidNumber, resolvedNumber] of replacements.entries()) {
+      // Usar regex global para reemplazar TODAS las ocurrencias
+      const globalRegex = new RegExp(`@${lidNumber}\\b`, 'g'); // \\b para límite de palabra
+      processedText = processedText.replace(globalRegex, `@${resolvedNumber}`);
+    }
+
+    return processedText;
+  } catch (error) {
+    console.error('❌ Error en processTextMentions:', error);
+    return text;
+  }
 }
 
 /**
- * Intercepta y procesa mensajes antes del handler
+ * FUNCIÓN AUXILIAR: Procesar contenido de mensaje recursivamente
  */
-async function interceptMessages(messages) {
+async function processMessageContent(messageContent, groupChatId, lidResolver) {
+  if (!messageContent || typeof messageContent !== 'object') return;
+
+  const messageTypes = Object.keys(messageContent);
+  
+  for (const msgType of messageTypes) {
+    const msgContent = messageContent[msgType];
+    if (!msgContent || typeof msgContent !== 'object') continue;
+
+    // Procesar texto principal
+    if (typeof msgContent.text === 'string') {
+      try {
+        const originalText = msgContent.text;
+        msgContent.text = await processTextMentions(originalText, groupChatId, lidResolver);
+      } catch (error) {
+        console.error('❌ Error procesando texto:', error);
+      }
+    }
+
+    // Procesar caption
+    if (typeof msgContent.caption === 'string') {
+      try {
+        const originalCaption = msgContent.caption;
+        msgContent.caption = await processTextMentions(originalCaption, groupChatId, lidResolver);
+      } catch (error) {
+        console.error('❌ Error procesando caption:', error);
+      }
+    }
+
+    // Procesar contextInfo
+    if (msgContent.contextInfo) {
+      await processContextInfo(msgContent.contextInfo, groupChatId, lidResolver);
+    }
+  }
+}
+
+/**
+ * FUNCIÓN AUXILIAR: Procesar contextInfo recursivamente
+ */
+async function processContextInfo(contextInfo, groupChatId, lidResolver) {
+  if (!contextInfo || typeof contextInfo !== 'object') return;
+
+  // Procesar mentionedJid en contextInfo
+  if (contextInfo.mentionedJid && Array.isArray(contextInfo.mentionedJid)) {
+    const resolvedMentions = [];
+    for (const jid of contextInfo.mentionedJid) {
+      if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+        try {
+          const resolved = await lidResolver.resolveLid(jid, groupChatId);
+          resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+        } catch (error) {
+          resolvedMentions.push(jid);
+        }
+      } else {
+        resolvedMentions.push(jid);
+      }
+    }
+    contextInfo.mentionedJid = resolvedMentions;
+  }
+
+  // Procesar participant en contextInfo
+  if (typeof contextInfo.participant === 'string' && contextInfo.participant.endsWith?.('@lid')) {
+    try {
+      const resolved = await lidResolver.resolveLid(contextInfo.participant, groupChatId);
+      if (resolved && !resolved.endsWith('@lid')) {
+        contextInfo.participant = resolved;
+      }
+    } catch (error) {
+      console.error('❌ Error resolviendo participant en contextInfo:', error);
+    }
+  }
+
+  // Procesar mensajes citados recursivamente
+  if (contextInfo.quotedMessage) {
+    await processMessageContent(contextInfo.quotedMessage, groupChatId, lidResolver);
+  }
+
+  // Procesar otros campos que puedan contener texto
+  if (typeof contextInfo.stanzaId === 'string') {
+    contextInfo.stanzaId = await processTextMentions(contextInfo.stanzaId, groupChatId, lidResolver);
+  }
+}
+
+/**
+ * FUNCIÓN MEJORADA: Procesar mensaje completo de forma más exhaustiva
+ */
+async function processMessageForDisplay(message, lidResolver) {
+  if (!message || !lidResolver) return message;
+  
+  try {
+    const processedMessage = JSON.parse(JSON.stringify(message)); // Deep copy
+    const groupChatId = message.key?.remoteJid?.endsWith?.('@g.us') ? message.key.remoteJid : null;
+    
+    if (!groupChatId) return processedMessage;
+
+    // 1. Resolver participant LID
+    if (processedMessage.key?.participant?.endsWith?.('@lid')) {
+      try {
+        const resolved = await lidResolver.resolveLid(processedMessage.key.participant, groupChatId);
+        if (resolved && resolved !== processedMessage.key.participant && !resolved.endsWith('@lid')) {
+          processedMessage.key.participant = resolved;
+        }
+      } catch (error) {
+        console.error('❌ Error resolviendo participant:', error);
+      }
+    }
+
+    // 2. Procesar mentionedJid a nivel raíz
+    if (processedMessage.mentionedJid && Array.isArray(processedMessage.mentionedJid)) {
+      const resolvedMentions = [];
+      for (const jid of processedMessage.mentionedJid) {
+        if (typeof jid === 'string' && jid.endsWith?.('@lid')) {
+          try {
+            const resolved = await lidResolver.resolveLid(jid, groupChatId);
+            resolvedMentions.push(resolved && !resolved.endsWith('@lid') ? resolved : jid);
+          } catch (error) {
+            resolvedMentions.push(jid);
+          }
+        } else {
+          resolvedMentions.push(jid);
+        }
+      }
+      processedMessage.mentionedJid = resolvedMentions;
+    }
+
+    // 3. Procesar el contenido del mensaje
+    if (processedMessage.message) {
+      await processMessageContent(processedMessage.message, groupChatId, lidResolver);
+    }
+
+    return processedMessage;
+  } catch (error) {
+    console.error('❌ Error procesando mensaje para display:', error);
+    return message;
+  }
+}
+
+/**
+ * FUNCIÓN AUXILIAR: Extraer todo el texto de un mensaje para debugging
+ */
+function extractAllText(message) {
+  if (!message?.message) return '';
+  
+  let allText = '';
+  
+  const extractFromContent = (content) => {
+    if (!content) return '';
+    let text = '';
+    
+    if (content.text) text += content.text + ' ';
+    if (content.caption) text += content.caption + ' ';
+    
+    if (content.contextInfo?.quotedMessage) {
+      const quotedTypes = Object.keys(content.contextInfo.quotedMessage);
+      for (const quotedType of quotedTypes) {
+        const quotedContent = content.contextInfo.quotedMessage[quotedType];
+        text += extractFromContent(quotedContent);
+      }
+    }
+    
+    return text;
+  };
+  
+  const messageTypes = Object.keys(message.message);
+  for (const msgType of messageTypes) {
+    allText += extractFromContent(message.message[msgType]);
+  }
+  
+  return allText.trim();
+}
+
+/**
+ * FUNCIÓN MEJORADA: Interceptar mensajes con mejor manejo de errores
+ */
+async function interceptMessages(messages, lidResolver) {
   if (!Array.isArray(messages)) return messages;
 
   const processedMessages = [];
+  
   for (const message of messages) {
     try {
-      const processedMessage = await global.lidResolver.processMessage(message);
+      // Procesar con lidResolver si existe
+      let processedMessage = message;
+      
+      if (lidResolver && typeof lidResolver.processMessage === 'function') {
+        try {
+          processedMessage = await lidResolver.processMessage(message);
+        } catch (error) {
+          console.error('❌ Error en lidResolver.processMessage:', error);
+          // Continuar con el procesamiento manual
+        }
+      }
+      
+      // Procesamiento adicional para display
+      processedMessage = await processMessageForDisplay(processedMessage, lidResolver);
+      
       processedMessages.push(processedMessage);
     } catch (error) {
       console.error('❌ Error interceptando mensaje:', error);
@@ -137,154 +487,6 @@ async function interceptMessages(messages) {
 
   return processedMessages;
 }
-
-/**
- * Obtener información de usuario por LID
- */
-global.getUserInfoByLid = function(lidNumber) {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.getUserInfo(lidNumber);
-};
-
-/**
- * Obtener información de usuario por JID
- */
-global.getUserInfoByJid = function(jid) {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.getUserInfoByJid(jid);
-};
-
-/**
- * Obtener LID de un JID (búsqueda inversa)
- */
-global.findLidByJid = function(jid) {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.findLidByJid(jid);
-};
-
-/**
- * Listar todos los usuarios en caché
- */
-global.getAllCachedUsers = function() {
-  if (!global.lidResolver) return [];
-  return global.lidResolver.getAllUsers();
-};
-
-/**
- * Obtener estadísticas del caché LID
- */
-global.getLidStats = function() {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.getStats();
-};
-
-/**
- * Analizar y corregir números telefónicos en caché
- */
-global.analyzePhoneNumbers = function() {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.analyzePhoneNumbers();
-};
-
-/**
- * Corregir automáticamente números telefónicos
- */
-global.autoCorrectPhoneNumbers = function() {
-  if (!global.lidResolver) return null;
-  return global.lidResolver.autoCorrectPhoneNumbers();
-};
-
-/**
- * Obtener usuarios por país
- */
-global.getUsersByCountry = function() {
-  if (!global.lidResolver) return {};
-  return global.lidResolver.getUsersByCountry();
-};
-
-/**
- * Validar si un string es un número telefónico
- */
-global.validatePhoneNumber = function(phoneNumber) {
-  if (!global.lidResolver) return false;
-  return global.lidResolver.phoneValidator.isValidPhoneNumber(phoneNumber);
-};
-
-/**
- * Detectar si un LID es realmente un número telefónico
- */
-global.detectPhoneInLid = function(lidString) {
-  if (!global.lidResolver) return { isPhone: false };
-  return global.lidResolver.phoneValidator.detectPhoneInLid(lidString);
-};
-
-/**
- * Forzar guardado del caché LID
- */
-global.forceSaveLidCache = function() {
-  if (!global.lidResolver) return false;
-  global.lidResolver.forceSave();
-  return true;
-};
-
-/**
- * Función para mostrar estadísticas del caché LID
- */
-global.getLidCacheInfo = function() {
-  if (!global.lidResolver) {
-    return 'Sistema LID no inicializado';
-  }
-  
-  const stats = global.lidResolver.getStats();
-  const analysis = global.lidResolver.analyzePhoneNumbers();
-  
-  return `📱 *ESTADÍSTICAS DEL CACHÉ LID*
-
-📊 *General:*
-• Total de entradas: ${stats.total}
-• Entradas válidas: ${stats.valid}
-• No encontradas: ${stats.notFound}
-• Con errores: ${stats.errors}
-• En procesamiento: ${stats.processing}
-
-📞 *Números telefónicos:*
-• Detectados: ${stats.phoneNumbers}
-• Corregidos: ${stats.corrected}
-• Problemáticos: ${analysis.stats.phoneNumbersProblematic}
-
-🗂️ *Caché:*
-• Archivo: ${stats.cacheFile}
-• Existe: ${stats.fileExists ? 'Sí' : 'No'}
-• Cambios pendientes: ${stats.isDirty ? 'Sí' : 'No'}
-• Mapeos JID: ${stats.jidMappings}
-
-🌍 *Países detectados:*
-${Object.entries(global.lidResolver.getUsersByCountry())
-  .slice(0, 5)
-  .map(([country, users]) => `• ${country}: ${users.length} usuarios`)
-  .join('\n')}`;
-};
-
-/**
- * Función para forzar corrección de números telefónicos
- */
-global.forcePhoneCorrection = function() {
-  if (!global.lidResolver) {
-    return 'Sistema LID no inicializado';
-  }
-  
-  try {
-    const result = global.lidResolver.autoCorrectPhoneNumbers();
-    
-    if (result.corrected > 0) {
-      return `✅ Se corrigieron ${result.corrected} números telefónicos automáticamente.`;
-    } else {
-      return '✅ No se encontraron números telefónicos que requieran corrección.';
-    }
-  } catch (error) {
-    return `❌ Error en corrección automática: ${error.message}`;
-  }
-};
 
 const { state, saveCreds } = await useMultiFileAuthState(global.authFile);
 const { version } = await fetchLatestBaileysVersion();
@@ -301,7 +503,7 @@ if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.authFile}/creds.j
   do {
     opcion = await question('[ ℹ️ ] Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n---> ');
     if (!/^[1-2]$/.test(opcion)) {
-      console.log('[ ❗ ] Por favor, seleccione solo 1 o 2.\n');
+      console.log('[ ⚠️ ] Por favor, seleccione solo 1 o 2.\n');
     }
   } while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${global.authFile}/creds.json`));
 }
@@ -364,14 +566,14 @@ const connectionOptions = {
 };
 
 global.conn = makeWASocket(connectionOptions);
-global.lidResolver = new LidResolver(global.conn);
+const lidResolver = new LidResolver(global.conn);
 
 // Ejecutar análisis y corrección automática al inicializar (SILENCIOSO)
 setTimeout(async () => {
   try {
-    if (global.lidResolver) {
+    if (lidResolver) {
       // Ejecutar corrección automática de números telefónicos (sin logs)
-      global.lidResolver.autoCorrectPhoneNumbers();
+      lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
     console.error('❌ Error en análisis inicial:', error.message);
@@ -413,7 +615,7 @@ if (!fs.existsSync(`./${global.authFile}/creds.json`)) {
 
 conn.isInit = false;
 conn.well = false;
-conn.logger.info(`[ㅤℹ️­ㅤ] Cargando...\n`);
+conn.logger.info(`[　ℹ️　] Cargando...\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -519,21 +721,21 @@ async function connectionUpdate(update) {
   if (global.db.data == null) loadDatabase();
   if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
     if (opcion == '1' || methodCodeQR) {
-      console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Escanea el código QR.'));
+      console.log(chalk.yellow('[　ℹ️　　] Escanea el código QR.'));
       qrAlreadyShown = true;
       if (qrTimeout) clearTimeout(qrTimeout);
       qrTimeout = setTimeout(() => qrAlreadyShown = false, 60000);
     }
   }
   if (connection == 'open') {
-    console.log(chalk.yellow('[ㅤℹ️ㅤㅤ] Conectado correctamente.'));
+    console.log(chalk.yellow('[　ℹ️　　] Conectado correctamente.'));
     isFirstConnection = true;
     if (!global.subBotsInitialized) {
       global.subBotsInitialized = true;
       try {
         await initializeSubBots();
       } catch (error) {
-        console.error(chalk.red('[ ❗ ] Error al inicializar sub-bots:'), error);
+        console.error(chalk.red('[ ⚠️ ] Error al inicializar sub-bots:'), error);
       }
     }
   }
@@ -553,55 +755,55 @@ async function connectionUpdate(update) {
   }
   if (reason == 405) {
     await fs.unlinkSync("./MysticSession/" + "creds.json");
-    console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`));
+    console.log(chalk.bold.redBright(`[ ⚠️ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`));
     process.send('reset');
   }
   if (connection === 'close') {
     if (reason === DisconnectReason.badSession) {
       if (shouldLogError('badSession')) {
-        conn.logger.error(`[ ⚠ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+        conn.logger.error(`[ ⚠️ ] Sesión incorrecta, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionClosed) {
       if (shouldLogError('connectionClosed')) {
-        conn.logger.warn(`[ ⚠ ] Conexión cerrada, reconectando...`);
+        conn.logger.warn(`[ ⚠️ ] Conexión cerrada, reconectando...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionLost) {
       if (shouldLogError('connectionLost')) {
-        conn.logger.warn(`[ ⚠ ] Conexión perdida con el servidor, reconectando...`);
+        conn.logger.warn(`[ ⚠️ ] Conexión perdida con el servidor, reconectando...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.connectionReplaced) {
       if (shouldLogError('connectionReplaced')) {
-        conn.logger.error(`[ ⚠ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
+        conn.logger.error(`[ ⚠️ ] Conexión reemplazada, se ha abierto otra nueva sesión. Por favor, cierra la sesión actual primero.`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else if (reason === DisconnectReason.loggedOut) {
       if (shouldLogError('loggedOut')) {
-        conn.logger.error(`[ ⚠ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
+        conn.logger.error(`[ ⚠️ ] Conexion cerrada, por favor elimina la carpeta ${global.authFile} y escanea nuevamente.`);
       }
     } else if (reason === DisconnectReason.restartRequired) {
       if (isFirstConnection) {
         if (shouldLogError('restartRequired')) {
-          //conn.logger.info(`[ ⚠ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
+          //conn.logger.info(`[ ⚠️ ] Primer inicio: Ignorando restartRequired (posible falso positivo)`);
         }
         isFirstConnection = false;
       } else {
         if (shouldLogError('restartRequired')) {
-          conn.logger.info(`[ ⚠ ] Reinicio necesario, reconectando...`);
+          conn.logger.info(`[ ⚠️ ] Reinicio necesario, reconectando...`);
         }
         await global.reloadHandler(true).catch(console.error);
       }
     } else if (reason === DisconnectReason.timedOut) {
       if (shouldLogError('timedOut')) {
-        conn.logger.warn(`[ ⚠ ] Tiempo de conexión agotado, reconectando...`);
+        conn.logger.warn(`[ ⚠️ ] Tiempo de conexión agotado, reconectando...`);
       }
       await global.reloadHandler(true).catch(console.error);
     } else {
       const unknownError = `unknown_${reason || ''}_${connection || ''}`;
       if (shouldLogError(unknownError)) {
-        conn.logger.warn(`[ ⚠ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
+        conn.logger.warn(`[ ⚠️ ] Razón de desconexión desconocida. ${reason || ''}: ${connection || ''}`);
       }
       await global.reloadHandler(true).catch(console.error);
     }
@@ -628,7 +830,8 @@ global.reloadHandler = async function (restatConn) {
     conn.ev.removeAllListeners();
     global.conn = makeWASocket(connectionOptions, { chats: oldChats });
     store?.bind(conn);
-    global.lidResolver = new LidResolver(global.conn);
+    // Reinicializar lidResolver con la nueva conexión
+    lidResolver.conn = global.conn;
     isInit = true;
   }
   if (!isInit) {
@@ -651,45 +854,36 @@ global.reloadHandler = async function (restatConn) {
   conn.sRevoke = '*[ ℹ️ ] El enlace de invitación al grupo ha sido restablecido.*';
 
   const originalHandler = handler.handler.bind(global.conn);
+  // HANDLER MEJORADO con procesamiento LID robusto
   conn.handler = async function (chatUpdate) {
     try {
       if (chatUpdate.messages) {
+        // DEBUG: Log para rastrear el procesamiento
+        //console.log(`🔄 Procesando ${chatUpdate.messages.length} mensajes...`);
+        
         // Interceptar y procesar mensajes para resolver LIDs
-        chatUpdate.messages = await interceptMessages(chatUpdate.messages);
+        chatUpdate.messages = await interceptMessages(chatUpdate.messages, lidResolver);
 
-        for (const message of chatUpdate.messages) {
-          if (message?.message && message.key?.remoteJid?.endsWith('@g.us')) {
-            const messageTypes = Object.keys(message.message);
-            
-            for (const msgType of messageTypes) {
-              const msgContent = message.message[msgType];
+        // Procesamiento adicional específico para LIDs en grupos
+        for (let i = 0; i < chatUpdate.messages.length; i++) {
+          const message = chatUpdate.messages[i];
+          
+          if (message?.key?.remoteJid?.endsWith('@g.us')) {
+            try {
+              // Procesar mensaje completo una vez más para asegurar que todo esté resuelto
+              const fullyProcessedMessage = await processMessageForDisplay(message, lidResolver);
+              chatUpdate.messages[i] = fullyProcessedMessage;
               
-              // Procesar texto principal
-              if (msgContent?.text) {
-                msgContent.text = await processTextMentions(msgContent.text, message.key.remoteJid);
-              }
-              
-              // Procesar caption si existe
-              if (msgContent?.caption) {
-                msgContent.caption = await processTextMentions(msgContent.caption, message.key.remoteJid);
-              }
-
-              // Procesar mensajes citados
-              if (msgContent?.contextInfo?.quotedMessage) {
-                const quotedTypes = Object.keys(msgContent.contextInfo.quotedMessage);
-                
-                for (const quotedType of quotedTypes) {
-                  const quotedContent = msgContent.contextInfo.quotedMessage[quotedType];
-                  
-                  if (quotedContent?.text) {
-                    quotedContent.text = await processTextMentions(quotedContent.text, message.key.remoteJid);
-                  }
-                  
-                  if (quotedContent?.caption) {
-                    quotedContent.caption = await processTextMentions(quotedContent.caption, message.key.remoteJid);
-                  }
+              // DEBUG: Verificar si hay menciones LID sin resolver
+              const messageText = extractAllText(fullyProcessedMessage);
+              if (messageText && messageText.includes('@') && /(@\d{8,20})/.test(messageText)) {
+                const lidMatches = messageText.match(/@(\d{8,20})/g);
+                if (lidMatches) {
+                  //console.log(`⚠️ Posibles LIDs sin resolver: ${lidMatches.join(', ')}`);
                 }
               }
+            } catch (error) {
+              console.error('❌ Error en procesamiento final de mensaje:', error);
             }
           }
         }
@@ -726,6 +920,144 @@ global.reloadHandler = async function (restatConn) {
   conn.ev.on('creds.update', conn.credsUpdate);
   isInit = false;
   return true;
+};
+
+// Agregar funciones de utilidad al conn para acceso desde plugins
+conn.lid = {
+  /**
+   * Obtener información de usuario por LID
+   */
+  getUserInfo: (lidNumber) => lidDataManager.getUserInfo(lidNumber),
+  
+  /**
+   * Obtener información de usuario por JID
+   */
+  getUserInfoByJid: (jid) => lidDataManager.getUserInfoByJid(jid),
+  
+  /**
+   * Encontrar LID por JID
+   */
+  findLidByJid: (jid) => lidDataManager.findLidByJid(jid),
+  
+  /**
+   * Listar todos los usuarios
+   */
+  getAllUsers: () => lidDataManager.getAllUsers(),
+  
+  /**
+   * Obtener estadísticas
+   */
+  getStats: () => lidDataManager.getStats(),
+  
+  /**
+   * Obtener usuarios por país
+   */
+  getUsersByCountry: () => lidDataManager.getUsersByCountry(),
+  
+  /**
+   * Validar número telefónico
+   */
+  validatePhoneNumber: (phoneNumber) => {
+    if (!lidResolver.phoneValidator) return false;
+    return lidResolver.phoneValidator.isValidPhoneNumber(phoneNumber);
+  },
+  
+  /**
+   * Detectar si un LID es un número telefónico
+   */
+  detectPhoneInLid: (lidString) => {
+    if (!lidResolver.phoneValidator) return { isPhone: false };
+    return lidResolver.phoneValidator.detectPhoneInLid(lidString);
+  },
+  
+  /**
+   * Forzar guardado del caché
+   */
+  forceSave: () => {
+    try {
+      lidResolver.forceSave();
+      return true;
+    } catch (error) {
+      console.error('Error guardando caché LID:', error);
+      return false;
+    }
+  },
+  
+  /**
+   * Mostrar información completa del caché
+   */
+  getCacheInfo: () => {
+    try {
+      const stats = lidDataManager.getStats();
+      const analysis = lidResolver.analyzePhoneNumbers();
+      
+      return `📱 *ESTADÍSTICAS DEL CACHÉ LID*
+
+📊 *General:*
+• Total de entradas: ${stats.total}
+• Entradas válidas: ${stats.valid}
+• No encontradas: ${stats.notFound}
+• Con errores: ${stats.errors}
+
+📞 *Números telefónicos:*
+• Detectados: ${stats.phoneNumbers}
+• Corregidos: ${stats.corrected}
+• Problemáticos: ${analysis.stats.phoneNumbersProblematic}
+
+🗂️ *Caché:*
+• Archivo: ${stats.cacheFile}
+• Existe: ${stats.fileExists ? 'Sí' : 'No'}
+
+🌍 *Países detectados:*
+${Object.entries(lidDataManager.getUsersByCountry())
+  .slice(0, 5)
+  .map(([country, users]) => `• ${country}: ${users.length} usuarios`)
+  .join('\n')}`;
+    } catch (error) {
+      return `❌ Error obteniendo información: ${error.message}`;
+    }
+  },
+  
+  /**
+   * Corregir números telefónicos automáticamente
+   */
+  forcePhoneCorrection: () => {
+    try {
+      const result = lidResolver.autoCorrectPhoneNumbers();
+      
+      if (result.corrected > 0) {
+        return `✅ Se corrigieron ${result.corrected} números telefónicos automáticamente.`;
+      } else {
+        return '✅ No se encontraron números telefónicos que requieran corrección.';
+      }
+    } catch (error) {
+      return `❌ Error en corrección automática: ${error.message}`;
+    }
+  },
+  
+  /**
+   * Resolver LID manualmente
+   */
+  resolveLid: async (lidJid, groupChatId) => {
+    try {
+      return await lidResolver.resolveLid(lidJid, groupChatId);
+    } catch (error) {
+      console.error('Error resolviendo LID:', error);
+      return lidJid;
+    }
+  },
+  
+  /**
+   * Procesar texto para resolver menciones (función auxiliar para plugins)
+   */
+  processTextMentions: async (text, groupId) => {
+    try {
+      return await processTextMentions(text, groupId, lidResolver);
+    } catch (error) {
+      console.error('Error procesando menciones en texto:', error);
+      return text;
+    }
+  }
 };
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
@@ -792,10 +1124,10 @@ setInterval(async () => {
 
 // Limpiar y optimizar caché LID cada 30 minutos
 setInterval(async () => {
-  if (stopped === 'close' || !conn || !conn?.user || !global.lidResolver) return;
+  if (stopped === 'close' || !conn || !conn?.user || !lidResolver) return;
   
   try {
-    const stats = global.lidResolver.getStats();
+    const stats = lidDataManager.getStats();
     
     // Si el caché tiene más de 800 entradas, hacer limpieza
     if (stats.total > 800) {
@@ -803,24 +1135,24 @@ setInterval(async () => {
       const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
       let cleanedCount = 0;
       
-      for (const [key, entry] of global.lidResolver.cache.entries()) {
+      for (const [key, entry] of lidResolver.cache.entries()) {
         if (entry.timestamp < sevenDaysAgo && (entry.notFound || entry.error)) {
-          global.lidResolver.cache.delete(key);
-          if (entry.jid && global.lidResolver.jidToLidMap.has(entry.jid)) {
-            global.lidResolver.jidToLidMap.delete(entry.jid);
+          lidResolver.cache.delete(key);
+          if (entry.jid && lidResolver.jidToLidMap.has(entry.jid)) {
+            lidResolver.jidToLidMap.delete(entry.jid);
           }
           cleanedCount++;
         }
       }
       
       if (cleanedCount > 0) {
-        global.lidResolver.markDirty();
+        lidResolver.markDirty();
       }
     }
     
     // Ejecutar corrección automática ocasionalmente
     if (Math.random() < 0.1) { // 10% de probabilidad
-      const correctionResult = global.lidResolver.autoCorrectPhoneNumbers();
+      const correctionResult = lidResolver.autoCorrectPhoneNumbers();
     }
   } catch (error) {
     console.error('❌ Error en limpieza de caché LID:', error.message);
@@ -832,14 +1164,14 @@ function clockString(ms) {
   const h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24;
   const m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60;
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
-  return [d, 'd ️', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
+  return [d, 'd ', h, 'h ', m, 'm ', s, 's '].map((v) => v.toString().padStart(2, 0)).join('');
 }
 
 // Manejo mejorado de salida del proceso
 const gracefulShutdown = () => {
-  if (global.lidResolver?.isDirty) {
+  if (lidResolver?.isDirty) {
     try {
-      global.lidResolver.forceSave();
+      lidResolver.forceSave();
     } catch (error) {
       console.error('❌ Error guardando caché LID:', error.message);
     }
