@@ -194,7 +194,7 @@ const downloadYtDlp = async (m) => {
 const updateYtDlp = async (m, errorMsg = null) => {
   try {
     const ytDlpPath = await detectYtDlpBinary(m);
-    const updateCommand = `${ytDlpPath} --update-to nightly`;
+    const updateCommand = `${ytDlpPath} --update-to master`; // nightly
     
     const result = await safeExecute(updateCommand);
     
