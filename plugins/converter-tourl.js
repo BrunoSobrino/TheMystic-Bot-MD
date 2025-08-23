@@ -1,4 +1,3 @@
-import uploadFile from '../src/libraries/uploadFile.js';
 import uploadImage from '../src/libraries/uploadImage.js';
 
 const handler = async (m) => {
@@ -11,10 +10,8 @@ const handler = async (m) => {
   const mime = (q.msg || q).mimetype || '';
   if (!mime) throw `*${tradutor.texto1}*`;
   const media = await q.download();
-  
   const isTele = /image\/(png|jpe?g|gif)|video\/mp4|audio\/(mpeg|wav)/.test(mime);
-  const link = await (isTele ? uploadImage : uploadFile)(media);
-  
+  const link = await uploadImage(media);
   m.reply(`*${tradutor.texto2}* ${link}`);
 };
 
