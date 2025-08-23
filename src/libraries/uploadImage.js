@@ -1,6 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import FormData from 'form-data';
+import fs from 'fs';
 
 /**
  * Upload file to UploadF
@@ -15,7 +16,7 @@ import FormData from 'form-data';
 
 export default async buffer => {
   const formData = new FormData();
-  formData.append('upfile', buffer);
+  formData.append('upfile', fs.createReadStream(buffer));
   const response = await axios.post('https://uploadf.com/upload.php', formData, {
     headers: formData.getHeaders()
   });
