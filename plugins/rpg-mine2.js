@@ -26,7 +26,7 @@ let handler = async (m, {conn, isPrems}) => {
     user[reward] += recompensas[reward];
     texto += `+${recompensas[reward]} ${global.rpgshop.emoticon(reward)}\n`;
   }
-  const text = `*${premium ? tradutor.texto3[0] : tradutor.texto3[1]}*\n*${minar}*\n*${money} ${global.rpgshop.emoticon('money')}*\n\n${tradutor.texto3[2]}n${texto}\n\n${tradutor.texto3[3]} ${premium ? '✅' : '❌'}\n${wm}`;
+  const text = `*${premium ? tradutor.texto3[0] : tradutor.texto3[1]}*\n*${minar} ${money} ${global.rpgshop.emoticon('money')}*\n\n${tradutor.texto3[2]}\n${texto}\n\n${tradutor.texto3[3]} ${premium ? '✅' : '❌'}\n${wm}`;
   await conn.sendFile(m.chat, pp, 'mystic.jpg', text, m);
   user.lastcoins = new Date * 1;
 };
