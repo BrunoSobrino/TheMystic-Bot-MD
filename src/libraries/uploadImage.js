@@ -1,34 +1,25 @@
-import fetch from 'node-fetch';
-import { FormData, Blob } from 'formdata-node';
-import { fileTypeFromBuffer } from 'file-type';
+import axios from 'axios';
+import cheerio from 'cheerio';
+import FormData from 'form-data';
 
 /**
- * Upload file to Catbox
+ * Upload file to UploadF
  * Supported mimetypes:
  * - `image/jpeg`
  * - `image/jpg`
  * - `image/png`
  * - `video/mp4`
- * - `video/webm`
- * - `audio/mpeg`
- * - `audio/wav`
  * @param {Buffer} buffer File Buffer
  * @return {Promise<string>}
  */
-export default async (buffer) => {
-  const { ext, mime } = await fileTypeFromBuffer(buffer);
-  const form = new FormData();
-  const blob = new Blob([buffer.toArrayBuffer()], { type: mime });
-  form.append('fileToUpload', blob, 'tmp.' + ext);
-  form.append('reqtype', 'fileupload');
-  const res = await fetch('https://catbox.moe/user/api.php', {
-    method: 'POST',
-    body: form,
+
+export default async buffer => {
+  const formData = new FormData();
+  formData.append('upfile', buffer);
+  const response = await axios.post('https://uploadf.com/upload.php', formData, {
+    headers: formData.getHeaders()
   });
-  const result = await res.text(); 
-  if (result.startsWith('https://files.catbox.moe/')) {
-    return result;
-  } else {
-    throw new Error('Failed to upload the file to Catbox');
-  }
+  const $ = cheerio.load(response.data);
+  const image = $('meta[property="og:image"]').attr('content');
+  return image;
 };
