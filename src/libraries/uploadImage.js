@@ -16,7 +16,7 @@ import fs from 'fs';
 
 export default async buffer => {
   const formData = new FormData();
-  formData.append('upfile', fs.createReadStream(buffer));
+  formData.append('upfile', buffer);
   const response = await axios.post('https://uploadf.com/upload.php', formData, {
     headers: formData.getHeaders()
   });
