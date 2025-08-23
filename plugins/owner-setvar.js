@@ -67,7 +67,7 @@ const handler = async (m, { text }) => {
 };
 
 handler.command = /^setvar$/i; 
-handler.help = ['cambia ajustes'];
+handler.help = ['setvar'];
 handler.tags = ['tools'];
 handler.owner = true; 
 
