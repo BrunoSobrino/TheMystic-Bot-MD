@@ -5,13 +5,12 @@ const handler = async (m) => {
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.convertidor_tourl;
-  
-  const q = m.quoted ? m.quoted : m;
-  const mime = (q.msg || q).mimetype || '';
+
+  const q = m.quoted ? m.quoted : m
+  const mime = (q.msg || q).mimetype || ''
   if (!mime) throw `*${tradutor.texto1}*`;
-  const media = await q.download();
-  const isTele = /image\/(png|jpe?g|gif)|video\/mp4|audio\/(mpeg|wav)/.test(mime);
-  const link = await uploadImage(media);
+  const buffer = await q.download();
+  const link = await uploadImage(buffer);
   m.reply(`*${tradutor.texto2}* ${link}`);
 };
 
