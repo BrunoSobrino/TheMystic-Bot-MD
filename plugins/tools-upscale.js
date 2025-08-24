@@ -15,7 +15,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
 
     m.reply(tradutor.texto3)
     let img = await q.download?.()
-    let fileUrl = await uploadToCatbox(img)
+    let fileUrl = await uploadToUploadF(img)
     let banner = await upscaleWithStellar(fileUrl)
 
     await conn.sendMessage(m.chat, { image: banner }, { quoted: m })
@@ -29,17 +29,16 @@ handler.tags = ["ai", "tools"]
 handler.command = ["remini", "hd", "enhance"]
 export default handler
 
-async function uploadToCatbox(buffer) {
+async function uploadToUploadF(buffer) {
   const form = new FormData()
-  form.append("reqtype", "fileupload")
-  form.append("fileToUpload", buffer, "image.jpg")
+  form.append("file", buffer, "image.jpg")
 
-  const { data } = await axios.post("https://catbox.moe/user/api.php", form, {
+  const { data } = await axios.post("https://uploadf.com/api/upload", form, {
     headers: form.getHeaders()
   })
 
-  if (!data || !data.startsWith("https://")) throw new Error("Falló la subida a Catbox")
-  return data.trim()
+  if (!data || !data.status || !data.url) throw new Error("Falló la subida a UploadF")
+  return data.url.trim()
 }
 
 async function upscaleWithStellar(url) {
