@@ -14,12 +14,9 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     if (!/image\/(jpe?g|png)/.test(mime)) throw `${tradutor.texto2[0]} (${mime}) ${tradutor.texto2[1]}`
 
     m.reply(tradutor.texto3)
-
-    let imgUrl = q?.msg?.url || q?.url || ""
-    if (!imgUrl || !imgUrl.startsWith("http")) throw tradutor.texto4
-
-    let catboxUrl = await uploadToCatbox(imgUrl)
-    let banner = await upscaleWithStellar(catboxUrl)
+    let img = await q.download?.()
+    let fileUrl = await uploadToCatbox(img)
+    let banner = await upscaleWithStellar(fileUrl)
 
     await conn.sendMessage(m.chat, { image: banner }, { quoted: m })
   } catch {
@@ -32,21 +29,21 @@ handler.tags = ["ai", "tools"]
 handler.command = ["remini", "hd", "enhance"]
 export default handler
 
-async function uploadToCatbox(imageUrl) {
+async function uploadToCatbox(buffer) {
   const form = new FormData()
-  form.append("reqtype", "urlupload")
-  form.append("url", imageUrl)
+  form.append("reqtype", "fileupload")
+  form.append("fileToUpload", buffer, "image.jpg")
 
   const { data } = await axios.post("https://catbox.moe/user/api.php", form, {
     headers: form.getHeaders()
   })
 
-  if (!data.startsWith("https://files.catbox.moe/")) throw "Falló la subida a Catbox"
-  return data
+  if (!data || !data.startsWith("https://")) throw new Error("Falló la subida a Catbox")
+  return data.trim()
 }
 
 async function upscaleWithStellar(url) {
-  const endpoint = `https://api.stellarwa.xyz/tools/upscale?url=${encodeURIComponent(url)}&apikey=Gawr`
+  const endpoint = `https://api.stellarwa.xyz/tools/upscale?url=${url}&apikey=BrunoSobrino`
 
   const { data } = await axios.get(endpoint, {
     responseType: "arraybuffer",
