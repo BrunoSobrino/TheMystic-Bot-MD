@@ -19,8 +19,8 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     let banner = await upscaleWithStellar(fileUrl)
 
     await conn.sendMessage(m.chat, { image: banner }, { quoted: m })
-  } catch {
-    throw tradutor.texto4
+  } catch (e) {
+    throw tradutor.texto4 + e
   }
 }
 
