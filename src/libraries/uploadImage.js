@@ -11,19 +11,18 @@ import { fileTypeFromBuffer } from "file-type"
  * @return {Promise<string>}
  */
 
-export async function (buffer) {
-    const f = await fileTypeFromBuffer(buffer)
-    const file = new File([buffer], `${Date.now()}.${f.ext}`, { type: f.mime })
-    const form = new FormData()
-    form.append('upfile', file)
-
-    const origin = 'https://uploadf.com'
-    const r = await fetch(origin + '/upload.php', {
-        'body': form,
-        'method': 'post'
-    })
-    if(!r.ok) throw Error (`${r.status} ${r.statusText}`)
-    const fileId = '/' + r.url.split("/").pop()
-    const result = origin + '/file' + fileId;
-    return result;
+export default async (buffer) => {
+ const f = await fileTypeFromBuffer(buffer)
+ const file = new File([buffer], `${Date.now()}.${f.ext}`, { type: f.mime })
+ const form = new FormData()
+ form.append('upfile', file)
+ const origin = 'https://uploadf.com'
+ const r = await fetch(origin + '/upload.php', {
+  'body': form,
+  'method': 'post'
+ })
+ if(!r.ok) throw Error (`${r.status} ${r.statusText}`)
+ const fileId = '/' + r.url.split("/").pop()
+ const result = origin + '/file' + fileId;
+ return result;
 }
