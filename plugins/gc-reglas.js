@@ -37,7 +37,7 @@ global.reglas = `╰Futabu Club╯
 ➥ No se permite acosar a miembros o administradores en privado.
 
 ❖ Mandar Packs
-➥ No se permiten mandar packs de alguien/o tuyos, sean tetas/pene/trasero.
+➥ No se permiten mandar packs de alguien/o tuyos, sean tetas/pene/trasero o vagina (SIN ROPA/SEMI-DESNUDO).
 
 ❖ Uso de comandos +18 del Bot
 ➥ Se permiten ciertos comandos con límites de uso específicos.
