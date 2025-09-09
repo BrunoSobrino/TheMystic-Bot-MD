@@ -37,7 +37,7 @@ global.reglasfutabucasino = `╰Futabu Casino╯
 ➥ No se permite acosar a miembros o administradores en privado.
 
 ❖ Mandar Packs
-➥ No se permiten mandar packs de alguien/o tuyos, sean tetas/pene/trasero o vagina (SIN ROPA/SEMI-DESNUDO).
+➥ No se permiten mandar packs de alguien/o tuyos, sean tetas/pene/trasero o vagina.
 
 ❖ Flood
 ➥ Se prohíbe enviar múltiples mensajes idénticos para evitar inundar el chat.
