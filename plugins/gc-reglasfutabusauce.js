@@ -2,7 +2,7 @@ let handler = async (m, { conn }) => {
 m.reply(global.reglasfutabusauce)}
 handler.help = ['reglasfutabusauce']
 handler.tags = ['grupo']
-handler.command = /^(reglasfutabusauce|rulesfutabusauce|reglafutabusauce|rulefutabusauce)$/i
+handler.command = /^(reglasfutabucasino|rulesfutabucasino|reglafutabucasino|rulefutabucasino|reglasfc)$/i
 handler.group = true;
 export default handler
 
