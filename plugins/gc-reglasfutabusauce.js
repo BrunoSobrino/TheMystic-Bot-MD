@@ -28,9 +28,6 @@ global.reglasfutabucasino = `╰Futabu Casino╯
 ❖ Toxicidad
 ➥ Se prohíben los insultos y el humor inapropiado hacia personas no receptivas.
 
-❖ Uso de Comandos RPG
-➥ Solo se permiten ciertos comandos en el grupo, el resto solo en privado o en el grupo de Futabu Casino.
-
 ❖ Spam
 ➥ No se puede enviar muy seguido enlaces, stickers o promociones sin permiso de un administrador.
 
@@ -41,10 +38,7 @@ global.reglasfutabucasino = `╰Futabu Casino╯
 ➥ No se permite acosar a miembros o administradores en privado.
 
 ❖ Mandar Packs
-➥ No se permiten mandar packs de alguien/o tuyos, sean tetas/pene/trasero.
-
-❖ Uso de comandos +18 del Bot
-➥ Se permiten ciertos comandos con límites de uso específicos.
+➥ No se permiten mandar packs de alguien/o tuyos, sean tetas/pene/trasero o vagina (SIN ROPA/SEMI-DESNUDO).
 
 ❖ Flood
 ➥ Se prohíbe enviar múltiples mensajes idénticos para evitar inundar el chat.
