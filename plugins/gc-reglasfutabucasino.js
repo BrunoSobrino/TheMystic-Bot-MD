@@ -9,7 +9,6 @@ export default handler
 global.reglasfutabucasino = `╰Futabu Casino╯
 
 📝| Reglas:
-
 ❖ Futabu Club
 ➥ Es *OBLIGATORIO* que estes a la vez en grupo de Futabu Club y que tambien aportes o hables por ahi.
 
