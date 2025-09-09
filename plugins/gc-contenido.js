@@ -11,7 +11,9 @@ global.contenido = `*_✅|CONTENIDO PERMITIDO_*
 ★ Trapos/Femboy's
 ★ Hentai/Furry
 ★ Transexual
+★ Pack Soft/Semi-Desnudo
 ★ Porno normal
+
 
 *_❌|CONTENIDO PROHIBIDO_*
 ✦ Earfuck
