@@ -6,6 +6,8 @@ const handler = async (m, { conn, text }) => {
   const q = m.quoted ? m.quoted : m;
   const mime = (q.msg || q).mimetype || q.mediaType || '';
 
+ console.log(text)
+  
   if (!/image/g.test(mime)) throw '❌ Debes responder a una imagen';
   if (!text) throw '⚠️ Escribe un prompt/descripción para la edición';
 
