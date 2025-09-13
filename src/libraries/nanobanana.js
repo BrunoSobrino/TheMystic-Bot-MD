@@ -1,146 +1,95 @@
 /**
- *** ᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁
- *** - Dev: FongsiDev
- *** - Contact: t.me/dashmodz
- *** - Github: github.com/Fgsi-APIs/RestAPIs
- *** ᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁
+ * Ai Image Editing - Nano Banana
+ * Author  : gienetic
+ * Base    : https://play.google.com/store/apps/details?id=com.codergautamyt.photogpt
+ * Note    : biar apk nya gak karam , makanya kalo recode tetep kasih tag author / sumber ya bab :v
  */
 
 import axios from "axios";
-import { wrapper } from "axios-cookiejar-support";
-import { CookieJar } from "tough-cookie";
-import fs from "fs";
+import FormData from "form-data";
+import crypto from "crypto";
 
-function generateFakeIpHeaders() {
-  const ipv4 = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
-  return {
-    "X-Forwarded-For": ipv4,
-    "X-Originating-IP": ipv4,
-    "X-Remote-IP": ipv4,
-    "X-Remote-Addr": ipv4,
-    "X-Host": ipv4,
-    "X-Forwarded-Host": ipv4,
-    "X-Connecting-IP": ipv4,
-    "Client-IP": ipv4,
-    "X-Client-IP": ipv4,
-    "CF-Connecting-IP": ipv4,
-    "Fastly-Client-IP": ipv4,
-    "True-Client-IP": ipv4,
-    "X-Real-IP": ipv4,
-    Forwarded: `for=${ipv4};proto=http;by=${ipv4}`,
-    "X-Cluster-Client-IP": ipv4,
-    Via: `1.1 ${ipv4}`,
-    Fgsi: `ap-${ipv4}`,
-    "X-ProxyUser-IP": ipv4,
-    "X-Forwarded-For-Original": ipv4,
-    "X-Forwarded": ipv4,
-    "X-Original-Forwarded-For": ipv4,
-    "X-Spoofed-IP": ipv4,
+const BASE_URL = "https://ai-apps.codergautam.dev";
+
+function acakName(len = 10) {
+  const chars = "abcdefghijklmnopqrstuvwxyz";
+  return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+}
+
+async function autoregist() {
+  const uid = crypto.randomBytes(12).toString("hex");
+  const email = `gienetic${Date.now()}@gmail.com`;
+
+  const payload = {
+    uid,
+    email,
+    displayName: acakName(),
+    photoURL: "https://i.pravatar.cc/150",
+    appId: "photogpt"
   };
+
+  const res = await axios.post(`${BASE_URL}/photogpt/create-user`, payload, {
+    headers: {
+      "content-type": "application/json",
+      "accept": "application/json",
+      "user-agent": "okhttp/4.9.2"
+    }
+  });
+
+  if (res.data.success) return uid;
+  throw new Error("❌ Error al registrar usuario: " + JSON.stringify(res.data));
 }
 
-export class NanoBananaClient {
-  constructor() {
-    this.jar = new CookieJar();
-    this.api = wrapper(
-      axios.create({
-        baseURL: "https://nanobanana.ai",
-        headers: {
-          "accept": "*/*",
-          "accept-language": "en-US,en;q=0.9,id;q=0.8",
-          "content-type": "application/json",
-          "origin": "https://nanobanana.ai",
-          "referer": "https://nanobanana.ai/",
-          "user-agent":
-            "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36",
-          ...generateFakeIpHeaders(),
-        },
-        jar: this.jar,
-        withCredentials: true,
-      })
-    );
-  }
+export async function img2img(imageBuffer, prompt, pollInterval = 3000, pollTimeout = 2 * 60 * 1000) {
+  const uid = await autoregist();
 
-  async initSession() {
-    console.log("🔄 Iniciando sesión con NanoBanana...");
-    const res = await this.api.get("/api/auth/session");
-    console.log("✅ Sesión iniciada:", res.data);
-    return res.data;
-  }
+  const form = new FormData();
+  form.append("image", imageBuffer, { filename: "input.jpg", contentType: "image/jpeg" });
+  form.append("prompt", prompt);
+  form.append("userId", uid);
 
-  async getUploadUrl(filePath, filename = "upload.jpg") {
-    console.log(`📤 Preparando subida de archivo: ${filename}`);
-    const file = fs.readFileSync(filePath);
-    console.log("📦 Tamaño del archivo:", file.length, "bytes");
+  const uploadRes = await axios.post(`${BASE_URL}/photogpt/generate-image`, form, {
+    headers: {
+      ...form.getHeaders(),
+      "accept": "application/json",
+      "user-agent": "okhttp/4.9.2",
+      "accept-encoding": "gzip"
+    },
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+    timeout: 120000
+  });
 
-    const res = await this.api.post("/api/get-upload-url", {
-      fileName: filename,
-      contentType: "image/jpeg",
-      fileSize: file.length,
+  if (!uploadRes.data.success) throw new Error("❌ Error al subir la imagen: " + JSON.stringify(uploadRes.data));
+
+  const pollingUrl = uploadRes.data.pollingUrl || (uploadRes.data.jobId ? `${BASE_URL}/photogpt/job/${uploadRes.data.jobId}` : null);
+  if (!pollingUrl) throw new Error("⚠️ No se encontró la URL de polling.");
+
+  let status = "pending";
+  let resultUrl = null;
+  const startTime = Date.now();
+
+  while (true) {
+    if (Date.now() - startTime > pollTimeout) throw new Error("⏳ Tiempo de espera agotado durante el polling.");
+
+    const pollRes = await axios.get(pollingUrl, {
+      headers: {
+        "accept": "application/json",
+        "user-agent": "okhttp/4.9.2",
+        "accept-encoding": "gzip"
+      }
     });
 
-    console.log("✅ URL de subida obtenida:", res.data);
-    return { ...res.data, file };
+    status = (pollRes.data.status || "").toLowerCase();
+    if (status === "ready" || status === "complete" || status === "success") {
+      resultUrl = pollRes.data.result?.url || pollRes.data.url;
+      if (!resultUrl) throw new Error("⚠️ La tarea finalizó pero no se encontró la URL de la imagen.");
+      break;
+    }
+
+    await new Promise(r => setTimeout(r, pollInterval));
   }
 
-  async uploadFile(uploadUrl, file, contentType = "image/jpeg") {
-    console.log("🚀 Subiendo archivo a:", uploadUrl);
-    await axios.put(uploadUrl, file, {
-      headers: { "content-type": contentType },
-    });
-    console.log("✅ Archivo subido correctamente");
-  }
-
-  async generateImage(prompt, styleId, publicUrl) {
-    console.log("🖼️ Enviando solicitud de generación de imagen...");
-    console.log("👉 Prompt:", prompt);
-    console.log("👉 Estilo:", styleId);
-    console.log("👉 Imagen base:", publicUrl);
-
-    const res = await this.api.post("/api/generate-image", {
-      prompt,
-      styleId,
-      mode: "image",
-      imageUrl: publicUrl,
-      imageUrls: [publicUrl],
-    });
-
-    console.log("✅ Tarea de generación creada:", res.data);
-    return res.data;
-  }
-
-  async checkStatus(taskId) {
-    console.log("🔍 Revisando estado de la tarea:", taskId);
-    const res = await this.api.get("/api/generate-image/status", {
-      params: { taskId },
-    });
-    console.log("📊 Estado actual:", res.data);
-    return res.data;
-  }
-
-  async waitForResult(taskId, interval = 5000) {
-    console.log("⏳ Esperando resultado para la tarea:", taskId);
-    return new Promise((resolve, reject) => {
-      const timer = setInterval(async () => {
-        try {
-          const status = await this.checkStatus(taskId);
-          if (status.status === "completed") {
-            clearInterval(timer);
-            console.log("🎉 Tarea completada:", status);
-            resolve(status);
-          } else if (status.status === "failed") {
-            clearInterval(timer);
-            console.error("❌ Tarea fallida:", status);
-            reject(new Error("La tarea falló"));
-          }
-        } catch (err) {
-          clearInterval(timer);
-          console.error("⚠️ Error al chequear estado:", err.message);
-          reject(err);
-        }
-      }, interval);
-    });
-  }
+  const resultImg = await axios.get(resultUrl, { responseType: "arraybuffer", headers: { "accept-encoding": "gzip" } });
+  return Buffer.from(resultImg.data);
 }
-
-export const nanoBanana = new NanoBananaClient();
