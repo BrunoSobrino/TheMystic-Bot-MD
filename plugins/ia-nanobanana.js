@@ -14,6 +14,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     const resultBuffer = await img2img(data, text);
 
+    console.log(resultBuffer)
+
     await conn.sendMessage(m.chat, { image: resultBuffer, caption: 'Aquí tienes tu imagen 🖼️' }, { quoted: m });
   } catch (error) {
     console.error(error);
