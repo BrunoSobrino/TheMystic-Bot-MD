@@ -12,11 +12,11 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   const data = await q.download?.();
 
   try {
-    const resultBuffer = await img2img(data, text);
+    const resultUrl = await img2img(data, text);
 
-    console.log(resultBuffer)
-
-    await conn.sendMessage(m.chat, { image: resultBuffer, caption: 'Aquí tienes tu imagen 🖼️' }, { quoted: m });
+    console.log(resultUrl)
+    
+    await conn.sendMessage(m.chat, { image: { url: resultUrl }, caption: 'Aquí tienes tu imagen 🖼️' }, { quoted: m });
   } catch (error) {
     console.error(error);
     throw `*Error al procesar la imagen con NanoBanana*`;
