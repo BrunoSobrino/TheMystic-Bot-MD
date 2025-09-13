@@ -1,7 +1,6 @@
 /**
  *** ᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁
  *** - Dev: FongsiDev
- *** - Adaptado para WhatsApp Bot (plugin nanobanana)
  *** - Contact: t.me/dashmodz
  *** - Github: github.com/Fgsi-APIs/RestAPIs
  *** ᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁
@@ -24,9 +23,9 @@ function generateFakeIpHeaders() {
     "X-Connecting-IP": ipv4,
     "Client-IP": ipv4,
     "X-Client-IP": ipv4,
-    "CF-Connecting-IP": ipv4, // Cloudflare
-    "Fastly-Client-IP": ipv4, // Fastly CDN
-    "True-Client-IP": ipv4,   // Akamai / CloudFront
+    "CF-Connecting-IP": ipv4,
+    "Fastly-Client-IP": ipv4,
+    "True-Client-IP": ipv4,
     "X-Real-IP": ipv4,
     Forwarded: `for=${ipv4};proto=http;by=${ipv4}`,
     "X-Cluster-Client-IP": ipv4,
@@ -63,27 +62,41 @@ export class NanoBananaClient {
   }
 
   async initSession() {
+    console.log("🔄 Iniciando sesión con NanoBanana...");
     const res = await this.api.get("/api/auth/session");
+    console.log("✅ Sesión iniciada:", res.data);
     return res.data;
   }
 
   async getUploadUrl(filePath, filename = "upload.jpg") {
+    console.log(`📤 Preparando subida de archivo: ${filename}`);
     const file = fs.readFileSync(filePath);
+    console.log("📦 Tamaño del archivo:", file.length, "bytes");
+
     const res = await this.api.post("/api/get-upload-url", {
       fileName: filename,
       contentType: "image/jpeg",
       fileSize: file.length,
     });
+
+    console.log("✅ URL de subida obtenida:", res.data);
     return { ...res.data, file };
   }
 
   async uploadFile(uploadUrl, file, contentType = "image/jpeg") {
+    console.log("🚀 Subiendo archivo a:", uploadUrl);
     await axios.put(uploadUrl, file, {
       headers: { "content-type": contentType },
     });
+    console.log("✅ Archivo subido correctamente");
   }
 
   async generateImage(prompt, styleId, publicUrl) {
+    console.log("🖼️ Enviando solicitud de generación de imagen...");
+    console.log("👉 Prompt:", prompt);
+    console.log("👉 Estilo:", styleId);
+    console.log("👉 Imagen base:", publicUrl);
+
     const res = await this.api.post("/api/generate-image", {
       prompt,
       styleId,
@@ -91,30 +104,38 @@ export class NanoBananaClient {
       imageUrl: publicUrl,
       imageUrls: [publicUrl],
     });
+
+    console.log("✅ Tarea de generación creada:", res.data);
     return res.data;
   }
 
   async checkStatus(taskId) {
+    console.log("🔍 Revisando estado de la tarea:", taskId);
     const res = await this.api.get("/api/generate-image/status", {
       params: { taskId },
     });
+    console.log("📊 Estado actual:", res.data);
     return res.data;
   }
 
   async waitForResult(taskId, interval = 5000) {
+    console.log("⏳ Esperando resultado para la tarea:", taskId);
     return new Promise((resolve, reject) => {
       const timer = setInterval(async () => {
         try {
           const status = await this.checkStatus(taskId);
           if (status.status === "completed") {
             clearInterval(timer);
+            console.log("🎉 Tarea completada:", status);
             resolve(status);
           } else if (status.status === "failed") {
             clearInterval(timer);
-            reject(new Error("❌ La tarea falló"));
+            console.error("❌ Tarea fallida:", status);
+            reject(new Error("La tarea falló"));
           }
         } catch (err) {
           clearInterval(timer);
+          console.error("⚠️ Error al chequear estado:", err.message);
           reject(err);
         }
       }, interval);
@@ -122,5 +143,4 @@ export class NanoBananaClient {
   }
 }
 
-// Cliente listo para usar
 export const nanoBanana = new NanoBananaClient();
