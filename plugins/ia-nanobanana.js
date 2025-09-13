@@ -14,7 +14,7 @@ const handler = async (m, { conn, text }) => {
   const buffer = await q.download?.();
   if (!buffer) throw '❌ No se pudo descargar la imagen.';
 
-  const tmpPath = path.join('./tmp', `${Date.now()}.jpg`);
+  const tmpPath = path.join('../src/tmp', `${Date.now()}.jpg`);
   fs.writeFileSync(tmpPath, buffer);
 
   try {
