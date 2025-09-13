@@ -1,74 +1,126 @@
 /**
- * Ai Image Editing - Nano Banana
- * Author  : gienetic
- * Base    : https://play.google.com/store/apps/details?id=com.codergautamyt.photogpt
- * Note    : biar apk nya gak karam , makanya kalo recode tetep kasih tag author / sumber ya bab :v
+ *** ᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁
+ *** - Dev: FongsiDev
+ *** - Adaptado para WhatsApp Bot (plugin nanobanana)
+ *** - Contact: t.me/dashmodz
+ *** - Github: github.com/Fgsi-APIs/RestAPIs
+ *** ᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁᠁
  */
 
 import axios from "axios";
-import FormData from "form-data";
-import crypto from "crypto";
+import { wrapper } from "axios-cookiejar-support";
+import { CookieJar } from "tough-cookie";
+import fs from "fs";
 
-const BASE_URL = "https://ai-apps.codergautam.dev";
-
-function acakName(len = 10) {
-  const chars = "abcdefghijklmnopqrstuvwxyz";
-  return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-}
-
-async function autoregist() {
-  const uid = crypto.randomBytes(12).toString("hex");
-  const email = `gienetic${Date.now()}@gmail.com`;
-
-  const payload = {
-    uid,
-    email,
-    displayName: acakName(),
-    photoURL: "https://i.pravatar.cc/150",
-    appId: "photogpt"
+function generateFakeIpHeaders() {
+  const ipv4 = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+  return {
+    "X-Forwarded-For": ipv4,
+    "X-Originating-IP": ipv4,
+    "X-Remote-IP": ipv4,
+    "X-Remote-Addr": ipv4,
+    "X-Host": ipv4,
+    "X-Forwarded-Host": ipv4,
+    "X-Connecting-IP": ipv4,
+    "Client-IP": ipv4,
+    "X-Client-IP": ipv4,
+    "CF-Connecting-IP": ipv4, // Cloudflare
+    "Fastly-Client-IP": ipv4, // Fastly CDN
+    "True-Client-IP": ipv4,   // Akamai / CloudFront
+    "X-Real-IP": ipv4,
+    Forwarded: `for=${ipv4};proto=http;by=${ipv4}`,
+    "X-Cluster-Client-IP": ipv4,
+    Via: `1.1 ${ipv4}`,
+    Fgsi: `ap-${ipv4}`,
+    "X-ProxyUser-IP": ipv4,
+    "X-Forwarded-For-Original": ipv4,
+    "X-Forwarded": ipv4,
+    "X-Original-Forwarded-For": ipv4,
+    "X-Spoofed-IP": ipv4,
   };
-
-  const res = await axios.post(`${BASE_URL}/photogpt/create-user`, payload, {
-    headers: {
-      "content-type": "application/json",
-      "accept": "application/json",
-      "user-agent": "okhttp/4.9.2"
-    }
-  });
-
-  if (res.data.success) return uid;
-  throw new Error("❌ Error al registrar usuario: " + JSON.stringify(res.data));
 }
 
-export async function img2img(imageBuffer, prompt) {
-  const uid = await autoregist();
-
-  const form = new FormData();
-  form.append("image", imageBuffer, { filename: "input.jpg", contentType: "image/jpeg" });
-  form.append("prompt", prompt);
-  form.append("userId", uid);
-
-  const uploadRes = await axios.post(`${BASE_URL}/photogpt/generate-image`, form, {
-    headers: {
-      ...form.getHeaders(),
-      "accept": "application/json",
-      "user-agent": "okhttp/4.9.2",
-      "accept-encoding": "gzip"
-    },
-    maxContentLength: Infinity,
-    maxBodyLength: Infinity,
-    timeout: 120000
-  });
-
-  if (!uploadRes.data.success) {
-    throw new Error("❌ Error al subir la imagen: " + JSON.stringify(uploadRes.data));
+export class NanoBananaClient {
+  constructor() {
+    this.jar = new CookieJar();
+    this.api = wrapper(
+      axios.create({
+        baseURL: "https://nanobanana.ai",
+        headers: {
+          "accept": "*/*",
+          "accept-language": "en-US,en;q=0.9,id;q=0.8",
+          "content-type": "application/json",
+          "origin": "https://nanobanana.ai",
+          "referer": "https://nanobanana.ai/",
+          "user-agent":
+            "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36",
+          ...generateFakeIpHeaders(),
+        },
+        jar: this.jar,
+        withCredentials: true,
+      })
+    );
   }
 
-  const resultUrl = uploadRes.data.result?.url || uploadRes.data.url;
-
-  if (!resultUrl) {
-    throw new Error("⚠️ No se encontró la URL de la imagen en la respuesta.");
+  async initSession() {
+    const res = await this.api.get("/api/auth/session");
+    return res.data;
   }
 
-  return resultUrl;
+  async getUploadUrl(filePath, filename = "upload.jpg") {
+    const file = fs.readFileSync(filePath);
+    const res = await this.api.post("/api/get-upload-url", {
+      fileName: filename,
+      contentType: "image/jpeg",
+      fileSize: file.length,
+    });
+    return { ...res.data, file };
+  }
+
+  async uploadFile(uploadUrl, file, contentType = "image/jpeg") {
+    await axios.put(uploadUrl, file, {
+      headers: { "content-type": contentType },
+    });
+  }
+
+  async generateImage(prompt, styleId, publicUrl) {
+    const res = await this.api.post("/api/generate-image", {
+      prompt,
+      styleId,
+      mode: "image",
+      imageUrl: publicUrl,
+      imageUrls: [publicUrl],
+    });
+    return res.data;
+  }
+
+  async checkStatus(taskId) {
+    const res = await this.api.get("/api/generate-image/status", {
+      params: { taskId },
+    });
+    return res.data;
+  }
+
+  async waitForResult(taskId, interval = 5000) {
+    return new Promise((resolve, reject) => {
+      const timer = setInterval(async () => {
+        try {
+          const status = await this.checkStatus(taskId);
+          if (status.status === "completed") {
+            clearInterval(timer);
+            resolve(status);
+          } else if (status.status === "failed") {
+            clearInterval(timer);
+            reject(new Error("❌ La tarea falló"));
+          }
+        } catch (err) {
+          clearInterval(timer);
+          reject(err);
+        }
+      }, interval);
+    });
+  }
 }
+
+// Cliente listo para usar
+export const nanoBanana = new NanoBananaClient();
