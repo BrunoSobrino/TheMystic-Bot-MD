@@ -40,7 +40,7 @@ async function autoregist() {
   throw new Error("❌ Error al registrar usuario: " + JSON.stringify(res.data));
 }
 
-export async function img2img(imageBuffer, prompt, pollInterval = 3000, pollTimeout = 2 * 60 * 1000) {
+export async function img2img(imageBuffer, prompt) {
   const uid = await autoregist();
 
   const form = new FormData();
@@ -60,36 +60,15 @@ export async function img2img(imageBuffer, prompt, pollInterval = 3000, pollTime
     timeout: 120000
   });
 
-  if (!uploadRes.data.success) throw new Error("❌ Error al subir la imagen: " + JSON.stringify(uploadRes.data));
-
-  const pollingUrl = uploadRes.data.pollingUrl || (uploadRes.data.jobId ? `${BASE_URL}/photogpt/job/${uploadRes.data.jobId}` : null);
-  if (!pollingUrl) throw new Error("⚠️ No se encontró la URL de polling.");
-
-  let status = "pending";
-  let resultUrl = null;
-  const startTime = Date.now();
-
-  while (true) {
-    if (Date.now() - startTime > pollTimeout) throw new Error("⏳ Tiempo de espera agotado durante el polling.");
-
-    const pollRes = await axios.get(pollingUrl, {
-      headers: {
-        "accept": "application/json",
-        "user-agent": "okhttp/4.9.2",
-        "accept-encoding": "gzip"
-      }
-    });
-
-    status = (pollRes.data.status || "").toLowerCase();
-    if (status === "ready" || status === "complete" || status === "success") {
-      resultUrl = pollRes.data.result?.url || pollRes.data.url;
-      if (!resultUrl) throw new Error("⚠️ La tarea finalizó pero no se encontró la URL de la imagen.");
-      break;
-    }
-
-    await new Promise(r => setTimeout(r, pollInterval));
+  if (!uploadRes.data.success) {
+    throw new Error("❌ Error al subir la imagen: " + JSON.stringify(uploadRes.data));
   }
 
-  const resultImg = await axios.get(resultUrl, { responseType: "arraybuffer", headers: { "accept-encoding": "gzip" } });
-  return Buffer.from(resultImg.data);
+  const resultUrl = uploadRes.data.result?.url || uploadRes.data.url;
+
+  if (!resultUrl) {
+    throw new Error("⚠️ No se encontró la URL de la imagen en la respuesta.");
+  }
+
+  return resultUrl;
 }
