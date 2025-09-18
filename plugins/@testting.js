@@ -1,27 +1,22 @@
 // Plugin para test de comandos - powered by @BrunoSobrino
 // Si vas a robar deja creditos o doname >:v
 import yts from 'yt-search';
-import { existsSync, mkdirSync, writeFileSync, statSync, unlinkSync, createReadStream, readFileSync } from 'fs';
-import { join } from 'path';
 import fetch from 'node-fetch';
 import axios from 'axios';
 import NodeID3 from 'node-id3';
+import fs from 'fs';
 import { load } from 'cheerio';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
-
-const tmpDir = join(process.cwd(), './src/tmp');
-if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
 
 const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024;
 const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024;
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
-        const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
-        const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
-        const tradutor = _translate._testting;
-        
+    const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
+    const tradutor = _translate._testting;
+    
     try {
-
         const query = args.join(' ');
         if (!query) return m.reply(tradutor.errors.no_query.replace('@command', usedPrefix + command));
 
@@ -38,7 +33,9 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
         const videoInfoMsg = `${tradutor.video_info.header}\n\n${tradutor.video_info.title.replace('@title', video.title)}\n${tradutor.video_info.author.replace('@author', video.author.name)}\n${tradutor.video_info.duration.replace('@duration', video.duration?.timestamp || '00:00')}\n${tradutor.video_info.views.replace('@views', (video.views || 0).toLocaleString())}\n${tradutor.video_info.published.replace('@published', video.ago || 'Desconocido')}\n${tradutor.video_info.id.replace('@id', video.videoId)}\n${tradutor.video_info.link.replace('@link', video.url)}`.trim();
 
-        if (command !== 'ytmp3' && command !== 'ytmp4') { conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m }) }
+        if (command !== 'ytmp3' && command !== 'ytmp4') { 
+            conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m });
+        }
 
         const isAudio = command === 'test' || command === 'play' || command === 'ytmp3';
         const format = isAudio ? 'mp3' : '720p';
@@ -48,17 +45,44 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         if (!downloadResult || !downloadResult.dlink) throw new Error('No se pudo obtener el enlace de descarga');
 
         const mediaUrl = downloadResult.dlink;
-        const timestamp = Date.now();
-        const id = `${video.videoId}_${timestamp}`;
 
         if (isAudio) {
-            try {
-                const [audioBuffer, thumbnailBuffer] = await Promise.all([
-                    fetch(mediaUrl).then(res => res.buffer()),
-                    fetch(video.thumbnail).then(res => res.buffer())
-                ]);
+            const [audioBuffer, thumbnailBuffer] = await Promise.all([
+                fetch(mediaUrl).then(res => res.buffer()),
+                fetch(video.thumbnail).then(res => res.buffer())
+            ]);
 
-                const audioSize = audioBuffer.length;
+            let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
+            if (!lyricsData && !isYouTubeUrl) {
+                lyricsData = await Genius.searchLyrics(query).catch(() => null);
+            }
+
+            const formattedLyrics = lyricsData ? formatLyrics(lyricsData.lyrics) : null;
+            
+            const tags = {
+                title: video.title,
+                artist: video.author.name,
+                album: 'YouTube Audio',
+                APIC: thumbnailBuffer,
+                year: new Date().getFullYear(),
+                comment: {
+                    language: 'spa',
+                    text: `🟢 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 🟢\n\nVideo De YouTube: ${video.url}`
+                }
+            };
+
+            if (formattedLyrics) {
+                tags.unsynchronisedLyrics = {
+                    language: 'spa',
+                    text: `🟢 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 🟢\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
+                };
+            }
+
+            const taggedBuffer = NodeID3.write(tags, audioBuffer);
+            const fileName = `${sanitizeFileName(video.title.substring(0, 64))}.mp3`;
+
+            try {
+                const audioSize = taggedBuffer.length;
                 const shouldSendAsDocument = audioSize > AUDIO_SIZE_LIMIT;
 
                 if (shouldSendAsDocument) {
@@ -66,64 +90,229 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
                 }
 
-                let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
-                if (!lyricsData && !isYouTubeUrl) {
-                    lyricsData = await Genius.searchLyrics(query).catch(() => null);
-                }
-
-                const formattedLyrics = lyricsData ? formatLyrics(lyricsData.lyrics) : null;
-                
-                const tags = {
-                    title: video.title,
-                    artist: video.author.name,
-                    album: 'YouTube Audio',
-                    APIC: thumbnailBuffer,
-                    year: new Date().getFullYear(),
-                    comment: {
-                        language: 'spa',
-                        text: `🟢 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 🟢\n\nVideo De YouTube: ${video.url}`
+                try {
+                    if (shouldSendAsDocument) {
+                        const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
+                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'audio/mpeg',
+                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } else {
+                        const sentMsg = await conn.sendMessage(m.chat, { audio: taggedBuffer, fileName: `${sanitizeFileName(video.title)}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
+                        
+                        setTimeout(async () => {
+                            try {
+                                if (sentMsg && sentMsg.message) {
+                                    const audioMsg = sentMsg.message.audioMessage;
+                                    const duration = audioMsg?.seconds || 0;
+                                    
+                                    if (duration === 0 || !duration) {
+                                        await conn.sendMessage(m.chat, { 
+                                            text: `🔗 ${mediaUrl}` 
+                                        }, { quoted: m });
+                                    }
+                                }
+                            } catch (verifyError) {
+                            }
+                        }, 2000);
                     }
-                };
-
-                if (formattedLyrics) {
-                    tags.unsynchronisedLyrics = {
-                        language: 'spa',
-                        text: `🟢 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 🟢\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
-                    };
-                }
-
-                const taggedBuffer = NodeID3.write(tags, audioBuffer);
-
-                if (shouldSendAsDocument) {
-                    await conn.sendMessage(m.chat, { document: taggedBuffer, fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
-                } else {
-                    await conn.sendMessage(m.chat, { audio: taggedBuffer, fileName: `${sanitizeFileName(video.title)}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
+                } catch (sendError) {
+                    const errorMsg = sendError.message || sendError.toString();
+                    if (errorMsg.includes('Media upload failed') || 
+                        errorMsg.includes('ENOSPC') || 
+                        errorMsg.includes('no space left') ||
+                        errorMsg.includes('Internal Server Error')) {
+                        
+                        const sizeMB = (taggedBuffer.length / (1024 * 1024)).toFixed(2);
+                        await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
+                        
+                        const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
+                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'audio/mpeg',
+                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } else {
+                        throw sendError;
+                    }
                 }
 
             } catch (audioError) {
-                console.error('Audio error:', audioError);
-                await m.reply(tradutor.errors.generic.replace('@error', audioError.message));
+                const errorMsg = audioError.message || audioError.toString();
+                if (errorMsg.includes('Media upload failed') || 
+                    errorMsg.includes('ENOSPC') || 
+                    errorMsg.includes('no space left') ||
+                    errorMsg.includes('Internal Server Error') ||
+                    errorMsg.includes('size') || 
+                    errorMsg.includes('memory')) {
+                    
+                    try {
+                        const sizeMB = (taggedBuffer.length / (1024 * 1024)).toFixed(2);
+                        await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
+                        
+                        const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
+                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'audio/mpeg',
+                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } catch (urlError) {
+                        await m.reply(tradutor.errors.generic.replace('@error', 'Error de envío. Intenta nuevamente.'));
+                    }
+                } else {
+                    await m.reply(tradutor.errors.generic.replace('@error', audioError.message));
+                }
             }
+            // CORREGIDO: Eliminé el bloque catch duplicado que causaba el error de sintaxis
 
         } else {
+            // Manejo de video
             try {
-                const videoBuffer = await fetch(mediaUrl).then(res => res.buffer());
+                const [videoBuffer, thumbnailBuffer] = await Promise.all([
+                    fetch(mediaUrl).then(res => res.buffer()),
+                    fetch(video.thumbnail).then(res => res.buffer())
+                ]);
+                
                 const videoSize = videoBuffer.length;
                 const shouldSendAsDocument = videoSize > VIDEO_SIZE_LIMIT;
+                const fileName = `${sanitizeFileName(video.title.substring(0, 64))}.mp4`;
 
                 if (shouldSendAsDocument) {
                     const sizeMB = (videoSize / (1024 * 1024)).toFixed(2);
                     await m.reply(tradutor.errors.large_video.replace('@size', sizeMB));
-                    
-                    await conn.sendMessage(m.chat, { document: videoBuffer, fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp4`, mimetype: 'video/mp4' }, { quoted: m });
-                    
-                } else {
-                    await conn.sendMessage(m.chat, { video: videoBuffer, caption: video.title, mimetype: 'video/mp4', fileName: `${sanitizeFileName(video.title)}.mp4` }, { quoted: m });
+                }
+
+                try {
+                    if (shouldSendAsDocument) {
+                        const documentMedia = await prepareWAMessageMedia({ document: videoBuffer }, { upload: conn.waUploadToServer });
+                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'video/mp4',
+                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } else {
+                        await conn.sendMessage(m.chat, { video: videoBuffer, caption: video.title, mimetype: 'video/mp4', fileName: `${sanitizeFileName(video.title)}.mp4` }, { quoted: m });
+                    }
+                } catch (sendError) {
+                    const errorMsg = sendError.message || sendError.toString();
+                    if (errorMsg.includes('Media upload failed') || 
+                        errorMsg.includes('ENOSPC') || 
+                        errorMsg.includes('no space left') ||
+                        errorMsg.includes('Internal Server Error')) {
+                        
+                        const sizeMB = (videoBuffer.length / (1024 * 1024)).toFixed(2);
+                        await m.reply(tradutor.errors.large_video.replace('@size', sizeMB));
+                        
+                        const documentMedia = await prepareWAMessageMedia({ document: videoBuffer }, { upload: conn.waUploadToServer });
+                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'video/mp4',
+                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } else {
+                        throw sendError; 
+                    }
                 }
 
             } catch (videoError) {
-                console.error('Video error:', videoError);
-                await m.reply(tradutor.errors.generic.replace('@error', videoError.message));
+                const errorMsg = videoError.message || videoError.toString();
+                if (errorMsg.includes('Media upload failed') || 
+                    errorMsg.includes('ENOSPC') || 
+                    errorMsg.includes('no space left') ||
+                    errorMsg.includes('Internal Server Error') ||
+                    errorMsg.includes('size') || 
+                    errorMsg.includes('memory')) {
+                    
+                    try {
+                        const sizeMB = (videoBuffer?.length || 0) / (1024 * 1024);
+                        await m.reply(tradutor.errors.large_video.replace('@size', sizeMB.toFixed(2)));
+                        
+                        // Crear media desde URL para casos de error
+                        const urlDocumentMedia = await prepareWAMessageMedia({ document: { url: mediaUrl } }, { upload: conn.waUploadToServer });
+                        const urlThumbnailMedia = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...urlDocumentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'video/mp4',
+                                jpegThumbnail: urlThumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } catch (urlError) {
+                        await m.reply(tradutor.errors.generic.replace('@error', 'Error de envío. Intenta nuevamente.'));
+                    }
+                } else {
+                    await m.reply(tradutor.errors.generic.replace('@error', videoError.message));
+                }
             }
         }
 
@@ -170,7 +359,6 @@ const yt = {
             const quality = allFormats.map(v => v[1].q).filter(v => /\d+p/.test(v)).map(v => parseInt(v)).sort((a, b) => b - a).map(v => v + 'p')
             if (!quality.includes(userFormat)) {
                 selectedFormat = quality[0]
-                // console.log(`format ${userFormat} gak ada. auto fallback ke best available yaitu ${selectedFormat}`)
             } else {
                 selectedFormat = userFormat
             }
@@ -186,7 +374,6 @@ const yt = {
             const body = new URLSearchParams(payload)
             const opts = { headers: this.baseHeaders, body, 'method': 'post' }
             const r = await fetch(`${this.baseUrl.origin}${path}`, opts)
-            // console.log('hit', path)
             if (!r.ok) throw Error(`${r.status} ${r.statusText}\n${await r.text()}`)
             const j = await r.json()
             return j
@@ -208,7 +395,6 @@ const yt = {
             if (!search?.items?.length) throw Error(`No se encontraron resultados para: ${queryOrYtUrl}`)
             const { v, t } = search.items[0]
             const videoUrl = 'https://www.youtube.com/watch?v=' + v
-            // console.log(`[found]\ntitle : ${t}\nurl   : ${videoUrl}`)
 
             search = await this.hit('/api/ajax/search', {
                 "query": videoUrl,
@@ -230,7 +416,6 @@ const yt = {
             let attempt = 0
             do {
                 attempt++
-                // console.log(`cek convert ${attempt}/${limit}`)
                 convert2 = await this.hit('/api/convert/check?hl=en', {
                     vid,
                     b_id: convert.b_id
@@ -347,7 +532,7 @@ const Genius = {
             const songPath = searchRes.data.response.sections[0].hits[0].result.path;
             const lyricsUrl = `https://genius.com${songPath}`;
             const { data } = await axios.get(lyricsUrl);
-            const $ = load(data);
+            const $ = load(data); 
             
             let lyrics = $('div[class*="Lyrics__Container"]').html();
             if (!lyrics) throw new Error('Letra no disponible en formato estructurado.');
@@ -361,7 +546,8 @@ const Genius = {
                 lyrics: lyrics
             };
 
-        } catch (error) { 
+        } catch (error) {
+            throw error;
         }
     }
 };
