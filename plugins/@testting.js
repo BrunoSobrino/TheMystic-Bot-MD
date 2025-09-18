@@ -124,8 +124,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
             } catch (videoError) {
                 console.error('Video error:', videoError);
                 await m.reply(tradutor.errors.generic.replace('@error', videoError.message));
-            } finally {
-                cleanupResources();
             }
         }
 
@@ -157,7 +155,7 @@ const yt = {
 
     validateFormat: function (userFormat) {
         const validFormat = ['mp3', '360p', '720p', '1080p']
-        if (!validFormat.includes(userFormat)) throw Error(`invalid format!. available formats: ${validFormat.join(', ')}`)
+        if (!validFormat.includes(userFormat)) throw Error(`Formato inválido. Formatos disponibles: ${validFormat.join(', ')}`)
     },
 
     handleFormat: function (userFormat, searchJson) {
@@ -179,7 +177,7 @@ const yt = {
             const find = allFormats.find(v => v[1].q == selectedFormat)
             result = find?.[1]?.k
         }
-        if (!result) throw Error(`${userFormat} gak ada cuy. aneh`)
+        if (!result) throw Error(`Formato ${userFormat} no disponible para este video`)
         return result
     },
 
@@ -207,7 +205,7 @@ const yt = {
         })
 
         if (search.p == 'search') {
-            if (!search?.items?.length) throw Error(`resultado de búsqueda ${queryOrYtUrl} no encontrado`)
+            if (!search?.items?.length) throw Error(`No se encontraron resultados para: ${queryOrYtUrl}`)
             const { v, t } = search.items[0]
             const videoUrl = 'https://www.youtube.com/watch?v=' + v
             // console.log(`[found]\ntitle : ${t}\nurl   : ${videoUrl}`)
@@ -228,7 +226,7 @@ const yt = {
 
         if (convert.c_status == 'CONVERTING') {
             let convert2
-            const limit = 5
+            const limit = 10
             let attempt = 0
             do {
                 attempt++
@@ -242,7 +240,7 @@ const yt = {
                 }
                 await new Promise(re => setTimeout(re, 5000))
             } while (attempt < limit && convert2.c_status == 'CONVERTING')
-            throw Error('file belum siap / status belum di ketahui')
+            throw Error('El archivo aún se está procesando. Intenta de nuevo en unos momentos.')
 
         } else {
             return convert
