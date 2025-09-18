@@ -822,7 +822,6 @@ function makeInMemoryStore() {
           if (processedMessages.length > 0) {
             const groupMessages = processedMessages.filter(m => m.key?.remoteJid?.endsWith('@g.us'));
             if (groupMessages.length > 0) {
-              console.log(`📨 Procesados ${groupMessages.length} mensajes de grupo`);
             }
           }
         } catch (outer) {
