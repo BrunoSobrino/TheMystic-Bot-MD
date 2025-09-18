@@ -792,7 +792,6 @@ function makeInMemoryStore() {
                   // Verificar si quedan menciones LID sin resolver
                   const messageText = extractAllTextFromMessage(processed);
                   if (messageText && /(@\d{8,20})/.test(messageText)) {
-                    console.log(`⚠️ Mensaje con posibles LIDs sin resolver en ${jid}`);
                     
                     // Intento adicional de procesamiento
                     const additionalProcessed = await processMessageLids(processed);
