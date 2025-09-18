@@ -5,11 +5,15 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 import NodeID3 from 'node-id3';
 import fs from 'fs';
+import { spawn } from 'child_process';
 import { load } from 'cheerio';
+import { tmpdir } from 'os';
+import { join } from 'path';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
 
 const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024;
 const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024;
+const TMP_DIR = join(process.cwd(), './src/tmp');
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
     const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
@@ -86,82 +90,82 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 const shouldSendAsDocument = audioSize > AUDIO_SIZE_LIMIT;
 
                 if (shouldSendAsDocument) {
-                    const sizeMB = (audioSize / (1024 * 1024)).toFixed(2);
-                    await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
-                }
-
-                try {
-                    if (shouldSendAsDocument) {
-                        const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
-                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
-                        
-                        const msg = generateWAMessageFromContent(m.chat, {
-                            documentMessage: {
-                                ...documentMedia.documentMessage,
-                                fileName: fileName,
-                                mimetype: 'audio/mpeg',
-                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
-                                contextInfo: {
-                                    mentionedJid: [],
-                                    forwardingScore: 0,
-                                    isForwarded: false
-                                }
+                    const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
+                    const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                    
+                    const msg = generateWAMessageFromContent(m.chat, {
+                        documentMessage: {
+                            ...documentMedia.documentMessage,
+                            fileName: fileName,
+                            mimetype: 'audio/mpeg',
+                            jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                            contextInfo: {
+                                mentionedJid: [],
+                                forwardingScore: 0,
+                                isForwarded: false
                             }
-                        }, { quoted: m });
-                        
-                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
-                    } else {
-                        const sentMsg = await conn.sendMessage(m.chat, { audio: taggedBuffer, fileName: `${sanitizeFileName(video.title)}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
-                        
-                        setTimeout(async () => {
-                            try {
-                                if (sentMsg && sentMsg.message) {
-                                    const audioMsg = sentMsg.message.audioMessage;
-                                    const duration = audioMsg?.seconds || 0;
+                        }
+                    }, { quoted: m });
+                    
+                    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                } else {
+                    const sentMsg = await conn.sendMessage(m.chat, { audio: taggedBuffer, fileName: `${sanitizeFileName(video.title)}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
+                    
+                    setTimeout(async () => {
+                        try {
+                            if (sentMsg && sentMsg.message) {
+                                const audioMsg = sentMsg.message.audioMessage;
+                                const duration = audioMsg?.seconds || 0;
+                                
+                                
+                                if (duration === 0 || !duration) {
                                     
-                                    if (duration === 0 || !duration) {
-                                        await conn.sendMessage(m.chat, { 
-                                            text: `🔗 ${mediaUrl}` 
-                                        }, { quoted: m });
+                                    try {
+                                        const repairedBuffer = await repairAudioBuffer(taggedBuffer, fileName);
+                                        
+                                        if (repairedBuffer) {
+                                            
+                                            const repairedSize = repairedBuffer.length;
+                                            const shouldSendRepairedAsDocument = repairedSize > AUDIO_SIZE_LIMIT;
+                                            
+                                            if (!shouldSendRepairedAsDocument) {
+                                                await conn.sendMessage(m.chat, { audio: repairedBuffer, fileName: `${sanitizeFileName(video.title)}.mp3`, mimetype: 'audio/mpeg' }, { quoted: sentMsg });
+                                            } else {
+                                                const documentMedia = await prepareWAMessageMedia({ document: repairedBuffer }, { upload: conn.waUploadToServer });
+                                                const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                                                
+                                                const repairMsg = generateWAMessageFromContent(m.chat, {
+                                                    documentMessage: {
+                                                        ...documentMedia.documentMessage,
+                                                        fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
+                                                        mimetype: 'audio/mpeg',
+                                                        jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                                        contextInfo: {
+                                                            mentionedJid: [],
+                                                            forwardingScore: 0,
+                                                            isForwarded: false
+                                                        }
+                                                    }
+                                                }, { quoted: sentMsg });
+                                                
+                                                await conn.relayMessage(m.chat, repairMsg.message, { messageId: repairMsg.key.id });
+                                            }
+                                        } else {
+                                            console.log('DEBUG: repairAudioBuffer retornó null o undefined');
+                                        }
+                                    } catch (repairError) {
+                                        console.log('DEBUG: Error en repairAudioBuffer:', repairError.message);
                                     }
+                                } else {
                                 }
-                            } catch (verifyError) {
+                            } else {
+                                console.log('DEBUG: sentMsg o sentMsg.message es undefined');
                             }
-                        }, 2000);
-                    }
-                } catch (sendError) {
-                    const errorMsg = sendError.message || sendError.toString();
-                    if (errorMsg.includes('Media upload failed') || 
-                        errorMsg.includes('ENOSPC') || 
-                        errorMsg.includes('no space left') ||
-                        errorMsg.includes('Internal Server Error')) {
-                        
-                        const sizeMB = (taggedBuffer.length / (1024 * 1024)).toFixed(2);
-                        await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
-                        
-                        const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
-                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
-                        
-                        const msg = generateWAMessageFromContent(m.chat, {
-                            documentMessage: {
-                                ...documentMedia.documentMessage,
-                                fileName: fileName,
-                                mimetype: 'audio/mpeg',
-                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
-                                contextInfo: {
-                                    mentionedJid: [],
-                                    forwardingScore: 0,
-                                    isForwarded: false
-                                }
-                            }
-                        }, { quoted: m });
-                        
-                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
-                    } else {
-                        throw sendError;
-                    }
+                        } catch (verifyError) {
+                            console.log('DEBUG: Error en verificación de duración:', verifyError.message);
+                        }
+                    }, 2000);
                 }
-
             } catch (audioError) {
                 const errorMsg = audioError.message || audioError.toString();
                 if (errorMsg.includes('Media upload failed') || 
@@ -172,9 +176,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     errorMsg.includes('memory')) {
                     
                     try {
-                        const sizeMB = (taggedBuffer.length / (1024 * 1024)).toFixed(2);
-                        await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
-                        
                         const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
                         const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
                         
@@ -200,10 +201,9 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     await m.reply(tradutor.errors.generic.replace('@error', audioError.message));
                 }
             }
-            // CORREGIDO: Eliminé el bloque catch duplicado que causaba el error de sintaxis
 
         } else {
-            // Manejo de video
+            // Manejo de video (sin cambios)
             try {
                 const [videoBuffer, thumbnailBuffer] = await Promise.all([
                     fetch(mediaUrl).then(res => res.buffer()),
@@ -215,64 +215,26 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                 const fileName = `${sanitizeFileName(video.title.substring(0, 64))}.mp4`;
 
                 if (shouldSendAsDocument) {
-                    const sizeMB = (videoSize / (1024 * 1024)).toFixed(2);
-                    await m.reply(tradutor.errors.large_video.replace('@size', sizeMB));
-                }
-
-                try {
-                    if (shouldSendAsDocument) {
-                        const documentMedia = await prepareWAMessageMedia({ document: videoBuffer }, { upload: conn.waUploadToServer });
-                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
-                        
-                        const msg = generateWAMessageFromContent(m.chat, {
-                            documentMessage: {
-                                ...documentMedia.documentMessage,
-                                fileName: fileName,
-                                mimetype: 'video/mp4',
-                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
-                                contextInfo: {
-                                    mentionedJid: [],
-                                    forwardingScore: 0,
-                                    isForwarded: false
-                                }
+                    const documentMedia = await prepareWAMessageMedia({ document: videoBuffer }, { upload: conn.waUploadToServer });
+                    const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                    
+                    const msg = generateWAMessageFromContent(m.chat, {
+                        documentMessage: {
+                            ...documentMedia.documentMessage,
+                            fileName: fileName,
+                            mimetype: 'video/mp4',
+                            jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                            contextInfo: {
+                                mentionedJid: [],
+                                forwardingScore: 0,
+                                isForwarded: false
                             }
-                        }, { quoted: m });
-                        
-                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
-                    } else {
-                        await conn.sendMessage(m.chat, { video: videoBuffer, caption: video.title, mimetype: 'video/mp4', fileName: `${sanitizeFileName(video.title)}.mp4` }, { quoted: m });
-                    }
-                } catch (sendError) {
-                    const errorMsg = sendError.message || sendError.toString();
-                    if (errorMsg.includes('Media upload failed') || 
-                        errorMsg.includes('ENOSPC') || 
-                        errorMsg.includes('no space left') ||
-                        errorMsg.includes('Internal Server Error')) {
-                        
-                        const sizeMB = (videoBuffer.length / (1024 * 1024)).toFixed(2);
-                        await m.reply(tradutor.errors.large_video.replace('@size', sizeMB));
-                        
-                        const documentMedia = await prepareWAMessageMedia({ document: videoBuffer }, { upload: conn.waUploadToServer });
-                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
-                        
-                        const msg = generateWAMessageFromContent(m.chat, {
-                            documentMessage: {
-                                ...documentMedia.documentMessage,
-                                fileName: fileName,
-                                mimetype: 'video/mp4',
-                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
-                                contextInfo: {
-                                    mentionedJid: [],
-                                    forwardingScore: 0,
-                                    isForwarded: false
-                                }
-                            }
-                        }, { quoted: m });
-                        
-                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
-                    } else {
-                        throw sendError; 
-                    }
+                        }
+                    }, { quoted: m });
+                    
+                    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                } else {
+                    await conn.sendMessage(m.chat, { video: videoBuffer, caption: video.title, mimetype: 'video/mp4', fileName: `${sanitizeFileName(video.title)}.mp4` }, { quoted: m });
                 }
 
             } catch (videoError) {
@@ -285,10 +247,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
                     errorMsg.includes('memory')) {
                     
                     try {
-                        const sizeMB = (videoBuffer?.length || 0) / (1024 * 1024);
-                        await m.reply(tradutor.errors.large_video.replace('@size', sizeMB.toFixed(2)));
-                        
-                        // Crear media desde URL para casos de error
                         const urlDocumentMedia = await prepareWAMessageMedia({ document: { url: mediaUrl } }, { upload: conn.waUploadToServer });
                         const urlThumbnailMedia = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
                         
@@ -317,7 +275,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         }
 
     } catch (e) {
-        console.error(`Error in ${command}:`, e);
+        console.log('DEBUG: Error general en handler:', e.message);
         await m.reply(tradutor.errors.generic.replace('@error', e.message));
     }
 };
@@ -399,7 +357,7 @@ const yt = {
             search = await this.hit('/api/ajax/search', {
                 "query": videoUrl,
                 "cf_token": "",
-                "vt": "youtube"
+                "vt": 'youtube'
             })
         }
 
@@ -464,7 +422,6 @@ async function getVideoInfoFromUrl(url) {
         };
         
     } catch (error) {
-        console.error('Error en getVideoInfoFromUrl:', error);
         return getVideoInfoFromYouTubeAPI(url);
     }
 }
@@ -551,3 +508,74 @@ const Genius = {
         }
     }
 };
+
+async function repairAudioBuffer(audioBuffer, fileName) {
+    
+    if (!fs.existsSync(TMP_DIR)) {
+        fs.mkdirSync(TMP_DIR, { recursive: true });
+    }
+    
+    const inputPath = join(TMP_DIR, `input_${Date.now()}_${fileName}`);
+    const outputPath = join(TMP_DIR, `repaired_${Date.now()}_${fileName}`);
+    
+    
+    try {
+        fs.writeFileSync(inputPath, audioBuffer);
+
+        return new Promise((resolve, reject) => {
+            
+            const ffmpeg = spawn('ffmpeg', [
+                '-i', inputPath,
+                '-c:a', 'libmp3lame',
+                '-b:a', '128k',
+                '-ac', '2',
+                '-ar', '44100',
+                '-y',
+                outputPath
+            ]);
+            
+            let stderr = '';
+            
+            ffmpeg.stderr.on('data', (data) => {
+                stderr += data.toString();
+            });
+            
+            ffmpeg.on('close', (code) => {
+                try {
+                    if (code === 0 && fs.existsSync(outputPath)) {
+                        const repairedBuffer = fs.readFileSync(outputPath);
+                        
+                        fs.unlinkSync(inputPath);
+                        fs.unlinkSync(outputPath);
+                        
+                        resolve(repairedBuffer);
+                    } else {
+                        reject(new Error(`FFmpeg process failed with code ${code}: ${stderr}`));
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+            
+            ffmpeg.on('error', (error) => {
+                reject(error);
+            });
+            
+            setTimeout(() => {
+                if (ffmpeg.exitCode === null) {
+                    ffmpeg.kill();
+                    reject(new Error('FFmpeg timeout'));
+                }
+            }, 30000);
+        });
+        
+    } catch (error) {
+        console.log('DEBUG: Error en repairAudioBuffer:', error.message);
+        try {
+            if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+            if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
+        } catch (cleanupError) {
+        }
+        throw error;
+    }
+}
