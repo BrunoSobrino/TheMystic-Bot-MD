@@ -172,7 +172,7 @@ const yt = {
             const quality = allFormats.map(v => v[1].q).filter(v => /\d+p/.test(v)).map(v => parseInt(v)).sort((a, b) => b - a).map(v => v + 'p')
             if (!quality.includes(userFormat)) {
                 selectedFormat = quality[0]
-                console.log(`format ${userFormat} gak ada. auto fallback ke best available yaitu ${selectedFormat}`)
+                // console.log(`format ${userFormat} gak ada. auto fallback ke best available yaitu ${selectedFormat}`)
             } else {
                 selectedFormat = userFormat
             }
@@ -188,7 +188,7 @@ const yt = {
             const body = new URLSearchParams(payload)
             const opts = { headers: this.baseHeaders, body, 'method': 'post' }
             const r = await fetch(`${this.baseUrl.origin}${path}`, opts)
-            console.log('hit', path)
+            // console.log('hit', path)
             if (!r.ok) throw Error(`${r.status} ${r.statusText}\n${await r.text()}`)
             const j = await r.json()
             return j
@@ -200,7 +200,7 @@ const yt = {
     download: async function (queryOrYtUrl, userFormat = 'mp3') {
         this.validateFormat(userFormat)
 
-        search = await this.hit('/api/ajax/search', {
+        let search = await this.hit('/api/ajax/search', {
             "query": queryOrYtUrl,
             "cf_token": "",
             "vt": "youtube"
@@ -210,7 +210,7 @@ const yt = {
             if (!search?.items?.length) throw Error(`resultado de búsqueda ${queryOrYtUrl} no encontrado`)
             const { v, t } = search.items[0]
             const videoUrl = 'https://www.youtube.com/watch?v=' + v
-            console.log(`[found]\ntitle : ${t}\nurl   : ${videoUrl}`)
+            // console.log(`[found]\ntitle : ${t}\nurl   : ${videoUrl}`)
 
             search = await this.hit('/api/ajax/search', {
                 "query": videoUrl,
@@ -232,7 +232,7 @@ const yt = {
             let attempt = 0
             do {
                 attempt++
-                console.log(`cek convert ${attempt}/${limit}`)
+                // console.log(`cek convert ${attempt}/${limit}`)
                 convert2 = await this.hit('/api/convert/check?hl=en', {
                     vid,
                     b_id: convert.b_id
