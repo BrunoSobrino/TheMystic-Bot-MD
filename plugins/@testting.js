@@ -1,41 +1,26 @@
 // Plugin para test de comandos - powered by @BrunoSobrino
 // Si vas a robar deja creditos o doname >:v
 import yts from 'yt-search';
-import { existsSync, mkdirSync, writeFileSync, statSync, unlinkSync, createReadStream, readFileSync } from 'fs';
-import { join } from 'path';
 import fetch from 'node-fetch';
 import axios from 'axios';
 import NodeID3 from 'node-id3';
-import ffmpeg from 'fluent-ffmpeg';
+import fs from 'fs';
+import { spawn } from 'child_process';
 import { load } from 'cheerio';
+import { tmpdir } from 'os';
+import { join } from 'path';
 const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
-
-const ytDownloader = createYoutubeDownloader();
-const tmpDir = join(process.cwd(), './src/tmp');
-if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
-
-function cleanupResources() {
-    try {
-        if (global.gc) {
-            global.gc();
-        }
-    } catch (e) {
-        console.error('Cleanup error:', e);
-    }
-}
 
 const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024;
 const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024;
+const TMP_DIR = join(process.cwd(), './src/tmp');
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
-        const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
-        const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
-        const tradutor = _translate._testting;
-    
-    cleanupResources();
+    const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
+    const tradutor = _translate._testting;
     
     try {
-
         const query = args.join(' ');
         if (!query) return m.reply(tradutor.errors.no_query.replace('@command', usedPrefix + command));
 
@@ -52,245 +37,245 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
         const videoInfoMsg = `${tradutor.video_info.header}\n\n${tradutor.video_info.title.replace('@title', video.title)}\n${tradutor.video_info.author.replace('@author', video.author.name)}\n${tradutor.video_info.duration.replace('@duration', video.duration?.timestamp || '00:00')}\n${tradutor.video_info.views.replace('@views', (video.views || 0).toLocaleString())}\n${tradutor.video_info.published.replace('@published', video.ago || 'Desconocido')}\n${tradutor.video_info.id.replace('@id', video.videoId)}\n${tradutor.video_info.link.replace('@link', video.url)}`.trim();
 
-        if (command !== 'ytmp3' && command !== 'ytmp4') { conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m }) }
+        if (command !== 'ytmp3' && command !== 'ytmp4') { 
+            conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m });
+        }
 
         const isAudio = command === 'test' || command === 'play' || command === 'ytmp3';
-        //await m.reply(tradutor.video_info.processing.replace('@type', isAudio ? 'audio' : 'video'));
+        const format = isAudio ? 'mp3' : '720p';
 
-        const mediaUrl = await getY2MetaLink(video.url, isAudio);
-        const timestamp = Date.now();
-        const id = `${video.videoId}_${timestamp}`;
+        const downloadResult = await yt.download(video.url, format);
+        
+        if (!downloadResult || !downloadResult.dlink) throw new Error('No se pudo obtener el enlace de descarga');
+
+        const mediaUrl = downloadResult.dlink;
 
         if (isAudio) {
-            try {
-                const [audioBuffer, thumbnailBuffer] = await Promise.all([
-                    fetch(mediaUrl).then(res => res.buffer()),
-                    fetch(video.thumbnail).then(res => res.buffer())
-                ]);
+            const [audioBuffer, thumbnailBuffer] = await Promise.all([
+                fetch(mediaUrl).then(res => res.buffer()),
+                fetch(video.thumbnail).then(res => res.buffer())
+            ]);
 
-                const audioSize = audioBuffer.length;
+            let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
+            if (!lyricsData && !isYouTubeUrl) {
+                lyricsData = await Genius.searchLyrics(query).catch(() => null);
+            }
+
+            const formattedLyrics = lyricsData ? formatLyrics(lyricsData.lyrics) : null;
+            
+            const tags = {
+                title: video.title,
+                artist: video.author.name,
+                album: 'YouTube Audio',
+                APIC: thumbnailBuffer,
+                year: new Date().getFullYear(),
+                comment: {
+                    language: 'spa',
+                    text: `🟢 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 🟢\n\nVideo De YouTube: ${video.url}`
+                }
+            };
+
+            if (formattedLyrics) {
+                tags.unsynchronisedLyrics = {
+                    language: 'spa',
+                    text: `🟢 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 🟢\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
+                };
+            }
+
+            const taggedBuffer = NodeID3.write(tags, audioBuffer);
+            const fileName = `${sanitizeFileName(video.title.substring(0, 64))}.mp3`;
+
+            try {
+                const audioSize = taggedBuffer.length;
                 const shouldSendAsDocument = audioSize > AUDIO_SIZE_LIMIT;
 
                 if (shouldSendAsDocument) {
-                    const sizeMB = (audioSize / (1024 * 1024)).toFixed(2);
-                    await m.reply(tradutor.errors.large_audio.replace('@size', sizeMB));
-                }
-
-                let lyricsData = await Genius.searchLyrics(video.title).catch(() => null);
-                if (!lyricsData && !isYouTubeUrl) {
-                    lyricsData = await Genius.searchLyrics(query).catch(() => null);
-                }
-
-                const formattedLyrics = lyricsData ? formatLyrics(lyricsData.lyrics) : null;
-                
-                const tags = {
-                    title: video.title,
-                    artist: video.author.name,
-                    album: 'YouTube Audio',
-                    APIC: thumbnailBuffer,
-                    year: new Date().getFullYear(),
-                    comment: {
-                        language: 'spa',
-                        text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nVideo De YouTube: ${video.url}`
-                    }
-                };
-
-                if (formattedLyrics) {
-                    tags.unsynchronisedLyrics = {
-                        language: 'spa',
-                        text: `👑 ᴅᴇsᴄᴀʀɢᴀ ᴘᴏʀ @ʙʀᴜɴᴏsᴏʙʀɪɴᴏ 👑\n\nTitulo: ${video.title}\n\n${formattedLyrics}`
-                    };
-                }
-
-                const taggedBuffer = NodeID3.write(tags, audioBuffer);
-
-                if (shouldSendAsDocument) {
-                    const audioPath = join(tmpDir, `${video.videoId}.mp3`);
-                    writeFileSync(audioPath, taggedBuffer);
-
-                    try {
-                        const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-                        const documentMessage = await prepareWAMessageMedia({ 
-                            document: {
-                                url: audioPath,
-                                mimetype: 'audio/mpeg',
-                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                                fileLength: taggedBuffer.length,
-                                title: video.title.substring(0, 64), 
-                                ptt: false 
+                    const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
+                    const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                    
+                    const msg = generateWAMessageFromContent(m.chat, {
+                        documentMessage: {
+                            ...documentMedia.documentMessage,
+                            fileName: fileName,
+                            mimetype: 'audio/mpeg',
+                            jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                            contextInfo: {
+                                mentionedJid: [],
+                                forwardingScore: 0,
+                                isForwarded: false
                             }
-                        }, { upload: conn.waUploadToServer, mediaType: 'document' });
-
-                        const mesg = generateWAMessageFromContent(m.chat, {
-                            documentMessage: {
-                                ...documentMessage.documentMessage,
-                                mimetype: 'audio/mpeg',
-                                title: video.title.substring(0, 64),
-                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`, 
-                                jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-                                mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-                            }
-                        }, { userJid: conn.user.jid, quoted: m });
-                        
-                        await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    } catch (mediaError) {
-                        cleanupResources();
-                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed') || mediaError.message.includes('ENOSPC') || mediaError.code === 'ENOSPC') {
-                            await conn.sendMessage(m.chat, {
-                                document: readFileSync(audioPath),
-                                fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
-                                mimetype: 'audio/mpeg'
-                            }, { quoted: m });
-                        } else {
-                            throw mediaError;
                         }
-                    }
-
-                    setTimeout(() => {
-                        if (existsSync(audioPath)) unlinkSync(audioPath);
-                    }, 5000);
-                } else {
-                    await conn.sendMessage(m.chat, {
-                        audio: taggedBuffer,
-                        fileName: `${sanitizeFileName(video.title)}.mp3`,
-                        mimetype: 'audio/mpeg',
-                        /*contextInfo: {
-                            externalAdReply: {
-                                title: video.title,
-                                body: `${video.author.name}`,
-                                thumbnailUrl: video.thumbnail,
-                                sourceUrl: video.url,
-                                mediaType: 1,
-                                renderLargerThumbnail: true
-                            }
-                        }*/
                     }, { quoted: m });
-                    //await m.reply(tradutor.success.audio);
+                    
+                    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                } else {
+                    const sentMsg = await conn.sendMessage(m.chat, { audio: taggedBuffer, fileName: `${sanitizeFileName(video.title)}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
+                    
+                    setTimeout(async () => {
+                        try {
+                            if (sentMsg && sentMsg.message) {
+                                const audioMsg = sentMsg.message.audioMessage;
+                                const duration = audioMsg?.seconds || 0;
+                                
+                                
+                                if (duration === 0 || !duration) {
+                                    
+                                    try {
+                                        const repairedBuffer = await repairAudioBuffer(taggedBuffer, fileName);
+                                        
+                                        if (repairedBuffer) {
+                                            
+                                            const repairedSize = repairedBuffer.length;
+                                            const shouldSendRepairedAsDocument = repairedSize > AUDIO_SIZE_LIMIT;
+                                            
+                                            if (!shouldSendRepairedAsDocument) {
+                                                await conn.sendMessage(m.chat, { audio: repairedBuffer, fileName: `${sanitizeFileName(video.title)}.mp3`, mimetype: 'audio/mpeg' }, { quoted: sentMsg });
+                                            } else {
+                                                const documentMedia = await prepareWAMessageMedia({ document: repairedBuffer }, { upload: conn.waUploadToServer });
+                                                const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                                                
+                                                const repairMsg = generateWAMessageFromContent(m.chat, {
+                                                    documentMessage: {
+                                                        ...documentMedia.documentMessage,
+                                                        fileName: `${sanitizeFileName(video.title.substring(0, 64))}.mp3`,
+                                                        mimetype: 'audio/mpeg',
+                                                        jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                                        contextInfo: {
+                                                            mentionedJid: [],
+                                                            forwardingScore: 0,
+                                                            isForwarded: false
+                                                        }
+                                                    }
+                                                }, { quoted: sentMsg });
+                                                
+                                                await conn.relayMessage(m.chat, repairMsg.message, { messageId: repairMsg.key.id });
+                                            }
+                                        } else {
+                                            console.log('DEBUG: repairAudioBuffer retornó null o undefined');
+                                        }
+                                    } catch (repairError) {
+                                        console.log('DEBUG: Error en repairAudioBuffer:', repairError.message);
+                                    }
+                                } else {
+                                }
+                            } else {
+                                console.log('DEBUG: sentMsg o sentMsg.message es undefined');
+                            }
+                        } catch (verifyError) {
+                            console.log('DEBUG: Error en verificación de duración:', verifyError.message);
+                        }
+                    }, 2000);
                 }
-
             } catch (audioError) {
-                console.error('Audio error:', audioError);
-                await m.reply(tradutor.errors.generic.replace('@error', audioError.message));
+                const errorMsg = audioError.message || audioError.toString();
+                if (errorMsg.includes('Media upload failed') || 
+                    errorMsg.includes('ENOSPC') || 
+                    errorMsg.includes('no space left') ||
+                    errorMsg.includes('Internal Server Error') ||
+                    errorMsg.includes('size') || 
+                    errorMsg.includes('memory')) {
+                    
+                    try {
+                        const documentMedia = await prepareWAMessageMedia({ document: taggedBuffer }, { upload: conn.waUploadToServer });
+                        const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...documentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'audio/mpeg',
+                                jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } catch (urlError) {
+                        await m.reply(tradutor.errors.generic.replace('@error', 'Error de envío. Intenta nuevamente.'));
+                    }
+                } else {
+                    await m.reply(tradutor.errors.generic.replace('@error', audioError.message));
+                }
             }
 
         } else {
-            // VIDEO PROCESSING - MODIFICADO PARA NO USAR FFMPEG EN DOCUMENTOS
+            // Manejo de video (sin cambios)
             try {
-                const [videoBuffer, videoMetadata, thumbnailBuffer] = await Promise.all([
+                const [videoBuffer, thumbnailBuffer] = await Promise.all([
                     fetch(mediaUrl).then(res => res.buffer()),
-                    Promise.resolve({
-                        title: video.title,
-                        author: video.author.name,
-                        duration: video.duration,
-                        thumbnail: video.thumbnail,
-                        url: video.url
-                    }),
                     fetch(video.thumbnail).then(res => res.buffer())
                 ]);
-
+                
                 const videoSize = videoBuffer.length;
                 const shouldSendAsDocument = videoSize > VIDEO_SIZE_LIMIT;
+                const fileName = `${sanitizeFileName(video.title.substring(0, 64))}.mp4`;
 
                 if (shouldSendAsDocument) {
-                    const sizeMB = (videoSize / (1024 * 1024)).toFixed(2);
-                    await m.reply(tradutor.errors.large_video.replace('@size', sizeMB));
+                    const documentMedia = await prepareWAMessageMedia({ document: videoBuffer }, { upload: conn.waUploadToServer });
+                    const thumbnailMedia = await prepareWAMessageMedia({ image: thumbnailBuffer }, { upload: conn.waUploadToServer });
                     
-                    // ENVIAR COMO DOCUMENTO SIN PROCESAR CON FFMPEG
-                    const rawPath = join(tmpDir, `${id}_raw.mp4`);
-                    writeFileSync(rawPath, videoBuffer);
-
-                    try {
-                        const thumbnailMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
-                        const documentMessage = await prepareWAMessageMedia({ 
-                            document: {
-                                url: rawPath,
-                                mimetype: 'video/mp4',
-                                fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
-                                fileLength: videoSize,
-                                title: videoMetadata.title.substring(0, 64)
+                    const msg = generateWAMessageFromContent(m.chat, {
+                        documentMessage: {
+                            ...documentMedia.documentMessage,
+                            fileName: fileName,
+                            mimetype: 'video/mp4',
+                            jpegThumbnail: thumbnailMedia.imageMessage.jpegThumbnail,
+                            contextInfo: {
+                                mentionedJid: [],
+                                forwardingScore: 0,
+                                isForwarded: false
                             }
-                        }, { upload: conn.waUploadToServer, mediaType: 'document' });
-
-                        const mesg = generateWAMessageFromContent(m.chat, {
-                            documentMessage: {
-                                ...documentMessage.documentMessage,
-                                mimetype: 'video/mp4',
-                                title: videoMetadata.title.substring(0, 64),
-                                fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`, 
-                                jpegThumbnail: thumbnailMessage.imageMessage.jpegThumbnail,
-                                mediaKeyTimestamp: Math.floor(Date.now() / 1000),
-                            }
-                        }, { userJid: conn.user.jid, quoted: m });
-                        
-                        await conn.relayMessage(m.chat, mesg.message, { messageId: mesg.key.id });
-                    } catch (mediaError) {
-                        cleanupResources();
-                        if (mediaError.message.includes('Media upload failed') || mediaError.message.includes('upload failed') || mediaError.message.includes('ENOSPC') || mediaError.code === 'ENOSPC') {
-                            await conn.sendMessage(m.chat, {
-                                document: videoBuffer,
-                                fileName: `${sanitizeFileName(videoMetadata.title.substring(0, 64))}.mp4`,
-                                mimetype: 'video/mp4'
-                            }, { quoted: m });
-                        } else {
-                            throw mediaError;
                         }
-                    }
-
-                    setTimeout(() => {
-                        if (existsSync(rawPath)) unlinkSync(rawPath);
-                    }, 5000);
-                    
-                } else {
-                    // PARA VIDEOS PEQUEÑOS, USAR FFMPEG PARA OPTIMIZAR
-                    const rawPath = join(tmpDir, `${id}_raw.mp4`);
-                    const fixedPath = join(tmpDir, `${id}_fixed.mp4`);
-
-                    writeFileSync(rawPath, videoBuffer);
-
-                    const stats = statSync(rawPath);
-                    if (stats.size === 0) throw new Error("Empty file");
-
-                    await new Promise((resolve, reject) => {
-                        ffmpeg(rawPath)
-                            .outputOptions([
-                                '-c copy',
-                                '-avoid_negative_ts make_zero',
-                                '-fflags +genpts',
-                                '-movflags +faststart',
-                                '-map_metadata -1',
-                                '-threads 0'
-                            ])
-                            .on('end', resolve)
-                            .on('error', reject)
-                            .save(fixedPath);
-                    });
-
-                    const fixedVideoBuffer = readFileSync(fixedPath);
-
-                    await conn.sendMessage(m.chat, { 
-                        video: fixedVideoBuffer, 
-                        caption: videoMetadata.title, 
-                        mimetype: 'video/mp4', 
-                        fileName: `${sanitizeFileName(videoMetadata.title)}.mp4` 
                     }, { quoted: m });
-
-                    setTimeout(() => {
-                        [rawPath, fixedPath].forEach(path => {
-                            if (existsSync(path)) unlinkSync(path);
-                        });
-                    }, 1000);
+                    
+                    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                } else {
+                    await conn.sendMessage(m.chat, { video: videoBuffer, caption: video.title, mimetype: 'video/mp4', fileName: `${sanitizeFileName(video.title)}.mp4` }, { quoted: m });
                 }
 
             } catch (videoError) {
-                console.error('Video error:', videoError);
-                await m.reply(tradutor.errors.generic.replace('@error', videoError.message));
-            } finally {
-                cleanupResources();
+                const errorMsg = videoError.message || videoError.toString();
+                if (errorMsg.includes('Media upload failed') || 
+                    errorMsg.includes('ENOSPC') || 
+                    errorMsg.includes('no space left') ||
+                    errorMsg.includes('Internal Server Error') ||
+                    errorMsg.includes('size') || 
+                    errorMsg.includes('memory')) {
+                    
+                    try {
+                        const urlDocumentMedia = await prepareWAMessageMedia({ document: { url: mediaUrl } }, { upload: conn.waUploadToServer });
+                        const urlThumbnailMedia = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+                        
+                        const msg = generateWAMessageFromContent(m.chat, {
+                            documentMessage: {
+                                ...urlDocumentMedia.documentMessage,
+                                fileName: fileName,
+                                mimetype: 'video/mp4',
+                                jpegThumbnail: urlThumbnailMedia.imageMessage.jpegThumbnail,
+                                contextInfo: {
+                                    mentionedJid: [],
+                                    forwardingScore: 0,
+                                    isForwarded: false
+                                }
+                            }
+                        }, { quoted: m });
+                        
+                        await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+                    } catch (urlError) {
+                        await m.reply(tradutor.errors.generic.replace('@error', 'Error de envío. Intenta nuevamente.'));
+                    }
+                } else {
+                    await m.reply(tradutor.errors.generic.replace('@error', videoError.message));
+                }
             }
         }
 
     } catch (e) {
-        console.error(`Error in ${command}:`, e);
+        console.log('DEBUG: Error general en handler:', e.message);
         await m.reply(tradutor.errors.generic.replace('@error', e.message));
     }
 };
@@ -299,6 +284,112 @@ handler.help = ['test <query>', 'test2 <query>'];
 handler.tags = ['downloader'];
 handler.command = /^(test|test2|play|play2|ytmp3|ytmp4)$/i;
 export default handler;
+
+const yt = {
+    get baseUrl() {
+        return {
+            origin: 'https://ssvid.net'
+        }
+    },
+
+    get baseHeaders() {
+        return {
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'origin': this.baseUrl.origin,
+            'referer': this.baseUrl.origin + '/youtube-to-mp3'
+        }
+    },
+
+    validateFormat: function (userFormat) {
+        const validFormat = ['mp3', '360p', '720p', '1080p']
+        if (!validFormat.includes(userFormat)) throw Error(`Formato inválido. Formatos disponibles: ${validFormat.join(', ')}`)
+    },
+
+    handleFormat: function (userFormat, searchJson) {
+        this.validateFormat(userFormat)
+        let result
+        if (userFormat == 'mp3') {
+            result = searchJson.links?.mp3?.mp3128?.k
+        } else {
+            let selectedFormat
+            const allFormats = Object.entries(searchJson.links.mp4)
+
+            const quality = allFormats.map(v => v[1].q).filter(v => /\d+p/.test(v)).map(v => parseInt(v)).sort((a, b) => b - a).map(v => v + 'p')
+            if (!quality.includes(userFormat)) {
+                selectedFormat = quality[0]
+            } else {
+                selectedFormat = userFormat
+            }
+            const find = allFormats.find(v => v[1].q == selectedFormat)
+            result = find?.[1]?.k
+        }
+        if (!result) throw Error(`Formato ${userFormat} no disponible para este video`)
+        return result
+    },
+
+    hit: async function (path, payload) {
+        try {
+            const body = new URLSearchParams(payload)
+            const opts = { headers: this.baseHeaders, body, 'method': 'post' }
+            const r = await fetch(`${this.baseUrl.origin}${path}`, opts)
+            if (!r.ok) throw Error(`${r.status} ${r.statusText}\n${await r.text()}`)
+            const j = await r.json()
+            return j
+        } catch (e) {
+            throw Error(`${path}\n${e.message}`)
+        }
+    },
+
+    download: async function (queryOrYtUrl, userFormat = 'mp3') {
+        this.validateFormat(userFormat)
+
+        let search = await this.hit('/api/ajax/search', {
+            "query": queryOrYtUrl,
+            "cf_token": "",
+            "vt": "youtube"
+        })
+
+        if (search.p == 'search') {
+            if (!search?.items?.length) throw Error(`No se encontraron resultados para: ${queryOrYtUrl}`)
+            const { v, t } = search.items[0]
+            const videoUrl = 'https://www.youtube.com/watch?v=' + v
+
+            search = await this.hit('/api/ajax/search', {
+                "query": videoUrl,
+                "cf_token": "",
+                "vt": 'youtube'
+            })
+        }
+
+        const vid = search.vid
+        const k = this.handleFormat(userFormat, search)
+
+        const convert = await this.hit('/api/ajax/convert', {
+            k, vid
+        })
+
+        if (convert.c_status == 'CONVERTING') {
+            let convert2
+            const limit = 10
+            let attempt = 0
+            do {
+                attempt++
+                convert2 = await this.hit('/api/convert/check?hl=en', {
+                    vid,
+                    b_id: convert.b_id
+                })
+                if (convert2.c_status == 'CONVERTED') {
+                    return convert2
+                }
+                await new Promise(re => setTimeout(re, 5000))
+            } while (attempt < limit && convert2.c_status == 'CONVERTING')
+            throw Error('El archivo aún se está procesando. Intenta de nuevo en unos momentos.')
+
+        } else {
+            return convert
+        }
+    },
+}
 
 function isValidYouTubeUrl(url) {
     const ytRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/)|youtu\.be\/|music\.youtube\.com\/watch\?v=)/i;
@@ -331,7 +422,6 @@ async function getVideoInfoFromUrl(url) {
         };
         
     } catch (error) {
-        console.error('Error en getVideoInfoFromUrl:', error);
         return getVideoInfoFromYouTubeAPI(url);
     }
 }
@@ -381,121 +471,6 @@ function formatLyrics(lyrics) {
         .join('\n');
 }
 
-async function getY2MetaLink(url, isAudio = false) {
-    try {
-        const formatId = isAudio ? "128kbps" : "720p";
-        const result = await ytDownloader.convert(url, formatId);
-        return result.link || result.url || result.downloadUrl;
-    } catch (e) {
-        console.error("Error en getY2MetaLink:", e);
-        throw new Error("No se pudo obtener el enlace de descarga");
-    }
-}
-
-function createYoutubeDownloader() {
-    const defaultHeaders = {
-        "accept": "*/*",
-        "accept-encoding": "gzip, deflate, br, zstd",
-        "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-        "cache-control": "no-cache",
-        "pragma": "no-cache",
-        "priority": "u=1, i",
-        "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Microsoft Edge\";v=\"138\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "cross-site",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
-    };
-
-    async function requestJson(description, url, headers, method = "get", body) {
-        try {
-            const response = await fetch(url, { headers, method, body });
-            if (!response.ok) {
-                throw new Error(`${response.status} ${response.statusText}\n${await response.text() || null}`);
-            }
-            return await response.json();
-        } catch (err) {
-            throw new Error(`fetch failed: ${description}\nbecause: ${err.message}`);
-        }
-    }
-
-    async function search(query) {
-        if (!query || typeof query !== "string") {
-            throw new Error("Consulta inválida o vacía");
-        }
-        const headers = {
-            ...defaultHeaders,
-            "origin": "https://v2.www-y2mate.com",
-            "referer": "https://v2.www-y2mate.com/"
-        };
-        const json = await requestJson(
-            "search",
-            `https://wwd.mp3juice.blog/search.php?q=${encodeURIComponent(query)}`,
-            headers
-        );
-        return json;
-    }
-
-    async function getKey() {
-        const headers = {
-            "content-type": "application/json",
-            "origin": "https://iframe.y2meta-uk.com",
-            "referer": "https://iframe.y2meta-uk.com/",
-            ...defaultHeaders
-        };
-        const json = await requestJson(
-            "get sacred key",
-            "https://api.mp3youtube.cc/v2/sanity/key",
-            headers
-        );
-        return json;
-    }
-
-    function handleFormat(link, formatId) {
-        const listFormat = ["128kbps", "320kbps", "144p", "240p", "360p", "720p", "1080p"];
-        if (!link || !formatId) throw new Error("Faltan parámetros de formato");
-        if (!listFormat.includes(formatId)) {
-            throw new Error(`${formatId} no es un formato válido. Disponibles: ${listFormat.join(", ")}`);
-        }
-        const match = formatId.match(/(\d+)(\w+)/);
-        const format = match[2] === "kbps" ? "mp3" : "mp4";
-        return {
-            link,
-            format,
-            audioBitrate: format === "mp3" ? match[1] : 128,
-            videoQuality: format === "mp4" ? match[1] : 720,
-            filenameStyle: "pretty",
-            vCodec: "h264"
-        };
-    }
-
-    async function convert(youtubeUrl, formatId) {
-        const { key } = await getKey();
-        const headers = {
-            "content-type": "application/x-www-form-urlencoded",
-            "Key": key,
-            "origin": "https://iframe.y2meta-uk.com",
-            "referer": "https://iframe.y2meta-uk.com/",
-            ...defaultHeaders
-        };
-
-        const payload = handleFormat(youtubeUrl, formatId);
-        const body = new URLSearchParams(payload);
-        const json = await requestJson(
-            "convert",
-            "https://api.mp3youtube.cc/v2/converter",
-            headers,
-            "post",
-            body
-        );
-        json.chosenFormat = formatId;
-        return json;
-    }
-    return { search, getKey, convert, handleFormat };
-}
-
 function extractVideoId(url) {
     const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|m\.youtube\.com\/watch\?v=)([^&\n?#]+)/);
     return match ? match[1] : null;
@@ -514,7 +489,7 @@ const Genius = {
             const songPath = searchRes.data.response.sections[0].hits[0].result.path;
             const lyricsUrl = `https://genius.com${songPath}`;
             const { data } = await axios.get(lyricsUrl);
-            const $ = load(data);
+            const $ = load(data); 
             
             let lyrics = $('div[class*="Lyrics__Container"]').html();
             if (!lyrics) throw new Error('Letra no disponible en formato estructurado.');
@@ -528,7 +503,79 @@ const Genius = {
                 lyrics: lyrics
             };
 
-        } catch (error) { 
+        } catch (error) {
+            throw error;
         }
     }
 };
+
+async function repairAudioBuffer(audioBuffer, fileName) {
+    
+    if (!fs.existsSync(TMP_DIR)) {
+        fs.mkdirSync(TMP_DIR, { recursive: true });
+    }
+    
+    const inputPath = join(TMP_DIR, `input_${Date.now()}_${fileName}`);
+    const outputPath = join(TMP_DIR, `repaired_${Date.now()}_${fileName}`);
+    
+    
+    try {
+        fs.writeFileSync(inputPath, audioBuffer);
+
+        return new Promise((resolve, reject) => {
+            
+            const ffmpeg = spawn('ffmpeg', [
+                '-i', inputPath,
+                '-c:a', 'libmp3lame',
+                '-b:a', '128k',
+                '-ac', '2',
+                '-ar', '44100',
+                '-y',
+                outputPath
+            ]);
+            
+            let stderr = '';
+            
+            ffmpeg.stderr.on('data', (data) => {
+                stderr += data.toString();
+            });
+            
+            ffmpeg.on('close', (code) => {
+                try {
+                    if (code === 0 && fs.existsSync(outputPath)) {
+                        const repairedBuffer = fs.readFileSync(outputPath);
+                        
+                        fs.unlinkSync(inputPath);
+                        fs.unlinkSync(outputPath);
+                        
+                        resolve(repairedBuffer);
+                    } else {
+                        reject(new Error(`FFmpeg process failed with code ${code}: ${stderr}`));
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+            
+            ffmpeg.on('error', (error) => {
+                reject(error);
+            });
+            
+            setTimeout(() => {
+                if (ffmpeg.exitCode === null) {
+                    ffmpeg.kill();
+                    reject(new Error('FFmpeg timeout'));
+                }
+            }, 30000);
+        });
+        
+    } catch (error) {
+        console.log('DEBUG: Error en repairAudioBuffer:', error.message);
+        try {
+            if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+            if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
+        } catch (cleanupError) {
+        }
+        throw error;
+    }
+}
