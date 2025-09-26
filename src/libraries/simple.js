@@ -2616,7 +2616,7 @@ export function serialize() {
         mentionedJid: {
             get() {
                 try {
-                    const mentioned = this.msg?.contextInfo?.mentionedJid || [];
+                    const mentioned = this.conn.parseMention(this.text).length > 0 ? this.conn.parseMention(this.text) : this.msg?.contextInfo?.mentionedJid || [];
                     const groupChatId = this.chat?.endsWith("@g.us") ? this.chat : null;
 
                     const processJid = (user) => {
