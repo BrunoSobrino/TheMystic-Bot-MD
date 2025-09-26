@@ -2310,6 +2310,213 @@ export function serialize() {
             },
             enumerable: true,
         },
+        _text: {
+            value: null,
+            writable: true,
+            enumerable: true,
+        },
+        text: {
+            get() {
+                try {
+                    const msg = this.msg;
+                    const text =
+                        (typeof msg === "string" ? msg : msg?.text) ||
+                        msg?.caption ||
+                        msg?.contentText ||
+                        "";
+                    return typeof this._text === "string" ?
+                        this._text :
+                        "" ||
+                        (typeof text === "string" ?
+                            text :
+                            text?.selectedDisplayText ||
+                            text?.hydratedTemplate?.hydratedContentText ||
+                            text) ||
+                        "";
+                } catch (e) {
+                    console.error("Error en text getter:", e);
+                    return "";
+                }
+            },
+            set(str) {
+                this._text = str;
+            },
+            enumerable: true,
+        },
+        mentionedJid: {
+            get() {
+                try {
+                    const mentioned = this.conn.parseMention(this.text).length > 0 ? this.conn.parseMention(this.text) : this.msg?.contextInfo?.mentionedJid || [];
+                    const groupChatId = this.chat?.endsWith("@g.us") ? this.chat : null;
+
+                    const processJid = (user) => {
+                        try {
+                            if (user && typeof user === "object") {
+                                user = user.lid || user.jid || user.id || "";
+                            }
+                            if (typeof user === "string" && user.includes("@lid") && groupChatId) {
+                                const resolved = String.prototype.resolveLidToRealJid.call(
+                                    user,
+                                    groupChatId,
+                                    this.conn
+                                );
+                                return resolved.then(res => typeof res === "string" ? res : user);
+                            }
+                            return Promise.resolve(user);
+                        } catch (e) {
+                            console.error("Error processing JID:", user, e);
+                            return Promise.resolve(user);
+                        }
+                    };
+
+                    const processed = mentioned.map(processJid);
+
+                    return Promise.all(processed)
+                        .then(jids => jids.filter(jid => jid && typeof jid === "string"))
+                        .catch(e => {
+                            console.error("Error en mentionedJid getter:", e);
+                            return [];
+                        });
+                } catch (e) {
+                    console.error("Error en mentionedJid getter:", e);
+                    return Promise.resolve([]);
+                }
+            },
+            enumerable: true,
+        },
+        name: {
+            get() {
+                try {
+                    if (!nullish(this.pushName) && this.pushName) return this.pushName;
+                    const sender = this.sender;
+                    return sender ? this.conn?.getName?.(sender) : "";
+                } catch (e) {
+                    console.error("Error en name getter:", e);
+                    return "";
+                }
+            },
+            enumerable: true,
+        },
+        download: {
+            value(saveToFile = false) {
+                try {
+                    const mtype = this.mediaType;
+                    return this.conn?.downloadM?.(
+                        this.mediaMessage?.[mtype],
+                        mtype?.replace(/message/i, ""),
+                        saveToFile,
+                    );
+                } catch (e) {
+                    console.error("Error en download:", e);
+                    return Promise.reject(e);
+                }
+            },
+            enumerable: true,
+            configurable: true,
+        },
+        reply: {
+            value(text, chatId, options) {
+                try {
+                    return this.conn?.reply?.(
+                        chatId ? chatId : this.chat,
+                        text,
+                        this,
+                        options,
+                    );
+                } catch (e) {
+                    console.error("Error en reply:", e);
+                    return Promise.reject(e);
+                }
+            },
+            enumerable: true,
+        },
+        copy: {
+            value() {
+                try {
+                    const M = proto.WebMessageInfo;
+                    return smsg(this.conn, M.fromObject(M.toObject(this)));
+                } catch (e) {
+                    console.error("Error en copy:", e);
+                    return null;
+                }
+            },
+            enumerable: true,
+        },
+        forward: {
+            value(jid, force = false, options = {}) {
+                try {
+                    return this.conn?.sendMessage?.(
+                        jid, {
+                            forward: this,
+                            force,
+                            ...options,
+                        }, {
+                            ...options
+                        },
+                    );
+                } catch (e) {
+                    console.error("Error en forward:", e);
+                    return Promise.reject(e);
+                }
+            },
+            enumerable: true,
+        },
+        copyNForward: {
+            value(jid, forceForward = false, options = {}) {
+                try {
+                    return this.conn?.copyNForward?.(jid, this, forceForward, options);
+                } catch (e) {
+                    console.error("Error en copyNForward:", e);
+                    return Promise.reject(e);
+                }
+            },
+            enumerable: true,
+        },
+        cMod: {
+            value(jid, text = "", sender = this.sender, options = {}) {
+                try {
+                    return this.conn?.cMod?.(jid, this, text, sender, options);
+                } catch (e) {
+                    console.error("Error en cMod:", e);
+                    return Promise.reject(e);
+                }
+            },
+            enumerable: true,
+        },
+        getQuotedObj: {
+            value() {
+                try {
+                    if (!this.quoted?.id) return null;
+                    const q = proto.WebMessageInfo.fromObject(
+                        this.conn?.loadMessage?.(this.quoted.id) || this.quoted.vM || {},
+                    );
+                    return smsg(this.conn, q);
+                } catch (e) {
+                    console.error("Error en getQuotedObj:", e);
+                    return null;
+                }
+            },
+            enumerable: true,
+        },
+        getQuotedMessage: {
+            get() {
+                return this.getQuotedObj;
+            },
+            enumerable: true,
+        },
+        delete: {
+            value() {
+                try {
+                    return this.conn?.sendMessage?.(this.chat, {
+                        delete: this.key
+                    });
+                } catch (e) {
+                    console.error("Error en delete:", e);
+                    return Promise.reject(e);
+                }
+            },
+            enumerable: true,
+        },
         quoted: {
             get() {
                 try {
@@ -2576,213 +2783,6 @@ export function serialize() {
                 } catch (e) {
                     console.error("Error en quoted getter:", e);
                     return null;
-                }
-            },
-            enumerable: true,
-        },
-        _text: {
-            value: null,
-            writable: true,
-            enumerable: true,
-        },
-        text: {
-            get() {
-                try {
-                    const msg = this.msg;
-                    const text =
-                        (typeof msg === "string" ? msg : msg?.text) ||
-                        msg?.caption ||
-                        msg?.contentText ||
-                        "";
-                    return typeof this._text === "string" ?
-                        this._text :
-                        "" ||
-                        (typeof text === "string" ?
-                            text :
-                            text?.selectedDisplayText ||
-                            text?.hydratedTemplate?.hydratedContentText ||
-                            text) ||
-                        "";
-                } catch (e) {
-                    console.error("Error en text getter:", e);
-                    return "";
-                }
-            },
-            set(str) {
-                this._text = str;
-            },
-            enumerable: true,
-        },
-        mentionedJid: {
-            get() {
-                try {
-                    const mentioned = this.conn.parseMention(this.text).length > 0 ? this.conn.parseMention(this.text) : this.msg?.contextInfo?.mentionedJid || [];
-                    const groupChatId = this.chat?.endsWith("@g.us") ? this.chat : null;
-
-                    const processJid = (user) => {
-                        try {
-                            if (user && typeof user === "object") {
-                                user = user.lid || user.jid || user.id || "";
-                            }
-                            if (typeof user === "string" && user.includes("@lid") && groupChatId) {
-                                const resolved = String.prototype.resolveLidToRealJid.call(
-                                    user,
-                                    groupChatId,
-                                    this.conn
-                                );
-                                return resolved.then(res => typeof res === "string" ? res : user);
-                            }
-                            return Promise.resolve(user);
-                        } catch (e) {
-                            console.error("Error processing JID:", user, e);
-                            return Promise.resolve(user);
-                        }
-                    };
-
-                    const processed = mentioned.map(processJid);
-
-                    return Promise.all(processed)
-                        .then(jids => jids.filter(jid => jid && typeof jid === "string"))
-                        .catch(e => {
-                            console.error("Error en mentionedJid getter:", e);
-                            return [];
-                        });
-                } catch (e) {
-                    console.error("Error en mentionedJid getter:", e);
-                    return Promise.resolve([]);
-                }
-            },
-            enumerable: true,
-        },
-        name: {
-            get() {
-                try {
-                    if (!nullish(this.pushName) && this.pushName) return this.pushName;
-                    const sender = this.sender;
-                    return sender ? this.conn?.getName?.(sender) : "";
-                } catch (e) {
-                    console.error("Error en name getter:", e);
-                    return "";
-                }
-            },
-            enumerable: true,
-        },
-        download: {
-            value(saveToFile = false) {
-                try {
-                    const mtype = this.mediaType;
-                    return this.conn?.downloadM?.(
-                        this.mediaMessage?.[mtype],
-                        mtype?.replace(/message/i, ""),
-                        saveToFile,
-                    );
-                } catch (e) {
-                    console.error("Error en download:", e);
-                    return Promise.reject(e);
-                }
-            },
-            enumerable: true,
-            configurable: true,
-        },
-        reply: {
-            value(text, chatId, options) {
-                try {
-                    return this.conn?.reply?.(
-                        chatId ? chatId : this.chat,
-                        text,
-                        this,
-                        options,
-                    );
-                } catch (e) {
-                    console.error("Error en reply:", e);
-                    return Promise.reject(e);
-                }
-            },
-            enumerable: true,
-        },
-        copy: {
-            value() {
-                try {
-                    const M = proto.WebMessageInfo;
-                    return smsg(this.conn, M.fromObject(M.toObject(this)));
-                } catch (e) {
-                    console.error("Error en copy:", e);
-                    return null;
-                }
-            },
-            enumerable: true,
-        },
-        forward: {
-            value(jid, force = false, options = {}) {
-                try {
-                    return this.conn?.sendMessage?.(
-                        jid, {
-                            forward: this,
-                            force,
-                            ...options,
-                        }, {
-                            ...options
-                        },
-                    );
-                } catch (e) {
-                    console.error("Error en forward:", e);
-                    return Promise.reject(e);
-                }
-            },
-            enumerable: true,
-        },
-        copyNForward: {
-            value(jid, forceForward = false, options = {}) {
-                try {
-                    return this.conn?.copyNForward?.(jid, this, forceForward, options);
-                } catch (e) {
-                    console.error("Error en copyNForward:", e);
-                    return Promise.reject(e);
-                }
-            },
-            enumerable: true,
-        },
-        cMod: {
-            value(jid, text = "", sender = this.sender, options = {}) {
-                try {
-                    return this.conn?.cMod?.(jid, this, text, sender, options);
-                } catch (e) {
-                    console.error("Error en cMod:", e);
-                    return Promise.reject(e);
-                }
-            },
-            enumerable: true,
-        },
-        getQuotedObj: {
-            value() {
-                try {
-                    if (!this.quoted?.id) return null;
-                    const q = proto.WebMessageInfo.fromObject(
-                        this.conn?.loadMessage?.(this.quoted.id) || this.quoted.vM || {},
-                    );
-                    return smsg(this.conn, q);
-                } catch (e) {
-                    console.error("Error en getQuotedObj:", e);
-                    return null;
-                }
-            },
-            enumerable: true,
-        },
-        getQuotedMessage: {
-            get() {
-                return this.getQuotedObj;
-            },
-            enumerable: true,
-        },
-        delete: {
-            value() {
-                try {
-                    return this.conn?.sendMessage?.(this.chat, {
-                        delete: this.key
-                    });
-                } catch (e) {
-                    console.error("Error en delete:", e);
-                    return Promise.reject(e);
                 }
             },
             enumerable: true,
