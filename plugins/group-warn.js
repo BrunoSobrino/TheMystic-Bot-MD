@@ -32,7 +32,7 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
       user.warn == 1 ? `*@${who.split`@`[0]}*` : `*@${who.split`@`[0]}*`
       } ${tradutor.texto2[0]} ${sdms}\n${tradutor.texto2[1]} ${
         user.warn
-      }/3*`,
+      }/6*`,
       null,
       {mentions: [who]},
   );
