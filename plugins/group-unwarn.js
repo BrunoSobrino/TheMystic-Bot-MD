@@ -43,7 +43,7 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   user.warn -= 1
 
   await m.reply(
-    `${user.warn === 1 ? `*@${who.split('@')[0]}*` : `♻️ *@${who.split('@')[0]}*`} ${tradutor.texto3} ${user.warn}/3*`,
+    `${user.warn === 1 ? `*@${who.split('@')[0]}*` : `♻️ *@${who.split('@')[0]}*`} ${tradutor.texto3} ${user.warn}/6*`,
     null,
     {mentions: [who]}
   )
