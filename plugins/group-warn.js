@@ -1,4 +1,4 @@
-const handler = async (m, {conn, text, command, usedPrefix}) => {
+const handler = async (m, {conn, args, text, command, usedPrefix}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
@@ -7,6 +7,7 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const testi = await m?.mentionedJid
   if (testi.includes(conn.user.jid)) return;
   const pp = './src/assets/images/menu/main/warn.jpg';
+  if (m.mentionedJid.length === 0 && args.length > 0) m.mentionedJid = conn.parseMention(text)
   let who;
   if (m.isGroup) {
     who = await m.mentionedJid[0] ?
