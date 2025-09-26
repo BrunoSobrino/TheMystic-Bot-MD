@@ -10,27 +10,33 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   let who
 
   if (m.isGroup) {
-    if (m.mentionedJid && m.mentionedJid[0]) {
+    if (Array.isArray(m.mentionedJid) && m.mentionedJid[0]) {
       who = m.mentionedJid[0]
     } else if (m.quoted) {
       who = m.quoted.sender
     } else if (text) {
-      who = text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' // convierte número a JID
+      who = text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
     }
   } else {
     who = m.chat
   }
 
-  const user = global.db.data.users[who]
-  const bot = global.db.data.settings[conn.user.jid] || {}
-
   const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`
 
-  if (!who || !user) {
+  if (!who) {
     throw m.reply(warntext, m.chat, {mentions: conn.parseMention(warntext)})
   }
 
-  if (m.mentionedJid?.includes(conn.user.jid)) return
+  // Crear registro del usuario si no existe
+  if (!global.db.data.users[who]) {
+    global.db.data.users[who] = {warn: 0}
+  }
+
+  const user = global.db.data.users[who]
+  const bot = global.db.data.settings[conn.user.jid] || {}
+
+  // Evitar que intenten hacer unwarn al bot
+  if (Array.isArray(m.mentionedJid) && m.mentionedJid.includes(conn.user.jid)) return
 
   if (user.warn === 0) throw tradutor.texto2
 
