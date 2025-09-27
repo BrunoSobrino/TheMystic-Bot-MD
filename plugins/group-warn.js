@@ -1,106 +1,76 @@
-const handler = async (m, { conn, args, text, command, usedPrefix }) => {
-  const datas = global
-  const idioma = datas.db?.data?.users?.[m.sender]?.language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.gc_warn
+import fs from 'fs';
 
-  // Helpers
-  const escapeRegex = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const normalizeJid = (id) => {
-    if (!id) return id
-    id = String(id).trim()
-    id = id.replace(/^@+/, '') // quitar arrobas iniciales
-    id = id.split(/\s+/)[0] // primer token
-    if (id.endsWith('@s.whatsapp.net')) return id
-    if (/^\+?\d+$/.test(id)) return id.replace(/^\+/, '') + '@s.whatsapp.net'
-    if (id.includes('@')) return id.split('@')[0] + '@s.whatsapp.net'
-    return id + '@s.whatsapp.net'
+const handler = async (m, { conn, args, text, command, usedPrefix }) => {
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
+  const tradutor = _translate.plugins.gc_warn;
+
+  // Si no hay menciones y hay texto, intenta parsearlas
+  if (!m.mentionedJid || m.mentionedJid.length === 0) {
+    m.mentionedJid = conn.parseMention(text || '');
   }
 
-  // Resolver target (who)
-  let who
-  let candidateRaw = null
+  // Evita que el bot se advierta a sí mismo
+  if (m.mentionedJid.includes(conn.user.jid)) return;
+
+  const pp = './src/assets/images/menu/main/warn.jpg';
+  let who;
 
   if (m.isGroup) {
-    if (Array.isArray(m.mentionedJid) && m.mentionedJid.length > 0) {
-      who = m.mentionedJid[0]
-    } else if (m.quoted && m.quoted.sender) {
-      who = m.quoted.sender
-    } else if (text) {
-      candidateRaw = text.split(' ')[0].trim()
-      // Si es @nombre, buscar en metadata del grupo
-      if (candidateRaw.startsWith('@') && !/@\d+/.test(candidateRaw)) {
-        try {
-          const metadata = await conn.groupMetadata(m.chat)
-          const matchName = candidateRaw.replace(/^@+/, '').toLowerCase()
-          for (const p of (metadata.participants || [])) {
-            const id = p.id || p
-            const name = conn.getName ? await conn.getName(id) : id
-            if (name && (name.toLowerCase() === matchName || name.toLowerCase().includes(matchName))) {
-              who = id
-              break
-            }
-          }
-        } catch (e) {}
-      }
-      if (!who) who = normalizeJid(candidateRaw)
+    if (m.mentionedJid.length > 0) {
+      who = m.mentionedJid[0]; // Primera mención
+    } else if (m.quoted) {
+      who = m.quoted.sender; // Si es respuesta a un mensaje
+    } else {
+      who = text.replace(/@\d+/g, '').trim(); // Si hay texto sin mención
     }
   } else {
-    who = m.chat
+    who = m.chat;
   }
 
   if (!who) {
-    const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`
-    return m.reply(warntext, m.chat, { mentions: conn.parseMention ? conn.parseMention(warntext) : [] })
+    const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`;
+    return m.reply(warntext, m.chat, { mentions: conn.parseMention(warntext) });
   }
 
-  // No advertir al bot
-  if (who === conn.user.jid) return
+  const user = global.db.data.users[who];
+  const bot = global.db.data.settings[conn.user.jid] || {};
+  const dReason = 'Sin motivo';
+  const msgtext = text || dReason;
+  const sdms = msgtext.replace(/@\d+-?\d* /g, '');
 
-  // Asegurar DB
-  global.db = global.db || { data: { users: {}, settings: {} } }
-  global.db.data.users[who] = global.db.data.users[who] || {}
-  const user = global.db.data.users[who]
-  const bot = global.db.data.settings[conn.user.jid] || {}
-  if (typeof user.warn !== 'number') user.warn = 0
+  // Suma advertencia
+  user.warn = (user.warn || 0) + 1;
 
-  // Extraer motivo
-  const dReason = 'Sin motivo'
-  let reason = dReason
-  if (text && text.trim()) {
-    reason = text.trim()
-    if (candidateRaw) {
-      reason = reason.replace(new RegExp('^\\s*' + escapeRegex(candidateRaw)), '').trim()
-    }
-    if (!reason) reason = dReason
-  }
-
-  // Aplicar warn
-  user.warn += 1
-  const displayName = await conn.getName(who) // nombre que muestra WhatsApp
   await m.reply(
-    `@${who.split('@')[0]} ${tradutor.texto2[0]} ${reason}\n${tradutor.texto2[1]} ${user.warn}/6*`,
-    m.chat,
+    `*@${who.split`@`[0]}* ${tradutor.texto2[0]} ${sdms}\n${tradutor.texto2[1]} ${user.warn}/6*`,
+    null,
     { mentions: [who] }
-  )
+  );
 
-  // Si llegó al máximo, expulsar
+  // Si llega a 6 advertencias
   if (user.warn >= 6) {
     if (!bot.restrict) {
-      return m.reply(`${tradutor.texto3[0]} (#𝚎𝚗𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝) ${tradutor.texto3[1]}`, m.chat)
+      return m.reply(`${tradutor.texto3[0]} (#𝚎𝚗𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝) ${tradutor.texto3[1]}`);
     }
-    user.warn = 0
-    await m.reply(`${tradutor.texto4[0]}\n*@${who.split('@')[0]}* ${tradutor.texto4[1]}`, m.chat, { mentions: [who] })
-    await conn.groupParticipantsUpdate(m.chat, [who], 'remove')
+
+    user.warn = 0;
+    await m.reply(
+      `${tradutor.texto4[0]}\n*@${who.split`@`[0]}* ${tradutor.texto4[1]}`,
+      null,
+      { mentions: [who] }
+    );
+    await conn.groupParticipantsUpdate(m.chat, [who], 'remove');
   }
 
-  return !1
-}
+  return !1;
+};
 
-handler.tags = ['group']
-handler.help = ['warn']
-handler.command = /^(advertir|advertencia|warn|warning)$/i
-handler.group = true
-handler.admin = true
-handler.botAdmin = true
-export default handler
+handler.tags = ['group'];
+handler.help = ['warn'];
+handler.command = /^(advertir|advertencia|warn|warning)$/i;
+handler.group = true;
+handler.admin = true;
+handler.botAdmin = true;
+export default handler;
