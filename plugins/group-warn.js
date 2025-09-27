@@ -4,25 +4,16 @@ const handler = async (m, { conn, args, text, command, usedPrefix }) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_warn
 
-  // helpers
+  // Helpers
   const escapeRegex = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
   const normalizeJid = (id) => {
     if (!id) return id
     id = String(id).trim()
-    // quitar arrobas iniciales si las trae
-    id = id.replace(/^@+/, '')
-    // quedarnos sólo con el primer token (por si vienen cosas después)
-    id = id.split(/\s+/)[0]
-    // si ya es un jid conocido
-    if (id.endsWith('@s.whatsapp.net') || id.endsWith('@c.us')) return id
-    // número con + opcional
+    id = id.replace(/^@+/, '') // quitar arrobas iniciales
+    id = id.split(/\s+/)[0] // primer token
+    if (id.endsWith('@s.whatsapp.net')) return id
     if (/^\+?\d+$/.test(id)) return id.replace(/^\+/, '') + '@s.whatsapp.net'
-    // si contiene @ pero no es dominio s.whatsapp.net
     if (id.includes('@')) return id.split('@')[0] + '@s.whatsapp.net'
-    // fallback intentar tratar como número
-    if (/^\d+$/.test(id)) return id + '@s.whatsapp.net'
-    // último recurso
     return id + '@s.whatsapp.net'
   }
 
@@ -37,26 +28,21 @@ const handler = async (m, { conn, args, text, command, usedPrefix }) => {
       who = m.quoted.sender
     } else if (text) {
       candidateRaw = text.split(' ')[0].trim()
-      // si es @nombre (no numérico) intentamos buscar por displayName
+      // Si es @nombre, buscar en metadata del grupo
       if (candidateRaw.startsWith('@') && !/@\d+/.test(candidateRaw)) {
         try {
           const metadata = await conn.groupMetadata(m.chat)
           const matchName = candidateRaw.replace(/^@+/, '').toLowerCase()
           for (const p of (metadata.participants || [])) {
             const id = p.id || p
-            // getName existe en muchas libs de baileys; si no, se usa el id
             const name = conn.getName ? await conn.getName(id) : id
-            if (!name) continue
-            if (name.toLowerCase() === matchName || name.toLowerCase().includes(matchName)) {
+            if (name && (name.toLowerCase() === matchName || name.toLowerCase().includes(matchName))) {
               who = id
               break
             }
           }
-        } catch (e) {
-          // no rompemos si falla groupMetadata
-        }
+        } catch (e) {}
       }
-      // si no lo encontramos por nombre, normalizamos a jid (número/jid)
       if (!who) who = normalizeJid(candidateRaw)
     }
   } else {
@@ -68,17 +54,17 @@ const handler = async (m, { conn, args, text, command, usedPrefix }) => {
     return m.reply(warntext, m.chat, { mentions: conn.parseMention ? conn.parseMention(warntext) : [] })
   }
 
-  // Proteger contra advertir al bot
+  // No advertir al bot
   if (who === conn.user.jid) return
 
-  // Asegurar estructura DB y campo warn
+  // Asegurar DB
   global.db = global.db || { data: { users: {}, settings: {} } }
   global.db.data.users[who] = global.db.data.users[who] || {}
   const user = global.db.data.users[who]
   const bot = global.db.data.settings[conn.user.jid] || {}
   if (typeof user.warn !== 'number') user.warn = 0
 
-  // Extraer motivo: borramos el candidateRaw del inicio si existe
+  // Extraer motivo
   const dReason = 'Sin motivo'
   let reason = dReason
   if (text && text.trim()) {
@@ -91,8 +77,9 @@ const handler = async (m, { conn, args, text, command, usedPrefix }) => {
 
   // Aplicar warn
   user.warn += 1
+  const displayName = await conn.getName(who) // nombre que muestra WhatsApp
   await m.reply(
-    `*@${(await conn.getName(who) || who.split('@')[0])}* ${tradutor.texto2[0]} ${reason}\n${tradutor.texto2[1]} ${user.warn}/6*`,
+    `@${who.split('@')[0]} ${tradutor.texto2[0]} ${reason}\n${tradutor.texto2[1]} ${user.warn}/6*`,
     m.chat,
     { mentions: [who] }
   )
