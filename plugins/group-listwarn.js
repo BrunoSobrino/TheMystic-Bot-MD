@@ -2,9 +2,15 @@ import fs from "fs"
 
 const handler = async (m, { conn, isOwner }) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender]?.language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_listwarn
+
+  // 🔹 Normalizar todos los usuarios antes de filtrar
+  for (const jid in global.db.data.users) {
+    const u = global.db.data.users[jid]
+    u.warn = Number(u.warn) || 0
+  }
 
   const adv = Object.entries(global.db.data.users).filter(([jid, u]) => u.warn > 0)
 
@@ -17,7 +23,7 @@ const handler = async (m, { conn, isOwner }) => {
 ${adv.length > 0 ? adv.map(([jid, user], i) => {
     const numero = jid.split('@')[0]
     const display = isOwner ? `@${numero}` : numero
-    mentions.push(jid) // guardamos para mentions
+    mentions.push(jid)
     return `
 ║ ${i + 1}.- ${display} *(${user.warn}/6)*
 ║ - - - - - - - - -`
