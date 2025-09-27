@@ -1,34 +1,30 @@
-import fs from 'fs';
-
 const handler = async (m, { conn, args, text, command, usedPrefix }) => {
   const datas = global;
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.gc_warn;
 
-  // Si no hay menciones y hay texto, intenta parsearlas
-  if (!m.mentionedJid || m.mentionedJid.length === 0) {
-    m.mentionedJid = conn.parseMention(text || '');
-  }
+  // Aseguramos que m.mentionedJid sea siempre un array
+  let mentions = Array.isArray(m.mentionedJid) ? m.mentionedJid : [];
+  if (mentions.length === 0 && text) mentions = conn.parseMention(text);
 
-  // Evita que el bot se advierta a sí mismo
-  if (m.mentionedJid.includes(conn.user.jid)) return;
+  // Evitamos advertir al bot
+  if (mentions.includes(conn.user.jid)) return;
 
-  const pp = './src/assets/images/menu/main/warn.jpg';
   let who;
-
   if (m.isGroup) {
-    if (m.mentionedJid.length > 0) {
-      who = m.mentionedJid[0]; // Primera mención
+    if (mentions.length > 0) {
+      who = mentions[0]; // Si hay mención, primera persona
     } else if (m.quoted) {
-      who = m.quoted.sender; // Si es respuesta a un mensaje
+      who = m.quoted.sender; // Si hay respuesta a mensaje
     } else {
-      who = text.replace(/@\d+/g, '').trim(); // Si hay texto sin mención
+      who = text?.replace(/@\d+/g, '').trim(); // Si hay texto sin mención
     }
   } else {
     who = m.chat;
   }
 
+  // Si no hay objetivo
   if (!who) {
     const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`;
     return m.reply(warntext, m.chat, { mentions: conn.parseMention(warntext) });
