@@ -1,13 +1,13 @@
+import fs from 'fs'
+
 const handler = async (m, {conn, args, text, command, usedPrefix}) => {
   const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
+  const idioma = datas.db.data.users[m.sender]?.language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_warn
 
-  // Usamos variable auxiliar en lugar de modificar m.mentionedJid
   let mentioned = Array.isArray(m.mentionedJid) ? m.mentionedJid : []
-
-  if (mentioned.includes(conn.user.jid)) return;
+  if (mentioned.includes(conn.user.jid)) return
 
   if (mentioned.length === 0 && args.length > 0) {
     mentioned = conn.parseMention(text)
@@ -27,18 +27,17 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
     throw m.reply(warntext, m.chat, {mentions: conn.parseMention(warntext)})
   }
 
-  // Si no existe el usuario en la DB, lo inicializamos
-  if (!global.db.data.users[who]) {
-    global.db.data.users[who] = { warn: 0 }
-  }
-
+  // 🔹 Inicializar usuario con warn en número
+  if (!global.db.data.users[who]) global.db.data.users[who] = {}
   const user = global.db.data.users[who]
+  user.warn = Number(user.warn) || 0
+
   const bot = global.db.data.settings[conn.user.jid] || {}
   const dReason = 'Sin motivo'
   const msgtext = text || dReason
   const sdms = msgtext.replace(/@\d+-?\d* /g, '')
 
-  user.warn += 1
+  user.warn++
 
   await m.reply(
     `*@${who.split`@`[0]}* ${tradutor.texto2[0]} ${sdms}\n${tradutor.texto2[1]} ${user.warn}/6*`,
