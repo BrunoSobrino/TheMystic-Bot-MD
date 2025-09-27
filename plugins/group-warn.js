@@ -4,31 +4,30 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_warn
 
-  // Asegurar que siempre sea array
-  m.mentionedJid = Array.isArray(m.mentionedJid) ? m.mentionedJid : []
+  // Usamos variable auxiliar en lugar de modificar m.mentionedJid
+  let mentioned = Array.isArray(m.mentionedJid) ? m.mentionedJid : []
 
-  if (m.mentionedJid.includes(conn.user.jid)) return;
+  if (mentioned.includes(conn.user.jid)) return;
 
-  if (m.mentionedJid.length === 0 && args.length > 0) {
-    m.mentionedJid = conn.parseMention(text)
+  if (mentioned.length === 0 && args.length > 0) {
+    mentioned = conn.parseMention(text)
   }
 
   let who
   if (m.isGroup) {
-    who = m.mentionedJid[0]
-      ? m.mentionedJid[0]
+    who = mentioned[0]
+      ? mentioned[0]
       : m.quoted
         ? m.quoted.sender
         : null
   } else who = m.chat
 
-  // Si no se detectó usuario
   if (!who) {
     const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`
     throw m.reply(warntext, m.chat, {mentions: conn.parseMention(warntext)})
   }
 
-  // Si el usuario no existe en la DB, crearlo
+  // Si no existe el usuario en la DB, lo inicializamos
   if (!global.db.data.users[who]) {
     global.db.data.users[who] = { warn: 0 }
   }
