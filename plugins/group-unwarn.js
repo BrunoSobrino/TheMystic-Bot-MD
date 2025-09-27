@@ -1,21 +1,21 @@
 import fs from 'fs'
 
-const handler = async (m, {conn, text, command, usedPrefix}) => {
+const handler = async (m, { conn, text, command, usedPrefix }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_unwarn
 
-  const pp = './src/assets/images/menu/main/warn.jpg'
   let who
 
   if (m.isGroup) {
-    if (Array.isArray(m.mentionedJid) && m.mentionedJid[0]) {
+    if (Array.isArray(m.mentionedJid) && m.mentionedJid.length > 0) {
       who = m.mentionedJid[0]
     } else if (m.quoted) {
       who = m.quoted.sender
     } else if (text) {
-      who = text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+      const numero = text.replace(/[^0-9]/g, '')
+      if (numero) who = numero + '@s.whatsapp.net'
     }
   } else {
     who = m.chat
@@ -24,28 +24,34 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`
 
   if (!who) {
-    throw m.reply(warntext, m.chat, {mentions: conn.parseMention(warntext)})
+    throw m.reply(warntext, m.chat, { mentions: conn.parseMention(warntext) })
   }
 
-  // Crear registro del usuario si no existe
+  // crear registro de usuario si no existe
   if (!global.db.data.users[who]) {
-    global.db.data.users[who] = {warn: 0}
+    global.db.data.users[who] = {}
+  }
+
+  // asegurar propiedad warn
+  if (typeof global.db.data.users[who].warn !== 'number') {
+    global.db.data.users[who].warn = 0
   }
 
   const user = global.db.data.users[who]
-  const bot = global.db.data.settings[conn.user.jid] || {}
 
-  // Evitar que intenten hacer unwarn al bot
-  if (Array.isArray(m.mentionedJid) && m.mentionedJid.includes(conn.user.jid)) return
+  // evitar unwarn al bot
+  if (who === conn.user.jid) return
 
-  if (user.warn === 0) throw tradutor.texto2
+  if (user.warn <= 0) {
+    throw tradutor.texto2 // no tiene warns
+  }
 
   user.warn -= 1
 
   await m.reply(
-    `${user.warn === 1 ? `*@${who.split('@')[0]}*` : `♻️ *@${who.split('@')[0]}*`} ${tradutor.texto3} ${user.warn}/6*`,
+    `♻️ *@${who.split('@')[0]}* ${tradutor.texto3} ${user.warn}/6*`,
     null,
-    {mentions: [who]}
+    { mentions: [who] }
   )
 }
 
