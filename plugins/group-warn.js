@@ -92,7 +92,7 @@ const handler = async (m, { conn, args, text, command, usedPrefix }) => {
   // Aplicar warn
   user.warn += 1
   await m.reply(
-    `*@${who.split('@')[0]}* ${tradutor.texto2[0]} ${reason}\n${tradutor.texto2[1]} ${user.warn}/6*`,
+    `*@${(await conn.getName(who) || who.split('@')[0])}* ${tradutor.texto2[0]} ${reason}\n${tradutor.texto2[1]} ${user.warn}/6*`,
     m.chat,
     { mentions: [who] }
   )
