@@ -16,7 +16,7 @@ return `
 ║
 ║ ${i}.- ${isOwner ? '@' + jid.split`@`[0] : jid} *(${user.warn}/3)*\n║\n║ - - - - - - - - -`.trim()}).join('\n') : ''}
 *╚══════════════════·•*`;
-  await conn.sendMessage(m.chat, {text: caption}, {quoted: m}, {mentions: await conn.parseMention(caption)});
+  await conn.sendMessage(m.chat, {text: caption, mentions: await conn.parseMention(caption)}, {quoted: m});
 };
 
 handler.help = ['listwarn'];
