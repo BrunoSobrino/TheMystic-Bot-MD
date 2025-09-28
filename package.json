@@ -35,6 +35,7 @@
     "@green-code/music-track-data": "^2.0.3",
     "@sefinek/google-tts-api": "*",
     "@vitalets/google-translate-api": "^8.0.0",
+    "@shineiichijo/marika": "*",
     "acrcloud": "^1.4.0",
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^2.68.0",
