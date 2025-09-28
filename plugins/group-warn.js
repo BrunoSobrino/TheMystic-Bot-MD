@@ -11,7 +11,7 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
   let who;
   if (m.isGroup) {
     who = conn.parseMention(text).length > 0 ?
-      conn.parseMention(text) :
+      conn.parseMention(text)[0] :
       m.quoted ?
       await m?.quoted?.sender :
       text;
