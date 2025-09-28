@@ -17,14 +17,7 @@ ${adv.map(([jid, user], i) => {
 ║ - - - - - - - - -`;
 }).join('\n')}
 *╚══════════════════·•*`;
-
-  // Crear array de menciones
-  const mentions = adv.map(([jid]) => jid);
-
-  await conn.sendMessage(m.chat, {
-    text: caption,
-    mentions: mentions
-  }, {quoted: m});
+  await conn.sendMessage(m.chat, {text: caption, mentions: await conn.parseMention(caption)}, {quoted: m});
 };
 
 handler.help = ['listwarn'];

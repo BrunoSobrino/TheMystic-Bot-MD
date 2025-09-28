@@ -10,8 +10,8 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
   if (m.mentionedJid.length === 0 && args.length > 0) m.mentionedJid = conn.parseMention(text)
   let who;
   if (m.isGroup) {
-    who = await m.mentionedJid[0] ?
-      await m.mentionedJid[0] :
+    who = conn.parseMention(text).length > 0 ?
+      conn.parseMention(text)[0] :
       m.quoted ?
       await m?.quoted?.sender :
       text;
