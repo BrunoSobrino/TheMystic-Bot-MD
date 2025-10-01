@@ -601,8 +601,8 @@ export async function handler(chatUpdate) {
         
       const chats = { // i want to assign dick instead chats
           isBanned: false,
-          welcome: true,
-          detect: true,
+          welcome: false,
+          detect: false,
           detect2: false,
           sWelcome: '',
           sBye: '',
@@ -611,8 +611,8 @@ export async function handler(chatUpdate) {
           antidelete: false,
           modohorny: true,
           autosticker: false,
-          audios: true,
-          antiLink: false,
+          audios: false,
+          antiLink: true,
           antiLink2: false,
           antiviewonce: false,
           antiToxic: false,
@@ -638,11 +638,11 @@ export async function handler(chatUpdate) {
       if (settings) {
        const setttings = { // yk the drill 
           self: false,
-          autoread: false,
-          autoread2: false,
-          restrict: false,
-          antiCall: false,
-          antiPrivate: false,
+          autoread: true,
+          autoread2: true,
+          restrict: true,
+          antiCall: true,
+          antiPrivate: true,
           modejadibot: true,
           antispam: false,
           audios_bot: true,
