@@ -638,11 +638,11 @@ export async function handler(chatUpdate) {
       if (settings) {
        const setttings = { // yk the drill 
           self: false,
-          autoread: true,
-          autoread2: true,
-          restrict: true,
-          antiCall: true,
-          antiPrivate: true,
+          autoread: false,
+          autoread2: false,
+          restrict: false,
+          antiCall: false,
+          antiPrivate: false,
           modejadibot: true,
           antispam: false,
           audios_bot: true,
