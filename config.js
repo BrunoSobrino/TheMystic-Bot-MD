@@ -25,7 +25,7 @@ global.owner = [
 ];
 
 global.suittag = ['5219993404349'];
-global.prems = ['51995386439'];
+global.prems = [];
 
 // Base Rest Api
 global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
