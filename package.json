@@ -103,7 +103,6 @@
     "wa-sticker-formatter": "^4.3.2"
   },
   "devDependencies": {
-    "eslint": "^8.45.0",
-    "eslint-config-google": "^0.14.0"
+    "eslint": "^9.37.0"
   }
 }
