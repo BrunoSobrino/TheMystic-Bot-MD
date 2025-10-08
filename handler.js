@@ -601,8 +601,8 @@ export async function handler(chatUpdate) {
         
       const chats = { // i want to assign dick instead chats
           isBanned: false,
-          welcome: true,
-          detect: true,
+          welcome: false,
+          detect: false,
           detect2: false,
           sWelcome: '',
           sBye: '',
@@ -611,8 +611,8 @@ export async function handler(chatUpdate) {
           antidelete: false,
           modohorny: true,
           autosticker: false,
-          audios: true,
-          antiLink: false,
+          audios: false,
+          antiLink: true,
           antiLink2: false,
           antiviewonce: false,
           antiToxic: false,
@@ -659,7 +659,7 @@ export async function handler(chatUpdate) {
     }
 
     const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje; // is null? np the operator ?? fix that (i hope)
-    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`, 'utf-8'))
     const tradutor = _translate.handler.handler
 
     if (opts['nyimak']) {
@@ -1083,60 +1083,66 @@ ${tradutor.texto1[1]} ${messageNumber}/3
  */
 export async function participantsUpdate({ id, participants, action }) {
   const idioma = global?.db?.data?.chats[id]?.language || global.defaultLenguaje;
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`, 'utf-8'))
   const tradutor = _translate.handler.participantsUpdate
 
   const m = mconn
   if (opts['self']) return;
   if (global.db.data == null) await loadDatabase();
   const chat = global.db.data.chats[id] || {};
-  const botTt = global.db.data.settings[mconn?.conn?.user?.jid] || {};
   let text = '';
   switch (action) {
     case 'add':
-    case 'remove':
-      if (chat.welcome && !chat?.isBanned) {
-        if (action === 'remove' && participants.includes(m?.conn?.user?.jid)) return;
-        const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
-        for (const user of participants) {
-          try {
-          let pp = await m?.conn?.profilePictureUrl(user, 'image').catch(_ => 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60');
-           const apii = await mconn?.conn?.getFile(pp);
-           const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
-           const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
-           const botTt2 = groupMetadata?.participants?.find((u) => m?.conn?.decodeJid(u.id) == m?.conn?.user?.jid) || {};
-           const isBotAdminNn = botTt2?.admin === 'admin' || false;
-           text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m?.conn?.getName(id)).replace('@desc', groupMetadata?.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*').replace('@user', '@' + user.split('@')[0]) :
-            (chat.sBye || tradutor.texto2 || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0]);
-            if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn && action === 'add') {
-           const responseb = await m.conn.groupParticipantsUpdate(id, [user], 'remove');
+  if (chat.welcome && !chat?.isBanned) {
+    const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
+    for (const user of participants) {
+      try {
+        const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
+        const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
+        const botTt2 = groupMetadata?.participants?.find((u) => m?.conn?.decodeJid(u.id) == m?.conn?.user?.jid) || {};
+        const isBotAdminNn = botTt2?.admin === 'admin' || false;
+
+        // Solo mensajes de bienvenida
+        if (action === 'add') {
+          let text = (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!')
+            .replace('@subject', await m?.conn?.getName(id))
+            .replace('@desc', groupMetadata?.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*')
+            .replace(/@user/g, '@' + user.split('@')[0]);
+
+          if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn) {
+            const responseb = await m.conn.groupParticipantsUpdate(id, [user], 'remove');
             if (responseb[0].status === '404') return;
-           const fkontak2 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${user.split('@')[0]}:${user.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
-           await m?.conn?.sendMessage(id, { text: `*[❗] @${user.split('@')[0]} ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`, mentions: [user] }, { quoted: fkontak2 });
-           return;
-            }
-            await m?.conn?.sendFile(id, apii.data, 'pp.jpg', text, null, false, { mentions: [user] });
-          } catch (e) {
-          console.log(e);
+            const fkontak2 = {
+              key: {
+                participants: '0@s.whatsapp.net',
+                remoteJid: 'status@broadcast',
+                fromMe: false,
+                id: 'Halo'
+              },
+              message: {
+                contactMessage: {
+                  vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${user.split('@')[0]}:${user.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`
+                }
+              },
+              participant: '0@s.whatsapp.net'
+            };
+            await m?.conn?.sendMessage(id, {
+              text: `*[❗] @${user.split('@')[0]} ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`,
+              mentions: [user]
+            }, { quoted: fkontak2 });
+            return;
           }
+
+          // Solo enviar mensaje de texto (sin foto)
+          await m?.conn?.sendMessage(id, { text, mentions: [user] });
         }
+      } catch (e) {
+        console.log(e);
       }
-      break;
-    case 'promote':
-    case 'daradmin':
-    case 'darpoder':
-      text = (chat.sPromote || tradutor.texto3 || conn?.spromote || '@user ```is now Admin```');
-    case 'demote':
-    case 'quitarpoder':
-    case 'quitaradmin':
-      if (!text) {
-        text = (chat?.sDemote || tradutor.texto4 || conn?.sdemote || '@user ```is no longer Admin```');
-      }
-      text = text.replace('@user', '@' + participants[0].split('@')[0]);
-      if (chat.detect && !chat?.isBanned) {
-        mconn?.conn?.sendMessage(id, { text, mentions: mconn?.conn?.parseMention(text) });
-      }
-      break;
+    }
+  }
+  break;
+
   }
 }
 
@@ -1147,7 +1153,7 @@ export async function participantsUpdate({ id, participants, action }) {
 
 export async function groupsUpdate(groupsUpdate) {
   const idioma = global.db.data.chats[groupsUpdate[0].id]?.language || global.defaultLenguaje;
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`, 'utf-8'))
   const tradutor = _translate.handler.participantsUpdate
 
   if (opts['self']) {
@@ -1191,7 +1197,7 @@ export async function deleteUpdate(message) {
   const datas = global
   const id = message?.participant 
   const idioma = datas.db.data.users[id]?.language || global.defaultLenguaje;
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`, 'utf-8'))
   const tradutor = _translate.handler.deleteUpdate
 
   let d = new Date(new Date + 3600000)
@@ -1221,7 +1227,7 @@ ${tradutor.texto1[5]}`.trim();
 global.dfail = (type, m, conn) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`, 'utf-8'))
   const tradutor = _translate.handler.dfail
 
   const msg = {
