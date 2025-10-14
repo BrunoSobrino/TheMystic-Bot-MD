@@ -489,7 +489,7 @@ async function interceptMessages(messages, lidResolver) {
 }
 
 const { state, saveCreds } = await useMultiFileAuthState(global.authFile);
-const { version } = await fetchLatestBaileysVersion();
+const version = await fetchLatestBaileysVersion();
 let phoneNumber = global.botnumber || process.argv.find(arg => arg.startsWith('--phone='))?.split('=')[1];
 const methodCodeQR = process.argv.includes('--method=qr');
 const methodCode = !!phoneNumber || process.argv.includes('--method=code');
@@ -560,9 +560,9 @@ const connectionOptions = {
   userDevicesCache: userDevicesCache || new Map(),
   defaultQueryTimeoutMs: undefined,
   cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
-  version: [2, 3000, 1023223821],
   keepAliveIntervalMs: 55000,
   maxIdleTimeMs: 60000,
+  version,
 };
 
 global.conn = makeWASocket(connectionOptions);
