@@ -753,9 +753,9 @@ async function connectionUpdate(update) {
     return true;
   }
   if (reason == 405) {
-    await fs.unlinkSync("./MysticSession/" + "creds.json");
+    //await fs.unlinkSync("./MysticSession/" + "creds.json");
     console.log(chalk.bold.redBright(`[ ⚠️ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`));
-    process.send('reset');
+    //process.send('reset');
   }
   if (connection === 'close') {
     if (reason === DisconnectReason.badSession) {
