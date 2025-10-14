@@ -559,10 +559,9 @@ const connectionOptions = {
   userDevicesCache: userDevicesCache || new Map(),
   defaultQueryTimeoutMs: undefined,
   cachedGroupMetadata: (jid) => global.conn.chats[jid] ?? {},
-  version: [2, 3000, 1025190524],
   keepAliveIntervalMs: 55000,
   maxIdleTimeMs: 60000,
-  version
+  version,
 };
 
 global.conn = makeWASocket(connectionOptions);
