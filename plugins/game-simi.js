@@ -8,14 +8,14 @@ const handler = async (m, { conn, text, command, args, usedPrefix }) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.fun_simi
 
-  // Detecta si el mensaje menciona al bot o le responde
-  const botJid = conn.user?.jid || conn.user?.id || conn.user?.jid
-  const mentioned = m.mentionedJid?.includes(botJid)
+  const botJid = (conn.user && (conn.user.jid || conn.user.id)) || ''
+  const mentionedJids = Array.isArray(m.mentionedJid) ? m.mentionedJid : []
+  const mentioned = mentionedJids.includes(botJid)
   const quotedFromBot = m.quoted?.sender === botJid
 
-  // Si el mensaje no usa comando, pero menciona o responde al bot
+  // Si menciona o responde al bot, tomar ese texto
   if (!text && (mentioned || quotedFromBot)) {
-    text = m.text?.replace(new RegExp(`@${botJid.split('@')[0]}`, 'gi'), '').trim()
+    text = (m.text || '').replace(new RegExp(`@${botJid.split('@')[0]}`, 'gi'), '').trim()
   }
 
   if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Hola Bot*`
@@ -30,13 +30,13 @@ const handler = async (m, { conn, text, command, args, usedPrefix }) => {
 }
 
 handler.before = async (m, { conn }) => {
-  const botJid = conn.user?.jid || conn.user?.id
-  const mentioned = m.mentionedJid?.includes(botJid)
+  const botJid = (conn.user && (conn.user.jid || conn.user.id)) || ''
+  const mentionedJids = Array.isArray(m.mentionedJid) ? m.mentionedJid : []
+  const mentioned = mentionedJids.includes(botJid)
   const quotedFromBot = m.quoted?.sender === botJid
 
-  // Solo responder si lo mencionan o responden un mensaje del bot
   if (mentioned || quotedFromBot) {
-    const text = m.text?.replace(new RegExp(`@${botJid.split('@')[0]}`, 'gi'), '').trim()
+    const text = (m.text || '').replace(new RegExp(`@${botJid.split('@')[0]}`, 'gi'), '').trim()
     if (!text) return
 
     try {
@@ -54,7 +54,6 @@ handler.command = /^((sim)?simi|bot|alexa|cortana)$/i
 
 export default handler
 
-// === Función SimSimi ===
 async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es") {
   if (!ask) return { status: false, resultado: { msg: "Debes ingresar un texto para hablar con SimSimi." } }
   try {
@@ -78,7 +77,6 @@ async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es")
   }
 }
 
-// === API Chat SimSimi base ===
 async function chatsimsimi(ask, language) {
   try {
     const response = await axios.post(
@@ -86,10 +84,8 @@ async function chatsimsimi(ask, language) {
       { ask, lc: language },
       {
         headers: {
-          'sec-ch-ua-platform': '"Android"',
-          'Referer': 'https://simi.anbuinfosec.live/',
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5)',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5)'
         }
       }
     )
