@@ -6,27 +6,18 @@ const handler = (m) => m
 
 handler.before = async (m, { conn }) => {
   const chat = global.db.data.chats[m.chat]
-  if (!chat.simi) return true
+  if (!chat.simi) return true // si no está activado el simi, no hace nada
 
+  // Detectar si el mensaje menciona o responde al bot
   const botJid = conn.user?.jid || conn.user?.id || ''
-  const botNumber = botJid.split('@')[0] // número del bot sin sufijo
-
-  // Aseguramos formato de m.mentionedJid
-  const mentioned = Array.isArray(m.mentionedJid)
-    ? m.mentionedJid
-    : (typeof m.mentionedJid === 'string' ? [m.mentionedJid] : [])
-
-  // Detectar si el mensaje menciona al bot
-  const isBotMentioned = mentioned.some(jid => jid.includes(botNumber)) ||
-                         (m.text && m.text.includes(`@${botNumber}`))
-
-  // Detectar si responde al bot
+  const mentioned = Array.isArray(m.mentionedJid) ? m.mentionedJid : []
+  const isBotMentioned = mentioned.includes(botJid)
   const isReplyToBot = m.quoted && m.quoted.sender === botJid
 
   // Si no lo mencionan ni le responden, no responde
   if (!isBotMentioned && !isReplyToBot) return true
 
-  // Evitar comandos o textos bloqueados
+  // Evitar que responda a comandos conocidos
   if (/^.*false|disable|(turn)?off|0/i.test(m.text)) return true
   const texto = (m.text || '').trim().toLowerCase()
   const palabrasBloqueadas = [
@@ -40,23 +31,22 @@ handler.before = async (m, { conn }) => {
     const respuesta = await simitalk(m.text)
     if (!respuesta?.resultado?.simsimi) throw new Error('Sin respuesta')
     await conn.sendMessage(m.chat, { text: respuesta.resultado.simsimi }, { quoted: m })
-  } catch {
+  } catch (e) {
     await conn.sendMessage(m.chat, { text: '*[❗] La API de Simsimi presenta errores.*' }, { quoted: m })
   }
-
   return true
 }
 
 export default handler
 
-// --- FUNCIONES AUXILIARES ---
+// FUNCIONES AUXILIARES
 async function simitalk(ask, apikeyyy = 'iJ6FxuA9vxlvz5cKQCt3', language = 'es') {
   if (!ask) return { status: false, resultado: { msg: 'Debes ingresar un texto para hablar con simsimi.' } }
   try {
     let response11 = await chatsimsimi(ask, language)
     if (response11.message == 'indefinida' || !response11.message) throw new Error('Respuesta vacía')
     return { status: true, resultado: { simsimi: response11.message } }
-  } catch {
+  } catch (error1) {
     try {
       const response1 = await axios.get(`https://delirius-apiofc.vercel.app/tools/simi?text=${encodeURIComponent(ask)}`)
       const trad1 = await translate(`${response1.data.data.message}`, { to: language, autoCorrect: true })
