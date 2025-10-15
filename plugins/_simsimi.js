@@ -11,23 +11,22 @@ handler.before = async (m, { conn }) => {
   const botJid = conn.user?.jid || conn.user?.id || ''
   const botNumber = botJid.split('@')[0] // número del bot sin sufijo
 
-  // Asegurar formato válido de m.mentionedJid
+  // Aseguramos formato de m.mentionedJid
   const mentioned = Array.isArray(m.mentionedJid)
     ? m.mentionedJid
     : (typeof m.mentionedJid === 'string' ? [m.mentionedJid] : [])
 
-  // Detección robusta de mención al bot
-  const isBotMentioned = mentioned.some(jid =>
-    jid.includes(botNumber) || jid === botJid
-  )
+  // Detectar si el mensaje menciona al bot
+  const isBotMentioned = mentioned.some(jid => jid.includes(botNumber)) ||
+                         (m.text && m.text.includes(`@${botNumber}`))
 
-  // Detección de respuesta a mensaje del bot
+  // Detectar si responde al bot
   const isReplyToBot = m.quoted && m.quoted.sender === botJid
 
-  // Si no lo mencionan ni responden, no responde
+  // Si no lo mencionan ni le responden, no responde
   if (!isBotMentioned && !isReplyToBot) return true
 
-  // Evita comandos o textos bloqueados
+  // Evitar comandos o textos bloqueados
   if (/^.*false|disable|(turn)?off|0/i.test(m.text)) return true
   const texto = (m.text || '').trim().toLowerCase()
   const palabrasBloqueadas = [
@@ -44,6 +43,7 @@ handler.before = async (m, { conn }) => {
   } catch {
     await conn.sendMessage(m.chat, { text: '*[❗] La API de Simsimi presenta errores.*' }, { quoted: m })
   }
+
   return true
 }
 
