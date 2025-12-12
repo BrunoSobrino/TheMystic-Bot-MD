@@ -40,7 +40,7 @@
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^2.68.0",
     "axios": "*",
-    "baileys": "npm:@lunabotv6/luna-baileys@7.3.3",
+    "baileys": "github:Itsukichann/Baileys",
     "body-parser": "^1.20.2",
     "browser-id3-writer": "*",
     "cfonts": "^2.10.0",
