@@ -1,45 +1,64 @@
-import fs from "fs"
 import axios from "axios"
+import FormData from "form-data"
 import uploadImage from "../src/libraries/uploadImage.js"
 
 const handler = async (m, { conn, usedPrefix, command }) => {
-  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.herramientas_hd
-
   try {
-    const q = m.quoted ? m.quoted : m
-    const mime = (q.msg || q).mimetype || q.mediaType || ""
+    let q = m.quoted ? m.quoted : m
+    let mime = (q.msg || q).mimetype || ""
 
-    if (!mime) throw `${tradutor.texto1} ${usedPrefix + command}*`
-    if (!/image\/(jpe?g|png)/.test(mime)) throw `${tradutor.texto2[0]} (${mime}) ${tradutor.texto2[1]}`
+    if (!mime || !mime.includes("image")) {
+      return m.reply(`✖️ *Envía o responde una imagen para mejorarla en HD.*`)
+    }
 
-    m.reply(tradutor.texto3)
+    // Mensaje de procesamiento
+    let status = await conn.sendMessage(m.chat, { text: "⏳ *Procesando imagen en HD...*" }, { quoted: m })
 
-    const img = await q.download()
-    const fileUrl = await uploadImage(img)
-    const banner = await upscaleWithStellar(fileUrl)
+    // Descargar imagen
+    let img = await q.download()
+    if (!img) return m.reply("✖️ No pude descargar la imagen.")
 
-    await conn.sendMessage(m.chat, { image: banner }, { quoted: m })
+    // Preparar formulario para POST
+    let form = new FormData()
+    form.append("image", img, {
+      filename: "image.jpg",
+      contentType: mime
+    })
+    form.append("scale", 4)
+
+    // Llamada API
+    const { data } = await axios.post(
+      "https://api.siputzx.my.id/api/iloveimg/upscale",
+      form,
+      {
+        headers: {
+          ...form.getHeaders()
+        },
+        responseType: "arraybuffer"
+      }
+    )
+
+    // Enviar imagen HD
+    await conn.sendMessage(
+      m.chat,
+      { image: data, caption: "✅ *Imagen mejorada a HD.*" },
+      { quoted: m }
+    )
+
+    // Cambiar mensaje a check ✔
+    await conn.sendMessage(
+      m.chat,
+      { edit: status.key, text: "✔️ *Proceso completado*" }
+    )
+
   } catch (e) {
-    throw tradutor.texto4 + e
+    console.log(e)
+    m.reply("✖️ Ocurrió un error procesando la imagen.")
   }
 }
 
-handler.help = ["remini", "hd", "enhance"]
-handler.tags = ["ai", "tools"]
-handler.command = ["remini", "hd", "enhance"]
+handler.help = ["hd", "upscale"]
+handler.tags = ["tools"]
+handler.command = /^(hd|upscale|enhance)$/i
+
 export default handler
-
-async function upscaleWithStellar(url) {
-  const endpoint = `https://api.stellarwa.xyz/tools/upscale?url=${url}&key=BrunoSobrino`
-
-  const { data } = await axios.get(endpoint, {
-    responseType: "arraybuffer",
-    headers: {
-      accept: "image/*"
-    }
-  })
-
-  return Buffer.from(data)
-}
