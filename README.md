@@ -74,19 +74,15 @@
 <details>
  <summary><b>:paperclip: Enlaces Importantes</b></summary>
 
-- [Sitio web](https://cafirexos.com)
+- [Sitio web](https://cafirexos.com/)
 - [Área de clientes](https://cafirexos.com/clientarea.php)
 - [Panel de control](https://panel.cafirexos.com)
 - [Base de conocimientos](https://cafirexos.com/knowledgebase)
 - [Estado de los servicios](https://estado.cafirexos.com)
-- [Canal de WhatsApp](https://cafirexos.com/whatsapp/canal)
-- [Comunidad de WhatsApp](https://cafirexos.com/whatsapp/comunidad)
-- [Soporte](https://cafirexos.com/submitticket.php)
+- [Canal de WhatsApp](https://links.cafirexos.com/whatsapp/canal)
+- [Soporte](https://cafirexos.com/contactenos)
 
 </details>
-
-> [!IMPORTANT]\
-> El registro de usuarios solo es posible al comprar uno de nuestros productos en la [tienda](https://cafirexos.com/store).
 
 ## Despliegue en BoxMineWorld
 
