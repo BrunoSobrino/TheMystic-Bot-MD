@@ -33,11 +33,11 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
       user.warn == 1 ? `*@${who.split`@`[0]}*` : `*@${who.split`@`[0]}*`
       } ${tradutor.texto2[0]} ${sdms}\n${tradutor.texto2[1]} ${
         user.warn
-      }/3*`,
+      }/6*`,
       null,
       {mentions: [who]},
   );
-  if (user.warn >= 3) {
+  if (user.warn >= 6) {
     if (!bot.restrict) {
       return m.reply(
           `${tradutor.texto3[0]} (#𝚎𝚗𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝) ${tradutor.texto3[1]}`,
