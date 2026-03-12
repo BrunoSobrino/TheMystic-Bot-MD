@@ -11,35 +11,45 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     const q = m.quoted ? m.quoted : m
     const mime = (q.msg || q).mimetype || q.mediaType || ""
 
-    if (!mime) throw `${tradutor.texto1} ${usedPrefix + command}*`
-    if (!/image\/(jpe?g|png)/.test(mime)) throw `${tradutor.texto2[0]} (${mime}) ${tradutor.texto2[1]}`
+    // Validación de imagen
+    if (!mime) throw `*${tradutor.texto1} ${usedPrefix + command}*`
+    if (!/image\/(jpe?g|png)/.test(mime)) throw `*${tradutor.texto2[0]} (${mime}) ${tradutor.texto2[1]}*`
 
-    m.reply(tradutor.texto3)
+    m.reply(tradutor.texto3) // Mensaje de "esperando..."
 
     const img = await q.download()
     const fileUrl = await uploadImage(img)
-    const banner = await upscaleWithStellar(fileUrl)
+    
+    // Llamada a la nueva API
+    const imageBuffer = await upscaleImage(fileUrl)
 
-    await conn.sendMessage(m.chat, { image: banner }, { quoted: m })
+    await conn.sendMessage(m.chat, { image: imageBuffer, caption: '✅ Imagen mejorada con éxito' }, { quoted: m })
   } catch (e) {
-    throw tradutor.texto4 + e
+    console.error(e)
+    throw `${tradutor.texto4} ${e.message || e}`
   }
 }
 
 handler.help = ["remini", "hd", "enhance"]
 handler.tags = ["ai", "tools"]
 handler.command = ["remini", "hd", "enhance"]
+
 export default handler
 
-async function upscaleWithStellar(url) {
-  const endpoint = `https://api.stellarwa.xyz/tools/upscale?url=${url}&key=BrunoSobrino`
+// Función para conectar con la API de apicausas.xyz
+async function upscaleImage(url) {
+  try {
+    // Nota: Sustituye 'TU_APIKEY' por tu clave real si es necesario
+    const apikey = "causa-0e3eacf90ab7be15" 
+    const endpoint = `https://rest.apicausas.xyz/api/v1/utilidades/upscale?apikey=${apikey}&url=${url}&type=4`
 
-  const { data } = await axios.get(endpoint, {
-    responseType: "arraybuffer",
-    headers: {
-      accept: "image/*"
-    }
-  })
+    const response = await axios.get(endpoint, {
+      responseType: "arraybuffer"
+    })
 
-  return Buffer.from(data)
+    return Buffer.from(response.data)
+  } catch (err) {
+    throw "Error al procesar la imagen con la API."
+  }
 }
+
