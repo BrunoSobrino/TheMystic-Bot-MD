@@ -5,61 +5,43 @@ import { pipeline } from 'stream/promises';
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
 
-    if (!fs.existsSync('./temp')) {
-        fs.mkdirSync('./temp', { recursive: true });
-    }
+    if (!fs.existsSync('./temp')) fs.mkdirSync('./temp', { recursive: true });
 
     const flags = {
-        'spa': '🇪🇸', 'es': '🇪🇸', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
+        'spa': '🇲🇽', 'es': '🇲🇽', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
         'fra': '🇫🇷', 'fr': '🇫🇷', 'ger': '🇩🇪', 'de': '🇩🇪', 'ita': '🇮🇹', 'it': '🇮🇹',
         'por': '🇧🇷', 'pt': '🇧🇷', 'rus': '🇷🇺', 'ru': '🇷🇺', 'chi': '🇨🇳', 'zh': '🇨🇳',
-        'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️', 'Desconocido': '🏳️'
+        'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️'
     };
 
-    const isMediaValid = () => {
-        if (!m.quoted) return false;
-        const mime = m.quoted.mimetype || '';
-        return mime.includes('video') || mime.includes('application') || mime.includes('document');
-    };
-
-    // Descarga mediante Pipeline para proteger la RAM
     const downloadMediaStream = async (quoted, outputPath) => {
         try {
             const { downloadContentFromMessage } = await import('baileys');
-            const mediaType = quoted.mtype ? quoted.mtype.replace('Message', '') : (quoted.mimetype.includes('video') ? 'video' : 'document');
-            const mediaObj = quoted.vM || quoted.message?.videoMessage || quoted.message?.documentMessage || quoted;
-            
-            const stream = await downloadContentFromMessage(mediaObj, mediaType);
-            
-            // Usamos pipeline para gestionar el flujo de datos sin cargar la RAM
+            const message = quoted.fakeObj ? quoted.fakeObj.message : (quoted.vM ? quoted.vM.message : quoted);
+            const type = Object.keys(message)[0];
+            const media = message[type];
+            if (!media || !media.mediaKey) return false;
+
+            const stream = await downloadContentFromMessage(media, type.replace('Message', ''));
             await pipeline(stream, fs.createWriteStream(outputPath));
             return true;
-        } catch (e) {
-            console.log('[!] Error en pipeline de descarga:', e.message);
-            return false;
-        }
+        } catch (e) { return false; }
     };
 
     if (command === 'dw') {
-        if (!isMediaValid()) return reply('Responde a un video o documento multimedia.');
+        if (!m.quoted) return reply('Responde a un video o documento.');
+        console.log(`\x1b[36m[ANALIZANDO]\x1b[0m Solicitud de: ${m.sender}`);
         
-        reply('Analizando flujo multimedia...');
         const inputVideo = `./temp/video_${Date.now()}`;
-        
         try {
-            const streamed = await downloadMediaStream(m.quoted, inputVideo);
-            if (!streamed) {
-                // Respaldo solo si el stream falla por completo
-                const mediaBuffer = await m.quoted.download();
-                fs.writeFileSync(inputVideo, mediaBuffer);
-            }
+            let success = await downloadMediaStream(m.quoted, inputVideo);
+            if (!success) fs.writeFileSync(inputVideo, await m.quoted.download());
             
             exec(`ffprobe -v quiet -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
                 if (error) {
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
-                    return reply('Error al analizar el video.');
+                    return reply('Error al analizar.');
                 }
-                
                 const data = JSON.parse(stdout);
                 let responseText = '> **Informacion del video**\n\n';
                 responseText += `> Formato: \`${data.format.format_long_name}\`\n`;
@@ -67,96 +49,83 @@ let handler = async (m, { conn, text, command, args }) => {
                 
                 const audios = data.streams.filter(s => s.codec_type === 'audio');
                 responseText += '> **Audios disponibles**\n';
-                if (audios.length === 0) {
-                    responseText += '- `Ninguno`\n';
-                } else {
-                    audios.forEach((audio, index) => {
-                        const langCode = (audio.tags?.language || 'und').toLowerCase();
-                        const flag = flags[langCode] || '🏳️';
-                        responseText += `- Pista ${index + 1}: \`${audio.codec_name}\` ${flag} (\`${langCode}\`)\n`;
-                    });
-                }
+                audios.forEach((a, i) => {
+                    const lang = (a.tags?.language || 'und').toLowerCase();
+                    responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                });
                 
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
                 responseText += '\n> **Subtitulos disponibles**\n';
-                if (subs.length === 0) {
-                    responseText += '- `Ninguno`\n';
-                } else {
-                    subs.forEach((sub, index) => {
-                        const langCode = (sub.tags?.language || 'und').toLowerCase();
-                        const flag = flags[langCode] || '🏳️';
-                        responseText += `- Pista ${index + 1}: \`${sub.codec_name}\` ${flag} (\`${langCode}\`)\n`;
-                    });
-                }
+                if (subs.length === 0) responseText += '- `Ninguno`\n';
+                else subs.forEach((s, i) => {
+                    const lang = (s.tags?.language || 'und').toLowerCase();
+                    responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                });
                 
-                responseText += '\nUso:\n';
-                responseText += '_***.dw2 [res] [calidad] (doc)***_\n';
-                responseText += '_***.dw3 [res] [audio] [sub] [calidad] (doc)***_';
-                
+                responseText += '\nUso:\n_***.dw2 [res] (doc)***_\n_***.dw3 [res] [audio] [sub] (doc)***_';
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
+                console.log(`\x1b[32m[OK]\x1b[0m MediaInfo enviado.`);
             });
-        } catch (err) {
-            reply('Error en el proceso de analisis.');
-        }
+        } catch (e) { reply('Error en analisis.'); }
     }
 
     if (command === 'dw2' || command === 'dw3') {
-        if (!isMediaValid()) return reply('Responde a un video.');
-
+        if (!m.quoted) return reply('Responde a un video.');
         const res = args[0];
         const isDw3 = command === 'dw3';
-        const calidad = (isDw3 ? args[3] : args[1]) || 'normal';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
-        
-        if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida (360, 720, 1080).');
+        if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
 
-        reply(`Procesando pipeline \`${calidad}\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
-        
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            const streamed = await downloadMediaStream(m.quoted, input);
-            if (!streamed) fs.writeFileSync(input, await m.quoted.download());
-
-            let crf = '28', fps = [], audio = ['-c:a', 'copy'];
-            if (calidad === 'alta') crf = '23';
-            else if (calidad === 'baja') { crf = '32'; audio = ['-c:a', 'aac', '-b:a', '96k']; }
-            else if (calidad === 'extrema') { crf = '40'; fps = ['-r', '20']; audio = ['-c:a', 'aac', '-b:a', '64k']; }
+            reply(`Procesando pipeline a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+            let success = await downloadMediaStream(m.quoted, input);
+            if (!success) fs.writeFileSync(input, await m.quoted.download());
 
             let ffmpegArgs = ['-i', input];
             if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1;
                 const sIdx = parseInt(args[2]) - 1;
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', (calidad === 'extrema' ? '64k' : '128k'));
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
             } else {
-                ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audio);
+                ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy');
             }
-            
-            // Limitamos threads a 2 y usamos preset ultrafast para proteger la RAM/CPU de Termux
-            ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-threads', '2', ...fps, '-y', output);
+            ffmpegArgs.push('-c:v', 'libx264', '-crf', '26', '-preset', 'ultrafast', '-threads', '2', '-y', output);
 
+            console.log(`\x1b[33m[TRANSCODING]\x1b[0m Iniciando FFmpeg | Res: ${res}p`);
             const proc = spawn('ffmpeg', ffmpegArgs);
+
+            proc.stderr.on('data', (data) => {
+                const line = data.toString();
+                if (line.includes('frame=')) {
+                    const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
+                    const fps = line.match(/fps=\s*([\d.]+)/)?.[1] || '0';
+                    const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
+                    const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
+                    process.stdout.write(`\r\x1b[35m[PROGRESS]\x1b[0m Frame: ${frame} | FPS: ${fps} | Time: ${time} | Speed: ${speed}`);
+                }
+            });
+
             proc.on('close', async (code) => {
+                console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
                 if (code === 0) {
                     const mediaOptions = asDocument 
                         ? { document: fs.readFileSync(output), fileName: `video_${res}p.mp4`, mimetype: 'video/mp4' }
                         : { video: fs.readFileSync(output) };
-                    
                     await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                } else {
-                    reply('Error en pipeline FFmpeg.');
-                }
+                } else { reply('Error en pipeline FFmpeg.'); }
+                
                 if (fs.existsSync(input)) fs.unlinkSync(input);
                 if (fs.existsSync(output)) fs.unlinkSync(output);
             });
-        } catch (e) {
-            reply('Error critico de memoria.');
-        }
+        } catch (e) { reply('Error de memoria.'); }
     }
 };
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
+        
