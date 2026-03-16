@@ -1,11 +1,39 @@
 import fs from 'fs';
 import { exec, spawn } from 'child_process';
 import { pipeline } from 'stream/promises';
+import { google } from 'googleapis';
+
+// Configuración de Autenticación Google Drive
+const oauth2Client = new google.auth.OAuth2();
+oauth2Client.setCredentials({
+    refresh_token: 'TU_REFRESH_TOKEN_AQUI' // Requiere generar un Token de Google Cloud
+});
+
+const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
 
     if (!fs.existsSync('./temp')) fs.mkdirSync('./temp', { recursive: true });
+
+    const uploadToDrive = async (filePath, fileName) => {
+        try {
+            const response = await drive.files.create({
+                requestBody: {
+                    name: fileName,
+                    mimeType: 'video/mp4',
+                },
+                media: {
+                    mimeType: 'video/mp4',
+                    body: fs.createReadStream(filePath),
+                },
+            });
+            return response.data.id;
+        } catch (error) {
+            console.error('Error subiendo a Drive:', error);
+            return null;
+        }
+    };
 
     const flags = {
         'spa': '🇲🇽', 'es': '🇲🇽', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
@@ -14,28 +42,16 @@ let handler = async (m, { conn, text, command, args }) => {
         'chi': '🇨🇳', 'zh': '🇨🇳', 'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️'
     };
 
-    const downloadMediaStream = async (quoted, outputPath) => {
-        try {
-            const { downloadContentFromMessage } = await import('baileys');
-            const message = quoted.fakeObj ? quoted.fakeObj.message : (quoted.vM ? quoted.vM.message : quoted);
-            const type = Object.keys(message)[0];
-            const media = message[type];
-            if (!media || !media.mediaKey) return false;
-
-            const stream = await downloadContentFromMessage(media, type.replace('Message', ''));
-            await pipeline(stream, fs.createWriteStream(outputPath));
-            return true;
-        } catch (e) { return false; }
-    };
-
-    // COMANDO DE ANÁLISIS
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
         const inputVideo = `./temp/video_${Date.now()}`;
         try {
-            let success = await downloadMediaStream(m.quoted, inputVideo);
-            if (!success) fs.writeFileSync(inputVideo, await m.quoted.download());
-            
+            const { downloadContentFromMessage } = await import('baileys');
+            const message = m.quoted.fakeObj ? m.quoted.fakeObj.message : (m.quoted.vM ? m.quoted.vM.message : m.quoted);
+            const type = Object.keys(message)[0];
+            const stream = await downloadContentFromMessage(message[type], type.replace('Message', ''));
+            await pipeline(stream, fs.createWriteStream(inputVideo));
+
             exec(`ffprobe -v quiet -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
                 if (error) {
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -46,20 +62,20 @@ let handler = async (m, { conn, text, command, args }) => {
                 const resolution = vStream ? `${vStream.width}x${vStream.height}` : 'Desconocida';
                 const durationSec = parseFloat(data.format.duration || 0);
                 const duration = new Date(durationSec * 1000).toISOString().substr(11, 8);
-
+                
                 let responseText = '> *Informacion del video*\n\n';
                 responseText += `> Formato: \`${data.format.format_long_name}\`\n`;
                 responseText += `> Resolucion: \`${resolution}\`\n`;
                 responseText += `> Duracion: \`${duration}\`\n`;
                 responseText += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
-                
+
                 const audios = data.streams.filter(s => s.codec_type === 'audio');
                 responseText += '> *Audios disponibles*\n';
                 audios.forEach((a, i) => {
                     const lang = (a.tags?.language || 'und').toLowerCase();
                     responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                 });
-                
+
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
                 responseText += '\n> *Subtitulos disponibles*\n';
                 if (subs.length === 0) responseText += '- `Ninguno`\n';
@@ -67,62 +83,45 @@ let handler = async (m, { conn, text, command, args }) => {
                     const lang = (s.tags?.language || 'und').toLowerCase();
                     responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                 });
-                
-                responseText += '\nUso:\n';
-                responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
-                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n';
-                responseText += '_*.dw4 (doc)*_';
-                
+
+                responseText += '\nUso:\n_*.dw2 [res] [calidad] (doc)*_\n_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n_*.dw4 (doc)*_';
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
             });
         } catch (e) { reply('Error en analisis.'); }
     }
 
-    // COMANDOS DE ENCODING
     if (/^(dw2|dw3|dw4)$/i.test(command)) {
         if (!m.quoted) return reply('Responde a un video.');
-        
         const isDw4 = command === 'dw4';
         const isDw3 = command === 'dw3';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
-        
         let res = isDw4 ? '360' : args[0];
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
-            let success = await downloadMediaStream(m.quoted, input);
-            if (!success) fs.writeFileSync(input, await m.quoted.download());
+            reply(`Procesando \`${command}\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\`\nSubiendo a Drive tras finalizar.`);
+            
+            const { downloadContentFromMessage } = await import('baileys');
+            const message = m.quoted.fakeObj ? m.quoted.fakeObj.message : (m.quoted.vM ? m.quoted.vM.message : m.quoted);
+            const type = Object.keys(message)[0];
+            const stream = await downloadContentFromMessage(message[type], type.replace('Message', ''));
+            await pipeline(stream, fs.createWriteStream(input));
 
-            // Obtener duración y frames totales
-            exec(`ffprobe -v error -show_entries format=duration,stream=nb_read_packets -select_streams v:0 -count_packets -of csv=p=0 "${input}"`, (err, stdout) => {
-                const parts = stdout.split(',');
-                const duration = parseFloat(parts[0]) || 0;
-                const totalFrames = parseInt(parts[1]) || 0;
+            exec(`ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate,duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
+                const parts = stdout.split('\n');
+                const fpsParts = parts[0].split('/');
+                const fps = parseFloat(fpsParts[0]) / parseFloat(fpsParts[1]);
+                const duration = parseFloat(parts[1]);
+                const totalFrames = Math.floor(fps * duration);
 
                 let ffmpegArgs = ['-i', input];
-                
-                if (isDw4) {
-                    // CONFIGURACIÓN DINÁMICA (LÍMITE 60MB)
-                    const targetSizeKbits = 57 * 8192; 
-                    let videoBitrate = Math.floor(targetSizeKbits / duration) - 64; 
-                    if (videoBitrate > 2500) videoBitrate = 2500;
-                    if (videoBitrate < 180) videoBitrate = 180;
 
-                    ffmpegArgs.push(
-                        '-vf', 'scale=-2:360',
-                        '-c:v', 'libx264',
-                        '-b:v', `${videoBitrate}k`,
-                        '-maxrate', `${videoBitrate}k`,
-                        '-bufsize', `${videoBitrate * 2}k`,
-                        '-preset', 'slower', 
-                        '-c:a', 'aac',
-                        '-b:a', '64k',
-                        '-ac', '1'
-                    );
+                if (isDw4) {
+                    // Configuración solicitada: Preset ultrafast y CRF 32
+                    ffmpegArgs.push('-vf', 'scale=-2:360', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast', '-c:a', 'aac', '-b:a', '64k', '-ac', '1');
                 } else if (isDw3) {
                     const aIdx = parseInt(args[1]) - 1;
                     const sIdx = parseInt(args[2]) - 1;
@@ -132,32 +131,21 @@ let handler = async (m, { conn, text, command, args }) => {
                 }
 
                 ffmpegArgs.push('-threads', '2', '-y', output);
-
                 const proc = spawn('ffmpeg', ffmpegArgs);
 
-                proc.stderr.on('data', (data) => {
-                    const line = data.toString();
-                    if (line.includes('frame=')) {
-                        const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
-                        const fps = line.match(/fps=\s*([\d.]+)/)?.[1] || '0';
-                        const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
-                        const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
-                        let progress = totalFrames > 0 ? ((parseInt(frame) / totalFrames) * 100).toFixed(1) : '0.0';
-                        process.stdout.write(`\r\x1b[35m[PROGRESS] ${progress}% | Frame: ${frame} | FPS: ${fps} | Time: ${time} | Speed: ${speed}\x1b[0m`);
-                    }
-                });
-
                 proc.on('close', async (code) => {
-                    console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
                     if (code === 0) {
+                        const driveId = await uploadToDrive(output, `Video_${timestamp}.mp4`);
                         const stats = fs.statSync(output);
                         const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);
-                        const fileName = `Video_${res}p_${sizeMB}MB.mp4`;
                         
+                        let caption = `✅ Tamaño: ${sizeMB} MB\n`;
+                        if (driveId) caption += `☁️ Almacenado en Drive ID: \`${driveId}\``;
+
                         const mediaOptions = asDocument 
-                            ? { document: fs.readFileSync(output), fileName: fileName, mimetype: 'video/mp4' }
-                            : { video: fs.readFileSync(output), caption: `✅ Tamaño: ${sizeMB} MB` };
-                        
+                            ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4', caption }
+                            : { video: fs.readFileSync(output), caption };
+
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                     } else { reply('Error en FFmpeg.'); }
                     if (fs.existsSync(input)) fs.unlinkSync(input);
@@ -170,4 +158,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-        
+                                  
