@@ -76,8 +76,8 @@ let handler = async (m, { conn, text, command, args }) => {
                 }
                 
                 responseText += '\nUso:\n';
-                responseText += '_*.dw2 [res] (doc)*_\n';
-                responseText += '_*.dw3 [res] [audio] [sub] (doc)*_';
+                responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
+                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_';
                 
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -90,6 +90,10 @@ let handler = async (m, { conn, text, command, args }) => {
         const isDw3 = command === 'dw3';
         const res = args[0];
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
+        
+        let rawCalidad = isDw3 ? args[3] : args[1];
+        if (rawCalidad && rawCalidad.toLowerCase() === 'doc') rawCalidad = undefined;
+        const calidad = (rawCalidad || 'normal').toLowerCase();
 
         if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
 
@@ -98,21 +102,37 @@ let handler = async (m, { conn, text, command, args }) => {
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`Procesando pipeline a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+            reply(`Procesando pipeline a \`${res}p\` (\`${calidad}\`)...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
+
+            let crf = '23', fpsLimit = [], audioCodec = ['-c:a', 'copy'], preset = 'veryfast', audioBit = '128k';
+            
+            if (calidad === 'alta') { 
+                crf = '18'; 
+                audioBit = '192k'; 
+            } else if (calidad === 'baja') { 
+                crf = '28'; 
+                audioCodec = ['-c:a', 'aac', '-b:a', '96k']; 
+                audioBit = '96k'; 
+            } else if (calidad === 'extremo' || calidad === 'extrema') { 
+                crf = '32'; 
+                preset = 'ultrafast';
+                fpsLimit = ['-r', '24']; 
+                audioCodec = ['-c:a', 'aac', '-b:a', '64k']; 
+                audioBit = '64k'; 
+            }
 
             let ffmpegArgs = ['-i', input];
             if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1;
                 const sIdx = parseInt(args[2]) - 1;
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', audioBit);
             } else {
-                ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy');
+                ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audioCodec);
             }
 
-            // Cambios aplicados: CRF 23 y Preset veryfast
-            ffmpegArgs.push('-c:v', 'libx264', '-crf', '23', '-preset', 'veryfast', '-threads', '2', '-y', output);
+            ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', preset, '-threads', '2', ...fpsLimit, '-y', output);
 
             const proc = spawn('ffmpeg', ffmpegArgs);
 
@@ -145,4 +165,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-          
+                
