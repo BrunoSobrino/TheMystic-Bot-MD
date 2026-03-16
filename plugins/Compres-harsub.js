@@ -15,16 +15,20 @@ let handler = async (m, { conn, text, command, args }) => {
         return mime.includes('video') || mime.includes('application') || mime.includes('document');
     };
 
-    // Funcion optimizada con busqueda dual de la libreria Baileys
     const downloadMediaStream = async (quoted, outputPath) => {
         try {
             let baileys;
             try {
-                // Intento 1: Version moderna
-                baileys = await import('@whiskeysockets/baileys');
+                // Intento 1: El fork especifico de Itsukichann que usa KanaArima-MD
+                baileys = await import('@itsukichan/baileys');
             } catch (err1) {
-                // Intento 2: Version clasica (La que probablemente usa KanaArima-MD)
-                baileys = await import('@adiwajshing/baileys');
+                try {
+                    // Intento 2: Version moderna comunitaria
+                    baileys = await import('@whiskeysockets/baileys');
+                } catch (err2) {
+                    // Intento 3: Version clasica original
+                    baileys = await import('@adiwajshing/baileys');
+                }
             }
             
             const { downloadContentFromMessage } = baileys;
@@ -98,7 +102,7 @@ let handler = async (m, { conn, text, command, args }) => {
                     responseText += `- Pista ${index + 1}: ${sub.codec_name} (Idioma: ${lang})\n`;
                 });
                 
-                responseText += '\nPara comprimir usa: .dw2 [360|720|1080]\nPara procesar completo usa: .dw3 [resolucion] [audio] [subtitulo]';
+                responseText += '\nPara comprimir usa: .dw2 [360|720|1080] [calidad]\nPara procesar completo usa: .dw3 [resolucion] [audio] [subtitulo] [calidad]';
                 
                 reply(responseText);
                 
@@ -116,13 +120,19 @@ let handler = async (m, { conn, text, command, args }) => {
             return reply('Por favor, responde a un video o a un archivo multimedia enviado como documento.');
         }
         
-        if (!args[0] || !['360', '720', '1080'].includes(args[0])) {
-            return reply('Formato invalido. Debes usar: .dw2 360, .dw2 720 o .dw2 1080');
+        const resolucion = args[0];
+        const calidad = (args[1] || 'normal').toLowerCase();
+        
+        if (!resolucion || !['360', '720', '1080'].includes(resolucion)) {
+            return reply('Resolucion invalida. Usa: 360, 720 o 1080');
         }
         
-        const resolucion = args[0];
-        console.log(`\n--- NUEVO PROCESO DE COMPRESION (.dw2 a ${resolucion}p) ---`);
-        reply(`Iniciando compresion a ${resolucion}p. Revisa la terminal para ver el progreso...`);
+        if (!['alta', 'normal', 'baja', 'extrema'].includes(calidad)) {
+            return reply('Calidad invalida. Usa: alta, normal, baja o extrema.');
+        }
+        
+        console.log(`\n--- NUEVO PROCESO DE COMPRESION (.dw2 a ${resolucion}p | Calidad: ${calidad}) ---`);
+        reply(`Iniciando compresion a ${resolucion}p en calidad ${calidad}. Revisa la terminal para ver el progreso...`);
         
         const timestamp = Date.now();
         const inputVideo = `./temp/input_${timestamp}`;
@@ -130,7 +140,6 @@ let handler = async (m, { conn, text, command, args }) => {
         
         try {
             console.log('[1/4] Descargando archivo fuente de WhatsApp por flujo...');
-            
             const streamed = await downloadMediaStream(m.quoted, inputVideo);
             if (!streamed) {
                 const mediaBuffer = await m.quoted.download();
@@ -139,14 +148,30 @@ let handler = async (m, { conn, text, command, args }) => {
             
             console.log('[2/4] Descarga completada. Iniciando FFmpeg limitado a 2 nucleos...');
             
+            let crf = '28';
+            let fpsArgs = [];
+            let audioArgs = ['-c:a', 'copy'];
+
+            if (calidad === 'alta') {
+                crf = '23';
+            } else if (calidad === 'baja') {
+                crf = '32';
+                audioArgs = ['-c:a', 'aac', '-b:a', '96k'];
+            } else if (calidad === 'extrema') {
+                crf = '40';
+                fpsArgs = ['-r', '20'];
+                audioArgs = ['-c:a', 'aac', '-b:a', '64k'];
+            }
+            
             const ffmpegArgs = [
                 '-i', inputVideo,
                 '-vf', `scale=-2:${resolucion}`,
                 '-c:v', 'libx264',
-                '-crf', '28',
+                '-crf', crf,
                 '-preset', 'ultrafast',
                 '-threads', '2',
-                '-c:a', 'copy',
+                ...fpsArgs,
+                ...audioArgs,
                 '-y', outputVideo
             ];
             
@@ -186,20 +211,29 @@ let handler = async (m, { conn, text, command, args }) => {
         }
         
         if (args.length < 3) {
-            return reply('Uso incorrecto. Formato: .dw3 [resolucion] [numero_audio] [numero_subtitulo]\nEjemplo: .dw3 720 2 1');
+            return reply('Uso incorrecto. Formato: .dw3 [resolucion] [numero_audio] [numero_subtitulo] [calidad_opcional]\nEjemplo: .dw3 720 2 1 baja');
         }
         
         const resolucion = args[0];
         const audioIndex = parseInt(args[1]) - 1;
         const subIndex = parseInt(args[2]) - 1;
+        const calidad = (args[3] || 'normal').toLowerCase();
         
-        if (!['360', '720', '1080'].includes(resolucion)) {
-            return reply('Resolucion invalida. Usa 360, 720 o 1080.');
+        if (!resolucion || !['360', '720', '1080'].includes(resolucion)) {
+            return reply('Resolucion invalida. Usa: 360, 720 o 1080.');
+        }
+        
+        if (isNaN(audioIndex) || isNaN(subIndex) || audioIndex < 0 || subIndex < 0) {
+            return reply('Los numeros de pista de audio y subtitulo deben ser validos.');
+        }
+
+        if (!['alta', 'normal', 'baja', 'extrema'].includes(calidad)) {
+            return reply('Calidad invalida. Usa: alta, normal, baja o extrema.');
         }
         
         console.log(`\n--- NUEVO PROCESO COMPLETO (.dw3) ---`);
-        console.log(`Resolucion: ${resolucion}p | Audio Index: ${audioIndex} | Sub Index: ${subIndex}`);
-        reply(`Procesando video a ${resolucion}p.\nExtrayendo Audio ${args[1]} y quemando Subtitulo ${args[2]}...\nRevisa la terminal de Termux.`);
+        console.log(`Resolucion: ${resolucion}p | Audio: ${audioIndex} | Sub: ${subIndex} | Calidad: ${calidad}`);
+        reply(`Procesando video a ${resolucion}p (Calidad: ${calidad}).\nExtrayendo Audio ${args[1]} y quemando Subtitulo ${args[2]}...\nRevisa la terminal de Termux.`);
         
         const timestamp = Date.now();
         const inputVideo = `./temp/input_${timestamp}.mkv`;
@@ -207,7 +241,6 @@ let handler = async (m, { conn, text, command, args }) => {
         
         try {
             console.log('[1/4] Descargando archivo fuente de WhatsApp por flujo...');
-            
             const streamed = await downloadMediaStream(m.quoted, inputVideo);
             if (!streamed) {
                 const mediaBuffer = await m.quoted.download();
@@ -216,17 +249,32 @@ let handler = async (m, { conn, text, command, args }) => {
             
             console.log('[2/4] Descarga completada. Iniciando mapeo y quema de subtitulos (Limitado a 2 nucleos)...');
             
+            let crf = '28';
+            let fpsArgs = [];
+            let audioArgs = ['-c:a', 'aac', '-b:a', '128k']; 
+
+            if (calidad === 'alta') {
+                crf = '23';
+            } else if (calidad === 'baja') {
+                crf = '32';
+                audioArgs = ['-c:a', 'aac', '-b:a', '96k'];
+            } else if (calidad === 'extrema') {
+                crf = '40';
+                fpsArgs = ['-r', '20'];
+                audioArgs = ['-c:a', 'aac', '-b:a', '64k'];
+            }
+            
             const ffmpegArgs = [
                 '-i', inputVideo,
                 '-map', '0:v:0',
                 '-map', `0:a:${audioIndex}`,
                 '-vf', `scale=-2:${resolucion},subtitles=${inputVideo}:si=${subIndex}`,
                 '-c:v', 'libx264',
-                '-crf', '28',
+                '-crf', crf,
                 '-preset', 'ultrafast',
                 '-threads', '2',
-                '-c:a', 'aac',
-                '-b:a', '128k',
+                ...fpsArgs,
+                ...audioArgs,
                 '-y', outputVideo
             ];
             
