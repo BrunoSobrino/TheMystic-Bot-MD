@@ -9,11 +9,33 @@ let handler = async (m, { conn, text, command, args }) => {
         console.log('[Sistema] Carpeta ./temp creada.');
     }
 
-    // Funcion para validar si el mensaje citado es un video o un documento
     const isMediaValid = () => {
         if (!m.quoted) return false;
         const mime = m.quoted.mimetype || '';
         return mime.includes('video') || mime.includes('application') || mime.includes('document');
+    };
+
+    // Funcion optimizada para descargar archivos grandes sin saturar la RAM
+    const downloadMediaStream = async (quoted, outputPath) => {
+        try {
+            const { downloadContentFromMessage } = await import('@whiskeysockets/baileys');
+            const mediaType = quoted.mtype ? quoted.mtype.replace('Message', '') : (quoted.mimetype.includes('video') ? 'video' : 'document');
+            
+            // Intentar obtener el objeto puro del mensaje para Baileys
+            const mediaObj = quoted.vM || quoted.message?.videoMessage || quoted.message?.documentMessage || quoted;
+            
+            const stream = await downloadContentFromMessage(mediaObj, mediaType);
+            const writeStream = fs.createWriteStream(outputPath);
+            
+            for await (const chunk of stream) {
+                writeStream.write(chunk);
+            }
+            writeStream.end();
+            return true;
+        } catch (e) {
+            console.log('[!] Error en descarga por flujo puro. Usando metodo de respaldo (RAM)...');
+            return false;
+        }
     };
 
     if (command === 'dw') {
@@ -26,12 +48,15 @@ let handler = async (m, { conn, text, command, args }) => {
         reply('Descargando y analizando el archivo multimedia...');
         
         const timestamp = Date.now();
-        // Guardamos sin extension especifica para que FFprobe lea los metadatos reales (MKV, MP4, etc.)
         const inputVideo = `./temp/video_${timestamp}`;
         
         try {
-            const mediaBuffer = await m.quoted.download();
-            fs.writeFileSync(inputVideo, mediaBuffer);
+            const streamed = await downloadMediaStream(m.quoted, inputVideo);
+            if (!streamed) {
+                const mediaBuffer = await m.quoted.download();
+                fs.writeFileSync(inputVideo, mediaBuffer);
+            }
+            
             console.log('[2/3] Descarga completada. Analizando metadatos con FFprobe...');
             
             const ffprobeCommand = `ffprobe -v quiet -print_format json -show_streams "${inputVideo}"`;
@@ -96,9 +121,14 @@ let handler = async (m, { conn, text, command, args }) => {
         
         try {
             console.log('[1/4] Descargando archivo fuente de WhatsApp...');
-            const mediaBuffer = await m.quoted.download();
-            fs.writeFileSync(inputVideo, mediaBuffer);
-            console.log('[2/4] Descarga completada. Iniciando FFmpeg...');
+            
+            const streamed = await downloadMediaStream(m.quoted, inputVideo);
+            if (!streamed) {
+                const mediaBuffer = await m.quoted.download();
+                fs.writeFileSync(inputVideo, mediaBuffer);
+            }
+            
+            console.log('[2/4] Descarga completada. Iniciando FFmpeg limitado a 2 nucleos...');
             
             const ffmpegArgs = [
                 '-i', inputVideo,
@@ -106,6 +136,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 '-c:v', 'libx264',
                 '-crf', '28',
                 '-preset', 'ultrafast',
+                '-threads', '2', // Limite de procesamiento para evitar congelamientos
                 '-c:a', 'copy',
                 '-y', outputVideo
             ];
@@ -162,16 +193,19 @@ let handler = async (m, { conn, text, command, args }) => {
         reply(`Procesando video a ${resolucion}p.\nExtrayendo Audio ${args[1]} y quemando Subtitulo ${args[2]}...\nRevisa la terminal de Termux.`);
         
         const timestamp = Date.now();
-        // Para el comando dw3, el filtro de subtitulos de FFmpeg requiere que el archivo tenga extension.
-        // Asignamos .mkv por defecto ya que es el contenedor mas comun para multiples pistas y funciona como comodin.
         const inputVideo = `./temp/input_${timestamp}.mkv`;
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
-            console.log('[1/4] Descargando archivo fuente de WhatsApp...');
-            const mediaBuffer = await m.quoted.download();
-            fs.writeFileSync(inputVideo, mediaBuffer);
-            console.log('[2/4] Descarga completada. Iniciando mapeo y quema de subtitulos en FFmpeg...');
+            console.log('[1/4] Descargando archivo fuente de WhatsApp por flujo (stream)...');
+            
+            const streamed = await downloadMediaStream(m.quoted, inputVideo);
+            if (!streamed) {
+                const mediaBuffer = await m.quoted.download();
+                fs.writeFileSync(inputVideo, mediaBuffer);
+            }
+            
+            console.log('[2/4] Descarga completada. Iniciando mapeo y quema de subtitulos (Límitado a 2 nucleos)...');
             
             const ffmpegArgs = [
                 '-i', inputVideo,
@@ -181,6 +215,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 '-c:v', 'libx264',
                 '-crf', '28',
                 '-preset', 'ultrafast',
+                '-threads', '2', // Limite de procesamiento para evitar congelamientos en tu dispositivo
                 '-c:a', 'aac',
                 '-b:a', '128k',
                 '-y', outputVideo
