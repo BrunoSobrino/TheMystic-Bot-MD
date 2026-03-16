@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { exec, spawn } from 'child_process';
-import fetch from 'node-fetch';
 
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
@@ -35,72 +34,53 @@ let handler = async (m, { conn, text, command, args }) => {
         }
     };
 
-    // Función mejorada para Graph.org con creación de cuenta dinámica
-    const createGraphPage = async (title, content) => {
-        try {
-            // 1. Crear una cuenta temporal para obtener un token fresco
-            const account = await fetch('https://api.telegra.ph/createAccount?short_name=ArimaBot&author_name=ArimaMedia').then(res => res.json());
-            if (!account.ok) return null;
-            
-            const token = account.result.access_token;
-
-            // 2. Crear la página
-            const response = await fetch('https://api.telegra.ph/createPage', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    access_token: token,
-                    title: title,
-                    content: content.split('\n').map(line => ({ tag: 'p', children: [line] })),
-                    return_content: true
-                })
-            });
-            const json = await response.json();
-            return json.ok ? json.result.url : null;
-        } catch (e) {
-            console.error('[Graph Error]', e);
-            return null;
-        }
-    };
-
     if (command === 'dw') {
         if (!isMediaValid()) return reply('Responde a un video o documento multimedia.');
-        reply('Generando MediaInfo en Graph.org...');
+        
+        reply('Analizando archivo multimedia...');
         const inputVideo = `./temp/video_${Date.now()}`;
         
         try {
             const streamed = await downloadMediaStream(m.quoted, inputVideo);
-            if (!streamed) fs.writeFileSync(inputVideo, await m.quoted.download());
+            if (!streamed) {
+                const mediaBuffer = await m.quoted.download();
+                fs.writeFileSync(inputVideo, mediaBuffer);
+            }
             
             exec(`ffprobe -v quiet -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
                 if (error) {
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
-                    return reply('Error al analizar el video con FFprobe.');
+                    return reply('Error al analizar el video.');
                 }
-                const data = JSON.parse(stdout);
-                let infoText = `Formato: ${data.format.format_long_name}\n`;
-                infoText += `Duracion: ${parseFloat(data.format.duration).toFixed(2)}s\n`;
-                infoText += `Peso: ${(data.format.size / 1024 / 1024).toFixed(2)} MB\n\n--- AUDIOS ---\n`;
                 
-                data.streams.filter(s => s.codec_type === 'audio').forEach((a, i) => {
-                    infoText += `Pista ${i + 1}: ${a.codec_name} (${a.tags?.language || 'und'})\n`;
+                const data = JSON.parse(stdout);
+                let responseText = '> **Informacion del video**\n\n';
+                responseText += `> Formato: ${data.format.format_long_name}\n`;
+                responseText += `> Peso: ${(data.format.size / 1024 / 1024).toFixed(2)} MB\n\n`;
+                
+                const audios = data.streams.filter(s => s.codec_type === 'audio');
+                responseText += '> **Audios disponibles**\n';
+                if (audios.length === 0) responseText += '- Ninguno\n';
+                audios.forEach((audio, index) => {
+                    const lang = audio.tags?.language || 'Desconocido';
+                    responseText += `- Pista ${index + 1}: ${audio.codec_name} (${lang})\n`;
                 });
                 
-                infoText += `\n--- SUBTITULOS ---\n`;
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
-                if (subs.length === 0) infoText += 'Ninguno detectado.\n';
-                subs.forEach((s, i) => infoText += `Pista ${i + 1}: ${s.codec_name} (${s.tags?.language || 'und'})\n`);
-
-                const graphUrl = await createGraphPage('Media Information', infoText);
+                responseText += '\n> **Subtitulos disponibles**\n';
+                if (subs.length === 0) responseText += '- Ninguno\n';
+                subs.forEach((sub, index) => {
+                    const lang = sub.tags?.language || 'Desconocido';
+                    responseText += `- Pista ${index + 1}: ${sub.codec_name} (${lang})\n`;
+                });
                 
-                if (graphUrl) {
-                    reply(`> **MediaInfo Generado**\n\n📄 Detalles: ${graphUrl}\n\nUso:\n.dw2 [res] [calidad] (doc)\n.dw3 [res] [audio] [sub] [calidad] (doc)`);
-                } else {
-                    reply('Fallo la subida a Graph.org. Revisa la consola de Termux.');
-                }
+                responseText += '\nUso:\n.dw2 [res] [calidad] (doc)\n.dw3 [res] [audio] [sub] [calidad] (doc)';
+                reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
             });
-        } catch (err) { reply('Error critico en el proceso.'); }
+        } catch (err) {
+            reply('Error en el proceso de analisis.');
+        }
     }
 
     if (command === 'dw2' || command === 'dw3') {
@@ -112,7 +92,7 @@ let handler = async (m, { conn, text, command, args }) => {
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
         
         if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida (360, 720, 1080).');
-        
+
         reply(`Procesando en calidad ${calidad}...\nModo: ${asDocument ? 'Documento' : 'Video'}`);
         
         const timestamp = Date.now();
@@ -132,7 +112,7 @@ let handler = async (m, { conn, text, command, args }) => {
             if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1;
                 const sIdx = parseInt(args[2]) - 1;
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', (calidad === 'extrema' ? '64k' : '128k'));
             } else {
                 ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audio);
             }
@@ -148,15 +128,17 @@ let handler = async (m, { conn, text, command, args }) => {
                     
                     await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                 } else {
-                    reply('Error en el motor de compresion FFmpeg.');
+                    reply('Error en FFmpeg.');
                 }
                 if (fs.existsSync(input)) fs.unlinkSync(input);
                 if (fs.existsSync(output)) fs.unlinkSync(output);
             });
-        } catch (e) { reply('Error en el sistema de archivos.'); }
+        } catch (e) {
+            reply('Error critico.');
+        }
     }
 };
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-    
+                        
