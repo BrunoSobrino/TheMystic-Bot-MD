@@ -28,6 +28,7 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { return false; }
     };
 
+    // COMANDO DE ANÁLISIS
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
         const inputVideo = `./temp/video_${Date.now()}`;
@@ -78,6 +79,7 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { reply('Error en analisis.'); }
     }
 
+    // COMANDOS DE ENCODING
     if (/^(dw2|dw3|dw4)$/i.test(command)) {
         if (!m.quoted) return reply('Responde a un video.');
         
@@ -95,18 +97,28 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            exec(`ffprobe -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${input}"`, (err, stdout) => {
-                const totalFrames = parseInt(stdout) || 0;
+            // Obtener duración y frames totales
+            exec(`ffprobe -v error -show_entries format=duration,stream=nb_read_packets -select_streams v:0 -count_packets -of csv=p=0 "${input}"`, (err, stdout) => {
+                const parts = stdout.split(',');
+                const duration = parseFloat(parts[0]) || 0;
+                const totalFrames = parseInt(parts[1]) || 0;
 
                 let ffmpegArgs = ['-i', input];
                 
                 if (isDw4) {
-                    // Revertido a configuración de peso mínimo general
+                    // CONFIGURACIÓN DINÁMICA (LÍMITE 60MB)
+                    const targetSizeKbits = 57 * 8192; 
+                    let videoBitrate = Math.floor(targetSizeKbits / duration) - 64; 
+                    if (videoBitrate > 2500) videoBitrate = 2500;
+                    if (videoBitrate < 180) videoBitrate = 180;
+
                     ffmpegArgs.push(
                         '-vf', 'scale=-2:360',
                         '-c:v', 'libx264',
-                        '-crf', '36', 
-                        '-preset', 'ultrafast',
+                        '-b:v', `${videoBitrate}k`,
+                        '-maxrate', `${videoBitrate}k`,
+                        '-bufsize', `${videoBitrate * 2}k`,
+                        '-preset', 'slower', 
                         '-c:a', 'aac',
                         '-b:a', '64k',
                         '-ac', '1'
@@ -138,10 +150,14 @@ let handler = async (m, { conn, text, command, args }) => {
                 proc.on('close', async (code) => {
                     console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
                     if (code === 0) {
-                        const fileName = `Video_Final_${res}p.mp4`;
+                        const stats = fs.statSync(output);
+                        const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);
+                        const fileName = `Video_${res}p_${sizeMB}MB.mp4`;
+                        
                         const mediaOptions = asDocument 
                             ? { document: fs.readFileSync(output), fileName: fileName, mimetype: 'video/mp4' }
-                            : { video: fs.readFileSync(output) };
+                            : { video: fs.readFileSync(output), caption: `✅ Tamaño: ${sizeMB} MB` };
+                        
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                     } else { reply('Error en FFmpeg.'); }
                     if (fs.existsSync(input)) fs.unlinkSync(input);
@@ -154,4 +170,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-                 
+        
