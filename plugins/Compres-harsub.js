@@ -86,6 +86,10 @@ let handler = async (m, { conn, text, command, args }) => {
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
         
         let res = isDw4 ? '360' : args[0];
+        let crf = '32'; 
+        let preset = 'ultrafast';
+        let audioCodec = isDw4 ? ['-c:a', 'aac', '-b:a', '96k'] : ['-c:a', 'copy'];
+
         if (!isDw4 && !['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
 
         const timestamp = Date.now();
@@ -97,37 +101,20 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
+            // Obtener total de frames para el porcentaje
             exec(`ffprobe -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${input}"`, (err, stdout) => {
                 const totalFrames = parseInt(stdout) || 0;
 
                 let ffmpegArgs = ['-i', input];
-                
-                if (isDw4) {
-                    // Configuración específica DW4: H.264 Main, 360p, 23.976fps, HE-AAC 48k
-                    ffmpegArgs.push(
-                        '-vf', 'scale=640:360',
-                        '-r', '23.976',
-                        '-c:v', 'libx264',
-                        '-profile:v', 'main',
-                        '-b:v', '231k',
-                        '-maxrate', '231k',
-                        '-bufsize', '462k',
-                        '-preset', 'ultrafast',
-                        '-c:a', 'aac',
-                        '-profile:a', 'aac_he',
-                        '-b:a', '48k',
-                        '-ar', '48000',
-                        '-ac', '2'
-                    );
-                } else if (isDw3) {
+                if (isDw3) {
                     const aIdx = parseInt(args[1]) - 1;
                     const sIdx = parseInt(args[2]) - 1;
-                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
                 } else {
-                    ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audioCodec);
                 }
 
-                ffmpegArgs.push('-threads', '2', '-y', output);
+                ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', preset, '-threads', '2', '-y', output);
 
                 const proc = spawn('ffmpeg', ffmpegArgs);
 
@@ -138,7 +125,12 @@ let handler = async (m, { conn, text, command, args }) => {
                         const fps = line.match(/fps=\s*([\d.]+)/)?.[1] || '0';
                         const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
                         const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
-                        let progress = totalFrames > 0 ? ((parseInt(frame) / totalFrames) * 100).toFixed(1) : '0.0';
+                        
+                        let progress = '0.0';
+                        if (totalFrames > 0) {
+                            progress = ((parseInt(frame) / totalFrames) * 100).toFixed(1);
+                        }
+
                         process.stdout.write(`\r\x1b[35m[PROGRESS] ${progress}% | Frame: ${frame} | FPS: ${fps} | Time: ${time} | Speed: ${speed}\x1b[0m`);
                     }
                 });
@@ -146,12 +138,13 @@ let handler = async (m, { conn, text, command, args }) => {
                 proc.on('close', async (code) => {
                     console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
                     if (code === 0) {
-                        const fileName = `Video_Encoded_${res}p.mp4`;
+                        const fileName = `Video_Final_${res}p.mp4`;
                         const mediaOptions = asDocument 
                             ? { document: fs.readFileSync(output), fileName: fileName, mimetype: 'video/mp4' }
                             : { video: fs.readFileSync(output) };
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                     } else { reply('Error en FFmpeg.'); }
+                    
                     if (fs.existsSync(input)) fs.unlinkSync(input);
                     if (fs.existsSync(output)) fs.unlinkSync(output);
                 });
@@ -162,3 +155,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
+                                                                                   
