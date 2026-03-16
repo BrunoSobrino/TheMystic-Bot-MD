@@ -1,12 +1,12 @@
 import fs from 'fs';
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
 
-    // Verificamos si la carpeta temp existe, si no, la creamos
     if (!fs.existsSync('./temp')) {
         fs.mkdirSync('./temp', { recursive: true });
+        console.log('[Sistema] Carpeta ./temp creada.');
     }
 
     if (command === 'dw') {
@@ -14,25 +14,28 @@ let handler = async (m, { conn, text, command, args }) => {
             return reply('Por favor, responde a un video.');
         }
         
+        console.log('\n--- NUEVO PROCESO DE ANALISIS (.dw) ---');
+        console.log('[1/3] Descargando video de WhatsApp para analisis...');
         reply('Descargando y analizando el video...');
         
         const timestamp = Date.now();
         const inputVideo = `./temp/video_${timestamp}.mp4`;
         
         try {
-            // Descargar el buffer y guardarlo manualmente
             const mediaBuffer = await m.quoted.download();
             fs.writeFileSync(inputVideo, mediaBuffer);
+            console.log('[2/3] Descarga completada. Analizando metadatos con FFprobe...');
             
             const ffprobeCommand = `ffprobe -v quiet -print_format json -show_streams "${inputVideo}"`;
             
             exec(ffprobeCommand, (error, stdout, stderr) => {
                 if (error) {
-                    console.error('Error en FFprobe:', error);
+                    console.error('[!] Error en FFprobe:', error);
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
                     return reply('Ocurrio un error al analizar el video.');
                 }
                 
+                console.log('[3/3] Analisis completado. Enviando resultados al chat.');
                 const data = JSON.parse(stdout);
                 
                 let responseText = '> **Informacion del video**\n\n';
@@ -58,9 +61,10 @@ let handler = async (m, { conn, text, command, args }) => {
                 reply(responseText);
                 
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
+                console.log('--- FIN DEL ANALISIS ---\n');
             });
         } catch (err) {
-            console.error(err);
+            console.error('[!] Error en la descarga:', err);
             reply('Error al descargar el video.');
         }
     }
@@ -75,34 +79,56 @@ let handler = async (m, { conn, text, command, args }) => {
         }
         
         const resolucion = args[0];
-        reply(`Iniciando compresion a ${resolucion}p. Esto tomara un tiempo...`);
+        console.log(`\n--- NUEVO PROCESO DE COMPRESION (.dw2 a ${resolucion}p) ---`);
+        reply(`Iniciando compresion a ${resolucion}p. Revisa la terminal para ver el progreso...`);
         
         const timestamp = Date.now();
         const inputVideo = `./temp/input_${timestamp}.mp4`;
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
+            console.log('[1/4] Descargando video fuente de WhatsApp...');
             const mediaBuffer = await m.quoted.download();
             fs.writeFileSync(inputVideo, mediaBuffer);
+            console.log('[2/4] Descarga completada. Iniciando FFmpeg...');
             
-            const ffmpegCommand = `ffmpeg -i "${inputVideo}" -vf "scale=-2:${resolucion}" -c:v libx264 -crf 28 -preset ultrafast -c:a copy -y "${outputVideo}"`;
+            const ffmpegArgs = [
+                '-i', inputVideo,
+                '-vf', `scale=-2:${resolucion}`,
+                '-c:v', 'libx264',
+                '-crf', '28',
+                '-preset', 'ultrafast',
+                '-c:a', 'copy',
+                '-y', outputVideo
+            ];
             
-            exec(ffmpegCommand, async (error, stdout, stderr) => {
-                if (error) {
-                    console.error('Error en FFmpeg:', error);
-                    if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
-                    return reply('Ocurrio un error al comprimir el video.');
+            const ffmpegProcess = spawn('ffmpeg', ffmpegArgs);
+            
+            // Esto muestra el progreso de FFmpeg en la terminal
+            ffmpegProcess.stderr.on('data', (data) => {
+                process.stdout.write(data.toString());
+            });
+            
+            ffmpegProcess.on('close', async (code) => {
+                if (code === 0) {
+                    console.log(`\n[3/4] Compresion completada con exito.`);
+                    console.log('[4/4] Subiendo video procesado a WhatsApp...');
+                    
+                    await conn.sendMessage(m.chat, { 
+                        video: fs.readFileSync(outputVideo)
+                    }, { quoted: m });
+                    
+                    console.log('--- ENVIO COMPLETADO ---\n');
+                } else {
+                    console.error(`\n[!] FFmpeg termino con error. Codigo: ${code}`);
+                    reply('Ocurrio un error al comprimir el video.');
                 }
-                
-                await conn.sendMessage(m.chat, { 
-                    video: fs.readFileSync(outputVideo)
-                }, { quoted: m });
                 
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
                 if (fs.existsSync(outputVideo)) fs.unlinkSync(outputVideo);
             });
         } catch (err) {
-            console.error(err);
+            console.error('[!] Error critico:', err);
             reply('Error en el proceso de descarga y compresion.');
         }
     }
@@ -124,38 +150,60 @@ let handler = async (m, { conn, text, command, args }) => {
             return reply('Resolucion invalida. Usa 360, 720 o 1080.');
         }
         
-        if (isNaN(audioIndex) || isNaN(subIndex) || audioIndex < 0 || subIndex < 0) {
-            return reply('Los numeros de pista de audio y subtitulo deben ser validos.');
-        }
-        
-        reply(`Procesando video a ${resolucion}p.\nExtrayendo Audio ${args[1]} y quemando Subtitulo ${args[2]}...\nEsto tomara un tiempo.`);
+        console.log(`\n--- NUEVO PROCESO COMPLETO (.dw3) ---`);
+        console.log(`Resolucion: ${resolucion}p | Audio Index: ${audioIndex} | Sub Index: ${subIndex}`);
+        reply(`Procesando video a ${resolucion}p.\nExtrayendo Audio ${args[1]} y quemando Subtitulo ${args[2]}...\nRevisa la terminal de Termux.`);
         
         const timestamp = Date.now();
         const inputVideo = `./temp/input_${timestamp}.mp4`;
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
+            console.log('[1/4] Descargando video fuente de WhatsApp...');
             const mediaBuffer = await m.quoted.download();
             fs.writeFileSync(inputVideo, mediaBuffer);
+            console.log('[2/4] Descarga completada. Iniciando mapeo y quema de subtitulos en FFmpeg...');
             
-            const ffmpegCommand = `ffmpeg -i "${inputVideo}" -map 0:v:0 -map 0:a:${audioIndex} -vf "scale=-2:${resolucion},subtitles='${inputVideo}':si=${subIndex}" -c:v libx264 -crf 28 -preset ultrafast -c:a aac -b:a 128k -y "${outputVideo}"`;
+            const ffmpegArgs = [
+                '-i', inputVideo,
+                '-map', '0:v:0',
+                '-map', `0:a:${audioIndex}`,
+                '-vf', `scale=-2:${resolucion},subtitles=${inputVideo}:si=${subIndex}`,
+                '-c:v', 'libx264',
+                '-crf', '28',
+                '-preset', 'ultrafast',
+                '-c:a', 'aac',
+                '-b:a', '128k',
+                '-y', outputVideo
+            ];
             
-            exec(ffmpegCommand, async (error, stdout, stderr) => {
-                if (error) {
-                    console.error('Error en FFmpeg:', error);
-                    if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
-                    return reply('Ocurrio un error al mapear el audio y los subtitulos. Asegurate de que los numeros de pista existan.');
+            const ffmpegProcess = spawn('ffmpeg', ffmpegArgs);
+            
+            // Esto imprime el frame a frame, bitrate y velocidad en tu pantalla
+            ffmpegProcess.stderr.on('data', (data) => {
+                process.stdout.write(data.toString());
+            });
+            
+            ffmpegProcess.on('close', async (code) => {
+                if (code === 0) {
+                    console.log(`\n[3/4] Decodificacion y quemado de subtitulos completado.`);
+                    console.log('[4/4] Subiendo archivo final a WhatsApp...');
+                    
+                    await conn.sendMessage(m.chat, { 
+                        video: fs.readFileSync(outputVideo)
+                    }, { quoted: m });
+                    
+                    console.log('--- ENVIO COMPLETADO ---\n');
+                } else {
+                    console.error(`\n[!] Error en FFmpeg al mapear. Codigo: ${code}`);
+                    reply('Ocurrio un error al mapear el audio y los subtitulos. Asegurate de que los indices existan.');
                 }
-                
-                await conn.sendMessage(m.chat, { 
-                    video: fs.readFileSync(outputVideo)
-                }, { quoted: m });
                 
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
                 if (fs.existsSync(outputVideo)) fs.unlinkSync(outputVideo);
             });
         } catch (err) {
-            console.error(err);
+            console.error('[!] Error critico en dw3:', err);
             reply('Error critico en la descarga o procesamiento.');
         }
     }
@@ -163,4 +211,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-                
+                    
