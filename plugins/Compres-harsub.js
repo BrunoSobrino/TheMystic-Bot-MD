@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { exec, spawn } from 'child_process';
+import fetch from 'node-fetch';
 
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
@@ -16,9 +17,7 @@ let handler = async (m, { conn, text, command, args }) => {
 
     const downloadMediaStream = async (quoted, outputPath) => {
         try {
-            // Importacion directa segun tu package.json
             const { downloadContentFromMessage } = await import('baileys');
-            
             const mediaType = quoted.mtype ? quoted.mtype.replace('Message', '') : (quoted.mimetype.includes('video') ? 'video' : 'document');
             const mediaObj = quoted.vM || quoted.message?.videoMessage || quoted.message?.documentMessage || quoted;
             
@@ -29,72 +28,81 @@ let handler = async (m, { conn, text, command, args }) => {
                 writeStream.write(chunk);
             }
             writeStream.end();
-            return true;
+            return new Promise((resolve) => writeStream.on('finish', () => resolve(true)));
         } catch (e) {
             console.log('[!] Error en descarga por flujo:', e.message);
             return false;
         }
     };
 
+    const createGraphPage = async (title, content) => {
+        try {
+            const response = await fetch('https://api.telegra.ph/createPage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    access_token: 'd3b25feccb83e502195148461c5369666710e2030263654497bc35b0e8c0',
+                    title: title,
+                    author_name: 'Arima-Bot-MediaInfo',
+                    content: [{ tag: 'p', children: [content.replace(/\n/g, '<br>')] }],
+                    return_content: true
+                })
+            });
+            const json = await response.json();
+            return json.ok ? json.result.url : null;
+        } catch (e) {
+            return null;
+        }
+    };
+
     if (command === 'dw') {
         if (!isMediaValid()) return reply('Responde a un video o documento multimedia.');
-        
-        reply('Analizando archivo multimedia...');
+        reply('Generando MediaInfo en Graph.org...');
         const inputVideo = `./temp/video_${Date.now()}`;
         
         try {
             const streamed = await downloadMediaStream(m.quoted, inputVideo);
-            if (!streamed) {
-                const mediaBuffer = await m.quoted.download();
-                fs.writeFileSync(inputVideo, mediaBuffer);
-            }
+            if (!streamed) fs.writeFileSync(inputVideo, await m.quoted.download());
             
-            exec(`ffprobe -v quiet -print_format json -show_streams "${inputVideo}"`, (error, stdout) => {
+            exec(`ffprobe -v quiet -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
                 if (error) {
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
                     return reply('Error al analizar el video.');
                 }
-                
                 const data = JSON.parse(stdout);
-                let responseText = '> **Informacion del video**\n\n';
-                
-                const audios = data.streams.filter(s => s.codec_type === 'audio');
-                responseText += '> **Audios**\n';
-                audios.forEach((audio, index) => {
-                    const lang = audio.tags?.language || 'Desconocido';
-                    responseText += `- Pista ${index + 1}: ${audio.codec_name} (${lang})\n`;
+                let infoText = `Formato: ${data.format.format_long_name}\n`;
+                infoText += `Duracion: ${parseFloat(data.format.duration).toFixed(2)}s\n`;
+                infoText += `Peso: ${(data.format.size / 1024 / 1024).toFixed(2)} MB\n\n--- AUDIOS ---\n`;
+                data.streams.filter(s => s.codec_type === 'audio').forEach((a, i) => {
+                    infoText += `Pista ${i + 1}: ${a.codec_name} (${a.tags?.language || 'und'})\n`;
                 });
-                
+                infoText += `\n--- SUBTITULOS ---\n`;
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
-                responseText += '\n> **Subtitulos**\n';
-                if (subs.length === 0) responseText += '- Ninguno\n';
-                subs.forEach((sub, index) => {
-                    const lang = sub.tags?.language || 'Desconocido';
-                    responseText += `- Pista ${index + 1}: ${sub.codec_name} (${lang})\n`;
-                });
-                
-                responseText += '\nUso:\n.dw2 [360|720|1080] [calidad]\n.dw3 [res] [audio] [sub] [calidad]';
-                reply(responseText);
+                if (subs.length === 0) infoText += 'Ninguno.\n';
+                subs.forEach((s, i) => infoText += `Pista ${i + 1}: ${s.codec_name} (${s.tags?.language || 'und'})\n`);
+
+                const graphUrl = await createGraphPage('Media Information', infoText);
+                reply(`> **MediaInfo Generado**\n\n📄 Detalles: ${graphUrl || 'Error Graph'}\n\nUso:\n.dw2 [res] [calidad] (doc)\n.dw3 [res] [audio] [sub] [calidad] (doc)`);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
             });
-        } catch (err) {
-            reply('Error en el proceso.');
-        }
+        } catch (err) { reply('Error en el proceso.'); }
     }
 
     if (command === 'dw2' || command === 'dw3') {
         if (!isMediaValid()) return reply('Responde a un video.');
 
         const res = args[0];
-        const calidad = (command === 'dw2' ? args[1] : args[3]) || 'normal';
+        const isDw3 = command === 'dw3';
+        const calidad = (isDw3 ? args[3] : args[1]) || 'normal';
+        // Verificar si el usuario quiere documento (último argumento)
+        const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
         
-        if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida (360, 720, 1080).');
-        if (!['alta', 'normal', 'baja', 'extrema'].includes(calidad.toLowerCase())) return reply('Calidad invalida (alta, normal, baja, extrema).');
-
-        reply(`Procesando en calidad ${calidad}...`);
+        if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
+        
+        reply(`Procesando en calidad ${calidad}...\nModo: ${asDocument ? 'Documento' : 'Video'}`);
         
         const timestamp = Date.now();
-        const input = `./temp/in_${timestamp}${command === 'dw3' ? '.mkv' : ''}`;
+        const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
@@ -107,7 +115,7 @@ let handler = async (m, { conn, text, command, args }) => {
             else if (calidad === 'extrema') { crf = '40'; fps = ['-r', '20']; audio = ['-c:a', 'aac', '-b:a', '64k']; }
 
             let ffmpegArgs = ['-i', input];
-            if (command === 'dw3') {
+            if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1;
                 const sIdx = parseInt(args[2]) - 1;
                 ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
@@ -118,19 +126,23 @@ let handler = async (m, { conn, text, command, args }) => {
             ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-threads', '2', ...fps, '-y', output);
 
             const proc = spawn('ffmpeg', ffmpegArgs);
-            proc.stderr.on('data', d => process.stdout.write(d.toString()));
             proc.on('close', async (code) => {
-                if (code === 0) await conn.sendMessage(m.chat, { video: fs.readFileSync(output) }, { quoted: m });
-                else reply('Error en FFmpeg.');
+                if (code === 0) {
+                    const mediaOptions = asDocument 
+                        ? { document: fs.readFileSync(output), fileName: `video_${res}p.mp4`, mimetype: 'video/mp4' }
+                        : { video: fs.readFileSync(output) };
+                    
+                    await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
+                } else {
+                    reply('Error en FFmpeg.');
+                }
                 if (fs.existsSync(input)) fs.unlinkSync(input);
                 if (fs.existsSync(output)) fs.unlinkSync(output);
             });
-        } catch (e) {
-            reply('Error critico.');
-        }
+        } catch (e) { reply('Error critico.'); }
     }
 };
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-            
+                                                            
