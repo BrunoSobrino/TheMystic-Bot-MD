@@ -5,6 +5,7 @@ import { pipeline } from 'stream/promises';
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
 
+    // Asegurar directorio temporal
     if (!fs.existsSync('./temp')) fs.mkdirSync('./temp', { recursive: true });
 
     const flags = {
@@ -14,7 +15,9 @@ let handler = async (m, { conn, text, command, args }) => {
         'chi': '🇨🇳', 'zh': '🇨🇳', 'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️'
     };
 
-    // Función de descarga con log en terminal
+    /**
+     * Descarga usando Pipeline para evitar fugas de memoria
+     */
     const downloadMediaStream = async (quoted, outputPath) => {
         try {
             const { downloadContentFromMessage } = await import('baileys');
@@ -23,7 +26,7 @@ let handler = async (m, { conn, text, command, args }) => {
             const media = message[type];
             if (!media || !media.mediaKey) return false;
 
-            console.log(`\x1b[36m[DOWNLOAD] Iniciando descarga de: ${type}\x1b[0m`);
+            console.log(`\x1b[36m[DOWNLOAD] Pipeline iniciado: ${type}\x1b[0m`);
             const stream = await downloadContentFromMessage(media, type.replace('Message', ''));
             
             let downloadedBytes = 0;
@@ -33,7 +36,7 @@ let handler = async (m, { conn, text, command, args }) => {
             });
 
             await pipeline(stream, fs.createWriteStream(outputPath));
-            console.log(`\n\x1b[32m[DOWNLOAD] Completado: ${outputPath}\x1b[0m`);
+            console.log(`\n\x1b[32m[DOWNLOAD] Pipeline completado con éxito.\x1b[0m`);
             return true;
         } catch (e) { 
             console.error('\x1b[31m[DOWNLOAD ERROR]\x1b[0m', e);
@@ -47,16 +50,12 @@ let handler = async (m, { conn, text, command, args }) => {
         const inputVideo = `./temp/video_${Date.now()}`;
         try {
             let success = await downloadMediaStream(m.quoted, inputVideo);
-            if (!success) {
-                console.log('\x1b[33m[INFO] Intentando descarga alternativa...\x1b[0m');
-                fs.writeFileSync(inputVideo, await m.quoted.download());
-            }
+            if (!success) return reply('Error al descargar el archivo para análisis.');
             
-            console.log(`\x1b[34m[ANALYSIS] Ejecutando ffprobe rápido...\x1b[0m`);
             exec(`ffprobe -v error -probesize 64K -analyzeduration 0 -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
                 if (error) {
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
-                    return reply('Error al analizar.');
+                    return reply('Error al analizar con ffprobe.');
                 }
                 const data = JSON.parse(stdout);
                 const vStream = data.streams.find(s => s.codec_type === 'video');
@@ -85,10 +84,9 @@ let handler = async (m, { conn, text, command, args }) => {
                 
                 responseText += '\nUso:\n_*.dw2 [res] [calidad] (doc)*_\n_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n_*.dw4 (doc)*_';
                 reply(responseText);
-                console.log(`\x1b[32m[ANALYSIS] Finalizado con éxito.\x1b[0m`);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
             });
-        } catch (e) { reply('Error en análisis.'); }
+        } catch (e) { reply('Error en proceso de análisis.'); }
     }
 
     // --- COMANDOS DE ENCODING (.dw2, .dw3, .dw4) ---
@@ -115,8 +113,9 @@ let handler = async (m, { conn, text, command, args }) => {
 
         try {
             reply(`Procesando \`${command}\` (\`${res}p\`) | Calidad: \`${Object.keys(qualityMap).find(k => qualityMap[k] === crf) || 'media'}\`...`);
+            
             let success = await downloadMediaStream(m.quoted, input);
-            if (!success) fs.writeFileSync(input, await m.quoted.download());
+            if (!success) return reply('Error crítico en la descarga del medio.');
 
             exec(`ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate,duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
                 const lines = stdout.split('\n');
@@ -141,7 +140,9 @@ let handler = async (m, { conn, text, command, args }) => {
                 }
 
                 ffmpegArgs.push('-threads', '2', '-y', output);
-                const proc = spawn('ffmpeg', ffmpegArgs);
+                
+                // Usamos 'nice' para no ahogar el proceso de Node (conexión)
+                const proc = spawn('nice', ['-n', '10', 'ffmpeg', ...ffmpegArgs]);
 
                 proc.stderr.on('data', (data) => {
                     const line = data.toString();
@@ -151,27 +152,46 @@ let handler = async (m, { conn, text, command, args }) => {
                         const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
                         const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
                         let progress = totalFrames > 0 ? ((parseInt(frame) / totalFrames) * 100).toFixed(1) : '0.0';
-                        process.stdout.write(`\r\x1b[35m[PROGRESS] ${progress}% | Frame: ${frame} | FPS: ${currFps} | Time: ${time} | Speed: ${speed}\x1b[0m`);
+                        process.stdout.write(`\r\x1b[35m[PROGRESS] ${progress}% | FPS: ${currFps} | Speed: ${speed}\x1b[0m`);
                     }
                 });
 
                 proc.on('close', async (code) => {
-                    if (code === 0) {
+                    if (code === 0 && fs.existsSync(output)) {
                         const stats = fs.statSync(output);
                         const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);
                         const mediaOptions = asDocument 
                             ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
-                            : { video: fs.readFileSync(output), caption: `✅ Tamaño final: ${sizeMB} MB` };
-                        await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                    } else { reply('Error en FFmpeg.'); }
+                            : { video: fs.readFileSync(output), caption: `✅ *Proceso Finalizado*\n\n📈 Tamaño: \`${sizeMB} MB\`\n⚙️ Comando: \`${command}\`` };
+                        
+                        // Manejo de reconexión al enviar
+                        const send = async (retries = 2) => {
+                            try {
+                                await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
+                            } catch (e) {
+                                if (retries > 0) {
+                                    console.log(`\x1b[33m[SEND ERROR] Reintentando envío... (${retries})\x1b[0m`);
+                                    setTimeout(() => send(retries - 1), 3000);
+                                } else {
+                                    reply('No pude enviarte el archivo por problemas de conexión, pero el proceso terminó.');
+                                }
+                            }
+                        };
+                        await send();
+                    } else { 
+                        reply('Error en el procesamiento de FFmpeg.'); 
+                    }
                     if (fs.existsSync(input)) fs.unlinkSync(input);
                     if (fs.existsSync(output)) fs.unlinkSync(output);
                 });
             });
-        } catch (e) { reply('Error de proceso.'); }
+        } catch (e) { 
+            reply('Error fatal en el proceso.'); 
+            if (fs.existsSync(input)) fs.unlinkSync(input);
+        }
     }
 };
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-                
+                 
