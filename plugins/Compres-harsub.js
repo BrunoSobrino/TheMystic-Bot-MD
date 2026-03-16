@@ -8,6 +8,14 @@ let handler = async (m, { conn, text, command, args }) => {
         fs.mkdirSync('./temp', { recursive: true });
     }
 
+    // Mapeo de banderas para idiomas comunes
+    const flags = {
+        'spa': '🇪🇸', 'es': '🇪🇸', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
+        'fra': '🇫🇷', 'fr': '🇫🇷', 'ger': '🇩🇪', 'de': '🇩🇪', 'ita': '🇮🇹', 'it': '🇮🇹',
+        'por': '🇧🇷', 'pt': '🇧🇷', 'rus': '🇷🇺', 'ru': '🇷🇺', 'chi': '🇨🇳', 'zh': '🇨🇳',
+        'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️', 'Desconocido': '🏳️'
+    };
+
     const isMediaValid = () => {
         if (!m.quoted) return false;
         const mime = m.quoted.mimetype || '';
@@ -55,26 +63,37 @@ let handler = async (m, { conn, text, command, args }) => {
                 
                 const data = JSON.parse(stdout);
                 let responseText = '> **Informacion del video**\n\n';
-                responseText += `> Formato: ${data.format.format_long_name}\n`;
-                responseText += `> Peso: ${(data.format.size / 1024 / 1024).toFixed(2)} MB\n\n`;
+                responseText += `> Formato: \`${data.format.format_long_name}\`\n`;
+                responseText += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
                 
                 const audios = data.streams.filter(s => s.codec_type === 'audio');
                 responseText += '> **Audios disponibles**\n';
-                if (audios.length === 0) responseText += '- Ninguno\n';
-                audios.forEach((audio, index) => {
-                    const lang = audio.tags?.language || 'Desconocido';
-                    responseText += `- Pista ${index + 1}: ${audio.codec_name} (${lang})\n`;
-                });
+                if (audios.length === 0) {
+                    responseText += '- `Ninguno`\n';
+                } else {
+                    audios.forEach((audio, index) => {
+                        const langCode = (audio.tags?.language || 'und').toLowerCase();
+                        const flag = flags[langCode] || '🏳️';
+                        responseText += `- Pista ${index + 1}: \`${audio.codec_name}\` ${flag} (\`${langCode}\`)\n`;
+                    });
+                }
                 
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
                 responseText += '\n> **Subtitulos disponibles**\n';
-                if (subs.length === 0) responseText += '- Ninguno\n';
-                subs.forEach((sub, index) => {
-                    const lang = sub.tags?.language || 'Desconocido';
-                    responseText += `- Pista ${index + 1}: ${sub.codec_name} (${lang})\n`;
-                });
+                if (subs.length === 0) {
+                    responseText += '- `Ninguno`\n';
+                } else {
+                    subs.forEach((sub, index) => {
+                        const langCode = (sub.tags?.language || 'und').toLowerCase();
+                        const flag = flags[langCode] || '🏳️';
+                        responseText += `- Pista ${index + 1}: \`${sub.codec_name}\` ${flag} (\`${langCode}\`)\n`;
+                    });
+                }
                 
-                responseText += '\nUso:\n.dw2 [res] [calidad] (doc)\n.dw3 [res] [audio] [sub] [calidad] (doc)';
+                responseText += '\nUso:\n';
+                responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
+                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_';
+                
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
             });
@@ -93,7 +112,7 @@ let handler = async (m, { conn, text, command, args }) => {
         
         if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida (360, 720, 1080).');
 
-        reply(`Procesando en calidad ${calidad}...\nModo: ${asDocument ? 'Documento' : 'Video'}`);
+        reply(`Procesando en calidad \`${calidad}\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
         
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
@@ -141,4 +160,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-                        
+        
