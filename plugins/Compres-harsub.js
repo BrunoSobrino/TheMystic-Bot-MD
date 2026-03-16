@@ -7,7 +7,6 @@ let handler = async (m, { conn, text, command, args }) => {
 
     if (!fs.existsSync('./temp')) fs.mkdirSync('./temp', { recursive: true });
 
-    // Diccionario de banderas actualizado
     const flags = {
         'spa': '🇲🇽', 'es': '🇲🇽', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
         'por': '🇧🇷', 'pt': '🇧🇷', 'ara': '🇸🇦', 'ar': '🇸🇦', 'fre': '🇫🇷', 'fra': '🇫🇷', 'fr': '🇫🇷',
@@ -64,8 +63,8 @@ let handler = async (m, { conn, text, command, args }) => {
                 });
                 
                 responseText += '\nUso:\n';
-                responseText += '_***.dw2 [res] (doc)***_\n';
-                responseText += '_***.dw3 [res] [audio] [sub] (doc)***_';
+                responseText += '_***.dw2 [res] [calidad] (doc)***_\n';
+                responseText += '_***.dw3 [res] [audio] [sub] [calidad] (doc)***_';
                 
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -76,9 +75,13 @@ let handler = async (m, { conn, text, command, args }) => {
 
     if (command === 'dw2' || command === 'dw3') {
         if (!m.quoted) return reply('Responde a un video.');
-        const res = args[0];
         const isDw3 = command === 'dw3';
+        const res = args[0];
+        
+        // Determinar calidad según el comando
+        const calidad = (isDw3 ? args[3] : args[1]) || 'normal';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
+
         if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
 
         const timestamp = Date.now();
@@ -86,21 +89,36 @@ let handler = async (m, { conn, text, command, args }) => {
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`Procesando pipeline a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+            reply(`Procesando pipeline a \`${res}p\` (\`${calidad}\`)...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
+
+            // Lógica de parámetros según calidad
+            let crf = '26', fpsLimit = [], audioCodec = ['-c:a', 'copy'];
+            
+            if (calidad === 'alta') crf = '23';
+            else if (calidad === 'baja') { 
+                crf = '30'; 
+                audioCodec = ['-c:a', 'aac', '-b:a', '96k']; 
+            }
+            else if (calidad === 'extrema') { 
+                crf = '35'; 
+                fpsLimit = ['-r', '22']; 
+                audioCodec = ['-c:a', 'aac', '-b:a', '64k']; 
+            }
 
             let ffmpegArgs = ['-i', input];
             if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1;
                 const sIdx = parseInt(args[2]) - 1;
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', (calidad === 'extrema' ? '64k' : '128k'));
             } else {
-                ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy');
+                ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audioCodec);
             }
-            ffmpegArgs.push('-c:v', 'libx264', '-crf', '26', '-preset', 'ultrafast', '-threads', '2', '-y', output);
 
-            console.log(`\x1b[33m[FFMPEG]\x1b[0m Iniciando transcodificación | Res: ${res}p`);
+            ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-threads', '2', ...fpsLimit, '-y', output);
+
+            console.log(`\x1b[33m[FFMPEG]\x1b[0m Calidad: ${calidad} | Res: ${res}p`);
             const proc = spawn('ffmpeg', ffmpegArgs);
 
             proc.stderr.on('data', (data) => {
@@ -132,4 +150,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-                
+                                           
