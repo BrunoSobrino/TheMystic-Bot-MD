@@ -43,28 +43,33 @@ let handler = async (m, { conn, text, command, args }) => {
                     return reply('Error al analizar.');
                 }
                 const data = JSON.parse(stdout);
-                let responseText = '> **Informacion del video**\n\n';
+                let responseText = '> *Informacion del video*\n\n';
                 responseText += `> Formato: \`${data.format.format_long_name}\`\n`;
                 responseText += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
                 
                 const audios = data.streams.filter(s => s.codec_type === 'audio');
-                responseText += '> **Audios disponibles**\n';
-                audios.forEach((a, i) => {
-                    const lang = (a.tags?.language || 'und').toLowerCase();
-                    responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
-                });
+                responseText += '> *Audios disponibles*\n';
+                if (audios.length === 0) responseText += '- `Ninguno`\n';
+                else {
+                    audios.forEach((a, i) => {
+                        const lang = (a.tags?.language || 'und').toLowerCase();
+                        responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                    });
+                }
                 
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
-                responseText += '\n> **Subtitulos disponibles**\n';
+                responseText += '\n> *Subtitulos disponibles*\n';
                 if (subs.length === 0) responseText += '- `Ninguno`\n';
-                else subs.forEach((s, i) => {
-                    const lang = (s.tags?.language || 'und').toLowerCase();
-                    responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
-                });
+                else {
+                    subs.forEach((s, i) => {
+                        const lang = (s.tags?.language || 'und').toLowerCase();
+                        responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                    });
+                }
                 
                 responseText += '\nUso:\n';
-                responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
-                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_';
+                responseText += '_*.dw2 [res] (doc)*_\n';
+                responseText += '_*.dw3 [res] [audio] [sub] (doc)*_';
                 
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -77,7 +82,6 @@ let handler = async (m, { conn, text, command, args }) => {
         if (!m.quoted) return reply('Responde a un video.');
         const isDw3 = command === 'dw3';
         const res = args[0];
-        const calidad = (isDw3 ? args[3] : args[1]) || 'normal';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
 
         if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
@@ -87,35 +91,22 @@ let handler = async (m, { conn, text, command, args }) => {
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`Procesando pipeline a \`${res}p\` (\`${calidad}\`)...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+            reply(`Procesando pipeline a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
-
-            let crf = '26', fpsLimit = [], audioCodec = ['-c:a', 'copy'];
-            
-            if (calidad === 'alta') crf = '23';
-            else if (calidad === 'baja') { 
-                crf = '30'; 
-                audioCodec = ['-c:a', 'aac', '-b:a', '96k']; 
-            }
-            else if (calidad === 'extrema') { 
-                crf = '35'; 
-                fpsLimit = ['-r', '22']; 
-                audioCodec = ['-c:a', 'aac', '-b:a', '64k']; 
-            }
 
             let ffmpegArgs = ['-i', input];
             if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1;
                 const sIdx = parseInt(args[2]) - 1;
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', (calidad === 'extrema' ? '64k' : '128k'));
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
             } else {
-                ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audioCodec);
+                ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy');
             }
 
-            ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-threads', '2', ...fpsLimit, '-y', output);
+            ffmpegArgs.push('-c:v', 'libx264', '-crf', '26', '-preset', 'ultrafast', '-threads', '2', '-y', output);
 
-            console.log(`\x1b[33m[FFMPEG]\x1b[0m Calidad: ${calidad} | Res: ${res}p`);
+            console.log(`\x1b[33m[FFMPEG]\x1b[0m Iniciando transcodificación | Res: ${res}p`);
             const proc = spawn('ffmpeg', ffmpegArgs);
 
             proc.stderr.on('data', (data) => {
@@ -147,4 +138,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-        
+                    
