@@ -4,6 +4,11 @@ import { exec } from 'child_process';
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
 
+    // Verificamos si la carpeta temp existe, si no, la creamos
+    if (!fs.existsSync('./temp')) {
+        fs.mkdirSync('./temp', { recursive: true });
+    }
+
     if (command === 'dw') {
         if (!m.quoted || !m.quoted.mimetype.includes('video')) {
             return reply('Por favor, responde a un video.');
@@ -12,10 +17,12 @@ let handler = async (m, { conn, text, command, args }) => {
         reply('Descargando y analizando el video...');
         
         const timestamp = Date.now();
-        const tempFile = `./temp/video_${timestamp}`;
+        const inputVideo = `./temp/video_${timestamp}.mp4`;
         
         try {
-            const inputVideo = await conn.downloadAndSaveMediaMessage(m.quoted, tempFile);
+            // Descargar el buffer y guardarlo manualmente
+            const mediaBuffer = await m.quoted.download();
+            fs.writeFileSync(inputVideo, mediaBuffer);
             
             const ffprobeCommand = `ffprobe -v quiet -print_format json -show_streams "${inputVideo}"`;
             
@@ -71,12 +78,12 @@ let handler = async (m, { conn, text, command, args }) => {
         reply(`Iniciando compresion a ${resolucion}p. Esto tomara un tiempo...`);
         
         const timestamp = Date.now();
-        const tempBase = `./temp/video_${timestamp}`;
-        let inputVideo = '';
+        const inputVideo = `./temp/input_${timestamp}.mp4`;
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
-            inputVideo = await conn.downloadAndSaveMediaMessage(m.quoted, tempBase);
+            const mediaBuffer = await m.quoted.download();
+            fs.writeFileSync(inputVideo, mediaBuffer);
             
             const ffmpegCommand = `ffmpeg -i "${inputVideo}" -vf "scale=-2:${resolucion}" -c:v libx264 -crf 28 -preset ultrafast -c:a copy -y "${outputVideo}"`;
             
@@ -124,12 +131,12 @@ let handler = async (m, { conn, text, command, args }) => {
         reply(`Procesando video a ${resolucion}p.\nExtrayendo Audio ${args[1]} y quemando Subtitulo ${args[2]}...\nEsto tomara un tiempo.`);
         
         const timestamp = Date.now();
-        const tempBase = `./temp/input_${timestamp}`;
-        let inputVideo = '';
+        const inputVideo = `./temp/input_${timestamp}.mp4`;
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
-            inputVideo = await conn.downloadAndSaveMediaMessage(m.quoted, tempBase);
+            const mediaBuffer = await m.quoted.download();
+            fs.writeFileSync(inputVideo, mediaBuffer);
             
             const ffmpegCommand = `ffmpeg -i "${inputVideo}" -map 0:v:0 -map 0:a:${audioIndex} -vf "scale=-2:${resolucion},subtitles='${inputVideo}':si=${subIndex}" -c:v libx264 -crf 28 -preset ultrafast -c:a aac -b:a 128k -y "${outputVideo}"`;
             
@@ -156,3 +163,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
+                
