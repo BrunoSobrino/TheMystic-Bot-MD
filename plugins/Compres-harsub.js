@@ -14,6 +14,7 @@ let handler = async (m, { conn, text, command, args }) => {
         'chi': '🇨🇳', 'zh': '🇨🇳', 'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️'
     };
 
+    // Función de descarga con log en terminal
     const downloadMediaStream = async (quoted, outputPath) => {
         try {
             const { downloadContentFromMessage } = await import('baileys');
@@ -21,19 +22,38 @@ let handler = async (m, { conn, text, command, args }) => {
             const type = Object.keys(message)[0];
             const media = message[type];
             if (!media || !media.mediaKey) return false;
+
+            console.log(`\x1b[36m[DOWNLOAD] Iniciando descarga de: ${type}\x1b[0m`);
             const stream = await downloadContentFromMessage(media, type.replace('Message', ''));
+            
+            let downloadedBytes = 0;
+            stream.on('data', (chunk) => {
+                downloadedBytes += chunk.length;
+                process.stdout.write(`\r\x1b[36m[DOWNLOAD] Recibido: ${(downloadedBytes / 1024 / 1024).toFixed(2)} MB\x1b[0m`);
+            });
+
             await pipeline(stream, fs.createWriteStream(outputPath));
+            console.log(`\n\x1b[32m[DOWNLOAD] Completado: ${outputPath}\x1b[0m`);
             return true;
-        } catch (e) { return false; }
+        } catch (e) { 
+            console.error('\x1b[31m[DOWNLOAD ERROR]\x1b[0m', e);
+            return false; 
+        }
     };
 
+    // --- COMANDO DE ANÁLISIS RÁPIDO (.dw) ---
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
         const inputVideo = `./temp/video_${Date.now()}`;
         try {
             let success = await downloadMediaStream(m.quoted, inputVideo);
-            if (!success) fs.writeFileSync(inputVideo, await m.quoted.download());
-            exec(`ffprobe -v quiet -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
+            if (!success) {
+                console.log('\x1b[33m[INFO] Intentando descarga alternativa...\x1b[0m');
+                fs.writeFileSync(inputVideo, await m.quoted.download());
+            }
+            
+            console.log(`\x1b[34m[ANALYSIS] Ejecutando ffprobe rápido...\x1b[0m`);
+            exec(`ffprobe -v error -probesize 64K -analyzeduration 0 -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
                 if (error) {
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
                     return reply('Error al analizar.');
@@ -43,55 +63,69 @@ let handler = async (m, { conn, text, command, args }) => {
                 const resolution = vStream ? `${vStream.width}x${vStream.height}` : 'Desconocida';
                 const durationSec = parseFloat(data.format.duration || 0);
                 const duration = new Date(durationSec * 1000).toISOString().substr(11, 8);
-                let responseText = '> *Informacion del video*\n\n';
-                responseText += `> Formato: \`${data.format.format_long_name}\`\n`;
-                responseText += `> Resolucion: \`${resolution}\`\n`;
-                responseText += `> Duracion: \`${duration}\`\n`;
+                
+                let responseText = '> *Información del video*\n\n';
+                responseText += `> Resolución: \`${resolution}\` | Duración: \`${duration}\`\n`;
                 responseText += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
+                
                 const audios = data.streams.filter(s => s.codec_type === 'audio');
                 responseText += '> *Audios disponibles*\n';
                 audios.forEach((a, i) => {
                     const lang = (a.tags?.language || 'und').toLowerCase();
-                    responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                    responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'}\n`;
                 });
+                
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
-                responseText += '\n> *Subtitulos disponibles*\n';
+                responseText += '\n> *Subtítulos disponibles*\n';
                 if (subs.length === 0) responseText += '- `Ninguno`\n';
                 else subs.forEach((s, i) => {
                     const lang = (s.tags?.language || 'und').toLowerCase();
-                    responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                    responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'}\n`;
                 });
+                
                 responseText += '\nUso:\n_*.dw2 [res] [calidad] (doc)*_\n_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n_*.dw4 (doc)*_';
                 reply(responseText);
+                console.log(`\x1b[32m[ANALYSIS] Finalizado con éxito.\x1b[0m`);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
             });
-        } catch (e) { reply('Error en analisis.'); }
+        } catch (e) { reply('Error en análisis.'); }
     }
 
+    // --- COMANDOS DE ENCODING (.dw2, .dw3, .dw4) ---
     if (/^(dw2|dw3|dw4)$/i.test(command)) {
         if (!m.quoted) return reply('Responde a un video.');
         const isDw4 = command === 'dw4';
         const isDw3 = command === 'dw3';
-        const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
-        let res = isDw4 ? '360' : args[0];
+        const asDocument = args.includes('doc');
+        
+        const qualityMap = { 'extrema': '18', 'alta': '23', 'media': '28', 'baja': '33' };
+        let res = isDw4 ? '360' : (args[0] || '360');
+        
+        let crf = '28'; 
+        for (let arg of args) {
+            if (qualityMap[arg.toLowerCase()]) {
+                crf = qualityMap[arg.toLowerCase()];
+                break;
+            }
+        }
+
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+            reply(`Procesando \`${command}\` (\`${res}p\`) | Calidad: \`${Object.keys(qualityMap).find(k => qualityMap[k] === crf) || 'media'}\`...`);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            // FFPROBE mejorado para obtener duración y FPS para calcular frames totales de forma más fiable
             exec(`ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate,duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
-                const parts = stdout.split('\n');
-                const fpsParts = parts[0].split('/');
-                const fps = parseFloat(fpsParts[0]) / parseFloat(fpsParts[1]);
-                const duration = parseFloat(parts[1]);
+                const lines = stdout.split('\n');
+                const fps = eval(lines[0]) || 24;
+                const duration = parseFloat(lines[1]) || 1;
                 const totalFrames = Math.floor(fps * duration);
 
                 let ffmpegArgs = ['-i', input];
+
                 if (isDw4) {
                     const targetSizeKbits = 57 * 8192; 
                     let videoBitrate = Math.floor(targetSizeKbits / duration) - 64; 
@@ -99,11 +133,11 @@ let handler = async (m, { conn, text, command, args }) => {
                     if (videoBitrate < 180) videoBitrate = 180;
                     ffmpegArgs.push('-vf', 'scale=-2:360', '-c:v', 'libx264', '-b:v', `${videoBitrate}k`, '-maxrate', `${videoBitrate}k`, '-bufsize', `${videoBitrate * 2}k`, '-preset', 'fast', '-c:a', 'aac', '-b:a', '64k', '-ac', '1');
                 } else if (isDw3) {
-                    const aIdx = parseInt(args[1]) - 1;
-                    const sIdx = parseInt(args[2]) - 1;
-                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    const aIdx = parseInt(args[1]) - 1 || 0;
+                    const sIdx = parseInt(args[2]) - 1 || 0;
+                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-c:a', 'aac', '-b:a', '128k');
                 } else {
-                    ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-c:a', 'copy');
                 }
 
                 ffmpegArgs.push('-threads', '2', '-y', output);
@@ -127,7 +161,7 @@ let handler = async (m, { conn, text, command, args }) => {
                         const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);
                         const mediaOptions = asDocument 
                             ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
-                            : { video: fs.readFileSync(output), caption: `✅ Tamaño: ${sizeMB} MB` };
+                            : { video: fs.readFileSync(output), caption: `✅ Tamaño final: ${sizeMB} MB` };
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                     } else { reply('Error en FFmpeg.'); }
                     if (fs.existsSync(input)) fs.unlinkSync(input);
@@ -140,4 +174,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-                                                                                                                                                         
+                
