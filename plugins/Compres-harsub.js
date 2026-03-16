@@ -30,7 +30,6 @@ let handler = async (m, { conn, text, command, args }) => {
 
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
-        
         const inputVideo = `./temp/video_${Date.now()}`;
         try {
             let success = await downloadMediaStream(m.quoted, inputVideo);
@@ -44,7 +43,6 @@ let handler = async (m, { conn, text, command, args }) => {
                 const data = JSON.parse(stdout);
                 const vStream = data.streams.find(s => s.codec_type === 'video');
                 const resolution = vStream ? `${vStream.width}x${vStream.height}` : 'Desconocida';
-                
                 const durationSec = parseFloat(data.format.duration || 0);
                 const duration = new Date(durationSec * 1000).toISOString().substr(11, 8);
 
@@ -56,23 +54,18 @@ let handler = async (m, { conn, text, command, args }) => {
                 
                 const audios = data.streams.filter(s => s.codec_type === 'audio');
                 responseText += '> *Audios disponibles*\n';
-                if (audios.length === 0) responseText += '- `Ninguno`\n';
-                else {
-                    audios.forEach((a, i) => {
-                        const lang = (a.tags?.language || 'und').toLowerCase();
-                        responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
-                    });
-                }
+                audios.forEach((a, i) => {
+                    const lang = (a.tags?.language || 'und').toLowerCase();
+                    responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                });
                 
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
                 responseText += '\n> *Subtitulos disponibles*\n';
                 if (subs.length === 0) responseText += '- `Ninguno`\n';
-                else {
-                    subs.forEach((s, i) => {
-                        const lang = (s.tags?.language || 'und').toLowerCase();
-                        responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
-                    });
-                }
+                else subs.forEach((s, i) => {
+                    const lang = (s.tags?.language || 'und').toLowerCase();
+                    responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                });
                 
                 responseText += '\nUso:\n';
                 responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
@@ -92,7 +85,6 @@ let handler = async (m, { conn, text, command, args }) => {
         const isDw3 = command === 'dw3';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
         
-        // Configuración para el comando rápido .dw4
         let res = isDw4 ? '360' : args[0];
         let crf = '32'; 
         let preset = 'ultrafast';
@@ -109,41 +101,53 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            let ffmpegArgs = ['-i', input];
-            
-            if (isDw3) {
-                const aIdx = parseInt(args[1]) - 1;
-                const sIdx = parseInt(args[2]) - 1;
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
-            } else {
-                ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audioCodec);
-            }
+            // Obtener total de frames para el porcentaje
+            exec(`ffprobe -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${input}"`, (err, stdout) => {
+                const totalFrames = parseInt(stdout) || 0;
 
-            ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', preset, '-threads', '2', '-y', output);
-
-            const proc = spawn('ffmpeg', ffmpegArgs);
-
-            proc.stderr.on('data', (data) => {
-                const line = data.toString();
-                if (line.includes('frame=')) {
-                    const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
-                    const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
-                    process.stdout.write(`\r\x1b[35m[PROGRESS]\x1b[0m Frame: ${frame} | Speed: ${speed}`);
+                let ffmpegArgs = ['-i', input];
+                if (isDw3) {
+                    const aIdx = parseInt(args[1]) - 1;
+                    const sIdx = parseInt(args[2]) - 1;
+                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
+                } else {
+                    ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audioCodec);
                 }
-            });
 
-            proc.on('close', async (code) => {
-                console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
-                if (code === 0) {
-                    const fileName = `Video_Final_${res}p.mp4`;
-                    const mediaOptions = asDocument 
-                        ? { document: fs.readFileSync(output), fileName: fileName, mimetype: 'video/mp4' }
-                        : { video: fs.readFileSync(output) };
-                    await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                } else { reply('Error en FFmpeg.'); }
-                
-                if (fs.existsSync(input)) fs.unlinkSync(input);
-                if (fs.existsSync(output)) fs.unlinkSync(output);
+                ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', preset, '-threads', '2', '-y', output);
+
+                const proc = spawn('ffmpeg', ffmpegArgs);
+
+                proc.stderr.on('data', (data) => {
+                    const line = data.toString();
+                    if (line.includes('frame=')) {
+                        const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
+                        const fps = line.match(/fps=\s*([\d.]+)/)?.[1] || '0';
+                        const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
+                        const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
+                        
+                        let progress = '0.0';
+                        if (totalFrames > 0) {
+                            progress = ((parseInt(frame) / totalFrames) * 100).toFixed(1);
+                        }
+
+                        process.stdout.write(`\r\x1b[35m[PROGRESS] ${progress}% | Frame: ${frame} | FPS: ${fps} | Time: ${time} | Speed: ${speed}\x1b[0m`);
+                    }
+                });
+
+                proc.on('close', async (code) => {
+                    console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
+                    if (code === 0) {
+                        const fileName = `Video_Final_${res}p.mp4`;
+                        const mediaOptions = asDocument 
+                            ? { document: fs.readFileSync(output), fileName: fileName, mimetype: 'video/mp4' }
+                            : { video: fs.readFileSync(output) };
+                        await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
+                    } else { reply('Error en FFmpeg.'); }
+                    
+                    if (fs.existsSync(input)) fs.unlinkSync(input);
+                    if (fs.existsSync(output)) fs.unlinkSync(output);
+                });
             });
         } catch (e) { reply('Error de proceso.'); }
     }
@@ -151,4 +155,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-                
+                                           
