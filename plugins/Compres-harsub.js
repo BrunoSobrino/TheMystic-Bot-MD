@@ -9,17 +9,25 @@ let handler = async (m, { conn, text, command, args }) => {
         console.log('[Sistema] Carpeta ./temp creada.');
     }
 
+    // Funcion para validar si el mensaje citado es un video o un documento
+    const isMediaValid = () => {
+        if (!m.quoted) return false;
+        const mime = m.quoted.mimetype || '';
+        return mime.includes('video') || mime.includes('application') || mime.includes('document');
+    };
+
     if (command === 'dw') {
-        if (!m.quoted || !m.quoted.mimetype.includes('video')) {
-            return reply('Por favor, responde a un video.');
+        if (!isMediaValid()) {
+            return reply('Por favor, responde a un video o a un archivo multimedia enviado como documento.');
         }
         
         console.log('\n--- NUEVO PROCESO DE ANALISIS (.dw) ---');
-        console.log('[1/3] Descargando video de WhatsApp para analisis...');
-        reply('Descargando y analizando el video...');
+        console.log('[1/3] Descargando archivo de WhatsApp para analisis...');
+        reply('Descargando y analizando el archivo multimedia...');
         
         const timestamp = Date.now();
-        const inputVideo = `./temp/video_${timestamp}.mp4`;
+        // Guardamos sin extension especifica para que FFprobe lea los metadatos reales (MKV, MP4, etc.)
+        const inputVideo = `./temp/video_${timestamp}`;
         
         try {
             const mediaBuffer = await m.quoted.download();
@@ -32,7 +40,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 if (error) {
                     console.error('[!] Error en FFprobe:', error);
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
-                    return reply('Ocurrio un error al analizar el video.');
+                    return reply('Ocurrio un error al analizar el video. Asegurate de que sea un archivo multimedia valido.');
                 }
                 
                 console.log('[3/3] Analisis completado. Enviando resultados al chat.');
@@ -65,13 +73,13 @@ let handler = async (m, { conn, text, command, args }) => {
             });
         } catch (err) {
             console.error('[!] Error en la descarga:', err);
-            reply('Error al descargar el video.');
+            reply('Error al descargar el archivo.');
         }
     }
 
     if (command === 'dw2') {
-        if (!m.quoted || !m.quoted.mimetype.includes('video')) {
-            return reply('Por favor, responde a un video.');
+        if (!isMediaValid()) {
+            return reply('Por favor, responde a un video o a un archivo multimedia enviado como documento.');
         }
         
         if (!args[0] || !['360', '720', '1080'].includes(args[0])) {
@@ -83,11 +91,11 @@ let handler = async (m, { conn, text, command, args }) => {
         reply(`Iniciando compresion a ${resolucion}p. Revisa la terminal para ver el progreso...`);
         
         const timestamp = Date.now();
-        const inputVideo = `./temp/input_${timestamp}.mp4`;
+        const inputVideo = `./temp/input_${timestamp}`;
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
-            console.log('[1/4] Descargando video fuente de WhatsApp...');
+            console.log('[1/4] Descargando archivo fuente de WhatsApp...');
             const mediaBuffer = await m.quoted.download();
             fs.writeFileSync(inputVideo, mediaBuffer);
             console.log('[2/4] Descarga completada. Iniciando FFmpeg...');
@@ -104,7 +112,6 @@ let handler = async (m, { conn, text, command, args }) => {
             
             const ffmpegProcess = spawn('ffmpeg', ffmpegArgs);
             
-            // Esto muestra el progreso de FFmpeg en la terminal
             ffmpegProcess.stderr.on('data', (data) => {
                 process.stdout.write(data.toString());
             });
@@ -134,8 +141,8 @@ let handler = async (m, { conn, text, command, args }) => {
     }
 
     if (command === 'dw3') {
-        if (!m.quoted || !m.quoted.mimetype.includes('video')) {
-            return reply('Por favor, responde a un video analizado previamente.');
+        if (!isMediaValid()) {
+            return reply('Por favor, responde a un video analizado previamente (o documento multimedia).');
         }
         
         if (args.length < 3) {
@@ -155,11 +162,13 @@ let handler = async (m, { conn, text, command, args }) => {
         reply(`Procesando video a ${resolucion}p.\nExtrayendo Audio ${args[1]} y quemando Subtitulo ${args[2]}...\nRevisa la terminal de Termux.`);
         
         const timestamp = Date.now();
-        const inputVideo = `./temp/input_${timestamp}.mp4`;
+        // Para el comando dw3, el filtro de subtitulos de FFmpeg requiere que el archivo tenga extension.
+        // Asignamos .mkv por defecto ya que es el contenedor mas comun para multiples pistas y funciona como comodin.
+        const inputVideo = `./temp/input_${timestamp}.mkv`;
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
-            console.log('[1/4] Descargando video fuente de WhatsApp...');
+            console.log('[1/4] Descargando archivo fuente de WhatsApp...');
             const mediaBuffer = await m.quoted.download();
             fs.writeFileSync(inputVideo, mediaBuffer);
             console.log('[2/4] Descarga completada. Iniciando mapeo y quema de subtitulos en FFmpeg...');
@@ -179,7 +188,6 @@ let handler = async (m, { conn, text, command, args }) => {
             
             const ffmpegProcess = spawn('ffmpeg', ffmpegArgs);
             
-            // Esto imprime el frame a frame, bitrate y velocidad en tu pantalla
             ffmpegProcess.stderr.on('data', (data) => {
                 process.stdout.write(data.toString());
             });
@@ -196,7 +204,7 @@ let handler = async (m, { conn, text, command, args }) => {
                     console.log('--- ENVIO COMPLETADO ---\n');
                 } else {
                     console.error(`\n[!] Error en FFmpeg al mapear. Codigo: ${code}`);
-                    reply('Ocurrio un error al mapear el audio y los subtitulos. Asegurate de que los indices existan.');
+                    reply('Ocurrio un error al mapear el audio y los subtitulos. Asegurate de que los indices existan en el archivo original.');
                 }
                 
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -211,4 +219,3 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-                    
