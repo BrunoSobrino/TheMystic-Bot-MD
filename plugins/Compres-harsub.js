@@ -77,8 +77,6 @@ let handler = async (m, { conn, text, command, args }) => {
         if (!m.quoted) return reply('Responde a un video.');
         const isDw3 = command === 'dw3';
         const res = args[0];
-        
-        // Determinar calidad según el comando
         const calidad = (isDw3 ? args[3] : args[1]) || 'normal';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
 
@@ -93,7 +91,6 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            // Lógica de parámetros según calidad
             let crf = '26', fpsLimit = [], audioCodec = ['-c:a', 'copy'];
             
             if (calidad === 'alta') crf = '23';
@@ -150,4 +147,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-                                           
+            
