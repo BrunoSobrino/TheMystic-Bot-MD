@@ -33,7 +33,8 @@ let handler = async (m, { conn, text, command, args }) => {
             writeStream.end();
             return true;
         } catch (e) {
-            console.log('[!] Error en descarga por flujo puro. Usando metodo de respaldo (RAM)...');
+            console.log('[!] Error DETALLADO en descarga por flujo:', e.message || e);
+            console.log('[!] Usando metodo de respaldo (RAM)...');
             return false;
         }
     };
@@ -136,7 +137,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 '-c:v', 'libx264',
                 '-crf', '28',
                 '-preset', 'ultrafast',
-                '-threads', '2', // Limite de procesamiento para evitar congelamientos
+                '-threads', '2',
                 '-c:a', 'copy',
                 '-y', outputVideo
             ];
@@ -215,7 +216,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 '-c:v', 'libx264',
                 '-crf', '28',
                 '-preset', 'ultrafast',
-                '-threads', '2', // Limite de procesamiento para evitar congelamientos en tu dispositivo
+                '-threads', '2',
                 '-c:a', 'aac',
                 '-b:a', '128k',
                 '-y', outputVideo
