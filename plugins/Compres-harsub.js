@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { exec, spawn } from 'child_process';
+import { pipeline } from 'stream/promises';
 
 let handler = async (m, { conn, text, command, args }) => {
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
@@ -8,9 +9,8 @@ let handler = async (m, { conn, text, command, args }) => {
         fs.mkdirSync('./temp', { recursive: true });
     }
 
-    // Mapeo de banderas para idiomas comunes
     const flags = {
-        'spa': '🇲🇽', 'es': '🇪🇸', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
+        'spa': '🇪🇸', 'es': '🇪🇸', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
         'fra': '🇫🇷', 'fr': '🇫🇷', 'ger': '🇩🇪', 'de': '🇩🇪', 'ita': '🇮🇹', 'it': '🇮🇹',
         'por': '🇧🇷', 'pt': '🇧🇷', 'rus': '🇷🇺', 'ru': '🇷🇺', 'chi': '🇨🇳', 'zh': '🇨🇳',
         'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️', 'Desconocido': '🏳️'
@@ -22,6 +22,7 @@ let handler = async (m, { conn, text, command, args }) => {
         return mime.includes('video') || mime.includes('application') || mime.includes('document');
     };
 
+    // Descarga mediante Pipeline para proteger la RAM
     const downloadMediaStream = async (quoted, outputPath) => {
         try {
             const { downloadContentFromMessage } = await import('baileys');
@@ -29,15 +30,12 @@ let handler = async (m, { conn, text, command, args }) => {
             const mediaObj = quoted.vM || quoted.message?.videoMessage || quoted.message?.documentMessage || quoted;
             
             const stream = await downloadContentFromMessage(mediaObj, mediaType);
-            const writeStream = fs.createWriteStream(outputPath);
             
-            for await (const chunk of stream) {
-                writeStream.write(chunk);
-            }
-            writeStream.end();
-            return new Promise((resolve) => writeStream.on('finish', () => resolve(true)));
+            // Usamos pipeline para gestionar el flujo de datos sin cargar la RAM
+            await pipeline(stream, fs.createWriteStream(outputPath));
+            return true;
         } catch (e) {
-            console.log('[!] Error en descarga por flujo:', e.message);
+            console.log('[!] Error en pipeline de descarga:', e.message);
             return false;
         }
     };
@@ -45,12 +43,13 @@ let handler = async (m, { conn, text, command, args }) => {
     if (command === 'dw') {
         if (!isMediaValid()) return reply('Responde a un video o documento multimedia.');
         
-        reply('Analizando archivo multimedia...');
+        reply('Analizando flujo multimedia...');
         const inputVideo = `./temp/video_${Date.now()}`;
         
         try {
             const streamed = await downloadMediaStream(m.quoted, inputVideo);
             if (!streamed) {
+                // Respaldo solo si el stream falla por completo
                 const mediaBuffer = await m.quoted.download();
                 fs.writeFileSync(inputVideo, mediaBuffer);
             }
@@ -91,8 +90,8 @@ let handler = async (m, { conn, text, command, args }) => {
                 }
                 
                 responseText += '\nUso:\n';
-                responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
-                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_';
+                responseText += '_***.dw2 [res] [calidad] (doc)***_\n';
+                responseText += '_***.dw3 [res] [audio] [sub] [calidad] (doc)***_';
                 
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -112,7 +111,7 @@ let handler = async (m, { conn, text, command, args }) => {
         
         if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida (360, 720, 1080).');
 
-        reply(`Procesando en calidad \`${calidad}\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+        reply(`Procesando pipeline \`${calidad}\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
         
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
@@ -136,6 +135,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audio);
             }
             
+            // Limitamos threads a 2 y usamos preset ultrafast para proteger la RAM/CPU de Termux
             ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-threads', '2', ...fps, '-y', output);
 
             const proc = spawn('ffmpeg', ffmpegArgs);
@@ -147,17 +147,16 @@ let handler = async (m, { conn, text, command, args }) => {
                     
                     await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                 } else {
-                    reply('Error en FFmpeg.');
+                    reply('Error en pipeline FFmpeg.');
                 }
                 if (fs.existsSync(input)) fs.unlinkSync(input);
                 if (fs.existsSync(output)) fs.unlinkSync(output);
             });
         } catch (e) {
-            reply('Error critico.');
+            reply('Error critico de memoria.');
         }
     }
 };
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-        
