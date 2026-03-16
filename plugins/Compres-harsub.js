@@ -10,7 +10,7 @@ let handler = async (m, { conn, text, command, args }) => {
 
     // Mapeo de banderas para idiomas comunes
     const flags = {
-        'spa': '🇪🇸', 'es': '🇪🇸', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
+        'spa': '🇲🇽', 'es': '🇪🇸', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
         'fra': '🇫🇷', 'fr': '🇫🇷', 'ger': '🇩🇪', 'de': '🇩🇪', 'ita': '🇮🇹', 'it': '🇮🇹',
         'por': '🇧🇷', 'pt': '🇧🇷', 'rus': '🇷🇺', 'ru': '🇷🇺', 'chi': '🇨🇳', 'zh': '🇨🇳',
         'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️', 'Desconocido': '🏳️'
