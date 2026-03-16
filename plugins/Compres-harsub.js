@@ -77,7 +77,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 responseText += '\nUso:\n';
                 responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
                 responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n';
-                responseText += '_*.fast (doc)*_';
+                responseText += '_*.dw4 (doc)*_';
                 
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -85,20 +85,20 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { reply('Error en analisis.'); }
     }
 
-    if (/^(dw2|dw3|fast)$/i.test(command)) {
+    if (/^(dw2|dw3|dw4)$/i.test(command)) {
         if (!m.quoted) return reply('Responde a un video.');
         
-        const isFast = command === 'fast';
+        const isDw4 = command === 'dw4';
         const isDw3 = command === 'dw3';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
         
-        // Configuración para el nuevo comando .fast
-        let res = isFast ? '360' : args[0];
-        let crf = isFast ? '32' : '32'; // Base CRF 32
+        // Configuración para el comando rápido .dw4
+        let res = isDw4 ? '360' : args[0];
+        let crf = '32'; 
         let preset = 'ultrafast';
-        let audioCodec = isFast ? ['-c:a', 'aac', '-b:a', '96k'] : ['-c:a', 'copy'];
+        let audioCodec = isDw4 ? ['-c:a', 'aac', '-b:a', '96k'] : ['-c:a', 'copy'];
 
-        if (!isFast && !['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
+        if (!isDw4 && !['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
 
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
@@ -135,7 +135,7 @@ let handler = async (m, { conn, text, command, args }) => {
             proc.on('close', async (code) => {
                 console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
                 if (code === 0) {
-                    const fileName = `Fast_Video_${res}p.mp4`;
+                    const fileName = `Video_Final_${res}p.mp4`;
                     const mediaOptions = asDocument 
                         ? { document: fs.readFileSync(output), fileName: fileName, mimetype: 'video/mp4' }
                         : { video: fs.readFileSync(output) };
@@ -149,6 +149,6 @@ let handler = async (m, { conn, text, command, args }) => {
     }
 };
 
-handler.command = /^(dw|dw2|dw3|fast)$/i;
+handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-                    
+                
