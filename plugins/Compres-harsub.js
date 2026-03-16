@@ -15,13 +15,21 @@ let handler = async (m, { conn, text, command, args }) => {
         return mime.includes('video') || mime.includes('application') || mime.includes('document');
     };
 
-    // Funcion optimizada para descargar archivos grandes sin saturar la RAM
+    // Funcion optimizada con busqueda dual de la libreria Baileys
     const downloadMediaStream = async (quoted, outputPath) => {
         try {
-            const { downloadContentFromMessage } = await import('@whiskeysockets/baileys');
+            let baileys;
+            try {
+                // Intento 1: Version moderna
+                baileys = await import('@whiskeysockets/baileys');
+            } catch (err1) {
+                // Intento 2: Version clasica (La que probablemente usa KanaArima-MD)
+                baileys = await import('@adiwajshing/baileys');
+            }
+            
+            const { downloadContentFromMessage } = baileys;
             const mediaType = quoted.mtype ? quoted.mtype.replace('Message', '') : (quoted.mimetype.includes('video') ? 'video' : 'document');
             
-            // Intentar obtener el objeto puro del mensaje para Baileys
             const mediaObj = quoted.vM || quoted.message?.videoMessage || quoted.message?.documentMessage || quoted;
             
             const stream = await downloadContentFromMessage(mediaObj, mediaType);
@@ -45,7 +53,7 @@ let handler = async (m, { conn, text, command, args }) => {
         }
         
         console.log('\n--- NUEVO PROCESO DE ANALISIS (.dw) ---');
-        console.log('[1/3] Descargando archivo de WhatsApp para analisis...');
+        console.log('[1/3] Descargando archivo de WhatsApp por flujo...');
         reply('Descargando y analizando el archivo multimedia...');
         
         const timestamp = Date.now();
@@ -121,7 +129,7 @@ let handler = async (m, { conn, text, command, args }) => {
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
-            console.log('[1/4] Descargando archivo fuente de WhatsApp...');
+            console.log('[1/4] Descargando archivo fuente de WhatsApp por flujo...');
             
             const streamed = await downloadMediaStream(m.quoted, inputVideo);
             if (!streamed) {
@@ -198,7 +206,7 @@ let handler = async (m, { conn, text, command, args }) => {
         const outputVideo = `./temp/output_${timestamp}.mp4`;
         
         try {
-            console.log('[1/4] Descargando archivo fuente de WhatsApp por flujo (stream)...');
+            console.log('[1/4] Descargando archivo fuente de WhatsApp por flujo...');
             
             const streamed = await downloadMediaStream(m.quoted, inputVideo);
             if (!streamed) {
@@ -206,7 +214,7 @@ let handler = async (m, { conn, text, command, args }) => {
                 fs.writeFileSync(inputVideo, mediaBuffer);
             }
             
-            console.log('[2/4] Descarga completada. Iniciando mapeo y quema de subtitulos (Límitado a 2 nucleos)...');
+            console.log('[2/4] Descarga completada. Iniciando mapeo y quema de subtitulos (Limitado a 2 nucleos)...');
             
             const ffmpegArgs = [
                 '-i', inputVideo,
@@ -255,3 +263,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
+        
