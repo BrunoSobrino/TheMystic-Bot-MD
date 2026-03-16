@@ -1,5 +1,5 @@
 {
-  "name": "KanaArima-MD",
+  "name": "TheMystic-Bot-MD",
   "version": "1.0.0",
   "description": "Un chatbot automatizado para WhatsApp basado en Node.js, que permite realizar múltiples funciones y personalizaciones en la plataforma.",
   "main": "index.js",
@@ -16,16 +16,16 @@
     "eslint": "eslint .",
     "eslintfix": "eslint --fix ."
   },
-  "homepage": "https://github.com/MINORURAKUEN/KanaArima-MD",
+  "homepage": "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
   "author": {
-    "name": "MINORURAKUEN"
+    "name": "BrunoSobrino"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MINORURAKUEN/KanaArima-MD.git"
+    "url": "git+https://github.com/BrunoSobrino/TheMystic-Bot-MD.git"
   },
   "bugs": {
-    "url": "https://github.com/MINORURAKUEN/KanaArima-MD/issues"
+    "url": "https://github.com/BrunoSobrino/TheMystic-Bot-MD/issues"
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
@@ -39,8 +39,8 @@
     "acrcloud": "^1.4.0",
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^2.68.0",
-    "axios": "^1.6.0",
-    "baileys": "github:WhiskeySockets/Baileys",
+    "axios": "*",
+    "baileys": "github:Itsukichann/Baileys",
     "body-parser": "^1.20.2",
     "browser-id3-writer": "*",
     "cfonts": "^2.10.0",
@@ -74,15 +74,15 @@
     "moment-timezone": "^0.5.34",
     "mongoose": "^6.3.3",
     "node-cache": "^5.1.2",
-    "node-fetch": "^3.3.2",
+    "node-fetch": "^3.2.0",
     "node-gtts": "^2.0.2",
     "node-id3": "^0.2.6",
     "node-shazam": "*",
     "node-webpmux": "^3.1.1",
     "pdfkit": "^0.13.0",
     "perf_hooks": "^0.0.1",
-    "pino": "^8.14.0",
-    "pino-pretty": "^10.0.0",
+    "pino": "^7.8.0",
+    "pino-pretty": "^7.5.1",
     "plotly": "^1.0.6",
     "qrcode": "^1.5.0",
     "qrcode-terminal": "^0.12.0",
