@@ -1,8 +1,7 @@
-const fs = require('fs');
-const { exec } = require('child_process');
+import fs from 'fs';
+import { exec } from 'child_process';
 
 let handler = async (m, { conn, text, command, args }) => {
-    // Definimos la funcion reply para mantener la compatibilidad interna
     const reply = (texto) => conn.sendMessage(m.chat, { text: texto }, { quoted: m });
 
     if (command === 'dw') {
@@ -155,7 +154,5 @@ let handler = async (m, { conn, text, command, args }) => {
     }
 };
 
-// Registra los comandos para que el bot los reconozca en este archivo
 handler.command = /^(dw|dw2|dw3)$/i;
-module.exports = handler;
-                    
+export default handler;
