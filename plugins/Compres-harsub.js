@@ -35,22 +35,30 @@ let handler = async (m, { conn, text, command, args }) => {
         }
     };
 
+    // Función mejorada para Graph.org con creación de cuenta dinámica
     const createGraphPage = async (title, content) => {
         try {
+            // 1. Crear una cuenta temporal para obtener un token fresco
+            const account = await fetch('https://api.telegra.ph/createAccount?short_name=ArimaBot&author_name=ArimaMedia').then(res => res.json());
+            if (!account.ok) return null;
+            
+            const token = account.result.access_token;
+
+            // 2. Crear la página
             const response = await fetch('https://api.telegra.ph/createPage', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    access_token: 'd3b25feccb83e502195148461c5369666710e2030263654497bc35b0e8c0',
+                    access_token: token,
                     title: title,
-                    author_name: 'Arima-Bot-MediaInfo',
-                    content: [{ tag: 'p', children: [content.replace(/\n/g, '<br>')] }],
+                    content: content.split('\n').map(line => ({ tag: 'p', children: [line] })),
                     return_content: true
                 })
             });
             const json = await response.json();
             return json.ok ? json.result.url : null;
         } catch (e) {
+            console.error('[Graph Error]', e);
             return null;
         }
     };
@@ -67,25 +75,32 @@ let handler = async (m, { conn, text, command, args }) => {
             exec(`ffprobe -v quiet -print_format json -show_streams -show_format "${inputVideo}"`, async (error, stdout) => {
                 if (error) {
                     if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
-                    return reply('Error al analizar el video.');
+                    return reply('Error al analizar el video con FFprobe.');
                 }
                 const data = JSON.parse(stdout);
                 let infoText = `Formato: ${data.format.format_long_name}\n`;
                 infoText += `Duracion: ${parseFloat(data.format.duration).toFixed(2)}s\n`;
                 infoText += `Peso: ${(data.format.size / 1024 / 1024).toFixed(2)} MB\n\n--- AUDIOS ---\n`;
+                
                 data.streams.filter(s => s.codec_type === 'audio').forEach((a, i) => {
                     infoText += `Pista ${i + 1}: ${a.codec_name} (${a.tags?.language || 'und'})\n`;
                 });
+                
                 infoText += `\n--- SUBTITULOS ---\n`;
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
-                if (subs.length === 0) infoText += 'Ninguno.\n';
+                if (subs.length === 0) infoText += 'Ninguno detectado.\n';
                 subs.forEach((s, i) => infoText += `Pista ${i + 1}: ${s.codec_name} (${s.tags?.language || 'und'})\n`);
 
                 const graphUrl = await createGraphPage('Media Information', infoText);
-                reply(`> **MediaInfo Generado**\n\n📄 Detalles: ${graphUrl || 'Error Graph'}\n\nUso:\n.dw2 [res] [calidad] (doc)\n.dw3 [res] [audio] [sub] [calidad] (doc)`);
+                
+                if (graphUrl) {
+                    reply(`> **MediaInfo Generado**\n\n📄 Detalles: ${graphUrl}\n\nUso:\n.dw2 [res] [calidad] (doc)\n.dw3 [res] [audio] [sub] [calidad] (doc)`);
+                } else {
+                    reply('Fallo la subida a Graph.org. Revisa la consola de Termux.');
+                }
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
             });
-        } catch (err) { reply('Error en el proceso.'); }
+        } catch (err) { reply('Error critico en el proceso.'); }
     }
 
     if (command === 'dw2' || command === 'dw3') {
@@ -94,10 +109,9 @@ let handler = async (m, { conn, text, command, args }) => {
         const res = args[0];
         const isDw3 = command === 'dw3';
         const calidad = (isDw3 ? args[3] : args[1]) || 'normal';
-        // Verificar si el usuario quiere documento (último argumento)
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
         
-        if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
+        if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida (360, 720, 1080).');
         
         reply(`Procesando en calidad ${calidad}...\nModo: ${asDocument ? 'Documento' : 'Video'}`);
         
@@ -134,15 +148,15 @@ let handler = async (m, { conn, text, command, args }) => {
                     
                     await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                 } else {
-                    reply('Error en FFmpeg.');
+                    reply('Error en el motor de compresion FFmpeg.');
                 }
                 if (fs.existsSync(input)) fs.unlinkSync(input);
                 if (fs.existsSync(output)) fs.unlinkSync(output);
             });
-        } catch (e) { reply('Error critico.'); }
+        } catch (e) { reply('Error en el sistema de archivos.'); }
     }
 };
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-                                                            
+    
