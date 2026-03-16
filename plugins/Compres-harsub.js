@@ -63,8 +63,8 @@ let handler = async (m, { conn, text, command, args }) => {
                 });
                 
                 responseText += '\nUso:\n';
-                responseText += '_***.dw2 [res] [calidad] (doc)***_\n';
-                responseText += '_***.dw3 [res] [audio] [sub] [calidad] (doc)***_';
+                responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
+                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_';
                 
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -147,4 +147,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3)$/i;
 export default handler;
-            
+        
