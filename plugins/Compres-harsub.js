@@ -30,7 +30,6 @@ let handler = async (m, { conn, text, command, args }) => {
 
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
-        console.log(`\x1b[36m[ANALIZANDO]\x1b[0m Pipeline MediaInfo: ${m.sender}`);
         
         const inputVideo = `./temp/video_${Date.now()}`;
         try {
@@ -77,7 +76,8 @@ let handler = async (m, { conn, text, command, args }) => {
                 
                 responseText += '\nUso:\n';
                 responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
-                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_';
+                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n';
+                responseText += '_*.fast (doc)*_';
                 
                 reply(responseText);
                 if (fs.existsSync(inputVideo)) fs.unlinkSync(inputVideo);
@@ -85,54 +85,41 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { reply('Error en analisis.'); }
     }
 
-    if (command === 'dw2' || command === 'dw3') {
+    if (/^(dw2|dw3|fast)$/i.test(command)) {
         if (!m.quoted) return reply('Responde a un video.');
+        
+        const isFast = command === 'fast';
         const isDw3 = command === 'dw3';
-        const res = args[0];
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
         
-        let rawCalidad = isDw3 ? args[3] : args[1];
-        if (rawCalidad && rawCalidad.toLowerCase() === 'doc') rawCalidad = undefined;
-        const calidad = (rawCalidad || 'normal').toLowerCase();
+        // Configuración para el nuevo comando .fast
+        let res = isFast ? '360' : args[0];
+        let crf = isFast ? '32' : '32'; // Base CRF 32
+        let preset = 'ultrafast';
+        let audioCodec = isFast ? ['-c:a', 'aac', '-b:a', '96k'] : ['-c:a', 'copy'];
 
-        if (!['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
+        if (!isFast && !['360', '720', '1080'].includes(res)) return reply('Resolucion invalida.');
 
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`Procesando pipeline a \`${res}p\` (\`${calidad}\`)...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+            reply(`Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            let crf = '23', fpsLimit = [], audioCodec = ['-c:a', 'copy'], preset = 'veryfast', audioBit = '128k';
-            
-            if (calidad === 'alta') { 
-                crf = '18'; 
-                audioBit = '192k'; 
-            } else if (calidad === 'baja') { 
-                crf = '28'; 
-                audioCodec = ['-c:a', 'aac', '-b:a', '96k']; 
-                audioBit = '96k'; 
-            } else if (calidad === 'extremo' || calidad === 'extrema') { 
-                crf = '32'; 
-                preset = 'ultrafast';
-                fpsLimit = ['-r', '24']; 
-                audioCodec = ['-c:a', 'aac', '-b:a', '64k']; 
-                audioBit = '64k'; 
-            }
-
             let ffmpegArgs = ['-i', input];
+            
             if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1;
                 const sIdx = parseInt(args[2]) - 1;
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', audioBit);
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k');
             } else {
                 ffmpegArgs.push('-vf', `scale=-2:${res}`, ...audioCodec);
             }
 
-            ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', preset, '-threads', '2', ...fpsLimit, '-y', output);
+            ffmpegArgs.push('-c:v', 'libx264', '-crf', crf, '-preset', preset, '-threads', '2', '-y', output);
 
             const proc = spawn('ffmpeg', ffmpegArgs);
 
@@ -140,29 +127,28 @@ let handler = async (m, { conn, text, command, args }) => {
                 const line = data.toString();
                 if (line.includes('frame=')) {
                     const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
-                    const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
                     const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
-                    process.stdout.write(`\r\x1b[35m[PROGRESS]\x1b[0m Frame: ${frame} | Time: ${time} | Speed: ${speed}`);
+                    process.stdout.write(`\r\x1b[35m[PROGRESS]\x1b[0m Frame: ${frame} | Speed: ${speed}`);
                 }
             });
 
             proc.on('close', async (code) => {
                 console.log(`\n\x1b[32m[FINISHED]\x1b[0m Codigo: ${code}`);
                 if (code === 0) {
-                    const fileName = `Encod_Video_${res}p.mp4`;
+                    const fileName = `Fast_Video_${res}p.mp4`;
                     const mediaOptions = asDocument 
                         ? { document: fs.readFileSync(output), fileName: fileName, mimetype: 'video/mp4' }
                         : { video: fs.readFileSync(output) };
                     await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                } else { reply('Error en pipeline FFmpeg.'); }
+                } else { reply('Error en FFmpeg.'); }
                 
                 if (fs.existsSync(input)) fs.unlinkSync(input);
                 if (fs.existsSync(output)) fs.unlinkSync(output);
             });
-        } catch (e) { reply('Error de memoria.'); }
+        } catch (e) { reply('Error de proceso.'); }
     }
 };
 
-handler.command = /^(dw|dw2|dw3)$/i;
+handler.command = /^(dw|dw2|dw3|fast)$/i;
 export default handler;
-                
+                    
