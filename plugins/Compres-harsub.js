@@ -30,27 +30,19 @@ let handler = async (m, { conn, text, command, args }) => {
     // --- COMANDO .dw (ANÁLISIS) ---
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
-        
         try {
             const { downloadContentFromMessage } = await import('baileys');
             const message = m.quoted.fakeObj ? m.quoted.fakeObj.message : (m.quoted.vM ? m.quoted.vM.message : m.quoted);
             const type = Object.keys(message)[0];
             const stream = await downloadContentFromMessage(message[type], type.replace('Message', ''));
-            
-            const ffprobe = spawn('ffprobe', [
-                '-v', 'error', '-probesize', '1M', '-analyzeduration', '1M',
-                '-show_streams', '-show_format', '-print_format', 'json', '-i', 'pipe:0'
-            ]);
-
+            const ffprobe = spawn('ffprobe', ['-v', 'error', '-probesize', '1M', '-analyzeduration', '1M', '-show_streams', '-show_format', '-print_format', 'json', '-i', 'pipe:0']);
             let stdoutData = '';
             ffprobe.stdin.on('error', (err) => { if (err.code !== 'EPIPE') console.error(err); });
             stream.pipe(ffprobe.stdin);
             ffprobe.stdout.on('data', (chunk) => { stdoutData += chunk; });
-
             ffprobe.on('close', (code) => {
                 if (stream) stream.destroy();
                 if (code !== 0 || !stdoutData) return reply('Error al analizar el video.');
-
                 try {
                     const data = JSON.parse(stdoutData);
                     const vStream = data.streams.find(s => s.codec_type === 'video');
@@ -58,20 +50,14 @@ let handler = async (m, { conn, text, command, args }) => {
                     const durationSec = parseFloat(data.format.duration || 0);
                     const duration = new Date(durationSec * 1000).toISOString().substr(11, 8);
                     const formatName = data.format.format_long_name ? data.format.format_long_name.split(' / ')[0] : 'Desconocido';
-                    
                     let responseText = '> *Informacion del video*\n\n';
-                    responseText += `> Formato: \`${formatName}\` \n`;
-                    responseText += `> Resolucion: \`${resolution}\` \n`;
-                    responseText += `> Duracion: \`${duration}\` \n`;
-                    responseText += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
-                    
+                    responseText += `> Formato: \`${formatName}\` \n> Resolucion: \`${resolution}\` \n> Duracion: \`${duration}\` \n> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
                     const audios = data.streams.filter(s => s.codec_type === 'audio');
                     responseText += '> *Audios disponibles*\n';
                     audios.forEach((a, i) => {
                         const lang = (a.tags?.language || 'und').toLowerCase();
                         responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                     });
-                    
                     const subs = data.streams.filter(s => s.codec_type === 'subtitle');
                     responseText += '\n> *Subtitulos disponibles*\n';
                     if (subs.length === 0) responseText += '- `Ninguno`\n';
@@ -79,31 +65,23 @@ let handler = async (m, { conn, text, command, args }) => {
                         const lang = (s.tags?.language || 'und').toLowerCase();
                         responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                     });
-                    
                     responseText += '\nUso:\n_*.dw2 [res] [calidad] (doc)*_\n_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n_*.dw4 (doc)*_';
                     reply(responseText);
                 } catch (e) { reply('Error procesando datos.'); }
             });
-        } catch (e) { reply('Error crítico en el flujo.'); }
+        } catch (e) { reply('Error crítico.'); }
     }
 
-    // --- COMANDOS .dw2, .dw3, .dw4 (CONVERSIÓN) ---
+    // --- COMANDOS .dw2, .dw3, .dw4 (CONVERSIÓN CON PROGRESO EN TERMINAL) ---
     if (/^(dw2|dw3|dw4)$/i.test(command)) {
         if (!m.quoted) return reply('Responde a un video.');
         const isDw4 = command === 'dw4';
         const isDw3 = command === 'dw3';
         const asDocument = args.includes('doc');
-        
         const qualityMap = { 'extrema': '18', 'alta': '23', 'media': '28', 'baja': '33' };
         let res = isDw4 ? '360' : (args[0] || '360');
         let crf = '28'; 
-
-        for (let arg of args) {
-            if (qualityMap[arg.toLowerCase()]) {
-                crf = qualityMap[arg.toLowerCase()];
-                break;
-            }
-        }
+        for (let arg of args) { if (qualityMap[arg.toLowerCase()]) { crf = qualityMap[arg.toLowerCase()]; break; } }
 
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
@@ -111,16 +89,17 @@ let handler = async (m, { conn, text, command, args }) => {
 
         try {
             reply(`Procesando \`${command}\` (\`${res}p\`) | Calidad: \`${Object.keys(qualityMap).find(k => qualityMap[k] === crf) || 'media'}\`...`);
-            
             let success = await downloadMediaStream(m.quoted, input);
-            if (!success) return reply('Error crítico en la descarga del medio.');
+            if (!success) return reply('Error en la descarga.');
 
+            // Obtener FPS y Duración para calcular progreso
             exec(`ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate,duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
                 const lines = stdout.split('\n');
+                const fpsIn = eval(lines[0]) || 24;
                 const duration = parseFloat(lines[1]) || 1;
+                const totalFrames = Math.floor(fpsIn * duration);
 
                 let ffmpegArgs = ['-i', input];
-
                 if (isDw4) {
                     const targetSizeKbits = 57 * 8192; 
                     let videoBitrate = Math.max(180, Math.min(2500, Math.floor(targetSizeKbits / duration) - 64));
@@ -132,30 +111,42 @@ let handler = async (m, { conn, text, command, args }) => {
                 } else {
                     ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:v', 'libx264', '-crf', crf, '-preset', 'ultrafast', '-c:a', 'copy');
                 }
-
                 ffmpegArgs.push('-threads', '2', '-y', output);
+
                 const proc = spawn('nice', ['-n', '10', 'ffmpeg', ...ffmpegArgs]);
 
+                // Lógica para mostrar PROGRESO en el terminal
+                proc.stderr.on('data', (data) => {
+                    const line = data.toString();
+                    if (line.includes('frame=')) {
+                        const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
+                        const currFps = line.match(/fps=\s*([\d.]+)/)?.[1] || '0';
+                        const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
+                        const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
+                        const progress = totalFrames > 0 ? ((parseInt(frame) / totalFrames) * 100).toFixed(1) : '0.0';
+
+                        // Limpia la línea y escribe el progreso en el terminal
+                        process.stdout.write(`\r\x1b[35m[PROGRESS] ${progress}% | Frame: ${frame} | FPS: ${currFps} | Time: ${time} | Speed: ${speed}\x1b[0m`);
+                    }
+                });
+
                 proc.on('close', async (code) => {
+                    process.stdout.write('\n'); // Salto de línea al terminar
                     if (code === 0 && fs.existsSync(output)) {
                         const stats = fs.statSync(output);
                         const mediaOptions = asDocument 
                             ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
                             : { video: fs.readFileSync(output), caption: `✅ *Proceso Finalizado*\n\n📈 Tamaño: \`${(stats.size / (1024 * 1024)).toFixed(2)} MB\`\n⚙️ Comando: \`${command}\`` };
-                        
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                     } else { reply('Error en FFmpeg.'); }
                     if (fs.existsSync(input)) fs.unlinkSync(input);
                     if (fs.existsSync(output)) fs.unlinkSync(output);
                 });
             });
-        } catch (e) { 
-            reply('Error fatal.');
-            if (fs.existsSync(input)) fs.unlinkSync(input);
-        }
+        } catch (e) { reply('Error fatal.'); if (fs.existsSync(input)) fs.unlinkSync(input); }
     }
 };
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-        
+                        
