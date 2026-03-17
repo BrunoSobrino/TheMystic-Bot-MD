@@ -7,20 +7,11 @@ let handler = async (m, { conn, text, command, args }) => {
 
     if (!fs.existsSync('./temp')) fs.mkdirSync('./temp', { recursive: true });
 
-    // Diccionario extendido de banderas
     const flags = {
-        'spa': '🇲🇽 (es)', 'es': '🇲🇽 (es)', 
-        'eng': '🇺🇸 (en)', 'en': '🇺🇸 (en)', 
-        'jpn': '🇯🇵 (ja)', 'ja': '🇯🇵 (ja)',
-        'por': '🇧🇷 (pt)', 'pt': '🇧🇷 (pt)', 
-        'ara': '🇸🇦 (ar)', 'ar': '🇸🇦 (ar)', 
-        'fre': '🇫🇷 (fr)', 'fra': '🇫🇷 (fr)', 'fr': '🇫🇷 (fr)',
-        'ger': '🇩🇪 (de)', 'de': '🇩🇪 (de)', 
-        'ita': '🇮🇹 (it)', 'it': '🇮🇹 (it)', 
-        'rus': '🇷🇺 (ru)', 'ru': '🇷🇺 (ru)',
-        'chi': '🇨🇳 (zh)', 'zh': '🇨🇳 (zh)', 
-        'kor': '🇰🇷 (ko)', 'ko': '🇰🇷 (ko)', 
-        'und': '🏳️ (??)'
+        'spa': '🇲🇽', 'es': '🇲🇽', 'eng': '🇺🇸', 'en': '🇺🇸', 'jpn': '🇯🇵', 'ja': '🇯🇵',
+        'por': '🇧🇷', 'pt': '🇧🇷', 'ara': '🇸🇦', 'ar': '🇸🇦', 'fre': '🇫🇷', 'fra': '🇫🇷', 'fr': '🇫🇷',
+        'ger': '🇩🇪', 'de': '🇩🇪', 'ita': '🇮🇹', 'it': '🇮🇹', 'rus': '🇷🇺', 'ru': '🇷🇺',
+        'chi': '🇨🇳', 'zh': '🇨🇳', 'kor': '🇰🇷', 'ko': '🇰🇷', 'und': '🏳️'
     };
 
     const downloadMediaStream = async (quoted, outputPath) => {
@@ -30,7 +21,6 @@ let handler = async (m, { conn, text, command, args }) => {
             const type = Object.keys(message)[0];
             const media = message[type];
             if (!media || !media.mediaKey) return false;
-
             const stream = await downloadContentFromMessage(media, type.replace('Message', ''));
             await pipeline(stream, fs.createWriteStream(outputPath));
             return true;
@@ -67,32 +57,34 @@ let handler = async (m, { conn, text, command, args }) => {
                     const resolution = vStream ? `${vStream.width}x${vStream.height}` : 'Desconocida';
                     const durationSec = parseFloat(data.format.duration || 0);
                     const duration = new Date(durationSec * 1000).toISOString().substr(11, 8);
+                    const formatName = data.format.format_long_name ? data.format.format_long_name.split(' / ')[0] : 'Desconocido';
                     
-                    let responseText = '┏━━〔 *INFO VIDEO* 〕━━┓\n┃\n';
-                    responseText += `┃ 📺 *Resolución:* \`${resolution}\` \n`;
-                    responseText += `┃ ⏳ *Duración:* \`${duration}\`\n`;
-                    responseText += `┃ ⚖️ *Peso:* \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n┃\n`;
+                    let responseText = '> *Informacion del video*\n\n';
+                    responseText += `> Formato: \`${formatName}\` \n`;
+                    responseText += `> Resolucion: \`${resolution}\` \n`;
+                    responseText += `> Duracion: \`${duration}\` \n`;
+                    responseText += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
                     
                     const audios = data.streams.filter(s => s.codec_type === 'audio');
-                    responseText += '┣━━〔 *AUDIOS* 〕\n';
+                    responseText += '> *Audios disponibles*\n';
                     audios.forEach((a, i) => {
                         const lang = (a.tags?.language || 'und').toLowerCase();
-                        responseText += `┃ ${i + 1}. ${flags[lang] || '🏳️ (' + lang + ')'} - \`${a.codec_name}\`\n`;
+                        responseText += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                     });
                     
                     const subs = data.streams.filter(s => s.codec_type === 'subtitle');
-                    responseText += '┃\n┣━━〔 *SUBTÍTULOS* 〕\n';
-                    if (subs.length === 0) responseText += '┃ 🚫 Ninguno\n';
+                    responseText += '\n> *Subtitulos disponibles*\n';
+                    if (subs.length === 0) responseText += '- `Ninguno`\n';
                     else subs.forEach((s, i) => {
                         const lang = (s.tags?.language || 'und').toLowerCase();
-                        responseText += `┃ ${i + 1}. ${flags[lang] || '🏳️ (' + lang + ')'} - \`${s.codec_name}\`\n`;
+                        responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                     });
                     
-                    responseText += '┃\n┗━━━━━━━━━━━━━━━┓\n\n*Uso:* \n_.dw2 [res] [calidad]_\n_.dw3 [res] [pista_audio] [pista_sub]_';
+                    responseText += '\nUso:\n_*.dw2 [res] [calidad] (doc)*_\n_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n_*.dw4 (doc)*_';
                     reply(responseText);
                 } catch (e) { reply('Error procesando datos.'); }
             });
-        } catch (e) { reply('Error de conexión con el flujo.'); }
+        } catch (e) { reply('Error crítico en el flujo.'); }
     }
 
     // --- COMANDOS .dw2, .dw3, .dw4 (CONVERSIÓN) ---
@@ -118,10 +110,10 @@ let handler = async (m, { conn, text, command, args }) => {
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`⏳ Procesando... \nResolución: \`${res}p\` | Calidad: \`${Object.keys(qualityMap).find(k => qualityMap[k] === crf) || 'media'}\``);
+            reply(`Procesando \`${command}\` (\`${res}p\`) | Calidad: \`${Object.keys(qualityMap).find(k => qualityMap[k] === crf) || 'media'}\`...`);
             
             let success = await downloadMediaStream(m.quoted, input);
-            if (!success) return reply('Error al descargar el archivo.');
+            if (!success) return reply('Error crítico en la descarga del medio.');
 
             exec(`ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate,duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
                 const lines = stdout.split('\n');
@@ -149,7 +141,7 @@ let handler = async (m, { conn, text, command, args }) => {
                         const stats = fs.statSync(output);
                         const mediaOptions = asDocument 
                             ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
-                            : { video: fs.readFileSync(output), caption: `✅ *Listo:* \`${(stats.size / 1024 / 1024).toFixed(2)} MB\`` };
+                            : { video: fs.readFileSync(output), caption: `✅ *Proceso Finalizado*\n\n📈 Tamaño: \`${(stats.size / (1024 * 1024)).toFixed(2)} MB\`\n⚙️ Comando: \`${command}\`` };
                         
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                     } else { reply('Error en FFmpeg.'); }
@@ -166,4 +158,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4)$/i;
 export default handler;
-                    
+        
