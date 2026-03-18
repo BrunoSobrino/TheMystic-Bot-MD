@@ -1,5 +1,5 @@
-// Plugin Torrent WHATSAPP - PURE STREAM (ESM Version)
-// 0% RAM Accumulation - Compatible con KanaArima-MD
+// Plugin: Torrent Streamer para KanaArima-MD
+// Descripción: Descarga archivos .torrent directamente a WhatsApp sin usar RAM ni Disco.
 
 import https from 'https';
 import http from 'http';
@@ -8,100 +8,87 @@ import { PassThrough } from 'stream';
 const T = '```';
 
 const CONFIG = {
-    MAX_MEMORY_LIMIT: 2 * 1024 * 1024 * 1024, // 2GB
+    MAX_SIZE: 2 * 1024 * 1024 * 1024, // Límite de 2GB
     SUPPORTED_EXT: ['.torrent', '.trt']
 };
 
-class PureStreamTorrent {
-    isValidTorrentUrl(url) {
-        return CONFIG.SUPPORTED_EXT.some(ext => url.toLowerCase().endsWith(ext));
-    }
+/**
+ * Lógica de Streaming sin acumulación de memoria
+ */
+const streamTorrent = async (url, from, client) => {
+    const isHttps = url.startsWith('https');
+    const protocol = isHttps ? https : http;
 
-    getProtocol(url) {
-        return url.startsWith('https') ? https : http;
-    }
+    return new Promise((resolve) => {
+        const req = protocol.get(url, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (Termux; Android) KanaArima-MD/6.0' }
+        });
 
-    async streamToWhatsApp(url, from, client) {
-        try {
-            if (!this.isValidTorrentUrl(url)) {
-                return { status: false, message: `❌ URL inválida\n\nEjemplo: .torrent https://site.com/file.torrent` };
+        req.on('response', async (res) => {
+            const totalBytes = parseInt(res.headers['content-length'] || '0');
+            const sizeMB = (totalBytes / (1024 * 1024)).toFixed(2);
+
+            // Validación de tamaño
+            if (totalBytes > CONFIG.MAX_SIZE) {
+                req.destroy();
+                return resolve({ status: false, message: `❌ El archivo es demasiado grande (${sizeMB}MB). Límite: 2GB.` });
             }
 
+            // Creamos el túnel de datos (PassThrough)
             const bridge = new PassThrough();
-            
-            const req = this.getProtocol(url).get(url, {
-                headers: { 'User-Agent': 'Mozilla/5.0 (Linux; Android) TorrentBot/3.0' }
-            });
+            res.pipe(bridge);
 
-            return new Promise((resolve) => {
-                req.on('response', async (res) => {
-                    const totalBytes = parseInt(res.headers['content-length'] || '0');
-                    const sizeMB = (totalBytes / (1024 * 1024)).toFixed(2);
-
-                    if (totalBytes > CONFIG.MAX_MEMORY_LIMIT) {
-                        req.destroy();
-                        return resolve({ status: false, message: `❌ Excede el límite de 2GB (Archivo: ${sizeMB}MB)` });
-                    }
-
-                    // Flujo directo: Red -> Bridge -> WhatsApp
-                    res.pipe(bridge);
-
-                    try {
-                        await client.sendMessage(from, {
-                            document: { stream: bridge },
-                            fileName: `torrent_${Date.now()}.torrent`,
-                            mimetype: 'application/x-bittorrent',
-                            caption: `✅ *Torrent Streamed*\n\n📊 *Tamaño:* ${sizeMB}MB\n🚀 *Modo:* ESM Pure Stream\n⚡ *Status:* Sin archivos temporales`
-                        }, { quoted: null });
-
-                        resolve({ status: true });
-                    } catch (err) {
-                        resolve({ status: false, message: `❌ Error en el pipeline: ${err.message}` });
-                    }
+            try {
+                // Enviamos el flujo directamente a la API de WhatsApp
+                await client.sendMessage(from, {
+                    document: { stream: bridge },
+                    fileName: `torrent_${Date.now()}.torrent`,
+                    mimetype: 'application/x-bittorrent',
+                    caption: `✅ *Torrent Procesado*\n\n📊 *Peso:* ${sizeMB} MB\n🚀 *Método:* Stream Pipeline\n⚡ *Entorno:* Termux (No RAM)`
                 });
+                resolve({ status: true });
+            } catch (err) {
+                resolve({ status: false, message: `❌ Error al enviar: ${err.message}` });
+            }
+        });
 
-                req.on('error', (err) => resolve({ status: false, message: `❌ Error de red: ${err.message}` }));
-                
-                req.setTimeout(300000, () => {
-                    req.destroy();
-                    resolve({ status: false, message: '⏰ Timeout de conexión (5 min)' });
-                });
-            });
+        req.on('error', (err) => resolve({ status: false, message: `❌ Error de conexión: ${err.message}` }));
+        req.setTimeout(60000, () => { req.destroy(); resolve({ status: false, message: '⏰ Tiempo de espera agotado.' }); });
+    });
+};
 
-        } catch (error) {
-            return { status: false, message: `❌ Error crítico: ${error.message}` };
-        }
-    }
-}
-
-const streamer = new PureStreamTorrent();
-
-// Exportación compatible con el cargador de plugins de KanaArima-MD
 export default {
     name: "torrent",
-    aliases: ['trt'],
+    aliases: ["trt"],
     category: "download",
-    description: "Descarga torrents directamente a WhatsApp sin usar RAM.",
-
+    description: "Envía un archivo .torrent mediante streaming directo.",
+    
     async execute(msg, args, client) {
         const from = msg.key.remoteJid;
         const url = args[0]?.trim();
 
         if (!url) {
             return client.sendMessage(from, { 
-                text: `${T}⚠️ Proporciona una URL de un archivo .torrent${T}` 
+                text: `💡 *Uso Correcto:*\n.torrent <enlace_directo_torrent>\n\nEjemplo:\n${T}.torrent https://nyaa.si/download/123.torrent${T}` 
             });
         }
 
-        const loading = await client.sendMessage(from, { text: "🔄 Procesando stream de torrent..." });
+        // Validar extensión
+        const isValid = CONFIG.SUPPORTED_EXT.some(ext => url.toLowerCase().endsWith(ext));
+        if (!isValid) {
+            return client.sendMessage(from, { text: "❌ La URL debe terminar en `.torrent` o `.trt`" });
+        }
 
-        const result = await streamer.streamToWhatsApp(url, from, client);
+        const { key } = await client.sendMessage(from, { text: "📥 *Iniciando pipeline de datos...*" });
+
+        const result = await streamTorrent(url, from, client);
 
         if (!result.status) {
             await client.sendMessage(from, { text: result.message });
         }
-        
-        // Limpieza del mensaje de carga
-        await client.sendMessage(from, { delete: loading.key });
+
+        // Borrar el mensaje de "Iniciando" para limpiar el chat
+        await client.sendMessage(from, { delete: key });
     }
 };
+        
