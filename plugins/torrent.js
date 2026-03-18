@@ -7,10 +7,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const handler = async (m, { conn, args, usedPrefix, command, db }) => {
+const cooldowns = new Map();
+const activeTorrents = new Map();
+
+const handler = async (m, { conn, args, usedPrefix, command }) => {
     const url = args[0]?.trim();
 
-    // 🔍 VALIDACIÓN MEJORADA DEL TORRENT
     if (!url) {
         return m.reply(`*⚠️ ERROR DE ENLACE*\n\n📋 *Uso:* ${usedPrefix + command} <link_torrent>\n\n💡 *Ejemplo:* ${usedPrefix + command} https://torrent-url.com/file.torrent`);
     }
@@ -19,31 +21,28 @@ const handler = async (m, { conn, args, usedPrefix, command, db }) => {
         return m.reply(`*❌ URL INVÁLIDA*\n\n🔗 Debe ser un enlace .torrent o magnet link válido`);
     }
 
-    // 🚫 ANTI-SPAM: Verificar cooldown por usuario
-    const cooldownKey = `torrent_cooldown_${m.sender}`;
+    const cooldownKey = `torrent_${m.sender}`;
     const now = Date.now();
-    const cooldownData = db.data?.cooldowns?.[cooldownKey];
+    const userCooldown = cooldowns.get(cooldownKey);
     
-    if (cooldownData && (now - cooldownData.lastUsed) < 300000) { // 5 minutos
-        const remaining = Math.ceil((300000 - (now - cooldownData.lastUsed)) / 60000);
+    if (userCooldown && (now - userCooldown.lastUsed) < 300000) {
+        const remaining = Math.ceil((300000 - (now - userCooldown.lastUsed)) / 60000);
         return m.reply(`*⏳ COOLDOWN ACTIVO*\n\n⏰ Espera ${remaining} minuto${remaining > 1 ? 's' : ''} antes de usar de nuevo`);
     }
 
-    // 📤 MENSAJE INICIAL CON CANCELACIÓN
     const { key } = await conn.sendMessage(m.chat, { 
-        text: `🔄 *CONECTANDO CON TORRENT...*\n\n⏳ Revisa la consola para progreso\n\n⚠️ *Cancelar:* .cancelar` 
+        text: `🔄 *CONECTANDO CON TORRENT...*\n\n⏳ Revisa la consola para progreso\n⚠️ *Cancelar:* \`.cancelar\`` 
     }, { quoted: m });
 
-    // 💾 REGISTRAR EN DB PARA CANCELACIÓN
-    if (!db.data.cooldowns) db.data.cooldowns = {};
-    db.data.cooldowns[cooldownKey] = { lastUsed: now, engineId: Date.now() };
-    db.data.activeTorrents = db.data.activeTorrents || [];
-    db.data.activeTorrents.push({ chat: m.chat, key, engineId: Date.now(), sender: m.sender });
+    cooldowns.set(cooldownKey, { lastUsed: now, engineId: Date.now() });
+    activeTorrents.set(m.chat + '_' + m.sender, { key, engineId: Date.now(), sender: m.sender });
 
-    const tmpDir = path.join(__dirname, '../tmp_torrents');
+    const tmpDir = path.join(process.cwd(), 'tmp_torrents');
     ensureDir(tmpDir);
 
     let engine;
+    let cancelListener;
+
     try {
         engine = torrentStream(url, {
             path: tmpDir,
@@ -56,62 +55,63 @@ const handler = async (m, { conn, args, usedPrefix, command, db }) => {
                 'udp://p4p.arenabg.com:1337',
                 'udp://tracker.cyberia.is:6969/announce'
             ],
-            connections: 55,        // Máx conexiones
-            uploadsLimit: 15,       // KB/s upload
-            downloadsLimit: -1,     // Sin límite download
-            maxConnections: 100,
-            tmpDir: tmpDir
+            connections: 55,
+            uploadsLimit: 15,
+            downloadsLimit: -1,
+            maxConnections: 100
         });
 
-        // 🛡️ CANCELACIÓN POR USUARIO
-        const cancelListener = (msg) => {
-            if (msg.text === '.cancelar' && msg.sender === m.sender && msg.chat === m.chat) {
-                engine.destroy();
-                cleanup();
+        cancelListener = (update) => {
+            const msg = update.messages[0];
+            if (msg.message?.conversation === '.cancelar' && 
+                msg.key.remoteJid === m.chat && 
+                msg.key.participant === m.sender) {
+                
+                if (engine) {
+                    engine.destroy();
+                    console.log('\n❌ Torrent cancelado por usuario');
+                }
                 conn.sendMessage(m.chat, { delete: key });
-                conn.reply(m.chat, '❌ *TORRENT CANCELADO*', msg);
-                conn.ev.off('messages.upsert', cancelListener);
+                conn.reply(m.chat, '❌ *TORRENT CANCELADO POR USUARIO*', msg.key);
+                cleanup();
             }
         };
+
         conn.ev.on('messages.upsert', cancelListener);
 
         engine.on('ready', () => {
             const files = engine.files.filter(f => f.length > 0);
             if (!files.length) throw new Error('No hay archivos válidos en el torrent');
 
-            // 🎯 SELECCIONAR MEJOR ARCHIVO (video prioritario)
             let selectedFile = files.reduce((best, file) => {
-                const bestExt = best.name.match(/\.(mp4|mkv|avi|mov|wmv|flv)$/i);
-                const currExt = file.name.match(/\.(mp4|mkv|avi|mov|wmv|flv)$/i);
+                const bestExt = best.name.match(/\.(mp4|mkv|avi|mov|wmv|flv|webm)$/i);
+                const currExt = file.name.match(/\.(mp4|mkv|avi|mov|wmv|flv|webm)$/i);
                 
-                if (!bestExt && currExt) return file;  // Prioridad video
+                if (!bestExt && currExt) return file;
                 if (currExt && !bestExt) return best;
                 return file.length > best.length ? file : best;
             });
 
             const totalSize = (selectedFile.length / 1048576).toFixed(2);
             
-            // 🚫 LÍMITE DE TAMAÑO (2GB)
             if (selectedFile.length > 2 * 1024 * 1024 * 1024) {
-                throw new Error(`Archivo demasiado grande: ${(selectedFile.length / (1024**3)).toFixed(2)} GB (Máx: 2GB)`);
+                throw new Error(`Archivo demasiado grande: ${(selectedFile.length / (1024**3)).toFixed(2)} GB (Max: 2GB)`);
             }
 
             console.clear();
             console.log('\n' + '='.repeat(60));
-            console.log(`🎬 TORRENT STREAMER v2.0`);
-            console.log(`📁 Archivo: ${selectedFile.name}`);
-            console.log(`⚖️  Tamaño: ${totalSize} MB`);
-            console.log(`🎯 Extensión: ${path.extname(selectedFile.name).toUpperCase()}`);
+            console.log(`TORRENT STREAMER v2.1`);
+            console.log(`📁 ${selectedFile.name}`);
+            console.log(`⚖️  ${totalSize} MB`);
+            console.log(`🎯 ${path.extname(selectedFile.name).toUpperCase()}`);
             console.log('='.repeat(60));
 
             const stream = selectedFile.createReadStream();
             const bridge = new PassThrough();
-            let downloaded = 0;
             let startTime = Date.now();
 
             stream.pipe(bridge);
 
-            // 📊 MONITOR DE PROGRESO AVANZADO
             const progressInterval = setInterval(() => {
                 const percent = ((engine.swarm.downloaded / selectedFile.length) * 100).toFixed(1);
                 const peers = engine.swarm.wires.length;
@@ -131,11 +131,10 @@ const handler = async (m, { conn, args, usedPrefix, command, db }) => {
                 }
 
                 process.stdout.write(
-                    `\r📊 ${percent}% | ⚡ ${speed}KB/s (Ø${avgSpeed}) | 🌱 ${seeds}/${peers} | ⏰ ${eta} | 📥 ${formatBytes(engine.swarm.downloaded)}`
+                    `\r📊 ${percent}% | ⚡ ${speed}KB/s (Ø${avgSpeed}) | 🌱 ${seeds}/${peers} | ⏰ ${eta}`
                 );
             }, 1000);
 
-            // 📤 ENVÍO INTELIGENTE SEGÚN TIPO DE ARCHIVO
             const ext = path.extname(selectedFile.name).toLowerCase();
             const isVideo = /\.(mp4|mkv|avi|mov|wmv|flv|webm)$/i.test(ext);
             const isAudio = /\.(mp3|wav|flac|aac|m4a|ogg)$/i.test(ext);
@@ -143,7 +142,7 @@ const handler = async (m, { conn, args, usedPrefix, command, db }) => {
             let messageConfig = {
                 document: { stream: bridge },
                 fileName: selectedFile.name,
-                caption: `✅ *ARCHIVO DESCARGADO*\n\n📁 *Nombre:* ${selectedFile.name}\n⚖️ *Tamaño:* ${totalSize} MB\n🚀 *Velocidad:* Streaming directo`
+                caption: `✅ *ARCHIVO DESCARGADO*\n\n📁 *Nombre:* ${selectedFile.name}\n⚖️ *Tamaño:* ${totalSize} MB`
             };
 
             if (isVideo) {
@@ -165,14 +164,13 @@ const handler = async (m, { conn, args, usedPrefix, command, db }) => {
 
             sendPromise.then(async () => {
                 clearInterval(progressInterval);
-                console.log(`\n\n✅ [ÉXITO] Archivo enviado correctamente`);
+                console.log(`\n\n✅ [EXITO] Archivo enviado correctamente`);
                 await cleanup();
-                conn.sendMessage(m.chat, { delete: key });
             }).catch(async (err) => {
                 clearInterval(progressInterval);
                 console.error('\n❌ Error enviando:', err.message);
                 await cleanup();
-                conn.reply(m.chat, `❌ *Error al enviar:* ${err.message}`, m);
+                conn.reply(m.chat, `❌ *Error al enviar:* ${err.message}\n\n💡 Intenta con un archivo más pequeño`, m);
             });
 
         });
@@ -182,31 +180,36 @@ const handler = async (m, { conn, args, usedPrefix, command, db }) => {
         });
 
         engine.on('error', async (err) => {
-            console.error('\n💥 ERROR DEL MOTOR:', err.message);
+            console.error('\n❌ ERROR DEL MOTOR:', err.message);
             await cleanup();
             conn.reply(m.chat, `❌ *Error del torrent:*\n${err.message}`, m);
         });
 
     } catch (error) {
-        console.error('💥 ERROR INICIAL:', error);
+        console.error('❌ ERROR INICIAL:', error);
         conn.reply(m.chat, `❌ *Error crítico:*\n${error.message}`, m);
         if (engine) engine.destroy();
+        cleanup();
     }
 
-    // 🧹 FUNCIÓN DE LIMPIEZA
     const cleanup = async () => {
-        conn.ev.off('messages.upsert', cancelListener);
+        if (cancelListener) {
+            conn.ev.off('messages.upsert', cancelListener);
+        }
         if (engine) {
             engine.removeAllListeners();
             engine.destroy();
         }
+        activeTorrents.delete(m.chat + '_' + m.sender);
+        for (let [key, data] of cooldowns.entries()) {
+            if (now - data.lastUsed > 3600000) {
+                cooldowns.delete(key);
+            }
+        }
         clearTmpDir(tmpDir);
-        // Limpiar DB
-        db.data.activeTorrents = db.data.activeTorrents.filter(t => t.engineId !== db.data.cooldowns[cooldownKey]?.engineId);
     };
 };
 
-// 🛠️ UTILIDADES
 const ensureDir = (dirPath) => {
     if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath, { recursive: true });
@@ -214,23 +217,18 @@ const ensureDir = (dirPath) => {
 };
 
 const clearTmpDir = (dirPath) => {
-    if (fs.existsSync(dirPath)) {
-        fs.rmSync(dirPath, { recursive: true, force: true });
+    try {
+        if (fs.existsSync(dirPath)) {
+            fs.rmSync(dirPath, { recursive: true, force: true });
+        }
+    } catch (e) {
+        console.log('⚠️ No se pudo limpiar tmp:', e.message);
     }
-};
-
-const formatBytes = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
 handler.help = ['torrent', 'trt'];
 handler.tags = ['downloader', 'media'];
 handler.command = /^(torrent|trt)$/i;
 handler.limit = true;
-handler.group = true;
 
 export default handler;
