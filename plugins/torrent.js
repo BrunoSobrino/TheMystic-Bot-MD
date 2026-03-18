@@ -1,94 +1,87 @@
-// Plugin: Torrent Streamer para KanaArima-MD
-// Descripción: Descarga archivos .torrent directamente a WhatsApp sin usar RAM ni Disco.
+// Plugin Torrent - KanaArima-MD
+// Ruta: /data/data/com.termux/files/home/KanaArima-MD/plugins/torrent.js
 
 import https from 'https';
 import http from 'http';
 import { PassThrough } from 'stream';
 
-const T = '```';
-
-const CONFIG = {
-    MAX_SIZE: 2 * 1024 * 1024 * 1024, // Límite de 2GB
-    SUPPORTED_EXT: ['.torrent', '.trt']
-};
-
 /**
- * Lógica de Streaming sin acumulación de memoria
+ * Función de procesamiento de Stream directo
+ * No acumula buffers, solo actúa como puente.
  */
-const streamTorrent = async (url, from, client) => {
-    const isHttps = url.startsWith('https');
-    const protocol = isHttps ? https : http;
+const startStreaming = async (url, from, client) => {
+    const protocol = url.startsWith('https') ? https : http;
 
     return new Promise((resolve) => {
         const req = protocol.get(url, {
-            headers: { 'User-Agent': 'Mozilla/5.0 (Termux; Android) KanaArima-MD/6.0' }
+            headers: { 'User-Agent': 'Mozilla/5.0 (Android; Termux) KanaArima-MD/6.0' }
         });
 
         req.on('response', async (res) => {
             const totalBytes = parseInt(res.headers['content-length'] || '0');
             const sizeMB = (totalBytes / (1024 * 1024)).toFixed(2);
 
-            // Validación de tamaño
-            if (totalBytes > CONFIG.MAX_SIZE) {
+            // Seguridad: Límite de 2GB
+            if (totalBytes > 2 * 1024 * 1024 * 1024) {
                 req.destroy();
-                return resolve({ status: false, message: `❌ El archivo es demasiado grande (${sizeMB}MB). Límite: 2GB.` });
+                return resolve({ status: false, message: `❌ Archivo demasiado pesado: ${sizeMB}MB` });
             }
 
-            // Creamos el túnel de datos (PassThrough)
+            // Creamos el conducto (PassThrough)
             const bridge = new PassThrough();
             res.pipe(bridge);
 
             try {
-                // Enviamos el flujo directamente a la API de WhatsApp
+                // Enviamos el stream directamente a WhatsApp
                 await client.sendMessage(from, {
                     document: { stream: bridge },
                     fileName: `torrent_${Date.now()}.torrent`,
                     mimetype: 'application/x-bittorrent',
-                    caption: `✅ *Torrent Procesado*\n\n📊 *Peso:* ${sizeMB} MB\n🚀 *Método:* Stream Pipeline\n⚡ *Entorno:* Termux (No RAM)`
+                    caption: `✅ *Stream Completo*\n\n📊 *Peso:* ${sizeMB} MB\n🚀 *Metodo:* Zero-RAM Pipeline\n📱 *Entorno:* Termux ESM`
                 });
                 resolve({ status: true });
             } catch (err) {
-                resolve({ status: false, message: `❌ Error al enviar: ${err.message}` });
+                resolve({ status: false, message: `❌ Error en el envío: ${err.message}` });
             }
         });
 
-        req.on('error', (err) => resolve({ status: false, message: `❌ Error de conexión: ${err.message}` }));
-        req.setTimeout(60000, () => { req.destroy(); resolve({ status: false, message: '⏰ Tiempo de espera agotado.' }); });
+        req.on('error', (err) => resolve({ status: false, message: `❌ Error de red: ${err.message}` }));
+        req.setTimeout(60000, () => { req.destroy(); resolve({ status: false, message: '⏰ Tiempo agotado.' }); });
     });
 };
 
 export default {
     name: "torrent",
-    aliases: ["trt"],
+    aliases: ["trt"], // Esto permite que funcione con .trt y .torrent
     category: "download",
-    description: "Envía un archivo .torrent mediante streaming directo.",
-    
+    description: "Descarga archivos torrent por stream directo.",
+
     async execute(msg, args, client) {
         const from = msg.key.remoteJid;
         const url = args[0]?.trim();
 
+        // Si no hay URL, enviamos el menú de ayuda
         if (!url) {
             return client.sendMessage(from, { 
-                text: `💡 *Uso Correcto:*\n.torrent <enlace_directo_torrent>\n\nEjemplo:\n${T}.torrent https://nyaa.si/download/123.torrent${T}` 
+                text: `*Uso de Comandos:*\n\n.torrent <link>\n.trt <link>\n\n_Ejemplo: .trt https://site.com/file.torrent_` 
             });
         }
 
-        // Validar extensión
-        const isValid = CONFIG.SUPPORTED_EXT.some(ext => url.toLowerCase().endsWith(ext));
-        if (!isValid) {
-            return client.sendMessage(from, { text: "❌ La URL debe terminar en `.torrent` o `.trt`" });
+        // Validación rápida de extensión
+        if (!url.toLowerCase().endsWith('.torrent') && !url.toLowerCase().endsWith('.trt')) {
+            return client.sendMessage(from, { text: "⚠️ La URL debe ser un enlace directo a un archivo .torrent" });
         }
 
-        const { key } = await client.sendMessage(from, { text: "📥 *Iniciando pipeline de datos...*" });
+        // Mensaje de espera (Loading)
+        const { key } = await client.sendMessage(from, { text: "🚀 *Conectando con el servidor...*" });
 
-        const result = await streamTorrent(url, from, client);
+        const result = await startStreaming(url, from, client);
 
         if (!result.status) {
             await client.sendMessage(from, { text: result.message });
         }
 
-        // Borrar el mensaje de "Iniciando" para limpiar el chat
+        // Borramos el mensaje de "Conectando" para no ensuciar el chat
         await client.sendMessage(from, { delete: key });
     }
 };
-        
