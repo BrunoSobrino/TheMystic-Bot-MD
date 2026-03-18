@@ -2,6 +2,7 @@ import torrentStream from 'torrent-stream';
 import { PassThrough } from 'stream';
 import fs from 'fs';
 import path from 'path';
+import { randomBytes } from 'crypto';
 
 const cooldowns = new Map();
 const activeEngines = new WeakMap();
@@ -14,54 +15,68 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     }
 
     if (!url.match(/\.torrent$|magnet:\?/i)) {
-        return m.reply(`❌ *URL INVÁLIDA*\n\n🔗 Debe ser un enlace .torrent o magnet link válido.`);
+        return m.reply(`❌ *URL INVÁLIDA*\n\n🔗 El enlace debe ser un archivo .torrent o un magnet link.`);
     }
 
-    // --- Sistema de Cooldown ---
+    // --- Control de Cooldown ---
     const cooldownKey = `torrent_${m.sender}`;
     const now = Date.now();
-    const userCooldown = cooldowns.get(cooldownKey);
-    
-    if (userCooldown && (now - userCooldown.lastUsed) < 300000) {
-        const remaining = Math.ceil((300000 - (now - userCooldown.lastUsed)) / 60000);
-        return m.reply(`⏳ *COOLDOWN ACTIVO*\n\n⏰ Espera ${remaining} minuto${remaining > 1 ? 's' : ''} para pedir otro torrent.`);
+    if (cooldowns.has(cooldownKey) && (now - cooldowns.get(cooldownKey).lastUsed) < 300000) {
+        const remaining = Math.ceil((300000 - (now - cooldowns.get(cooldownKey).lastUsed)) / 60000);
+        return m.reply(`⏳ *ESPERA:* Faltan ${remaining} minuto${remaining > 1 ? 's' : ''} para volver a usar este comando.`);
     }
 
     const { key } = await conn.sendMessage(m.chat, { 
-        text: `🔄 *CONECTANDO CON EL ENJAMBRE...*\n\n⏳ Buscando peers (esto puede tardar unos segundos)\n⚠️ Cancelar: Use .cancelar (si implementado)` 
+        text: `🔄 *INICIANDO MOTOR TORRENT...*\n\n📡 Conectando con pares (peers)...\n⏱️ Tiempo estimado: 15-40 seg.` 
     }, { quoted: m });
 
     cooldowns.set(cooldownKey, { lastUsed: now });
     
-    // Directorio temporal único por usuario para evitar errores de Node.js Internals
-    const userId = m.sender.replace(/[^0-9]/g, '');
-    const userTmpDir = path.join('./tmp_torrents', `${userId}_${Date.now()}`);
-    ensureDir(userTmpDir);
+    // Crear carpeta temporal única con ID aleatorio para evitar conflictos de Node.js
+    const sessionId = randomBytes(4).toString('hex');
+    const userTmpDir = path.join('./tmp_torrents', `session_${sessionId}`);
+    
+    if (!fs.existsSync('./tmp_torrents')) fs.mkdirSync('./tmp_torrents');
+    fs.mkdirSync(userTmpDir, { recursive: true });
 
     let engine = null;
     let progressInterval = null;
     let bridge = null;
     let fileStream = null;
 
+    // Función de limpieza "suave" para evitar el ERR_INTERNAL_ASSERTION
     const safeCleanup = async () => {
         try {
             if (progressInterval) clearInterval(progressInterval);
             
-            // Cerrar streams antes de destruir el motor
+            // 1. Desconectar streams antes de cerrar el motor
             if (fileStream) fileStream.unpipe();
-            if (bridge) bridge.destroy();
+            if (bridge) {
+                bridge.end();
+                bridge.destroy();
+            }
             
             if (engine) {
-                engine.remove(() => {}); 
-                engine.destroy();
-                engine = null;
+                // Removemos los listeners para evitar triggers durante el cierre
+                engine.removeAllListeners();
+                engine.destroy(() => {
+                    engine = null;
+                });
             }
             
             activeEngines.delete(m);
-            // Pequeño delay para asegurar que Node soltó los archivos antes de borrar
-            setTimeout(() => clearTmpDir(userTmpDir), 2000);
+
+            // 2. Borrado diferido (Delay): Da tiempo a Node.js para liberar los descriptores de archivo
+            setTimeout(() => {
+                try {
+                    if (fs.existsSync(userTmpDir)) {
+                        fs.rmSync(userTmpDir, { recursive: true, force: true });
+                    }
+                } catch (e) { /* Ignorar errores de borrado tardío */ }
+            }, 10000); 
+
         } catch (e) {
-            console.log('⚠️ Error en cleanup:', e.message);
+            console.error('⚠️ Error en limpieza:', e.message);
         }
     };
 
@@ -74,51 +89,51 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
                 'udp://9.rarbg.com:2810/announce',
                 'udp://tracker.openbittorrent.com:6969/announce',
                 'http://tracker.openbittorrent.com:80/announce',
-                'udp://opentracker.i2p.rocks:6969/announce',
+                'udp://exodus.desync.com:6969/announce',
                 'udp://tracker.torrent.eu.org:451/announce'
             ],
-            connections: 30, // Reducido para evitar saturar el bot
-            uploadsLimit: 5
+            connections: 30, // Límite para no saturar el ancho de banda del VPS
+            uploadsLimit: 2
         });
 
         activeEngines.set(m, engine);
 
-        // Timeout por si el torrent está muerto (30 segundos)
+        // Timeout por si el torrent no tiene semillas (45 segundos)
         const torrentTimeout = setTimeout(() => {
-            if (engine && !engine.files.length) {
+            if (engine && (!engine.files || engine.files.length === 0)) {
                 safeCleanup();
-                conn.reply(m.chat, '❌ *TIEMPO AGOTADO:* No se encontraron semillas (seeds) para este torrent.', m);
+                conn.reply(m.chat, '❌ *TIEMPO AGOTADO:* No hay suficientes semillas (seeds) para iniciar la descarga.', m);
             }
-        }, 40000);
+        }, 45000);
 
         engine.on('ready', () => {
             clearTimeout(torrentTimeout);
+            
             const files = engine.files.filter(f => f.length > 0);
-            if (!files.length) throw new Error('El torrent no contiene archivos válidos.');
+            if (!files.length) throw new Error('El torrent está vacío.');
 
-            // Seleccionar el archivo más pesado (generalmente la película/serie)
-            let selectedFile = files.reduce((prev, current) => (prev.length > current.length) ? prev : current);
-
+            // Seleccionar el archivo más grande (generalmente el video)
+            let selectedFile = files.reduce((prev, curr) => (prev.length > curr.length) ? prev : curr);
             const totalSizeMB = (selectedFile.length / (1024 * 1024)).toFixed(2);
             
-            // Limite de seguridad: 1.5GB (ajustable según tu servidor)
-            if (selectedFile.length > 1.5 * 1024 * 1024 * 1024) {
-                throw new Error(`El archivo es demasiado grande (${(selectedFile.length / (1024**3)).toFixed(2)} GB). El límite es 1.5GB.`);
+            // Límite de seguridad: 1.5GB
+            if (selectedFile.length > 1500 * 1024 * 1024) {
+                safeCleanup();
+                return conn.reply(m.chat, `⚠️ *ARCHIVO MUY GRANDE:* El límite es de 1.5GB. Este archivo pesa ${(selectedFile.length / (1024**3)).toFixed(2)} GB.`, m);
             }
 
             fileStream = selectedFile.createReadStream();
             bridge = new PassThrough();
-            const startTime = Date.now();
-
             fileStream.pipe(bridge);
 
-            // Registro de progreso en consola
+            // Reporte de progreso en consola (opcional)
             progressInterval = setInterval(() => {
-                const downloaded = engine.swarm.downloaded;
-                const percent = ((downloaded / selectedFile.length) * 100).toFixed(1);
-                const speed = (engine.swarm.downloadSpeed() / 1024).toFixed(1);
-                process.stdout.write(`\r📥 Descargando: ${percent}% | Speed: ${speed} KB/s | Peers: ${engine.swarm.wires.length}`);
-            }, 2000);
+                if (engine.swarm) {
+                    const speed = (engine.swarm.downloadSpeed() / 1024).toFixed(1);
+                    const peers = engine.swarm.wires.length;
+                    process.stdout.write(`\r📥 [TORRENT] Descargando: ${selectedFile.name} | ${speed} KB/s | Peers: ${peers}`);
+                }
+            }, 3000);
 
             const ext = path.extname(selectedFile.name).toLowerCase();
             const isVideo = /\.(mp4|mkv|avi|mov|flv|webm)$/i.test(ext);
@@ -127,7 +142,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
             let messageConfig = {
                 document: { stream: bridge },
                 fileName: selectedFile.name,
-                caption: `✅ *ARCHIVO COMPLETADO*\n\n📁 *Nombre:* ${selectedFile.name}\n⚖️ *Tamaño:* ${totalSizeMB} MB`
+                caption: `✅ *DESCARGA EXITOSA*\n\n📁 *Nombre:* ${selectedFile.name}\n⚖️ *Tamaño:* ${totalSizeMB} MB`
             };
 
             if (isVideo) {
@@ -137,53 +152,26 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
             }
 
             conn.sendMessage(m.chat, messageConfig, { quoted: m }).then(async () => {
-                console.log(`\n✅ Enviado: ${selectedFile.name}`);
                 await safeCleanup();
                 conn.sendMessage(m.chat, { delete: key });
             }).catch(async (err) => {
-                console.error('\n❌ Error al enviar:', err);
+                console.error('Error al enviar mensaje:', err);
                 await safeCleanup();
             });
         });
 
         engine.on('error', async (err) => {
-            console.error('Motor Error:', err);
+            console.error('Error en el motor:', err);
             await safeCleanup();
-            conn.reply(m.chat, `❌ *ERROR DEL MOTOR:* ${err.message}`, m);
+            conn.reply(m.chat, `❌ *ERROR INTERNO:* ${err.message}`, m);
         });
 
     } catch (error) {
-        console.error('Error Inicial:', error);
+        console.error('Error en handler:', error);
         conn.reply(m.chat, `❌ *ERROR:* ${error.message}`, m);
         await safeCleanup();
     }
 };
-
-// --- Funciones de Utilidad ---
-
-function ensureDir(dirPath) {
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-    }
-}
-
-function clearTmpDir(dirPath) {
-    try {
-        if (fs.existsSync(dirPath)) {
-            fs.rmSync(dirPath, { recursive: true, force: true });
-        }
-    } catch (e) {
-        console.log(`No se pudo borrar temporal: ${dirPath}`);
-    }
-}
-
-// Limpieza de cooldowns cada 30 min
-setInterval(() => {
-    const now = Date.now();
-    for (let [key, data] of cooldowns.entries()) {
-        if (now - data.lastUsed > 1800000) cooldowns.delete(key);
-    }
-}, 1800000);
 
 handler.help = ['torrent', 'trt'];
 handler.tags = ['downloader'];
@@ -191,4 +179,4 @@ handler.command = /^(torrent|trt)$/i;
 handler.limit = true;
 
 export default handler;
-                  
+                             
