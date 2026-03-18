@@ -41,10 +41,8 @@ let handler = async (m, { conn, text, command, args }) => {
             
             if (!media || !media.mediaKey) return reply('Error: No se encontró el medio.');
 
-            // Iniciamos el stream de descarga
             const stream = await downloadContentFromMessage(media, type.replace('Message', ''));
             
-            // ffprobe analiza solo el primer megabyte del flujo directamente
             const ffprobe = spawn('ffprobe', [
                 '-v', 'error',
                 '-probesize', '1M',
@@ -57,7 +55,6 @@ let handler = async (m, { conn, text, command, args }) => {
 
             let stdoutData = '';
 
-            // Evitamos el error EPIPE si ffprobe cierra el pipe antes de que termine el stream
             ffprobe.stdin.on('error', (err) => {
                 if (err.code !== 'EPIPE') console.error('[FFPROBE ERROR]', err);
             });
@@ -69,7 +66,6 @@ let handler = async (m, { conn, text, command, args }) => {
             });
 
             ffprobe.on('close', (code) => {
-                // Cerramos la descarga inmediatamente después de obtener los metadatos
                 if (stream) stream.destroy();
 
                 if (code !== 0 || !stdoutData) return reply('Error al analizar en tiempo real.');
@@ -139,21 +135,20 @@ let handler = async (m, { conn, text, command, args }) => {
                 let ffmpegArgs = ['-i', input];
                 
                 if (isDw4) {
-                    // 🎥 DW4 OPTIMIZADO: Máxima calidad <60MB, sin pixelado
+                    // 🚀 DW4 ULTRA-RÁPIDO: Máxima velocidad <60MB, calidad aceptable
                     ffmpegArgs.push(
-                        '-vf', 'scale=-2:360:flags=lanczos',     // Escalado de alta calidad
+                        '-vf', 'scale=-2:360:flags=neighbor',   // Escalado ULTRA-rápido
                         '-c:v', 'libx264',
-                        '-crf', '24',                           // Alta calidad visual
-                        '-maxrate', '1200k',                    // Control de peso máximo
-                        '-bufsize', '2400k',                    // Buffer bitrate variable
-                        '-preset', 'medium',                    // Mejor compresión que ultrafast
-                        '-tune', 'film',                        // Optimizado para video
-                        '-profile:v', 'high',
-                        '-level', '3.1',
+                        '-crf', '28',                           // Calidad aceptable para velocidad
+                        '-preset', 'ultrafast',                 // MÁXIMA VELOCIDAD
+                        '-tune', 'zerolatency',                 // Latencia cero
+                        '-profile:v', 'baseline',               // Compatibilidad máxima
+                        '-level', '3.0',
                         '-c:a', 'aac',
-                        '-b:a', '96k',                          // Audio estéreo de calidad
+                        '-b:a', '64k',                          // Audio súper ligero
                         '-ac', '2',
-                        '-movflags', '+faststart'               // Optimizado para web
+                        '-movflags', '+faststart',
+                        '-threads', '0'                         // Auto-threading máximo
                     );
                 } else if (isDw3) {
                     const aIdx = parseInt(args[1]) - 1 || 0;
@@ -163,7 +158,7 @@ let handler = async (m, { conn, text, command, args }) => {
                     ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
                 }
 
-                ffmpegArgs.push('-threads', '2', '-y', output);
+                ffmpegArgs.push('-y', output);
 
                 const proc = spawn('ffmpeg', ffmpegArgs);
 
@@ -182,41 +177,25 @@ let handler = async (m, { conn, text, command, args }) => {
                 proc.on('close', async (code) => {
                     process.stdout.write('\n');
                     if (code === 0) {
-                        // 🔍 Verificación especial para DW4 (peso <60MB)
+                        // Verificación rápida para DW4
                         if (isDw4) {
                             const fileSizeMB = fs.statSync(output).size / 1024 / 1024;
-                            console.log(`📁 DW4 - Peso: ${fileSizeMB.toFixed(1)}MB`);
-                            
-                            if (fileSizeMB > 60) {
-                                reply('📦 Archivo muy pesado, optimizando final...');
-                                exec(`ffmpeg -i "${output}" -c:v libx264 -crf 28 -maxrate 1000k -bufsize 2000k -preset fast -c:a aac -b:a 80k -y "${output}_opt.mp4"`, async (err) => {
-                                    const finalFile = fs.existsSync(`${output}_opt.mp4`) ? `${output}_opt.mp4` : output;
-                                    const mediaOptions = asDocument 
-                                        ? { document: fs.readFileSync(finalFile), fileName: `Video_360p_HD.mp4`, mimetype: 'video/mp4' }
-                                        : { video: fs.readFileSync(finalFile) };
-                                    await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                                    
-                                    // Limpieza completa
-                                    [input, output, `${output}_opt.mp4`].forEach(f => {
-                                        if (fs.existsSync(f)) fs.unlinkSync(f);
-                                    });
-                                });
-                                return;
-                            }
+                            console.log(`📁 DW4 ULTRA - Peso: ${fileSizeMB.toFixed(1)}MB`);
                         }
                         
-                        // Envío normal
+                        // Envío inmediato
                         const mediaOptions = asDocument 
-                            ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
+                            ? { document: fs.readFileSync(output), fileName: `Video_${res}p_Fast.mp4`, mimetype: 'video/mp4' }
                             : { video: fs.readFileSync(output) };
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
                     } else { 
                         reply('❌ Error en FFmpeg.'); 
                     }
                     
-                    // Limpieza final
-                    if (fs.existsSync(input)) fs.unlinkSync(input);
-                    if (fs.existsSync(output)) fs.unlinkSync(output);
+                    // Limpieza
+                    [input, output].forEach(f => {
+                        if (fs.existsSync(f)) fs.unlinkSync(f);
+                    });
                 });
             });
         } catch (e) { 
