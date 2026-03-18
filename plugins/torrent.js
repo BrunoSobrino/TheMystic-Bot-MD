@@ -1,77 +1,80 @@
-// Plugin: Torrent Streamer para KanaArima-MD
-// Ruta sugerida: plugins/torrent.js
-
 import https from 'https';
 import http from 'http';
 import { PassThrough } from 'stream';
 
-const streamTorrent = async (url, from, client) => {
-    const protocol = url.startsWith('https') ? https : http;
+/**
+ * Plugin Torrent Streamer - Versión Gratuita (Sin Diamantes)
+ * Sistema: 100% Stream Pipeline (Zero RAM)
+ */
 
-    return new Promise((resolve) => {
-        const req = protocol.get(url, {
-            headers: { 'User-Agent': 'Mozilla/5.0 (Android; Termux) KanaArima-MD/6.0' }
-        });
+const handler = async (m, { conn, args, usedPrefix, command }) => {
+    const url = args[0]?.trim();
 
-        req.on('response', async (res) => {
-            const totalBytes = parseInt(res.headers['content-length'] || '0');
-            const sizeMB = (totalBytes / (1024 * 1024)).toFixed(2);
+    // 1. Validación de URL
+    if (!url) {
+        return conn.reply(m.chat, `💡 *Uso:* ${usedPrefix + command} <enlace_torrent>\n\nEjemplo:\n.trt https://nyaa.si/download/123.torrent`, m);
+    }
 
-            if (totalBytes > 2000 * 1024 * 1024) { // Límite 2GB
-                req.destroy();
-                return resolve({ status: false, message: `❌ Muy pesado: ${sizeMB}MB` });
+    if (!url.toLowerCase().endsWith('.torrent')) {
+        return conn.reply(m.chat, '⚠️ Solo se permiten enlaces directos que terminen en *.torrent*', m);
+    }
+
+    // 2. Mensaje de espera (Loading)
+    const { key } = await conn.sendMessage(m.chat, { text: '⏳ *Iniciando descarga por Stream...*' }, { quoted: m });
+
+    try {
+        const protocol = url.startsWith('https') ? https : http;
+        
+        const req = protocol.get(url, (res) => {
+            // Validar estado de la respuesta
+            if (res.statusCode !== 200) {
+                conn.sendMessage(m.chat, { delete: key });
+                return conn.reply(m.chat, `❌ El servidor respondió con error: ${res.statusCode}`, m);
             }
 
+            const totalBytes = parseInt(res.headers['content-length'] || 0);
+            const sizeMB = (totalBytes / 1048576).toFixed(2);
+            
+            // Tubería de datos (Pipeline)
             const bridge = new PassThrough();
             res.pipe(bridge);
 
-            try {
-                await client.sendMessage(from, {
-                    document: { stream: bridge },
-                    fileName: `torrent_${Date.now()}.torrent`,
-                    mimetype: 'application/x-bittorrent',
-                    caption: `✅ *Torrent Streamed*\n📊 *Peso:* ${sizeMB} MB`
-                });
-                resolve({ status: true });
-            } catch (err) {
-                resolve({ status: false, message: `❌ Error: ${err.message}` });
-            }
+            // 3. Envío directo a WhatsApp
+            conn.sendMessage(m.chat, {
+                document: { stream: bridge },
+                fileName: `torrent_${Date.now()}.torrent`,
+                mimetype: 'application/x-bittorrent',
+                caption: `✅ *Stream Finalizado*\n\n📊 *Peso:* ${sizeMB} MB\n🚀 *Modo:* 0% RAM Accumulation\n💎 *Costo:* Gratis (Sin diamantes)`
+            }, { quoted: m }).then(() => {
+                // Limpieza del mensaje de espera
+                conn.sendMessage(m.chat, { delete: key });
+            });
         });
 
-        req.on('error', (err) => resolve({ status: false, message: `❌ Red: ${err.message}` }));
-        req.setTimeout(60000, () => { req.destroy(); resolve({ status: false, message: '⏰ Timeout' }); });
-    });
-};
+        req.on('error', (e) => {
+            conn.sendMessage(m.chat, { delete: key });
+            conn.reply(m.chat, `❌ Error de conexión: ${e.message}`, m);
+        });
 
-export default {
-    name: "torrent",
-    command: ["torrent", "trt"], // Asegúrate de que tu bot use 'command' o 'command' para el registro
-    alias: ["torrent", "trt"],
-    category: "download",
-    description: "Envía un archivo torrent vía stream.",
+        req.setTimeout(60000, () => {
+            req.destroy();
+            conn.sendMessage(m.chat, { delete: key });
+            conn.reply(m.chat, '⏰ Tiempo de espera agotado (Timeout).', m);
+        });
 
-    async execute(msg, args, client) {
-        // En muchos bots de Termux, 'from' se obtiene de msg.chat o msg.key.remoteJid
-        const from = msg.chat || msg.key.remoteJid;
-        
-        // Extraer la URL de los argumentos o del texto directamente
-        const text = args.join(" ");
-        const url = text.match(/https?:\/\/[^\s]+/gi)?.[0];
-
-        if (!url) {
-            return client.sendMessage(from, { 
-                text: `💡 *Uso:* .torrent <enlace>\nEjemplo: .trt https://nyaa.si/download/123.torrent` 
-            });
-        }
-
-        const { key } = await client.sendMessage(from, { text: "⏳ *Procesando Torrent...*" });
-
-        const result = await streamTorrent(url, from, client);
-
-        if (!result.status) {
-            await client.sendMessage(from, { text: result.message });
-        }
-
-        await client.sendMessage(from, { delete: key });
+    } catch (e) {
+        conn.reply(m.chat, `❌ Error crítico: ${e.message}`, m);
     }
 };
+
+// --- CONFIGURACIÓN DEL HANDLER AL FINAL ---
+handler.help = ['torrent', 'trt'];
+handler.tags = ['download'];
+handler.command = /^(torrent|trt)$/i; // Registra .torrent y .trt
+
+// Propiedades de acceso (Sin diamantes)
+handler.limit = false;   // <--- AQUÍ: Desactiva el costo de diamantes
+handler.register = false; // Permite que lo usen aunque no estén registrados
+handler.premium = false;  // No requiere ser usuario premium
+
+export default handler;
