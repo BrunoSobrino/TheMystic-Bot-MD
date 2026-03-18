@@ -383,4 +383,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-                    
+        
