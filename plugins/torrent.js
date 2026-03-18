@@ -1,80 +1,62 @@
-import https from 'https';
-import http from 'http';
+import WebTorrent from 'webtorrent';
 import { PassThrough } from 'stream';
 
-/**
- * Plugin Torrent Streamer - Versión Gratuita (Sin Diamantes)
- * Sistema: 100% Stream Pipeline (Zero RAM)
- */
+const client = new WebTorrent();
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
     const url = args[0]?.trim();
 
-    // 1. Validación de URL
     if (!url) {
-        return conn.reply(m.chat, `💡 *Uso:* ${usedPrefix + command} <enlace_torrent>\n\nEjemplo:\n.trt https://nyaa.si/download/123.torrent`, m);
+        return conn.reply(m.chat, `*⚠️ ERROR DE ENLACE*\n\nUso: ${usedPrefix + command} <link_torrent>`, m);
     }
 
-    if (!url.toLowerCase().endsWith('.torrent')) {
-        return conn.reply(m.chat, '⚠️ Solo se permiten enlaces directos que terminen en *.torrent*', m);
-    }
+    // Mensaje de Carga con tu decoración
+    const { key } = await conn.sendMessage(m.chat, { 
+        text: `╔═̷͠═̷͝═̷̈́═̷͋═̷͘═̷͊═̷͝═̷╗˖ꉂ📥ﮩ٨ـﮩﮩ٨ـ☣︎⃤꩜\n║  *PROCESANDO TORRENT...*\n╚═̷͠═̷͝═̷̈́═̷͋═̷͘═̷͊═̷͝═̷╝🔋⃤૮⇀ﻌ↼აⳊ` 
+    }, { quoted: m });
 
-    // 2. Mensaje de espera (Loading)
-    const { key } = await conn.sendMessage(m.chat, { text: '⏳ *Iniciando descarga por Stream...*' }, { quoted: m });
-
-    try {
-        const protocol = url.startsWith('https') ? https : http;
+    // Iniciar el motor de búsqueda P2P
+    client.add(url, (torrent) => {
+        // Seleccionamos el archivo más grande (el video/contenido real)
+        const file = torrent.files.reduce((prev, curr) => prev.length > curr.length ? prev : curr);
+        const sizeMB = (file.length / 1048576).toFixed(2);
         
-        const req = protocol.get(url, (res) => {
-            // Validar estado de la respuesta
-            if (res.statusCode !== 200) {
-                conn.sendMessage(m.chat, { delete: key });
-                return conn.reply(m.chat, `❌ El servidor respondió con error: ${res.statusCode}`, m);
-            }
+        // Evitar que el bot colapse por archivos de más de 2GB
+        if (file.length > 2048 * 1048576) {
+            torrent.destroy();
+            return conn.reply(m.chat, `❌ *ARCHIVO DEMASIADO GRANDE*\n\nPeso: ${sizeMB} MB\nLímite: 2048 MB`, m);
+        }
 
-            const totalBytes = parseInt(res.headers['content-length'] || 0);
-            const sizeMB = (totalBytes / 1048576).toFixed(2);
-            
-            // Tubería de datos (Pipeline)
-            const bridge = new PassThrough();
-            res.pipe(bridge);
+        const stream = file.createReadStream();
+        const bridge = new PassThrough();
+        stream.pipe(bridge);
 
-            // 3. Envío directo a WhatsApp
-            conn.sendMessage(m.chat, {
-                document: { stream: bridge },
-                fileName: `torrent_${Date.now()}.torrent`,
-                mimetype: 'application/x-bittorrent',
-                caption: `✅ *Stream Finalizado*\n\n📊 *Peso:* ${sizeMB} MB\n🚀 *Modo:* 0% RAM Accumulation\n💎 *Costo:* Gratis (Sin diamantes)`
-            }, { quoted: m }).then(() => {
-                // Limpieza del mensaje de espera
-                conn.sendMessage(m.chat, { delete: key });
-            });
-        });
-
-        req.on('error', (e) => {
+        // Envío del archivo real
+        conn.sendMessage(m.chat, {
+            document: { stream: bridge },
+            fileName: file.name,
+            mimetype: 'video/mp4', // Cambia según el archivo, pero mp4 es estándar
+            caption: `╔═̷͠═̷͝═̷̈́═̷͋═̷͘═̷͊═̷͝═̷╗˖ꉂ📥ﮩ٨ـﮩﮩ٨ـ☣︎⃤꩜\n║  ✅ *DESCARGA EXITOSA*\n║ \n║  📂 *FILE:* ${file.name}\n║  ⚖️ *PESO:* ${sizeMB} MB\n║  🚀 *MODO:* P2P STREAM\n║  💎 *COSTO:* GRATIS\n╚═̷͠═̷͝═̷̈́═̷͋═̷͘═̷͊═̷͝═̷╝🔋⃤૮⇀ﻌ↼აⳊ`
+        }, { quoted: m }).then(() => {
             conn.sendMessage(m.chat, { delete: key });
-            conn.reply(m.chat, `❌ Error de conexión: ${e.message}`, m);
+            torrent.destroy(); // Limpiar caché de Termux inmediatamente
         });
 
-        req.setTimeout(60000, () => {
-            req.destroy();
-            conn.sendMessage(m.chat, { delete: key });
-            conn.reply(m.chat, '⏰ Tiempo de espera agotado (Timeout).', m);
+        // Log en la consola de Termux para monitorear
+        torrent.on('download', () => {
+            process.stdout.write(`\r📥 [TORRENT] Descargando: ${(torrent.progress * 100).toFixed(1)}% | ${sizeMB}MB`);
         });
+    });
 
-    } catch (e) {
-        conn.reply(m.chat, `❌ Error crítico: ${e.message}`, m);
-    }
+    client.on('error', (err) => {
+        conn.sendMessage(m.chat, { delete: key });
+        conn.reply(m.chat, `❌ *FALLO EN EL MOTOR P2P*\n\n${err.message}`, m);
+    });
 };
 
-// --- CONFIGURACIÓN DEL HANDLER AL FINAL ---
 handler.help = ['torrent', 'trt'];
 handler.tags = ['download'];
-handler.command = /^(torrent|trt)$/i; // Registra .torrent y .trt
-
-// Propiedades de acceso (Sin diamantes)
-handler.limit = false;   // <--- AQUÍ: Desactiva el costo de diamantes
-handler.register = false; // Permite que lo usen aunque no estén registrados
-handler.premium = false;  // No requiere ser usuario premium
+handler.command = /^(torrent|trt)$/i;
+handler.limit = false; 
 
 export default handler;
