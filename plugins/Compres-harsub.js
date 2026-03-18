@@ -28,47 +28,27 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { return false; }
     };
 
-    // --- COMANDO .dw OPTIMIZADO PARA RESPUESTA INSTANTÁNEA ---
+    // --- COMANDO .dw (ANÁLISIS RÁPIDO) ---
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
-        
         try {
             const { downloadContentFromMessage } = await import('baileys');
             const quoted = m.quoted;
             const message = quoted.fakeObj ? quoted.fakeObj.message : (quoted.vM ? quoted.vM.message : quoted);
             const type = Object.keys(message)[0];
             const media = message[type];
-            
             if (!media || !media.mediaKey) return reply('Error: No se encontró el medio.');
 
             const stream = await downloadContentFromMessage(media, type.replace('Message', ''));
-            
-            const ffprobe = spawn('ffprobe', [
-                '-v', 'error',
-                '-probesize', '1M',
-                '-analyzeduration', '1M',
-                '-show_streams',
-                '-show_format',
-                '-print_format', 'json',
-                '-i', 'pipe:0'
-            ]);
-
+            const ffprobe = spawn('ffprobe', ['-v', 'error', '-probesize', '1M', '-analyzeduration', '1M', '-show_streams', '-show_format', '-print_format', 'json', '-i', 'pipe:0']);
             let stdoutData = '';
-
-            ffprobe.stdin.on('error', (err) => {
-                if (err.code !== 'EPIPE') console.error('[FFPROBE ERROR]', err);
-            });
-
+            ffprobe.stdin.on('error', (err) => { if (err.code !== 'EPIPE') console.error('[FFPROBE ERROR]', err); });
             stream.pipe(ffprobe.stdin);
-
-            ffprobe.stdout.on('data', (chunk) => {
-                stdoutData += chunk;
-            });
+            ffprobe.stdout.on('data', (chunk) => { stdoutData += chunk; });
 
             ffprobe.on('close', (code) => {
                 if (stream) stream.destroy();
                 if (code !== 0 || !stdoutData) return reply('Error al analizar en tiempo real.');
-
                 const data = JSON.parse(stdoutData);
                 const vStream = data.streams.find(s => s.codec_type === 'video');
                 const resolution = vStream ? `${vStream.width}x${vStream.height}` : 'Desconocida';
@@ -97,131 +77,49 @@ let handler = async (m, { conn, text, command, args }) => {
                     responseText += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                 });
                 
-                responseText += '\nUso:\n';
-                responseText += '_*.dw2 [res] [calidad] (doc)*_\n';
-                responseText += '_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n';
-                responseText += '_*.dw4 (doc)*_\n';
-                responseText += '_*.mi [res] [pesoMB] (doc)*_';
-                
+                responseText += '\nUso:\n_*.dw2 [res] [calidad] (doc)*_\n_*.dw3 [res] [audio] [sub] [calidad] (doc)*_\n_*.dw4 (doc)*_\n_*.mi [res] [pesoMB] (doc)*_';
                 reply(responseText);
             });
-
-        } catch (e) { 
-            reply('Error crítico en el análisis de flujo.'); 
-        }
+        } catch (e) { reply('Error crítico en el análisis.'); }
     }
 
-    // --- COMANDO .mi SIN LÍMITES ---
+    // --- COMANDO .mi (CON PROGRESO EN TERMINAL) ---
     if (command === 'mi') {
-        if (!m.quoted) return reply('Responde a un video.\nUso: _*.mi [resolucion] [peso]*_\nEjemplo: _*.mi 720 168mb*_');
-        if (args.length < 2) return reply('Faltan parámetros. Ejemplo: _*.mi 720 168mb*_');
+        if (!m.quoted) return reply('Uso: _*.mi [resolucion] [peso]*_\nEjemplo: _*.mi 720 168mb*_');
+        if (args.length < 2) return reply('Faltan parámetros.');
 
         const res = args[0].replace(/p/i, ''); 
         const targetMB = parseFloat(args[1].replace(/mb/i, ''));
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
-
-        if (isNaN(res) || isNaN(targetMB)) return reply('❌ Error: La resolución y el peso deben ser números válidos.');
+        if (isNaN(res) || isNaN(targetMB)) return reply('❌ Datos inválidos.');
 
         const timestamp = Date.now();
         const input = `./temp/in_${timestamp}.mp4`;
         const output = `./temp/out_${timestamp}.mp4`;
 
         try {
-            reply(`Calculando compresión a \`${res}p\` con objetivo de \`${targetMB} MB\`...`);
+            reply(`Calculando compresión para \`${targetMB} MB\`...\nMonitorea el progreso en el terminal.`);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            exec(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
-                if (err) return reply('❌ Error al leer la duración del video.');
-                
-                const durationSec = parseFloat(stdout);
-                if (!durationSec || durationSec <= 0) return reply('❌ Duración inválida o archivo corrupto.');
+            // Obtener duración y frames para el progreso
+            exec(`ffprobe -v error -show_entries format=duration -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
+                const info = stdout.split('\n');
+                const durationSec = parseFloat(info[0]);
+                const totalFrames = parseInt(info[1]) || 0;
 
-                // Calculamos el bitrate sin límites superiores
+                if (!durationSec) return reply('❌ No se pudo determinar la duración.');
+
                 const totalBitrateKbps = Math.floor((targetMB * 8192) / durationSec);
-                const audioBitrate = 128; 
-                let videoBitrate = totalBitrateKbps - audioBitrate;
-
-                // Única protección matemática: evitar que ffmpeg crashee si se pide 0.001MB
-                if (videoBitrate < 10) videoBitrate = 10; 
+                let videoBitrate = totalBitrateKbps - 128;
+                if (videoBitrate < 10) videoBitrate = 10;
 
                 const ffmpegArgs = [
-                    '-i', input,
-                    '-vf', `scale=-2:${res}:flags=lanczos`, 
-                    '-c:v', 'libx264',
-                    '-b:v', `${videoBitrate}k`,             
-                    '-maxrate', `${Math.floor(videoBitrate * 1.5)}k`, 
-                    '-bufsize', `${videoBitrate * 2}k`,     
-                    '-preset', 'fast',
-                    '-c:a', 'aac',
-                    '-b:a', `${audioBitrate}k`,
-                    '-threads', '2', // Controlar los hilos de procesamiento
-                    '-y', output
+                    '-i', input, '-vf', `scale=-2:${res}:flags=lanczos`, '-c:v', 'libx264',
+                    '-b:v', `${videoBitrate}k`, '-maxrate', `${Math.floor(videoBitrate * 1.5)}k`,
+                    '-bufsize', `${videoBitrate * 2}k`, '-preset', 'fast', '-c:a', 'aac', '-b:a', '128k',
+                    '-threads', '2', '-y', output
                 ];
-
-                const proc = spawn('ffmpeg', ffmpegArgs);
-
-                proc.on('close', async (code) => {
-                    if (code === 0) {
-                        const finalSizeMB = (fs.statSync(output).size / 1024 / 1024).toFixed(2);
-                        reply(`✅ Procesado con éxito.\nPeso resultante: \`${finalSizeMB} MB\``);
-
-                        const mediaOptions = asDocument 
-                            ? { document: fs.readFileSync(output), fileName: `Video_${res}p_${targetMB}MB.mp4`, mimetype: 'video/mp4' }
-                            : { video: fs.readFileSync(output) };
-                        await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                    } else {
-                        reply('❌ Ocurrió un error en la compresión de video.');
-                    }
-
-                    if (fs.existsSync(input)) fs.unlinkSync(input);
-                    if (fs.existsSync(output)) fs.unlinkSync(output);
-                });
-            });
-        } catch (e) {
-            reply('❌ Error interno en comando .mi.');
-        }
-    }
-
-    // --- COMANDOS DE PROCESAMIENTO (.dw2, .dw3, .dw4) ---
-    if (/^(dw2|dw3|dw4)$/i.test(command)) {
-        if (!m.quoted) return reply('Responde a un video.');
-        
-        const isDw4 = command === 'dw4';
-        const isDw3 = command === 'dw3';
-        const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
-        
-        let res = isDw4 ? '360' : args[0];
-        const timestamp = Date.now();
-        const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
-        const output = `./temp/out_${timestamp}.mp4`;
-
-        try {
-            reply(`Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
-            let success = await downloadMediaStream(m.quoted, input);
-            if (!success) fs.writeFileSync(input, await m.quoted.download());
-
-            exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
-                const totalFrames = parseInt(stdout) || 0;
-
-                let ffmpegArgs = ['-i', input];
-                
-                if (isDw4) {
-                    ffmpegArgs.push(
-                        '-vf', 'scale=-2:360:flags=lanczos',
-                        '-c:v', 'libx264', '-crf', '24', '-maxrate', '1200k', '-bufsize', '2400k',
-                        '-preset', 'medium', '-tune', 'film', '-profile:v', 'high', '-level', '3.1',
-                        '-c:a', 'aac', '-b:a', '96k', '-ac', '2', '-movflags', '+faststart'
-                    );
-                } else if (isDw3) {
-                    const aIdx = parseInt(args[1]) - 1 || 0;
-                    const sIdx = parseInt(args[2]) - 1 || 0;
-                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
-                } else {
-                    ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
-                }
-
-                ffmpegArgs.push('-threads', '2', '-y', output);
 
                 const proc = spawn('ffmpeg', ffmpegArgs);
 
@@ -229,8 +127,70 @@ let handler = async (m, { conn, text, command, args }) => {
                     const line = data.toString();
                     if (line.includes('frame=')) {
                         const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
-                        const totalFramesSafe = totalFrames > 0 ? totalFrames : 1; 
-                        const progress = ((parseInt(frame) / totalFramesSafe) * 100).toFixed(1);
+                        const fps = line.match(/fps=\s*([\d.]+)/)?.[1] || '0';
+                        const time = line.match(/time=\s*([\d:.]+)/)?.[1] || '00:00:00';
+                        const speed = line.match(/speed=\s*([\d.]+x)/)?.[1] || '0x';
+                        const progress = totalFrames > 0 ? ((parseInt(frame) / totalFrames) * 100).toFixed(1) : '0.0';
+                        // Output en terminal con color magenta
+                        process.stdout.write(`\r\x1b[35m[MI PROGRESS] ${progress}% | Frame: ${frame} | FPS: ${fps} | Time: ${time} | Speed: ${speed}\x1b[0m`);
+                    }
+                });
+
+                proc.on('close', async (code) => {
+                    process.stdout.write('\n'); // Salto de línea al terminar
+                    if (code === 0) {
+                        const finalSize = (fs.statSync(output).size / 1024 / 1024).toFixed(2);
+                        const mediaOptions = asDocument 
+                            ? { document: fs.readFileSync(output), fileName: `Video_${res}p_${targetMB}MB.mp4`, mimetype: 'video/mp4' }
+                            : { video: fs.readFileSync(output), caption: `✅ Finalizado: ${finalSize} MB` };
+                        await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
+                    } else {
+                        reply('❌ Error en el proceso FFmpeg.');
+                    }
+                    if (fs.existsSync(input)) fs.unlinkSync(input);
+                    if (fs.existsSync(output)) fs.unlinkSync(output);
+                });
+            });
+        } catch (e) { reply('❌ Error interno.'); }
+    }
+
+    // --- COMANDOS DW2, DW3, DW4 ---
+    if (/^(dw2|dw3|dw4)$/i.test(command)) {
+        if (!m.quoted) return reply('Responde a un video.');
+        const isDw4 = command === 'dw4';
+        const isDw3 = command === 'dw3';
+        const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
+        let res = isDw4 ? '360' : args[0];
+        const timestamp = Date.now();
+        const input = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
+        const output = `./temp/out_${timestamp}.mp4`;
+
+        try {
+            reply(`Procesando \`${command}\` a \`${res}p\`...`);
+            let success = await downloadMediaStream(m.quoted, input);
+            if (!success) fs.writeFileSync(input, await m.quoted.download());
+
+            exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
+                const totalFrames = parseInt(stdout) || 0;
+                let ffmpegArgs = ['-i', input];
+                
+                if (isDw4) {
+                    ffmpegArgs.push('-vf', 'scale=-2:360:flags=lanczos', '-c:v', 'libx264', '-crf', '24', '-maxrate', '1200k', '-bufsize', '2400k', '-preset', 'medium', '-c:a', 'aac', '-b:a', '96k');
+                } else if (isDw3) {
+                    const aIdx = parseInt(args[1]) - 1 || 0;
+                    const sIdx = parseInt(args[2]) - 1 || 0;
+                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', `scale=-2:${res},subtitles=${input}:si=${sIdx}`, '-c:a', 'aac', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                } else {
+                    ffmpegArgs.push('-vf', `scale=-2:${res}`, '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                }
+                ffmpegArgs.push('-threads', '2', '-y', output);
+
+                const proc = spawn('ffmpeg', ffmpegArgs);
+                proc.stderr.on('data', (data) => {
+                    const line = data.toString();
+                    if (line.includes('frame=')) {
+                        const frame = line.match(/frame=\s*(\d+)/)?.[1] || '0';
+                        const progress = totalFrames > 0 ? ((parseInt(frame) / totalFrames) * 100).toFixed(1) : '0.0';
                         process.stdout.write(`\r\x1b[35m[PROGRESS] ${progress}% | Frame: ${frame}\x1b[0m`);
                     }
                 });
@@ -238,43 +198,19 @@ let handler = async (m, { conn, text, command, args }) => {
                 proc.on('close', async (code) => {
                     process.stdout.write('\n');
                     if (code === 0) {
-                        if (isDw4) {
-                            const fileSizeMB = fs.statSync(output).size / 1024 / 1024;
-                            if (fileSizeMB > 60) {
-                                reply('📦 Archivo muy pesado, optimizando final...');
-                                exec(`ffmpeg -i "${output}" -c:v libx264 -crf 28 -maxrate 1000k -bufsize 2000k -preset fast -c:a aac -b:a 80k -y "${output}_opt.mp4"`, async (err) => {
-                                    const finalFile = fs.existsSync(`${output}_opt.mp4`) ? `${output}_opt.mp4` : output;
-                                    const mediaOptions = asDocument 
-                                        ? { document: fs.readFileSync(finalFile), fileName: `Video_360p_HD.mp4`, mimetype: 'video/mp4' }
-                                        : { video: fs.readFileSync(finalFile) };
-                                    await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                                    
-                                    [input, output, `${output}_opt.mp4`].forEach(f => {
-                                        if (fs.existsSync(f)) fs.unlinkSync(f);
-                                    });
-                                });
-                                return;
-                            }
-                        }
-                        
                         const mediaOptions = asDocument 
                             ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
                             : { video: fs.readFileSync(output) };
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                    } else { 
-                        reply('❌ Error en FFmpeg.'); 
-                    }
-                    
+                    } else { reply('❌ Error FFmpeg.'); }
                     if (fs.existsSync(input)) fs.unlinkSync(input);
                     if (fs.existsSync(output)) fs.unlinkSync(output);
                 });
             });
-        } catch (e) { 
-            reply('❌ Error de proceso.'); 
-        }
+        } catch (e) { reply('❌ Error de proceso.'); }
     }
 };
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-            
+        
