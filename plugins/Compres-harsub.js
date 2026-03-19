@@ -77,30 +77,26 @@ let handler = async (m, { conn, text, command, args }) => {
                 const duration    = new Date(durationSec * 1000).toISOString().substr(11, 8);
                 const formatName  = data.format.format_long_name ? data.format.format_long_name.split(' / ')[0] : 'Desconocido';
 
-                // Mensaje 1: info del video
-                let r1 = '> *Información del video*\n\n';
-                r1 += `> Formato: \`${formatName}\`\n`;
-                r1 += `> Resolución: \`${resolution}\`\n`;
-                r1 += `> Duración: \`${duration}\`\n`;
-                r1 += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\``;
-                await conn.sendMessage(m.chat, { text: r1 }, { quoted: m });
-
-                // Mensaje 2: pistas + uso
+                let r = '> *Información del video*\n\n';
+                r += `> Formato: \`${formatName}\`\n`;
+                r += `> Resolución: \`${resolution}\`\n`;
+                r += `> Duración: \`${duration}\`\n`;
+                r += `> Peso: \`${(data.format.size / 1024 / 1024).toFixed(2)} MB\`\n\n`;
                 const audios = data.streams.filter(s => s.codec_type === 'audio');
-                let r2 = '> *Audios disponibles*\n';
+                r += '> *Audios disponibles*\n';
                 audios.forEach((a, i) => {
                     const lang = (a.tags?.language || 'und').toLowerCase();
-                    r2 += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                    r += `- Pista ${i + 1}: \`${a.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                 });
                 const subs = data.streams.filter(s => s.codec_type === 'subtitle');
-                r2 += '\n> *Subtítulos disponibles*\n';
-                if (subs.length === 0) r2 += '- `Ninguno`\n';
+                r += '\n> *Subtítulos disponibles*\n';
+                if (subs.length === 0) r += '- `Ninguno`\n';
                 else subs.forEach((s, i) => {
                     const lang = (s.tags?.language || 'und').toLowerCase();
-                    r2 += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
+                    r += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                 });
-                r2 += '\n_*.dw2 [res] (doc)*_\n_*.dw3 [res] [audio] [sub] (doc)*_\n_*.dw4 (doc)*_\n_*.mi [res] [pesoMB] (doc)*_';
-                await conn.sendMessage(m.chat, { text: r2 }, { quoted: m });
+                r += '\n_*.dw2 [res] (doc)*_\n_*.dw3 [res] [audio] [sub] (doc)*_\n_*.dw4 (doc)*_\n_*.mi [res] [pesoMB] (doc)*_';
+                reply(r);
             });
         } catch (e) {
             console.error('[DW] Error crítico:', e);
@@ -135,7 +131,21 @@ let handler = async (m, { conn, text, command, args }) => {
             const maxrateK      = Math.round(videoBitrateK * 1.5);
             const bufsizeK      = maxrateK * 2;
             console.log(`${label} v:${videoBitrateK}k max:${maxrateK}k a:${AUDIO_KBPS}k`);
-            const pass1Args = ['-i', input, '-vf', `scale=-2:${res}:flags=lanczos`, '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`, '-pass', '1', '-an', '-f', 'null', '/dev/null', '-y'];
+            
+            // ÓPTIMIZACIÓN: Pasada 1 súper rápida, sin calidad visual requerida, usando todos los hilos
+            const pass1Args = [
+                '-i', input, 
+                '-vf', `scale=-2:${res}:flags=fast_bilinear`, 
+                '-c:v', 'libx264', 
+                '-b:v', `${videoBitrateK}k`, 
+                '-maxrate', `${maxrateK}k`, 
+                '-bufsize', `${bufsizeK}k`, 
+                '-pass', '1', 
+                '-preset', 'ultrafast',
+                '-threads', '0',
+                '-an', '-f', 'null', '/dev/null', '-y'
+            ];
+            
             console.log(`\n${label} PASS 1/2`);
             await new Promise((resolve, reject) => {
                 const p1 = spawn('ffmpeg', pass1Args);
@@ -146,7 +156,25 @@ let handler = async (m, { conn, text, command, args }) => {
                     else reject(new Error(`pass1 code ${code}`));
                 });
             });
-            const pass2Args = ['-i', input, '-vf', withWM(`scale=-2:${res}:flags=lanczos`), '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`, '-pass', '2', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output];
+
+            // ÓPTIMIZACIÓN: Pasada 2 usando preset veryfast y fast_bilinear
+            const pass2Args = [
+                '-i', input, 
+                '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), 
+                '-c:v', 'libx264', 
+                '-b:v', `${videoBitrateK}k`, 
+                '-maxrate', `${maxrateK}k`, 
+                '-bufsize', `${bufsizeK}k`, 
+                '-pass', '2', 
+                '-preset', 'veryfast',
+                '-threads', '0',
+                '-c:a', 'aac', 
+                '-b:a', `${AUDIO_KBPS}k`, 
+                '-ac', '2', 
+                '-movflags', '+faststart', 
+                '-y', output
+            ];
+
             console.log(`\n${label} PASS 2/2`);
             await new Promise((resolve, reject) => {
                 const p2 = spawn('ffmpeg', pass2Args);
@@ -196,7 +224,8 @@ let handler = async (m, { conn, text, command, args }) => {
                 } else if (isDw3) {
                     const aIdx = parseInt(args[1]) - 1 || 0;
                     const sIdx = parseInt(args[2]) - 1 || 0;
-                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res},subtitles=${input}:si=${sIdx}`), '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    // Modificación: Texto blanco (&H00FFFFFF), Borde azul claro (&H00FFBF00), Outline=2.5 para grosor
+                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res},subtitles=${input}:si=${sIdx}:force_style='PrimaryColour=&H00FFFFFF,OutlineColour=&H00FFBF00,Outline=2.5,Shadow=0.5'`), '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
                 } else {
                     ffmpegArgs.push('-vf', withWM(`scale=-2:${res}`), '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
                 }
@@ -244,4 +273,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-                               
+                
