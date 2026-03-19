@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { translate } from '@vitalets/google-translate-api';
+import pkg from '@vitalets/google-translate-api'; // Importación por defecto
+const { translate } = pkg; // Extraemos la función translate
 import fs from 'fs';
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
@@ -20,7 +21,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) return m.reply(`*${tradutor.texto1}*`);
 
   try {
-    // Consulta limpia sin espacios especiales (Evita el Error 400)
+    // Query ultra-limpia para evitar el error 400
     const query = `query($search:String){Media(search:$search,type:ANIME){id title{romaji english native}studios(isMain:true){nodes{name}}seasonYear episodes genres duration format season status description bannerImage coverImage{extraLarge large}}}`;
 
     const response = await axios({
@@ -39,10 +40,9 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const result = response.data.data.Media;
     if (!result) throw 'No se encontraron resultados';
 
-    // Limpieza de etiquetas HTML en la descripción
     const cleanDesc = result.description ? result.description.replace(/<\/?[^>]+(>|$)/g, "") : 'No disponible';
     
-    // Traducción segura de la sinopsis
+    // Función de traducción usando la nueva constante extraída
     const safeTranslate = async (txt) => {
       try {
         const res = await translate(txt, { to: 'es' });
@@ -88,7 +88,6 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     }, { quoted: m });
 
   } catch (e) {
-    // Log detallado en la terminal para depuración
     console.log(`\n==== [ERROR ANIME REPORT] ====`);
     if (e.response) {
       console.log('Status:', e.response.status);
@@ -107,4 +106,3 @@ handler.tags = ['buscadores'];
 handler.command = /^(anime|animeinfo)$/i;
 
 export default handler;
-      
