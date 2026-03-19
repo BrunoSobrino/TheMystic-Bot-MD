@@ -49,7 +49,7 @@ let handler = async (m, { conn, text, command, args }) => {
         return Math.max(100, Math.floor(videoBits / durationSec / 1000));
     };
 
-    const WM     = `drawtext=text='By\\: CID':fontcolor=white:fontsize=w*0.04:x=18:y=14:borderw=2:bordercolor=black:font=Sans:fontstyle=italic:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
+    const WM     = `drawtext=text='By\\: CID':fontcolor=white:fontsize=w*0.04:x=18:y=14:borderw=2:bordercolor=black:font=Sans:italic=1:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
     const withWM = (vf) => `${vf},${WM}`;
 
     if (command === 'dw') {
@@ -115,7 +115,7 @@ let handler = async (m, { conn, text, command, args }) => {
         const timestamp = Date.now();
         const input     = `./temp/mi_in_${timestamp}`;
         const output    = `./temp/mi_out_${timestamp}.mp4`;
-        const logPrefix = `./temp/ffmpeg2pass_${timestamp}`;
+        const logPrefix = `./temp/ffmpeg2pass_${timestamp}`; // Prefijo único para evitar conflictos
         const label     = `[MI ${res}p→${targetMB}MB]`;
 
         try {
@@ -153,7 +153,9 @@ let handler = async (m, { conn, text, command, args }) => {
             ];
             await new Promise((resolve, reject) => {
                 const p2 = spawn('ffmpeg', pass2Args);
-                p2.stderr.on('data', (d) => logFFmpegProgress(`${label} P2`, d, totalFrames));
+                p2.stderr.on('data', (d) => {
+                    logFFmpegProgress(`${label} P2`, d, totalFrames);
+                });
                 p2.on('close', (code) => {
                     process.stdout.write('\n');
                     if (code === 0) resolve(); else reject(new Error(`pass2 code ${code}`));
@@ -169,6 +171,7 @@ let handler = async (m, { conn, text, command, args }) => {
             console.error(e);
             reply(`❌ Error al comprimir:\n\`${e.message}\``);
         } finally {
+            // Limpieza exhaustiva
             [input, output, `${logPrefix}-0.log`, `${logPrefix}-0.log.mbtree`].forEach(f => { 
                 if (fs.existsSync(f)) fs.unlinkSync(f); 
             });
@@ -240,3 +243,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
+        
