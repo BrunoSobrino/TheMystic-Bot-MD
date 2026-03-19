@@ -21,9 +21,6 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
   if (!text) return m.reply(`*${tradutor.texto1}*`);
 
-  // Mensaje de carga
-  await m.reply(`${tradutor.texto_procesando || '⏳ Procesando...'}`);
-
   try {
     // ========== PASO 1: BUSCAR INFORMACIÓN DEL ANIME ==========
     const query = `query ($search: String) { 
@@ -93,14 +90,14 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         'Ecchi': 'Ecchi', 
         'Fantasy': 'Fantasía', 
         'Horror': 'Terror', 
-        'Mahou Shoujo': 'Magical Girl', 
+        'Mahou Shoujo': 'Chicas Mágicas', 
         'Mecha': 'Mecha', 
         'Music': 'Música', 
         'Mystery': 'Misterio', 
         'Psychological': 'Psicológico', 
         'Romance': 'Romance', 
         'Sci-Fi': 'Ciencia Ficción', 
-        'Slice of Life': 'Recuentos de la vida', 
+        'Slice of Life': 'Recuentos de la Vida', 
         'Sports': 'Deportes', 
         'Supernatural': 'Sobrenatural', 
         'Thriller': 'Suspenso',
@@ -121,7 +118,11 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         'Vampire': 'Vampiros',
         'Demons': 'Demonios',
         'Space': 'Espacial',
-        'Game': 'Juegos'
+        'Game': 'Juegos',
+        'Cars': 'Autos',
+        'Kids': 'Infantil',
+        'Magic': 'Magia',
+        'Police': 'Policía'
       }
     };
 
@@ -132,10 +133,18 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     
     let sinopsisEsp = await traducirTexto(cleanDesc);
     
+    // Formatear sinopsis con > al inicio de cada línea
+    const sinopsisFormateada = sinopsisEsp
+      .split('\n')
+      .map(linea => linea.trim())
+      .filter(linea => linea.length > 0)
+      .map(linea => `> ${linea}`)
+      .join('\n');
+    
     // ========== PASO 3: CONSTRUIR INFORMACIÓN ==========
     const titulo = result.title.romaji || result.title.english || result.title.native;
     const tituloIngles = result.title.english && result.title.english !== result.title.romaji 
-      ? `\n🔤 | *Título inglés:* ${result.title.english}` 
+      ? `\n🔤 *Título en inglés:* ${result.title.english}` 
       : '';
     const tituloNativo = result.title.native && result.title.native !== result.title.romaji 
       ? ` (${result.title.native})` 
@@ -146,44 +155,34 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       .map(g => TRADUCCIONES.generos[g] || g)
       .join(', ');
 
-    const AnimeInfo = `✨ *INFORMACIÓN DE ANIME* ✨
+    const AnimeInfo = `✨ *INFORMACIÓN DEL ANIME* ✨
 
-🈺 | *Título:* ${titulo}${tituloIngles}${tituloNativo}
-🏦 | *Estudio:* ${estudios}
-📆 | *Año:* ${result.seasonYear || 'N/A'}
-🗂 | *Episodios:* ${result.episodes || 'En emisión'}
-🎧 | *Audio:* Japonés
-💬 | *Subtítulos:* Español
-🏷 | *Géneros:* ${generosEsp}
-⏱ | *Duración:* ${result.duration ? result.duration + ' min' : 'N/A'}
-💽 | *Formato:* ${TRADUCCIONES.formatos[result.format] || result.format}
-🔅 | *Temporada:* ${TRADUCCIONES.temporadas[result.season] || 'N/A'}
-⏳ | *Estado:* ${TRADUCCIONES.estados[result.status] || result.status}
+🈺 *Título:* ${titulo}${tituloIngles}${tituloNativo}
+🏦 *Estudio:* ${estudios}
+📆 *Año:* ${result.seasonYear || 'N/A'}
+🗂 *Episodios:* ${result.episodes || 'En emisión'}
+🎧 *Audio:* Japonés
+💬 *Subtítulos:* Español
+🏷 *Géneros:* ${generosEsp}
+⏱ *Duración:* ${result.duration ? result.duration + ' min' : 'N/A'}
+💽 *Formato:* ${TRADUCCIONES.formatos[result.format] || result.format}
+🔅 *Temporada:* ${TRADUCCIONES.temporadas[result.season] || 'N/A'}
+⏳ *Estado:* ${TRADUCCIONES.estados[result.status] || result.status}
 
-📜 | *Sinopsis:*
-${sinopsisEsp}`;
+📜 *Sinopsis:*
+${sinopsisFormateada}`;
 
     // ========== PASO 4: OBTENER Y MEJORAR IMAGEN ==========
     const imageUrl = result.coverImage.extraLarge || result.bannerImage || result.coverImage.large;
     
-    console.log('🖼️ Iniciando proceso de mejora de imagen...');
-    console.log('📸 URL original:', imageUrl);
-    
     let imageToSend;
     let imageCaption = AnimeInfo.trim();
     
-    // Mensaje de que se está mejorando
-    await m.reply('🎨 Mejorando imagen con IA, espera 15-30 segundos...');
-    
     try {
-      // Intentar mejorar la imagen con múltiples APIs
       const enhancedImage = await upscaleImageWithFallback(imageUrl);
       imageToSend = enhancedImage;
       imageCaption += '\n\n✨ _Imagen mejorada con IA (4x upscale)_';
-      console.log('✅ Imagen mejorada exitosamente');
     } catch (upscaleError) {
-      // Si falla el upscale, usar imagen original
-      console.error('⚠️ Error al mejorar imagen:', upscaleError.message);
       imageToSend = { url: imageUrl };
       imageCaption += '\n\n⚠️ _Imagen original (sin mejora IA)_';
     }
@@ -195,8 +194,6 @@ ${sinopsisEsp}`;
     }, { quoted: m });
 
   } catch (e) {
-    console.error('❌ Error en comando Anime:', e);
-    
     let errorMsg = `*${tradutor.texto3}*`;
     
     if (e.message?.includes('timeout')) {
@@ -226,12 +223,10 @@ async function traducirTexto(texto) {
   
   for (const fragmento of fragmentos) {
     try {
-      // Intento 1: Google Translate
       const res = await translate(fragmento, { to: 'es', from: 'en' });
       traducidos.push(res.text);
     } catch (err1) {
       try {
-        // Intento 2: MyMemory API
         const res = await axios.get('https://api.mymemory.translated.net/get', {
           params: { q: fragmento, langpair: 'en|es' },
           timeout: 5000
@@ -243,7 +238,6 @@ async function traducirTexto(texto) {
           throw new Error('MyMemory no disponible');
         }
       } catch (err2) {
-        // Si fallan ambos, mantener original
         traducidos.push(fragmento);
       }
     }
@@ -260,20 +254,17 @@ async function upscaleImageWithFallback(imageUrl) {
       fn: async () => await upscaleWithApiCausas(imageUrl)
     },
     {
-      name: 'Vyro.ai (Respaldo)',
+      name: 'Vyro.ai',
       fn: async () => await upscaleWithVyro(imageUrl)
     }
   ];
 
   for (const api of apis) {
     try {
-      console.log(`🔄 Intentando con ${api.name}...`);
       const result = await api.fn();
-      console.log(`✅ Éxito con ${api.name}`);
       return result;
     } catch (error) {
-      console.error(`❌ ${api.name} falló:`, error.message);
-      // Continuar con la siguiente API
+      continue;
     }
   }
 
@@ -284,8 +275,6 @@ async function upscaleImageWithFallback(imageUrl) {
 async function upscaleWithApiCausas(imageUrl) {
   try {
     const apikey = process.env.APICAUSAS_KEY || "causa-0e3eacf90ab7be15";
-    
-    console.log('🔍 ApiCausas - URL:', imageUrl.substring(0, 60) + '...');
     
     const fullUrl = `https://rest.apicausas.xyz/api/v1/utilidades/upscale?apikey=${apikey}&url=${encodeURIComponent(imageUrl)}&type=4`;
 
@@ -298,43 +287,29 @@ async function upscaleWithApiCausas(imageUrl) {
       maxRedirects: 5
     });
 
-    console.log('✅ ApiCausas - Status:', response.status);
-    console.log('📄 ApiCausas - Content-Type:', response.headers['content-type']);
-    console.log('📦 ApiCausas - Tamaño:', response.data.length, 'bytes');
-
     if (response.status !== 200) {
       throw new Error(`API respondió con código ${response.status}`);
     }
 
     const contentType = response.headers['content-type'];
     if (!contentType || !contentType.startsWith('image/')) {
-      const textResponse = Buffer.from(response.data).toString('utf-8').substring(0, 200);
-      throw new Error(`No es una imagen. Respuesta: ${textResponse}`);
+      throw new Error('Respuesta no es una imagen');
     }
 
     return Buffer.from(response.data);
 
   } catch (err) {
-    if (err.response) {
-      const errorData = Buffer.from(err.response.data).toString('utf-8').substring(0, 300);
-      throw new Error(`ApiCausas error (${err.response.status}): ${errorData}`);
-    } else if (err.request) {
-      throw new Error("ApiCausas no respondió");
-    } else {
-      throw new Error(`ApiCausas: ${err.message}`);
-    }
+    throw new Error(`ApiCausas: ${err.message}`);
   }
 }
 
 // ========== API 2: Vyro.ai (Respaldo) ==========
 async function upscaleWithVyro(imageUrl) {
   try {
-    console.log('🔍 Vyro.ai - Procesando...');
-    
     const response = await axios.get('https://api.vyro.ai/v1/imagine/api/generations', {
       params: {
         prompt: imageUrl,
-        style_id: 122, // Upscale style
+        style_id: 122,
         aspect_ratio: '1:1',
         high_res_results: 1
       },
@@ -347,17 +322,15 @@ async function upscaleWithVyro(imageUrl) {
     if (response.data && response.data.data && response.data.data[0]) {
       const imageResultUrl = response.data.data[0].url;
       
-      // Descargar la imagen mejorada
       const imageResponse = await axios.get(imageResultUrl, {
         responseType: 'arraybuffer',
         timeout: 30000
       });
       
-      console.log('✅ Vyro.ai - Imagen descargada');
       return Buffer.from(imageResponse.data);
     }
 
-    throw new Error('Vyro.ai no devolvió resultados');
+    throw new Error('Sin resultados');
 
   } catch (err) {
     throw new Error(`Vyro.ai: ${err.message}`);
