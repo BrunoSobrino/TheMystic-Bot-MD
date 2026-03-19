@@ -15,14 +15,14 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     tradutor = { 
       texto1: 'Por favor, ingresa el nombre de un anime.', 
       texto3: '[❗] OCURRIÓ UN ERROR, INTÉNTALO DE NUEVO',
-      texto_procesando: '⏳ Buscando información y mejorando imagen...'
+      texto_procesando: '⏳ Buscando información...'
     };
   }
 
   if (!text) return m.reply(`*${tradutor.texto1}*`);
 
   // Mensaje de carga
-  const loadingMsg = await m.reply(`${tradutor.texto_procesando || '⏳ Procesando...'}`);
+  await m.reply(`${tradutor.texto_procesando || '⏳ Procesando...'}`);
 
   try {
     // ========== PASO 1: BUSCAR INFORMACIÓN DEL ANIME ==========
@@ -161,9 +161,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 ⏳ | *Estado:* ${TRADUCCIONES.estados[result.status] || result.status}
 
 📜 | *Sinopsis:*
-${sinopsisEsp}
-
-🎨 | _Imagen mejorada con IA_`;
+${sinopsisEsp}`;
 
     // ========== PASO 4: OBTENER Y MEJORAR IMAGEN ==========
     const imageUrl = result.coverImage.extraLarge || result.bannerImage || result.coverImage.large;
@@ -174,10 +172,12 @@ ${sinopsisEsp}
     let imageToSend;
     let imageCaption = AnimeInfo.trim();
     
+    // Mensaje de que se está mejorando
+    await m.reply('🎨 Mejorando imagen con IA, espera 15-30 segundos...');
+    
     try {
-      // Intentar mejorar la imagen con la API
-      m.reply('🎨 Mejorando imagen con IA, espera un momento...');
-      const enhancedImage = await upscaleImage(imageUrl);
+      // Intentar mejorar la imagen con múltiples APIs
+      const enhancedImage = await upscaleImageWithFallback(imageUrl);
       imageToSend = enhancedImage;
       imageCaption += '\n\n✨ _Imagen mejorada con IA (4x upscale)_';
       console.log('✅ Imagen mejorada exitosamente');
@@ -185,8 +185,7 @@ ${sinopsisEsp}
       // Si falla el upscale, usar imagen original
       console.error('⚠️ Error al mejorar imagen:', upscaleError.message);
       imageToSend = { url: imageUrl };
-      imageCaption += '\n\n⚠️ _Usando imagen original_';
-      imageCaption += `\n_Motivo: ${upscaleError.message}_`;
+      imageCaption += '\n\n⚠️ _Imagen original (sin mejora IA)_';
     }
 
     // ========== PASO 5: ENVIAR RESULTADO ==========
@@ -253,66 +252,115 @@ async function traducirTexto(texto) {
   return traducidos.join(' ');
 }
 
-// ========== FUNCIÓN DE MEJORA DE IMAGEN ==========
-async function upscaleImage(imageUrl) {
+// ========== FUNCIÓN DE MEJORA DE IMAGEN CON MÚLTIPLES APIS ==========
+async function upscaleImageWithFallback(imageUrl) {
+  const apis = [
+    {
+      name: 'ApiCausas',
+      fn: async () => await upscaleWithApiCausas(imageUrl)
+    },
+    {
+      name: 'Vyro.ai (Respaldo)',
+      fn: async () => await upscaleWithVyro(imageUrl)
+    }
+  ];
+
+  for (const api of apis) {
+    try {
+      console.log(`🔄 Intentando con ${api.name}...`);
+      const result = await api.fn();
+      console.log(`✅ Éxito con ${api.name}`);
+      return result;
+    } catch (error) {
+      console.error(`❌ ${api.name} falló:`, error.message);
+      // Continuar con la siguiente API
+    }
+  }
+
+  throw new Error('Todas las APIs de mejora fallaron');
+}
+
+// ========== API 1: ApiCausas ==========
+async function upscaleWithApiCausas(imageUrl) {
   try {
-    // Obtener API key desde variable de entorno o usar la por defecto
     const apikey = process.env.APICAUSAS_KEY || "causa-0e3eacf90ab7be15";
     
-    // Log para debugging
-    console.log('🔍 URL de imagen a mejorar:', imageUrl);
-    console.log('🔑 Usando API key:', apikey.substring(0, 10) + '...');
+    console.log('🔍 ApiCausas - URL:', imageUrl.substring(0, 60) + '...');
     
-    // Construir URL completa
     const fullUrl = `https://rest.apicausas.xyz/api/v1/utilidades/upscale?apikey=${apikey}&url=${encodeURIComponent(imageUrl)}&type=4`;
-    console.log('📡 Llamando a API:', fullUrl.substring(0, 80) + '...');
 
     const response = await axios.get(fullUrl, {
       responseType: "arraybuffer",
-      timeout: 45000, // 45 segundos (más tiempo para imágenes grandes)
+      timeout: 45000,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       },
-      maxRedirects: 5,
-      validateStatus: function (status) {
-        return status >= 200 && status < 300;
-      }
+      maxRedirects: 5
     });
 
-    console.log('✅ Respuesta recibida - Status:', response.status);
-    console.log('📄 Content-Type:', response.headers['content-type']);
-    console.log('📦 Tamaño de respuesta:', response.data.length, 'bytes');
+    console.log('✅ ApiCausas - Status:', response.status);
+    console.log('📄 ApiCausas - Content-Type:', response.headers['content-type']);
+    console.log('📦 ApiCausas - Tamaño:', response.data.length, 'bytes');
 
-    // Validar respuesta
     if (response.status !== 200) {
       throw new Error(`API respondió con código ${response.status}`);
     }
 
-    // Validar que la respuesta sea una imagen válida
     const contentType = response.headers['content-type'];
     if (!contentType || !contentType.startsWith('image/')) {
-      // Intentar leer como texto para ver el error
-      const textResponse = Buffer.from(response.data).toString('utf-8');
-      console.log('⚠️ Respuesta no es imagen:', textResponse.substring(0, 200));
-      throw new Error(`La API no devolvió una imagen. Content-Type: ${contentType}`);
+      const textResponse = Buffer.from(response.data).toString('utf-8').substring(0, 200);
+      throw new Error(`No es una imagen. Respuesta: ${textResponse}`);
     }
 
-    const buffer = Buffer.from(response.data);
-    console.log('🎉 Imagen mejorada correctamente:', buffer.length, 'bytes');
-    return buffer;
+    return Buffer.from(response.data);
 
   } catch (err) {
-    console.error('❌ Error en upscaleImage:', err.message);
-    
     if (err.response) {
-      const errorData = Buffer.from(err.response.data).toString('utf-8').substring(0, 500);
-      console.error('📄 Respuesta de error:', errorData);
-      throw new Error(`Error de API (${err.response.status}): ${errorData || err.response.statusText}`);
+      const errorData = Buffer.from(err.response.data).toString('utf-8').substring(0, 300);
+      throw new Error(`ApiCausas error (${err.response.status}): ${errorData}`);
     } else if (err.request) {
-      throw new Error("La API no respondió - verifica tu conexión");
+      throw new Error("ApiCausas no respondió");
     } else {
-      throw new Error(`Error al procesar: ${err.message}`);
+      throw new Error(`ApiCausas: ${err.message}`);
     }
+  }
+}
+
+// ========== API 2: Vyro.ai (Respaldo) ==========
+async function upscaleWithVyro(imageUrl) {
+  try {
+    console.log('🔍 Vyro.ai - Procesando...');
+    
+    const response = await axios.get('https://api.vyro.ai/v1/imagine/api/generations', {
+      params: {
+        prompt: imageUrl,
+        style_id: 122, // Upscale style
+        aspect_ratio: '1:1',
+        high_res_results: 1
+      },
+      timeout: 45000,
+      headers: {
+        'Authorization': 'Bearer vk-v1RLbbKaLfAUCiKL4FlHMHMGz8DVKjQC29hLT0uPFqKXbcJ'
+      }
+    });
+
+    if (response.data && response.data.data && response.data.data[0]) {
+      const imageResultUrl = response.data.data[0].url;
+      
+      // Descargar la imagen mejorada
+      const imageResponse = await axios.get(imageResultUrl, {
+        responseType: 'arraybuffer',
+        timeout: 30000
+      });
+      
+      console.log('✅ Vyro.ai - Imagen descargada');
+      return Buffer.from(imageResponse.data);
+    }
+
+    throw new Error('Vyro.ai no devolvió resultados');
+
+  } catch (err) {
+    throw new Error(`Vyro.ai: ${err.message}`);
   }
 }
 
