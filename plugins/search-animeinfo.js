@@ -1,112 +1,105 @@
 import axios from 'axios';
-import pkg from '@vitalets/google-translate-api';
-const { translate } = pkg;
 import fs from 'fs';
-import Jimp from 'jimp';
+
+const cache = new Map(); // ⚡ cache simple
 
 const handler = async (m, { conn, text }) => {
-  const datas = global;
-  const idioma = datas.db?.data?.users?.[m.sender]?.language || global.defaultLenguaje || 'es';
-  
+  const idioma = global.db?.data?.users?.[m.sender]?.language || 'es';
+
   let tradutor;
   try {
-    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
-    tradutor = _translate.plugins.buscador_animeinfo;
+    tradutor = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`)).plugins.buscador_animeinfo;
   } catch {
-    tradutor = { texto1: 'Ingresa el nombre de un anime.', texto3: '[❗] ERROR' };
+    tradutor = { 
+      texto1: 'Ingresa el nombre de un anime.', 
+      texto3: 'Ocurrió un error.' 
+    };
   }
 
   if (!text) return m.reply(`*${tradutor.texto1}*`);
 
-  try {
-    const query = `query ($search: String) { Media (search: $search, type: ANIME) { id title { romaji english native } studios(isMain: true) { nodes { name } } seasonYear episodes genres duration format season status description bannerImage coverImage { extraLarge large } averageScore } }`;
+  // ⚡ CACHE
+  if (cache.has(text.toLowerCase())) {
+    return conn.sendMessage(m.chat, cache.get(text.toLowerCase()), { quoted: m });
+  }
 
-    const response = await axios({
-      url: 'https://graphql.anilist.co',
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      data: { query, variables: { search: text } }
+  try {
+    const query = `query ($search: String) {
+      Media (search: $search, type: ANIME) {
+        title { romaji english }
+        episodes
+        duration
+        season
+        seasonYear
+        status
+        format
+        averageScore
+        description
+        genres
+        coverImage { extraLarge large }
+        studios { nodes { name } }
+      }
+    }`;
+
+    const { data } = await axios.post('https://graphql.anilist.co', {
+      query,
+      variables: { search: text }
     });
 
-    const result = response.data.data.Media;
-    if (!result) return m.reply(`*${tradutor.texto3}*`);
+    const result = data.data.Media;
+    if (!result) return m.reply(tradutor.texto3);
 
-    // --- TRADUCCIONES ---
-    const estados = { 'FINISHED': 'Finalizado', 'RELEASING': 'En emisión', 'NOT_YET_RELEASED': 'Próximamente', 'CANCELLED': 'Cancelado', 'HIATUS': 'En pausa' };
-    const temporadas = { 'WINTER': 'Invierno', 'SPRING': 'Primavera', 'SUMMER': 'Verano', 'FALL': 'Otoño' };
-    const formatos = { 'TV': 'Serie de TV', 'MOVIE': 'Película', 'SPECIAL': 'Especial', 'OVA': 'OVA', 'ONA': 'ONA', 'MUSIC': 'Musical' };
-    const generosTrad = { 'Action': 'Acción', 'Adventure': 'Aventura', 'Comedy': 'Comedia', 'Drama': 'Drama', 'Fantasy': 'Fantasía', 'Horror': 'Terror', 'Mystery': 'Misterio', 'Psychological': 'Psicológico', 'Romance': 'Romance', 'Sci-Fi': 'C. Ficción', 'Slice of Life': 'Recuentos', 'Sports': 'Deportes', 'Supernatural': 'Sobrenatural', 'Thriller': 'Suspenso' };
+    // Diccionarios
+    const estados = {
+      FINISHED: 'Finalizado',
+      RELEASING: 'En emisión',
+      NOT_YET_RELEASED: 'Próximamente'
+    };
 
-    const cleanDesc = result.description ? result.description.replace(/<\/?[^>]+(>|$)/g, "").trim() : 'No disponible';
-    let sinopsisEsp;
-    try {
-      const resTrans = await translate(cleanDesc, { to: 'es' });
-      sinopsisEsp = resTrans.text;
-    } catch { sinopsisEsp = cleanDesc; }
+    const temporadas = {
+      WINTER: 'Invierno',
+      SPRING: 'Primavera',
+      SUMMER: 'Verano',
+      FALL: 'Otoño'
+    };
 
-    const titulo = result.title.romaji || result.title.english || result.title.native;
-    const estudio = result.studios.nodes[0]?.name || 'Desconocido';
-    const generosEsp = result.genres.map(g => generosTrad[g] || g).join(', ');
-    const puntaje = result.averageScore ? `${result.averageScore}%` : 'N/A';
+    // ⚡ limpiar descripción y recortar
+    let desc = result.description?.replace(/<[^>]+>/g, '') || 'No disponible';
+    if (desc.length > 600) desc = desc.slice(0, 600) + '...';
 
-    // --- DISEÑO DE IMAGEN (CON PROTECCIÓN ANTI-BLOQUEO) ---
-    let buffer;
-    try {
-      const coverUrl = result.coverImage.extraLarge || result.coverImage.large;
-      const bannerUrl = result.bannerImage || coverUrl; // Si no hay banner, usamos la misma portada de fondo
+    const titulo = result.title.romaji || result.title.english;
+    const estudios = result.studios.nodes.map(s => s.name).join(', ') || 'N/A';
 
-      // Cargamos imágenes con timeout para no quedar trabados
-      const [cover, banner] = await Promise.all([
-        Jimp.read({ url: coverUrl }).catch(() => null),
-        Jimp.read({ url: bannerUrl }).catch(() => null)
-      ]);
+    const textoFinal = `✨ *${titulo}* ✨
 
-      if (cover) {
-        const finalImg = new Jimp(1000, 450, 0x1A1A1AFF); // Fondo gris oscuro sólido (no depende de Imgur)
-        
-        if (banner) {
-          banner.resize(Jimp.AUTO, 450).opacity(0.4);
-          finalImg.composite(banner, 0, 0);
-        }
+⭐ *Puntaje:* ${result.averageScore || 'N/A'}%
+🎬 *Episodios:* ${result.episodes || 'En emisión'}
+📆 *Año:* ${result.seasonYear || 'N/A'}
+🎞 *Formato:* ${result.format}
+🏢 *Estudio:* ${estudios}
+📡 *Estado:* ${estados[result.status] || result.status}
+🌸 *Temporada:* ${temporadas[result.season] || result.season}
 
-        cover.resize(Jimp.AUTO, 450);
-        finalImg.composite(cover, 1000 - cover.bitmap.width, 0);
+🎭 *Géneros:* ${result.genres.join(', ')}
 
-        const font64 = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE).catch(() => null);
-        const font32 = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).catch(() => null);
+📜 *Sinopsis:*
+${desc}`;
 
-        if (font64) finalImg.print(font64, 40, 150, titulo.slice(0, 25), 600);
-        if (font32) finalImg.print(font32, 40, 250, `⭐ Puntaje: ${puntaje}`);
+    const msg = {
+      image: { url: result.coverImage.extraLarge || result.coverImage.large },
+      caption: textoFinal
+    };
 
-        buffer = await finalImg.getBufferAsync(Jimp.MIME_PNG);
-      }
-    } catch (imgErr) {
-      console.error('Fallo Jimp:', imgErr);
-      buffer = result.coverImage.extraLarge || result.coverImage.large; // Fallback a imagen normal
-    }
+    // ⚡ guardar en cache
+    cache.set(text.toLowerCase(), msg);
 
-    // --- MENSAJE FINAL ---
-    let txt = `✨ *INFORMACIÓN DE ANIME* ✨\n\n`
-    txt += `*㊙️ ❘ Título:* ${titulo}\n`
-    txt += `*🏦 ❘ Estudio:* ${estudio}\n`
-    txt += `*📆 ❘ Año:* ${result.seasonYear || 'N/A'}\n`
-    txt += `*🗂 ❘ Episodios:* ${result.episodes || 'En emisión'}\n`
-    txt += `*🏷 ❘ Géneros:* ${generosEsp}\n`
-    txt += `*💽 ❘ Formato:* ${formatos[result.format] || result.format}\n`
-    txt += `*⏳ ❘ Estado:* ${estados[result.status] || result.status}\n\n`
-    txt += `*📜 ❘ Sinopsis:*\n> ${sinopsisEsp}`;
-
-    await conn.sendMessage(m.chat, { image: buffer?.constructor === Buffer ? buffer : { url: buffer }, caption: txt.trim() }, { quoted: m });
+    await conn.sendMessage(m.chat, msg, { quoted: m });
 
   } catch (e) {
     console.error(e);
-    m.reply(`*${tradutor.texto3}*`);
+    m.reply(tradutor.texto3);
   }
 };
 
-handler.help = ['anime <nombre>'];
-handler.tags = ['buscadores'];
 handler.command = /^(anime|animeinfo)$/i;
-
 export default handler;
-      
