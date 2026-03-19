@@ -1,6 +1,6 @@
 import axios from 'axios';
-import pkg from '@vitalets/google-translate-api'; // Importación por defecto
-const { translate } = pkg; // Extraemos la función translate
+import pkg from '@vitalets/google-translate-api';
+const { translate } = pkg;
 import fs from 'fs';
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
@@ -21,8 +21,25 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) return m.reply(`*${tradutor.texto1}*`);
 
   try {
-    // Query ultra-limpia para evitar el error 400
-    const query = `query($search:String){Media(search:$search,type:ANIME){id title{romaji english native}studios(isMain:true){nodes{name}}seasonYear episodes genres duration format season status description bannerImage coverImage{extraLarge large}}}`;
+    // Consulta optimizada para AniList (GraphQL)
+    const query = `
+    query ($search: String) {
+      Media (search: $search, type: ANIME) {
+        id
+        title { romaji english native }
+        studios(isMain: true) { nodes { name } }
+        seasonYear
+        episodes
+        genres
+        duration
+        format
+        season
+        status
+        description
+        bannerImage
+        coverImage { extraLarge large medium }
+      }
+    }`;
 
     const response = await axios({
       url: 'https://graphql.anilist.co',
@@ -38,11 +55,12 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     });
 
     const result = response.data.data.Media;
-    if (!result) throw 'No se encontraron resultados';
+    if (!result) return m.reply(`*${tradutor.texto3}*`);
 
+    // Limpieza profunda de HTML para evitar texto sucio en WhatsApp
     const cleanDesc = result.description ? result.description.replace(/<\/?[^>]+(>|$)/g, "") : 'No disponible';
     
-    // Función de traducción usando la nueva constante extraída
+    // Traducción automática de la Sinopsis
     const safeTranslate = async (txt) => {
       try {
         const res = await translate(txt, { to: 'es' });
@@ -52,6 +70,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
     const sinopsisTranslate = await safeTranslate(cleanDesc);
     
+    // Formateo de datos
     const titulo = result.title.romaji || result.title.english || result.title.native;
     const estudios = result.studios.nodes.map(s => s.name).join(', ') || 'N/A';
     const generos = result.genres.join(', ') || 'N/A';
@@ -63,24 +82,21 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       'CANCELLED': 'Cancelado',
       'HIATUS': 'En pausa'
     };
-    const estado = estadosRespaldo[result.status] || result.status;
 
-    let AnimeInfo = `✨ *ANIME INFO* ✨\n\n`
+    let AnimeInfo = `✨ *ANIME INFO (AniList)* ✨\n\n`
     AnimeInfo += `*㊙️ ❘ Título:* ${titulo}\n`
     AnimeInfo += `*🏦 ❘ Estudio/s:* ${estudios}\n`
     AnimeInfo += `*📆 ❘ Año:* ${result.seasonYear || 'N/A'}\n`
     AnimeInfo += `*🗂 ❘ Episodios:* ${result.episodes || 'En emisión'}\n`
-    AnimeInfo += `*🎧 ❘ Audio:* Japonés\n`
-    AnimeInfo += `*💬 ❘ Subtitulos:* Español\n`
     AnimeInfo += `*🏷 ❘ Género:* ${generos}\n`
     AnimeInfo += `*⏱ ❘ Duración:* ${result.duration ? result.duration + ' min' : 'N/A'}\n`
     AnimeInfo += `*💽 ❘ Formato:* ${result.format || 'N/A'}\n`
-    AnimeInfo += `*🔅 ❘ Temporada:* ${result.season || 'N/A'}\n`
-    AnimeInfo += `*⏳ ❘ Estado:* ${estado}\n\n`
+    AnimeInfo += `*⏳ ❘ Estado:* ${estadosRespaldo[result.status] || result.status}\n\n`
     AnimeInfo += `*📜 ❘ Sinopsis:*\n`
-    AnimeInfo += `> ${sinopsisTranslate}`
+    AnimeInfo += `> ${sinopsisTranslate.trim()}`
 
-    const imageHD = result.coverImage.extraLarge || result.coverImage.large || result.bannerImage;
+    // Selección de la mejor imagen disponible
+    const imageHD = result.coverImage.extraLarge || result.bannerImage || result.coverImage.large;
 
     await conn.sendMessage(m.chat, { 
       image: { url: imageHD }, 
@@ -88,14 +104,14 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     }, { quoted: m });
 
   } catch (e) {
-    console.log(`\n==== [ERROR ANIME REPORT] ====`);
-    if (e.response) {
-      console.log('Status:', e.response.status);
-      console.log('Data:', JSON.stringify(e.response.data, null, 2));
+    // Registro detallado en consola si algo falla
+    console.log(`\n==== [ANILIST ERROR] ====`);
+    if (e.response && e.response.data) {
+      console.log(JSON.stringify(e.response.data, null, 2));
     } else {
       console.error(e);
     }
-    console.log(`==============================\n`);
+    console.log(`=========================\n`);
 
     m.reply(`*${tradutor.texto3}*`);
   }
