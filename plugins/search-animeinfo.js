@@ -2,8 +2,9 @@ import axios from 'axios';
 import pkg from '@vitalets/google-translate-api';
 const { translate } = pkg;
 import fs from 'fs';
+import Jimp from 'jimp';
 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, { conn, text }) => {
   const datas = global;
   const idioma = datas.db?.data?.users?.[m.sender]?.language || global.defaultLenguaje || 'es';
   
@@ -12,16 +13,13 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
     tradutor = _translate.plugins.buscador_animeinfo;
   } catch {
-    tradutor = { 
-      texto1: 'Por favor, ingresa el nombre de un anime.', 
-      texto3: '[❗] OCURRIÓ UN ERROR, INTÉNTALO DE NUEVO' 
-    };
+    tradutor = { texto1: 'Ingresa el nombre de un anime.', texto3: '[❗] ERROR' };
   }
 
   if (!text) return m.reply(`*${tradutor.texto1}*`);
 
   try {
-    const query = `query ($search: String) { Media (search: $search, type: ANIME) { id title { romaji english native } studios(isMain: true) { nodes { name } } seasonYear episodes genres duration format season status description bannerImage coverImage { extraLarge large } } }`;
+    const query = `query ($search: String) { Media (search: $search, type: ANIME) { id title { romaji english native } studios(isMain: true) { nodes { name } } seasonYear episodes genres duration format season status description bannerImage coverImage { extraLarge large } averageScore } }`;
 
     const response = await axios({
       url: 'https://graphql.anilist.co',
@@ -33,38 +31,55 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const result = response.data.data.Media;
     if (!result) return m.reply(`*${tradutor.texto3}*`);
 
-    // --- DICCIONARIOS ---
+    // --- DICCIONARIOS DE TRADUCCIÓN ---
     const estados = { 'FINISHED': 'Finalizado', 'RELEASING': 'En emisión', 'NOT_YET_RELEASED': 'Próximamente', 'CANCELLED': 'Cancelado', 'HIATUS': 'En pausa' };
     const temporadas = { 'WINTER': 'Invierno', 'SPRING': 'Primavera', 'SUMMER': 'Verano', 'FALL': 'Otoño' };
     const formatos = { 'TV': 'Serie de TV', 'MOVIE': 'Película', 'SPECIAL': 'Especial', 'OVA': 'OVA', 'ONA': 'ONA', 'MUSIC': 'Musical' };
-    const generosTraduccion = { 'Action': 'Acción', 'Adventure': 'Aventura', 'Comedy': 'Comedia', 'Drama': 'Drama', 'Ecchi': 'Ecchi', 'Fantasy': 'Fantasía', 'Horror': 'Terror', 'Mahou Shoujo': 'Magical Girl', 'Mecha': 'Mecha', 'Music': 'Música', 'Mystery': 'Misterio', 'Psychological': 'Psicológico', 'Romance': 'Romance', 'Sci-Fi': 'Ciencia Ficción', 'Slice of Life': 'Recuentos de la vida', 'Sports': 'Deportes', 'Supernatural': 'Sobrenatural', 'Thriller': 'Suspenso' };
+    const generosTraduccion = { 'Action': 'Acción', 'Adventure': 'Aventura', 'Comedy': 'Comedia', 'Drama': 'Drama', 'Ecchi': 'Ecchi', 'Fantasy': 'Fantasía', 'Horror': 'Terror', 'Mystery': 'Misterio', 'Psychological': 'Psicológico', 'Romance': 'Romance', 'Sci-Fi': 'C. Ficción', 'Slice of Life': 'Recuentos', 'Sports': 'Deportes', 'Supernatural': 'Sobrenatural', 'Thriller': 'Suspenso' };
 
-    // --- LIMPIEZA Y TRADUCCIÓN ---
-    let cleanDesc = result.description ? result.description.replace(/<\/?[^>]+(>|$)/g, "").trim() : 'No disponible';
-    
-    // Traducción forzada con manejo de error explícito
-    let sinopsisEsp = 'Traduciendo...';
+    // --- PROCESO DE TEXTO Y TRADUCCIÓN ---
+    const cleanDesc = result.description ? result.description.replace(/<\/?[^>]+(>|$)/g, "").trim() : 'No disponible';
+    let sinopsisEsp;
     try {
       const resTrans = await translate(cleanDesc, { to: 'es' });
       sinopsisEsp = resTrans.text;
-    } catch (err) {
-      console.log('Error en traductor primario, intentando secundario...');
-      try {
-        // Backup: Traductor simple vía MyMemory API (sin necesidad de API Key)
-        const backupRes = await axios.get(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanDesc)}&langpair=en|es`);
-        sinopsisEsp = backupRes.data.responseData.translatedText;
-      } catch {
-        sinopsisEsp = cleanDesc; // Si todo falla, queda en inglés
-      }
+    } catch {
+      sinopsisEsp = cleanDesc;
     }
-    
-    const titulo = result.title.romaji || result.title.english || result.title.native;
-    const estudios = result.studios.nodes.map(s => s.name).join(', ') || 'Desconocido';
-    const generosEsp = result.genres.map(g => generosTraduccion[g] || g).join(', ');
 
+    const titulo = result.title.romaji || result.title.english || result.title.native;
+    const estudio = result.studios.nodes[0]?.name || 'Desconocido';
+    const generosEsp = result.genres.map(g => generosTraduccion[g] || g).join(', ');
+    const puntaje = result.averageScore ? `${result.averageScore}%` : 'N/A';
+
+    // --- GENERACIÓN DE IMAGEN ESTILO BANNER ---
+    const coverUrl = result.coverImage.extraLarge || result.coverImage.large;
+    const bannerUrl = result.bannerImage || 'https://i.imgur.com/G5Z5f5y.png';
+
+    const [cover, banner] = await Promise.all([
+      Jimp.read(coverUrl).catch(() => Jimp.read('https://i.imgur.com/G5Z5f5y.png')),
+      Jimp.read(bannerUrl).catch(() => Jimp.read('https://i.imgur.com/G5Z5f5y.png'))
+    ]);
+
+    const finalImg = new Jimp(1000, 450, 0x000000FF);
+    banner.resize(Jimp.AUTO, 450);
+    finalImg.composite(banner, 0, 0);
+
+    cover.resize(Jimp.AUTO, 450);
+    finalImg.composite(cover, 1000 - cover.bitmap.width, 0);
+
+    // Escribir datos básicos en la imagen (Título y Puntaje)
+    const fontTitle = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE);
+    const fontData = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
+    finalImg.print(fontTitle, 50, 150, { text: titulo.slice(0, 30), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT }, 600);
+    finalImg.print(fontData, 50, 250, `⭐ ${puntaje}`);
+
+    const buffer = await finalImg.getBufferAsync(Jimp.MIME_PNG);
+
+    // --- CONSTRUCCIÓN DEL MENSAJE DE TEXTO ---
     let AnimeInfo = `✨ *INFORMACIÓN DE ANIME* ✨\n\n`
     AnimeInfo += `*㊙️ ❘ Título:* ${titulo}\n`
-    AnimeInfo += `*🏦 ❘ Estudio:* ${estudios}\n`
+    AnimeInfo += `*🏦 ❘ Estudio:* ${estudio}\n`
     AnimeInfo += `*📆 ❘ Año:* ${result.seasonYear || 'N/A'}\n`
     AnimeInfo += `*🗂 ❘ Episodios:* ${result.episodes || 'En emisión'}\n`
     AnimeInfo += `*🎧 ❘ Audio:* Japonés\n`
@@ -77,12 +92,11 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     AnimeInfo += `*📜 ❘ Sinopsis:*\n`
     AnimeInfo += `> ${sinopsisEsp}`
 
-    const imageHD = result.coverImage.extraLarge || result.bannerImage || result.coverImage.large;
-
-    await conn.sendMessage(m.chat, { image: { url: imageHD }, caption: AnimeInfo.trim() }, { quoted: m });
+    // Enviamos la imagen generada con el texto completo como pie de foto (Caption)
+    await conn.sendMessage(m.chat, { image: buffer, caption: AnimeInfo.trim() }, { quoted: m });
 
   } catch (e) {
-    console.error('Error en comando Anime:', e);
+    console.error(e);
     m.reply(`*${tradutor.texto3}*`);
   }
 };
@@ -92,4 +106,4 @@ handler.tags = ['buscadores'];
 handler.command = /^(anime|animeinfo)$/i;
 
 export default handler;
-                                   
+  
