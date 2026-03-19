@@ -49,7 +49,7 @@ let handler = async (m, { conn, text, command, args }) => {
         return Math.max(100, Math.floor(videoBits / durationSec / 1000));
     };
 
-    const WM     = `drawtext=text='By//: CID':fontcolor=white:fontsize=w*0.04:x=18:y=14:borderw=2:bordercolor=black:font=Sans:italic=1:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
+    const WM     = `drawtext=text='By\\:CID':fontcolor=white:fontsize=w*0.04:x=18:y=14:borderw=2:bordercolor=black:font=Sans:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
     const withWM = (vf) => `${vf},${WM}`;
 
     if (command === 'dw') {
