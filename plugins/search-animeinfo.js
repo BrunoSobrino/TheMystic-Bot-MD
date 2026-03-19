@@ -6,48 +6,43 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   const datas = global;
   const idioma = datas.db?.data?.users?.[m.sender]?.language || global.defaultLenguaje || 'es';
   
-  // Intentar cargar el archivo de idioma para los mensajes
   let tradutor;
   try {
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
     tradutor = _translate.plugins.buscador_animeinfo;
   } catch {
-    // Si falla el archivo, usamos un fallback manual
-    tradutor = { texto1: 'Ingrese el nombre de un anime.', texto3: '[❗] ERROR, INTENTELO DE NUEVO' };
+    tradutor = { 
+      texto1: 'Ingrese el nombre de un anime para buscar.', 
+      texto3: '[❗] ERROR, INTENTELO DE NUEVO' 
+    };
   }
 
   if (!text) return m.reply(`*${tradutor.texto1}*`);
 
   try {
-    const query = `
-    query ($search: String) {
-      Media (search: $search, type: ANIME) {
-        id
-        title { romaji english native }
-        studios(isMain: true) { nodes { name } }
-        seasonYear
-        episodes
-        genres
-        duration
-        format
-        season
-        status
-        description
-        bannerImage
-        coverImage { extraLarge large }
+    // Consulta limpia sin espacios especiales (Evita el Error 400)
+    const query = `query($search:String){Media(search:$search,type:ANIME){id title{romaji english native}studios(isMain:true){nodes{name}}seasonYear episodes genres duration format season status description bannerImage coverImage{extraLarge large}}}`;
+
+    const response = await axios({
+      url: 'https://graphql.anilist.co',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      data: {
+        query: query,
+        variables: { search: text }
       }
-    }`;
+    });
 
-    const { data } = await axios.post('https://graphql.anilist.co', {
-      query,
-      variables: { search: text }
-    }, { timeout: 10000 }); // 10 segundos de límite
+    const result = response.data.data.Media;
+    if (!result) throw 'No se encontraron resultados';
 
-    const result = data.data.Media;
-    if (!result) throw 'ANIME_NOT_FOUND';
-
+    // Limpieza de etiquetas HTML en la descripción
     const cleanDesc = result.description ? result.description.replace(/<\/?[^>]+(>|$)/g, "") : 'No disponible';
     
+    // Traducción segura de la sinopsis
     const safeTranslate = async (txt) => {
       try {
         const res = await translate(txt, { to: 'es' });
@@ -56,39 +51,53 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     };
 
     const sinopsisTranslate = await safeTranslate(cleanDesc);
-    const titulo = result.title.romaji || result.title.english;
+    
+    const titulo = result.title.romaji || result.title.english || result.title.native;
     const estudios = result.studios.nodes.map(s => s.name).join(', ') || 'N/A';
     const generos = result.genres.join(', ') || 'N/A';
     
     const estadosRespaldo = {
-        'FINISHED': 'Finalizado',
-        'RELEASING': 'En emisión',
-        'NOT_YET_RELEASED': 'Próximamente',
-        'CANCELLED': 'Cancelado',
-        'HIATUS': 'En pausa'
+      'FINISHED': 'Finalizado',
+      'RELEASING': 'En emisión',
+      'NOT_YET_RELEASED': 'Próximamente',
+      'CANCELLED': 'Cancelado',
+      'HIATUS': 'En pausa'
     };
+    const estado = estadosRespaldo[result.status] || result.status;
 
     let AnimeInfo = `✨ *ANIME INFO* ✨\n\n`
     AnimeInfo += `*㊙️ ❘ Título:* ${titulo}\n`
     AnimeInfo += `*🏦 ❘ Estudio/s:* ${estudios}\n`
     AnimeInfo += `*📆 ❘ Año:* ${result.seasonYear || 'N/A'}\n`
     AnimeInfo += `*🗂 ❘ Episodios:* ${result.episodes || 'En emisión'}\n`
+    AnimeInfo += `*🎧 ❘ Audio:* Japonés\n`
+    AnimeInfo += `*💬 ❘ Subtitulos:* Español\n`
     AnimeInfo += `*🏷 ❘ Género:* ${generos}\n`
-    AnimeInfo += `*⏳ ❘ Estado:* ${estadosRespaldo[result.status] || result.status}\n\n`
+    AnimeInfo += `*⏱ ❘ Duración:* ${result.duration ? result.duration + ' min' : 'N/A'}\n`
+    AnimeInfo += `*💽 ❘ Formato:* ${result.format || 'N/A'}\n`
+    AnimeInfo += `*🔅 ❘ Temporada:* ${result.season || 'N/A'}\n`
+    AnimeInfo += `*⏳ ❘ Estado:* ${estado}\n\n`
     AnimeInfo += `*📜 ❘ Sinopsis:*\n`
     AnimeInfo += `> ${sinopsisTranslate}`
 
     const imageHD = result.coverImage.extraLarge || result.coverImage.large || result.bannerImage;
 
-    await conn.sendMessage(m.chat, { image: { url: imageHD }, caption: AnimeInfo.trim() }, { quoted: m });
+    await conn.sendMessage(m.chat, { 
+      image: { url: imageHD }, 
+      caption: AnimeInfo.trim() 
+    }, { quoted: m });
 
   } catch (e) {
-    // --- ESTA PARTE MUESTRA EL ERROR EN LA TERMINAL ---
-    console.log(`\n--- [ERROR EN COMANDO ANIME] ---`);
-    console.error(e); 
-    console.log(`---------------------------------\n`);
-    
-    // --- ESTA PARTE RESPONDE AL USUARIO ---
+    // Log detallado en la terminal para depuración
+    console.log(`\n==== [ERROR ANIME REPORT] ====`);
+    if (e.response) {
+      console.log('Status:', e.response.status);
+      console.log('Data:', JSON.stringify(e.response.data, null, 2));
+    } else {
+      console.error(e);
+    }
+    console.log(`==============================\n`);
+
     m.reply(`*${tradutor.texto3}*`);
   }
 };
@@ -98,3 +107,4 @@ handler.tags = ['buscadores'];
 handler.command = /^(anime|animeinfo)$/i;
 
 export default handler;
+      
