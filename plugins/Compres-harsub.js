@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { exec, spawn } from 'child_process';
 import { pipeline } from 'stream/promises';
 
@@ -27,7 +28,6 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { return false; }
     };
 
-    // Barra compacta para Termux (evita line-wrap en pantallas pequeñas)
     const logFFmpegProgress = (label, data, totalFrames = 0) => {
         const line = data.toString();
         if (!line.includes('frame=')) return;
@@ -49,7 +49,7 @@ let handler = async (m, { conn, text, command, args }) => {
         return Math.max(100, Math.floor(videoBits / durationSec / 1000));
     };
 
-    const WM     = `drawtext=text='CID':fontcolor=white:fontsize=w*0.04:x=18:y=14:borderw=2:bordercolor=black:font=Sans`;
+    const WM     = `drawtext=text='CID':fontcolor=white:fontsize=w*0.04:x=18:y=14:borderw=2:bordercolor=black:font=Sans:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
     const withWM = (vf) => `${vf},${WM}`;
 
     if (command === 'dw') {
@@ -111,93 +111,69 @@ let handler = async (m, { conn, text, command, args }) => {
         const targetMB   = args[1] ? parseFloat(args[1].replace(/mb/i, '')) : NaN;
         if (!res || isNaN(res))           return reply('❌ Especifica la resolución. Ej: `.mi 720 200mb`');
         if (!targetMB || isNaN(targetMB)) return reply('❌ Especifica el peso objetivo. Ej: `.mi 720 200mb`');
+        
         const timestamp = Date.now();
         const input     = `./temp/mi_in_${timestamp}`;
         const output    = `./temp/mi_out_${timestamp}.mp4`;
+        const logPrefix = `./temp/ffmpeg2pass_${timestamp}`; // Prefijo único para evitar conflictos
         const label     = `[MI ${res}p→${targetMB}MB]`;
-        console.log(`\n${label} ${res}p | ${targetMB}MB | ${asDocument ? 'doc' : 'video'}`);
+
         try {
             reply(`⚙️ *Comprimiendo video*\n> Resolución: \`${res}p\`\n> Peso objetivo: \`${targetMB} MB\`\n> Modo: \`${asDocument ? 'Documento' : 'Video'}\`\n\nProcesando...`);
-            console.log(`${label} Descargando...`);
             let success = await downloadMediaStream(m.quoted, input);
-            if (!success) { console.log(`${label} fallback .download()`); fs.writeFileSync(input, await m.quoted.download()); }
-            console.log(`${label} ✔ Descarga OK`);
+            if (!success) fs.writeFileSync(input, await m.quoted.download());
+            
             const getDuration    = () => new Promise(r => exec(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (e, o) => r(parseFloat(o) || 0)));
             const getTotalFrames = () => new Promise(r => exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (e, o) => r(parseInt(o) || 0)));
             const [durationSec, totalFrames] = await Promise.all([getDuration(), getTotalFrames()]);
-            console.log(`${label} ${durationSec.toFixed(1)}s | ${totalFrames}f`);
+            
             const AUDIO_KBPS    = 128;
             const videoBitrateK = calcVideoBitrate(durationSec, targetMB, AUDIO_KBPS);
             const maxrateK      = Math.round(videoBitrateK * 1.5);
             const bufsizeK      = maxrateK * 2;
-            console.log(`${label} v:${videoBitrateK}k max:${maxrateK}k a:${AUDIO_KBPS}k`);
             
-            // ÓPTIMIZACIÓN: Pasada 1 súper rápida, sin calidad visual requerida, usando todos los hilos
+            // PASS 1
             const pass1Args = [
-                '-i', input, 
-                '-vf', `scale=-2:${res}:flags=fast_bilinear`, 
-                '-c:v', 'libx264', 
-                '-b:v', `${videoBitrateK}k`, 
-                '-maxrate', `${maxrateK}k`, 
-                '-bufsize', `${bufsizeK}k`, 
-                '-pass', '1', 
-                '-preset', 'ultrafast',
-                '-threads', '0',
-                '-an', '-f', 'null', '/dev/null', '-y'
+                '-i', input, '-vf', `scale=-2:${res}:flags=fast_bilinear`, '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`, 
+                '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast', '-threads', '0', '-an', '-f', 'null', '/dev/null', '-y'
             ];
-            
-            console.log(`\n${label} PASS 1/2`);
             await new Promise((resolve, reject) => {
                 const p1 = spawn('ffmpeg', pass1Args);
                 p1.stderr.on('data', (d) => logFFmpegProgress(`${label} P1`, d, totalFrames));
                 p1.on('close', (code) => {
                     process.stdout.write('\n');
-                    if (code === 0) { console.log(`${label} ✔ P1 OK`); resolve(); }
-                    else reject(new Error(`pass1 code ${code}`));
+                    if (code === 0) resolve(); else reject(new Error(`pass1 code ${code}`));
                 });
             });
 
-            // ÓPTIMIZACIÓN: Pasada 2 usando preset veryfast y fast_bilinear
+            // PASS 2
             const pass2Args = [
-                '-i', input, 
-                '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), 
-                '-c:v', 'libx264', 
-                '-b:v', `${videoBitrateK}k`, 
-                '-maxrate', `${maxrateK}k`, 
-                '-bufsize', `${bufsizeK}k`, 
-                '-pass', '2', 
-                '-preset', 'veryfast',
-                '-threads', '0',
-                '-c:a', 'aac', 
-                '-b:a', `${AUDIO_KBPS}k`, 
-                '-ac', '2', 
-                '-movflags', '+faststart', 
-                '-y', output
+                '-i', input, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`, 
+                '-pass', '2', '-passlogfile', logPrefix, '-preset', 'veryfast', '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output
             ];
-
-            console.log(`\n${label} PASS 2/2`);
             await new Promise((resolve, reject) => {
                 const p2 = spawn('ffmpeg', pass2Args);
-                p2.stderr.on('data', (d) => logFFmpegProgress(`${label} P2`, d, totalFrames));
+                p2.stderr.on('data', (d) => {
+                    logFFmpegProgress(`${label} P2`, d, totalFrames);
+                });
                 p2.on('close', (code) => {
                     process.stdout.write('\n');
-                    if (code === 0) resolve();
-                    else reject(new Error(`pass2 code ${code}`));
+                    if (code === 0) resolve(); else reject(new Error(`pass2 code ${code}`));
                 });
             });
+
             const finalSizeMB = fs.statSync(output).size / 1024 / 1024;
-            console.log(`\n${label} ✅ ${finalSizeMB.toFixed(2)}MB (Δ${Math.abs(finalSizeMB - targetMB).toFixed(2)}MB)`);
             const mediaOptions = asDocument
                 ? { document: fs.readFileSync(output), fileName: `video_${res}p_${targetMB}mb.mp4`, mimetype: 'video/mp4' }
                 : { video: fs.readFileSync(output), caption: `✅ *${res}p* | ${finalSizeMB.toFixed(1)} MB` };
             await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-            console.log(`${label} ✔ Enviado`);
         } catch (e) {
-            console.error(`\n${label} ❌`, e.message);
+            console.error(e);
             reply(`❌ Error al comprimir:\n\`${e.message}\``);
         } finally {
-            [input, output, 'ffmpeg2pass-0.log', 'ffmpeg2pass-0.log.mbtree'].forEach(f => {
-                if (fs.existsSync(f)) { fs.unlinkSync(f); console.log(`${label} 🗑 ${f}`); }
+            // Limpieza exhaustiva
+            [input, output, `${logPrefix}-0.log`, `${logPrefix}-0.log.mbtree`].forEach(f => { 
+                if (fs.existsSync(f)) fs.unlinkSync(f); 
             });
         }
     }
@@ -224,13 +200,11 @@ let handler = async (m, { conn, text, command, args }) => {
                 } else if (isDw3) {
                     const aIdx = parseInt(args[1]) - 1 || 0;
                     const sIdx = parseInt(args[2]) - 1 || 0;
-                    // Modificación: Texto blanco (&H00FFFFFF), Borde azul claro (&H00FFBF00), Outline=2.5 para grosor
-                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res},subtitles=${input}:si=${sIdx}:force_style='PrimaryColour=&H00FFFFFF,OutlineColour=&H00FFBF00,Outline=2.5,Shadow=0.5'`), '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res},subtitles=${input}:si=${sIdx}:force_style='PrimaryColour=&H00FFFFFF,OutlineColour=&H00FFBF00,Outline=1.0,Shadow=0.5'`), '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
                 } else {
                     ffmpegArgs.push('-vf', withWM(`scale=-2:${res}`), '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
                 }
                 ffmpegArgs.push('-threads', '2', '-y', output);
-                console.log(`\n${label} ffmpeg iniciado`);
                 const proc = spawn('ffmpeg', ffmpegArgs);
                 proc.stderr.on('data', (data) => logFFmpegProgress(label, data, totalFrames));
                 proc.on('close', async (code) => {
@@ -238,9 +212,7 @@ let handler = async (m, { conn, text, command, args }) => {
                     if (code === 0) {
                         if (isDw4) {
                             const fileSizeMB = fs.statSync(output).size / 1024 / 1024;
-                            console.log(`${label} ${fileSizeMB.toFixed(1)}MB`);
                             if (fileSizeMB > 60) {
-                                reply('📦 Optimizando peso final...');
                                 exec(`ffmpeg -i "${output}" -c:v libx264 -crf 28 -maxrate 1000k -bufsize 2000k -preset fast -c:a aac -b:a 80k -y "${output}_opt.mp4"`, async () => {
                                     const finalFile    = fs.existsSync(`${output}_opt.mp4`) ? `${output}_opt.mp4` : output;
                                     const mediaOptions = asDocument
@@ -256,7 +228,6 @@ let handler = async (m, { conn, text, command, args }) => {
                             ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
                             : { video: fs.readFileSync(output) };
                         await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                        console.log(`${label} ✔ Enviado`);
                     } else {
                         reply('❌ Error en FFmpeg.');
                     }
@@ -265,7 +236,6 @@ let handler = async (m, { conn, text, command, args }) => {
                 });
             });
         } catch (e) {
-            console.error(`${label} Error:`, e.message);
             reply('❌ Error de proceso.');
         }
     }
@@ -273,4 +243,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-                
+                              
