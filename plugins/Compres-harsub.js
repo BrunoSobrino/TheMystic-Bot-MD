@@ -49,8 +49,8 @@ let handler = async (m, { conn, text, command, args }) => {
         return Math.max(100, Math.floor(videoBits / durationSec / 1000));
     };
 
-    const WM = `drawtext=text='By\\:CID':fontcolor=white:fontsize=w*0.04:x=20:y=20:borderw=2:bordercolor=black:font='Sans\\:style=Italic':alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
-    const withWM = (vf) => `${vf},${WM}`;
+    const WM = `drawtext=fontfile='/data/data/com.termux/files/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf':text='By\\:CID':fontcolor=white:fontsize=w*0.04:x=20:y=20:borderw=2:bordercolor=black:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
+const withWM = (vf) => `${vf},${WM}`;
     
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
