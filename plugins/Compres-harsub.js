@@ -28,19 +28,45 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { return false; }
     };
 
+    // Barra de progreso mejorada y más legible
     const logFFmpegProgress = (label, data, totalFrames = 0) => {
         const line = data.toString();
         if (!line.includes('frame=')) return;
-        const frame = parseInt(line.match(/frame=\s*(\d+)/)?.[1] ?? '0');
-        const fps   = line.match(/fps=\s*([\d.]+)/)?.[1]         ?? '0';
-        const time  = line.match(/time=\s*([\d:.]+)/)?.[1]       ?? '00:00:00.00';
-        const speed = line.match(/speed=\s*([\d.x]+)/)?.[1]      ?? '0x';
-        const pct   = totalFrames > 0 ? `${((frame / totalFrames) * 100).toFixed(1)}%` : '??%';
-        const filled = totalFrames > 0 ? Math.round((frame / totalFrames) * 10) : 0;
-        const bar   = '▣'.repeat(filled) + '──'.repeat(10 - filled);
-        process.stdout.write(
-            `\r[${label}] ${pct} | Frame: ${frame} | FPS: ${Math.round(fps)} | Time: ${time} | Speed: ${speed}${bar}   `
-        );
+        
+        const frameMatch = line.match(/frame=\s*(\d+)/);
+        const fpsMatch = line.match(/fps=\s*([\d.]+)/);
+        const timeMatch = line.match(/time=\s*([\d:.]+)/);
+        const speedMatch = line.match(/speed=\s*([\d.x]+)/);
+        
+        if (!frameMatch) return;
+        
+        const frame = parseInt(frameMatch[1]);
+        const fps = fpsMatch ? parseFloat(fpsMatch[1]) : 0;
+        const time = timeMatch ? timeMatch[1] : '00:00:00';
+        const speed = speedMatch ? speedMatch[1] : '0x';
+        
+        let progressBar = '';
+        let percentage = '??';
+        
+        if (totalFrames > 0) {
+            const pct = (frame / totalFrames) * 100;
+            percentage = pct.toFixed(1);
+            const filled = Math.round((frame / totalFrames) * 20);
+            progressBar = '█'.repeat(filled) + '░'.repeat(20 - filled);
+        } else {
+            progressBar = '████████████████████';
+        }
+        
+        // Formato más limpio y legible
+        const output = [
+            `\r┌─ ${label}`,
+            `\n│ Progreso: [${progressBar}] ${percentage}%`,
+            `\n│ Frame: ${frame.toLocaleString()} | FPS: ${Math.round(fps)} | Tiempo: ${time} | Velocidad: ${speed}`,
+            `\n└─────────────────────────────────────────────────────────────`
+        ].join('');
+        
+        // Limpiar y mostrar
+        process.stdout.write('\x1B[4A' + output); // Mover cursor 4 líneas arriba
     };
 
     const calcVideoBitrate = (durationSec, targetMB, audioBitrateK = 128) => {
@@ -50,7 +76,7 @@ let handler = async (m, { conn, text, command, args }) => {
     };
 
     const WM = `drawtext=fontfile='/data/data/com.termux/files/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf':text='By\\:CID':fontcolor=white:fontsize=w*0.04:x=20:y=20:borderw=2:bordercolor=black:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
-const withWM = (vf) => `${vf},${WM}`;
+    const withWM = (vf) => `${vf},${WM}`;
     
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
@@ -115,10 +141,11 @@ const withWM = (vf) => `${vf},${WM}`;
         const timestamp = Date.now();
         const input     = `./temp/mi_in_${timestamp}`;
         const output    = `./temp/mi_out_${timestamp}.mp4`;
-        const logPrefix = `./temp/ffmpeg2pass_${timestamp}`; // Prefijo único para evitar conflictos
-        const label     = `[MI ${res}p→${targetMB}MB]`;
+        const logPrefix = `./temp/ffmpeg2pass_${timestamp}`;
+        const label     = `MI ${res}p → ${targetMB}MB`;
 
         try {
+            console.log('\n\n\n\n'); // Espacio inicial para el progreso
             reply(`⚙️ *Comprimiendo video*\n> Resolución: \`${res}p\`\n> Peso objetivo: \`${targetMB} MB\`\n> Modo: \`${asDocument ? 'Documento' : 'Video'}\`\n\nProcesando...`);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
@@ -139,9 +166,9 @@ const withWM = (vf) => `${vf},${WM}`;
             ];
             await new Promise((resolve, reject) => {
                 const p1 = spawn('ffmpeg', pass1Args);
-                p1.stderr.on('data', (d) => logFFmpegProgress(`${label} P1`, d, totalFrames));
+                p1.stderr.on('data', (d) => logFFmpegProgress(`${label} - PASS 1/2`, d, totalFrames));
                 p1.on('close', (code) => {
-                    process.stdout.write('\n');
+                    process.stdout.write('\n\n');
                     if (code === 0) resolve(); else reject(new Error(`pass1 code ${code}`));
                 });
             });
@@ -154,10 +181,10 @@ const withWM = (vf) => `${vf},${WM}`;
             await new Promise((resolve, reject) => {
                 const p2 = spawn('ffmpeg', pass2Args);
                 p2.stderr.on('data', (d) => {
-                    logFFmpegProgress(`${label} P2`, d, totalFrames);
+                    logFFmpegProgress(`${label} - PASS 2/2`, d, totalFrames);
                 });
                 p2.on('close', (code) => {
-                    process.stdout.write('\n');
+                    process.stdout.write('\n\n');
                     if (code === 0) resolve(); else reject(new Error(`pass2 code ${code}`));
                 });
             });
@@ -171,7 +198,6 @@ const withWM = (vf) => `${vf},${WM}`;
             console.error(e);
             reply(`❌ Error al comprimir:\n\`${e.message}\``);
         } finally {
-            // Limpieza exhaustiva
             [input, output, `${logPrefix}-0.log`, `${logPrefix}-0.log.mbtree`].forEach(f => { 
                 if (fs.existsSync(f)) fs.unlinkSync(f); 
             });
@@ -187,28 +213,70 @@ const withWM = (vf) => `${vf},${WM}`;
         const timestamp  = Date.now();
         const input      = `./temp/in_${timestamp}${isDw3 ? '.mkv' : ''}`;
         const output     = `./temp/out_${timestamp}.mp4`;
-        const label      = `[${command.toUpperCase()} ${res}p]`;
+        const label      = `${command.toUpperCase()} ${res}p`;
+        
         try {
+            console.log('\n\n\n\n'); // Espacio inicial para el progreso
             reply(`⚙️ Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
+            
             exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
                 const totalFrames = parseInt(stdout) || 0;
                 let ffmpegArgs = ['-i', input];
+                
                 if (isDw4) {
-                    ffmpegArgs.push('-vf', withWM('scale=-2:360:flags=lanczos'), '-c:v', 'libx264', '-crf', '24', '-maxrate', '1200k', '-bufsize', '2400k', '-preset', 'medium', '-tune', 'film', '-profile:v', 'high', '-level', '3.1', '-c:a', 'aac', '-b:a', '96k', '-ac', '2', '-movflags', '+faststart');
+                    // DW4: Optimizado para mejor calidad en 360p
+                    ffmpegArgs.push(
+                        '-vf', withWM('scale=-2:360:flags=lanczos'),
+                        '-c:v', 'libx264',
+                        '-crf', '23', // Mejor calidad (era 24)
+                        '-maxrate', '1400k', // Mayor bitrate (era 1200k)
+                        '-bufsize', '2800k',
+                        '-preset', 'medium',
+                        '-tune', 'film',
+                        '-profile:v', 'high',
+                        '-level', '3.1',
+                        '-c:a', 'aac',
+                        '-b:a', '96k',
+                        '-ac', '2',
+                        '-movflags', '+faststart'
+                    );
                 } else if (isDw3) {
+                    // DW3: Mejorado con lanczos y mejor CRF
                     const aIdx = parseInt(args[1]) - 1 || 0;
                     const sIdx = parseInt(args[2]) - 1 || 0;
-                    ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res},subtitles=${input}:si=${sIdx}:force_style='PrimaryColour=&H00FFFFFF,OutlineColour=&H00FFBF00,Outline=1.0,Shadow=0.5'`), '-c:a', 'aac', '-b:a', '128k', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    ffmpegArgs.push(
+                        '-map', '0:v:0',
+                        '-map', `0:a:${aIdx}`,
+                        '-vf', withWM(`scale=-2:${res}:flags=lanczos,subtitles=${input}:si=${sIdx}:force_style='PrimaryColour=&H00FFFFFF,OutlineColour=&H00FFBF00,Outline=1.0,Shadow=0.5'`),
+                        '-c:a', 'aac',
+                        '-b:a', '128k',
+                        '-c:v', 'libx264',
+                        '-crf', '22', // Mejor calidad (era 32)
+                        '-preset', 'medium', // Mejor calidad (era ultrafast)
+                        '-profile:v', 'high',
+                        '-movflags', '+faststart'
+                    );
                 } else {
-                    ffmpegArgs.push('-vf', withWM(`scale=-2:${res}`), '-c:a', 'copy', '-c:v', 'libx264', '-crf', '32', '-preset', 'ultrafast');
+                    // DW2: Mejorado con lanczos y mejor CRF
+                    ffmpegArgs.push(
+                        '-vf', withWM(`scale=-2:${res}:flags=lanczos`), // Mejor escalado
+                        '-c:a', 'copy',
+                        '-c:v', 'libx264',
+                        '-crf', '20', // Mucho mejor calidad (era 32)
+                        '-preset', 'medium', // Mejor calidad (era ultrafast)
+                        '-profile:v', 'high',
+                        '-movflags', '+faststart'
+                    );
                 }
-                ffmpegArgs.push('-threads', '2', '-y', output);
+                
+                ffmpegArgs.push('-threads', '0', '-y', output); // threads 0 = auto
+                
                 const proc = spawn('ffmpeg', ffmpegArgs);
                 proc.stderr.on('data', (data) => logFFmpegProgress(label, data, totalFrames));
                 proc.on('close', async (code) => {
-                    process.stdout.write('\n');
+                    process.stdout.write('\n\n');
                     if (code === 0) {
                         if (isDw4) {
                             const fileSizeMB = fs.statSync(output).size / 1024 / 1024;
@@ -237,10 +305,11 @@ const withWM = (vf) => `${vf},${WM}`;
             });
         } catch (e) {
             reply('❌ Error de proceso.');
+            console.error(e);
         }
     }
 };
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-                              
+                
