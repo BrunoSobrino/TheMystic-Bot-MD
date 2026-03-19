@@ -28,7 +28,18 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { return false; }
     };
 
-    // Barra de progreso mejorada y más legible
+    // Colores ANSI
+    const colors = {
+        reset: '\x1b[0m',
+        cyan: '\x1b[36m',
+        green: '\x1b[32m',
+        yellow: '\x1b[33m',
+        blue: '\x1b[34m',
+        magenta: '\x1b[35m',
+        red: '\x1b[31m'
+    };
+
+    // Visualización de progreso estilo solicitado con colores
     const logFFmpegProgress = (label, data, totalFrames = 0) => {
         const line = data.toString();
         if (!line.includes('frame=')) return;
@@ -45,28 +56,16 @@ let handler = async (m, { conn, text, command, args }) => {
         const time = timeMatch ? timeMatch[1] : '00:00:00';
         const speed = speedMatch ? speedMatch[1] : '0x';
         
-        let progressBar = '';
-        let percentage = '??';
-        
+        let percentage = '000';
         if (totalFrames > 0) {
             const pct = (frame / totalFrames) * 100;
-            percentage = pct.toFixed(1);
-            const filled = Math.round((frame / totalFrames) * 20);
-            progressBar = '█'.repeat(filled) + '░'.repeat(20 - filled);
-        } else {
-            progressBar = '████████████████████';
+            percentage = pct.toFixed(0).padStart(3, '0');
         }
         
-        // Formato más limpio y legible
-        const output = [
-            `\r┌─ ${label}`,
-            `\n│ Progreso: [${progressBar}] ${percentage}%`,
-            `\n│ Frame: ${frame.toLocaleString()} | FPS: ${Math.round(fps)} | Tiempo: ${time} | Velocidad: ${speed}`,
-            `\n└─────────────────────────────────────────────────────────────`
-        ].join('');
+        // Formato: [[DW3 360p]] Progreso 000% | Frame: 5804 | FPS: 236 | Time: 00:04:02.07 | Speed: 9.85x
+        const output = `\r${colors.cyan}[[${label}]]${colors.reset} Progreso ${colors.green}${percentage}%${colors.reset} | Frame: ${colors.yellow}${frame}${colors.reset} | FPS: ${colors.blue}${Math.round(fps)}${colors.reset} | Time: ${colors.magenta}${time}${colors.reset} | Speed: ${colors.red}${speed}${colors.reset}`;
         
-        // Limpiar y mostrar
-        process.stdout.write('\x1B[4A' + output); // Mover cursor 4 líneas arriba
+        process.stdout.write(output);
     };
 
     const calcVideoBitrate = (durationSec, targetMB, audioBitrateK = 128) => {
@@ -145,7 +144,6 @@ let handler = async (m, { conn, text, command, args }) => {
         const label     = `MI ${res}p → ${targetMB}MB`;
 
         try {
-            console.log('\n\n\n\n'); // Espacio inicial para el progreso
             reply(`⚙️ *Comprimiendo video*\n> Resolución: \`${res}p\`\n> Peso objetivo: \`${targetMB} MB\`\n> Modo: \`${asDocument ? 'Documento' : 'Video'}\`\n\nProcesando...`);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
@@ -216,7 +214,6 @@ let handler = async (m, { conn, text, command, args }) => {
         const label      = `${command.toUpperCase()} ${res}p`;
         
         try {
-            console.log('\n\n\n\n'); // Espacio inicial para el progreso
             reply(`⚙️ Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
