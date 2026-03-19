@@ -168,20 +168,25 @@ ${sinopsisEsp}
     // ========== PASO 4: OBTENER Y MEJORAR IMAGEN ==========
     const imageUrl = result.coverImage.extraLarge || result.bannerImage || result.coverImage.large;
     
+    console.log('🖼️ Iniciando proceso de mejora de imagen...');
+    console.log('📸 URL original:', imageUrl);
+    
     let imageToSend;
     let imageCaption = AnimeInfo.trim();
     
     try {
       // Intentar mejorar la imagen con la API
-      console.log('🎨 Mejorando imagen con IA...');
+      m.reply('🎨 Mejorando imagen con IA, espera un momento...');
       const enhancedImage = await upscaleImage(imageUrl);
       imageToSend = enhancedImage;
+      imageCaption += '\n\n✨ _Imagen mejorada con IA (4x upscale)_';
       console.log('✅ Imagen mejorada exitosamente');
     } catch (upscaleError) {
       // Si falla el upscale, usar imagen original
-      console.log('⚠️ No se pudo mejorar la imagen, usando original:', upscaleError.message);
+      console.error('⚠️ Error al mejorar imagen:', upscaleError.message);
       imageToSend = { url: imageUrl };
-      imageCaption += '\n\n_⚠️ Imagen original (no se pudo mejorar)_';
+      imageCaption += '\n\n⚠️ _Usando imagen original_';
+      imageCaption += `\n_Motivo: ${upscaleError.message}_`;
     }
 
     // ========== PASO 5: ENVIAR RESULTADO ==========
@@ -253,20 +258,30 @@ async function upscaleImage(imageUrl) {
   try {
     // Obtener API key desde variable de entorno o usar la por defecto
     const apikey = process.env.APICAUSAS_KEY || "causa-0e3eacf90ab7be15";
-    const endpoint = 'https://rest.apicausas.xyz/api/v1/utilidades/upscale';
+    
+    // Log para debugging
+    console.log('🔍 URL de imagen a mejorar:', imageUrl);
+    console.log('🔑 Usando API key:', apikey.substring(0, 10) + '...');
+    
+    // Construir URL completa
+    const fullUrl = `https://rest.apicausas.xyz/api/v1/utilidades/upscale?apikey=${apikey}&url=${encodeURIComponent(imageUrl)}&type=4`;
+    console.log('📡 Llamando a API:', fullUrl.substring(0, 80) + '...');
 
-    const response = await axios.get(endpoint, {
-      params: {
-        apikey: apikey,
-        url: imageUrl,
-        type: '4' // 4x upscale para máxima calidad
-      },
+    const response = await axios.get(fullUrl, {
       responseType: "arraybuffer",
-      timeout: 30000, // 30 segundos
+      timeout: 45000, // 45 segundos (más tiempo para imágenes grandes)
       headers: {
-        'User-Agent': 'WhatsApp-Bot/1.0'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      },
+      maxRedirects: 5,
+      validateStatus: function (status) {
+        return status >= 200 && status < 300;
       }
     });
+
+    console.log('✅ Respuesta recibida - Status:', response.status);
+    console.log('📄 Content-Type:', response.headers['content-type']);
+    console.log('📦 Tamaño de respuesta:', response.data.length, 'bytes');
 
     // Validar respuesta
     if (response.status !== 200) {
@@ -276,16 +291,25 @@ async function upscaleImage(imageUrl) {
     // Validar que la respuesta sea una imagen válida
     const contentType = response.headers['content-type'];
     if (!contentType || !contentType.startsWith('image/')) {
-      throw new Error('La respuesta no es una imagen válida');
+      // Intentar leer como texto para ver el error
+      const textResponse = Buffer.from(response.data).toString('utf-8');
+      console.log('⚠️ Respuesta no es imagen:', textResponse.substring(0, 200));
+      throw new Error(`La API no devolvió una imagen. Content-Type: ${contentType}`);
     }
 
-    return Buffer.from(response.data);
+    const buffer = Buffer.from(response.data);
+    console.log('🎉 Imagen mejorada correctamente:', buffer.length, 'bytes');
+    return buffer;
 
   } catch (err) {
+    console.error('❌ Error en upscaleImage:', err.message);
+    
     if (err.response) {
-      throw new Error(`Error de API: ${err.response.status} - ${err.response.statusText}`);
+      const errorData = Buffer.from(err.response.data).toString('utf-8').substring(0, 500);
+      console.error('📄 Respuesta de error:', errorData);
+      throw new Error(`Error de API (${err.response.status}): ${errorData || err.response.statusText}`);
     } else if (err.request) {
-      throw new Error("La API no respondió");
+      throw new Error("La API no respondió - verifica tu conexión");
     } else {
       throw new Error(`Error al procesar: ${err.message}`);
     }
