@@ -19,6 +19,10 @@ export async function before(m, { conn, participants }) {
       return fallback;
     }
   };
+  const fetchBuffer = async (url) => {
+    const response = await fetch(url);
+    return Buffer.from(await response.arrayBuffer());
+  };
 
   try {     
     if (m.messageStubType === 'GROUP_PARTICIPANT_REMOVE') {
@@ -45,12 +49,12 @@ export async function before(m, { conn, participants }) {
         groupMetadataCache.set(m.chat, groupMetadata);
         groupName = groupMetadata.subject || "el grupo";
         pp = await safeOperation(() => conn.profilePictureUrl(m.chat, 'image').catch(() => pp), pp);
-        img = await safeOperation(() => fetch(pp).then(res => res.buffer()));
+        img = await safeOperation(() => fetchBuffer(pp));
       }
     } else {
       groupName = groupMetadata.subject || "el grupo";
       pp = await safeOperation(() => conn.profilePictureUrl(m.chat, 'image').catch(() => pp), pp);
-      img = await safeOperation(() => fetch(pp).then(res => res.buffer()));
+      img = await safeOperation(() => fetchBuffer(pp));
     }
 
     const chat = global?.db?.data?.chats[m.chat];
@@ -389,3 +393,4 @@ function validateLidCacheStatus(conn) {
     };
   }
 }
+  
