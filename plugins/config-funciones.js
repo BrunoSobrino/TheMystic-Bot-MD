@@ -1,10 +1,7 @@
-const handler = async (m, {conn, usedPrefix, command, args, isOwner, isAdmin, isROwner}) => {
-const datas = global
-const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-const tradutor = _translate.plugins.config_funciones
-
-const optionsFull = `_*${tradutor.texto1[0]}*_\n 
+const groupMetadata = m.isGroup ? await conn.groupMetadata(m.chat).catch(e => {}) : {}
+const participants = m.isGroup ? groupMetadata.participants : []
+const admins = m.isGroup ? participants.filter(v => v.admin !== null).map(v => v.id) : []
+const isAdmin = m.isGroup ? admins.includes(m.sender) : false
 
 ${tradutor.texto1[1]}  | WELCOME
 ${tradutor.texto1[2]} ${usedPrefix + command} welcome
