@@ -1,5 +1,5 @@
+import fetch from 'node-fetch';
 import axios from 'axios';
-import cheerio from 'cheerio';
 import fs from 'fs';
 
 const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
@@ -11,75 +11,75 @@ const handler = async (m, {conn, usedPrefix: prefix, command, text}) => {
   if (!text) throw `${tradutor.texto1}`;
   
   try {    
-    // Usar APKPure como fuente alternativa
-    const searchUrl = `https://apkpure.com/search?q=${encodeURIComponent(text)}`;
-    const searchRes = await axios.get(searchUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
-    });
-    const $ = cheerio.load(searchRes.data);
+    // Usar API pública de APK downloader
+    const searchApi = `https://api.lolhuman.xyz/api/apkdownloader?apikey=GataDios&query=${encodeURIComponent(text)}`;
     
-    // Obtener el primer resultado
-    const firstResult = $('.first');
-    const appUrl = 'https://apkpure.com' + firstResult.find('a').attr('href');
-    const appName = firstResult.find('.p1').text().trim();
+    const response = await fetch(searchApi);
+    const data = await response.json();
     
-    if (!appUrl || appUrl === 'https://apkpure.com') {
+    if (!data.status || data.status !== 200) {
       throw new Error('No se encontró la aplicación');
     }
     
-    // Obtener detalles de la app
-    const appRes = await axios.get(appUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
-    });
-    const $app = cheerio.load(appRes.data);
+    const result = data.result;
     
-    const icon = $app('.icon img').attr('src');
-    const packageName = $app('.fz-13').first().text().trim();
-    const size = $app('.fz-13:contains("Size")').parent().find('.fz-13').last().text().trim() || 'Desconocido';
-    const version = $app('.details-sdk span').first().text().trim() || 'Última versión';
-    const downloadPageUrl = $app('.download-btn').attr('href');
+    let responseText = `${tradutor.texto2[0]} ${result.name || result.title}\n${tradutor.texto2[1]} ${result.package || result.package_name}\n${tradutor.texto2[2]} ${result.lastup || result.updated || result.version}\n${tradutor.texto2[3]} ${result.size}`;
     
-    if (!downloadPageUrl) {
-      throw new Error('No se encontró el enlace de descarga');
-    }
+    await conn.sendMessage(m.chat, {
+      image: {url: result.icon || result.thumbnail}, 
+      caption: responseText
+    }, {quoted: m});
     
-    // Obtener link de descarga directo
-    const dlRes = await axios.get('https://apkpure.com' + downloadPageUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
-    });
-    const $dl = cheerio.load(dlRes.data);
-    const directLink = $dl('#download_link').attr('href') || $dl('.download-btn').attr('href');
-    
-    if (!directLink) {
-      throw new Error('No se pudo obtener el enlace de descarga directo');
-    }
-    
-    let response = `${tradutor.texto2[0]} ${appName}\n${tradutor.texto2[1]} ${packageName}\n${tradutor.texto2[2]} ${version}\n${tradutor.texto2[3]} ${size}`;
-    
-    await conn.sendMessage(m.chat, {image: {url: icon}, caption: response}, {quoted: m});
-    
-    // Verificar si el archivo es muy grande
-    if (size.includes('GB') || (size.includes('MB') && parseInt(size.replace(' MB', '')) > 999)) {
+    // Verificar tamaño
+    if (result.size.includes('GB') || (result.size.includes('MB') && parseInt(result.size.replace(' MB', '')) > 999)) {
       return await conn.sendMessage(m.chat, {text: `${tradutor.texto3}`}, {quoted: m});
     }
     
-    // Enviar el APK
+    // Enviar APK
     await conn.sendMessage(m.chat, {
-      document: {url: directLink}, 
+      document: {url: result.link || result.dllink || result.download}, 
       mimetype: 'application/vnd.android.package-archive', 
-      fileName: appName.replace(/[^a-zA-Z0-9]/g, '_') + '.apk', 
+      fileName: (result.name || result.title).replace(/[^a-zA-Z0-9]/g, '_') + '.apk', 
       caption: null
     }, {quoted: m});
     
   } catch (error) {
-    console.error('Error en descarga de APK:', error);
-    throw `${tradutor.texto4}`;
+    console.error('Error:', error);
+    
+    // Alternativa 2: Usar otra API si la primera falla
+    try {
+      const altApi = `https://api.akuari.my.id/search/apk?query=${encodeURIComponent(text)}`;
+      const altResponse = await fetch(altApi);
+      const altData = await altResponse.json();
+      
+      if (!altData.hasil || altData.hasil.length === 0) {
+        throw new Error('No encontrado');
+      }
+      
+      const app = altData.hasil[0];
+      
+      let responseText = `${tradutor.texto2[0]} ${app.name}\n${tradutor.texto2[1]} ${app.package}\n${tradutor.texto2[2]} ${app.version}\n${tradutor.texto2[3]} ${app.size}`;
+      
+      await conn.sendMessage(m.chat, {
+        image: {url: app.icon}, 
+        caption: responseText
+      }, {quoted: m});
+      
+      if (app.size.includes('GB') || (app.size.includes('MB') && parseInt(app.size.replace(' MB', '')) > 999)) {
+        return await conn.sendMessage(m.chat, {text: `${tradutor.texto3}`}, {quoted: m});
+      }
+      
+      await conn.sendMessage(m.chat, {
+        document: {url: app.download}, 
+        mimetype: 'application/vnd.android.package-archive', 
+        fileName: app.name.replace(/[^a-zA-Z0-9]/g, '_') + '.apk', 
+        caption: null
+      }, {quoted: m});
+      
+    } catch (altError) {
+      console.error('Error alternativo:', altError);
+      throw `${tradutor.texto4}`;
+    }
   }
 };
 
@@ -88,4 +88,3 @@ handler.tags = ['search'];
 handler.command = /^(apk|apkmod|modapk|dapk2|aptoide|aptoidedl)$/i;
 
 export default handler;
-   
