@@ -90,3 +90,5 @@ handler.help = ['openai <texto>'];
 handler.tags = ['ai'];
 handler.command = /^(openai|chatgpt|ia|mystic|mysticbot)$/i;
 export default handler;
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));

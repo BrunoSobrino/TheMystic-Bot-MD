@@ -29,6 +29,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "p-queue": "6.6.2",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "^4.2.4",
     "@brandond/findthelyrics": "^2.0.5",

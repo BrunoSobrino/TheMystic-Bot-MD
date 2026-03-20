@@ -31,7 +31,7 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
       try {
         const ruby = await (
           await fetch(
-            `https://ruby-core.vercel.app/api/download/youtube/mp3?url=${encodeURIComponent(regex + result.videoId)}`
+            `https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(regex + result.videoId)}`
           )
         ).json();
         if (ruby?.status && ruby?.download?.url) {
@@ -61,7 +61,7 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
       try {
         const ruby = await (
           await fetch(
-            `https://ruby-core.vercel.app/api/download/youtube/mp4?url=${encodeURIComponent(regex + result.videoId)}`
+            `https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(regex + result.videoId)}`
           )
         ).json();
         if (ruby?.status && ruby?.download?.url) {
