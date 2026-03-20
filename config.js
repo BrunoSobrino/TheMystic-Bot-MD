@@ -11,12 +11,14 @@ global.authFile = `KanaSession`;
 // Cambiar a true si el Bot responde a sus comandos con otros comandos.
 // Cambiar a false para usar el Bot desde el mismo numero del Bot.
 // Error de m.isBaileys marcado como false fix temporal
+global.isBaileysFail = false;
 
 global.defaultLenguaje = 'es';
 
 global.owner = [
-  ['51925092348','👑 Propietario 👑',true],
+  ['51925092340','👑 Propietario 👑',true],
   ['584262212498']
+  ['51925092348'],
 ];
 
 global.suittag = ['51925092348'];
