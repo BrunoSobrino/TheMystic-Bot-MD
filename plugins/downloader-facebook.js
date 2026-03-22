@@ -15,7 +15,7 @@ let handler = async (m, { args, command, conn }) => {
     
     // Lista de APIs priorizadas (Agregada la nueva al principio)
     const apis = [
-      `https://rest.apicausas.xyz/api/v1/descargas/facebook?apikey=${apiKey}&url=${encoded}`,
+      `https://rest.apicausas.xyz//api/v1/descargas/facebook?apikey=causa-0e3eacf90ab7be15=https://www.facebook.com/watch?v=123456789`,
       `https://eliasar-yt-api.vercel.app/api/facebookdl?link=${encoded}`,
       `https://api.botcahx.eu.org/api/dowloader/fbdown?url=${encoded}&apikey=BrunoSobrino`,
       `https://api.vreden.my.id/api/facebook?url=${encoded}`
