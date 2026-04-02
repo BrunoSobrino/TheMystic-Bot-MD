@@ -62,6 +62,7 @@ let handler = async (m, { conn, text, command, args }) => {
             percentage = pct.toFixed(0).padStart(3, '0');
         }
 
+        // Formato: [[DW3 360p]] Progreso 000% | Frame: 5804 | FPS: 236 | Time: 00:04:02.07 | Speed: 9.85x
         const output = `\r${colors.cyan}[[${label}]]${colors.reset} Progreso ${colors.green}${percentage}%${colors.reset} | Frame: ${colors.yellow}${frame}${colors.reset} | FPS: ${colors.blue}${Math.round(fps)}${colors.reset} | Time: ${colors.magenta}${time}${colors.reset} | Speed: ${colors.red}${speed}${colors.reset}`;
 
         process.stdout.write(output);
@@ -75,210 +76,6 @@ let handler = async (m, { conn, text, command, args }) => {
 
     const WM = `drawtext=fontfile='/data/data/com.termux/files/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf':text='By\\:CID':fontcolor=white:fontsize=w*0.04:x=20:y=20:borderw=2:bordercolor=black:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
     const withWM = (vf) => `${vf},${WM}`;
-
-    // ─────────────────────────────────────────────
-    //  COMANDO: .tr — Transcripción/Traducción con Whisper
-    //  Uso:
-    //    .tr              → transcribe en idioma original
-    //    .tr es           → fuerza detección española
-    //    .tr ja           → audio en japonés, transcribe en japonés
-    //    .tr ja translate → transcribe y traduce al inglés (limitación de Whisper)
-    //  Modelo por defecto: small (balance velocidad/calidad en Termux)
-    // ─────────────────────────────────────────────
-    if (command === 'tr') {
-        if (!m.quoted) return reply('Responde a un audio, video o nota de voz.\n\nUso: *.tr [idioma] [translate]*\nEjemplos:\n`.tr` → auto\n`.tr ja` → japonés\n`.tr ja translate` → japonés → inglés');
-
-        const timestamp  = Date.now();
-        const inputRaw   = `./temp/tr_in_${timestamp}`;
-        const audioWav   = `./temp/tr_audio_${timestamp}.wav`;
-
-        // Parseo de args
-        // Idiomas válidos (ISO 639-1 / nombre Whisper)
-        const whisperLangs = new Set([
-            'af','ar','hy','az','be','bs','bg','ca','zh','hr','cs','da','nl','en','et',
-            'fi','fr','gl','de','el','he','hi','hu','is','id','it','ja','kn','kk','ko',
-            'lv','lt','mk','ms','mr','mi','ne','no','fa','pl','pt','ro','ru','sr','sk',
-            'sl','es','sw','sv','tl','ta','th','tr','uk','ur','vi','cy'
-        ]);
-
-        let lang   = null;   // null = autodetección
-        let task   = 'transcribe';
-        let model  = 'small';
-
-        for (const arg of args) {
-            if (arg.toLowerCase() === 'translate') task = 'translate';
-            else if (whisperLangs.has(arg.toLowerCase())) lang = arg.toLowerCase();
-            else if (['tiny','base','small','medium','large'].includes(arg.toLowerCase())) model = arg.toLowerCase();
-        }
-
-        // Si no se especifica idioma, Whisper auto-detecta
-        const langLabel = lang ? `\`${lang}\`` : '`auto`';
-        const taskLabel = task === 'translate' ? '→ inglés 🇺🇸' : '→ español 🇲🇽 (si el audio es en español)';
-
-        await reply(
-            `🎙️ *Transcribiendo audio...*\n` +
-            `> Modelo: \`${model}\`\n` +
-            `> Idioma: ${langLabel}\n` +
-            `> Tarea: \`${task}\` ${taskLabel}\n\n` +
-            `_Esto puede tardar unos minutos en Termux..._`
-        );
-
-        try {
-            // 1. Descargar el medio (manejo robusto para audios/videos de WhatsApp)
-            let downloaded = false;
-
-            // Intento 1: downloadContentFromMessage directo (más confiable para audios)
-            try {
-                const { downloadContentFromMessage } = await import('baileys');
-                const quoted  = m.quoted;
-                const message = quoted.fakeObj ? quoted.fakeObj.message
-                              : quoted.vM      ? quoted.vM.message
-                              : quoted.message ? quoted.message
-                              : quoted;
-
-                // Buscar el tipo de medio (audioMessage, videoMessage, documentMessage, etc.)
-                const mediaTypes = ['audioMessage', 'videoMessage', 'documentMessage', 'voiceMessage'];
-                let mediaType = null;
-                let mediaObj  = null;
-
-                for (const t of mediaTypes) {
-                    if (message[t]?.mediaKey) { mediaType = t; mediaObj = message[t]; break; }
-                }
-
-                // Fallback: primer key con mediaKey
-                if (!mediaType) {
-                    for (const [k, v] of Object.entries(message || {})) {
-                        if (v?.mediaKey) { mediaType = k; mediaObj = v; break; }
-                    }
-                }
-
-                if (mediaType && mediaObj) {
-                    const mType  = mediaType.replace('Message', '');
-                    const stream = await downloadContentFromMessage(mediaObj, mType);
-                    await pipeline(stream, fs.createWriteStream(inputRaw));
-                    downloaded = fs.existsSync(inputRaw) && fs.statSync(inputRaw).size > 0;
-                }
-            } catch (e) {
-                console.error('[TR] Intento 1 fallido:', e.message);
-            }
-
-            // Intento 2: downloadMediaStream genérico
-            if (!downloaded) {
-                downloaded = await downloadMediaStream(m.quoted, inputRaw);
-            }
-
-            // Intento 3: m.quoted.download() si existe
-            if (!downloaded && typeof m.quoted?.download === 'function') {
-                try {
-                    const buf = await m.quoted.download();
-                    if (buf) { fs.writeFileSync(inputRaw, buf); downloaded = true; }
-                } catch (e) { console.error('[TR] Intento 3 fallido:', e.message); }
-            }
-
-            if (!downloaded) {
-                return reply('❌ No se pudo descargar el archivo.\nAsegúrate de responder directamente a un audio o video.');
-            }
-
-            // 2. Extraer audio en WAV mono 16kHz (formato óptimo para Whisper)
-            await new Promise((resolve, reject) => {
-                const ffArgs = [
-                    '-y', '-i', inputRaw,
-                    '-vn',                   // sin video
-                    '-ar', '16000',          // sample rate 16kHz
-                    '-ac', '1',              // mono
-                    '-c:a', 'pcm_s16le',     // PCM 16-bit (WAV puro)
-                    audioWav
-                ];
-                const ff = spawn('ffmpeg', ffArgs);
-                ff.on('close', (code) => code === 0 ? resolve() : reject(new Error(`ffmpeg WAV extraction failed (code ${code})`)));
-            });
-
-            // 3. Construir comando Whisper
-            const whisperArgs = [
-                audioWav,
-                '--model', model,
-                '--task', task,
-                '--output_format', 'txt',
-                '--output_dir', './temp',
-                '--fp16', 'False'  // Sin GPU en Termux
-            ];
-            if (lang) whisperArgs.push('--language', lang);
-
-            console.log(`[TR] Ejecutando: whisper ${whisperArgs.join(' ')}`);
-
-            // 4. Ejecutar Whisper
-            const whisperResult = await new Promise((resolve, reject) => {
-                let stdout = '';
-                let stderr = '';
-                const wp = spawn('whisper', whisperArgs);
-                wp.stdout.on('data', (d) => { stdout += d.toString(); process.stdout.write(d); });
-                wp.stderr.on('data', (d) => { stderr += d.toString(); process.stdout.write(d); });
-                wp.on('close', (code) => {
-                    if (code === 0) resolve({ stdout, stderr });
-                    else reject(new Error(stderr || `Whisper salió con código ${code}`));
-                });
-                wp.on('error', (err) => {
-                    // whisper no está instalado
-                    reject(new Error('Whisper no encontrado. Instala con: pip install openai-whisper'));
-                });
-            });
-
-            // 5. Leer el .txt generado por Whisper (usa el stem del archivo de entrada)
-            const stem    = path.basename(audioWav, '.wav');
-            const txtFile = `./temp/${stem}.txt`;
-            let transcription = '';
-
-            if (fs.existsSync(txtFile)) {
-                transcription = fs.readFileSync(txtFile, 'utf8').trim();
-            } else {
-                // Fallback: buscar cualquier .txt generado en ./temp con timestamp
-                const candidates = fs.readdirSync('./temp').filter(f => f.includes(`tr_audio_${timestamp}`) && f.endsWith('.txt'));
-                if (candidates.length > 0) {
-                    transcription = fs.readFileSync(`./temp/${candidates[0]}`, 'utf8').trim();
-                } else {
-                    // Último recurso: capturar desde stdout
-                    transcription = whisperResult.stdout.replace(/\[\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}\]/g, '').trim();
-                }
-            }
-
-            if (!transcription) {
-                return reply('⚠️ Whisper no produjo texto. Verifica que el audio tenga voz clara.');
-            }
-
-            // 6. Enviar resultado
-            const header = task === 'translate'
-                ? `📝 *Transcripción (EN)* | Modelo: \`${model}\`\n${'─'.repeat(30)}\n\n`
-                : `📝 *Transcripción (${lang || 'auto'})* | Modelo: \`${model}\`\n${'─'.repeat(30)}\n\n`;
-
-            const fullText = header + transcription;
-
-            // Telegram/WhatsApp tienen límite de ~4096 chars; dividir si es largo
-            const MAX_CHUNK = 3800;
-            if (fullText.length <= MAX_CHUNK) {
-                await reply(fullText);
-            } else {
-                // Enviar en partes
-                const parts = [];
-                let remaining = transcription;
-                while (remaining.length > 0) {
-                    parts.push(remaining.slice(0, MAX_CHUNK));
-                    remaining = remaining.slice(MAX_CHUNK);
-                }
-                await reply(header + `_(${parts.length} partes)_`);
-                for (let i = 0; i < parts.length; i++) {
-                    await conn.sendMessage(m.chat, { text: `📄 *Parte ${i + 1}/${parts.length}*\n\n${parts[i]}` }, { quoted: m });
-                }
-            }
-
-        } catch (e) {
-            console.error('[TR] Error:', e);
-            reply(`❌ Error en transcripción:\n\`${e.message}\``);
-        } finally {
-            [inputRaw, audioWav, `./temp/tr_audio_${timestamp}.txt`].forEach(f => {
-                if (fs.existsSync(f)) fs.unlinkSync(f);
-            });
-        }
-    }
 
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
@@ -323,7 +120,7 @@ let handler = async (m, { conn, text, command, args }) => {
                     const lang = (s.tags?.language || 'und').toLowerCase();
                     r += `- Pista ${i + 1}: \`${s.codec_name}\` ${flags[lang] || '🏳️'} (\`${lang}\`)\n`;
                 });
-                r += '\n_*.dw2 [res] (doc)*_\n_*.dw3 [res] [audio] [sub] (doc)*_\n_*.dw4 (doc)*_\n_*.mi [res] [pesoMB] (doc)*_\n_*.tr [idioma] (translate)*_';
+                r += '\n_*.dw2 [res] (doc)*_\n_*.dw3 [res] [audio] [sub] (doc)*_\n_*.dw4 (doc)*_\n_*.mi [res] [pesoMB] (doc)*_';
                 reply(r);
             });
         } catch (e) {
@@ -349,11 +146,7 @@ let handler = async (m, { conn, text, command, args }) => {
         try {
             reply(`⚙️ *Comprimiendo video*\n> Resolución: \`${res}p\`\n> Peso objetivo: \`${targetMB} MB\`\n> Modo: \`${asDocument ? 'Documento' : 'Video'}\`\n\nProcesando...`);
             let success = await downloadMediaStream(m.quoted, input);
-            if (!success) {
-                const buf = await m.quoted.download();
-                if (!buf) return reply('❌ No se pudo descargar el archivo.');
-                fs.writeFileSync(input, buf);
-            }
+            if (!success) fs.writeFileSync(input, await m.quoted.download());
 
             const getDuration    = () => new Promise(r => exec(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (e, o) => r(parseFloat(o) || 0)));
             const getTotalFrames = () => new Promise(r => exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (e, o) => r(parseInt(o) || 0)));
@@ -423,22 +216,19 @@ let handler = async (m, { conn, text, command, args }) => {
         try {
             reply(`⚙️ Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
             let success = await downloadMediaStream(m.quoted, input);
-            if (!success) {
-                const buf = await m.quoted.download();
-                if (!buf) return reply('❌ No se pudo descargar el archivo.');
-                fs.writeFileSync(input, buf);
-            }
+            if (!success) fs.writeFileSync(input, await m.quoted.download());
 
             exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
                 const totalFrames = parseInt(stdout) || 0;
                 let ffmpegArgs = ['-i', input];
 
                 if (isDw4) {
+                    // DW4: Optimizado para mejor calidad en 360p
                     ffmpegArgs.push(
                         '-vf', withWM('scale=-2:360:flags=lanczos'),
                         '-c:v', 'libx264',
-                        '-crf', '23',
-                        '-maxrate', '1400k',
+                        '-crf', '23', // Mejor calidad (era 24)
+                        '-maxrate', '1400k', // Mayor bitrate (era 1200k)
                         '-bufsize', '2800k',
                         '-preset', 'medium',
                         '-tune', 'film',
@@ -450,6 +240,7 @@ let handler = async (m, { conn, text, command, args }) => {
                         '-movflags', '+faststart'
                     );
                 } else if (isDw3) {
+                    // DW3: Mejorado con lanczos y mejor CRF
                     const aIdx = parseInt(args[1]) - 1 || 0;
                     const sIdx = parseInt(args[2]) - 1 || 0;
                     ffmpegArgs.push(
@@ -459,24 +250,25 @@ let handler = async (m, { conn, text, command, args }) => {
                         '-c:a', 'aac',
                         '-b:a', '128k',
                         '-c:v', 'libx264',
-                        '-crf', '22',
-                        '-preset', 'medium',
+                        '-crf', '22', // Mejor calidad (era 32)
+                        '-preset', 'medium', // Mejor calidad (era ultrafast)
                         '-profile:v', 'high',
                         '-movflags', '+faststart'
                     );
                 } else {
+                    // DW2: Mejorado con lanczos y mejor CRF
                     ffmpegArgs.push(
-                        '-vf', withWM(`scale=-2:${res}:flags=lanczos`),
+                        '-vf', withWM(`scale=-2:${res}:flags=lanczos`), // Mejor escalado
                         '-c:a', 'copy',
                         '-c:v', 'libx264',
-                        '-crf', '20',
-                        '-preset', 'medium',
+                        '-crf', '20', // Mucho mejor calidad (era 32)
+                        '-preset', 'medium', // Mejor calidad (era ultrafast)
                         '-profile:v', 'high',
                         '-movflags', '+faststart'
                     );
                 }
 
-                ffmpegArgs.push('-threads', '0', '-y', output);
+                ffmpegArgs.push('-threads', '0', '-y', output); // threads 0 = auto
 
                 const proc = spawn('ffmpeg', ffmpegArgs);
                 proc.stderr.on('data', (data) => logFFmpegProgress(label, data, totalFrames));
@@ -515,5 +307,7 @@ let handler = async (m, { conn, text, command, args }) => {
     }
 };
 
-handler.command = /^(dw|dw2|dw3|dw4|mi|tr)$/i;
+handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
+
+    
