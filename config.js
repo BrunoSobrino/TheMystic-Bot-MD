@@ -271,12 +271,13 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
     // Resolver preset o URL directa
     const input = text.trim().toLowerCase()
     const url = PRESET_FEEDS[input] || text.trim()
-    const label = PRESET_FEEDS[input]
-      ? Object.keys(PRESET_FEEDS).find(k => PRESET_FEEDS[k] === PRESET_FEEDS[input]) || input
-      : new URL(url).hostname
 
-    // Validar URL
-    if (!/^https?:\/\/.+/.test(url)) return m.reply(`❌ URL inválida.`)
+    // Validar URL primero (antes de new URL)
+    if (!/^https?:\/\/.+/.test(url)) return m.reply(`❌ URL inválida. Usa un preset (ej: \`${usedPrefix}rssadd kudasai\`) o una URL completa.`)
+
+    const label = PRESET_FEEDS[input]
+      ? input
+      : (() => { try { return new URL(url).hostname } catch { return url } })()
 
     // Verificar duplicado
     if (feeds.some(f => f.url === url)) return m.reply(`⚠️ Este feed ya está agregado.`)
@@ -319,4 +320,4 @@ handler.tags     = ['tools']
 handler.help     = ['rssadd <url|preset>', 'rssdel <número>', 'rsslist', 'rsscheck', 'rssultimo [número]']
 
 export default handler
-    
+      
