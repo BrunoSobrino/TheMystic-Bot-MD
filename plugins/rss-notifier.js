@@ -178,6 +178,18 @@ function startPoller (conn) {
 
 // ─── Handler de comandos ──────────────────────────────────────────────────────
 
+/** Verifica si puede gestionar feeds (owner del bot o admin del grupo) */
+async function canManage (m, conn) {
+  const ownerNums = (Array.isArray(global.owner) ? global.owner : [])
+    .map(n => (n + '').replace(/\D/g, '') + '@s.whatsapp.net')
+  if (ownerNums.includes(m.sender)) return true
+  try {
+    const meta = await conn.groupMetadata(m.chat)
+    const p = meta.participants.find(p => p.id === m.sender)
+    return p?.admin === 'admin' || p?.admin === 'superadmin'
+  } catch { return false }
+}
+
 let handler = async (m, { conn, text, usedPrefix, command }) => {
   const chatId = m.chat
   const feeds  = feedsOf(chatId)
@@ -244,6 +256,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   // ── .rssdel <n> ───────────────────────────────────────────────────────────
   if (/^rssdel$/i.test(command)) {
+    if (!await canManage(m, conn)) return m.reply(`⛔ Solo el dueño del bot o administradores del grupo pueden eliminar feeds.`)
     const n = parseInt(text?.trim())
     if (isNaN(n) || n < 1 || n > feeds.length)
       return m.reply(`⚠️ Número inválido. Usa *${usedPrefix}rsslist* para ver los feeds.`)
@@ -255,6 +268,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   // ── .rssadd <url|preset> ──────────────────────────────────────────────────
   if (/^rssadd$/i.test(command)) {
+    if (!await canManage(m, conn)) return m.reply(`⛔ Solo el dueño del bot o administradores del grupo pueden agregar feeds.`)
     if (!text?.trim()) {
       let msg = `⚠️ Debes indicar una URL o un preset.\n\n`
       msg += `*Presets disponibles:*\n`
@@ -314,7 +328,6 @@ handler.all = async function (m) {
 handler.command  = /^rss(add|del|list|check|ultimo)$/i
 handler.tags     = ['tools']
 handler.help     = ['rssadd <url|preset>', 'rssdel <número>', 'rsslist', 'rsscheck', 'rssultimo [número]']
-handler.group    = true   // Solo en grupos
-handler.admin    = true   // Solo admins del grupo (o dueño del bot)
 
 export default handler
+          
