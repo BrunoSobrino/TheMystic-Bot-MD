@@ -3,56 +3,93 @@ import * as cheerio from 'cheerio'
 import fs from 'fs'
 import path from 'path'
 
+// Cliente axios con soporte para Cloudflare
+const axiosInstance = axios.create({
+    headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1'
+    },
+    timeout: 15000,
+    maxRedirects: 5
+})
+
 let handler = async (m, { conn, text, usedPrefix, command }) => {
     if (!text) throw `*⚠️ Ejemplo:* ${usedPrefix}${command} One Piece|01`
     
     const args = text.split('|').map(arg => arg.trim())
     const anime = args[0]
     const episode = args[1] || '01'
+    const servidor = args[2] || 'auto' // mega, mediafire, etc
     
     await conn.sendMessage(m.chat, { 
-        text: `✨ *Buscando:* _${anime} Cap ${episode}_\n🌐 *Fuente:* _Jkanime/Monoschinos_...` 
+        text: `✨ *Buscando:* _${anime} Cap ${episode}_\n🌐 *Extrayendo servidores disponibles...*` 
     }, { quoted: m })
 
     try {
         let animeData = null
 
-        // Intentar con Jkanime primero
-        animeData = await searchJkanime(anime, episode)
-        
-        if (!animeData) {
-            // Si falla, intentar con Monoschinos
-            animeData = await searchMonoschinos(anime, episode)
+        // Proveedores a intentar
+        const providers = [
+            () => searchJkanime(anime, episode),
+            () => searchAnimeFLV(anime, episode),
+            () => searchKatanime(anime, episode),
+            () => searchAnimeDBS(anime, episode),
+            () => searchAnimeYTX(anime, episode)
+        ]
+
+        for (const provider of providers) {
+            try {
+                animeData = await provider()
+                if (animeData && animeData.downloadLinks && Object.keys(animeData.downloadLinks).length > 0) {
+                    break
+                }
+            } catch (e) {
+                console.error('Provider error:', e.message)
+                continue
+            }
         }
 
-        if (!animeData) {
-            // Si falla, intentar con GoGoAnime
-            animeData = await searchGogoAnime(anime, episode)
-        }
-        
-        if (!animeData || !animeData.downloadLink) {
-            return m.reply(`❌ *No se hallaron resultados para:* _${anime} Cap ${episode}_\n\n💡 *Intenta:*\n• Verificar el nombre del anime\n• Usar el nombre en inglés\n• Revisar si el capítulo existe`)
+        if (!animeData || !animeData.downloadLinks) {
+            return m.reply(`❌ *No se hallaron resultados para:* _${anime} Cap ${episode}_`)
         }
 
-        // Mostrar información del anime antes de descargar
-        let infoCaption = `⭐ *ANIME ENCONTRADO* ⭐\n`
-        infoCaption += `═══════════════════\n\n`
-        infoCaption += `*🎬 Título:* ${animeData.title}\n`
-        infoCaption += `*📺 Capítulo:* ${animeData.episode || episode}\n`
-        infoCaption += `*🌐 Proveedor:* ${animeData.provider}\n\n`
-        infoCaption += `📥 *Descargando...*`
+        // Mostrar servidores disponibles
+        let serversText = `⭐ *SERVIDORES DISPONIBLES* ⭐\n`
+        serversText += `═══════════════════\n\n`
+        serversText += `*🎬 Título:* ${animeData.title}\n`
+        serversText += `*📺 Capítulo:* ${animeData.episode}\n\n`
+        serversText += `*📥 Servidores disponibles:*\n`
+
+        let serverIndex = 1
+        const servers = Object.keys(animeData.downloadLinks)
+        
+        servers.forEach(server => {
+            serversText += `${serverIndex}️⃣ *${server}*\n`
+            serverIndex++
+        })
+
+        serversText += `\n_Usa:_ \`${usedPrefix}${command} ${anime}|${episode}|<servidor>\`\n`
+        serversText += `_Ejemplo:_ \`${usedPrefix}${command} ${anime}|${episode}|mega\``
 
         if (animeData.img) {
             await conn.sendMessage(m.chat, { 
                 image: { url: animeData.img }, 
-                caption: infoCaption 
+                caption: serversText 
             }, { quoted: m })
         } else {
-            await m.reply(infoCaption)
+            await m.reply(serversText)
         }
 
-        // Descargar el video
-        await downloadAnimeVideo(conn, m.chat, animeData, m)
+        // Si especificó servidor, descargar
+        if (servidor !== 'auto' && animeData.downloadLinks[servidor]) {
+            await m.reply(`📥 *Descargando desde ${servidor}...`))
+            await downloadAnimeVideo(conn, m.chat, animeData, servidor, m)
+        }
 
     } catch (e) {
         console.error('Error en anime handler:', e)
@@ -64,24 +101,18 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 async function searchJkanime(anime, episode) {
     try {
         const searchUrl = `https://jkanime.net/directorio/?q=${encodeURIComponent(anime)}`
-        const { data } = await axios.get(searchUrl, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
-            },
-            timeout: 15000
-        })
+        const { data } = await axiosInstance.get(searchUrl)
 
         const $ = cheerio.load(data)
         let animeUrl = null
         let img = null
 
-        // Buscar el primer resultado
-        $('.container-capitulos a, .anime-link, [class*="anime"]').each((i, el) => {
+        $('a[href*="/anime/"]').each((i, el) => {
             if (!animeUrl && i < 1) {
                 const link = $(el).attr('href')
                 const image = $(el).find('img').attr('src') || $(el).find('img').attr('data-src')
                 
-                if (link && (link.includes('jkanime.net') || link.startsWith('/'))) {
+                if (link) {
                     animeUrl = link.startsWith('http') ? link : `https://jkanime.net${link}`
                     img = image
                 }
@@ -90,7 +121,16 @@ async function searchJkanime(anime, episode) {
 
         if (!animeUrl) return null
 
-        return await getJkanimeEpisodeLink(animeUrl, episode, img)
+        const episodeData = await getJkanimeDownloads(animeUrl, episode)
+        if (!episodeData) return null
+
+        return {
+            title: episodeData.title,
+            episode: episodeData.episodeText || `Capítulo ${episode}`,
+            downloadLinks: episodeData.downloadLinks || {},
+            img: img || episodeData.img,
+            provider: 'Jkanime'
+        }
 
     } catch (e) {
         console.error('Error en searchJkanime:', e.message)
@@ -98,127 +138,91 @@ async function searchJkanime(anime, episode) {
     }
 }
 
-async function getJkanimeEpisodeLink(animeUrl, episode, img) {
+async function getJkanimeDownloads(animeUrl, episode) {
     try {
-        const { data } = await axios.get(animeUrl, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            },
-            timeout: 15000
-        })
-
+        const { data } = await axiosInstance.get(animeUrl)
         const $ = cheerio.load(data)
-        const title = $('h1').text().trim() || $('title').text().split('|')[0].trim()
-        
-        let downloadLink = null
+        const title = $('h1').text().trim()
+        const episodeNum = episode.padStart(2, '0')
+        let episodeUrl = null
         let episodeText = null
 
-        // Buscar el capítulo en los links
         $('a').each((i, el) => {
             const text = $(el).text().toLowerCase().trim()
             const href = $(el).attr('href')
             
-            const episodeNum = episode.padStart(2, '0')
-            const patterns = [
-                `capitulo ${episodeNum}`,
-                `cap ${episodeNum}`,
-                `episodio ${episodeNum}`,
-                `episode ${episodeNum}`,
-                `ep ${episodeNum}`,
-                `${episodeNum}`
-            ]
-            
-            if (href && patterns.some(p => text.includes(p))) {
-                const fullUrl = href.startsWith('http') ? href : `https://jkanime.net${href}`
-                downloadLink = fullUrl
+            if (href && (text.includes(`cap ${episodeNum}`) || text === episodeNum)) {
+                episodeUrl = href.startsWith('http') ? href : `https://jkanime.net${href}`
                 episodeText = $(el).text().trim()
                 return false
             }
         })
 
-        if (downloadLink) {
-            // Obtener link de descarga real
-            const episodeData = await getJkanimeDownloadLink(downloadLink)
-            if (episodeData.downloadUrl) {
-                downloadLink = episodeData.downloadUrl
+        if (!episodeUrl) return null
+
+        // Obtener página del episodio
+        const episodeRes = await axiosInstance.get(episodeUrl)
+        const $ep = cheerio.load(episodeRes.data)
+        const downloadLinks = {}
+
+        // Buscar links de descarga
+        $ep('a').each((i, el) => {
+            const href = $ep(el).attr('href')
+            const text = $ep(el).text().toLowerCase().trim()
+            
+            if (href) {
+                if (href.includes('mega.nz') || href.includes('mega')) {
+                    downloadLinks['Mega'] = href
+                }
+                else if (href.includes('mediafire')) {
+                    downloadLinks['Mediafire'] = href
+                }
+                else if (href.includes('drive.google') || href.includes('gdrive')) {
+                    downloadLinks['Google Drive'] = href
+                }
+                else if (href.includes('dropbox')) {
+                    downloadLinks['Dropbox'] = href
+                }
+                else if (text.includes('descargar') || text.includes('download')) {
+                    // Intentar extraer servidor del texto
+                    const server = text.split(' ')[0]
+                    if (server && !downloadLinks[server]) {
+                        downloadLinks[server] = href
+                    }
+                }
             }
-        }
+        })
 
         return {
-            title: title || 'Anime',
-            episode: episodeText || `Capítulo ${episode}`,
-            downloadLink,
-            img,
-            provider: 'Jkanime',
-            duration: 'No disponible'
+            title,
+            episodeText,
+            downloadLinks,
+            episodeUrl
         }
 
     } catch (e) {
-        console.error('Error en getJkanimeEpisodeLink:', e.message)
+        console.error('Error en getJkanimeDownloads:', e.message)
         return null
     }
 }
 
-async function getJkanimeDownloadLink(episodeUrl) {
+// ================== BÚSQUEDA ANIME FLV ==================
+async function searchAnimeFLV(anime, episode) {
     try {
-        const { data } = await axios.get(episodeUrl, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            },
-            timeout: 15000
-        })
-
-        const $ = cheerio.load(data)
-        let downloadUrl = null
-
-        // Buscar links de descarga
-        $('a').each((i, el) => {
-            const href = $(el).attr('href')
-            const text = $(el).text().toLowerCase()
-            
-            if (href && (
-                href.includes('mediafire') || 
-                href.includes('mega.nz') || 
-                href.includes('drive.google') ||
-                href.includes('dropbox') ||
-                text.includes('descargar') ||
-                text.includes('download')
-            )) {
-                downloadUrl = href
-                return false
-            }
-        })
-
-        return { downloadUrl }
-
-    } catch (e) {
-        console.error('Error en getJkanimeDownloadLink:', e.message)
-        return { downloadUrl: null }
-    }
-}
-
-// ================== BÚSQUEDA MONOSCHINOS ==================
-async function searchMonoschinos(anime, episode) {
-    try {
-        const searchUrl = `https://monoschinos2.com/search?q=${encodeURIComponent(anime)}`
-        const { data } = await axios.get(searchUrl, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            },
-            timeout: 15000
-        })
+        const searchUrl = `https://m.animeflv.net/browse?q=${encodeURIComponent(anime)}`
+        const { data } = await axiosInstance.get(searchUrl)
 
         const $ = cheerio.load(data)
         let animeUrl = null
         let img = null
 
-        $('[class*="item"], .anime-item, a[href*="/anime/"]').each((i, el) => {
+        $('article a').each((i, el) => {
             if (!animeUrl && i < 1) {
-                const link = $(el).find('a').attr('href') || $(el).attr('href')
+                const link = $(el).attr('href')
                 const image = $(el).find('img').attr('src') || $(el).find('img').attr('data-src')
                 
-                if (link && link.includes('monoschinos')) {
-                    animeUrl = link.startsWith('http') ? link : `https://monoschinos2.com${link}`
+                if (link) {
+                    animeUrl = link.startsWith('http') ? link : `https://m.animeflv.net${link}`
                     img = image
                 }
             }
@@ -226,78 +230,101 @@ async function searchMonoschinos(anime, episode) {
 
         if (!animeUrl) return null
 
-        return await getMonoschinosEpisodeLink(animeUrl, episode, img)
+        const episodeData = await getAnimeFLVDownloads(animeUrl, episode)
+        if (!episodeData) return null
+
+        return {
+            title: episodeData.title,
+            episode: episodeData.episodeText || `Capítulo ${episode}`,
+            downloadLinks: episodeData.downloadLinks || {},
+            img: img || episodeData.img,
+            provider: 'AnimeFLV'
+        }
 
     } catch (e) {
-        console.error('Error en searchMonoschinos:', e.message)
+        console.error('Error en searchAnimeFLV:', e.message)
         return null
     }
 }
 
-async function getMonoschinosEpisodeLink(animeUrl, episode, img) {
+async function getAnimeFLVDownloads(animeUrl, episode) {
     try {
-        const { data } = await axios.get(animeUrl, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            },
-            timeout: 15000
-        })
-
+        const { data } = await axiosInstance.get(animeUrl)
         const $ = cheerio.load(data)
-        const title = $('h1').text().trim() || $('[class*="title"]').text().trim()
-        
-        let downloadLink = null
+        const title = $('h1').text().trim()
+        const episodeNum = parseInt(episode)
+        let episodeUrl = null
         let episodeText = null
 
-        // Buscar capítulo
         $('a').each((i, el) => {
             const text = $(el).text().toLowerCase().trim()
             const href = $(el).attr('href')
             
-            const episodeNum = episode.padStart(2, '0')
-            if (href && (text.includes(`ep ${episodeNum}`) || text.includes(`capitulo ${episodeNum}`) || text.includes(episodeNum))) {
-                downloadLink = href.startsWith('http') ? href : `https://monoschinos2.com${href}`
+            if (href && (text.includes(episodeNum) || text.includes(`ep-${episodeNum}`))) {
+                episodeUrl = href.startsWith('http') ? href : `https://m.animeflv.net${href}`
                 episodeText = $(el).text().trim()
                 return false
             }
         })
 
+        if (!episodeUrl) return null
+
+        const episodeRes = await axiosInstance.get(episodeUrl)
+        const $ep = cheerio.load(episodeRes.data)
+        const downloadLinks = {}
+
+        // Buscar en botones de descarga
+        $ep('a[class*="btn"], a[class*="download"]').each((i, el) => {
+            const href = $ep(el).attr('href')
+            const text = $ep(el).text().trim()
+            
+            if (href && text) {
+                downloadLinks[text] = href
+            }
+        })
+
+        // Buscar links directos
+        $ep('a').each((i, el) => {
+            const href = $ep(el).attr('href')
+            const text = $ep(el).text().toLowerCase()
+            
+            if (href && (text.includes('mega') || text.includes('mediafire') || text.includes('drive'))) {
+                const serverName = text.split(' ')[0].charAt(0).toUpperCase() + text.split(' ')[0].slice(1)
+                if (!downloadLinks[serverName]) {
+                    downloadLinks[serverName] = href
+                }
+            }
+        })
+
         return {
-            title: title || 'Anime',
-            episode: episodeText || `Capítulo ${episode}`,
-            downloadLink,
-            img,
-            provider: 'Monoschinos',
-            duration: 'No disponible'
+            title,
+            episodeText,
+            downloadLinks,
+            episodeUrl
         }
 
     } catch (e) {
-        console.error('Error en getMonoschinosEpisodeLink:', e.message)
+        console.error('Error en getAnimeFLVDownloads:', e.message)
         return null
     }
 }
 
-// ================== BÚSQUEDA GOGOANIME ==================
-async function searchGogoAnime(anime, episode) {
+// ================== BÚSQUEDA KATANIME ==================
+async function searchKatanime(anime, episode) {
     try {
-        const searchUrl = `https://gogoanime.gg/?s=${encodeURIComponent(anime)}`
-        const { data } = await axios.get(searchUrl, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            },
-            timeout: 15000
-        })
+        const searchUrl = `https://katanime.net/?s=${encodeURIComponent(anime)}`
+        const { data } = await axiosInstance.get(searchUrl)
 
         const $ = cheerio.load(data)
         let animeUrl = null
         let img = null
 
-        $('.last-episodes a, .items a').each((i, el) => {
+        $('[class*="anime"] a, .post a').each((i, el) => {
             if (!animeUrl && i < 1) {
                 const link = $(el).attr('href')
-                const image = $(el).find('img').attr('src') || $(el).find('img').attr('data-src')
+                const image = $(el).find('img').attr('src')
                 
-                if (link && link.includes('gogoanime')) {
+                if (link && link.includes('katanime')) {
                     animeUrl = link
                     img = image
                 }
@@ -306,76 +333,279 @@ async function searchGogoAnime(anime, episode) {
 
         if (!animeUrl) return null
 
-        return await getGogoAnimeEpisodeLink(animeUrl, episode, img)
+        const episodeData = await getKatanimeDownloads(animeUrl, episode)
+        if (!episodeData) return null
+
+        return {
+            title: episodeData.title,
+            episode: episodeData.episodeText || `Capítulo ${episode}`,
+            downloadLinks: episodeData.downloadLinks || {},
+            img: img || episodeData.img,
+            provider: 'Katanime'
+        }
 
     } catch (e) {
-        console.error('Error en searchGogoAnime:', e.message)
+        console.error('Error en searchKatanime:', e.message)
         return null
     }
 }
 
-async function getGogoAnimeEpisodeLink(animeUrl, episode, img) {
+async function getKatanimeDownloads(animeUrl, episode) {
     try {
-        const { data } = await axios.get(animeUrl, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            },
-            timeout: 15000
-        })
-
+        const { data } = await axiosInstance.get(animeUrl)
         const $ = cheerio.load(data)
-        const title = $('h2').text().trim() || $('title').text().split('-')[0].trim()
-        
-        let downloadLink = null
+        const title = $('h1').text().trim()
+        const episodeNum = episode.padStart(2, '0')
+        let episodeUrl = null
         let episodeText = null
 
-        const episodeNum = episode.padStart(2, '0')
         $('a').each((i, el) => {
-            const text = $(el).text().toLowerCase().trim()
+            const text = $(el).text().toLowerCase()
             const href = $(el).attr('href')
             
-            if (href && (text.includes(`episode ${episodeNum}`) || text.includes(`ep ${episodeNum}`))) {
-                downloadLink = href.startsWith('http') ? href : `https://gogoanime.gg${href}`
+            if (href && (text.includes(`cap ${episodeNum}`) || text.includes(`${episodeNum}`))) {
+                episodeUrl = href
                 episodeText = $(el).text().trim()
                 return false
             }
         })
 
+        if (!episodeUrl) return null
+
+        const episodeRes = await axiosInstance.get(episodeUrl)
+        const $ep = cheerio.load(episodeRes.data)
+        const downloadLinks = {}
+
+        // Buscar botones de descarga
+        $ep('a[class*="btn-descarg"], button').each((i, el) => {
+            const href = $ep(el).attr('href') || $ep(el).data('href')
+            const text = $ep(el).text().trim()
+            
+            if (href && text.includes('Descargar')) {
+                const serverName = text.replace('Descargar por ', '').trim()
+                downloadLinks[serverName] = href
+            }
+        })
+
         return {
-            title: title || 'Anime',
-            episode: episodeText || `Capítulo ${episode}`,
-            downloadLink,
-            img,
-            provider: 'GoGoAnime',
-            duration: 'No disponible'
+            title,
+            episodeText,
+            downloadLinks,
+            episodeUrl
         }
 
     } catch (e) {
-        console.error('Error en getGogoAnimeEpisodeLink:', e.message)
+        console.error('Error en getKatanimeDownloads:', e.message)
+        return null
+    }
+}
+
+// ================== BÚSQUEDA ANIMEDBS ==================
+async function searchAnimeDBS(anime, episode) {
+    try {
+        const searchUrl = `https://www.animedbs.online/?s=${encodeURIComponent(anime)}`
+        const { data } = await axiosInstance.get(searchUrl)
+
+        const $ = cheerio.load(data)
+        let animeUrl = null
+        let img = null
+
+        $('article a, .post-title a').each((i, el) => {
+            if (!animeUrl && i < 1) {
+                const link = $(el).attr('href')
+                const image = $(el).closest('article').find('img').attr('src')
+                
+                if (link) {
+                    animeUrl = link
+                    img = image
+                }
+            }
+        })
+
+        if (!animeUrl) return null
+
+        const episodeData = await getAnimeDBSDownloads(animeUrl, episode)
+        if (!episodeData) return null
+
+        return {
+            title: episodeData.title,
+            episode: episodeData.episodeText || `Capítulo ${episode}`,
+            downloadLinks: episodeData.downloadLinks || {},
+            img: img || episodeData.img,
+            provider: 'AnimeDBS'
+        }
+
+    } catch (e) {
+        console.error('Error en searchAnimeDBS:', e.message)
+        return null
+    }
+}
+
+async function getAnimeDBSDownloads(animeUrl, episode) {
+    try {
+        const { data } = await axiosInstance.get(animeUrl)
+        const $ = cheerio.load(data)
+        const title = $('h1').text().trim()
+        const episodeNum = episode.padStart(2, '0')
+        let episodeUrl = null
+        let episodeText = null
+
+        $('a').each((i, el) => {
+            const text = $(el).text().toLowerCase()
+            const href = $(el).attr('href')
+            
+            if (href && text.includes(episodeNum)) {
+                episodeUrl = href
+                episodeText = $(el).text().trim()
+                return false
+            }
+        })
+
+        if (!episodeUrl) return null
+
+        const episodeRes = await axiosInstance.get(episodeUrl)
+        const $ep = cheerio.load(episodeRes.data)
+        const downloadLinks = {}
+
+        $ep('a').each((i, el) => {
+            const href = $ep(el).attr('href')
+            const text = $ep(el).text().trim()
+            
+            if (href && (text.includes('Mega') || text.includes('Mediafire') || text.includes('Drive'))) {
+                downloadLinks[text] = href
+            }
+        })
+
+        return {
+            title,
+            episodeText,
+            downloadLinks,
+            episodeUrl
+        }
+
+    } catch (e) {
+        console.error('Error en getAnimeDBSDownloads:', e.message)
+        return null
+    }
+}
+
+// ================== BÚSQUEDA ANIMEYTX ==================
+async function searchAnimeYTX(anime, episode) {
+    try {
+        const searchUrl = `https://animeytx.net/?s=${encodeURIComponent(anime)}`
+        const { data } = await axiosInstance.get(searchUrl)
+
+        const $ = cheerio.load(data)
+        let animeUrl = null
+        let img = null
+
+        $('a[href*="animeytx.net"]').each((i, el) => {
+            if (!animeUrl && i < 1) {
+                const link = $(el).attr('href')
+                const image = $(el).find('img').attr('src')
+                
+                if (link) {
+                    animeUrl = link
+                    img = image
+                }
+            }
+        })
+
+        if (!animeUrl) return null
+
+        const episodeData = await getAnimeYTXDownloads(animeUrl, episode)
+        if (!episodeData) return null
+
+        return {
+            title: episodeData.title,
+            episode: episodeData.episodeText || `Capítulo ${episode}`,
+            downloadLinks: episodeData.downloadLinks || {},
+            img: img || episodeData.img,
+            provider: 'AnimeYTX'
+        }
+
+    } catch (e) {
+        console.error('Error en searchAnimeYTX:', e.message)
+        return null
+    }
+}
+
+async function getAnimeYTXDownloads(animeUrl, episode) {
+    try {
+        const { data } = await axiosInstance.get(animeUrl)
+        const $ = cheerio.load(data)
+        const title = $('h1').text().trim()
+        const episodeNum = episode.padStart(2, '0')
+        let episodeUrl = null
+        let episodeText = null
+
+        $('a').each((i, el) => {
+            const text = $(el).text().toLowerCase()
+            const href = $(el).attr('href')
+            
+            if (href && (text.includes(`cap ${episodeNum}`) || text.includes(episodeNum))) {
+                episodeUrl = href
+                episodeText = $(el).text().trim()
+                return false
+            }
+        })
+
+        if (!episodeUrl) return null
+
+        const episodeRes = await axiosInstance.get(episodeUrl)
+        const $ep = cheerio.load(episodeRes.data)
+        const downloadLinks = {}
+
+        // Buscar íconos/logos de servidores
+        $ep('a[href*="mega"], a[href*="mediafire"], a[href*="drive"], a[href*="gofile"]').each((i, el) => {
+            const href = $ep(el).attr('href')
+            const text = $ep(el).text().trim()
+            const title = $ep(el).attr('title') || text
+            
+            if (href) {
+                if (href.includes('mega')) downloadLinks['Mega'] = href
+                else if (href.includes('mediafire')) downloadLinks['Mediafire'] = href
+                else if (href.includes('drive')) downloadLinks['Google Drive'] = href
+                else if (href.includes('gofile')) downloadLinks['Gofile'] = href
+            }
+        })
+
+        return {
+            title,
+            episodeText,
+            downloadLinks,
+            episodeUrl
+        }
+
+    } catch (e) {
+        console.error('Error en getAnimeYTXDownloads:', e.message)
         return null
     }
 }
 
 // ================== DESCARGA DE VIDEO ==================
-async function downloadAnimeVideo(conn, chatId, animeData, m) {
+async function downloadAnimeVideo(conn, chatId, animeData, servidor, m) {
     try {
-        if (!animeData.downloadLink) {
-            return m.reply('❌ No se encontró enlace de descarga disponible')
+        const downloadLink = animeData.downloadLinks[servidor]
+        
+        if (!downloadLink) {
+            return m.reply(`❌ El servidor ${servidor} no está disponible.\n\nServidores: ${Object.keys(animeData.downloadLinks).join(', ')}`)
         }
 
-        const link = animeData.downloadLink.toLowerCase()
-        const fileName = `${animeData.title.replace(/[^a-zA-Z0-9]/g, '_')}_Cap_${animeData.episode}.mp4`
-
         try {
-            const response = await axios.get(animeData.downloadLink, {
+            const response = await axiosInstance.get(downloadLink, {
                 responseType: 'stream',
                 timeout: 60000,
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                    'Referer': 'https://jkanime.net/'
-                }
+                maxRedirects: 5
             })
 
+            const contentType = response.headers['content-type'] || ''
+            
+            if (!contentType.includes('video') && !contentType.includes('mp4') && !downloadLink.includes('mega')) {
+                return m.reply(`🔗 *Link de descarga:*\n\n${downloadLink}`)
+            }
+
+            const fileName = `${animeData.title.replace(/[^a-zA-Z0-9]/g, '_')}_${animeData.episode}.mp4`
             const tempPath = path.join(process.cwd(), 'temp', fileName)
             const dir = path.dirname(tempPath)
 
@@ -396,15 +626,16 @@ async function downloadAnimeVideo(conn, chatId, animeData, m) {
                             document: fs.readFileSync(tempPath),
                             mimetype: 'video/mp4',
                             fileName: fileName,
-                            caption: `✅ *${animeData.title}*\n📺 Capítulo: ${animeData.episode}\n📦 Tamaño: ${sizeMB} MB\n🌐 Proveedor: ${animeData.provider}`
+                            caption: `✅ *${animeData.title}*\n📺 ${animeData.episode}\n📦 ${sizeMB} MB\n🌐 ${servidor}`
                         }, { quoted: m })
 
                         fs.unlinkSync(tempPath)
                         resolve()
 
                     } catch (err) {
-                        console.error('Error enviando archivo:', err)
+                        console.error('Error enviando:', err)
                         fs.unlink(tempPath, () => {})
+                        m.reply('⚠️ Error al enviar el archivo')
                         reject(err)
                     }
                 })
@@ -413,29 +644,25 @@ async function downloadAnimeVideo(conn, chatId, animeData, m) {
                     fs.unlink(tempPath, () => {})
                     reject(err)
                 })
-
-                response.data.on('error', reject)
             })
 
         } catch (err) {
-            console.error('Error descargando:', err)
-            await m.reply(`🔗 *Enlace de descarga encontrado:*\n\n${animeData.downloadLink}\n\n_Intenta descargar manualmente desde el navegador_`)
+            console.error('Error descargando:', err.message)
+            await m.reply(`🔗 *Link encontrado:*\n${downloadLink}`)
         }
 
     } catch (e) {
-        console.error('Error en downloadAnimeVideo:', e)
-        await m.reply('⚠️ *Error descargando el anime.* Intenta de nuevo más tarde.')
+        console.error('Error:', e)
+        await m.reply('⚠️ Error en la descarga')
     }
 }
 
-// ================== CONFIGURACIÓN DEL HANDLER ==================
-handler.command = /^(animedownload|anidl|animedl)$/i
+// ================== CONFIG ==================
+handler.command = /^(animedownload|anidl|animedl|animedown)$/i
 handler.tags = ['anime', 'descargas']
 handler.help = [
     'animedownload <nombre>|<cap>',
-    'anidl One Piece|01',
-    'animedl Oshi no Ko|05'
+    'anidl Oshi no Ko|05|mega'
 ]
 
 export default handler
-            
