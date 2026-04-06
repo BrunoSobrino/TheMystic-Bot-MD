@@ -10,12 +10,20 @@ const MAX_FEEDS_PER_CHAT = 10
 const MAX_SEEN_GUIDS = 50
 const REQUEST_TIMEOUT = 15_000
 
-const PRESET_FEEDS = {
-  kudasai: 'https://somoskudasai.com/feed/',
-  crunchyroll: 'https://www.crunchyroll.com/newsrss?lang=es'
+// ─── Helpers de Traducción ────────────────────────────────────────────────────
+
+async function translateText(text) {
+  try {
+    const res = await axios.get(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=es&dt=t&q=${encodeURIComponent(text)}`, {
+      timeout: 5000
+    })
+    return res.data[0][0][0]
+  } catch {
+    return text // Si falla, devuelve el original
+  }
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helpers de RSS ───────────────────────────────────────────────────────────
 
 function initDB() {
   if (!global.db?.data) return
@@ -31,13 +39,16 @@ function feedsOf(chatId) {
 async function fetchFeed(url) {
   const { data } = await axios.get(url, {
     timeout: REQUEST_TIMEOUT,
-    headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+    headers: { 
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': 'application/xml,text/xml,application/xhtml+xml',
+      'Cache-Control': 'no-cache'
+    }
   })
 
   const $ = cheerio.load(data, { xmlMode: true })
   const items = []
 
-  // RSS 2.0 Parser
   $('item').each((_, el) => {
     const title = $(el).find('title').first().text().trim()
     const link = $(el).find('link').first().text().trim() || $(el).find('link').first().attr('href') || ''
@@ -50,7 +61,6 @@ async function fetchFeed(url) {
     if (title && guid) items.push({ title, link, guid, pubDate, img })
   })
 
-  // Atom Parser Fallback
   if (!items.length) {
     $('entry').each((_, el) => {
       const title = $(el).find('title').first().text().trim()
@@ -75,6 +85,10 @@ function formatDate(pubDate) {
   return isNaN(d) ? '' : d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 // ─── Poller Automático ────────────────────────────────────────────────────────
 
 let _pollerStarted = false
@@ -92,14 +106,20 @@ async function checkAllFeeds(conn) {
           continue
         }
         const newItems = items.filter(i => !feed.seenGuids.includes(i.guid))
-        for (const item of newItems.reverse().slice(0, 3)) { // Máximo 3 por ciclo para evitar spam
-          const text = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${item.title}*\n${formatDate(item.pubDate) ? '🕐 ' + formatDate(item.pubDate) + '\n' : ''}\n🔗 ${item.link}`
+        for (const item of newItems.reverse().slice(0, 3)) { 
+          // Traducción automática del título antes de enviar
+          const translatedTitle = await translateText(item.title)
+          
+          const text = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${translatedTitle}*\n${formatDate(item.pubDate) ? '🕐 ' + formatDate(item.pubDate) + '\n' : ''}\n🔗 ${item.link}`
+          
           if (item.img) await conn.sendMessage(chatId, { image: { url: item.img }, caption: text })
           else await conn.sendMessage(chatId, { text })
           await new Promise(r => setTimeout(r, 2000))
         }
         feed.seenGuids = [...newItems.map(i => i.guid), ...feed.seenGuids].slice(0, MAX_SEEN_GUIDS)
-      } catch (e) { console.error(`[RSS Error] ${feed.url}:`, e.message) }
+      } catch (e) { 
+        if (e.code !== 'ECONNRESET') console.error(`[RSS Error] ${feed.url}:`, e.message) 
+      }
     }
   }
   global.db.write().catch(() => {})
@@ -108,7 +128,7 @@ async function checkAllFeeds(conn) {
 function startPoller(conn) {
   if (_pollerStarted) return
   _pollerStarted = true
-  console.log('[RSS] Poller Activo')
+  console.log('[RSS] Poller Activo con Traducción')
   setInterval(() => checkAllFeeds(conn), POLL_INTERVAL_MS)
 }
 
@@ -120,53 +140,68 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
   const canManage = isOwner || isAdmin || isROwner
 
   if (/list$/i.test(command)) {
-    if (!feeds.length) return m.reply(`❌ No hay feeds.\nUsa *${usedPrefix}rssadd <url>*`)
+    if (!feeds.length) return m.reply(`❌ No hay feeds activos.\nUsa *${usedPrefix}rssadd <url>*`)
     let msg = `📋 *Feeds Activos (${feeds.length}/${MAX_FEEDS_PER_CHAT})*\n━━━━━━━━━━━━━━━━\n`
-    feeds.forEach((f, i) => msg += `*${i + 1}.* ${f.label}\n   🔗 ${f.url}\n`)
+    feeds.forEach((f, i) => msg += `*${i + 1}.* ${capitalize(f.label)}\n   🔗 ${f.url}\n`)
     return m.reply(msg)
   }
 
   if (/recientes$/i.test(command)) {
-    if (!feeds.length) return m.reply(`❌ No hay feeds.`)
+    if (!feeds.length) return m.reply(`❌ No hay feeds registrados.`)
     const idx = parseInt(text) - 1
     const feed = feeds[idx] || feeds[0]
-    m.reply(`⏳ Cargando de *${feed.label}*...`)
-    const items = await fetchFeed(feed.url)
-    const top = items.slice(0, 5)
-    let res = `📰 *${feed.label}*\n━━━━━━━━━━━━━━━━\n`
-    top.forEach((it, i) => res += `*${i + 1}.* ${it.title}\n🔗 ${it.link}\n───────────────\n`)
-    return m.reply(res.trim())
+    m.reply(`⏳ Cargando noticias de *${feed.label}*...`)
+    try {
+      const items = await fetchFeed(feed.url)
+      const top = items.slice(0, 5)
+      let res = `📰 *${capitalize(feed.label)}*\n━━━━━━━━━━━━━━━━\n`
+      for (const [i, it] of top.entries()) {
+        const translated = await translateText(it.title)
+        res += `*${i + 1}.* ${translated}\n🔗 ${it.link}\n───────────────\n`
+      }
+      return m.reply(res.trim())
+    } catch (e) {
+      return m.reply(`❌ Error al conectar con el feed: ${e.message}`)
+    }
   }
 
   if (/add$/i.test(command)) {
-    if (!canManage) return m.reply('⛔ Solo Admins.')
-    if (!text) return m.reply(`Ejemplo: *${usedPrefix}rssadd kudasai*`)
-    const url = PRESET_FEEDS[text.trim().toLowerCase()] || text.trim()
+    if (!canManage) return m.reply('⛔ Solo administradores.')
+    if (!text) return m.reply(`Ejemplo: *${usedPrefix}rssadd <url>*`)
+    
+    const url = text.trim()
     if (!/^https?:\/\//.test(url)) return m.reply('❌ URL inválida.')
     
-    await m.reply('⏳ Verificando...')
-    const items = await fetchFeed(url)
-    if (!items.length) return m.reply('❌ No es un feed válido.')
-    
-    const label = PRESET_FEEDS[text.toLowerCase()] ? text.toLowerCase() : new URL(url).hostname
-    feeds.push({ url, label, seenGuids: items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS) })
-    await global.db.write()
-    return m.reply(`✅ Agregado: *${label}*`)
+    if (feeds.some(f => f.url === url)) return m.reply('⚠️ Ya está en la lista.')
+    if (feeds.length >= MAX_FEEDS_PER_CHAT) return m.reply(`⚠️ Límite alcanzado.`)
+
+    await m.reply('⏳ Verificando URL...')
+    try {
+      const items = await fetchFeed(url)
+      if (!items.length) return m.reply('❌ No se encontraron noticias.')
+      
+      const label = new URL(url).hostname
+      feeds.push({ url, label, seenGuids: items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS) })
+      await global.db.write()
+      return m.reply(`✅ Agregado: *${capitalize(label)}* (Traducción automática activada)`)
+    } catch (e) {
+      return m.reply(`❌ No se pudo conectar: ${e.message}`)
+    }
   }
 
   if (/del$/i.test(command)) {
-    if (!canManage) return m.reply('⛔ Solo Admins.')
+    if (!canManage) return m.reply('⛔ Solo administradores.')
     const n = parseInt(text) - 1
-    if (isNaN(n) || !feeds[n]) return m.reply('❌ Número inválido.')
-    feeds.splice(n, 1)
+    if (isNaN(n) || !feeds[n]) return m.reply(`❌ Número inválido.`)
+    const removed = feeds.splice(n, 1)
     await global.db.write()
-    return m.reply('🗑️ Feed eliminado.')
+    return m.reply(`🗑️ Feed *${removed[0].label}* eliminado.`)
   }
   
   if (/check$/i.test(command)) {
-    await m.reply('🔄 Revisando...')
+    await m.reply('🔄 Buscando actualizaciones...')
     await checkAllFeeds(conn)
-    return m.reply('✅ Hecho.')
+    return m.reply('✅ Sincronización completada.')
   }
 }
 
@@ -176,7 +211,7 @@ handler.all = async function () {
 
 handler.command = /^rss(add|del|list|recientes|check)$/i
 handler.tags = ['tools']
-handler.help = ['rssadd', 'rssdel', 'rsslist', 'rssrecientes', 'rsscheck']
+handler.help = ['rssadd <url>', 'rssdel <número>', 'rsslist', 'rssrecientes', 'rsscheck']
 
 export default handler
-                                              
+    
