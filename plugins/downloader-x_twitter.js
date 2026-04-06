@@ -1,63 +1,69 @@
 import axios from 'axios';
+import fs from 'fs';
 
 let enviando = false;
 const handler = async (m, {conn, text, usedPrefix, command}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.downloader_x_twitter
+  const datas = global;
+  const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
+  const tradutor = _translate.plugins.downloader_x_twitter;
 
+  // Mensaje más sutil y dinámico sin el link de AuronPlay
+  if (!text) throw `*${tradutor.texto1}*\n\n*${usedPrefix + command}* https://x.com/username/status/123456789`;
+  
+  if (enviando) return;
+  enviando = true;
 
-if (!text) throw `${tradutor.texto1} ${usedPrefix + command}* https://twitter.com/auronplay/status/1586487664274206720?s=20&t=3snvkvwGUIez5iWYQAehpw`;
-if (enviando) return;
-    enviando = true;
-try {
-   await conn.sendMessage(m.chat, {text: global.wait}, {quoted: m}); 
-   const res = await TwitterDL(text);
- if (res?.result.type == 'video') {
-     const caption = res?.result.caption ? res.result.caption : tradutor.texto2;
-     for (let i = 0; i < res.result.media.length; i++) {
-     await conn.sendMessage(m.chat, {video: {url: res.result.media[i].result[0].url}, caption: caption}, {quoted: m});
-     };
-     enviando = false;
-     return;
- } else if (res?.result.type == 'photo') {
-     const caption = res?.result.caption ? res.result.caption : tradutor.texto2;
-     for (let i = 0; i < res.result.media.length; i++) {
-     await conn.sendMessage(m.chat, {image: {url: res.result.media[i].url}, caption: caption}, {quoted: m});
-     };
-     enviando = false;
-     return;
-  }
-} catch {
+  try {
+    await conn.sendMessage(m.chat, {text: global.wait}, {quoted: m}); 
+    const res = await TwitterDL(text, tradutor);
+
+    if (res?.result.type == 'video') {
+      const caption = res?.result.caption ? res.result.caption : tradutor.texto2;
+      for (let i = 0; i < res.result.media.length; i++) {
+        await conn.sendMessage(m.chat, {video: {url: res.result.media[i].result[0].url}, caption: caption}, {quoted: m});
+      }
+      enviando = false;
+      return;
+    } else if (res?.result.type == 'photo') {
+      const caption = res?.result.caption ? res.result.caption : tradutor.texto2;
+      for (let i = 0; i < res.result.media.length; i++) {
+        await conn.sendMessage(m.chat, {image: {url: res.result.media[i].url}, caption: caption}, {quoted: m});
+      }
+      enviando = false;
+      return;
+    }
+  } catch (e) {
     enviando = false;
     throw tradutor.texto3;
-    return;
   }
-};    
-handler.command = /^((x|xdl|dlx|twdl|tw|twt|twitter)(dl)?)$/i;
+};
+
+handler.command = /^(x|twitter|xdl|dlx|twdl|twt|twitterdl)$/i;
 export default handler;
 
 const _twitterapi = (id) => `https://info.tweeload.site/status/${id}.json`;
+
 const getAuthorization = async () => {
-    const { data } = await axios.default.get("https://pastebin.com/raw/SnCfd4ru");
-    return data;
+  const { data } = await axios.get("https://pastebin.com/raw/SnCfd4ru");
+  return data;
 };
-const TwitterDL = async (url) => {
+
+const TwitterDL = async (url, tradutor) => {
   return new Promise(async (resolve, reject) => {
     const id = url.match(/\/([\d]+)/);
     if (!id)
       return resolve({
         status: "error",
-        message:
-          tradutor.texto4,
+        message: tradutor.texto4,
       });
-      const response = await axios.default(_twitterapi(id[1]), {
+
+    try {
+      const response = await axios.get(_twitterapi(id[1]), {
         method: "GET",
         headers: {
           Authorization: await getAuthorization(),
-          "user-agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
+          "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
         },
       });
 
@@ -73,7 +79,6 @@ const TwitterDL = async (url) => {
         name: response.data.tweet.author.name,
         username: response.data.tweet.author.screen_name,
         avatar_url: response.data.tweet.author.avatar_url,
-        banner_url: response.data.tweet.author.banner_url,
       };
 
       let media = [];
@@ -84,18 +89,16 @@ const TwitterDL = async (url) => {
         response.data.tweet.media.videos.forEach((v) => {
           const resultVideo = [];
           v.video_urls.forEach((z) => {
+            const resMatch = z.url.match(/([\d ]{2,5}[x][\d ]{2,5})/);
             resultVideo.push({
               bitrate: z.bitrate,
-              content_type: z.content_type,
-              resolution: z.url.match(/([\d ]{2,5}[x][\d ]{2,5})/)[0],
               url: z.url,
+              resolution: resMatch ? resMatch[0] : "HD"
             });
           });
           if (resultVideo.length !== 0) {
             media.push({
               type: v.type,
-              duration: v.duration,
-              thumbnail_url: v.thumbnail_url,
               result: v.type === "video" ? resultVideo : v.url,
             });
           }
@@ -110,19 +113,15 @@ const TwitterDL = async (url) => {
       resolve({
         status: "success",
         result: {
-          id: response.data.tweet.id,
           caption: response.data.tweet.text,
-          created_at: response.data.tweet.created_at,
-          created_timestamp: response.data.tweet.created_timestamp,
-          replies: response.data.tweet.replies,
-          retweets: response.data.tweet.retweets,
-          likes: response.data.tweet.likes,
-          url: response.data.tweet.url,
-          possibly_sensitive: response.data.tweet.possibly_sensitive,
           author,
           type,
           media: media.length !== 0 ? media : null,
         },
       });
+    } catch (err) {
+      reject(err);
+    }
   });
 };
+          

@@ -680,10 +680,18 @@ export async function handler(chatUpdate) {
     if (typeof m.text !== 'string') {
       m.text = '';
     }
-    const isROwner = [...global.owner.map(([number]) => number)].map((v) => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
+    const _user = global.db.data && global.db.data.users && global.db.data.users[m.sender];
+    const ownerJids = (Array.isArray(global.owner) ? global.owner : [])
+      .map((entry) => Array.isArray(entry) ? entry[0] : entry)
+      .filter((value) => value !== undefined && value !== null)
+      .map((value) => String(value).replace(/[^0-9]/g, '') + '@s.whatsapp.net');
+    const modJids = (Array.isArray(global.mods) ? global.mods : [])
+      .filter((value) => value !== undefined && value !== null)
+      .map((value) => String(value).replace(/[^0-9]/g, '') + '@s.whatsapp.net');
+    const isROwner = ownerJids.includes(m.sender);
     const isOwner = isROwner || m.fromMe;
-    const isMods = isOwner || global.mods.map((v) => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
-    const isPrems = isROwner || isOwner || isMods || global.db.data.users[m.sender].premiumTime > 0; // || global.db.data.users[m.sender].premium = 'true'
+    const isMods = isOwner || modJids.includes(m.sender);
+    const isPrems = isROwner || isOwner || isMods || (_user?.premiumTime > 0); // || global.db.data.users[m.sender].premium = 'true'
 
     if (opts['queque'] && m.text && !(isMods || isPrems)) {
       const queque = this.msgqueque; const time = 1000 * 5;
@@ -702,7 +710,6 @@ export async function handler(chatUpdate) {
     m.exp += Math.ceil(Math.random() * 10);
 
     let usedPrefix;
-    const _user = global.db.data && global.db.data.users && global.db.data.users[m.sender];
     const groupMetadata = m.isGroup ? { ...(conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => null) || {}), ...(((conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => null) || {}).participants) && { participants: ((conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => null) || {}).participants || []).map(p => ({ ...p, id: p.jid, jid: p.jid, lid: p.lid })) }) } : {};
     //const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch((_) => null)) : {}) || {};
     const participants = ((m.isGroup ? groupMetadata.participants : []) || []).map(participant => ({ id: participant.jid, jid: participant.jid, lid: participant.lid, admin: participant.admin }));
