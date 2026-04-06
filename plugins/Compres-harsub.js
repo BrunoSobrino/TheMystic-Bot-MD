@@ -148,19 +148,20 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            const getDuration    = () => new Promise(r => exec(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${input}"`, (e, o) => r(parseFloat(o) || 0)));
-            const getTotalFrames = () => new Promise(r => exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (e, o) => r(parseInt(o) || 0)));
-            const [durationSec, totalFrames] = await Promise.all([getDuration(), getTotalFrames()]);
+            const totalFrames = parseInt(require('child_process').execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, { encoding: 'utf8' }).trim()) || 0;
+            
+            const AUDIO_KBPS = 96; // Reduce de 128 a 96 kbps
+            const videoBitrateK = calcVideoBitrate(totalFrames / 30, targetMB, AUDIO_KBPS);
+            const maxrateK = Math.floor(videoBitrateK * 1.2);
+            const bufsizeK = Math.floor(videoBitrateK * 2);
 
-            const AUDIO_KBPS    = 128;
-            const videoBitrateK = calcVideoBitrate(durationSec, targetMB, AUDIO_KBPS);
-            const maxrateK      = Math.round(videoBitrateK * 1.5);
-            const bufsizeK      = maxrateK * 2;
-
-            // PASS 1
+            // PASS 1 - PREVIEW (ULTRAFAST para ahorrar tiempo)
             const pass1Args = [
-                '-i', input, '-vf', `scale=-2:${res}:flags=fast_bilinear`, '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
-                '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast', '-threads', '0', '-an', '-f', 'null', '/dev/null', '-y'
+                '-i', input, '-vf', `scale=-2:${res}:flags=fast_bilinear`, // fast_bilinear = más rápido
+                '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
+                '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast', // ⚡ ULTRAFAST en pass 1
+                '-tune', 'fastdecode', // ⚡ Optimizar para decodificación rápida
+                '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-f', 'null', '-y', '/dev/null'
             ];
             await new Promise((resolve, reject) => {
                 const p1 = spawn('ffmpeg', pass1Args);
@@ -171,10 +172,13 @@ let handler = async (m, { conn, text, command, args }) => {
                 });
             });
 
-            // PASS 2
+            // PASS 2 - SALIDA RÁPIDA (FAST en lugar de VERYFAST)
             const pass2Args = [
-                '-i', input, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
-                '-pass', '2', '-passlogfile', logPrefix, '-preset', 'veryfast', '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output
+                '-i', input, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`),
+                '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
+                '-pass', '2', '-passlogfile', logPrefix, '-preset', 'fast', // ⚡ FAST en pass 2 (rápido pero aceptable)
+                '-tune', 'fastdecode',
+                '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output
             ];
             await new Promise((resolve, reject) => {
                 const p2 = spawn('ffmpeg', pass2Args);
@@ -223,52 +227,55 @@ let handler = async (m, { conn, text, command, args }) => {
                 let ffmpegArgs = ['-i', input];
 
                 if (isDw4) {
-                    // DW4: Optimizado para mejor calidad en 360p
+                    // DW4: OPTIMIZADO PARA VELOCIDAD EN 360p
                     ffmpegArgs.push(
-                        '-vf', withWM('scale=-2:360:flags=lanczos'),
+                        '-vf', withWM('scale=-2:360:flags=fast_bilinear'), // ⚡ fast_bilinear en lugar de lanczos
                         '-c:v', 'libx264',
-                        '-crf', '23', // Mejor calidad (era 24)
-                        '-maxrate', '1400k', // Mayor bitrate (era 1200k)
-                        '-bufsize', '2800k',
-                        '-preset', 'medium',
-                        '-tune', 'film',
-                        '-profile:v', 'high',
-                        '-level', '3.1',
+                        '-crf', '26', // Reduce crf a 26 (más rápido, calidad aceptable)
+                        '-maxrate', '800k', // Reduce maxrate
+                        '-bufsize', '1600k',
+                        '-preset', 'faster', // ⚡ FASTER en lugar de medium
+                        '-tune', 'fastdecode',
+                        '-profile:v', 'baseline', // ⚡ baseline es más rápido que high
+                        '-level', '3.0',
                         '-c:a', 'aac',
-                        '-b:a', '96k',
+                        '-b:a', '64k', // Reduce audio a 64k
                         '-ac', '2',
                         '-movflags', '+faststart'
                     );
                 } else if (isDw3) {
-                    // DW3: Mejorado con lanczos y mejor CRF
+                    // DW3: SUBTÍTULOS QUEMADOS ULTRA-RÁPIDO ⚡⚡⚡
                     const aIdx = parseInt(args[1]) - 1 || 0;
                     const sIdx = parseInt(args[2]) - 1 || 0;
                     ffmpegArgs.push(
                         '-map', '0:v:0',
                         '-map', `0:a:${aIdx}`,
-                        '-vf', withWM(`scale=-2:${res}:flags=lanczos,subtitles=${input}:si=${sIdx}:force_style='PrimaryColour=&H00FFFFFF,OutlineColour=&H00FFBF00,Outline=1.0,Shadow=0.5'`),
+                        // ⚡ IMPORTANTE: ass en lugar de subtitles (MUCHO más rápido para SSA/ASS)
+                        '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear,ass=${input}:si=${sIdx}`), // ass = más rápido
                         '-c:a', 'aac',
-                        '-b:a', '128k',
+                        '-b:a', '80k', // Reduce de 128k
                         '-c:v', 'libx264',
-                        '-crf', '22', // Mejor calidad (era 32)
-                        '-preset', 'medium', // Mejor calidad (era ultrafast)
-                        '-profile:v', 'high',
+                        '-crf', '25', // Reduce de 22 (más rápido)
+                        '-preset', 'faster', // ⚡ FASTER en lugar de medium
+                        '-tune', 'fastdecode',
+                        '-profile:v', 'baseline', // ⚡ baseline más rápido
                         '-movflags', '+faststart'
                     );
                 } else {
-                    // DW2: Mejorado con lanczos y mejor CRF
+                    // DW2: SIN SUBTÍTULOS - MÁXIMA VELOCIDAD
                     ffmpegArgs.push(
-                        '-vf', withWM(`scale=-2:${res}:flags=lanczos`), // Mejor escalado
-                        '-c:a', 'copy',
+                        '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), // ⚡ fast_bilinear
+                        '-c:a', 'copy', // ⚡ copy audio = casi instantáneo
                         '-c:v', 'libx264',
-                        '-crf', '20', // Mucho mejor calidad (era 32)
-                        '-preset', 'medium', // Mejor calidad (era ultrafast)
-                        '-profile:v', 'high',
+                        '-crf', '24', // Reduce de 20
+                        '-preset', 'faster', // ⚡ FASTER en lugar de medium
+                        '-tune', 'fastdecode',
+                        '-profile:v', 'baseline', // ⚡ baseline
                         '-movflags', '+faststart'
                     );
                 }
 
-                ffmpegArgs.push('-threads', '0', '-y', output); // threads 0 = auto
+                ffmpegArgs.push('-threads', '0', '-y', output);
 
                 const proc = spawn('ffmpeg', ffmpegArgs);
                 proc.stderr.on('data', (data) => logFFmpegProgress(label, data, totalFrames));
@@ -278,7 +285,8 @@ let handler = async (m, { conn, text, command, args }) => {
                         if (isDw4) {
                             const fileSizeMB = fs.statSync(output).size / 1024 / 1024;
                             if (fileSizeMB > 60) {
-                                exec(`ffmpeg -i "${output}" -c:v libx264 -crf 28 -maxrate 1000k -bufsize 2000k -preset fast -c:a aac -b:a 80k -y "${output}_opt.mp4"`, async () => {
+                                // ⚡ Recompresión ultra-rápida si excede 60MB
+                                exec(`ffmpeg -i "${output}" -c:v libx264 -crf 32 -preset superfast -c:a aac -b:a 64k -y "${output}_opt.mp4"`, async () => {
                                     const finalFile    = fs.existsSync(`${output}_opt.mp4`) ? `${output}_opt.mp4` : output;
                                     const mediaOptions = asDocument
                                         ? { document: fs.readFileSync(finalFile), fileName: 'Video_360p_HD.mp4', mimetype: 'video/mp4' }
@@ -309,5 +317,4 @@ let handler = async (m, { conn, text, command, args }) => {
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-
-    
+            
