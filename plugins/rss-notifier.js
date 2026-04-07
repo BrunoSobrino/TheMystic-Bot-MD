@@ -97,48 +97,64 @@ let _pollerStarted = false
 async function checkAllFeeds(conn) {
   if (!global.db?.data?.rss) return
 
+  // ── Paso 1: agrupar todas las suscripciones por URL ──────────────────────────
+  // urlMap[url] = [ { chatId, feed }, ... ]
+  const urlMap = {}
   for (const [chatId, feeds] of Object.entries(global.db.data.rss)) {
     if (!feeds?.length) continue
-
     for (const feed of feeds) {
-      try {
-        const items = await fetchFeed(feed.url)
-        if (!items.length) continue
+      if (!urlMap[feed.url]) urlMap[feed.url] = []
+      urlMap[feed.url].push({ chatId, feed })
+    }
+  }
 
-        // Primera vez que se ve este feed: inicializar seenGuids sin enviar nada
-        if (!feed.seenGuids || !feed.seenGuids.length) {
-          feed.seenGuids = items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS)
-          continue
-        }
+  // ── Paso 2: fetch una sola vez por URL y distribuir a todos los grupos ────────
+  for (const [url, subscribers] of Object.entries(urlMap)) {
+    let items
+    try {
+      items = await fetchFeed(url)
+      if (!items.length) continue
+    } catch (e) {
+      if (e.code !== 'ECONNRESET') console.error(`[RSS Error] ${url}:`, e.message)
+      continue
+    }
 
-        // Solo enviar GUIDs que nunca se hayan notificado
-        const newItems = items.filter(i => !feed.seenGuids.includes(i.guid))
+    // Pre-traducir títulos de items nuevos una sola vez (se reutiliza por grupo)
+    // Se calcula por suscriptor porque cada uno tiene su propio seenGuids
+    for (const { chatId, feed } of subscribers) {
+      // Primera vez: inicializar sin enviar
+      if (!feed.seenGuids || !feed.seenGuids.length) {
+        feed.seenGuids = items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS)
+        continue
+      }
 
-        for (const item of newItems.reverse().slice(0, 3)) {
+      const newItems = items.filter(i => !feed.seenGuids.includes(i.guid))
+      if (!newItems.length) continue
+
+      // Traducir una sola vez para este lote (mismo feed, mismo contenido)
+      const toSend = newItems.reverse().slice(0, 3)
+      for (const item of toSend) {
+        try {
           const translatedTitle = await translateText(item.title)
           const dateStr = formatDate(item.pubDate)
           const text = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${translatedTitle}*\n${dateStr ? '🕐 ' + dateStr + '\n' : ''}\n🔗 ${item.link}`
 
           if (item.img) await conn.sendMessage(chatId, { image: { url: item.img }, caption: text })
           else          await conn.sendMessage(chatId, { text })
-          await new Promise(r => setTimeout(r, 2000))
+          await new Promise(r => setTimeout(r, 1500))
+        } catch (e) {
+          console.error(`[RSS Send] ${chatId}:`, e.message)
         }
-
-        // Marcar nuevos como vistos SIEMPRE, incluso si no se enviaron (> 3 items)
-        if (newItems.length) {
-          feed.seenGuids = [
-            ...newItems.map(i => i.guid),
-            ...feed.seenGuids
-          ].slice(0, MAX_SEEN_GUIDS)
-        }
-
-      } catch (e) {
-        if (e.code !== 'ECONNRESET') console.error(`[RSS Error] ${feed.url}:`, e.message)
       }
+
+      // Marcar todos los nuevos como vistos (no solo los enviados)
+      feed.seenGuids = [
+        ...newItems.map(i => i.guid),
+        ...feed.seenGuids
+      ].slice(0, MAX_SEEN_GUIDS)
     }
   }
 
-  // Persistir seenGuids actualizado
   try { await global.db.write() } catch (e) { console.error('[RSS] db.write error:', e.message) }
 }
 
@@ -246,4 +262,4 @@ handler.tags    = ['tools']
 handler.help    = ['rssadd <url>', 'rssdel <número>', 'rsslist', 'rssrecientes', 'rsscheck']
 
 export default handler
-    
+          
