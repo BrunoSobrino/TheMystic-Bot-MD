@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { exec, spawn } from 'child_process';
+import { exec, spawn, execSync } from 'child_process';
 import { pipeline } from 'stream/promises';
 
 let handler = async (m, { conn, text, command, args }) => {
@@ -28,27 +28,18 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) { return false; }
     };
 
-    // Colores ANSI
     const colors = {
-        reset: '\x1b[0m',
-        cyan: '\x1b[36m',
-        green: '\x1b[32m',
-        yellow: '\x1b[33m',
-        blue: '\x1b[34m',
-        magenta: '\x1b[35m',
-        red: '\x1b[31m'
+        reset: '\x1b[0m', cyan: '\x1b[36m', green: '\x1b[32m', yellow: '\x1b[33m',
+        blue: '\x1b[34m', magenta: '\x1b[35m', red: '\x1b[31m'
     };
 
-    // Visualización de progreso estilo solicitado con colores
     const logFFmpegProgress = (label, data, totalFrames = 0) => {
         const line = data.toString();
         if (!line.includes('frame=')) return;
-
         const frameMatch = line.match(/frame=\s*(\d+)/);
         const fpsMatch = line.match(/fps=\s*([\d.]+)/);
         const timeMatch = line.match(/time=\s*([\d:.]+)/);
         const speedMatch = line.match(/speed=\s*([\d.x]+)/);
-
         if (!frameMatch) return;
 
         const frame = parseInt(frameMatch[1]);
@@ -61,10 +52,7 @@ let handler = async (m, { conn, text, command, args }) => {
             const pct = (frame / totalFrames) * 100;
             percentage = pct.toFixed(0).padStart(3, '0');
         }
-
-        // Formato: [[DW3 360p]] Progreso 000% | Frame: 5804 | FPS: 236 | Time: 00:04:02.07 | Speed: 9.85x
         const output = `\r${colors.cyan}[[${label}]]${colors.reset} Progreso ${colors.green}${percentage}%${colors.reset} | Frame: ${colors.yellow}${frame}${colors.reset} | FPS: ${colors.blue}${Math.round(fps)}${colors.reset} | Time: ${colors.magenta}${time}${colors.reset} | Speed: ${colors.red}${speed}${colors.reset}`;
-
         process.stdout.write(output);
     };
 
@@ -144,51 +132,36 @@ let handler = async (m, { conn, text, command, args }) => {
         const label     = `MI ${res}p → ${targetMB}MB`;
 
         try {
-            reply(`⚙️ *Comprimiendo video*\n> Resolución: \`${res}p\`\n> Peso objetivo: \`${targetMB} MB\`\n> Modo: \`${asDocument ? 'Documento' : 'Video'}\`\n\nProcesando...`);
+            reply(`⚙️ *Comprimiendo video*\n> Resolución: \`${res}p\`\n> Peso objetivo: \`${targetMB} MB\`\n\nProcesando...`);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            const totalFrames = parseInt(require('child_process').execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, { encoding: 'utf8' }).trim()) || 0;
+            // CORRECCIÓN: Se usa execSync importado arriba, no require
+            const totalFrames = parseInt(execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, { encoding: 'utf8' }).trim()) || 0;
             
-            const AUDIO_KBPS = 96; // Reduce de 128 a 96 kbps
+            const AUDIO_KBPS = 96;
             const videoBitrateK = calcVideoBitrate(totalFrames / 30, targetMB, AUDIO_KBPS);
             const maxrateK = Math.floor(videoBitrateK * 1.2);
             const bufsizeK = Math.floor(videoBitrateK * 2);
 
-            // PASS 1 - PREVIEW (ULTRAFAST para ahorrar tiempo)
-            const pass1Args = [
-                '-i', input, '-vf', `scale=-2:${res}:flags=fast_bilinear`, // fast_bilinear = más rápido
-                '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
-                '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast', // ⚡ ULTRAFAST en pass 1
-                '-tune', 'fastdecode', // ⚡ Optimizar para decodificación rápida
-                '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-f', 'null', '-y', '/dev/null'
-            ];
             await new Promise((resolve, reject) => {
-                const p1 = spawn('ffmpeg', pass1Args);
+                const p1 = spawn('ffmpeg', [
+                    '-i', input, '-vf', `scale=-2:${res}:flags=fast_bilinear`,
+                    '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast',
+                    '-f', 'null', '-y', '/dev/null'
+                ]);
                 p1.stderr.on('data', (d) => logFFmpegProgress(`${label} - PASS 1/2`, d, totalFrames));
-                p1.on('close', (code) => {
-                    process.stdout.write('\n\n');
-                    if (code === 0) resolve(); else reject(new Error(`pass1 code ${code}`));
-                });
+                p1.on('close', (code) => code === 0 ? resolve() : reject(new Error(`pass1 code ${code}`)));
             });
 
-            // PASS 2 - SALIDA RÁPIDA (FAST en lugar de VERYFAST)
-            const pass2Args = [
-                '-i', input, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`),
-                '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
-                '-pass', '2', '-passlogfile', logPrefix, '-preset', 'fast', // ⚡ FAST en pass 2 (rápido pero aceptable)
-                '-tune', 'fastdecode',
-                '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output
-            ];
             await new Promise((resolve, reject) => {
-                const p2 = spawn('ffmpeg', pass2Args);
-                p2.stderr.on('data', (d) => {
-                    logFFmpegProgress(`${label} - PASS 2/2`, d, totalFrames);
-                });
-                p2.on('close', (code) => {
-                    process.stdout.write('\n\n');
-                    if (code === 0) resolve(); else reject(new Error(`pass2 code ${code}`));
-                });
+                const p2 = spawn('ffmpeg', [
+                    '-i', input, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`),
+                    '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-pass', '2', '-passlogfile', logPrefix, '-preset', 'fast',
+                    '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output
+                ]);
+                p2.stderr.on('data', (d) => logFFmpegProgress(`${label} - PASS 2/2`, d, totalFrames));
+                p2.on('close', (code) => code === 0 ? resolve() : reject(new Error(`pass2 code ${code}`)));
             });
 
             const finalSizeMB = fs.statSync(output).size / 1024 / 1024;
@@ -211,165 +184,53 @@ let handler = async (m, { conn, text, command, args }) => {
         const isDw4      = command === 'dw4';
         const isDw3      = command === 'dw3';
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
-        let res          = isDw4 ? '360' : args[0];
+        let res          = isDw4 ? '360' : (args[0] || '360');
         const timestamp  = Date.now();
         const input      = `./temp/in_${timestamp}`;
         const output     = `./temp/out_${timestamp}.mp4`;
         const label      = `${command.toUpperCase()} ${res}p`;
 
         try {
-            reply(`⚙️ Procesando \`${command}\` a \`${res}p\`...\nModo: \`${asDocument ? 'Documento' : 'Video'}\``);
+            reply(`⚙️ Procesando \`${command}\` a \`${res}p\`...`);
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            // Usar promise-based FFprobe
-            const ffprobeArgs = ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=nb_frames', '-of', 'default=noprint_wrappers=1:nokey=1', input];
-            
-            const totalFrames = await new Promise((resolve) => {
-                const probeProc = spawn('ffprobe', ffprobeArgs);
-                let stdout = '';
-                probeProc.stdout.on('data', (d) => { stdout += d.toString(); });
-                probeProc.on('close', () => resolve(parseInt(stdout) || 0));
-            });
+            const totalFrames = parseInt(execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, { encoding: 'utf8' }).trim()) || 0;
 
             let ffmpegArgs = ['-i', input];
 
             if (isDw4) {
-                // DW4: OPTIMIZADO PARA VELOCIDAD EN 360p
-                ffmpegArgs.push(
-                    '-vf', withWM('scale=-2:360:flags=fast_bilinear'),
-                    '-c:v', 'libx264',
-                    '-crf', '26',
-                    '-maxrate', '800k',
-                    '-bufsize', '1600k',
-                    '-preset', 'faster',
-                    '-tune', 'fastdecode',
-                    '-profile:v', 'baseline',
-                    '-level', '3.0',
-                    '-c:a', 'aac',
-                    '-b:a', '64k',
-                    '-ac', '2',
-                    '-movflags', '+faststart'
-                );
+                ffmpegArgs.push('-vf', withWM('scale=-2:360:flags=fast_bilinear'), '-c:v', 'libx264', '-crf', '26', '-preset', 'faster', '-c:a', 'aac', '-b:a', '64k');
             } else if (isDw3) {
-                // DW3: SUBTÍTULOS QUEMADOS
                 const aIdx = parseInt(args[1]) - 1 || 0;
                 const sIdx = parseInt(args[2]) - 1 || 0;
                 const escapedInput = input.replace(/'/g, "'\\''");
-                ffmpegArgs.push(
-                    '-map', '0:v:0',
-                    '-map', `0:a:${aIdx}`,
-                    '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear,subtitles='${escapedInput}':si=${sIdx}`),
-                    '-c:a', 'aac',
-                    '-b:a', '80k',
-                    '-c:v', 'libx264',
-                    '-crf', '25',
-                    '-preset', 'faster',
-                    '-tune', 'fastdecode',
-                    '-profile:v', 'baseline',
-                    '-movflags', '+faststart'
-                );
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear,subtitles='${escapedInput}':si=${sIdx}`), '-c:v', 'libx264', '-crf', '25', '-preset', 'faster', '-c:a', 'aac', '-b:a', '80k');
             } else {
-                // DW2: SIN SUBTÍTULOS - MÁXIMA VELOCIDAD
-                ffmpegArgs.push(
-                    '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`),
-                    '-c:a', 'copy',
-                    '-c:v', 'libx264',
-                    '-crf', '24',
-                    '-preset', 'faster',
-                    '-tune', 'fastdecode',
-                    '-profile:v', 'baseline',
-                    '-movflags', '+faststart'
-                );
+                ffmpegArgs.push('-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), '-c:v', 'libx264', '-crf', '24', '-preset', 'faster', '-c:a', 'copy');
             }
 
-            ffmpegArgs.push('-threads', '0', '-y', output);
+            ffmpegArgs.push('-threads', '0', '-movflags', '+faststart', '-y', output);
 
-            // Ejecutar FFmpeg con Promise
-            const ffmpegResult = await new Promise((resolve) => {
+            await new Promise((resolve, reject) => {
                 const proc = spawn('ffmpeg', ffmpegArgs);
-                let stderr = '';
-                
-                proc.stderr.on('data', (data) => {
-                    stderr += data.toString();
-                    logFFmpegProgress(label, data, totalFrames);
-                });
-                
-                proc.on('close', (code) => {
-                    process.stdout.write('\n\n');
-                    resolve({ code, stderr });
-                });
+                proc.stderr.on('data', (d) => logFFmpegProgress(label, d, totalFrames));
+                proc.on('close', (code) => code === 0 ? resolve() : reject(new Error(`FFmpeg falló: ${code}`)));
             });
 
-            if (ffmpegResult.code !== 0) {
-                const errorLines = ffmpegResult.stderr.split('\n')
-                    .filter(l => l.includes('Error') || l.includes('error') || l.includes('Invalid'))
-                    .slice(-5);
-                return reply(`❌ Error FFmpeg:\n\`\`\`${errorLines.join('\n') || 'Error desconocido'}\`\`\``);
-            }
-
-            // Validar que el archivo existe y tiene tamaño
-            if (!fs.existsSync(output)) {
-                return reply('❌ El archivo de salida no se creó. Intenta otra resolución.');
-            }
-
-            const fileStats = fs.statSync(output);
-            if (fileStats.size === 0) {
-                return reply('❌ El archivo de salida está vacío. FFmpeg puede no haber codificado correctamente.');
-            }
-
-            // Para DW4, recomprimir si es muy grande
-            let finalFile = output;
-            if (isDw4) {
-                const fileSizeMB = fileStats.size / 1024 / 1024;
-                if (fileSizeMB > 60) {
-                    reply(`⚙️ Recomprimiendo (${fileSizeMB.toFixed(1)}MB > 60MB)...`);
-                    const optOutput = `${output}_opt.mp4`;
-                    await new Promise((resolve) => {
-                        const optProc = spawn('ffmpeg', [
-                            '-i', output, '-c:v', 'libx264', '-crf', '32', 
-                            '-preset', 'superfast', '-c:a', 'aac', '-b:a', '64k', 
-                            '-y', optOutput
-                        ]);
-                        optProc.on('close', () => {
-                            if (fs.existsSync(optOutput) && fs.statSync(optOutput).size > 0) {
-                                fs.unlinkSync(output);
-                                finalFile = optOutput;
-                            }
-                            resolve();
-                        });
-                    });
-                }
-            }
-
-            // Enviar archivo
             const mediaOptions = asDocument
-                ? { 
-                    document: fs.readFileSync(finalFile), 
-                    fileName: `Video_${res}p_${Date.now()}.mp4`, 
-                    mimetype: 'video/mp4',
-                    ptt: false
-                }
-                : { 
-                    video: fs.readFileSync(finalFile),
-                    caption: `✅ *${res}p* | ${(fs.statSync(finalFile).size / 1024 / 1024).toFixed(1)} MB`
-                };
+                ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
+                : { video: fs.readFileSync(output), caption: `✅ *${res}p* | ${(fs.statSync(output).size / 1024 / 1024).toFixed(1)} MB` };
             
             await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-            reply('✅ Archivo enviado correctamente.');
-
         } catch (e) {
-            reply(`❌ Error de proceso:\n\`${e.message}\``);
-            console.error('[DW Error]', e);
+            reply(`❌ Error: ${e.message}`);
         } finally {
-            // Limpiar archivos temporales
-            [input, output, `${output}_opt.mp4`].forEach(f => {
-                try { if (fs.existsSync(f)) fs.unlinkSync(f); } catch {}
-            });
+            [input, output].forEach(f => { if (fs.existsSync(f)) fs.unlinkSync(f); });
         }
     }
 };
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-            
+                    
