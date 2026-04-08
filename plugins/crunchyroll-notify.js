@@ -18,7 +18,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import cron from 'node-cron'
+
 
 // ─── Rutas ───────────────────────────────────────────────────────────────────
 
@@ -151,11 +151,11 @@ async function sendDelay(ms) {
 
 // ─── Cron ────────────────────────────────────────────────────────────────────
 
-let cronTask    = null
+let cronTimer   = null
 let storedConn  = null
 
 function stopCron() {
-  if (cronTask) { cronTask.stop(); cronTask = null }
+  if (cronTimer) { clearInterval(cronTimer); cronTimer = null }
 }
 
 function startCron(conn) {
@@ -171,7 +171,9 @@ function startCron(conn) {
     return
   }
 
-  cronTask = cron.schedule(`*/${minutes} * * * *`, async () => {
+  const ms = minutes * 60 * 1000
+
+  cronTimer = setInterval(async () => {
     try {
       const items = await fetchNewEpisodes()
       for (const item of items) {
@@ -184,9 +186,9 @@ function startCron(conn) {
     } catch (err) {
       console.error('[CR-Notify] Error en cron:', err.message)
     }
-  })
+  }, ms)
 
-  console.log(`[CR-Notify] Cron iniciado → cada ${minutes} min | destino: ${jid}`)
+  console.log(`[CR-Notify] Intervalo iniciado → cada ${minutes} min | destino: ${jid}`)
 }
 
 // ─── Handler del plugin ──────────────────────────────────────────────────────
@@ -228,7 +230,7 @@ let handler = async (m, { conn, args, isOwner }) => {
             `⏱ Cron: cada *${minutes} min*\n` +
             `🕐 Ventana RSS: últimos *${last} min*\n` +
             `💾 IDs guardados: *${seen.length}*\n` +
-            `🔄 Cron activo: *${cronTask ? 'Sí' : 'No'}*`,
+            `🔄 Cron activo: *${cronTimer ? 'Sí' : 'No'}*`,
     }, { quoted: m })
   }
 
@@ -262,7 +264,7 @@ handler.command = /^cr(notify|news)$/i
 ;(async () => {
   const cfg = loadCfg()
   const jid = process.env.CR_TARGET_JID || cfg.targetJid || ''
-  if (jid && !cronTask) {
+  if (jid && !cronTimer) {
     // conn no está disponible aún en el arranque; el cron se inicia
     // cuando el primer comando llega y establece storedConn.
     // Solo logueamos que hay config lista.
@@ -271,4 +273,4 @@ handler.command = /^cr(notify|news)$/i
 })()
 
 export default handler
-                        
+  
