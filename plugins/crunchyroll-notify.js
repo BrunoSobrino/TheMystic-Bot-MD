@@ -4,7 +4,7 @@
  *
  * Variables de entorno (.env):
  *   CR_MINUTES       → cada cuántos minutos corre el cron        (default: 30)
- *   CR_LAST_MINUTES  → ventana de tiempo a revisar en el RSS     (default: 60)
+ *   CR_LAST_MINUTES  → ventana de tiempo a revisar en el calendario  (default: 60)
  *   CR_TARGET_JID    → JID del grupo/chat destino automático
  *                      ej: 1234567890-1234567890@g.us  (grupo)
  *                          1234567890@s.whatsapp.net   (privado)
@@ -31,7 +31,12 @@ if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const RSS_URL = 'https://feeds.feedburner.com/crunchyroll/rss/anime?lang=esLA'
+const CALENDAR_URL = 'https://www.crunchyroll.com/es/simulcastcalendar?filter=premium'
+const CR_HEADERS   = {
+  'User-Agent'     : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+  'Accept'         : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language': 'es-419,es;q=0.9,en;q=0.8',
+}
 
 function loadCfg() {
   try { return JSON.parse(readFileSync(CFG_PATH, 'utf-8')) } catch { return {} }
@@ -49,66 +54,190 @@ function saveSeen(ids) {
   writeFileSync(DB_PATH, JSON.stringify(ids.slice(-300)), 'utf-8')
 }
 
-// ─── RSS Parser (sin dependencias externas) ───────────────────────────────────
+// ─── Scraper del calendario (Next.js __NEXT_DATA__) ──────────────────────────
 
-function parseXML(xml) {
-  const items = []
-  const blocks = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)]
+/**
+ * Busca recursivamente en el objeto de Next.js un array que contenga
+ * elementos con forma de episodio del calendario de CR.
+ */
+function findCalendarDays(obj, depth = 0) {
+  if (depth > 12 || obj === null || typeof obj !== 'object') return null
 
-  for (const [, block] of blocks) {
-    const getText = (tag) => {
-      const m = block.match(
-        new RegExp(`<${tag}[^>]*>(?:<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>|([\\s\\S]*?))<\\/${tag}>`)
-      )
-      return m ? (m[1] ?? m[2] ?? '').trim() : ''
+  if (Array.isArray(obj)) {
+    // ¿Es un array de días? Los días tienen `date` y alguna lista de episodios/paneles
+    if (
+      obj.length > 0 &&
+      typeof obj[0] === 'object' &&
+      (obj[0].date || obj[0].simulcastDate || obj[0].airDate)
+    ) {
+      return obj
     }
-    const getAttr = (tag, attr) => {
-      const m = block.match(new RegExp(`<${tag}[^>]*\\s${attr}="([^"]*)"[^>]*\\/?>`, 'i'))
-      return m ? m[1].trim() : ''
+    for (const item of obj) {
+      const found = findCalendarDays(item, depth + 1)
+      if (found) return found
     }
-
-    // <link> en RSS 2.0 puede ser texto plano sin CDATA
-    const rawLink = block.match(/<link>([\s\S]*?)<\/link>/)
-    const link = rawLink ? rawLink[1].trim() : getAttr('atom:link', 'href')
-
-    const pubDate   = getText('pubDate')
-    const published = pubDate ? new Date(pubDate).getTime() : 0
-
-    // Imagen: intenta media:thumbnail → enclosure
-    const image =
-      getAttr('media:thumbnail', 'url') ||
-      getAttr('media:content', 'url')   ||
-      getAttr('enclosure', 'url')       || ''
-
-    const id = getText('guid') || link
-
-    if (id) {
-      items.push({ id, title: getText('title'), link, published, image })
+  } else {
+    for (const val of Object.values(obj)) {
+      const found = findCalendarDays(val, depth + 1)
+      if (found) return found
     }
   }
+  return null
+}
 
-  return items
+/**
+ * Extrae la imagen más grande de la estructura de thumbnails de CR.
+ * Acepta array de arrays [[{source,width,height},...]] o string directo.
+ */
+function extractImage(images) {
+  if (!images) return ''
+  if (typeof images === 'string') return images
+
+  // CR usa: { thumbnail: [[{source,width,height},...]] }
+  const thumb = images.thumbnail || images.poster_tall || images.poster_wide
+  if (!thumb) return ''
+  if (typeof thumb === 'string') return thumb
+  if (Array.isArray(thumb)) {
+    // Aplana y toma el source del elemento con mayor width
+    const flat = thumb.flat()
+    const best = flat.sort((a, b) => (b.width || 0) - (a.width || 0))[0]
+    return best?.source || best?.url || ''
+  }
+  return ''
+}
+
+/**
+ * Normaliza un "día" del calendario a un array de episodios planos.
+ * Intenta las estructuras más comunes de la API de CR.
+ */
+function normalizeDayEpisodes(day) {
+  const date = day.date || day.simulcastDate || day.airDate || ''
+  const episodes = []
+
+  // Estructura: day.windows[].panels[] (API v2+)
+  if (Array.isArray(day.windows)) {
+    for (const win of day.windows) {
+      const panels = win.panels || win.items || win.episodes || []
+      for (const p of panels) {
+        episodes.push({ date, window: win.time || win.startsAt || '', panel: p })
+      }
+    }
+    return episodes
+  }
+
+  // Estructura: day.panels[] (API alternativa)
+  if (Array.isArray(day.panels)) {
+    for (const p of day.panels) {
+      episodes.push({ date, window: p.startsAt || p.time || '', panel: p })
+    }
+    return episodes
+  }
+
+  // Estructura: day.episodes[]
+  if (Array.isArray(day.episodes)) {
+    for (const p of day.episodes) {
+      episodes.push({ date, window: p.airDate || p.startsAt || '', panel: p })
+    }
+    return episodes
+  }
+
+  return episodes
+}
+
+/**
+ * Convierte un panel de CR en el objeto unificado que usa el plugin.
+ */
+function panelToItem(entry) {
+  const p    = entry.panel
+  const slug = p.slug || p.id || ''
+  const link = slug
+    ? `https://www.crunchyroll.com/es/series/${slug}`
+    : (p.link || p.url || p.seriesLink || '')
+
+  // Título: prefiere título localizado
+  const title = (
+    p.title              ||
+    p.seriesTitle        ||
+    p.episodeTitle       ||
+    p.name               || ''
+  ).trim()
+
+  const epNum = p.episodeNumber ?? p.episode_number ?? p.number ?? null
+  const fullTitle = epNum !== null
+    ? `${title} — Episodio ${epNum}`
+    : title
+
+  // Hora de emisión
+  const airRaw = entry.window || p.startsAt || p.airDate || p.time || ''
+  const airTime = airRaw ? new Date(airRaw).getTime() : 0
+
+  const image = extractImage(p.images) || extractImage(p.thumbnailImage) || ''
+
+  // Estreno
+  const isNew = !!(p.isNew || p.isPremiere || p.firstEpisode || epNum === 1)
+
+  // ID único para deduplicación
+  const id = `${slug}-ep${epNum ?? title}`
+
+  return { id, title: fullTitle, link, airTime, image, isNew }
+}
+
+async function scrapeCalendar() {
+  const res = await fetch(CALENDAR_URL, {
+    headers: CR_HEADERS,
+    signal: AbortSignal.timeout(20_000),
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status} al scrapear el calendario`)
+
+  const html = await res.text()
+
+  // ── Extraer __NEXT_DATA__ ──────────────────────────────────────────────────
+  const ndMatch = html.match(
+    /<script[^>]*id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/
+  )
+  if (!ndMatch) throw new Error('No se encontró __NEXT_DATA__ en la página')
+
+  let nextData
+  try { nextData = JSON.parse(ndMatch[1]) }
+  catch { throw new Error('Error al parsear __NEXT_DATA__') }
+
+  // ── Navegar la estructura ──────────────────────────────────────────────────
+  const days = findCalendarDays(nextData)
+  if (!days || !days.length) {
+    // Log para debug — no lanza error para que el bot pueda informar
+    console.warn('[CR-Notify] No se encontraron días en __NEXT_DATA__. Claves top-level:', Object.keys(nextData?.props?.pageProps || {}))
+    return []
+  }
+
+  // Filtrar solo el día de HOY (zona America/Mexico_City)
+  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Mexico_City' }) // YYYY-MM-DD
+
+  const todayDays = days.filter(d => {
+    const dayDate = (d.date || d.simulcastDate || d.airDate || '').slice(0, 10)
+    return dayDate === todayStr || dayDate === ''  // '' = incluye si no hay fecha
+  })
+
+  const rawEpisodes = (todayDays.length ? todayDays : days)
+    .flatMap(normalizeDayEpisodes)
+    .map(panelToItem)
+    .filter(i => i.title && i.id)
+
+  return rawEpisodes
 }
 
 async function fetchNewEpisodes() {
-  const res = await fetch(RSS_URL, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; CrunchyBot/1.0)' },
-    signal: AbortSignal.timeout(15_000),
-  })
-  if (!res.ok) throw new Error(`RSS HTTP ${res.status}`)
-
-  const xml   = await res.text()
-  const items = parseXML(xml)
-
   const cfg         = loadCfg()
   const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
   const cutoff      = Date.now() - lastMinutes * 60_000
 
-  const recent   = items.filter(i => i.published >= cutoff)
+  const allItems = await scrapeCalendar()
+
+  // Filtra solo los emitidos dentro de la ventana de tiempo
+  const recent = allItems.filter(i => !i.airTime || i.airTime >= cutoff)
   if (!recent.length) return []
 
   const seen     = loadSeen()
-  const newItems = recent.filter(i => !seen.includes(i.id)).reverse()
+  const newItems = recent.filter(i => !seen.includes(i.id))
 
   if (newItems.length) {
     saveSeen([...seen, ...newItems.map(i => i.id)])
@@ -120,12 +249,16 @@ async function fetchNewEpisodes() {
 // ─── Formateo de mensaje ─────────────────────────────────────────────────────
 
 function formatCaption(item) {
-  const date = new Date(item.published).toLocaleString('es-MX', {
-    timeZone: 'America/Mexico_City',
-    weekday: 'long', year: 'numeric', month: 'long',
-    day: 'numeric', hour: '2-digit', minute: '2-digit',
-  })
-  return `🎌 *Nuevo episodio en Crunchyroll*\n\n📺 *${item.title}*\n🕐 _${date}_\n🔗 ${item.link}`
+  const date = item.airTime
+    ? new Date(item.airTime).toLocaleString('es-MX', {
+        timeZone: 'America/Mexico_City',
+        weekday: 'long', year: 'numeric', month: 'long',
+        day: 'numeric', hour: '2-digit', minute: '2-digit',
+      })
+    : ''
+  const estreno = item.isNew ? '🆕 *ESTRENO*\n' : ''
+  const hora    = date ? `\n🕐 _${date}_` : ''
+  return `🎌 *Nuevo episodio en Crunchyroll*\n\n${estreno}📺 *${item.title}*${hora}\n🔗 ${item.link}`
 }
 
 // ─── Envío a WhatsApp ────────────────────────────────────────────────────────
@@ -228,7 +361,7 @@ let handler = async (m, { conn, args, isOwner }) => {
       text: `📊 *CR-Notify Status*\n\n` +
             `🎯 Destino: \`${jid}\`\n` +
             `⏱ Cron: cada *${minutes} min*\n` +
-            `🕐 Ventana RSS: últimos *${last} min*\n` +
+            `🕐 Ventana: últimos *${last} min*\n` +
             `💾 IDs guardados: *${seen.length}*\n` +
             `🔄 Cron activo: *${cronTimer ? 'Sí' : 'No'}*`,
     }, { quoted: m })
@@ -273,4 +406,4 @@ handler.command = /^cr(notify|news)$/i
 })()
 
 export default handler
-  
+      
