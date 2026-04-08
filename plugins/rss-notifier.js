@@ -72,31 +72,55 @@ async function fetchFeed(url) {
     return ''
   }
 
-  // Imagen: busca SOLO en el XML crudo del item, evita heredar logo del canal
-  const extractImg = (el, desc = '') => {
+  // Extrae imagen Y video del XML crudo del item (nunca hereda del channel)
+  const extractMedia = (el, desc = '') => {
     const raw = $.html(el)
+    let img = null, video = null
 
-    // 1. enclosure type image
-    const encMatch = raw.match(/<enclosure[^>]+type=["']image[^"']*["'][^>]+url=["']([^"']+)["']/i)
-                  || raw.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]+type=["']image[^"']*["']/i)
-    if (encMatch) return encMatch[1]
+    // ── VIDEO ────────────────────────────────────────────────────────────────────
+    // enclosure tipo video
+    const encVid = raw.match(/<enclosure[^>]+type=["']video[^"']*["'][^>]+url=["']([^"']+)["']/i)
+                || raw.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]+type=["']video[^"']*["']/i)
+    if (encVid) video = encVid[1]
 
-    // 2. media:thumbnail
-    const mediaTh = raw.match(/<media:thumbnail[^>]+url=["']([^"']+)["']/i)
-    if (mediaTh) return mediaTh[1]
+    // media:content medium=video o url con extensión de video
+    if (!video) {
+      const medVid = raw.match(/<media:content[^>]+medium=["']video["'][^>]+url=["']([^"']+)["']/i)
+                  || raw.match(/<media:content[^>]+url=["']([^"']+)["'][^>]+medium=["']video["']/i)
+                  || raw.match(/<media:content[^>]+url=["']([^"']+\.(?:mp4|webm|mov|avi))[^"']*["']/i)
+      if (medVid) video = medVid[1]
+    }
 
-    // 3. media:content con url de imagen o medium=image
-    const mediaCo = raw.match(/<media:content[^>]+url=["']([^"']+\.(?:jpe?g|png|gif|webp))[^"']*["']/i)
-                 || raw.match(/<media:content[^>]+medium=["']image["'][^>]+url=["']([^"']+)["']/i)
-                 || raw.match(/<media:content[^>]+url=["']([^"']+)["'][^>]+medium=["']image["']/i)
-    if (mediaCo) return mediaCo[1]
+    // ── IMAGEN ───────────────────────────────────────────────────────────────────
+    // enclosure tipo image
+    const encImg = raw.match(/<enclosure[^>]+type=["']image[^"']*["'][^>]+url=["']([^"']+)["']/i)
+                || raw.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]+type=["']image[^"']*["']/i)
+    if (encImg) img = encImg[1]
 
-    // 4. <image><url>...</url></image> solo si está DENTRO del item
-    const imgTag = raw.match(/<image[^>]*>[\s\S]*?<url>(https?:\/\/[^<]+)<\/url>/i)
-    if (imgTag) return imgTag[1]
+    // media:thumbnail (el más fiable para Crunchyroll/ANN)
+    if (!img) {
+      const mediaTh = raw.match(/<media:thumbnail[^>]+url=["']([^"']+)["']/i)
+      if (mediaTh) img = mediaTh[1]
+    }
 
-    // 5. primer <img src> en description/content
-    return extractFirstImgSrc(desc)
+    // media:content medium=image o url con extensión de imagen
+    if (!img) {
+      const mediaCo = raw.match(/<media:content[^>]+url=["']([^"']+\.(?:jpe?g|png|gif|webp))[^"']*["']/i)
+                   || raw.match(/<media:content[^>]+medium=["']image["'][^>]+url=["']([^"']+)["']/i)
+                   || raw.match(/<media:content[^>]+url=["']([^"']+)["'][^>]+medium=["']image["']/i)
+      if (mediaCo) img = mediaCo[1]
+    }
+
+    // content:encoded — buscar primera img src (donde Crunchyroll mete la imagen real)
+    if (!img) {
+      const encoded = raw.match(/<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/i)
+      if (encoded) img = extractFirstImgSrc(encoded[1])
+    }
+
+    // description como último recurso
+    if (!img) img = extractFirstImgSrc(desc)
+
+    return { img, video }
   }
 
   const items = []
@@ -108,8 +132,8 @@ async function fetchFeed(url) {
     const guid    = txt($(el).find('guid').first()) || link
     const pubDate = txt($(el).find('pubDate').first()) || txt($(el).find('dc\\:date').first())
     const desc    = txt($(el).find('description').first())
-    const img     = extractImg(el, desc)
-    if (title && guid) items.push({ title, link, guid, pubDate, img })
+    const { img, video } = extractMedia(el, desc)
+    if (title && guid) items.push({ title, link, guid, pubDate, img, video })
   })
 
   // ── Atom ──────────────────────────────────────────────────────────────────────
@@ -121,8 +145,8 @@ async function fetchFeed(url) {
       const guid    = txt($(el).find('id').first()) || link
       const pubDate = txt($(el).find('published').first()) || txt($(el).find('updated').first())
       const content = txt($(el).find('content').first()) || txt($(el).find('summary').first())
-      const img     = extractImg(el, content)
-      if (title && guid) items.push({ title, link, guid, pubDate, img })
+      const { img, video } = extractMedia(el, content)
+      if (title && guid) items.push({ title, link, guid, pubDate, img, video })
     })
   }
 
@@ -193,8 +217,13 @@ async function checkAllFeeds(conn) {
           const dateStr = formatDate(item.pubDate)
           const text = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${translatedTitle}*\n${dateStr ? '🕐 ' + dateStr + '\n' : ''}\n🔗 ${item.link}`
 
-          if (item.img) await conn.sendMessage(chatId, { image: { url: item.img }, caption: text })
-          else          await conn.sendMessage(chatId, { text })
+          if (item.video) {
+            await conn.sendMessage(chatId, { video: { url: item.video }, caption: text, mimetype: 'video/mp4' })
+          } else if (item.img) {
+            await conn.sendMessage(chatId, { image: { url: item.img }, caption: text })
+          } else {
+            await conn.sendMessage(chatId, { text })
+          }
           await new Promise(r => setTimeout(r, 1500))
         } catch (e) {
           console.error(`[RSS Send] ${chatId}:`, e.message)
@@ -313,8 +342,13 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
           const translatedTitle = await translateText(item.title)
           const dateStr = formatDate(item.pubDate)
           const text2 = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${translatedTitle}*\n${dateStr ? '🕐 ' + dateStr + '\n' : ''}\n🔗 ${item.link}`
-          if (item.img) await conn.sendMessage(chatId, { image: { url: item.img }, caption: text2 })
-          else          await conn.sendMessage(chatId, { text: text2 })
+          if (item.video) {
+            await conn.sendMessage(chatId, { video: { url: item.video }, caption: text2, mimetype: 'video/mp4' })
+          } else if (item.img) {
+            await conn.sendMessage(chatId, { image: { url: item.img }, caption: text2 })
+          } else {
+            await conn.sendMessage(chatId, { text: text2 })
+          }
           await new Promise(r => setTimeout(r, 1500))
         } catch (e) {
           await conn.sendMessage(chatId, { text: `⚠️ Error en *${feed.label}*: ${e.message}` })
@@ -353,8 +387,13 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
             const translatedTitle = await translateText(item.title)
             const dateStr = formatDate(item.pubDate)
             const text2 = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${translatedTitle}*\n${dateStr ? '🕐 ' + dateStr + '\n' : ''}\n🔗 ${item.link}`
-            if (item.img) await conn.sendMessage(cid, { image: { url: item.img }, caption: text2 })
-            else          await conn.sendMessage(cid, { text: text2 })
+            if (item.video) {
+              await conn.sendMessage(cid, { video: { url: item.video }, caption: text2, mimetype: 'video/mp4' })
+            } else if (item.img) {
+              await conn.sendMessage(cid, { image: { url: item.img }, caption: text2 })
+            } else {
+              await conn.sendMessage(cid, { text: text2 })
+            }
             await new Promise(r => setTimeout(r, 1500))
           } catch (e) {
             console.error(`[rsscheck 2 send] ${cid}:`, e.message)
@@ -382,4 +421,4 @@ handler.tags    = ['tools']
 handler.help    = ['rssadd <url>', 'rssdel <número>', 'rsslist', 'rssrecientes', 'rsscheck']
 
 export default handler
-    
+      
