@@ -47,80 +47,101 @@ async function fetchFeed(url) {
     }
   })
 
-  // Normalizar: desenrollar CDATA y escapar & sueltos
+  // ── Detectar prefijos de namespace dinámicamente (inspirado en rss-bridge FeedParser) ──
+  // En lugar de asumir "media:", "content:", etc., detectamos el prefijo real del feed
+  const nsMap = {}  // uri → prefix (ej: 'http://search.yahoo.com/mrss/' → 'media')
+  for (const [, prefix, uri] of data.matchAll(/xmlns:(\w+)=["']([^"']+)["']/g)) {
+    nsMap[uri] = prefix
+  }
+  const mediaPrefix   = nsMap['http://search.yahoo.com/mrss/'] || 'media'
+  const contentPrefix = nsMap['http://purl.org/rss/1.0/modules/content/'] || 'content'
+  const dcPrefix      = nsMap['http://purl.org/dc/elements/1.1/'] || 'dc'
+
+  // Normalizar CDATA y & sueltos
   const xml = data
     .replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[\da-f]+);)/gi, '&amp;')
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, (_, c) => c.trim())
 
   const $ = cheerio.load(xml, { xmlMode: true })
-
-  // Texto limpio sin tags residuales
   const txt = el => $(el).text().replace(/<[^>]+>/g, '').trim()
 
-  // <link> en RSS puede ser texto hijo o atributo href
+  // ── Link: texto hijo o href (rss-bridge usa (string)$feedItem->link) ─────────
   const extractLink = el => {
     const byText = $(el).find('link').first().text().trim()
     if (byText && /^https?:\/\//.test(byText)) return byText
-    const byHref = $(el).find('link').first().attr('href')
+    const byHref = $(el).find('link[rel="alternate"]').attr('href') ||
+                   $(el).find('link').first().attr('href')
     if (byHref && /^https?:\/\//.test(byHref)) return byHref
-    const atomAlt = $(el).find('link[rel="alternate"]').attr('href')
-    if (atomAlt) return atomAlt
-    // fallback: buscar en el XML crudo del elemento
     const raw = $.html(el)
     const m = raw.match(/<link[^>]*?>([^<]+)<\/link>/)
-    if (m && /^https?:\/\//.test(m[1].trim())) return m[1].trim()
-    return ''
+    return (m && /^https?:\/\//.test(m[1].trim())) ? m[1].trim() : ''
   }
 
-  // Extrae imagen Y video del XML crudo del item (nunca hereda del channel)
+  // ── Media: detecta video e imagen en el XML crudo del item ───────────────────
+  // Usa los prefijos reales detectados del feed (no hardcoded)
   const extractMedia = (el, desc = '') => {
     const raw = $.html(el)
     let img = null, video = null
 
-    // ── VIDEO ────────────────────────────────────────────────────────────────────
-    // enclosure tipo video
-    const encVid = raw.match(/<enclosure[^>]+type=["']video[^"']*["'][^>]+url=["']([^"']+)["']/i)
-                || raw.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]+type=["']video[^"']*["']/i)
+    // 1. <enclosure> — rss-bridge: $feedItem->enclosure['url'] + type
+    const encVid = raw.match(new RegExp('<enclosure[^>]+type=["\']video[^"\']*["\'][^>]+url=["\']([^"\']+)["\']', 'i'))
+                || raw.match(new RegExp('<enclosure[^>]+url=["\']([^"\']+)["\'][^>]+type=["\']video[^"\']*["\']', 'i'))
     if (encVid) video = encVid[1]
 
-    // media:content medium=video o url con extensión de video
-    if (!video) {
-      const medVid = raw.match(/<media:content[^>]+medium=["']video["'][^>]+url=["']([^"']+)["']/i)
-                  || raw.match(/<media:content[^>]+url=["']([^"']+)["'][^>]+medium=["']video["']/i)
-                  || raw.match(/<media:content[^>]+url=["']([^"']+\.(?:mp4|webm|mov|avi))[^"']*["']/i)
-      if (medVid) video = medVid[1]
-    }
-
-    // ── IMAGEN ───────────────────────────────────────────────────────────────────
-    // enclosure tipo image
-    const encImg = raw.match(/<enclosure[^>]+type=["']image[^"']*["'][^>]+url=["']([^"']+)["']/i)
-                || raw.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]+type=["']image[^"']*["']/i)
+    const encImg = raw.match(new RegExp('<enclosure[^>]+type=["\']image[^"\']*["\'][^>]+url=["\']([^"\']+)["\']', 'i'))
+                || raw.match(new RegExp('<enclosure[^>]+url=["\']([^"\']+)["\'][^>]+type=["\']image[^"\']*["\']', 'i'))
     if (encImg) img = encImg[1]
 
-    // media:thumbnail (el más fiable para Crunchyroll/ANN)
+    // 2. media:thumbnail (prefijo dinámico) — más fiable para Crunchyroll/ANN
     if (!img) {
-      const mediaTh = raw.match(/<media:thumbnail[^>]+url=["']([^"']+)["']/i)
-      if (mediaTh) img = mediaTh[1]
+      const thRe = new RegExp(`<${mediaPrefix}:thumbnail[^>]+url=["']([^"']+)["']`, 'i')
+      const thMatch = raw.match(thRe)
+      if (thMatch) img = thMatch[1]
     }
 
-    // media:content medium=image o url con extensión de imagen
-    if (!img) {
-      const mediaCo = raw.match(/<media:content[^>]+url=["']([^"']+\.(?:jpe?g|png|gif|webp))[^"']*["']/i)
-                   || raw.match(/<media:content[^>]+medium=["']image["'][^>]+url=["']([^"']+)["']/i)
-                   || raw.match(/<media:content[^>]+url=["']([^"']+)["'][^>]+medium=["']image["']/i)
-      if (mediaCo) img = mediaCo[1]
+    // 3. media:content (prefijo dinámico) — video o imagen
+    if (!video || !img) {
+      const mcVidRe = new RegExp(`<${mediaPrefix}:content[^>]+medium=["']video["'][^>]+url=["']([^"']+)["']`, 'i')
+      const mcVid = raw.match(mcVidRe)
+        || raw.match(new RegExp(`<${mediaPrefix}:content[^>]+url=["']([^"']+\\.(?:mp4|webm|mov))[^"']*["']`, 'i'))
+      if (mcVid && !video) video = mcVid[1]
+
+      const mcImgRe = new RegExp(`<${mediaPrefix}:content[^>]+url=["']([^"']+\\.(?:jpe?g|png|gif|webp))[^"']*["']`, 'i')
+      const mcImg = raw.match(mcImgRe)
+        || raw.match(new RegExp(`<${mediaPrefix}:content[^>]+medium=["']image["'][^>]+url=["']([^"']+)["']`, 'i'))
+      if (mcImg && !img) img = mcImg[1]
     }
 
-    // content:encoded — buscar primera img src (donde Crunchyroll mete la imagen real)
+    // 4. content:encoded (prefijo dinámico) — Crunchyroll pone la imagen aquí
     if (!img) {
-      const encoded = raw.match(/<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/i)
+      const encRe = new RegExp(`<${contentPrefix}:encoded[^>]*>([\\s\\S]*?)<\\/${contentPrefix}:encoded>`, 'i')
+      const encoded = raw.match(encRe)
       if (encoded) img = extractFirstImgSrc(encoded[1])
     }
 
-    // description como último recurso
+    // 5. <img src> en description como último recurso
     if (!img) img = extractFirstImgSrc(desc)
 
     return { img, video }
+  }
+
+  // ── GUID con soporte isPermaLink (rss-bridge: isPermaLink fallback) ──────────
+  const extractGuid = (el, link) => {
+    const guidEl = $(el).find('guid').first()
+    const guidText = txt(guidEl)
+    if (guidText) return guidText
+    // Si no hay guid, usar link (rss-bridge fallback)
+    return link || ''
+  }
+
+  // ── pubDate con fallback dc:date (rss-bridge: $feedItem->pubDate ?? $dc->date) ─
+  const extractDate = el => {
+    const raw = $.html(el)
+    const pubDate = txt($(el).find('pubDate').first())
+    if (pubDate) return pubDate
+    const dcRe = new RegExp(`<${dcPrefix}:date[^>]*>([^<]+)<\/${dcPrefix}:date>`, 'i')
+    const dcMatch = raw.match(dcRe)
+    return dcMatch ? dcMatch[1].trim() : ''
   }
 
   const items = []
@@ -129,8 +150,8 @@ async function fetchFeed(url) {
   $('item').each((_, el) => {
     const title   = txt($(el).find('title').first())
     const link    = extractLink(el)
-    const guid    = txt($(el).find('guid').first()) || link
-    const pubDate = txt($(el).find('pubDate').first()) || txt($(el).find('dc\\:date').first())
+    const guid    = extractGuid(el, link)
+    const pubDate = extractDate(el)
     const desc    = txt($(el).find('description').first())
     const { img, video } = extractMedia(el, desc)
     if (title && guid) items.push({ title, link, guid, pubDate, img, video })
@@ -152,6 +173,7 @@ async function fetchFeed(url) {
 
   return items
 }
+
 
 function extractFirstImgSrc(html = '') {
   const m = html.match(/<img[^>]+src=["']([^"'>]+)["']/i)
