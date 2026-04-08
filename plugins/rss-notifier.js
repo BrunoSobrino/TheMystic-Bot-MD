@@ -72,17 +72,30 @@ async function fetchFeed(url) {
     return ''
   }
 
-  // Imagen: enclosure > media:thumbnail/content > itunes:image > <img> en descripción
+  // Imagen: busca SOLO en el XML crudo del item, evita heredar logo del canal
   const extractImg = (el, desc = '') => {
-    const enc = $(el).find('enclosure').filter((_, e) =>
-      ($(e).attr('type') || '').startsWith('image')).attr('url')
-    if (enc) return enc
-    const media = $(el).find('thumbnail, content').filter((_, e) => {
-      const u = $(e).attr('url'); return u && /\.(jpe?g|png|gif|webp)/i.test(u)
-    }).first().attr('url')
-    if (media) return media
-    const itunes = $(el).find('image').attr('href')
-    if (itunes) return itunes
+    const raw = $.html(el)
+
+    // 1. enclosure type image
+    const encMatch = raw.match(/<enclosure[^>]+type=["']image[^"']*["'][^>]+url=["']([^"']+)["']/i)
+                  || raw.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]+type=["']image[^"']*["']/i)
+    if (encMatch) return encMatch[1]
+
+    // 2. media:thumbnail
+    const mediaTh = raw.match(/<media:thumbnail[^>]+url=["']([^"']+)["']/i)
+    if (mediaTh) return mediaTh[1]
+
+    // 3. media:content con url de imagen o medium=image
+    const mediaCo = raw.match(/<media:content[^>]+url=["']([^"']+\.(?:jpe?g|png|gif|webp))[^"']*["']/i)
+                 || raw.match(/<media:content[^>]+medium=["']image["'][^>]+url=["']([^"']+)["']/i)
+                 || raw.match(/<media:content[^>]+url=["']([^"']+)["'][^>]+medium=["']image["']/i)
+    if (mediaCo) return mediaCo[1]
+
+    // 4. <image><url>...</url></image> solo si está DENTRO del item
+    const imgTag = raw.match(/<image[^>]*>[\s\S]*?<url>(https?:\/\/[^<]+)<\/url>/i)
+    if (imgTag) return imgTag[1]
+
+    // 5. primer <img src> en description/content
     return extractFirstImgSrc(desc)
   }
 
