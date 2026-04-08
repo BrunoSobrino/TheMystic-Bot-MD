@@ -196,13 +196,7 @@ let handler = async (m, { conn, args, isOwner }) => {
   if (!storedConn) startCron(conn)
   else storedConn = conn
 
-  // Alias directos: .crset → set | .crstatus → status
-  const cmdAlias = m.command?.toLowerCase()
-  const sub = cmdAlias === 'crset'
-    ? 'set'
-    : cmdAlias === 'crstatus'
-      ? 'status'
-      : (args[0] || '').toLowerCase()
+  const sub = (args[0] || '').toLowerCase()
 
   // ── .crnotify set ──────────────────────────────────────────────────────────
   if (sub === 'set') {
@@ -238,29 +232,6 @@ let handler = async (m, { conn, args, isOwner }) => {
     }, { quoted: m })
   }
 
-  // ── .crultimo → último episodio del RSS sin filtro de tiempo ─────────────
-  if (m.command && /^crultimo$/i.test(m.command)) {
-    await conn.sendMessage(m.chat, { text: '🔍 Obteniendo último episodio...' }, { quoted: m })
-    try {
-      const res = await fetch(RSS_URL, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; CrunchyBot/1.0)' },
-        signal: AbortSignal.timeout(15_000),
-      })
-      if (!res.ok) throw new Error(`RSS HTTP ${res.status}`)
-      const xml   = await res.text()
-      const items = parseXML(xml)
-      if (!items.length) {
-        return conn.sendMessage(m.chat, { text: '📭 No se encontraron episodios en el RSS.' }, { quoted: m })
-      }
-      // El RSS viene ordenado del más reciente al más antiguo
-      const last = items[0]
-      await sendItem(conn, m.chat, last, m)
-    } catch (err) {
-      await conn.sendMessage(m.chat, { text: `❌ Error: ${err.message}` }, { quoted: m })
-    }
-    return
-  }
-
   // ── .crnotify (fetch manual) ───────────────────────────────────────────────
   await conn.sendMessage(m.chat, { text: '🔍 Buscando episodios nuevos...' }, { quoted: m })
 
@@ -283,9 +254,9 @@ let handler = async (m, { conn, args, isOwner }) => {
   }
 }
 
-handler.help    = ['crnotify', 'crnotify set', 'crnotify status', 'crultimo', 'crnews']
+handler.help    = ['crnotify', 'crnotify set', 'crnotify status']
 handler.tags    = ['anime']
-handler.command = /^(crnotify|crnews|crultimo|crset|crstatus)$/i
+handler.command = /^cr(notify|news)$/i
 
 // Inicia el cron en cuanto el plugin se carga (si ya hay JID guardado)
 ;(async () => {
@@ -300,4 +271,4 @@ handler.command = /^(crnotify|crnews|crultimo|crset|crstatus)$/i
 })()
 
 export default handler
-    
+                        
