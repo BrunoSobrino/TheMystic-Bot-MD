@@ -62,6 +62,7 @@ let handler = async (m, { conn, text, command, args }) => {
         return Math.max(100, Math.floor(videoBits / durationSec / 1000));
     };
 
+    // Marca de agua configurada según tu solicitud previa
     const WM = `drawtext=fontfile='/data/data/com.termux/files/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf':text='By\\:CID':fontcolor=white:fontsize=w*0.04:x=20:y=20:borderw=2:bordercolor=black:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
     const withWM = (vf) => `${vf},${WM}`;
 
@@ -136,29 +137,30 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            // CORRECCIÓN: Se usa execSync importado arriba, no require
+            // CORRECCIÓN: Uso de execSync (ES Modules) para evitar "require is not defined"
             const totalFrames = parseInt(execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, { encoding: 'utf8' }).trim()) || 0;
             
             const AUDIO_KBPS = 96;
             const videoBitrateK = calcVideoBitrate(totalFrames / 30, targetMB, AUDIO_KBPS);
-            const maxrateK = Math.floor(videoBitrateK * 1.2);
-            const bufsizeK = Math.floor(videoBitrateK * 2);
 
+            // PASS 1 - Optimizado para Termux
             await new Promise((resolve, reject) => {
                 const p1 = spawn('ffmpeg', [
                     '-i', input, '-vf', `scale=-2:${res}:flags=fast_bilinear`,
-                    '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast',
-                    '-f', 'null', '-y', '/dev/null'
+                    '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-pass', '1', '-passlogfile', logPrefix, 
+                    '-preset', 'ultrafast', '-threads', '2', '-f', 'null', '-y', '/dev/null'
                 ]);
                 p1.stderr.on('data', (d) => logFFmpegProgress(`${label} - PASS 1/2`, d, totalFrames));
                 p1.on('close', (code) => code === 0 ? resolve() : reject(new Error(`pass1 code ${code}`)));
             });
 
+            // PASS 2 - Corregido para evitar Error 187 (Preset y Threads ajustados)
             await new Promise((resolve, reject) => {
                 const p2 = spawn('ffmpeg', [
                     '-i', input, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`),
-                    '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-pass', '2', '-passlogfile', logPrefix, '-preset', 'fast',
-                    '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output
+                    '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-pass', '2', '-passlogfile', logPrefix, 
+                    '-preset', 'veryfast', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', 
+                    '-threads', '2', '-movflags', '+faststart', '-y', output
                 ]);
                 p2.stderr.on('data', (d) => logFFmpegProgress(`${label} - PASS 2/2`, d, totalFrames));
                 p2.on('close', (code) => code === 0 ? resolve() : reject(new Error(`pass2 code ${code}`)));
@@ -168,13 +170,15 @@ let handler = async (m, { conn, text, command, args }) => {
             const mediaOptions = asDocument
                 ? { document: fs.readFileSync(output), fileName: `video_${res}p_${targetMB}mb.mp4`, mimetype: 'video/mp4' }
                 : { video: fs.readFileSync(output), caption: `✅ *${res}p* | ${finalSizeMB.toFixed(1)} MB` };
+            
             await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
         } catch (e) {
             console.error(e);
             reply(`❌ Error al comprimir:\n\`${e.message}\``);
         } finally {
+            // Limpieza rigurosa de logs de doble pasada
             [input, output, `${logPrefix}-0.log`, `${logPrefix}-0.log.mbtree`].forEach(f => {
-                if (fs.existsSync(f)) fs.unlinkSync(f);
+                try { if (fs.existsSync(f)) fs.unlinkSync(f); } catch {}
             });
         }
     }
@@ -200,17 +204,17 @@ let handler = async (m, { conn, text, command, args }) => {
             let ffmpegArgs = ['-i', input];
 
             if (isDw4) {
-                ffmpegArgs.push('-vf', withWM('scale=-2:360:flags=fast_bilinear'), '-c:v', 'libx264', '-crf', '26', '-preset', 'faster', '-c:a', 'aac', '-b:a', '64k');
+                ffmpegArgs.push('-vf', withWM('scale=-2:360:flags=fast_bilinear'), '-c:v', 'libx264', '-crf', '28', '-preset', 'veryfast', '-c:a', 'aac', '-b:a', '64k');
             } else if (isDw3) {
                 const aIdx = parseInt(args[1]) - 1 || 0;
                 const sIdx = parseInt(args[2]) - 1 || 0;
                 const escapedInput = input.replace(/'/g, "'\\''");
-                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear,subtitles='${escapedInput}':si=${sIdx}`), '-c:v', 'libx264', '-crf', '25', '-preset', 'faster', '-c:a', 'aac', '-b:a', '80k');
+                ffmpegArgs.push('-map', '0:v:0', '-map', `0:a:${aIdx}`, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear,subtitles='${escapedInput}':si=${sIdx}`), '-c:v', 'libx264', '-crf', '26', '-preset', 'veryfast', '-c:a', 'aac', '-b:a', '80k');
             } else {
-                ffmpegArgs.push('-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), '-c:v', 'libx264', '-crf', '24', '-preset', 'faster', '-c:a', 'copy');
+                ffmpegArgs.push('-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), '-c:v', 'libx264', '-crf', '24', '-preset', 'veryfast', '-c:a', 'copy');
             }
 
-            ffmpegArgs.push('-threads', '0', '-movflags', '+faststart', '-y', output);
+            ffmpegArgs.push('-threads', '2', '-movflags', '+faststart', '-y', output);
 
             await new Promise((resolve, reject) => {
                 const proc = spawn('ffmpeg', ffmpegArgs);
@@ -226,11 +230,11 @@ let handler = async (m, { conn, text, command, args }) => {
         } catch (e) {
             reply(`❌ Error: ${e.message}`);
         } finally {
-            [input, output].forEach(f => { if (fs.existsSync(f)) fs.unlinkSync(f); });
+            [input, output].forEach(f => { try { if (fs.existsSync(f)) fs.unlinkSync(f); } catch {} });
         }
     }
 };
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-                    
+            
