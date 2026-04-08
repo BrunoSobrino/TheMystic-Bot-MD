@@ -310,6 +310,47 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
       return m.reply('✅ Listo.')
     }
 
+    if (text?.trim() === '2') {
+      if (!global.db?.data?.rss) return m.reply('❌ Sin datos RSS.')
+      await m.reply('📡 Enviando el último item a todos los grupos suscritos...')
+
+      // Agrupar por URL (igual que checkAllFeeds)
+      const urlMap = {}
+      for (const [cid, cfeeds] of Object.entries(global.db.data.rss)) {
+        if (!cfeeds?.length) continue
+        for (const feed of cfeeds) {
+          if (!urlMap[feed.url]) urlMap[feed.url] = []
+          urlMap[feed.url].push({ chatId: cid, feed })
+        }
+      }
+
+      for (const [url, subscribers] of Object.entries(urlMap)) {
+        let items
+        try {
+          items = await fetchFeed(url)
+          if (!items.length) continue
+        } catch (e) {
+          console.error(`[rsscheck 2] ${url}:`, e.message)
+          continue
+        }
+
+        const item = items[0]
+        for (const { chatId: cid, feed } of subscribers) {
+          try {
+            const translatedTitle = await translateText(item.title)
+            const dateStr = formatDate(item.pubDate)
+            const text2 = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${translatedTitle}*\n${dateStr ? '🕐 ' + dateStr + '\n' : ''}\n🔗 ${item.link}`
+            if (item.img) await conn.sendMessage(cid, { image: { url: item.img }, caption: text2 })
+            else          await conn.sendMessage(cid, { text: text2 })
+            await new Promise(r => setTimeout(r, 1500))
+          } catch (e) {
+            console.error(`[rsscheck 2 send] ${cid}:`, e.message)
+          }
+        }
+      }
+      return m.reply('✅ Listo.')
+    }
+
     // check normal
     await m.reply('🔄 Buscando actualizaciones...')
     await checkAllFeeds(conn)
@@ -328,4 +369,4 @@ handler.tags    = ['tools']
 handler.help    = ['rssadd <url>', 'rssdel <número>', 'rsslist', 'rssrecientes', 'rsscheck']
 
 export default handler
-          
+    
