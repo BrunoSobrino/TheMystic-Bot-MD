@@ -6,9 +6,10 @@ const cheerio = require('cheerio')
 // ─── Configuración ────────────────────────────────────────────────────────────
 
 const POLL_INTERVAL_MS = 10 * 60 * 1000
-const MAX_FEEDS_PER_CHAT = 10
-const MAX_SEEN_GUIDS = 200   // subido para reducir falsas "novedades" tras reinicio
+const MAX_FEEDS_PER_CHAT = 20              // ↑ Aumentado de 10 a 20
+const MAX_SEEN_GUIDS = 200
 const REQUEST_TIMEOUT = 15_000
+const MAX_CHATS_PER_FEED = 50              // Nuevo: límite de grupos por feed global
 
 // ─── Helpers de Traducción ────────────────────────────────────────────────────
 
@@ -29,12 +30,48 @@ async function translateText(text) {
 function initDB() {
   if (!global.db?.data) return
   global.db.data.rss = global.db.data.rss || {}
+  global.db.data.rss_global = global.db.data.rss_global || {}  // Nuevo: almacén global de feeds
 }
 
 function feedsOf(chatId) {
   initDB()
   if (!global.db.data.rss[chatId]) global.db.data.rss[chatId] = []
   return global.db.data.rss[chatId]
+}
+
+function getGlobalFeedStore() {
+  initDB()
+  return global.db.data.rss_global
+}
+
+/**
+ * Obtiene todos los grupos que están suscritos a un feed específico
+ */
+function getChatsForUrl(url) {
+  const store = getGlobalFeedStore()
+  return store[url] || []
+}
+
+/**
+ * Registra un grupo como suscriptor a un feed URL
+ */
+function addChatToUrl(url, chatId, label) {
+  const store = getGlobalFeedStore()
+  if (!store[url]) store[url] = []
+  if (!store[url].some(c => c.chatId === chatId)) {
+    store[url].push({ chatId, label, addedAt: new Date().toISOString() })
+  }
+}
+
+/**
+ * Desuscribe un grupo de un feed URL
+ */
+function removeChatFromUrl(url, chatId) {
+  const store = getGlobalFeedStore()
+  if (store[url]) {
+    store[url] = store[url].filter(c => c.chatId !== chatId)
+    if (store[url].length === 0) delete store[url]
+  }
 }
 
 async function fetchFeed(url) {
@@ -98,40 +135,42 @@ async function checkAllFeeds(conn) {
   if (!global.db?.data?.rss) return
 
   // ── Paso 1: agrupar todas las suscripciones por URL ──────────────────────────
-  // urlMap[url] = [ { chatId, feed }, ... ]
   const urlMap = {}
   for (const [chatId, feeds] of Object.entries(global.db.data.rss)) {
     if (!feeds?.length) continue
     for (const feed of feeds) {
-      if (!urlMap[feed.url]) urlMap[feed.url] = []
-      urlMap[feed.url].push({ chatId, feed })
+      if (!urlMap[feed.url]) {
+        urlMap[feed.url] = {
+          subscribers: [],
+          items: null,
+          lastFetch: null
+        }
+      }
+      urlMap[feed.url].subscribers.push({ chatId, feed })
     }
   }
 
   // ── Paso 2: fetch una sola vez por URL y distribuir a todos los grupos ────────
-  for (const [url, subscribers] of Object.entries(urlMap)) {
-    let items
+  for (const [url, data] of Object.entries(urlMap)) {
     try {
-      items = await fetchFeed(url)
-      if (!items.length) continue
+      data.items = await fetchFeed(url)
+      if (!data.items.length) continue
     } catch (e) {
       if (e.code !== 'ECONNRESET') console.error(`[RSS Error] ${url}:`, e.message)
       continue
     }
 
-    // Pre-traducir títulos de items nuevos una sola vez (se reutiliza por grupo)
-    // Se calcula por suscriptor porque cada uno tiene su propio seenGuids
-    for (const { chatId, feed } of subscribers) {
+    // Distribuir a cada suscriptor
+    for (const { chatId, feed } of data.subscribers) {
       // Primera vez: inicializar sin enviar
       if (!feed.seenGuids || !feed.seenGuids.length) {
-        feed.seenGuids = items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS)
+        feed.seenGuids = data.items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS)
         continue
       }
 
-      const newItems = items.filter(i => !feed.seenGuids.includes(i.guid))
+      const newItems = data.items.filter(i => !feed.seenGuids.includes(i.guid))
       if (!newItems.length) continue
 
-      // Traducir una sola vez para este lote (mismo feed, mismo contenido)
       const toSend = newItems.reverse().slice(0, 3)
       for (const item of toSend) {
         try {
@@ -147,7 +186,7 @@ async function checkAllFeeds(conn) {
         }
       }
 
-      // Marcar todos los nuevos como vistos (no solo los enviados)
+      // Marcar todos los nuevos como vistos
       feed.seenGuids = [
         ...newItems.map(i => i.guid),
         ...feed.seenGuids
@@ -163,10 +202,8 @@ function startPoller(conn) {
   _pollerStarted = true
   console.log('[RSS] Poller activo ✓')
 
-  // Primer check a los 30 s del arranque (no esperar 10 min)
   setTimeout(() => checkAllFeeds(conn).catch(e => console.error('[RSS Poller init]', e.message)), 30_000)
 
-  // Check periódico: el .catch() evita que el setInterval muera por un error
   setInterval(
     () => checkAllFeeds(conn).catch(e => console.error('[RSS Poller tick]', e.message)),
     POLL_INTERVAL_MS
@@ -185,10 +222,41 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
     if (!feeds.length) return m.reply(`❌ No hay feeds activos.\nUsa *${usedPrefix}rssadd <url>*`)
     let msg = `📋 *Feeds Activos (${feeds.length}/${MAX_FEEDS_PER_CHAT})*\n━━━━━━━━━━━━━━━━\n`
     feeds.forEach((f, i) => msg += `*${i + 1}.* ${capitalize(f.label)}\n   🔗 ${f.url}\n`)
+    
+    // Info de grupos compartidos
+    const store = getGlobalFeedStore()
+    const sharedCount = feeds.filter(f => store[f.url]?.length > 1).length
+    if (sharedCount > 0) {
+      msg += `\n✨ *Feeds compartidos con otros grupos:* ${sharedCount}`
+    }
     return m.reply(msg)
   }
 
-  // .rssrecientes
+  // .rssinfo [número] — información detallada de un feed
+  if (/info$/i.test(command)) {
+    const idx = parseInt(text) - 1
+    if (isNaN(idx) || !feeds[idx]) {
+      return m.reply(`❌ Número inválido.\nUsa *${usedPrefix}rssinfo <número>*`)
+    }
+    const feed = feeds[idx]
+    const store = getGlobalFeedStore()
+    const chats = store[feed.url] || []
+    
+    let msg = `📊 *Info: ${capitalize(feed.label)}*\n━━━━━━━━━━━━━━━━\n`
+    msg += `🔗 ${feed.url}\n`
+    msg += `📌 Noticias vistas: ${feed.seenGuids?.length || 0}\n`
+    msg += `👥 Suscriptores (grupos): ${chats.length}\n`
+    if (chats.length > 1) {
+      msg += `\n   Grupos:\n`
+      chats.slice(0, 5).forEach(c => {
+        msg += `   • ${c.label || c.chatId}\n`
+      })
+      if (chats.length > 5) msg += `   ... y ${chats.length - 5} más`
+    }
+    return m.reply(msg)
+  }
+
+  // .rssrecientes [número]
   if (/recientes$/i.test(command)) {
     if (!feeds.length) return m.reply(`❌ No hay feeds registrados.`)
     const idx  = parseInt(text) - 1
@@ -208,58 +276,148 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
     }
   }
 
-  // .rssadd
+  // .rssadd <url> [nombre personalizado]
   if (/add$/i.test(command)) {
     if (!canManage) return m.reply('⛔ Solo administradores.')
-    if (!text)      return m.reply(`Ejemplo: *${usedPrefix}rssadd <url>*`)
+    if (!text)      return m.reply(`Ejemplo: *${usedPrefix}rssadd <url> [nombre]*`)
 
-    const url = text.trim()
+    const parts = text.trim().split('|')
+    const url = parts[0].trim()
+    const customLabel = parts[1]?.trim()
+    
     if (!/^https?:\/\//.test(url))          return m.reply('❌ URL inválida.')
     if (feeds.some(f => f.url === url))      return m.reply('⚠️ Ya está en la lista.')
-    if (feeds.length >= MAX_FEEDS_PER_CHAT)  return m.reply('⚠️ Límite alcanzado.')
+    if (feeds.length >= MAX_FEEDS_PER_CHAT)  return m.reply(`⚠️ Límite de ${MAX_FEEDS_PER_CHAT} feeds alcanzado.`)
 
     await m.reply('⏳ Verificando URL...')
     try {
       const items = await fetchFeed(url)
       if (!items.length) return m.reply('❌ No se encontraron noticias.')
 
-      const label = new URL(url).hostname
-      // seenGuids inicializado con los items actuales → no notifica noticias viejas
+      const label = customLabel || new URL(url).hostname
       feeds.push({ url, label, seenGuids: items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS) })
+      addChatToUrl(url, chatId, label)
+      
       await global.db.write()
-      return m.reply(`✅ Agregado: *${capitalize(label)}* (traducción automática activada)`)
+      
+      const chats = getChatsForUrl(url)
+      let reply = `✅ Agregado: *${capitalize(label)}*\n━━━━━━━━━━━━━━━━\n`
+      reply += `📌 Traducción automática: activada\n`
+      if (chats.length > 1) {
+        reply += `👥 También en ${chats.length - 1} grupo(s) más`
+      }
+      return m.reply(reply)
     } catch (e) {
       return m.reply(`❌ No se pudo conectar: ${e.message}`)
     }
   }
 
-  // .rssdel
+  // .rssdel <número>
   if (/del$/i.test(command)) {
     if (!canManage) return m.reply('⛔ Solo administradores.')
     const n = parseInt(text) - 1
     if (isNaN(n) || !feeds[n]) return m.reply('❌ Número inválido.')
     const [removed] = feeds.splice(n, 1)
+    
+    removeChatFromUrl(removed.url, chatId)
+    
     await global.db.write()
-    return m.reply(`🗑️ Feed *${removed.label}* eliminado.`)
+    
+    const chats = getChatsForUrl(removed.url)
+    let reply = `🗑️ Feed *${removed.label}* eliminado de este grupo.\n`
+    if (chats.length > 0) {
+      reply += `ℹ️ Aún activo en ${chats.length} grupo(s).`
+    }
+    return m.reply(reply)
   }
 
-  // .rsscheck — fuerza un check manual y notifica solo novedades reales
+  // .rssrename <número> | <nuevo nombre>
+  if (/rename$/i.test(command)) {
+    if (!canManage) return m.reply('⛔ Solo administradores.')
+    const parts = text.split('|')
+    const n = parseInt(parts[0]) - 1
+    const newName = parts[1]?.trim()
+    
+    if (isNaN(n) || !feeds[n]) return m.reply('❌ Número inválido.')
+    if (!newName) return m.reply(`Ejemplo: *${usedPrefix}rssrename 1 | Mi feed personalizado*`)
+    
+    const oldName = feeds[n].label
+    feeds[n].label = newName
+    await global.db.write()
+    
+    return m.reply(`✏️ Renombrado: *${oldName}* → *${newName}*`)
+  }
+
+  // .rsscheck — fuerza un check manual
   if (/check$/i.test(command)) {
-    await m.reply('🔄 Buscando actualizaciones...')
+    await m.reply('🔄 Buscando actualizaciones en todos los feeds...')
     await checkAllFeeds(conn)
-    return m.reply('✅ Listo. Solo se enviaron items no vistos anteriormente.')
+    return m.reply('✅ Listo. Solo se enviaron noticias nuevas.')
+  }
+
+  // .rssstat — estadísticas globales
+  if (/stat$/i.test(command)) {
+    const allChats = new Set(Object.keys(global.db.data.rss))
+    let totalFeeds = 0
+    for (const f of Object.values(global.db.data.rss)) {
+      totalFeeds += f.length
+    }
+    const store = getGlobalFeedStore()
+    const uniqueUrls = Object.keys(store).length
+    
+    let msg = `📊 *Estadísticas RSS*\n━━━━━━━━━━━━━━━━\n`
+    msg += `👥 Grupos activos: ${allChats.size}\n`
+    msg += `📰 Feeds únicos: ${uniqueUrls}\n`
+    msg += `📌 Total suscripciones: ${totalFeeds}\n`
+    msg += `⏱️ Intervalo de check: ${POLL_INTERVAL_MS / 1000 / 60} min`
+    
+    if (canManage) {
+      msg += `\n\n🔧 *Opciones de administrador:*\n`
+      msg += `*${usedPrefix}rsscleanup* - Limpiar feeds huérfanos`
+    }
+    
+    return m.reply(msg)
+  }
+
+  // .rsscleanup — limpia feeds sin suscriptores (admin)
+  if (/cleanup$/i.test(command)) {
+    if (!canManage) return m.reply('⛔ Solo administradores.')
+    
+    const store = getGlobalFeedStore()
+    const initialCount = Object.keys(store).length
+    
+    for (const url of Object.keys(store)) {
+      if (!store[url] || store[url].length === 0) {
+        delete store[url]
+      }
+    }
+    
+    const finalCount = Object.keys(store).length
+    await global.db.write()
+    
+    return m.reply(`🧹 Limpieza completada.\nFeeds removidos: ${initialCount - finalCount}`)
   }
 }
 
-// Inicia el poller en cada mensaje (solo arranca una vez por _pollerStarted)
+// Inicia el poller en cada mensaje
 handler.all = async function (m, { conn } = {}) {
   const c = conn || global.conn
   if (!_pollerStarted && c) startPoller(c)
 }
 
-handler.command = /^rss(add|del|list|recientes|check)$/i
+handler.command = /^rss(add|del|list|recientes|check|info|rename|stat|cleanup)$/i
 handler.tags    = ['tools']
-handler.help    = ['rssadd <url>', 'rssdel <número>', 'rsslist', 'rssrecientes', 'rsscheck']
+handler.help    = [
+  'rssadd <url> [nombre]',
+  'rssdel <número>',
+  'rsslist',
+  'rssinfo <número>',
+  'rssrecientes [número]',
+  'rssrename <número> | <nombre>',
+  'rsscheck',
+  'rssstat',
+  'rsscleanup'
+]
 
 export default handler
-          
+        
