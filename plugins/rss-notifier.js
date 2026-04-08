@@ -6,10 +6,9 @@ const cheerio = require('cheerio')
 // ─── Configuración ────────────────────────────────────────────────────────────
 
 const POLL_INTERVAL_MS = 10 * 60 * 1000
-const MAX_FEEDS_PER_CHAT = 20              // ↑ Aumentado de 10 a 20
-const MAX_SEEN_GUIDS = 200
+const MAX_FEEDS_PER_CHAT = 10
+const MAX_SEEN_GUIDS = 200   // subido para reducir falsas "novedades" tras reinicio
 const REQUEST_TIMEOUT = 15_000
-const MAX_CHATS_PER_FEED = 50              // Nuevo: límite de grupos por feed global
 
 // ─── Helpers de Traducción ────────────────────────────────────────────────────
 
@@ -30,7 +29,6 @@ async function translateText(text) {
 function initDB() {
   if (!global.db?.data) return
   global.db.data.rss = global.db.data.rss || {}
-  global.db.data.rss_global = global.db.data.rss_global || {}  // Nuevo: almacén global de feeds
 }
 
 function feedsOf(chatId) {
@@ -39,76 +37,82 @@ function feedsOf(chatId) {
   return global.db.data.rss[chatId]
 }
 
-function getGlobalFeedStore() {
-  initDB()
-  return global.db.data.rss_global
-}
-
-/**
- * Obtiene todos los grupos que están suscritos a un feed específico
- */
-function getChatsForUrl(url) {
-  const store = getGlobalFeedStore()
-  return store[url] || []
-}
-
-/**
- * Registra un grupo como suscriptor a un feed URL
- */
-function addChatToUrl(url, chatId, label) {
-  const store = getGlobalFeedStore()
-  if (!store[url]) store[url] = []
-  if (!store[url].some(c => c.chatId === chatId)) {
-    store[url].push({ chatId, label, addedAt: new Date().toISOString() })
-  }
-}
-
-/**
- * Desuscribe un grupo de un feed URL
- */
-function removeChatFromUrl(url, chatId) {
-  const store = getGlobalFeedStore()
-  if (store[url]) {
-    store[url] = store[url].filter(c => c.chatId !== chatId)
-    if (store[url].length === 0) delete store[url]
-  }
-}
-
 async function fetchFeed(url) {
   const { data } = await axios.get(url, {
     timeout: REQUEST_TIMEOUT,
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Accept': 'application/xml,text/xml,application/xhtml+xml',
+      'Accept': 'application/rss+xml,application/atom+xml,application/xml,text/xml,*/*',
       'Cache-Control': 'no-cache'
     }
   })
 
-  const $ = cheerio.load(data, { xmlMode: true })
+  // Normalizar: desenrollar CDATA y escapar & sueltos
+  const xml = data
+    .replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[\da-f]+);)/gi, '&amp;')
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, (_, c) => c.trim())
+
+  const $ = cheerio.load(xml, { xmlMode: true })
+
+  // Texto limpio sin tags residuales
+  const txt = el => $(el).text().replace(/<[^>]+>/g, '').trim()
+
+  // <link> en RSS puede ser texto hijo o atributo href
+  const extractLink = el => {
+    const byText = $(el).find('link').first().text().trim()
+    if (byText && /^https?:\/\//.test(byText)) return byText
+    const byHref = $(el).find('link').first().attr('href')
+    if (byHref && /^https?:\/\//.test(byHref)) return byHref
+    const atomAlt = $(el).find('link[rel="alternate"]').attr('href')
+    if (atomAlt) return atomAlt
+    // fallback: buscar en el XML crudo del elemento
+    const raw = $.html(el)
+    const m = raw.match(/<link[^>]*?>([^<]+)<\/link>/)
+    if (m && /^https?:\/\//.test(m[1].trim())) return m[1].trim()
+    return ''
+  }
+
+  // Imagen: enclosure > media:thumbnail/content > itunes:image > <img> en descripción
+  const extractImg = (el, desc = '') => {
+    const enc = $(el).find('enclosure').filter((_, e) =>
+      ($(e).attr('type') || '').startsWith('image')).attr('url')
+    if (enc) return enc
+    const media = $(el).find('thumbnail, content').filter((_, e) => {
+      const u = $(e).attr('url'); return u && /\.(jpe?g|png|gif|webp)/i.test(u)
+    }).first().attr('url')
+    if (media) return media
+    const itunes = $(el).find('image').attr('href')
+    if (itunes) return itunes
+    return extractFirstImgSrc(desc)
+  }
+
   const items = []
 
+  // ── RSS 2.0 / RDF ─────────────────────────────────────────────────────────────
   $('item').each((_, el) => {
-    const title   = $(el).find('title').first().text().trim()
-    const link    = $(el).find('link').first().text().trim() || $(el).find('link').first().attr('href') || ''
-    const guid    = $(el).find('guid').first().text().trim() || link
-    const pubDate = $(el).find('pubDate').first().text().trim()
-    const desc    = $(el).find('description').first().text().trim()
-    const img     = $(el).find('enclosure[type^="image"]').attr('url') ||
-                    $(el).find('media\\:thumbnail, media\\:content').first().attr('url') ||
-                    extractFirstImgSrc(desc)
+    const title   = txt($(el).find('title').first())
+    const link    = extractLink(el)
+    const guid    = txt($(el).find('guid').first()) || link
+    const pubDate = txt($(el).find('pubDate').first()) || txt($(el).find('dc\\:date').first())
+    const desc    = txt($(el).find('description').first())
+    const img     = extractImg(el, desc)
     if (title && guid) items.push({ title, link, guid, pubDate, img })
   })
 
+  // ── Atom ──────────────────────────────────────────────────────────────────────
   if (!items.length) {
     $('entry').each((_, el) => {
-      const title   = $(el).find('title').first().text().trim()
-      const link    = $(el).find('link[rel="alternate"]').attr('href') || $(el).find('link').first().attr('href') || ''
-      const guid    = $(el).find('id').first().text().trim() || link
-      const pubDate = $(el).find('published, updated').first().text().trim()
-      const img     = extractFirstImgSrc($(el).find('content').first().text())
+      const title   = txt($(el).find('title').first())
+      const link    = $(el).find('link[rel="alternate"]').attr('href') ||
+                      $(el).find('link').first().attr('href') || extractLink(el)
+      const guid    = txt($(el).find('id').first()) || link
+      const pubDate = txt($(el).find('published').first()) || txt($(el).find('updated').first())
+      const content = txt($(el).find('content').first()) || txt($(el).find('summary').first())
+      const img     = extractImg(el, content)
       if (title && guid) items.push({ title, link, guid, pubDate, img })
     })
   }
+
   return items
 }
 
@@ -135,42 +139,40 @@ async function checkAllFeeds(conn) {
   if (!global.db?.data?.rss) return
 
   // ── Paso 1: agrupar todas las suscripciones por URL ──────────────────────────
+  // urlMap[url] = [ { chatId, feed }, ... ]
   const urlMap = {}
   for (const [chatId, feeds] of Object.entries(global.db.data.rss)) {
     if (!feeds?.length) continue
     for (const feed of feeds) {
-      if (!urlMap[feed.url]) {
-        urlMap[feed.url] = {
-          subscribers: [],
-          items: null,
-          lastFetch: null
-        }
-      }
-      urlMap[feed.url].subscribers.push({ chatId, feed })
+      if (!urlMap[feed.url]) urlMap[feed.url] = []
+      urlMap[feed.url].push({ chatId, feed })
     }
   }
 
   // ── Paso 2: fetch una sola vez por URL y distribuir a todos los grupos ────────
-  for (const [url, data] of Object.entries(urlMap)) {
+  for (const [url, subscribers] of Object.entries(urlMap)) {
+    let items
     try {
-      data.items = await fetchFeed(url)
-      if (!data.items.length) continue
+      items = await fetchFeed(url)
+      if (!items.length) continue
     } catch (e) {
       if (e.code !== 'ECONNRESET') console.error(`[RSS Error] ${url}:`, e.message)
       continue
     }
 
-    // Distribuir a cada suscriptor
-    for (const { chatId, feed } of data.subscribers) {
+    // Pre-traducir títulos de items nuevos una sola vez (se reutiliza por grupo)
+    // Se calcula por suscriptor porque cada uno tiene su propio seenGuids
+    for (const { chatId, feed } of subscribers) {
       // Primera vez: inicializar sin enviar
       if (!feed.seenGuids || !feed.seenGuids.length) {
-        feed.seenGuids = data.items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS)
+        feed.seenGuids = items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS)
         continue
       }
 
-      const newItems = data.items.filter(i => !feed.seenGuids.includes(i.guid))
+      const newItems = items.filter(i => !feed.seenGuids.includes(i.guid))
       if (!newItems.length) continue
 
+      // Traducir una sola vez para este lote (mismo feed, mismo contenido)
       const toSend = newItems.reverse().slice(0, 3)
       for (const item of toSend) {
         try {
@@ -186,7 +188,7 @@ async function checkAllFeeds(conn) {
         }
       }
 
-      // Marcar todos los nuevos como vistos
+      // Marcar todos los nuevos como vistos (no solo los enviados)
       feed.seenGuids = [
         ...newItems.map(i => i.guid),
         ...feed.seenGuids
@@ -202,8 +204,10 @@ function startPoller(conn) {
   _pollerStarted = true
   console.log('[RSS] Poller activo ✓')
 
+  // Primer check a los 30 s del arranque (no esperar 10 min)
   setTimeout(() => checkAllFeeds(conn).catch(e => console.error('[RSS Poller init]', e.message)), 30_000)
 
+  // Check periódico: el .catch() evita que el setInterval muera por un error
   setInterval(
     () => checkAllFeeds(conn).catch(e => console.error('[RSS Poller tick]', e.message)),
     POLL_INTERVAL_MS
@@ -222,41 +226,10 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
     if (!feeds.length) return m.reply(`❌ No hay feeds activos.\nUsa *${usedPrefix}rssadd <url>*`)
     let msg = `📋 *Feeds Activos (${feeds.length}/${MAX_FEEDS_PER_CHAT})*\n━━━━━━━━━━━━━━━━\n`
     feeds.forEach((f, i) => msg += `*${i + 1}.* ${capitalize(f.label)}\n   🔗 ${f.url}\n`)
-    
-    // Info de grupos compartidos
-    const store = getGlobalFeedStore()
-    const sharedCount = feeds.filter(f => store[f.url]?.length > 1).length
-    if (sharedCount > 0) {
-      msg += `\n✨ *Feeds compartidos con otros grupos:* ${sharedCount}`
-    }
     return m.reply(msg)
   }
 
-  // .rssinfo [número] — información detallada de un feed
-  if (/info$/i.test(command)) {
-    const idx = parseInt(text) - 1
-    if (isNaN(idx) || !feeds[idx]) {
-      return m.reply(`❌ Número inválido.\nUsa *${usedPrefix}rssinfo <número>*`)
-    }
-    const feed = feeds[idx]
-    const store = getGlobalFeedStore()
-    const chats = store[feed.url] || []
-    
-    let msg = `📊 *Info: ${capitalize(feed.label)}*\n━━━━━━━━━━━━━━━━\n`
-    msg += `🔗 ${feed.url}\n`
-    msg += `📌 Noticias vistas: ${feed.seenGuids?.length || 0}\n`
-    msg += `👥 Suscriptores (grupos): ${chats.length}\n`
-    if (chats.length > 1) {
-      msg += `\n   Grupos:\n`
-      chats.slice(0, 5).forEach(c => {
-        msg += `   • ${c.label || c.chatId}\n`
-      })
-      if (chats.length > 5) msg += `   ... y ${chats.length - 5} más`
-    }
-    return m.reply(msg)
-  }
-
-  // .rssrecientes [número]
+  // .rssrecientes
   if (/recientes$/i.test(command)) {
     if (!feeds.length) return m.reply(`❌ No hay feeds registrados.`)
     const idx  = parseInt(text) - 1
@@ -276,148 +249,83 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, isAdmin, isR
     }
   }
 
-  // .rssadd <url> [nombre personalizado]
+  // .rssadd
   if (/add$/i.test(command)) {
     if (!canManage) return m.reply('⛔ Solo administradores.')
-    if (!text)      return m.reply(`Ejemplo: *${usedPrefix}rssadd <url> [nombre]*`)
+    if (!text)      return m.reply(`Ejemplo: *${usedPrefix}rssadd <url>*`)
 
-    const parts = text.trim().split('|')
-    const url = parts[0].trim()
-    const customLabel = parts[1]?.trim()
-    
+    const url = text.trim()
     if (!/^https?:\/\//.test(url))          return m.reply('❌ URL inválida.')
     if (feeds.some(f => f.url === url))      return m.reply('⚠️ Ya está en la lista.')
-    if (feeds.length >= MAX_FEEDS_PER_CHAT)  return m.reply(`⚠️ Límite de ${MAX_FEEDS_PER_CHAT} feeds alcanzado.`)
+    if (feeds.length >= MAX_FEEDS_PER_CHAT)  return m.reply('⚠️ Límite alcanzado.')
 
     await m.reply('⏳ Verificando URL...')
     try {
       const items = await fetchFeed(url)
       if (!items.length) return m.reply('❌ No se encontraron noticias.')
 
-      const label = customLabel || new URL(url).hostname
+      const label = new URL(url).hostname
+      // seenGuids inicializado con los items actuales → no notifica noticias viejas
       feeds.push({ url, label, seenGuids: items.map(i => i.guid).slice(0, MAX_SEEN_GUIDS) })
-      addChatToUrl(url, chatId, label)
-      
       await global.db.write()
-      
-      const chats = getChatsForUrl(url)
-      let reply = `✅ Agregado: *${capitalize(label)}*\n━━━━━━━━━━━━━━━━\n`
-      reply += `📌 Traducción automática: activada\n`
-      if (chats.length > 1) {
-        reply += `👥 También en ${chats.length - 1} grupo(s) más`
-      }
-      return m.reply(reply)
+      return m.reply(`✅ Agregado: *${capitalize(label)}* (traducción automática activada)`)
     } catch (e) {
       return m.reply(`❌ No se pudo conectar: ${e.message}`)
     }
   }
 
-  // .rssdel <número>
+  // .rssdel
   if (/del$/i.test(command)) {
     if (!canManage) return m.reply('⛔ Solo administradores.')
     const n = parseInt(text) - 1
     if (isNaN(n) || !feeds[n]) return m.reply('❌ Número inválido.')
     const [removed] = feeds.splice(n, 1)
-    
-    removeChatFromUrl(removed.url, chatId)
-    
     await global.db.write()
-    
-    const chats = getChatsForUrl(removed.url)
-    let reply = `🗑️ Feed *${removed.label}* eliminado de este grupo.\n`
-    if (chats.length > 0) {
-      reply += `ℹ️ Aún activo en ${chats.length} grupo(s).`
-    }
-    return m.reply(reply)
+    return m.reply(`🗑️ Feed *${removed.label}* eliminado.`)
   }
 
-  // .rssrename <número> | <nuevo nombre>
-  if (/rename$/i.test(command)) {
-    if (!canManage) return m.reply('⛔ Solo administradores.')
-    const parts = text.split('|')
-    const n = parseInt(parts[0]) - 1
-    const newName = parts[1]?.trim()
-    
-    if (isNaN(n) || !feeds[n]) return m.reply('❌ Número inválido.')
-    if (!newName) return m.reply(`Ejemplo: *${usedPrefix}rssrename 1 | Mi feed personalizado*`)
-    
-    const oldName = feeds[n].label
-    feeds[n].label = newName
-    await global.db.write()
-    
-    return m.reply(`✏️ Renombrado: *${oldName}* → *${newName}*`)
-  }
-
-  // .rsscheck — fuerza un check manual
+  // .rsscheck        → check normal de novedades
+  // .rsscheck 1      → fuerza envío del primer item de cada feed (sin tocar seenGuids)
   if (/check$/i.test(command)) {
-    await m.reply('🔄 Buscando actualizaciones en todos los feeds...')
-    await checkAllFeeds(conn)
-    return m.reply('✅ Listo. Solo se enviaron noticias nuevas.')
-  }
+    const force = text?.trim() === '1'
 
-  // .rssstat — estadísticas globales
-  if (/stat$/i.test(command)) {
-    const allChats = new Set(Object.keys(global.db.data.rss))
-    let totalFeeds = 0
-    for (const f of Object.values(global.db.data.rss)) {
-      totalFeeds += f.length
-    }
-    const store = getGlobalFeedStore()
-    const uniqueUrls = Object.keys(store).length
-    
-    let msg = `📊 *Estadísticas RSS*\n━━━━━━━━━━━━━━━━\n`
-    msg += `👥 Grupos activos: ${allChats.size}\n`
-    msg += `📰 Feeds únicos: ${uniqueUrls}\n`
-    msg += `📌 Total suscripciones: ${totalFeeds}\n`
-    msg += `⏱️ Intervalo de check: ${POLL_INTERVAL_MS / 1000 / 60} min`
-    
-    if (canManage) {
-      msg += `\n\n🔧 *Opciones de administrador:*\n`
-      msg += `*${usedPrefix}rsscleanup* - Limpiar feeds huérfanos`
-    }
-    
-    return m.reply(msg)
-  }
-
-  // .rsscleanup — limpia feeds sin suscriptores (admin)
-  if (/cleanup$/i.test(command)) {
-    if (!canManage) return m.reply('⛔ Solo administradores.')
-    
-    const store = getGlobalFeedStore()
-    const initialCount = Object.keys(store).length
-    
-    for (const url of Object.keys(store)) {
-      if (!store[url] || store[url].length === 0) {
-        delete store[url]
+    if (force) {
+      if (!feeds.length) return m.reply('❌ No hay feeds en este grupo.')
+      await m.reply(`📡 Enviando el último item de *${feeds.length}* feed(s)...`)
+      for (const feed of feeds) {
+        try {
+          const items = await fetchFeed(feed.url)
+          if (!items.length) continue
+          const item = items[0]
+          const translatedTitle = await translateText(item.title)
+          const dateStr = formatDate(item.pubDate)
+          const text2 = `📰 *${feed.label || 'RSS'}*\n━━━━━━━━━━━━━━━━\n🎌 *${translatedTitle}*\n${dateStr ? '🕐 ' + dateStr + '\n' : ''}\n🔗 ${item.link}`
+          if (item.img) await conn.sendMessage(chatId, { image: { url: item.img }, caption: text2 })
+          else          await conn.sendMessage(chatId, { text: text2 })
+          await new Promise(r => setTimeout(r, 1500))
+        } catch (e) {
+          await conn.sendMessage(chatId, { text: `⚠️ Error en *${feed.label}*: ${e.message}` })
+        }
       }
+      return m.reply('✅ Listo.')
     }
-    
-    const finalCount = Object.keys(store).length
-    await global.db.write()
-    
-    return m.reply(`🧹 Limpieza completada.\nFeeds removidos: ${initialCount - finalCount}`)
+
+    // check normal
+    await m.reply('🔄 Buscando actualizaciones...')
+    await checkAllFeeds(conn)
+    return m.reply('✅ Listo. Solo se enviaron items no vistos anteriormente.')
   }
 }
 
-// Inicia el poller en cada mensaje
+// Inicia el poller en cada mensaje (solo arranca una vez por _pollerStarted)
 handler.all = async function (m, { conn } = {}) {
   const c = conn || global.conn
   if (!_pollerStarted && c) startPoller(c)
 }
 
-handler.command = /^rss(add|del|list|recientes|check|info|rename|stat|cleanup)$/i
+handler.command = /^rss(add|del|list|recientes|check)$/i
 handler.tags    = ['tools']
-handler.help    = [
-  'rssadd <url> [nombre]',
-  'rssdel <número>',
-  'rsslist',
-  'rssinfo <número>',
-  'rssrecientes [número]',
-  'rssrename <número> | <nombre>',
-  'rsscheck',
-  'rssstat',
-  'rsscleanup'
-]
+handler.help    = ['rssadd <url>', 'rssdel <número>', 'rsslist', 'rssrecientes', 'rsscheck']
 
 export default handler
-        
+          
