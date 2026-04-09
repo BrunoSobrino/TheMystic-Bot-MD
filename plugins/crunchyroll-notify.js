@@ -31,12 +31,11 @@ if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const CALENDAR_URL = 'https://www.crunchyroll.com/es/simulcastcalendar?filter=premium'
-const CR_HEADERS   = {
-  'User-Agent'     : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-  'Accept'         : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language': 'es-419,es;q=0.9,en;q=0.8',
-}
+// API Beta oficial de Crunchyroll (la que usan sus propias apps)
+const CR_API      = 'https://beta-api.crunchyroll.com'
+const CR_AUTH_URL = `${CR_API}/auth/v1/token`
+// client_id anónimo del cliente web (base64 de "cr_web:")
+const CR_BASIC    = 'Basic Y3Jfd2ViOg=='
 
 function loadCfg() {
   try { return JSON.parse(readFileSync(CFG_PATH, 'utf-8')) } catch { return {} }
@@ -54,175 +53,130 @@ function saveSeen(ids) {
   writeFileSync(DB_PATH, JSON.stringify(ids.slice(-300)), 'utf-8')
 }
 
-// ─── Scraper del calendario (Next.js __NEXT_DATA__) ──────────────────────────
+// ─── Auth — Token anónimo (expira ~5 min, se renueva automáticamente) ─────────
 
-/**
- * Busca recursivamente en el objeto de Next.js un array que contenga
- * elementos con forma de episodio del calendario de CR.
- */
-function findCalendarDays(obj, depth = 0) {
-  if (depth > 12 || obj === null || typeof obj !== 'object') return null
+let _token    = null
+let _tokenExp = 0
 
-  if (Array.isArray(obj)) {
-    // ¿Es un array de días? Los días tienen `date` y alguna lista de episodios/paneles
-    if (
-      obj.length > 0 &&
-      typeof obj[0] === 'object' &&
-      (obj[0].date || obj[0].simulcastDate || obj[0].airDate)
-    ) {
-      return obj
-    }
-    for (const item of obj) {
-      const found = findCalendarDays(item, depth + 1)
-      if (found) return found
-    }
-  } else {
-    for (const val of Object.values(obj)) {
-      const found = findCalendarDays(val, depth + 1)
-      if (found) return found
-    }
-  }
-  return null
+async function getToken() {
+  if (_token && Date.now() < _tokenExp - 30_000) return _token
+
+  const res = await fetch(CR_AUTH_URL, {
+    method : 'POST',
+    headers: {
+      'Authorization'  : CR_BASIC,
+      'Content-Type'   : 'application/x-www-form-urlencoded',
+      'User-Agent'     : 'Crunchyroll/3.46.2 Android/13 okhttp/4.12.0',
+    },
+    body: 'grant_type=client_credentials',
+    signal: AbortSignal.timeout(15_000),
+  })
+  if (!res.ok) throw new Error(`Auth CR falló: HTTP ${res.status}`)
+
+  const data = await res.json()
+  _token    = data.access_token
+  _tokenExp = Date.now() + (data.expires_in || 300) * 1000
+  return _token
 }
 
-/**
- * Extrae la imagen más grande de la estructura de thumbnails de CR.
- * Acepta array de arrays [[{source,width,height},...]] o string directo.
- */
-function extractImage(images) {
-  if (!images) return ''
-  if (typeof images === 'string') return images
+async function crFetch(path, params = {}) {
+  const token  = await getToken()
+  const url    = new URL(`${CR_API}${path}`)
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
 
-  // CR usa: { thumbnail: [[{source,width,height},...]] }
-  const thumb = images.thumbnail || images.poster_tall || images.poster_wide
-  if (!thumb) return ''
-  if (typeof thumb === 'string') return thumb
-  if (Array.isArray(thumb)) {
-    // Aplana y toma el source del elemento con mayor width
-    const flat = thumb.flat()
-    const best = flat.sort((a, b) => (b.width || 0) - (a.width || 0))[0]
-    return best?.source || best?.url || ''
+  const res = await fetch(url.toString(), {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'User-Agent'   : 'Crunchyroll/3.46.2 Android/13 okhttp/4.12.0',
+      'Accept'       : 'application/json',
+    },
+    signal: AbortSignal.timeout(20_000),
+  })
+  if (!res.ok) throw new Error(`CR API HTTP ${res.status} → ${path}`)
+  return res.json()
+}
+
+// ─── Imagen: extrae la URL de mayor resolución ────────────────────────────────
+
+function extractImage(images = {}) {
+  const src = images.thumbnail || images.poster_tall || images.poster_wide
+  if (!src) return ''
+  if (typeof src === 'string') return src
+  if (Array.isArray(src)) {
+    const flat = src.flat().filter(Boolean)
+    return flat.sort((a, b) => (b.width || 0) - (a.width || 0))[0]?.source || ''
   }
   return ''
 }
 
-/**
- * Normaliza un "día" del calendario a un array de episodios planos.
- * Intenta las estructuras más comunes de la API de CR.
- */
-function normalizeDayEpisodes(day) {
-  const date = day.date || day.simulcastDate || day.airDate || ''
-  const episodes = []
-
-  // Estructura: day.windows[].panels[] (API v2+)
-  if (Array.isArray(day.windows)) {
-    for (const win of day.windows) {
-      const panels = win.panels || win.items || win.episodes || []
-      for (const p of panels) {
-        episodes.push({ date, window: win.time || win.startsAt || '', panel: p })
-      }
-    }
-    return episodes
-  }
-
-  // Estructura: day.panels[] (API alternativa)
-  if (Array.isArray(day.panels)) {
-    for (const p of day.panels) {
-      episodes.push({ date, window: p.startsAt || p.time || '', panel: p })
-    }
-    return episodes
-  }
-
-  // Estructura: day.episodes[]
-  if (Array.isArray(day.episodes)) {
-    for (const p of day.episodes) {
-      episodes.push({ date, window: p.airDate || p.startsAt || '', panel: p })
-    }
-    return episodes
-  }
-
-  return episodes
-}
-
-/**
- * Convierte un panel de CR en el objeto unificado que usa el plugin.
- */
-function panelToItem(entry) {
-  const p    = entry.panel
-  const slug = p.slug || p.id || ''
-  const link = slug
-    ? `https://www.crunchyroll.com/es/series/${slug}`
-    : (p.link || p.url || p.seriesLink || '')
-
-  // Título: prefiere título localizado
-  const title = (
-    p.title              ||
-    p.seriesTitle        ||
-    p.episodeTitle       ||
-    p.name               || ''
-  ).trim()
-
-  const epNum = p.episodeNumber ?? p.episode_number ?? p.number ?? null
-  const fullTitle = epNum !== null
-    ? `${title} — Episodio ${epNum}`
-    : title
-
-  // Hora de emisión
-  const airRaw = entry.window || p.startsAt || p.airDate || p.time || ''
-  const airTime = airRaw ? new Date(airRaw).getTime() : 0
-
-  const image = extractImage(p.images) || extractImage(p.thumbnailImage) || ''
-
-  // Estreno
-  const isNew = !!(p.isNew || p.isPremiere || p.firstEpisode || epNum === 1)
-
-  // ID único para deduplicación
-  const id = `${slug}-ep${epNum ?? title}`
-
-  return { id, title: fullTitle, link, airTime, image, isNew }
-}
+// ─── Scraper usando el endpoint de calendario simulcast ───────────────────────
 
 async function scrapeCalendar() {
-  const res = await fetch(CALENDAR_URL, {
-    headers: CR_HEADERS,
-    signal: AbortSignal.timeout(20_000),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status} al scrapear el calendario`)
-
-  const html = await res.text()
-
-  // ── Extraer __NEXT_DATA__ ──────────────────────────────────────────────────
-  const ndMatch = html.match(
-    /<script[^>]*id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/
-  )
-  if (!ndMatch) throw new Error('No se encontró __NEXT_DATA__ en la página')
-
-  let nextData
-  try { nextData = JSON.parse(ndMatch[1]) }
-  catch { throw new Error('Error al parsear __NEXT_DATA__') }
-
-  // ── Navegar la estructura ──────────────────────────────────────────────────
-  const days = findCalendarDays(nextData)
-  if (!days || !days.length) {
-    // Log para debug — no lanza error para que el bot pueda informar
-    console.warn('[CR-Notify] No se encontraron días en __NEXT_DATA__. Claves top-level:', Object.keys(nextData?.props?.pageProps || {}))
-    return []
+  // Endpoint principal: calendario simulcast de hoy (es-419 = español Latino)
+  let data
+  try {
+    data = await crFetch('/content/v2/discover/simulcastcalendar', {
+      locale: 'es-419',
+      filter: 'premium',
+    })
+  } catch (err) {
+    console.warn('[CR-Notify] simulcastcalendar falló, usando newly_added:', err.message)
+    // Fallback: episodios más recientes añadidos
+    data = await crFetch('/content/v2/discover/browse', {
+      n      : '36',
+      sort_by: 'newly_added',
+      type   : 'episode',
+      locale : 'es-419',
+    })
   }
 
-  // Filtrar solo el día de HOY (zona America/Mexico_City)
-  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Mexico_City' }) // YYYY-MM-DD
+  const items = []
 
-  const todayDays = days.filter(d => {
-    const dayDate = (d.date || d.simulcastDate || d.airDate || '').slice(0, 10)
-    return dayDate === todayStr || dayDate === ''  // '' = incluye si no hay fecha
-  })
+  // El calendario devuelve { data: [ { date, windows: [ { time, panels: [...] } ] } ] }
+  // El browse devuelve       { data: [ { ...episode } ] }
+  const rows = Array.isArray(data?.data) ? data.data : []
 
-  const rawEpisodes = (todayDays.length ? todayDays : days)
-    .flatMap(normalizeDayEpisodes)
-    .map(panelToItem)
-    .filter(i => i.title && i.id)
+  for (const row of rows) {
+    // ── Formato calendario ─────────────────────────────────────────────────
+    if (Array.isArray(row.windows)) {
+      for (const win of row.windows) {
+        for (const panel of (win.panels || [])) {
+          items.push(normalizePanel(panel, win.time || row.date || ''))
+        }
+      }
+      continue
+    }
 
-  return rawEpisodes
+    // ── Formato browse / episodio plano ────────────────────────────────────
+    items.push(normalizePanel(row, row.episode_air_date || row.availability_starts || ''))
+  }
+
+  return items.filter(i => i.id && i.title)
+}
+
+function normalizePanel(p, airRaw) {
+  const airTime   = airRaw ? new Date(airRaw).getTime() : 0
+  const epNum     = p.episode_number ?? p.episodeNumber ?? null
+  const series    = p.series_title   || p.seriesTitle   || ''
+  const epTitle   = p.title          || ''
+  const fullTitle = series
+    ? `${series}${epNum !== null ? ` — Ep. ${epNum}` : ''}${epTitle && epTitle !== series ? ` "${epTitle}"` : ''}`
+    : epTitle
+
+  const slug = p.slug_title || p.slug || p.series_slug_title || ''
+  const id   = p.id || `${slug}-ep${epNum}`
+  const link = slug
+    ? `https://www.crunchyroll.com/es/series/${slug}`
+    : `https://www.crunchyroll.com/es/watch/${p.id || ''}`
+
+  return {
+    id,
+    title  : fullTitle.trim(),
+    link,
+    airTime,
+    image  : extractImage(p.images) || extractImage(p.thumbnailImage) || '',
+    isNew  : !!(p.is_premiere || epNum === 1),
+  }
 }
 
 async function fetchNewEpisodes() {
@@ -232,7 +186,7 @@ async function fetchNewEpisodes() {
 
   const allItems = await scrapeCalendar()
 
-  // Filtra solo los emitidos dentro de la ventana de tiempo
+  // Filtra los emitidos dentro de la ventana de tiempo
   const recent = allItems.filter(i => !i.airTime || i.airTime >= cutoff)
   if (!recent.length) return []
 
@@ -406,4 +360,4 @@ handler.command = /^cr(notify|news)$/i
 })()
 
 export default handler
-      
+                           
