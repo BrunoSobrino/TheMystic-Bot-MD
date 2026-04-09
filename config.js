@@ -90,7 +90,7 @@ global.flaaa = [
 
 // ─── IA Plugin (Kana Arima) ──────────────────────────────
 global.APICAUSAS_KEY     = 'causa-db9690e010e31139';
-global.ANTHROPIC_API_KEY = 'PON_AQUI_TU_CLAVE_sk-ant-...'; // ← reemplaza esto
+global.ANTHROPIC_API_KEY = 'sk-ant-api03-Gq1...VgAA'; // ← reemplaza esto
 global.IA_MAX_TOKENS     = 1024;
 // ────────────────────────────────────────────────────────
 
