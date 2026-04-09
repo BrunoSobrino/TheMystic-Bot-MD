@@ -38,16 +38,13 @@ async function callAPICausas(userText, history, apiKey) {
     ...history,
     { role: 'user', content: userText },
   ]
-
   const res = await fetch(`${APICAUSAS_BASE}?apikey=${encodeURIComponent(apiKey)}`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify({ model: APICAUSAS_MODEL, messages }),
     signal:  AbortSignal.timeout(20_000),
   })
-
   if (!res.ok) throw new Error(`APICausas ${res.status}: ${await res.text()}`)
-
   const data  = await res.json()
   const reply =
     data?.choices?.[0]?.message?.content ||
@@ -57,14 +54,11 @@ async function callAPICausas(userText, history, apiKey) {
     data?.text     ||
     data?.message  ||
     (typeof data === 'string' ? data : null)
-
-  if (!reply) throw new Error(`APICausas: vacía. Raw: ${JSON.stringify(data)}`)
+  if (!reply) throw new Error(`APICausas vacía. Raw: ${JSON.stringify(data)}`)
   return reply.trim()
 }
 
 async function callClaude(userText, history, apiKey) {
-  const maxTokens = global.IA_MAX_TOKENS || 1024
-
   const res = await fetch(ANTHROPIC_URL, {
     method:  'POST',
     headers: {
@@ -74,21 +68,15 @@ async function callClaude(userText, history, apiKey) {
     },
     body: JSON.stringify({
       model:      ANTHROPIC_MODEL,
-      max_tokens: maxTokens,
+      max_tokens: global.IA_MAX_TOKENS || 1024,
       system:     KANA_PROMPT,
       messages:   [...history, { role: 'user', content: userText }],
     }),
     signal: AbortSignal.timeout(30_000),
   })
-
   if (!res.ok) throw new Error(`Anthropic ${res.status}: ${await res.text()}`)
-
   const data = await res.json()
-  return data.content
-    .filter(b => b.type === 'text')
-    .map(b => b.text)
-    .join('')
-    .trim()
+  return data.content.filter(b => b.type === 'text').map(b => b.text).join('').trim()
 }
 
 // ════════════════════════════════════════════════════════
@@ -96,7 +84,7 @@ async function callClaude(userText, history, apiKey) {
 // ════════════════════════════════════════════════════════
 
 const chatHistory = new Map()
-const MAX_HISTORY  = 6 // 3 rondas user + assistant
+const MAX_HISTORY  = 6
 
 function getHistory(jid) {
   if (!chatHistory.has(jid)) chatHistory.set(jid, [])
@@ -110,32 +98,35 @@ function pushHistory(jid, role, content) {
 }
 
 // ════════════════════════════════════════════════════════
-//  HANDLER — formato nativo del bot
+//  HANDLER
 // ════════════════════════════════════════════════════════
 
 let handler = async (m, { conn }) => {
-  // ── Solo responde cuando citan un mensaje del bot ─────
-  const quoted = m.quoted
-  if (!quoted) return                              // no es reply → ignorar
-  if (!quoted.fromMe) return                       // citaron a otro, no al bot → ignorar
+  // ── Verificar que sea un reply al bot ─────────────────
+  // m.quoted existe cuando el mensaje cita otro
+  // m.quoted.isSelf / m.quoted.fromMe indica si el citado es del bot
+  if (!m.quoted) return
+  
+  // Compatibilidad: algunos forks usan .isSelf, otros .fromMe
+  const quotedIsBot = m.quoted.isSelf === true || m.quoted.fromMe === true
+  if (!quotedIsBot) return
 
-  // ── Texto que escribió el usuario ─────────────────────
+  // ── Texto del usuario ──────────────────────────────────
   const userText = (m.text || '').trim()
   if (!userText) return
 
-  // ── Texto del mensaje citado (contexto) ───────────────
-  const quotedText = (quoted.text || quoted.caption || '').trim()
+  // Ignorar si empieza con prefijo de comando (. / ! #)
+  if (/^[./!#]/.test(userText)) return
 
-  // ── Claves desde globals ──────────────────────────────
+  // ── Claves ─────────────────────────────────────────────
   const apicausasKey = global.APICAUSAS_KEY
   const anthropicKey = global.ANTHROPIC_API_KEY
-  if (!apicausasKey && !anthropicKey) {
-    return conn.sendMessage(m.chat, {
-      text: '⚠️ No hay API configurada. Agrega APICAUSAS_KEY o ANTHROPIC_API_KEY en config.js',
-    }, { quoted: m })
-  }
+  if (!apicausasKey && !anthropicKey) return
 
-  // ── Reacción "pensando" ────────────────────────────────
+  // ── Texto del mensaje citado ───────────────────────────
+  const quotedText = (m.quoted.text || m.quoted.caption || '').trim()
+
+  // ── Reacción pensando ──────────────────────────────────
   await conn.sendMessage(m.chat, { react: { text: '💭', key: m.key } })
 
   // ── Historial ──────────────────────────────────────────
@@ -168,9 +159,7 @@ let handler = async (m, { conn }) => {
 
   if (!reply) {
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-    return conn.sendMessage(m.chat, {
-      text: '...Algo salió mal. No es mi culpa.',
-    }, { quoted: m })
+    return conn.sendMessage(m.chat, { text: '...Algo salió mal. No es mi culpa.' }, { quoted: m })
   }
 
   // ── Guardar historial ──────────────────────────────────
@@ -184,10 +173,9 @@ let handler = async (m, { conn }) => {
   await conn.sendMessage(m.chat, { text: reply }, { quoted: m })
 }
 
-// Sin comando — se activa por cualquier mensaje que cite al bot
-handler.all     = true   // escucha TODOS los mensajes (no solo comandos)
+handler.all     = true
+handler.command = false
 handler.tags    = ['ia']
-handler.command = false  // no requiere comando
 
 export default handler
-    
+  
