@@ -34,57 +34,47 @@ async function callAPICausas(userText, quotedText) {
   if (!res.ok) throw new Error(`Error HTTP: ${res.status}`)
 
   const data = await res.json()
-  const reply = data?.reply || data?.result || data?.response || data?.text || data?.message || data?.choices?.[0]?.message?.content
+  const reply =
+    data?.reply ||
+    data?.result ||
+    data?.response ||
+    data?.text ||
+    data?.message ||
+    data?.choices?.[0]?.message?.content
 
   if (!reply) throw new Error(`Respuesta vacía. Raw: ${JSON.stringify(data)}`)
 
   return reply.trim()
 }
 
-// ── Helper: ¿el quoted es del bot? ───────────────────────
-function quotedIsFromBot(m, conn) {
-  const q = m.quoted
-  if (!q) return false
+// ── Handler ───────────────────────────────────────────────
+const handler = (m) => m
 
-  if (q.isSelf === true) return true
-  if (q.fromMe === true) return true
-  if (q.key?.fromMe === true) return true
-
-  const botJid = conn?.user?.jid || conn?.user?.id || conn?.authState?.creds?.me?.id || ''
-  if (!botJid) return false
-  const botNum = botJid.split(':')[0].split('@')[0]
-
-  const sender = (q.sender || q.participant || q.key?.participant || q.key?.remoteJid || '')
-  if (!sender) return false
-  const senderNum = sender.split(':')[0].split('@')[0]
-
-  return botNum === senderNum
-}
-
-// ── Handler (patrón Nao-MD) ───────────────────────────────
-let handler = m => m
-
-handler.before = async (m, { conn }) => {
+handler.before = async (m) => {
+  // 1. Debe haber mensaje citado
   if (!m.quoted) return true
-  if (!quotedIsFromBot(m, conn)) return true
 
-  const userText = (m.text || m.body || m.message?.conversation || '').trim()
+  // 2. El quoted.fromMe ya usa areJidsSameUser internamente — confiar en él
+  if (!m.quoted.fromMe) return true
+
+  // 3. Texto del usuario
+  const userText = (m.text || '').trim()
   if (!userText || /^[./!#]/.test(userText)) return true
 
   console.log(`[kana/ia] Procesando: "${userText}"`)
 
-  const quotedText = (m.quoted.text || m.quoted.caption || m.quoted.body || '').trim()
+  const quotedText = (m.quoted.text || '').trim()
 
-  await conn.sendMessage(m.chat, { react: { text: '💭', key: m.key } })
+  await m.conn.sendMessage(m.chat, { react: { text: '💭', key: m.key } })
 
   try {
     const reply = await callAPICausas(userText, quotedText)
-    await conn.sendMessage(m.chat, { react: { text: '', key: m.key } })
+    await m.conn.sendMessage(m.chat, { react: { text: '', key: m.key } })
     await m.reply(reply)
     console.log(`[kana/ia] ✅ Respondido.`)
   } catch (e) {
     console.error('[kana/ia] Error →', e.message)
-    await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+    await m.conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
     await m.reply('...Hmph. Algo falló con la conexión. No me molestes ahora.')
   }
 
@@ -92,4 +82,3 @@ handler.before = async (m, { conn }) => {
 }
 
 export default handler
-                                             
