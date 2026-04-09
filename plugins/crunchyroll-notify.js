@@ -1,26 +1,12 @@
 /**
  * crunchyroll-notify.js
  * Plugin para KanaArima-MD / Rikka-Bot (Baileys)
- *
- * Variables de entorno (.env):
- *   CR_MINUTES       → cada cuántos minutos corre el cron        (default: 30)
- *   CR_LAST_MINUTES  → ventana de tiempo a revisar en el calendario  (default: 60)
- *   CR_TARGET_JID    → JID del grupo/chat destino automático
- *                      ej: 1234567890-1234567890@g.us  (grupo)
- *                          1234567890@s.whatsapp.net   (privado)
- *
- * Comandos:
- *   .crnotify        → fetch manual de episodios nuevos al chat actual
- *   .crnotify set    → guarda el chat actual como destino automático del cron
- *   .crnotify status → muestra configuración actual
+ * Comandos: .cr yes (Activar) / .cr not (Desactivar)
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-
-
-// ─── Rutas ───────────────────────────────────────────────────────────────────
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const TMP_DIR   = join(__dirname, '../tmp')
@@ -29,336 +15,134 @@ const CFG_PATH  = join(TMP_DIR, 'crunchyroll-cfg.json')
 
 if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 
-// ─── Config ──────────────────────────────────────────────────────────────────
-
-// API Beta oficial de Crunchyroll (la que usan sus propias apps)
 const CR_API      = 'https://beta-api.crunchyroll.com'
 const CR_AUTH_URL = `${CR_API}/auth/v1/token`
-// client_id anónimo del cliente web (base64 de "cr_web:")
-const CR_BASIC    = 'Basic Y3Jfd2ViOg=='
+const CR_BASIC    = 'Basic d2p3eW1yeWd4M2V4Znd6N2p2anI6' 
+const USER_AGENT  = 'Crunchyroll/3.62.2 Android/14 okhttp/4.12.0'
 
-function loadCfg() {
-  try { return JSON.parse(readFileSync(CFG_PATH, 'utf-8')) } catch { return {} }
-}
-function saveCfg(data) {
-  writeFileSync(CFG_PATH, JSON.stringify(data, null, 2), 'utf-8')
-}
+let _token = null; let _tokenExp = 0
+let cronTimer = null
 
-// ─── Deduplicación ───────────────────────────────────────────────────────────
+// ─── Utilidades ──────────────────────────────────────────────────────────────
+function loadCfg() { try { return JSON.parse(readFileSync(CFG_PATH, 'utf-8')) } catch { return {} } }
+function saveCfg(data) { writeFileSync(CFG_PATH, JSON.stringify(data, null, 2), 'utf-8') }
+function loadSeen() { try { return JSON.parse(readFileSync(DB_PATH, 'utf-8')) } catch { return [] } }
+function saveSeen(ids) { writeFileSync(DB_PATH, JSON.stringify(ids.slice(-300)), 'utf-8') }
 
-function loadSeen() {
-  try { return JSON.parse(readFileSync(DB_PATH, 'utf-8')) } catch { return [] }
-}
-function saveSeen(ids) {
-  writeFileSync(DB_PATH, JSON.stringify(ids.slice(-300)), 'utf-8')
-}
-
-// ─── Auth — Token anónimo (expira ~5 min, se renueva automáticamente) ─────────
-
-let _token    = null
-let _tokenExp = 0
-
+// ─── Auth ────────────────────────────────────────────────────────────────────
 async function getToken() {
-  if (_token && Date.now() < _tokenExp - 30_000) return _token
-
+  if (_token && Date.now() < _tokenExp - 30000) return _token
   const res = await fetch(CR_AUTH_URL, {
-    method : 'POST',
-    headers: {
-      'Authorization'  : CR_BASIC,
-      'Content-Type'   : 'application/x-www-form-urlencoded',
-      'User-Agent'     : 'Crunchyroll/3.46.2 Android/13 okhttp/4.12.0',
-    },
-    body: 'grant_type=client_credentials',
-    signal: AbortSignal.timeout(15_000),
+    method: 'POST',
+    headers: { 'Authorization': CR_BASIC, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': USER_AGENT },
+    body: 'grant_type=client_credentials'
   })
-  if (!res.ok) throw new Error(`Auth CR falló: HTTP ${res.status}`)
-
+  if (!res.ok) throw new Error(`Auth Falló: ${res.status}`)
   const data = await res.json()
-  _token    = data.access_token
+  _token = data.access_token
   _tokenExp = Date.now() + (data.expires_in || 300) * 1000
   return _token
 }
 
 async function crFetch(path, params = {}) {
-  const token  = await getToken()
-  const url    = new URL(`${CR_API}${path}`)
+  const token = await getToken()
+  const url = new URL(`${CR_API}${path}`)
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
-
   const res = await fetch(url.toString(), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'User-Agent'   : 'Crunchyroll/3.46.2 Android/13 okhttp/4.12.0',
-      'Accept'       : 'application/json',
-    },
-    signal: AbortSignal.timeout(20_000),
+    headers: { 'Authorization': `Bearer ${token}`, 'User-Agent': USER_AGENT, 'Accept': 'application/json' }
   })
-  if (!res.ok) throw new Error(`CR API HTTP ${res.status} → ${path}`)
   return res.json()
 }
 
-// ─── Imagen: extrae la URL de mayor resolución ────────────────────────────────
+// ─── Formateador Visual ──────────────────────────────────────────────────────
+function formatCaption(p) {
+  const id = p.id || '?'
+  const link = `https://www.crunchyroll.com/es/watch/${id}/${p.slug_title || ''}`
+  
+  return `Anime: ${p.series_title || 'N/A'} | Z: GT00258001 | S: GS00258022JAJP
 
-function extractImage(images = {}) {
-  const src = images.thumbnail || images.poster_tall || images.poster_wide
-  if (!src) return ''
-  if (typeof src === 'string') return src
-  if (Array.isArray(src)) {
-    const flat = src.flat().filter(Boolean)
-    return flat.sort((a, b) => (b.width || 0) - (a.width || 0))[0]?.source || ''
-  }
-  return ''
+Título: '${p.title || 'N/A'}'
+Episodio: ${p.episode_number ?? '?'} | ID: ${id} | Ext. ID: EPI.${id}
+
+Categoría: Anime | Enlace: Crunchyroll
+(${link})
+
+Idioma: 🇯🇵
+Subtítulos: 🇸🇦 🇩🇪 🇺🇸 🇲🇽 🇪🇸 🇫🇷 🇮🇹 🇧🇷 🇷🇺
+
+Sinopsis: ${p.description || 'Sin sinopsis.'}`
 }
 
-// ─── Scraper usando el endpoint de calendario simulcast ───────────────────────
+// ─── Monitor Automático ──────────────────────────────────────────────────────
+async function checkUpdates(conn) {
+  const cfg = loadCfg()
+  if (!cfg.active || !cfg.targetJid) return
 
-async function scrapeCalendar() {
-  // Endpoint principal: calendario simulcast de hoy (es-419 = español Latino)
-  let data
   try {
-    data = await crFetch('/content/v2/discover/simulcastcalendar', {
-      locale: 'es-419',
-      filter: 'premium',
-    })
-  } catch (err) {
-    console.warn('[CR-Notify] simulcastcalendar falló, usando newly_added:', err.message)
-    // Fallback: episodios más recientes añadidos
-    data = await crFetch('/content/v2/discover/browse', {
-      n      : '36',
-      sort_by: 'newly_added',
-      type   : 'episode',
-      locale : 'es-419',
-    })
-  }
+    const data = await crFetch('/content/v1/browse', { locale: 'es-419', sort_by: 'newly_added', n: '15', type: 'episode' })
+    const items = (data?.items || data?.data || []).map(p => ({
+      ...p,
+      customId: p.id || p.slug_title,
+      airTime: p.episode_air_date ? new Date(p.episode_air_date).getTime() : 0,
+      image: p.images?.thumbnail?.[0]?.slice(-1)[0]?.source || p.images?.poster_tall?.[0]?.[0]?.source || ''
+    }))
 
-  const items = []
+    const seen = loadSeen()
+    const cutoff = Date.now() - 60 * 60000 
+    const newItems = items.filter(i => i.airTime >= cutoff && !seen.includes(i.customId))
 
-  // El calendario devuelve { data: [ { date, windows: [ { time, panels: [...] } ] } ] }
-  // El browse devuelve       { data: [ { ...episode } ] }
-  const rows = Array.isArray(data?.data) ? data.data : []
-
-  for (const row of rows) {
-    // ── Formato calendario ─────────────────────────────────────────────────
-    if (Array.isArray(row.windows)) {
-      for (const win of row.windows) {
-        for (const panel of (win.panels || [])) {
-          items.push(normalizePanel(panel, win.time || row.date || ''))
-        }
+    for (const item of newItems) {
+      const caption = formatCaption(item)
+      if (item.image) {
+        await conn.sendMessage(cfg.targetJid, { image: { url: item.image }, caption })
+      } else {
+        await conn.sendMessage(cfg.targetJid, { text: caption })
       }
-      continue
+      await new Promise(r => setTimeout(r, 3000))
     }
 
-    // ── Formato browse / episodio plano ────────────────────────────────────
-    items.push(normalizePanel(row, row.episode_air_date || row.availability_starts || ''))
+    if (newItems.length > 0) saveSeen([...seen, ...newItems.map(i => i.customId)])
+  } catch (e) { console.error('[CR-AUTO] Error:', e.message) }
+}
+
+// ─── Handler ─────────────────────────────────────────────────────────────────
+let handler = async (m, { conn, args, isOwner }) => {
+  const cfg = loadCfg()
+  
+  // Inicialización del temporizador si no existe
+  if (!cronTimer) {
+    cronTimer = setInterval(() => checkUpdates(conn), 15 * 60000) 
+    console.log('[CR-AUTO] Ciclo de 15 min iniciado.')
   }
 
-  return items.filter(i => i.id && i.title)
-}
+  const action = (args[0] || '').toLowerCase()
 
-function normalizePanel(p, airRaw) {
-  const airTime   = airRaw ? new Date(airRaw).getTime() : 0
-  const epNum     = p.episode_number ?? p.episodeNumber ?? null
-  const series    = p.series_title   || p.seriesTitle   || ''
-  const epTitle   = p.title          || ''
-  const fullTitle = series
-    ? `${series}${epNum !== null ? ` — Ep. ${epNum}` : ''}${epTitle && epTitle !== series ? ` "${epTitle}"` : ''}`
-    : epTitle
-
-  const slug = p.slug_title || p.slug || p.series_slug_title || ''
-  const id   = p.id || `${slug}-ep${epNum}`
-  const link = slug
-    ? `https://www.crunchyroll.com/es/series/${slug}`
-    : `https://www.crunchyroll.com/es/watch/${p.id || ''}`
-
-  return {
-    id,
-    title  : fullTitle.trim(),
-    link,
-    airTime,
-    image  : extractImage(p.images) || extractImage(p.thumbnailImage) || '',
-    isNew  : !!(p.is_premiere || epNum === 1),
-  }
-}
-
-async function fetchNewEpisodes() {
-  const cfg         = loadCfg()
-  const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
-  const cutoff      = Date.now() - lastMinutes * 60_000
-
-  const allItems = await scrapeCalendar()
-
-  // Filtra los emitidos dentro de la ventana de tiempo
-  const recent = allItems.filter(i => !i.airTime || i.airTime >= cutoff)
-  if (!recent.length) return []
-
-  const seen     = loadSeen()
-  const newItems = recent.filter(i => !seen.includes(i.id))
-
-  if (newItems.length) {
-    saveSeen([...seen, ...newItems.map(i => i.id)])
-  }
-
-  return newItems
-}
-
-// ─── Formateo de mensaje ─────────────────────────────────────────────────────
-
-function formatCaption(item) {
-  const date = item.airTime
-    ? new Date(item.airTime).toLocaleString('es-MX', {
-        timeZone: 'America/Mexico_City',
-        weekday: 'long', year: 'numeric', month: 'long',
-        day: 'numeric', hour: '2-digit', minute: '2-digit',
-      })
-    : ''
-  const estreno = item.isNew ? '🆕 *ESTRENO*\n' : ''
-  const hora    = date ? `\n🕐 _${date}_` : ''
-  return `🎌 *Nuevo episodio en Crunchyroll*\n\n${estreno}📺 *${item.title}*${hora}\n🔗 ${item.link}`
-}
-
-// ─── Envío a WhatsApp ────────────────────────────────────────────────────────
-
-async function sendItem(conn, jid, item, quotedMsg = null) {
-  const caption = formatCaption(item)
-  const opts    = quotedMsg ? { quoted: quotedMsg } : {}
-
-  if (item.image) {
-    try {
-      await conn.sendMessage(jid, { image: { url: item.image }, caption }, opts)
-      return
-    } catch {
-      // fallback a texto si la imagen falla
-    }
-  }
-  await conn.sendMessage(jid, { text: caption }, opts)
-}
-
-async function sendDelay(ms) {
-  return new Promise(r => setTimeout(r, ms))
-}
-
-// ─── Cron ────────────────────────────────────────────────────────────────────
-
-let cronTimer   = null
-let storedConn  = null
-
-function stopCron() {
-  if (cronTimer) { clearInterval(cronTimer); cronTimer = null }
-}
-
-function startCron(conn) {
-  storedConn = conn
-  stopCron()
-
-  const cfg     = loadCfg()
-  const minutes = parseInt(process.env.CR_MINUTES ?? cfg.minutes ?? '30')
-  const jid     = process.env.CR_TARGET_JID || cfg.targetJid || ''
-
-  if (!jid) {
-    console.log('[CR-Notify] Sin JID configurado, cron en standby.')
+  // COMANDO: .cr yes (Activar)
+  if (action === 'yes') {
+    if (!isOwner) return
+    cfg.targetJid = m.chat
+    cfg.active = true
+    saveCfg(cfg)
+    m.reply('✅ *Notificaciones Crunchyroll ACTIVADAS* en este chat.')
+    checkUpdates(conn)
     return
   }
 
-  const ms = minutes * 60 * 1000
-
-  cronTimer = setInterval(async () => {
-    try {
-      const items = await fetchNewEpisodes()
-      for (const item of items) {
-        await sendItem(storedConn, jid, item)
-        await sendDelay(2000)
-      }
-      if (items.length) {
-        console.log(`[CR-Notify] ${items.length} episodio(s) enviado(s) a ${jid}`)
-      }
-    } catch (err) {
-      console.error('[CR-Notify] Error en cron:', err.message)
-    }
-  }, ms)
-
-  console.log(`[CR-Notify] Intervalo iniciado → cada ${minutes} min | destino: ${jid}`)
-}
-
-// ─── Handler del plugin ──────────────────────────────────────────────────────
-
-let handler = async (m, { conn, args, isOwner }) => {
-  // Inicializa / refresca la conexión almacenada
-  if (!storedConn) startCron(conn)
-  else storedConn = conn
-
-  const sub = (args[0] || '').toLowerCase()
-
-  // ── .crnotify set ──────────────────────────────────────────────────────────
-  if (sub === 'set') {
-    if (!isOwner) return conn.sendMessage(m.chat, { text: '⛔ Solo el dueño puede hacer esto.' }, { quoted: m })
-
-    const cfg     = loadCfg()
-    cfg.targetJid = m.chat
+  // COMANDO: .cr not (Desactivar)
+  if (action === 'not') {
+    if (!isOwner) return
+    cfg.active = false
     saveCfg(cfg)
-    process.env.CR_TARGET_JID = m.chat
-
-    startCron(conn) // reinicia con el nuevo JID
-
-    return conn.sendMessage(m.chat, {
-      text: `✅ *Canal configurado*\n\`${m.chat}\`\n\nEl cron enviará las notificaciones aquí.`,
-    }, { quoted: m })
+    return m.reply('❌ *Notificaciones Crunchyroll DESACTIVADAS*.')
   }
 
-  // ── .crnotify status ───────────────────────────────────────────────────────
-  if (sub === 'status') {
-    const cfg     = loadCfg()
-    const jid     = process.env.CR_TARGET_JID || cfg.targetJid || '_no configurado_'
-    const minutes = process.env.CR_MINUTES    || cfg.minutes   || '30'
-    const last    = process.env.CR_LAST_MINUTES || cfg.lastMinutes || '60'
-    const seen    = loadSeen()
-
-    return conn.sendMessage(m.chat, {
-      text: `📊 *CR-Notify Status*\n\n` +
-            `🎯 Destino: \`${jid}\`\n` +
-            `⏱ Cron: cada *${minutes} min*\n` +
-            `🕐 Ventana: últimos *${last} min*\n` +
-            `💾 IDs guardados: *${seen.length}*\n` +
-            `🔄 Cron activo: *${cronTimer ? 'Sí' : 'No'}*`,
-    }, { quoted: m })
-  }
-
-  // ── .crnotify (fetch manual) ───────────────────────────────────────────────
-  await conn.sendMessage(m.chat, { text: '🔍 Buscando episodios nuevos...' }, { quoted: m })
-
-  try {
-    const items = await fetchNewEpisodes()
-
-    if (!items.length) {
-      const last = process.env.CR_LAST_MINUTES || loadCfg().lastMinutes || '60'
-      return conn.sendMessage(m.chat, {
-        text: `📭 No hay episodios nuevos en los últimos *${last} min*.`,
-      }, { quoted: m })
-    }
-
-    for (const item of items) {
-      await sendItem(conn, m.chat, item, m)
-      await sendDelay(1500)
-    }
-  } catch (err) {
-    await conn.sendMessage(m.chat, { text: `❌ Error: ${err.message}` }, { quoted: m })
-  }
+  // Si solo pone .cr muestra el estado
+  m.reply(`📊 *Sistema Crunchyroll*\n\nEstado: ${cfg.active ? '✅ Activo' : '❌ Inactivo'}\nChat: ${cfg.targetJid || 'Ninguno'}`)
 }
 
-handler.help    = ['crnotify', 'crnotify set', 'crnotify status']
+handler.help    = ['cr yes', 'cr not']
 handler.tags    = ['anime']
-handler.command = /^cr(notify|news)$/i
-
-// Inicia el cron en cuanto el plugin se carga (si ya hay JID guardado)
-;(async () => {
-  const cfg = loadCfg()
-  const jid = process.env.CR_TARGET_JID || cfg.targetJid || ''
-  if (jid && !cronTimer) {
-    // conn no está disponible aún en el arranque; el cron se inicia
-    // cuando el primer comando llega y establece storedConn.
-    // Solo logueamos que hay config lista.
-    console.log(`[CR-Notify] Config cargada. JID destino: ${jid}`)
-  }
-})()
+handler.command = /^cr$/i
 
 export default handler
-
-  
+                         
