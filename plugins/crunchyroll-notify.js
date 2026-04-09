@@ -15,6 +15,7 @@ if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 
 // ─── Constantes (crunchyroll-rs) ─────────────────────────────────────────────
 const CR_BASE    = 'https://www.crunchyroll.com'
+const CR_BETA    = 'https://beta-api.crunchyroll.com'
 const CR_AUTH    = `${CR_BASE}/auth/v1/token`
 // Token anónimo → grant_type=client_id
 const BASIC_ANON = 'Basic dC1rZGdwMmg4YzNqdWI4Zm4wZnE6eWZMRGZNZnJZdktYaDRKWFMxTEVJMmNDcXUxdjVXYW4='
@@ -105,9 +106,9 @@ async function getToken() {
 }
 
 // ─── Fetch autenticado ────────────────────────────────────────────────────────
-async function crFetch(path, params = {}) {
+async function crFetch(path, params = {}, base = CR_BASE) {
   const token = await getToken()
-  const url   = new URL(`${CR_BASE}${path}`)
+  const url   = new URL(`${base}${path}`)
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
   const res   = await fetch(url.toString(), {
     headers: { 'Authorization': `Bearer ${token}`, 'User-Agent': CR_UA, 'Accept': 'application/json', 'Cookie': _cookies },
@@ -142,11 +143,13 @@ function normalizeEpisode(p) {
     ? `${series}${epNum !== null ? ` — Ep. ${epNum}` : ''}${epTitle ? `: ${epTitle}` : ''}`
     : epTitle || p.title || ''
   const link = epId
-    ? `https://www.crunchyroll.com/es/watch/${epId}/${p.slug_title || ''}`
-    : slug ? `https://www.crunchyroll.com/es/series/${slug}` : ''
+    ? `https://www.crunchyroll.com/watch/${epId}/${p.slug_title || ''}`
+    : slug ? `https://www.crunchyroll.com/series/${slug}` : ''
+  const seasonNum = p.season_number ?? null
+  const seasonTitle = p.season_title || (seasonNum ? `Season ${seasonNum}` : '')
   return {
     id: epId || `${slug}-ep${epNum}`, title: fullTitle.trim(),
-    series, epTitle, epNum, epId, link, airTime,
+    series, seasonTitle, seasonNum, epTitle, epNum, epId, link, airTime,
     image: extractImage(p.images), isNew: !!(p.is_premiere || epNum === 1),
     audioLocale: p.audio_locale || '', isDubbed: p.is_dubbed || false,
     subtitles: Array.isArray(p.subtitle_locales) ? p.subtitle_locales : [],
@@ -155,14 +158,18 @@ function normalizeEpisode(p) {
 }
 
 // ─── Fetch episodios nuevos ───────────────────────────────────────────────────
+const ALLOWED_LOCALES = new Set(['ja-JP', 'es-419', 'es-ES'])
+
 async function fetchNewEpisodes() {
   const cfg         = loadCfg()
   const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
   const cutoff      = Date.now() - lastMinutes * 60_000
   // Endpoint v1
-  const data     = await crFetch('/content/v1/browse', { count: '36', sort_by: 'newly_added', type: 'episode', locale: 'es-419' })
+  const data     = await crFetch('/content/v1/browse', { count: '36', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows     = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
-  const allItems = rows.map(normalizeEpisode).filter(i => i.id && i.title)
+  const allItems = rows
+    .map(normalizeEpisode)
+    .filter(i => i.id && i.title && ALLOWED_LOCALES.has(i.audioLocale))
   const recent   = allItems.filter(i => !i.airTime || i.airTime >= cutoff)
   if (!recent.length) return []
   const seen     = loadSeen()
@@ -173,20 +180,31 @@ async function fetchNewEpisodes() {
 
 // ─── Formato ──────────────────────────────────────────────────────────────────
 const FLAG = { 'ja-JP':'🇯🇵','en-US':'🇺🇸','es-419':'🇲🇽','es-ES':'🇪🇸','pt-BR':'🇧🇷','fr-FR':'🇫🇷','de-DE':'🇩🇪','it-IT':'🇮🇹','ru-RU':'🇷🇺','ar-SA':'🇸🇦','hi-IN':'🇮🇳','ko-KR':'🇰🇷','zh-CN':'🇨🇳' }
-const flags = ls => ls.map(l => FLAG[l] || l).join(' ')
+
+const LOCALE_NAME = {
+  'ja-JP' : 'Japonés',
+  'es-419': 'Español Latino',
+  'es-ES' : 'Español Castellano',
+}
 
 function formatCaption(ep) {
-  const date    = ep.airTime ? new Date(ep.airTime).toLocaleString('es-MX', { timeZone:'America/Mexico_City', weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' }) : ''
-  const estreno = ep.isNew ? '🆕 *ESTRENO DE TEMPORADA*\n' : ''
-  const hora    = date              ? `\n🕐 _${date}_`                                  : ''
-  const audio   = ep.audioLocale    ? `\n🎙 Audio: ${FLAG[ep.audioLocale] || ep.audioLocale}` : ''
-  const subs    = ep.subtitles?.length ? `\n📝 Subs: ${flags(ep.subtitles)}`             : ''
-  const desc    = ep.description    ? `\n\n📄 _${ep.description.slice(0,220)}${ep.description.length>220?'…':''}_` : ''
+  // Nombre del idioma para el título de la serie  ej: "Season 1 (Español (América Latina))"
+  const localeName = LOCALE_NAME[ep.audioLocale] || ep.audioLocale
+  const seasonPart = ep.seasonTitle ? ` ${ep.seasonTitle}` : ''
+  const seriesLine = `${ep.series}${seasonPart}${localeName ? ` (${localeName})` : ''}`
+
+  // Línea de episodio  ej: "Episode 3 - Wait, Could This Be Love?!"
+  const epLabel  = ep.epNum !== null ? `Episode ${ep.epNum}` : 'Special'
+  const epLine   = ep.epTitle ? `${epLabel} - ${ep.epTitle}` : epLabel
+
+  // Bandera + nombre corto del idioma
+  const audioLine = `${FLAG[ep.audioLocale] || '🌐'} ${localeName}`
+
   return (
-    `🎌 *Nuevo episodio en Crunchyroll*\n\n${estreno}` +
-    `📺 *${ep.series || ep.title}*\n` +
-    `▶️ ${ep.epNum !== null ? `Episodio ${ep.epNum}` : 'Especial'}${ep.epTitle ? `: ${ep.epTitle}` : ''}` +
-    `${hora}${audio}${subs}${desc}\n\n🔗 ${ep.link}`
+    `📺 *${seriesLine}*\n` +
+    `🎬 ${epLine}\n` +
+    `${audioLine}\n\n` +
+    `${ep.link}`
   )
 }
 
@@ -303,4 +321,4 @@ handler.command = /^(crlogin|crlogout|crset|crstatus|crlist|crnotify)$/i
 })()
 
 export default handler
-                            
+        
