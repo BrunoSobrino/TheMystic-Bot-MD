@@ -1,7 +1,7 @@
 /**
  * crunchyroll-notify.js
  * Plugin para KanaArima-MD / Rikka-Bot (Baileys)
- * MODO: 100% Automático Permanente con Status y Lista
+ * MODO: Automático con Debug e IA para Sinopsis
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
@@ -17,6 +17,7 @@ if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 
 const CR_API      = 'https://beta-api.crunchyroll.com'
 const CR_AUTH_URL = `${CR_API}/auth/v1/token`
+const AI_API      = 'https://api.causa-db.com/api/v1/ai?apikey=causa-db9690e010e31139'
 const CR_BASIC    = 'Basic d2p3eW1yeWd4M2V4Znd6N2p2anI6' 
 const USER_AGENT  = 'Crunchyroll/3.62.2 Android/14 okhttp/4.12.0'
 
@@ -29,7 +30,22 @@ function saveCfg(data) { writeFileSync(CFG_PATH, JSON.stringify(data, null, 2), 
 function loadSeen() { try { return JSON.parse(readFileSync(DB_PATH, 'utf-8')) } catch { return [] } }
 function saveSeen(ids) { writeFileSync(DB_PATH, JSON.stringify(ids.slice(-300)), 'utf-8') }
 
-// ─── API Core ────────────────────────────────────────────────────────────────
+// ─── Integración IA para Sinopsis ───────────────────────────────────────────
+async function getAISynopsis(text) {
+  try {
+    const res = await fetch(AI_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: `Mejora y resume esta sinopsis de anime para que sea atractiva: ${text}` })
+    })
+    const data = await res.json()
+    return data.result || text
+  } catch {
+    return text
+  }
+}
+
+// ─── API Core con Debug ──────────────────────────────────────────────────────
 async function getToken() {
   if (_token && Date.now() < _tokenExp - 30000) return _token
   const res = await fetch(CR_AUTH_URL, {
@@ -37,7 +53,14 @@ async function getToken() {
     headers: { 'Authorization': CR_BASIC, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': USER_AGENT },
     body: 'grant_type=client_credentials'
   })
-  if (!res.ok) throw new Error(`Auth Falló: ${res.status}`)
+
+  if (!res.ok) {
+    const errorText = await res.text()
+    console.error('─── [DEBUG CRUNCHYROLL AUTH] ───')
+    console.error(`Status: ${res.status} | Respuesta: ${errorText}`)
+    throw new Error(`Auth Falló: ${res.status}`)
+  }
+
   const data = await res.json()
   _token = data.access_token
   _tokenExp = Date.now() + (data.expires_in || 300) * 1000
@@ -55,11 +78,14 @@ async function crFetch(path, params = {}) {
 }
 
 // ─── Formateador Visual ──────────────────────────────────────────────────────
-function formatCaption(p) {
+async function formatCaption(p) {
   const id = p.id || '?'
-  const slug = p.slug_title || p.slug || ''
-  const link = `https://www.crunchyroll.com/es/watch/${id}/${slug}`
+  const link = `https://www.crunchyroll.com/es/watch/${id}/${p.slug_title || ''}`
+  let desc = p.description || 'Sin sinopsis.'
   
+  // Si la sinopsis es muy corta o inexistente, usar la IA
+  if (desc.length < 10) desc = await getAISynopsis(`${p.series_title} - ${p.title}`)
+
   return `Anime: ${p.series_title || 'N/A'} | Z: GT00258001 | S: GS00258022JAJP
 
 Título: '${p.title || 'N/A'}'
@@ -71,10 +97,10 @@ Categoría: Anime | Enlace: Crunchyroll
 Idioma: 🇯🇵
 Subtítulos: 🇸🇦 🇩🇪 🇺🇸 🇲🇽 🇪🇸 🇫🇷 🇮🇹 🇧🇷 🇷🇺
 
-Sinopsis: ${p.description || 'Sin sinopsis.'}`
+Sinopsis: ${desc}`
 }
 
-// ─── Monitor Automático (Cada 15 min) ────────────────────────────────────────
+// ─── Monitor Automático ──────────────────────────────────────────────────────
 async function checkUpdates(conn) {
   const cfg = loadCfg()
   if (!cfg.targetJid) return
@@ -93,7 +119,7 @@ async function checkUpdates(conn) {
     const newItems = items.filter(i => i.airTime >= cutoff && !seen.includes(i.customId))
 
     for (const item of newItems) {
-      const caption = formatCaption(item)
+      const caption = await formatCaption(item)
       if (item.image) {
         await conn.sendMessage(cfg.targetJid, { image: { url: item.image }, caption })
       } else {
@@ -102,43 +128,37 @@ async function checkUpdates(conn) {
       await new Promise(r => setTimeout(r, 3000))
     }
     if (newItems.length > 0) saveSeen([...seen, ...newItems.map(i => i.customId)])
-  } catch (e) { console.error('[CR-AUTO] Error:', e.message) }
+  } catch (e) { /* Error silenciado en cron */ }
 }
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
 let handler = async (m, { conn, command }) => {
   const cfg = loadCfg()
-  
-  // Iniciar ciclo automático
   if (!cronTimer) {
     cronTimer = setInterval(() => checkUpdates(conn), 15 * 60000)
-    if (!cfg.targetJid) {
-        cfg.targetJid = m.chat
-        saveCfg(cfg)
-    }
+    if (!cfg.targetJid) { cfg.targetJid = m.chat; saveCfg(cfg) }
   }
 
-  // COMANDO: .crstatus
   if (command === 'crstatus') {
     const seen = loadSeen()
     return m.reply(`📊 *CR-SYSTEM STATUS*
-    
 🔄 Monitor: *Activo (15m)*
-🎯 Destino: \`${cfg.targetJid || 'No definido'}\`
-💾 Base de datos: *${seen.length} IDs*
-📱 Cliente: *Android (v3.62.2)*`)
+🎯 Destino: \`${cfg.targetJid}\`
+💾 Base: *${seen.length} IDs*
+🤖 IA: *Conectada*`)
   }
 
-  // COMANDO: .crlist
   if (command === 'crlist') {
-    await m.reply('🕒 Obteniendo los últimos 10...')
+    await m.reply('🕒 Obteniendo lista...')
     try {
       const data = await crFetch('/content/v1/browse', { locale: 'es-419', sort_by: 'newly_added', n: '10', type: 'episode' })
       const items = (data?.items || data?.data || [])
       let txt = '✨ *ESTRENOS RECIENTES* ✨\n\n'
       items.forEach((it, i) => txt += `${i + 1}. *${it.series_title}* (Ep ${it.episode_number})\n`)
       return m.reply(txt.trim())
-    } catch (e) { return m.reply(`❌ Error: ${e.message}`) }
+    } catch (e) { 
+      return m.reply(`❌ Error: ${e.message}\n_Revisa la terminal._`) 
+    }
   }
 }
 
