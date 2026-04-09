@@ -131,7 +131,6 @@ function extractImage(images = {}) {
 }
 
 function normalizeEpisode(p) {
-  // Aquí corregimos el error del nombre vacío: Buscamos en 'episode_metadata' si es necesario
   const meta    = p.episode_metadata || {}
   const airRaw  = p.episode_air_date || p.premium_available_date || p.availability_starts || ''
   const airTime = airRaw ? new Date(airRaw).getTime() : 0
@@ -139,7 +138,6 @@ function normalizeEpisode(p) {
   const epId    = p.id || ''
   const slug    = p.slug_title || meta.slug_title || ''
   
-  // Extraer idioma inteligentemente
   let locale = p.audio_locale || meta.audio_locale || ''
   if (!locale && epId) {
     if (epId.endsWith('JAJP')) locale = 'ja-JP'
@@ -147,7 +145,6 @@ function normalizeEpisode(p) {
     else if (epId.endsWith('ESES')) locale = 'es-ES'
   }
 
-  // Juntar el nombre de la serie de forma segura (buscando en 'meta' si no está en la raíz)
   let seriesName = p.series_title || meta.series_title || ''
   const seasonTitle = p.season_title || meta.season_title || ''
   
@@ -156,7 +153,7 @@ function normalizeEpisode(p) {
   }
   
   if (!seriesName.trim()) {
-    seriesName = p.title || 'Anime Desconocido' // Si sigue fallando, usa el título del video
+    seriesName = p.title || 'Anime Desconocido' 
   }
   
   return {
@@ -185,14 +182,12 @@ const LOCALE_NAME = {
   'es-ES' : 'Español Castellano'
 }
 
-// SOLO DEJAR PASAR ESTOS TRES IDIOMAS:
 const ALLOWED_LOCALES = new Set(['ja-JP', 'es-419', 'es-LA', 'es-ES'])
 
 function formatCaption(ep) {
   const localeName = LOCALE_NAME[ep.audioLocale] || ep.audioLocale || 'Desconocido'
   const audioFlag = FLAG[ep.audioLocale] || '🌐'
   
-  // Cambiado de "Episode" a "Episodio"
   const epLabel = ep.epNum !== 'Especial' ? `Episodio ${ep.epNum}` : 'Episodio Especial'
   const epLine = ep.epTitle ? `${epLabel} - ${ep.epTitle}` : epLabel
 
@@ -209,7 +204,7 @@ async function fetchNewEpisodes() {
   const cfg         = loadCfg()
   const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
   const cutoff      = Date.now() - lastMinutes * 60_000
-  const data     = await crFetch('/content/v1/browse', { count: '50', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
+  const data     = await crFetch('/content/v1/browse', { count: '100', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows     = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
   
   const allItems = rows.map(normalizeEpisode).filter(i => i.id && i.series && ALLOWED_LOCALES.has(i.audioLocale))
@@ -253,7 +248,8 @@ function startCron(conn) {
   if (conn) storedConn = conn
   stopCron()
   const cfg     = loadCfg()
-  const minutes = parseInt(process.env.CR_MINUTES ?? cfg.minutes ?? '30')
+  // Se cambió el intervalo predeterminado de 30 a 5 minutos para mayor rapidez
+  const minutes = parseInt(process.env.CR_MINUTES ?? cfg.minutes ?? '5')
   const jid     = process.env.CR_TARGET_JID || cfg.targetJid || ''
   if (!jid) { console.log('[CR-Notify] Sin JID → cron en standby. Usa .crset'); return }
   cronTimer = setInterval(async () => {
@@ -282,7 +278,7 @@ let handler = async (m, { conn, command, args, isOwner }) => {
       const cfg = loadCfg(); cfg.targetJid = cfg.targetJid || m.chat; saveCfg(cfg)
       startCron(conn)
       return conn.sendMessage(m.chat, {
-        text: `✅ *Login exitoso*\n👤 Cuenta real activa\n🎯 Canal: \`${cfg.targetJid}\`\n🔄 Monitor cada ${process.env.CR_MINUTES || cfg.minutes || 30} min\n🔁 Refresh automático habilitado`,
+        text: `✅ *Login exitoso*\n👤 Cuenta real activa\n🎯 Canal: \`${cfg.targetJid}\`\n🔄 Monitor cada ${process.env.CR_MINUTES || cfg.minutes || 5} min\n🔁 Refresh automático habilitado`,
       }, { quoted: m })
     } catch (e) { return conn.sendMessage(m.chat, { text: `❌ *Auth fallida*\n${e.message}` }, { quoted: m }) }
   }
@@ -304,7 +300,7 @@ let handler = async (m, { conn, command, args, isOwner }) => {
   if (command === 'crstatus') {
     const cfg  = loadCfg()
     const jid  = process.env.CR_TARGET_JID || cfg.targetJid || '_no configurado_'
-    const mins = process.env.CR_MINUTES || cfg.minutes || '30'
+    const mins = process.env.CR_MINUTES || cfg.minutes || '5'
     const last = process.env.CR_LAST_MINUTES || cfg.lastMinutes || '60'
     const seen = loadSeen()
     const exp  = cfg.tokenExp ? new Date(cfg.tokenExp).toLocaleTimeString('es-MX', { timeZone:'America/Mexico_City' }) : '—'
