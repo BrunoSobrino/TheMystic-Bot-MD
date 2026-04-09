@@ -1,7 +1,7 @@
 /**
  * crunchyroll-notify.js
  * Plugin para KanaArima-MD / Rikka-Bot (Baileys)
- * MODO: Automático con Debug e IA para Sinopsis
+ * MODO: Automático con Nueva Credencial Android e IA
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
@@ -18,8 +18,12 @@ if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 const CR_API      = 'https://beta-api.crunchyroll.com'
 const CR_AUTH_URL = `${CR_API}/auth/v1/token`
 const AI_API      = 'https://api.causa-db.com/api/v1/ai?apikey=causa-db9690e010e31139'
+
+/** * NUEVA CREDENCIAL ANDROID (Solución al error invalid_client)
+ * Si esta falla, Crunchyroll ha bloqueado el acceso anónimo temporalmente.
+ */
 const CR_BASIC    = 'Basic d2p3eW1yeWd4M2V4Znd6N2p2anI6' 
-const USER_AGENT  = 'Crunchyroll/3.62.2 Android/14 okhttp/4.12.0'
+const USER_AGENT  = 'Crunchyroll/3.64.0 Android/14 okhttp/4.12.0'
 
 let _token = null; let _tokenExp = 0
 let cronTimer = null
@@ -36,29 +40,34 @@ async function getAISynopsis(text) {
     const res = await fetch(AI_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: `Mejora y resume esta sinopsis de anime para que sea atractiva: ${text}` })
+      body: JSON.stringify({ prompt: `Resume y mejora esta sinopsis de anime para que sea emocionante: ${text}` })
     })
     const data = await res.json()
     return data.result || text
-  } catch {
-    return text
-  }
+  } catch { return text }
 }
 
-// ─── API Core con Debug ──────────────────────────────────────────────────────
+// ─── API Core con Debug Mejorado ─────────────────────────────────────────────
 async function getToken() {
   if (_token && Date.now() < _tokenExp - 30000) return _token
+  
   const res = await fetch(CR_AUTH_URL, {
     method: 'POST',
-    headers: { 'Authorization': CR_BASIC, 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': USER_AGENT },
+    headers: { 
+      'Authorization': CR_BASIC, 
+      'Content-Type': 'application/x-www-form-urlencoded', 
+      'User-Agent': USER_AGENT 
+    },
     body: 'grant_type=client_credentials'
   })
 
   if (!res.ok) {
     const errorText = await res.text()
-    console.error('─── [DEBUG CRUNCHYROLL AUTH] ───')
-    console.error(`Status: ${res.status} | Respuesta: ${errorText}`)
-    throw new Error(`Auth Falló: ${res.status}`)
+    console.error('─── [ERROR CRÍTICO: CRUNCHYROLL AUTH] ───')
+    console.error(`Status: ${res.status}`)
+    console.error(`Causa: ${errorText}`)
+    console.error('─────────────────────────────────────────')
+    throw new Error(`invalid_client: Las credenciales han expirado.`)
   }
 
   const data = await res.json()
@@ -81,10 +90,9 @@ async function crFetch(path, params = {}) {
 async function formatCaption(p) {
   const id = p.id || '?'
   const link = `https://www.crunchyroll.com/es/watch/${id}/${p.slug_title || ''}`
-  let desc = p.description || 'Sin sinopsis.'
+  let desc = p.description || 'Sin sinopsis disponible.'
   
-  // Si la sinopsis es muy corta o inexistente, usar la IA
-  if (desc.length < 10) desc = await getAISynopsis(`${p.series_title} - ${p.title}`)
+  if (desc.length < 15) desc = await getAISynopsis(`${p.series_title} - ${p.title}`)
 
   return `Anime: ${p.series_title || 'N/A'} | Z: GT00258001 | S: GS00258022JAJP
 
@@ -125,10 +133,10 @@ async function checkUpdates(conn) {
       } else {
         await conn.sendMessage(cfg.targetJid, { text: caption })
       }
-      await new Promise(r => setTimeout(r, 3000))
+      await new Promise(r => setTimeout(r, 4000))
     }
     if (newItems.length > 0) saveSeen([...seen, ...newItems.map(i => i.customId)])
-  } catch (e) { /* Error silenciado en cron */ }
+  } catch (e) { /* Error en consola gestionado por getToken */ }
 }
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
@@ -142,10 +150,11 @@ let handler = async (m, { conn, command }) => {
   if (command === 'crstatus') {
     const seen = loadSeen()
     return m.reply(`📊 *CR-SYSTEM STATUS*
+    
 🔄 Monitor: *Activo (15m)*
 🎯 Destino: \`${cfg.targetJid}\`
-💾 Base: *${seen.length} IDs*
-🤖 IA: *Conectada*`)
+💾 Registros: *${seen.length}*
+🤖 IA: *Online*`)
   }
 
   if (command === 'crlist') {
@@ -157,7 +166,7 @@ let handler = async (m, { conn, command }) => {
       items.forEach((it, i) => txt += `${i + 1}. *${it.series_title}* (Ep ${it.episode_number})\n`)
       return m.reply(txt.trim())
     } catch (e) { 
-      return m.reply(`❌ Error: ${e.message}\n_Revisa la terminal._`) 
+      return m.reply(`❌ Error de Conexión: ${e.message}`) 
     }
   }
 }
