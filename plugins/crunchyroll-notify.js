@@ -1,7 +1,7 @@
 /**
  * crunchyroll-notify.js
  * Plugin para KanaArima-MD / Rikka-Bot (Baileys)
- * Comandos: .cr yes (Activar) / .cr not (Desactivar)
+ * MODO: 100% Automático Permanente con Status y Lista
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
@@ -23,13 +23,13 @@ const USER_AGENT  = 'Crunchyroll/3.62.2 Android/14 okhttp/4.12.0'
 let _token = null; let _tokenExp = 0
 let cronTimer = null
 
-// ─── Utilidades ──────────────────────────────────────────────────────────────
+// ─── Persistencia ────────────────────────────────────────────────────────────
 function loadCfg() { try { return JSON.parse(readFileSync(CFG_PATH, 'utf-8')) } catch { return {} } }
 function saveCfg(data) { writeFileSync(CFG_PATH, JSON.stringify(data, null, 2), 'utf-8') }
 function loadSeen() { try { return JSON.parse(readFileSync(DB_PATH, 'utf-8')) } catch { return [] } }
 function saveSeen(ids) { writeFileSync(DB_PATH, JSON.stringify(ids.slice(-300)), 'utf-8') }
 
-// ─── Auth ────────────────────────────────────────────────────────────────────
+// ─── API Core ────────────────────────────────────────────────────────────────
 async function getToken() {
   if (_token && Date.now() < _tokenExp - 30000) return _token
   const res = await fetch(CR_AUTH_URL, {
@@ -57,7 +57,8 @@ async function crFetch(path, params = {}) {
 // ─── Formateador Visual ──────────────────────────────────────────────────────
 function formatCaption(p) {
   const id = p.id || '?'
-  const link = `https://www.crunchyroll.com/es/watch/${id}/${p.slug_title || ''}`
+  const slug = p.slug_title || p.slug || ''
+  const link = `https://www.crunchyroll.com/es/watch/${id}/${slug}`
   
   return `Anime: ${p.series_title || 'N/A'} | Z: GT00258001 | S: GS00258022JAJP
 
@@ -73,10 +74,10 @@ Subtítulos: 🇸🇦 🇩🇪 🇺🇸 🇲🇽 🇪🇸 🇫🇷 🇮🇹 🇧
 Sinopsis: ${p.description || 'Sin sinopsis.'}`
 }
 
-// ─── Monitor Automático ──────────────────────────────────────────────────────
+// ─── Monitor Automático (Cada 15 min) ────────────────────────────────────────
 async function checkUpdates(conn) {
   const cfg = loadCfg()
-  if (!cfg.active || !cfg.targetJid) return
+  if (!cfg.targetJid) return
 
   try {
     const data = await crFetch('/content/v1/browse', { locale: 'es-419', sort_by: 'newly_added', n: '15', type: 'episode' })
@@ -100,49 +101,50 @@ async function checkUpdates(conn) {
       }
       await new Promise(r => setTimeout(r, 3000))
     }
-
     if (newItems.length > 0) saveSeen([...seen, ...newItems.map(i => i.customId)])
   } catch (e) { console.error('[CR-AUTO] Error:', e.message) }
 }
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
-let handler = async (m, { conn, args, isOwner }) => {
+let handler = async (m, { conn, command }) => {
   const cfg = loadCfg()
   
-  // Inicialización del temporizador si no existe
+  // Iniciar ciclo automático
   if (!cronTimer) {
-    cronTimer = setInterval(() => checkUpdates(conn), 15 * 60000) 
-    console.log('[CR-AUTO] Ciclo de 15 min iniciado.')
+    cronTimer = setInterval(() => checkUpdates(conn), 15 * 60000)
+    if (!cfg.targetJid) {
+        cfg.targetJid = m.chat
+        saveCfg(cfg)
+    }
   }
 
-  const action = (args[0] || '').toLowerCase()
-
-  // COMANDO: .cr yes (Activar)
-  if (action === 'yes') {
-    if (!isOwner) return
-    cfg.targetJid = m.chat
-    cfg.active = true
-    saveCfg(cfg)
-    m.reply('✅ *Notificaciones Crunchyroll ACTIVADAS* en este chat.')
-    checkUpdates(conn)
-    return
+  // COMANDO: .crstatus
+  if (command === 'crstatus') {
+    const seen = loadSeen()
+    return m.reply(`📊 *CR-SYSTEM STATUS*
+    
+🔄 Monitor: *Activo (15m)*
+🎯 Destino: \`${cfg.targetJid || 'No definido'}\`
+💾 Base de datos: *${seen.length} IDs*
+📱 Cliente: *Android (v3.62.2)*`)
   }
 
-  // COMANDO: .cr not (Desactivar)
-  if (action === 'not') {
-    if (!isOwner) return
-    cfg.active = false
-    saveCfg(cfg)
-    return m.reply('❌ *Notificaciones Crunchyroll DESACTIVADAS*.')
+  // COMANDO: .crlist
+  if (command === 'crlist') {
+    await m.reply('🕒 Obteniendo los últimos 10...')
+    try {
+      const data = await crFetch('/content/v1/browse', { locale: 'es-419', sort_by: 'newly_added', n: '10', type: 'episode' })
+      const items = (data?.items || data?.data || [])
+      let txt = '✨ *ESTRENOS RECIENTES* ✨\n\n'
+      items.forEach((it, i) => txt += `${i + 1}. *${it.series_title}* (Ep ${it.episode_number})\n`)
+      return m.reply(txt.trim())
+    } catch (e) { return m.reply(`❌ Error: ${e.message}`) }
   }
-
-  // Si solo pone .cr muestra el estado
-  m.reply(`📊 *Sistema Crunchyroll*\n\nEstado: ${cfg.active ? '✅ Activo' : '❌ Inactivo'}\nChat: ${cfg.targetJid || 'Ninguno'}`)
 }
 
-handler.help    = ['cr yes', 'cr not']
+handler.help    = ['crlist', 'crstatus']
 handler.tags    = ['anime']
-handler.command = /^cr$/i
+handler.command = /^(crlist|crstatus)$/i
 
 export default handler
-                         
+      
