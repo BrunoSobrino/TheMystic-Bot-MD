@@ -14,29 +14,17 @@ const DB_PATH   = join(TMP_DIR, 'crunchyroll-seen.json')
 const CFG_PATH  = join(TMP_DIR, 'crunchyroll-cfg.json')
 if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 
-// ─── Constantes ──────────────────────────────────────────────────────────────
+// ─── Constantes (crunchyroll-rs) ─────────────────────────────────────────────
 const CR_BASE    = 'https://www.crunchyroll.com'
 const CR_BETA    = 'https://beta-api.crunchyroll.com'
 const CR_AUTH    = `${CR_BASE}/auth/v1/token`
+// Token anónimo → grant_type=client_id
 const BASIC_ANON = 'Basic dC1rZGdwMmg4YzNqdWI4Zm4wZnE6eWZMRGZNZnJZdktYaDRKWFMxTEVJMmNDcXUxdjVXYW4='
+// Token con cuenta → grant_type=password (BASIC_AUTH_TOKEN en crunchyroll-rs)
 const BASIC_AUTH = 'Basic eTJhcnZqYjBoMHJndnRpemxvdnk6SlZMdndkSXBYdnhVLXFJQnZUMU04b1FUcjFxbFFKWDI='
 const CR_UA      = 'Crunchyroll/ANDROIDTV/3.59.0_22338 (Android 13.0; en-US; TCL-S5400AF Build/TP1A.220624.014)'
 const DEVICE_ID  = '00000000-dead-beef-cafe-000000000000'
 const DEVICE_TYPE= 'ANDROIDTV'
-
-const FLAG = { 
-    'ja-JP':'🇯🇵','en-US':'🇺🇸','es-419':'🇲🇽','es-ES':'🇪🇸','pt-BR':'🇧🇷',
-    'fr-FR':'🇫🇷','de-DE':'🇩🇪','it-IT':'🇮🇹','ru-RU':'🇷🇺','ar-SA':'🇸🇦',
-    'ar-ME':'🇸🇦','hi-IN':'🇮🇳','ko-KR':'🇰🇷','zh-CN':'🇨🇳','th-TH':'🇹🇭'
-}
-
-const LOCALE_NAME = {
-  'ja-JP' : 'Japonés',
-  'es-419': 'Español Latino',
-  'es-ES' : 'Español España',
-  'en-US' : 'Inglés',
-  'pt-BR' : 'Portugués',
-}
 
 // ─── Persistencia ─────────────────────────────────────────────────────────────
 function loadCfg()     { try { return JSON.parse(readFileSync(CFG_PATH, 'utf-8')) } catch { return {} } }
@@ -131,7 +119,7 @@ async function crFetch(path, params = {}, base = CR_BASE) {
   return res.json()
 }
 
-// ─── Lógica de Procesamiento ──────────────────────────────────────────────────
+// ─── Imagen ───────────────────────────────────────────────────────────────────
 function extractImage(images = {}) {
   const src = images.thumbnail || images.poster_tall || images.poster_wide
   if (!src) return ''
@@ -143,62 +131,50 @@ function extractImage(images = {}) {
   return ''
 }
 
+// ─── Normalizar episodio ──────────────────────────────────────────────────────
 function normalizeEpisode(p) {
   const airRaw  = p.episode_air_date || p.premium_available_date || p.availability_starts || ''
+  const airTime = airRaw ? new Date(airRaw).getTime() : 0
+  const epNum   = p.episode_number ?? null
   const epId    = p.id || ''
+  
   return {
     id: epId,
     series: p.series_title || '',
     seriesId: p.series_id || '-',
     seasonId: p.season_id || '-',
     epTitle: p.title || '',
-    epNum: p.episode_number ?? 'Especial',
+    epNum: epNum !== null ? epNum : 'Especial',
     externalId: p.external_id || `EPI.${epId}`,
-    link: `https://www.crunchyroll.com/watch/${epId}`,
+    link: `https://www.crunchyroll.com/es/watch/${epId}`,
     audioLocale: p.audio_locale || '',
     subtitles: Array.isArray(p.subtitle_locales) ? p.subtitle_locales : [],
     description: p.description || '',
     image: extractImage(p.images),
-    airTime: airRaw ? new Date(airRaw).getTime() : 0,
+    airTime,
     title: p.title || ''
   }
 }
 
-function formatCaption(ep) {
-  const localeName = LOCALE_NAME[ep.audioLocale] || ep.audioLocale || 'Desconocido'
-  const audioFlag = FLAG[ep.audioLocale] || '🌐'
-  const subFlags = ep.subtitles && ep.subtitles.length > 0
-    ? ep.subtitles.map(sub => FLAG[sub] || sub).join(', ')
-    : 'Ninguno'
-  const synopsis = ep.description ? `\n\nSinopsis: ${ep.description.trim()}` : ''
-
-  return (
-    `Anime: ${ep.series} | Z: ${ep.seriesId} | S: ${ep.seasonId}\n` +
-    `Título: '${ep.epTitle || 'Sin título'}'\n` +
-    `Episodio: ${ep.epNum} | ID: ${ep.id} | Ext. ID: ${ep.externalId}\n` +
-    `Categoría: Anime | Enlace: Crunchyroll\n` +
-    `Idioma: ${localeName} ${audioFlag}\n` +
-    `Subtítulos: ${subFlags}` +
-    synopsis
-  )
-}
-
-// ─── Fetch episodios (Cron & Manual) ──────────────────────────────────────────
+// ─── Fetch episodios (Cron y Manual) ──────────────────────────────────────────
 const ALLOWED_LOCALES = new Set(['ja-JP', 'es-419', 'es-ES'])
 
 async function fetchNewEpisodes() {
   const cfg         = loadCfg()
   const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
   const cutoff      = Date.now() - lastMinutes * 60_000
+  // Endpoint v1 en Beta para búsqueda de novedades
   const data     = await crFetch('/content/v1/browse', { count: '36', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows     = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
+  
   const allItems = rows.map(normalizeEpisode).filter(i => i.id && i.title && ALLOWED_LOCALES.has(i.audioLocale))
   const recent   = allItems.filter(i => !i.airTime || i.airTime >= cutoff)
   
   if (!recent.length) return []
   
   const seen     = loadSeen()
-  const newItems = recent.filter(i => !seen.includes(i.id)) // Solo filtra por ID, permite doblajes
+  // Solo filtra por el ID exacto del video (permite que lleguen los distintos doblajes independientemente)
+  const newItems = recent.filter(i => !seen.includes(i.id))
   
   if (newItems.length) saveSeen([...seen, ...newItems.map(i => i.id)])
   return newItems
@@ -213,15 +189,52 @@ async function getLatestEpisodes(limit = 10) {
     .slice(0, limit)
 }
 
-const delay = ms => new Promise(r => setTimeout(r, ms))
+// ─── Formato Exacto ───────────────────────────────────────────────────────────
+const FLAG = { 
+  'ja-JP':'🇯🇵','en-US':'🇺🇸','es-419':'🇲🇽','es-ES':'🇪🇸','pt-BR':'🇧🇷',
+  'fr-FR':'🇫🇷','de-DE':'🇩🇪','it-IT':'🇮🇹','ru-RU':'🇷🇺','ar-SA':'🇸🇦',
+  'ar-ME':'🇸🇦','hi-IN':'🇮🇳','ko-KR':'🇰🇷','zh-CN':'🇨🇳','th-TH':'🇹🇭'
+}
+
+const LOCALE_NAME = {
+  'ja-JP' : 'Japonés',
+  'es-419': 'Español Latino',
+  'es-ES' : 'Español España',
+  'en-US' : 'Inglés',
+  'pt-BR' : 'Portugués',
+}
+
+function formatCaption(ep) {
+  const localeName = LOCALE_NAME[ep.audioLocale] || ep.audioLocale || 'Desconocido'
+  const audioFlag = FLAG[ep.audioLocale] || '🌐'
+  
+  const subFlags = ep.subtitles && ep.subtitles.length > 0
+    ? ep.subtitles.map(sub => FLAG[sub] || sub).join(', ')
+    : 'Ninguno'
+
+  const synopsis = ep.description ? `\n\nSinopsis: _${ep.description.trim()}_` : ''
+
+  return (
+    `Anime: ${ep.series} | Z: ${ep.seriesId} | S: ${ep.seasonId}\n` +
+    `Título: '${ep.epTitle || 'Sin título'}'\n` +
+    `Episodio: ${ep.epNum} | ID: ${ep.id} | Ext. ID: ${ep.externalId}\n` +
+    `Categoría: Anime | Enlace: Crunchyroll\n` +
+    `Idioma: ${localeName} ${audioFlag}\n` +
+    `Subtítulos: ${subFlags}` +
+    synopsis
+  )
+}
+
+// ─── Envío ────────────────────────────────────────────────────────────────────
 async function sendItem(conn, jid, ep, quoted = null) {
   const caption = formatCaption(ep)
   const opts    = quoted ? { quoted } : {}
   if (ep.image) {
-    try { await conn.sendMessage(jid, { image: { url: ep.image }, caption }, opts); return } catch { }
+    try { await conn.sendMessage(jid, { image: { url: ep.image }, caption }, opts); return } catch { /* fallback */ }
   }
   await conn.sendMessage(jid, { text: caption }, opts)
 }
+const delay = ms => new Promise(r => setTimeout(r, ms))
 
 // ─── Cron ─────────────────────────────────────────────────────────────────────
 let cronTimer = null, storedConn = null
@@ -246,7 +259,7 @@ function startCron(conn) {
   console.log(`[CR-Notify] Cron → cada ${minutes} min | ${jid}`)
 }
 
-// ─── Handler Principal ────────────────────────────────────────────────────────
+// ─── Handler ──────────────────────────────────────────────────────────────────
 let handler = async (m, { conn, command, args, isOwner }) => {
   storedConn = conn
   if (!cronTimer) startCron(conn)
@@ -304,7 +317,7 @@ let handler = async (m, { conn, command, args, isOwner }) => {
     await conn.sendMessage(m.chat, { text: '🔍 Obteniendo los 10 lanzamientos más recientes...' }, { quoted: m })
     try {
       const episodes = await getLatestEpisodes(10)
-      if (!episodes.length) return conn.sendMessage(m.chat, { text: '📭 No se encontraron episodios.' }, { quoted: m })
+      if (!episodes.length) return conn.sendMessage(m.chat, { text: '📭 No se encontraron episodios recientes.' }, { quoted: m })
       for (const ep of episodes) { await sendItem(conn, m.chat, ep, m); await delay(2000) }
     } catch (err) { await conn.sendMessage(m.chat, { text: `❌ Error: ${err.message}` }, { quoted: m }) }
     return
@@ -336,4 +349,4 @@ handler.command = /^(crlogin|crlogout|crset|crstatus|crlist|crnotify)$/i
 })()
 
 export default handler
-      
+                                    
