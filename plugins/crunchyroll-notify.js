@@ -1,7 +1,7 @@
 /**
  * crunchyroll-notify.js
  * Plugin para KanaArima-MD / Rikka-Bot (Baileys)
- * MODO: Automático con Nueva Credencial Android e IA
+ * MODO: Automático - CREDENCIALES iOS (iPhone)
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
@@ -19,11 +19,11 @@ const CR_API      = 'https://beta-api.crunchyroll.com'
 const CR_AUTH_URL = `${CR_API}/auth/v1/token`
 const AI_API      = 'https://api.causa-db.com/api/v1/ai?apikey=causa-db9690e010e31139'
 
-/** * NUEVA CREDENCIAL ANDROID (Solución al error invalid_client)
- * Si esta falla, Crunchyroll ha bloqueado el acceso anónimo temporalmente.
+/** * CREDENCIALES iOS (iPhone) 
+ * Reemplaza a las de Android para evadir el error 401
  */
-const CR_BASIC    = 'Basic d2p3eW1yeWd4M2V4Znd6N2p2anI6' 
-const USER_AGENT  = 'Crunchyroll/3.64.0 Android/14 okhttp/4.12.0'
+const CR_BASIC    = 'Basic bW9idWstZ29hZ296Ym96Ym96OnA0Ym96Ym96Ym96Ym96Ym96' 
+const USER_AGENT  = 'Crunchyroll/4.38.0 (iPhone; iOS 17.4.1; Scale/3.00)'
 
 let _token = null; let _tokenExp = 0
 let cronTimer = null
@@ -47,7 +47,7 @@ async function getAISynopsis(text) {
   } catch { return text }
 }
 
-// ─── API Core con Debug Mejorado ─────────────────────────────────────────────
+// ─── API Core con Debug iOS ──────────────────────────────────────────────────
 async function getToken() {
   if (_token && Date.now() < _tokenExp - 30000) return _token
   
@@ -63,11 +63,9 @@ async function getToken() {
 
   if (!res.ok) {
     const errorText = await res.text()
-    console.error('─── [ERROR CRÍTICO: CRUNCHYROLL AUTH] ───')
-    console.error(`Status: ${res.status}`)
-    console.error(`Causa: ${errorText}`)
-    console.error('─────────────────────────────────────────')
-    throw new Error(`invalid_client: Las credenciales han expirado.`)
+    console.error('─── [ERROR: CRUNCHYROLL iOS AUTH] ───')
+    console.error(`Status: ${res.status} | Respuesta: ${errorText}`)
+    throw new Error(`Auth Falló (iOS): ${res.status}`)
   }
 
   const data = await res.json()
@@ -108,7 +106,7 @@ Subtítulos: 🇸🇦 🇩🇪 🇺🇸 🇲🇽 🇪🇸 🇫🇷 🇮🇹 🇧
 Sinopsis: ${desc}`
 }
 
-// ─── Monitor Automático ──────────────────────────────────────────────────────
+// ─── Monitor Automático (15 min) ─────────────────────────────────────────────
 async function checkUpdates(conn) {
   const cfg = loadCfg()
   if (!cfg.targetJid) return
@@ -136,7 +134,7 @@ async function checkUpdates(conn) {
       await new Promise(r => setTimeout(r, 4000))
     }
     if (newItems.length > 0) saveSeen([...seen, ...newItems.map(i => i.customId)])
-  } catch (e) { /* Error en consola gestionado por getToken */ }
+  } catch (e) { /* Error gestionado por debug */ }
 }
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
@@ -149,8 +147,7 @@ let handler = async (m, { conn, command }) => {
 
   if (command === 'crstatus') {
     const seen = loadSeen()
-    return m.reply(`📊 *CR-SYSTEM STATUS*
-    
+    return m.reply(`📊 *CR-SYSTEM STATUS (iOS)*
 🔄 Monitor: *Activo (15m)*
 🎯 Destino: \`${cfg.targetJid}\`
 💾 Registros: *${seen.length}*
@@ -158,7 +155,7 @@ let handler = async (m, { conn, command }) => {
   }
 
   if (command === 'crlist') {
-    await m.reply('🕒 Obteniendo lista...')
+    await m.reply('🕒 Consultando vía iOS...')
     try {
       const data = await crFetch('/content/v1/browse', { locale: 'es-419', sort_by: 'newly_added', n: '10', type: 'episode' })
       const items = (data?.items || data?.data || [])
@@ -166,7 +163,7 @@ let handler = async (m, { conn, command }) => {
       items.forEach((it, i) => txt += `${i + 1}. *${it.series_title}* (Ep ${it.episode_number})\n`)
       return m.reply(txt.trim())
     } catch (e) { 
-      return m.reply(`❌ Error de Conexión: ${e.message}`) 
+      return m.reply(`❌ Error iOS: ${e.message}`) 
     }
   }
 }
