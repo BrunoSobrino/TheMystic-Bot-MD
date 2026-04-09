@@ -204,14 +204,28 @@ async function fetchNewEpisodes() {
   const data  = await crFetch('/content/v1/browse', { count: '100', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows  = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
 
-  // Solo filtra por idioma — el caché es el único dedup (airTime puede ser antiguo en dubs)
   const valid = rows.map(normalizeEpisode).filter(i => i.id && i.series && ALLOWED_LOCALES.has(i.audioLocale))
   if (!valid.length) return []
 
-  const seen     = loadSeen()
+  const seen = loadSeen()
+
+  // Primera ejecución: el caché está vacío → solo sembramos los IDs actuales sin enviar nada
+  if (seen.length === 0) {
+    saveSeen(valid.map(i => i.id))
+    console.log(`[CR-Notify] Caché sembrado con ${valid.length} IDs. Las próximas ejecuciones detectarán episodios nuevos.`)
+    return []
+  }
+
+  // IDs que la API devuelve y NO están en el caché → son nuevos
   const newItems = valid.filter(i => !seen.includes(i.id))
-  if (newItems.length) saveSeen([...seen, ...newItems.map(i => i.id)])
+  // Guardamos DESPUÉS del envío (lo hace el cron por episodio)
   return newItems
+}
+
+// Marca un episodio como visto en el caché (se llama tras envío exitoso)
+function markSeen(id) {
+  const seen = loadSeen()
+  if (!seen.includes(id)) saveSeen([...seen, id])
 }
 
 async function getLatestEpisodes(limit = 10) {
@@ -251,7 +265,11 @@ function startCron(conn) {
     if (!storedConn) return
     try {
       const items = await fetchNewEpisodes()
-      for (const ep of items) { await sendItem(storedConn, jid, ep); await delay(3000) }
+      for (const ep of items) {
+        await sendItem(storedConn, jid, ep)
+        markSeen(ep.id)   // guarda DESPUÉS del envío exitoso
+        await delay(3000)
+      }
       if (items.length) console.log(`[CR-Notify] ${items.length} ep(s) → ${jid}`)
     } catch (err) { console.error('[CR-Notify] Cron:', err.message) }
   }, minutes * 60_000)
@@ -323,14 +341,11 @@ let handler = async (m, { conn, command, args, isOwner }) => {
   }
 
   if (command === 'crnotify') {
-    await conn.sendMessage(m.chat, { text: '🔍 Buscando episodios nuevos...' }, { quoted: m })
+    await conn.sendMessage(m.chat, { text: '🔍 Buscando episodios recientes...' }, { quoted: m })
     try {
-      const items = await fetchNewEpisodes()
-      if (!items.length) {
-        const last = process.env.CR_LAST_MINUTES || loadCfg().lastMinutes || '60'
-        return conn.sendMessage(m.chat, { text: `📭 No hay episodios nuevos en los últimos *${last} min*.` }, { quoted: m })
-      }
-      for (const ep of items) { await sendItem(conn, m.chat, ep, m); await delay(2000) }
+      const episodes = await getLatestEpisodes(10)
+      if (!episodes.length) return conn.sendMessage(m.chat, { text: '📭 No se encontraron episodios.' }, { quoted: m })
+      for (const ep of episodes) { await sendItem(conn, m.chat, ep, m); await delay(2000) }
     } catch (err) { await conn.sendMessage(m.chat, { text: `❌ Error: ${err.message}` }, { quoted: m }) }
   }
 }
