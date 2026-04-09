@@ -45,46 +45,58 @@ function pushHistory(jid, role, content) {
 }
 
 // ── Helper: ¿el quoted es del bot? ───────────────────────
-// Cubre TODAS las variantes conocidas de forks Baileys-MD
 function quotedIsFromBot(m, conn) {
   const q = m.quoted
   if (!q) return false
 
-  // Variante 1: propiedad directa .isSelf o .fromMe
   if (q.isSelf === true) return true
   if (q.fromMe === true) return true
-
-  // Variante 2: key.fromMe dentro del quoted
   if (q.key?.fromMe === true) return true
 
-  // Variante 3: comparar sender/participant con JID del bot
-  const botJid = conn?.user?.id || conn?.authState?.creds?.me?.id || ''
+  const botJid = conn?.user?.jid || conn?.user?.id || conn?.authState?.creds?.me?.id || ''
   if (!botJid) return false
   const botNum = botJid.split(':')[0].split('@')[0]
 
   const sender = (q.sender || q.participant || q.key?.participant || q.key?.remoteJid || '')
+  if (!sender) return false
   const senderNum = sender.split(':')[0].split('@')[0]
 
-  return botNum && senderNum && botNum === senderNum
+  return botNum === senderNum
 }
 
 // ── Handler ───────────────────────────────────────────────
 let handler = async (m, { conn }) => {
-  // Solo si citan al bot
+  // 1. Debe haber un mensaje citado
   if (!m.quoted) return
-  if (!quotedIsFromBot(m, conn)) return
 
-  // Texto del usuario (ignorar comandos)
-  const userText = (m.text || '').trim()
-  if (!userText || /^[./!#]/.test(userText)) return
+  // 2. Comprobar que le estamos respondiendo al bot
+  if (!quotedIsFromBot(m, conn)) {
+    // Descomenta esto solo si quieres ver todo lo que ignoras
+    // console.log('[kana/ia] Ignorado: El mensaje citado no es del bot')
+    return
+  }
 
+  // 3. Obtener el texto del usuario (con fallbacks por si m.text falla)
+  const userText = (m.text || m.body || m.message?.conversation || '').trim()
+  
+  if (!userText || /^[./!#]/.test(userText)) {
+    console.log(`[kana/ia] Detenido: Texto vacío o es un comando (${userText})`)
+    return
+  }
+
+  // 4. Comprobar la API Key
   const apicausasKey = global.APICAUSAS_KEY
-  if (!apicausasKey) return
+  if (!apicausasKey) {
+    console.log('[kana/ia] ERROR: global.APICAUSAS_KEY no está definida o está vacía.')
+    return
+  }
+
+  console.log(`[kana/ia] Procesando mensaje para Kana: "${userText}"...`)
 
   // Texto del mensaje citado como contexto inicial
   const quotedText = (m.quoted.text || m.quoted.caption || m.quoted.body || '').trim()
 
-  // Reacción
+  // Reacción de pensando
   await conn.sendMessage(m.chat, { react: { text: '💭', key: m.key } })
 
   // Historial
@@ -109,7 +121,7 @@ let handler = async (m, { conn }) => {
 
   pushHistory(m.chat, 'user', userText)
   pushHistory(m.chat, 'assistant', reply)
-  console.log(`[kana/ia] ✅ APICausas → ${m.chat}`)
+  console.log(`[kana/ia] ✅ Respondido con éxito en ${m.chat}`)
 
   await conn.sendMessage(m.chat, { react: { text: '', key: m.key } })
   await conn.sendMessage(m.chat, { text: reply }, { quoted: m })
@@ -120,4 +132,4 @@ handler.command = false
 handler.tags    = ['ia']
 
 export default handler
-    
+  
