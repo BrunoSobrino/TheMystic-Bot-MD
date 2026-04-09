@@ -47,21 +47,41 @@ async function callAPICausas(userText, quotedText) {
   return reply.trim()
 }
 
+// ── Helper: comparar JIDs sin depender de fromMe ──────────
+function isQuotedFromBot(m) {
+  const q = m.quoted
+  if (!q) return false
+
+  // fromMe del fork (puede fallar en algunos casos, lo logueamos)
+  const fromMe = q.fromMe
+
+  // Comparación manual por número
+  const botRaw = m.conn?.user?.jid || m.conn?.user?.id || ''
+  const botNum = botRaw.split('@')[0].split(':')[0]
+  const senderRaw = q.sender || ''
+  const senderNum = senderRaw.split('@')[0].split(':')[0]
+  const manualMatch = botNum && senderNum && botNum === senderNum
+
+  console.log(`[kana/ia] DEBUG quoted:
+  fromMe        = ${fromMe}
+  botJid        = ${botRaw}
+  quotedSender  = ${senderRaw}
+  manualMatch   = ${manualMatch}`)
+
+  return fromMe || manualMatch
+}
+
 // ── Handler ───────────────────────────────────────────────
 const handler = (m) => m
 
 handler.before = async (m) => {
-  // 1. Debe haber mensaje citado
   if (!m.quoted) return true
+  if (!isQuotedFromBot(m)) return true
 
-  // 2. El quoted.fromMe ya usa areJidsSameUser internamente — confiar en él
-  if (!m.quoted.fromMe) return true
-
-  // 3. Texto del usuario
   const userText = (m.text || '').trim()
   if (!userText || /^[./!#]/.test(userText)) return true
 
-  console.log(`[kana/ia] Procesando: "${userText}"`)
+  console.log(`[kana/ia] ✅ Activado: "${userText}"`)
 
   const quotedText = (m.quoted.text || '').trim()
 
