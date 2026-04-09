@@ -2,6 +2,7 @@
  * crunchyroll-notify.js — Plugin KanaArima-MD / Rikka-Bot (Baileys)
  * Modos: Anónimo (sin cuenta) | Cuenta real (con refresh automático)
  * Filtro estricto: Solo Japonés, Latino y Castellano.
+ * Formato: Corto y limpio.
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
@@ -134,34 +135,36 @@ function normalizeEpisode(p) {
   const airTime = airRaw ? new Date(airRaw).getTime() : 0
   const epNum   = p.episode_number ?? null
   const epId    = p.id || ''
+  const slug    = p.slug_title || ''
   
-  // Inteligencia extra para obtener el idioma si CR no lo envía pero está en el ID
+  // Inteligencia para obtener el idioma si CR no lo envía pero está en el ID
   let locale = p.audio_locale || ''
   if (!locale && epId) {
     if (epId.endsWith('JAJP')) locale = 'ja-JP'
     else if (epId.endsWith('ES419') || epId.endsWith('LA')) locale = 'es-419'
     else if (epId.endsWith('ESES')) locale = 'es-ES'
   }
+
+  // Juntar el nombre de la serie con la temporada (si la hay)
+  let seriesName = p.series_title || '-'
+  const seasonTitle = p.season_title || ''
+  if (seasonTitle && !seriesName.includes(seasonTitle) && !seriesName.includes('Season')) {
+    seriesName += ` ${seasonTitle}`
+  }
   
   return {
     id: epId,
-    series: p.series_title || '-',
-    seriesId: p.series_id || '-',
-    seasonId: p.season_id || '-',
+    series: seriesName,
     epTitle: p.title || '',
     epNum: epNum !== null ? epNum : 'Especial',
-    externalId: p.external_id || `EPI.${epId}`,
-    link: `https://www.crunchyroll.com/es/watch/${epId}`,
+    link: `https://www.crunchyroll.com/watch/${epId}${slug ? `/${slug}` : ''}`,
     audioLocale: locale,
-    subtitles: Array.isArray(p.subtitle_locales) ? p.subtitle_locales : [],
-    description: p.description || '',
     image: extractImage(p.images),
-    airTime,
-    title: p.title || ''
+    airTime
   }
 }
 
-// ─── Formato Exacto ───────────────────────────────────────────────────────────
+// ─── Formato Limpio y Corto ───────────────────────────────────────────────────
 const FLAG = { 
   'ja-JP':'🇯🇵','en-US':'🇺🇸','es-419':'🇲🇽','es-LA':'🇲🇽','es-ES':'🇪🇸','pt-BR':'🇧🇷',
   'fr-FR':'🇫🇷','de-DE':'🇩🇪','it-IT':'🇮🇹','ru-RU':'🇷🇺','ar-SA':'🇸🇦',
@@ -182,20 +185,14 @@ function formatCaption(ep) {
   const localeName = LOCALE_NAME[ep.audioLocale] || ep.audioLocale || 'Desconocido'
   const audioFlag = FLAG[ep.audioLocale] || '🌐'
   
-  const subFlags = ep.subtitles && ep.subtitles.length > 0
-    ? ep.subtitles.map(sub => FLAG[sub] || sub).join(', ')
-    : 'Ninguno'
-
-  const synopsis = ep.description ? `\n\nSinopsis: _${ep.description.trim()}_` : ''
+  const epLabel = ep.epNum !== 'Especial' ? `Episode ${ep.epNum}` : 'Especial'
+  const epLine = ep.epTitle ? `${epLabel} - ${ep.epTitle}` : epLabel
 
   return (
-    `Anime: ${ep.series} | Z: ${ep.seriesId} | S: ${ep.seasonId}\n` +
-    `Título: '${ep.epTitle || 'Sin título'}'\n` +
-    `Episodio: ${ep.epNum} | ID: ${ep.id} | Ext. ID: ${ep.externalId}\n` +
-    `Categoría: Anime | Enlace: ${ep.link}\n` +
-    `Idioma: ${localeName} ${audioFlag}\n` +
-    `Subtítulos: ${subFlags}` +
-    synopsis
+    `📺 ${ep.series}\n` +
+    `🎬 ${epLine}\n` +
+    `${audioFlag} ${localeName}\n\n` +
+    `${ep.link}`
   )
 }
 
@@ -204,12 +201,11 @@ async function fetchNewEpisodes() {
   const cfg         = loadCfg()
   const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
   const cutoff      = Date.now() - lastMinutes * 60_000
-  // Pedimos un lote amplio (50) para asegurar que queden suficientes tras filtrar los idiomas no deseados
   const data     = await crFetch('/content/v1/browse', { count: '50', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows     = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
   
   // Filtramos estrictamente por los idiomas permitidos
-  const allItems = rows.map(normalizeEpisode).filter(i => i.id && i.title && ALLOWED_LOCALES.has(i.audioLocale))
+  const allItems = rows.map(normalizeEpisode).filter(i => i.id && i.series && ALLOWED_LOCALES.has(i.audioLocale))
   const recent   = allItems.filter(i => !i.airTime || i.airTime >= cutoff)
   
   if (!recent.length) return []
@@ -222,12 +218,11 @@ async function fetchNewEpisodes() {
 }
 
 async function getLatestEpisodes(limit = 10) {
-  // Buscamos entre los últimos 100 para garantizar encontrar 10 que sean Jap/Latino/Castellano
   const data = await crFetch('/content/v1/browse', { count: '100', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows = Array.isArray(data?.items) ? data.items : []
   return rows
     .map(normalizeEpisode)
-    .filter(i => ALLOWED_LOCALES.has(i.audioLocale)) // Aquí se aplica el filtro de los 3 idiomas
+    .filter(i => ALLOWED_LOCALES.has(i.audioLocale)) 
     .slice(0, limit)
 }
 
@@ -355,4 +350,4 @@ handler.command = /^(crlogin|crlogout|crset|crstatus|crlist|crnotify)$/i
 })()
 
 export default handler
-                       
+    
