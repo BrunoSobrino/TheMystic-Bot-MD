@@ -17,9 +17,7 @@ if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 const CR_BASE    = 'https://www.crunchyroll.com'
 const CR_BETA    = 'https://beta-api.crunchyroll.com'
 const CR_AUTH    = `${CR_BASE}/auth/v1/token`
-// Token anónimo → grant_type=client_id
 const BASIC_ANON = 'Basic dC1rZGdwMmg4YzNqdWI4Zm4wZnE6eWZMRGZNZnJZdktYaDRKWFMxTEVJMmNDcXUxdjVXYW4='
-// Token con cuenta → grant_type=password (BASIC_AUTH_TOKEN en crunchyroll-rs)
 const BASIC_AUTH = 'Basic eTJhcnZqYjBoMHJndnRpemxvdnk6SlZMdndkSXBYdnhVLXFJQnZUMU04b1FUcjFxbFFKWDI='
 const CR_UA      = 'Crunchyroll/ANDROIDTV/3.59.0_22338 (Android 13.0; en-US; TCL-S5400AF Build/TP1A.220624.014)'
 const DEVICE_ID  = '00000000-dead-beef-cafe-000000000000'
@@ -157,14 +155,14 @@ function normalizeEpisode(p) {
   }
 }
 
-// ─── Fetch episodios nuevos ───────────────────────────────────────────────────
+// ─── Locales permitidos ───────────────────────────────────────────────────────
 const ALLOWED_LOCALES = new Set(['ja-JP', 'es-419', 'es-ES'])
 
+// ─── Fetch episodios nuevos (para .crnotify — respeta caché y ventana de tiempo) ──
 async function fetchNewEpisodes() {
   const cfg         = loadCfg()
   const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
   const cutoff      = Date.now() - lastMinutes * 60_000
-  // Endpoint v1
   const data     = await crFetch('/content/v1/browse', { count: '36', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows     = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
   const allItems = rows
@@ -178,6 +176,31 @@ async function fetchNewEpisodes() {
   return newItems
 }
 
+// ─── Fetch para .crlist (top 10 series recientes, sin filtro de visto) ────────
+async function fetchRecentAnimes() {
+  const data = await crFetch(
+    '/content/v1/browse',
+    { count: '50', sort_by: 'newly_added', type: 'episode', locale: 'es-419' },
+    CR_BETA
+  )
+  const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
+
+  // Normalizar y filtrar locales permitidos
+  const items = rows
+    .map(normalizeEpisode)
+    .filter(i => i.id && i.title && ALLOWED_LOCALES.has(i.audioLocale))
+
+  // Deduplicar: una entrada por serie+locale (la más reciente)
+  const seen = new Map()
+  for (const ep of items) {
+    const key = `${ep.series}::${ep.audioLocale}`
+    if (!seen.has(key)) seen.set(key, ep)
+  }
+
+  // Retornar máximo 10 series únicas
+  return [...seen.values()].slice(0, 10)
+}
+
 // ─── Formato ──────────────────────────────────────────────────────────────────
 const FLAG = { 'ja-JP':'🇯🇵','en-US':'🇺🇸','es-419':'🇲🇽','es-ES':'🇪🇸','pt-BR':'🇧🇷','fr-FR':'🇫🇷','de-DE':'🇩🇪','it-IT':'🇮🇹','ru-RU':'🇷🇺','ar-SA':'🇸🇦','hi-IN':'🇮🇳','ko-KR':'🇰🇷','zh-CN':'🇨🇳' }
 
@@ -188,18 +211,12 @@ const LOCALE_NAME = {
 }
 
 function formatCaption(ep) {
-  // Nombre del idioma para el título de la serie  ej: "Season 1 (Español (América Latina))"
   const localeName = LOCALE_NAME[ep.audioLocale] || ep.audioLocale
   const seasonPart = ep.seasonTitle ? ` ${ep.seasonTitle}` : ''
   const seriesLine = `${ep.series}${seasonPart}${localeName ? ` (${localeName})` : ''}`
-
-  // Línea de episodio  ej: "Episode 3 - Wait, Could This Be Love?!"
-  const epLabel  = ep.epNum !== null ? `Episode ${ep.epNum}` : 'Special'
-  const epLine   = ep.epTitle ? `${epLabel} - ${ep.epTitle}` : epLabel
-
-  // Bandera + nombre corto del idioma
-  const audioLine = `${FLAG[ep.audioLocale] || '🌐'} ${localeName}`
-
+  const epLabel    = ep.epNum !== null ? `Episode ${ep.epNum}` : 'Special'
+  const epLine     = ep.epTitle ? `${epLabel} - ${ep.epTitle}` : epLabel
+  const audioLine  = `${FLAG[ep.audioLocale] || '🌐'} ${localeName}`
   return (
     `📺 *${seriesLine}*\n` +
     `🎬 ${epLine}\n` +
@@ -208,7 +225,7 @@ function formatCaption(ep) {
   )
 }
 
-// ─── Envío ────────────────────────────────────────────────────────────────────
+// ─── Envío estándar ───────────────────────────────────────────────────────────
 async function sendItem(conn, jid, ep, quoted = null) {
   const caption = formatCaption(ep)
   const opts    = quoted ? { quoted } : {}
@@ -217,6 +234,16 @@ async function sendItem(conn, jid, ep, quoted = null) {
   }
   await conn.sendMessage(jid, { text: caption }, opts)
 }
+
+// ─── Envío con caption ya armado (para .crlist con índice) ───────────────────
+async function sendItemRaw(conn, jid, ep, caption, quoted = null) {
+  const opts = quoted ? { quoted } : {}
+  if (ep.image) {
+    try { await conn.sendMessage(jid, { image: { url: ep.image }, caption }, opts); return } catch { /* fallback */ }
+  }
+  await conn.sendMessage(jid, { text: caption }, opts)
+}
+
 const delay = ms => new Promise(r => setTimeout(r, ms))
 
 // ─── Cron ─────────────────────────────────────────────────────────────────────
@@ -296,7 +323,28 @@ let handler = async (m, { conn, command, args, isOwner }) => {
     }, { quoted: m })
   }
 
-  // .crlist / .crnotify — fetch manual
+  // .crlist — top 10 series recientes (sin filtro de caché ni tiempo)
+  if (command === 'crlist') {
+    await conn.sendMessage(m.chat, { text: '📋 Cargando los 10 animes más recientes...' }, { quoted: m })
+    try {
+      const items = await fetchRecentAnimes()
+      if (!items.length)
+        return conn.sendMessage(m.chat, { text: '📭 No se encontraron animes recientes.' }, { quoted: m })
+
+      let idx = 1
+      for (const ep of items) {
+        const caption = `*[${idx}/${items.length}]* ` + formatCaption(ep)
+        await sendItemRaw(conn, m.chat, ep, caption, m)
+        await delay(1500)
+        idx++
+      }
+    } catch (err) {
+      await conn.sendMessage(m.chat, { text: `❌ Error: ${err.message}` }, { quoted: m })
+    }
+    return
+  }
+
+  // .crnotify — fetch manual con filtro normal (nuevos no vistos)
   await conn.sendMessage(m.chat, { text: '🔍 Buscando episodios nuevos...' }, { quoted: m })
   try {
     const items = await fetchNewEpisodes()
