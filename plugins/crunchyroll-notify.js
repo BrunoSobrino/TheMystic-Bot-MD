@@ -1,6 +1,7 @@
 /**
  * crunchyroll-notify.js — Plugin KanaArima-MD / Rikka-Bot (Baileys)
  * Modos: Anónimo (sin cuenta) | Cuenta real (con refresh automático)
+ * Filtro estricto: Solo Japonés, Latino y Castellano.
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
@@ -13,7 +14,7 @@ const DB_PATH   = join(TMP_DIR, 'crunchyroll-seen.json')
 const CFG_PATH  = join(TMP_DIR, 'crunchyroll-cfg.json')
 if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
 
-// ─── Constantes (crunchyroll-rs) ─────────────────────────────────────────────
+// ─── Constantes ──────────────────────────────────────────────────────────────
 const CR_BASE    = 'https://www.crunchyroll.com'
 const CR_BETA    = 'https://beta-api.crunchyroll.com'
 const CR_AUTH    = `${CR_BASE}/auth/v1/token`
@@ -29,7 +30,7 @@ function saveCfg(d)    { writeFileSync(CFG_PATH, JSON.stringify(d, null, 2), 'ut
 function loadSeen()    { try { return JSON.parse(readFileSync(DB_PATH,  'utf-8')) } catch { return [] } }
 function saveSeen(ids) { writeFileSync(DB_PATH,  JSON.stringify(ids.slice(-300)), 'utf-8') }
 
-// ─── Cookie jar (bypass Cloudflare) ──────────────────────────────────────────
+// ─── Cookie jar ──────────────────────────────────────────────────────────────
 let _cookies = ''
 async function preLogin() {
   try {
@@ -116,7 +117,7 @@ async function crFetch(path, params = {}, base = CR_BASE) {
   return res.json()
 }
 
-// ─── Imagen ───────────────────────────────────────────────────────────────────
+// ─── Lógica de Procesamiento ──────────────────────────────────────────────────
 function extractImage(images = {}) {
   const src = images.thumbnail || images.poster_tall || images.poster_wide
   if (!src) return ''
@@ -128,23 +129,30 @@ function extractImage(images = {}) {
   return ''
 }
 
-// ─── Normalizar episodio ──────────────────────────────────────────────────────
 function normalizeEpisode(p) {
   const airRaw  = p.episode_air_date || p.premium_available_date || p.availability_starts || ''
   const airTime = airRaw ? new Date(airRaw).getTime() : 0
   const epNum   = p.episode_number ?? null
   const epId    = p.id || ''
   
+  // Inteligencia extra para obtener el idioma si CR no lo envía pero está en el ID
+  let locale = p.audio_locale || ''
+  if (!locale && epId) {
+    if (epId.endsWith('JAJP')) locale = 'ja-JP'
+    else if (epId.endsWith('ES419') || epId.endsWith('LA')) locale = 'es-419'
+    else if (epId.endsWith('ESES')) locale = 'es-ES'
+  }
+  
   return {
     id: epId,
-    series: p.series_title || '',
+    series: p.series_title || '-',
     seriesId: p.series_id || '-',
     seasonId: p.season_id || '-',
     epTitle: p.title || '',
     epNum: epNum !== null ? epNum : 'Especial',
     externalId: p.external_id || `EPI.${epId}`,
     link: `https://www.crunchyroll.com/es/watch/${epId}`,
-    audioLocale: p.audio_locale || '',
+    audioLocale: locale,
     subtitles: Array.isArray(p.subtitle_locales) ? p.subtitle_locales : [],
     description: p.description || '',
     image: extractImage(p.images),
@@ -155,7 +163,7 @@ function normalizeEpisode(p) {
 
 // ─── Formato Exacto ───────────────────────────────────────────────────────────
 const FLAG = { 
-  'ja-JP':'🇯🇵','en-US':'🇺🇸','es-419':'🇲🇽','es-ES':'🇪🇸','pt-BR':'🇧🇷',
+  'ja-JP':'🇯🇵','en-US':'🇺🇸','es-419':'🇲🇽','es-LA':'🇲🇽','es-ES':'🇪🇸','pt-BR':'🇧🇷',
   'fr-FR':'🇫🇷','de-DE':'🇩🇪','it-IT':'🇮🇹','ru-RU':'🇷🇺','ar-SA':'🇸🇦',
   'ar-ME':'🇸🇦','hi-IN':'🇮🇳','ko-KR':'🇰🇷','zh-CN':'🇨🇳','th-TH':'🇹🇭'
 }
@@ -163,10 +171,12 @@ const FLAG = {
 const LOCALE_NAME = {
   'ja-JP' : 'Japonés',
   'es-419': 'Español Latino',
-  'es-ES' : 'Español España',
-  'en-US' : 'Inglés',
-  'pt-BR' : 'Portugués',
+  'es-LA' : 'Español Latino',
+  'es-ES' : 'Español Castellano'
 }
+
+// SOLO DEJAR PASAR ESTOS TRES IDIOMAS:
+const ALLOWED_LOCALES = new Set(['ja-JP', 'es-419', 'es-LA', 'es-ES'])
 
 function formatCaption(ep) {
   const localeName = LOCALE_NAME[ep.audioLocale] || ep.audioLocale || 'Desconocido'
@@ -189,16 +199,19 @@ function formatCaption(ep) {
   )
 }
 
-// ─── Fetch episodios nuevos ───────────────────────────────────────────────────
+// ─── Fetch episodios (Cron y Manual) ──────────────────────────────────────────
 async function fetchNewEpisodes() {
   const cfg         = loadCfg()
   const lastMinutes = parseInt(process.env.CR_LAST_MINUTES ?? cfg.lastMinutes ?? '60')
   const cutoff      = Date.now() - lastMinutes * 60_000
-  const data     = await crFetch('/content/v1/browse', { count: '36', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
+  // Pedimos un lote amplio (50) para asegurar que queden suficientes tras filtrar los idiomas no deseados
+  const data     = await crFetch('/content/v1/browse', { count: '50', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows     = Array.isArray(data?.items) ? data.items : Array.isArray(data?.data) ? data.data : []
   
-  const allItems = rows.map(normalizeEpisode).filter(i => i.id && i.title)
+  // Filtramos estrictamente por los idiomas permitidos
+  const allItems = rows.map(normalizeEpisode).filter(i => i.id && i.title && ALLOWED_LOCALES.has(i.audioLocale))
   const recent   = allItems.filter(i => !i.airTime || i.airTime >= cutoff)
+  
   if (!recent.length) return []
   
   const seen     = loadSeen()
@@ -209,10 +222,12 @@ async function fetchNewEpisodes() {
 }
 
 async function getLatestEpisodes(limit = 10) {
-  const data = await crFetch('/content/v1/browse', { count: '50', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
+  // Buscamos entre los últimos 100 para garantizar encontrar 10 que sean Jap/Latino/Castellano
+  const data = await crFetch('/content/v1/browse', { count: '100', sort_by: 'newly_added', type: 'episode', locale: 'es-419' }, CR_BETA)
   const rows = Array.isArray(data?.items) ? data.items : []
   return rows
     .map(normalizeEpisode)
+    .filter(i => ALLOWED_LOCALES.has(i.audioLocale)) // Aquí se aplica el filtro de los 3 idiomas
     .slice(0, limit)
 }
 
@@ -340,4 +355,4 @@ handler.command = /^(crlogin|crlogout|crset|crstatus|crlist|crnotify)$/i
 })()
 
 export default handler
-    
+                       
