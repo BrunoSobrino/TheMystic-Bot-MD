@@ -12,7 +12,6 @@ Nunca rompas el personaje. Responde siempre en español.
 Ejemplos: "Hmph... supongo que puedo responderte eso." / "¿En serio no sabes eso? Escucha bien." / "...No es que me importe, pero aquí va."`
 
 async function callAPICausas(userText) {
-  // Cambiamos 'text' por 'q' que es el estándar más común en estas APIs
   const params = new URLSearchParams({
     apikey: API_KEY,
     model: APICAUSAS_MODEL,
@@ -31,8 +30,8 @@ async function callAPICausas(userText) {
   
   const data = await res.json()
   
-  // Buscar la respuesta 
-  const reply = data?.result || data?.response || data?.answer || data?.text || data?.message || data?.data || data?.choices?.[0]?.message?.content || (typeof data === 'string' ? data : null)
+  // ¡Hemos añadido data?.reply aquí al principio!
+  const reply = data?.reply || data?.result || data?.response || data?.answer || data?.text || data?.message || data?.data || data?.choices?.[0]?.message?.content || (typeof data === 'string' ? data : null)
   
   if (!reply || typeof reply !== 'string') {
     throw new Error(`Respuesta vacía o formato desconocido. Raw: ${JSON.stringify(data)}`)
