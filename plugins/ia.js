@@ -1,6 +1,6 @@
 // plugins/ia.js
 // Responde cuando citan un mensaje del bot — Kana Arima (Oshi no Ko)
-// v2: Detecta mensajes del bot por key.id (compatible con @lid JIDs)
+// v3: Parcha conn.sendMessage para capturar TODOS los key.id del bot automáticamente
 
 import fetch from 'node-fetch'
 
@@ -13,25 +13,37 @@ Personalidad tsundere: directa, un poco fría, orgullosa de su talento.
 Frases cortas como en WhatsApp. Sarcástica pero no cruel.
 Nunca rompas el personaje. Responde siempre en español.`
 
-// ── Caché de IDs de mensajes enviados por el bot ──────────
-// Persiste mientras el proceso esté activo.
-// Al reiniciar se vacía (comportamiento esperado).
+// ── Caché de key.id de mensajes enviados por el bot ───────
 const botMessageIds = new Set()
 const MAX_CACHE = 500
 
-/**
- * Registra el key.id de un mensaje enviado por el bot.
- * Llamar desde cualquier parte donde el bot envíe mensajes.
- * @param {object} key  - El campo `key` del mensaje retornado por sendMessage()
- */
-export function trackBotMessage(key) {
+function trackBotMessage(key) {
   if (!key?.id) return
   botMessageIds.add(key.id)
-
-  // Evitar crecimiento ilimitado: eliminar el más antiguo
   if (botMessageIds.size > MAX_CACHE) {
     botMessageIds.delete(botMessageIds.values().next().value)
   }
+}
+
+// ── Parche único sobre conn.sendMessage ───────────────────
+// Se instala una sola vez por conexión. Intercepta TODOS los
+// mensajes salientes y registra su key.id en el caché.
+const patchedConns = new WeakSet()
+
+function patchConn(conn) {
+  if (!conn || patchedConns.has(conn)) return
+  patchedConns.add(conn)
+
+  const original = conn.sendMessage.bind(conn)
+  conn.sendMessage = async (...args) => {
+    const result = await original(...args)
+    if (result?.key) {
+      trackBotMessage(result.key)
+      console.log(`[kana/ia] 📌 key.id registrado: ${result.key.id}`)
+    }
+    return result
+  }
+  console.log('[kana/ia] ✅ conn.sendMessage parcheado')
 }
 
 // ── API ───────────────────────────────────────────────────
@@ -57,58 +69,72 @@ async function callAPICausas(userText, quotedText) {
 
   const data = await res.json()
   const reply =
-    data?.reply ||
-    data?.result ||
+    data?.reply    ||
+    data?.result   ||
     data?.response ||
-    data?.text ||
-    data?.message ||
+    data?.text     ||
+    data?.message  ||
     data?.choices?.[0]?.message?.content
 
   if (!reply) throw new Error(`Respuesta vacía. Raw: ${JSON.stringify(data)}`)
-
   return reply.trim()
 }
 
+// ── Helper: resuelve q.sender aunque sea Promise u objeto ─
+async function resolveSender(q) {
+  try {
+    const raw = await Promise.resolve(q.sender)
+    if (typeof raw === 'string') return raw
+    if (typeof raw === 'number') return String(raw)
+    return raw?.toString?.() ?? ''
+  } catch {
+    return ''
+  }
+}
+
 // ── Helper: detecta si el mensaje citado es del bot ───────
-// Estrategia 1: fromMe (puede fallar con @lid)
-// Estrategia 2: key.id en caché de mensajes enviados por el bot
-// Estrategia 3: comparación manual de número (fallback)
-function isQuotedFromBot(m) {
+async function isQuotedFromBot(m) {
   const q = m.quoted
   if (!q) return false
 
-  const fromMe = q.fromMe === true
+  // Estrategia 1: fromMe
+  if (q.fromMe === true) {
+    console.log('[kana/ia] ✅ match por fromMe')
+    return true
+  }
 
-  const cachedId = !!(q.id && botMessageIds.has(q.id))
+  // Estrategia 2: key.id en caché (principal para @lid)
+  if (q.id && botMessageIds.has(q.id)) {
+    console.log(`[kana/ia] ✅ match por cachedId (${q.id})`)
+    return true
+  }
 
-  // Fallback: comparación por número (puede fallar con @lid pero lo intentamos)
+  // Estrategia 3: comparación de número (fallback, falla con @lid)
   const botRaw    = String(m.conn?.user?.jid || m.conn?.user?.id || '')
   const botNum    = botRaw.split('@')[0].split(':')[0]
-  // q.sender en grupos puede ser objeto, número, o undefined — forzar string
-  const senderRaw = typeof q.sender === 'string' ? q.sender
-                  : typeof q.sender === 'number' ? String(q.sender)
-                  : q.sender?.toString?.() ?? ''
+  const senderRaw = await resolveSender(q)
   const senderNum = senderRaw.split('@')[0].split(':')[0]
   const manualMatch = !!(botNum && senderNum && botNum === senderNum)
 
   console.log(`[kana/ia] DEBUG quoted:
-  fromMe      = ${fromMe}
-  cachedId    = ${cachedId}  (q.id: ${q.id})
+  fromMe      = ${q.fromMe}
+  cachedId    = false  (q.id: ${q.id}, cacheSize: ${botMessageIds.size})
   botJid      = ${botRaw}
-  sender(raw) = ${JSON.stringify(q.sender)} [${typeof q.sender}]
-  senderStr   = ${senderRaw}
-  manualMatch = ${manualMatch}
-  cacheSize   = ${botMessageIds.size}`)
+  senderRaw   = ${senderRaw}
+  manualMatch = ${manualMatch}`)
 
-  return fromMe || cachedId || manualMatch
+  return manualMatch
 }
 
 // ── Handler ───────────────────────────────────────────────
 const handler = (m) => m
 
 handler.before = async (m) => {
+  // Instalar parche tan pronto como tengamos acceso al conn
+  if (m.conn) patchConn(m.conn)
+
   if (!m.quoted) return true
-  if (!isQuotedFromBot(m)) return true
+  if (!await isQuotedFromBot(m)) return true
 
   const userText = (m.text || '').trim()
   if (!userText || /^[./!#]/.test(userText)) return true
@@ -121,18 +147,10 @@ handler.before = async (m) => {
 
   try {
     const reply = await callAPICausas(userText, quotedText)
-
     await m.conn.sendMessage(m.chat, { react: { text: '', key: m.key } })
-
-    // Enviar respuesta y registrar su key.id en el caché
-    const sent = await m.conn.sendMessage(
-      m.chat,
-      { text: reply },
-      { quoted: m }
-    )
-    if (sent?.key) trackBotMessage(sent.key)
-
-    console.log(`[kana/ia] ✅ Respondido. key.id registrado: ${sent?.key?.id}`)
+    // sendMessage ya está parcheado — registra key.id automáticamente
+    await m.conn.sendMessage(m.chat, { text: reply }, { quoted: m })
+    console.log('[kana/ia] ✅ Respondido.')
   } catch (e) {
     console.error('[kana/ia] Error →', e.message)
     await m.conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
@@ -143,3 +161,4 @@ handler.before = async (m) => {
 }
 
 export default handler
+              
