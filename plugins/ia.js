@@ -1,5 +1,6 @@
 // plugins/ia.js
 // Responde cuando citan un mensaje del bot — Kana Arima (Oshi no Ko)
+// v2: Detecta mensajes del bot por key.id (compatible con @lid JIDs)
 
 import fetch from 'node-fetch'
 
@@ -11,6 +12,27 @@ const KANA_PROMPT = `Eres Kana Arima, famosa actriz e idol del anime "Oshi no Ko
 Personalidad tsundere: directa, un poco fría, orgullosa de su talento.
 Frases cortas como en WhatsApp. Sarcástica pero no cruel.
 Nunca rompas el personaje. Responde siempre en español.`
+
+// ── Caché de IDs de mensajes enviados por el bot ──────────
+// Persiste mientras el proceso esté activo.
+// Al reiniciar se vacía (comportamiento esperado).
+const botMessageIds = new Set()
+const MAX_CACHE = 500
+
+/**
+ * Registra el key.id de un mensaje enviado por el bot.
+ * Llamar desde cualquier parte donde el bot envíe mensajes.
+ * @param {object} key  - El campo `key` del mensaje retornado por sendMessage()
+ */
+export function trackBotMessage(key) {
+  if (!key?.id) return
+  botMessageIds.add(key.id)
+
+  // Evitar crecimiento ilimitado: eliminar el más antiguo
+  if (botMessageIds.size > MAX_CACHE) {
+    botMessageIds.delete(botMessageIds.values().next().value)
+  }
+}
 
 // ── API ───────────────────────────────────────────────────
 async function callAPICausas(userText, quotedText) {
@@ -47,28 +69,38 @@ async function callAPICausas(userText, quotedText) {
   return reply.trim()
 }
 
-// ── Helper: comparar JIDs sin depender de fromMe ──────────
+// ── Helper: detecta si el mensaje citado es del bot ───────
+// Estrategia 1: fromMe (puede fallar con @lid)
+// Estrategia 2: key.id en caché de mensajes enviados por el bot
+// Estrategia 3: comparación manual de número (fallback)
 function isQuotedFromBot(m) {
   const q = m.quoted
   if (!q) return false
 
-  // fromMe del fork (puede fallar en algunos casos, lo logueamos)
-  const fromMe = q.fromMe
+  const fromMe = q.fromMe === true
 
-  // Comparación manual por número
-  const botRaw = m.conn?.user?.jid || m.conn?.user?.id || ''
-  const botNum = botRaw.split('@')[0].split(':')[0]
-  const senderRaw = q.sender || ''
+  const cachedId = !!(q.id && botMessageIds.has(q.id))
+
+  // Fallback: comparación por número (puede fallar con @lid pero lo intentamos)
+  const botRaw    = String(m.conn?.user?.jid || m.conn?.user?.id || '')
+  const botNum    = botRaw.split('@')[0].split(':')[0]
+  // q.sender en grupos puede ser objeto, número, o undefined — forzar string
+  const senderRaw = typeof q.sender === 'string' ? q.sender
+                  : typeof q.sender === 'number' ? String(q.sender)
+                  : q.sender?.toString?.() ?? ''
   const senderNum = senderRaw.split('@')[0].split(':')[0]
-  const manualMatch = botNum && senderNum && botNum === senderNum
+  const manualMatch = !!(botNum && senderNum && botNum === senderNum)
 
   console.log(`[kana/ia] DEBUG quoted:
-  fromMe        = ${fromMe}
-  botJid        = ${botRaw}
-  quotedSender  = ${senderRaw}
-  manualMatch   = ${manualMatch}`)
+  fromMe      = ${fromMe}
+  cachedId    = ${cachedId}  (q.id: ${q.id})
+  botJid      = ${botRaw}
+  sender(raw) = ${JSON.stringify(q.sender)} [${typeof q.sender}]
+  senderStr   = ${senderRaw}
+  manualMatch = ${manualMatch}
+  cacheSize   = ${botMessageIds.size}`)
 
-  return fromMe || manualMatch
+  return fromMe || cachedId || manualMatch
 }
 
 // ── Handler ───────────────────────────────────────────────
@@ -89,9 +121,18 @@ handler.before = async (m) => {
 
   try {
     const reply = await callAPICausas(userText, quotedText)
+
     await m.conn.sendMessage(m.chat, { react: { text: '', key: m.key } })
-    await m.reply(reply)
-    console.log(`[kana/ia] ✅ Respondido.`)
+
+    // Enviar respuesta y registrar su key.id en el caché
+    const sent = await m.conn.sendMessage(
+      m.chat,
+      { text: reply },
+      { quoted: m }
+    )
+    if (sent?.key) trackBotMessage(sent.key)
+
+    console.log(`[kana/ia] ✅ Respondido. key.id registrado: ${sent?.key?.id}`)
   } catch (e) {
     console.error('[kana/ia] Error →', e.message)
     await m.conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
