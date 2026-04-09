@@ -1,11 +1,9 @@
 // plugins/ia.js
 // Responde cuando citan un mensaje del bot — Kana Arima (Oshi no Ko)
-// APICausas principal → Anthropic fallback
+// APICausas principal
 
 const APICAUSAS_BASE  = 'https://rest.apicausas.xyz/api/v1/ai'
 const APICAUSAS_MODEL = 'google/gemini-2.5-flash'
-const ANTHROPIC_URL   = 'https://api.anthropic.com/v1/messages'
-const ANTHROPIC_MODEL = 'claude-sonnet-4-20250514'
 
 const KANA_PROMPT = `Eres Kana Arima, famosa actriz e idol del anime "Oshi no Ko".
 Personalidad tsundere: directa, un poco fría, orgullosa de su talento.
@@ -31,23 +29,6 @@ async function callAPICausas(userText, history, apiKey) {
   const reply = data?.choices?.[0]?.message?.content || data?.result || data?.response || data?.answer || data?.text || data?.message || (typeof data === 'string' ? data : null)
   if (!reply) throw new Error(`APICausas vacía. Raw: ${JSON.stringify(data)}`)
   return reply.trim()
-}
-
-async function callClaude(userText, history, apiKey) {
-  const res = await fetch(ANTHROPIC_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({
-      model: ANTHROPIC_MODEL,
-      max_tokens: global.IA_MAX_TOKENS || 1024,
-      system: KANA_PROMPT,
-      messages: [...history, { role: 'user', content: userText }],
-    }),
-    signal: AbortSignal.timeout(30_000),
-  })
-  if (!res.ok) throw new Error(`Anthropic ${res.status}: ${await res.text()}`)
-  const data = await res.json()
-  return data.content.filter(b => b.type === 'text').map(b => b.text).join('').trim()
 }
 
 // ── Historial ─────────────────────────────────────────────
@@ -98,8 +79,7 @@ let handler = async (m, { conn }) => {
   if (!userText || /^[./!#]/.test(userText)) return
 
   const apicausasKey = global.APICAUSAS_KEY
-  const anthropicKey = global.ANTHROPIC_API_KEY
-  if (!apicausasKey && !anthropicKey) return
+  if (!apicausasKey) return
 
   // Texto del mensaje citado como contexto inicial
   const quotedText = (m.quoted.text || m.quoted.caption || m.quoted.body || '').trim()
@@ -113,25 +93,13 @@ let handler = async (m, { conn }) => {
     history.push({ role: 'assistant', content: quotedText })
   }
 
-  // Llamar APIs
-  let reply = null, usedApi = null
+  // Llamar API
+  let reply = null
 
-  if (apicausasKey) {
-    try {
-      reply = await callAPICausas(userText, history, apicausasKey)
-      usedApi = 'APICausas'
-    } catch (e) {
-      console.warn('[kana/ia] APICausas falló →', e.message)
-    }
-  }
-
-  if (!reply && anthropicKey) {
-    try {
-      reply = await callClaude(userText, history, anthropicKey)
-      usedApi = 'Anthropic'
-    } catch (e) {
-      console.error('[kana/ia] Anthropic falló →', e.message)
-    }
+  try {
+    reply = await callAPICausas(userText, history, apicausasKey)
+  } catch (e) {
+    console.error('[kana/ia] APICausas falló →', e.message)
   }
 
   if (!reply) {
@@ -141,7 +109,7 @@ let handler = async (m, { conn }) => {
 
   pushHistory(m.chat, 'user', userText)
   pushHistory(m.chat, 'assistant', reply)
-  console.log(`[kana/ia] ✅ ${usedApi} → ${m.chat}`)
+  console.log(`[kana/ia] ✅ APICausas → ${m.chat}`)
 
   await conn.sendMessage(m.chat, { react: { text: '', key: m.key } })
   await conn.sendMessage(m.chat, { text: reply }, { quoted: m })
@@ -152,3 +120,4 @@ handler.command = false
 handler.tags    = ['ia']
 
 export default handler
+    
