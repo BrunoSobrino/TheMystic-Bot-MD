@@ -315,7 +315,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
   await m.reply(`⬇️ Descargando desde *${listaIntentos[0].nombre}*...\n_Puede tardar hasta 2 min_`)
 
-  const tmpDir = `/tmp/anime_${Date.now()}`
+  const tmpDir = path.join(process.env.TMPDIR || '/tmp', `anime_${Date.now()}`)
   fs.mkdirSync(tmpDir, { recursive: true })
 
   let archivoPath = null
@@ -361,4 +361,4 @@ handler.tags = ['descargas']
 handler.command = /^animedl$/i
 
 export default handler
-      
+     
