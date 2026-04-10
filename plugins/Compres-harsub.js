@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { exec, spawn } from 'child_process';
+import { exec, spawn, execSync } from 'child_process'; // ✅ execSync añadido
 import { pipeline } from 'stream/promises';
 
 let handler = async (m, { conn, text, command, args }) => {
@@ -30,41 +30,25 @@ let handler = async (m, { conn, text, command, args }) => {
 
     // Colores ANSI
     const colors = {
-        reset: '\x1b[0m',
-        cyan: '\x1b[36m',
-        green: '\x1b[32m',
-        yellow: '\x1b[33m',
-        blue: '\x1b[34m',
-        magenta: '\x1b[35m',
-        red: '\x1b[31m'
+        reset: '\x1b[0m', cyan: '\x1b[36m', green: '\x1b[32m',
+        yellow: '\x1b[33m', blue: '\x1b[34m', magenta: '\x1b[35m', red: '\x1b[31m'
     };
 
-    // Visualización de progreso estilo solicitado con colores
     const logFFmpegProgress = (label, data, totalFrames = 0) => {
         const line = data.toString();
         if (!line.includes('frame=')) return;
-
         const frameMatch = line.match(/frame=\s*(\d+)/);
-        const fpsMatch = line.match(/fps=\s*([\d.]+)/);
-        const timeMatch = line.match(/time=\s*([\d:.]+)/);
+        const fpsMatch   = line.match(/fps=\s*([\d.]+)/);
+        const timeMatch  = line.match(/time=\s*([\d:.]+)/);
         const speedMatch = line.match(/speed=\s*([\d.x]+)/);
-
         if (!frameMatch) return;
-
         const frame = parseInt(frameMatch[1]);
-        const fps = fpsMatch ? parseFloat(fpsMatch[1]) : 0;
-        const time = timeMatch ? timeMatch[1] : '00:00:00';
-        const speed = speedMatch ? speedMatch[1] : '0x';
-
+        const fps   = fpsMatch  ? parseFloat(fpsMatch[1]) : 0;
+        const time  = timeMatch ? timeMatch[1]             : '00:00:00';
+        const speed = speedMatch ? speedMatch[1]           : '0x';
         let percentage = '000';
-        if (totalFrames > 0) {
-            const pct = (frame / totalFrames) * 100;
-            percentage = pct.toFixed(0).padStart(3, '0');
-        }
-
-        // Formato: [[DW3 360p]] Progreso 000% | Frame: 5804 | FPS: 236 | Time: 00:04:02.07 | Speed: 9.85x
+        if (totalFrames > 0) percentage = ((frame / totalFrames) * 100).toFixed(0).padStart(3, '0');
         const output = `\r${colors.cyan}[[${label}]]${colors.reset} Progreso ${colors.green}${percentage}%${colors.reset} | Frame: ${colors.yellow}${frame}${colors.reset} | FPS: ${colors.blue}${Math.round(fps)}${colors.reset} | Time: ${colors.magenta}${time}${colors.reset} | Speed: ${colors.red}${speed}${colors.reset}`;
-
         process.stdout.write(output);
     };
 
@@ -74,9 +58,43 @@ let handler = async (m, { conn, text, command, args }) => {
         return Math.max(100, Math.floor(videoBits / durationSec / 1000));
     };
 
+    // ✅ Helper: frames + duración real del vídeo con ffprobe
+    const getVideoMeta = (filePath) => {
+        try {
+            const raw = execSync(
+                `ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames,r_frame_rate -show_entries format=duration -of json "${filePath}"`,
+                { encoding: 'utf8' }
+            );
+            const data = JSON.parse(raw);
+            const stream = data.streams?.[0] || {};
+            const durationSec = parseFloat(data.format?.duration || 0);
+            let totalFrames = parseInt(stream.nb_frames) || 0;
+            if (!totalFrames && durationSec && stream.r_frame_rate) {
+                const [num, den] = stream.r_frame_rate.split('/').map(Number);
+                const fps = den ? num / den : 0;
+                totalFrames = Math.round(durationSec * fps);
+            }
+            return { totalFrames, durationSec };
+        } catch { return { totalFrames: 0, durationSec: 0 }; }
+    };
+
+    // ─── Watermark ───────────────────────────────────────────────────────────────
     const WM = `drawtext=fontfile='/data/data/com.termux/files/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf':text='By\\:CID':fontcolor=white:fontsize=w*0.04:x=20:y=20:borderw=2:bordercolor=black:alpha='if(lt(t,4),1,if(lt(t,5),5-t,0))'`;
     const withWM = (vf) => `${vf},${WM}`;
 
+    // ✅ Padding par (de compressO): elimina errores "not divisible by 2" con
+    //    vídeos de dimensiones impares. Va siempre después del scale.
+    const PAD = 'pad=ceil(iw/2)*2:ceil(ih/2)*2';
+
+    // Helpers de scale con pad incorporado:
+    //   - fast_bilinear → dw3/dw4/mi (velocidad en Termux)
+    //   - lanczos       → dw2 (sin hardsub: podemos subir calidad)
+    const scaleFast    = (res) => `scale=-2:${res}:flags=fast_bilinear,${PAD}`;
+    const scaleLanczos = (res) => `scale=-2:${res}:flags=lanczos,${PAD}`;
+
+    // ─────────────────────────────────────────────
+    //  DW — Analizar info del vídeo
+    // ─────────────────────────────────────────────
     if (command === 'dw') {
         if (!m.quoted) return reply('Responde a un video o documento.');
         try {
@@ -87,7 +105,12 @@ let handler = async (m, { conn, text, command, args }) => {
             const media   = message[type];
             if (!media || !media.mediaKey) return reply('Error: No se encontró el medio.');
             const stream  = await downloadContentFromMessage(media, type.replace('Message', ''));
-            const ffprobe = spawn('ffprobe', ['-v', 'error', '-probesize', '1M', '-analyzeduration', '1M', '-show_streams', '-show_format', '-print_format', 'json', '-i', 'pipe:0']);
+
+            // ✅ -v error: suprime advertencias innecesarias (ffmpeg-video-bot + compressO)
+            const ffprobe = spawn('ffprobe', [
+                '-v', 'error', '-probesize', '1M', '-analyzeduration', '1M',
+                '-show_streams', '-show_format', '-print_format', 'json', '-i', 'pipe:0'
+            ]);
             let stdoutData = '';
             ffprobe.stdin.on('error', (err) => { if (err.code !== 'EPIPE') console.error('[FFPROBE ERROR]', err); });
             stream.pipe(ffprobe.stdin);
@@ -129,6 +152,9 @@ let handler = async (m, { conn, text, command, args }) => {
         }
     }
 
+    // ─────────────────────────────────────────────
+    //  MI — Comprimir a tamaño objetivo (2-pass)
+    // ─────────────────────────────────────────────
     if (command === 'mi') {
         if (!m.quoted) return reply('Responde a un video.\nUso: *.mi [resolución] [pesoMB]*\nEjemplo: `.mi 720 200mb`');
         const asDocument = args[args.length - 1]?.toLowerCase() === 'doc';
@@ -148,47 +174,45 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            const totalFrames = parseInt(require('child_process').execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, { encoding: 'utf8' }).trim()) || 0;
-            
-            const AUDIO_KBPS = 96; // Reduce de 128 a 96 kbps
-            const videoBitrateK = calcVideoBitrate(totalFrames / 30, targetMB, AUDIO_KBPS);
-            const maxrateK = Math.floor(videoBitrateK * 1.2);
-            const bufsizeK = Math.floor(videoBitrateK * 2);
+            // ✅ Duración real desde ffprobe (no asumir 30fps)
+            const { totalFrames, durationSec } = getVideoMeta(input);
 
-            // PASS 1 - PREVIEW (ULTRAFAST para ahorrar tiempo)
+            const AUDIO_KBPS    = 96;
+            const videoBitrateK = calcVideoBitrate(durationSec, targetMB, AUDIO_KBPS);
+            const maxrateK      = Math.floor(videoBitrateK * 1.2);
+            const bufsizeK      = Math.floor(videoBitrateK * 2);
+
+            // ✅ scale fast_bilinear + pad (sin watermark en pass 1)
+            const sf = scaleFast(res);
+
+            // PASS 1 — ULTRAFAST (análisis)
             const pass1Args = [
-                '-i', input, '-vf', `scale=-2:${res}:flags=fast_bilinear`, // fast_bilinear = más rápido
+                '-i', input, '-vf', sf,
                 '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
-                '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast', // ⚡ ULTRAFAST en pass 1
-                '-tune', 'fastdecode', // ⚡ Optimizar para decodificación rápida
+                '-pix_fmt', 'yuv420p',          // ✅ compatibilidad móvil (compressO)
+                '-pass', '1', '-passlogfile', logPrefix, '-preset', 'ultrafast',
+                '-tune', 'fastdecode',
                 '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-f', 'null', '-y', '/dev/null'
             ];
             await new Promise((resolve, reject) => {
                 const p1 = spawn('ffmpeg', pass1Args);
                 p1.stderr.on('data', (d) => logFFmpegProgress(`${label} - PASS 1/2`, d, totalFrames));
-                p1.on('close', (code) => {
-                    process.stdout.write('\n\n');
-                    if (code === 0) resolve(); else reject(new Error(`pass1 code ${code}`));
-                });
+                p1.on('close', (code) => { process.stdout.write('\n\n'); code === 0 ? resolve() : reject(new Error(`pass1 code ${code}`)); });
             });
 
-            // PASS 2 - SALIDA RÁPIDA (FAST en lugar de VERYFAST)
+            // PASS 2 — FAST (salida + watermark)
             const pass2Args = [
-                '-i', input, '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`),
+                '-i', input, '-vf', withWM(sf),
                 '-c:v', 'libx264', '-b:v', `${videoBitrateK}k`, '-maxrate', `${maxrateK}k`, '-bufsize', `${bufsizeK}k`,
-                '-pass', '2', '-passlogfile', logPrefix, '-preset', 'fast', // ⚡ FAST en pass 2 (rápido pero aceptable)
+                '-pix_fmt', 'yuv420p',
+                '-pass', '2', '-passlogfile', logPrefix, '-preset', 'fast',
                 '-tune', 'fastdecode',
                 '-threads', '0', '-c:a', 'aac', '-b:a', `${AUDIO_KBPS}k`, '-ac', '2', '-movflags', '+faststart', '-y', output
             ];
             await new Promise((resolve, reject) => {
                 const p2 = spawn('ffmpeg', pass2Args);
-                p2.stderr.on('data', (d) => {
-                    logFFmpegProgress(`${label} - PASS 2/2`, d, totalFrames);
-                });
-                p2.on('close', (code) => {
-                    process.stdout.write('\n\n');
-                    if (code === 0) resolve(); else reject(new Error(`pass2 code ${code}`));
-                });
+                p2.stderr.on('data', (d) => logFFmpegProgress(`${label} - PASS 2/2`, d, totalFrames));
+                p2.on('close', (code) => { process.stdout.write('\n\n'); code === 0 ? resolve() : reject(new Error(`pass2 code ${code}`)); });
             });
 
             const finalSizeMB = fs.statSync(output).size / 1024 / 1024;
@@ -206,6 +230,9 @@ let handler = async (m, { conn, text, command, args }) => {
         }
     }
 
+    // ─────────────────────────────────────────────
+    //  DW2 / DW3 / DW4 — Reescalar / hardsub / 360p
+    // ─────────────────────────────────────────────
     if (/^(dw2|dw3|dw4)$/i.test(command)) {
         if (!m.quoted) return reply('Responde a un video.');
         const isDw4      = command === 'dw4';
@@ -222,99 +249,93 @@ let handler = async (m, { conn, text, command, args }) => {
             let success = await downloadMediaStream(m.quoted, input);
             if (!success) fs.writeFileSync(input, await m.quoted.download());
 
-            exec(`ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "${input}"`, (err, stdout) => {
-                const totalFrames = parseInt(stdout) || 0;
-                let ffmpegArgs = ['-i', input];
+            const { totalFrames } = getVideoMeta(input);
+            let ffmpegArgs = ['-i', input];
 
-                if (isDw4) {
-                    // DW4: OPTIMIZADO PARA VELOCIDAD EN 360p
-                    ffmpegArgs.push(
-                        '-vf', withWM('scale=-2:360:flags=fast_bilinear'), // ⚡ fast_bilinear en lugar de lanczos
-                        '-c:v', 'libx264',
-                        '-crf', '26', // Reduce crf a 26 (más rápido, calidad aceptable)
-                        '-maxrate', '800k', // Reduce maxrate
-                        '-bufsize', '1600k',
-                        '-preset', 'faster', // ⚡ FASTER en lugar de medium
-                        '-tune', 'fastdecode',
-                        '-profile:v', 'baseline', // ⚡ baseline es más rápido que high
-                        '-level', '3.0',
-                        '-c:a', 'aac',
-                        '-b:a', '64k', // Reduce audio a 64k
-                        '-ac', '2',
-                        '-movflags', '+faststart'
-                    );
-                } else if (isDw3) {
-                    // DW3: SUBTÍTULOS QUEMADOS ULTRA-RÁPIDO ⚡⚡⚡
-                    const aIdx = parseInt(args[1]) - 1 || 0;
-                    const sIdx = parseInt(args[2]) - 1 || 0;
-                    ffmpegArgs.push(
-                        '-map', '0:v:0',
-                        '-map', `0:a:${aIdx}`,
-                        // ⚡ IMPORTANTE: ass en lugar de subtitles (MUCHO más rápido para SSA/ASS)
-                        '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear,ass=${input}:si=${sIdx}`), // ass = más rápido
-                        '-c:a', 'aac',
-                        '-b:a', '80k', // Reduce de 128k
-                        '-c:v', 'libx264',
-                        '-crf', '25', // Reduce de 22 (más rápido)
-                        '-preset', 'faster', // ⚡ FASTER en lugar de medium
-                        '-tune', 'fastdecode',
-                        '-profile:v', 'baseline', // ⚡ baseline más rápido
-                        '-movflags', '+faststart'
-                    );
-                } else {
-                    // DW2: SIN SUBTÍTULOS - MÁXIMA VELOCIDAD
-                    ffmpegArgs.push(
-                        '-vf', withWM(`scale=-2:${res}:flags=fast_bilinear`), // ⚡ fast_bilinear
-                        '-c:a', 'copy', // ⚡ copy audio = casi instantáneo
-                        '-c:v', 'libx264',
-                        '-crf', '24', // Reduce de 20
-                        '-preset', 'faster', // ⚡ FASTER en lugar de medium
-                        '-tune', 'fastdecode',
-                        '-profile:v', 'baseline', // ⚡ baseline
-                        '-movflags', '+faststart'
-                    );
-                }
+            if (isDw4) {
+                // DW4: 360p máx. velocidad
+                // ✅ pix_fmt yuv420p + pad (compressO)
+                ffmpegArgs.push(
+                    '-vf', withWM(scaleFast('360')),
+                    '-c:v', 'libx264', '-crf', '26', '-maxrate', '800k', '-bufsize', '1600k',
+                    '-pix_fmt', 'yuv420p',          // ✅
+                    '-preset', 'faster', '-tune', 'fastdecode',
+                    '-profile:v', 'baseline', '-level', '3.0',
+                    '-c:a', 'aac', '-b:a', '64k', '-ac', '2', '-movflags', '+faststart'
+                );
+            } else if (isDw3) {
+                // DW3: hardsub
+                // ✅ 'subtitles' filter (compatible con SRT/ASS/PGS) vs el antiguo 'ass'
+                // ✅ fast_bilinear + pad, pix_fmt yuv420p
+                const aIdx = parseInt(args[1]) - 1 || 0;
+                const sIdx = parseInt(args[2]) - 1 || 0;
+                ffmpegArgs.push(
+                    '-map', '0:v:0', '-map', `0:a:${aIdx}`,
+                    '-vf', withWM(`${scaleFast(res)},subtitles=${input}:si=${sIdx}`),
+                    '-c:a', 'aac', '-b:a', '80k',
+                    '-c:v', 'libx264', '-crf', '25',
+                    '-pix_fmt', 'yuv420p',          // ✅
+                    '-preset', 'faster', '-tune', 'fastdecode',
+                    '-profile:v', 'baseline', '-movflags', '+faststart'
+                );
+            } else {
+                // DW2: sin subtítulos, audio copy
+                // ✅ lanczos (mejor calidad, sin costo significativo sin hardsub)
+                // ✅ pix_fmt yuv420p + pad
+                ffmpegArgs.push(
+                    '-vf', withWM(scaleLanczos(res)),
+                    '-c:a', 'copy',
+                    '-c:v', 'libx264', '-crf', '24',
+                    '-pix_fmt', 'yuv420p',          // ✅
+                    '-preset', 'faster', '-tune', 'fastdecode',
+                    '-profile:v', 'baseline', '-movflags', '+faststart'
+                );
+            }
 
-                ffmpegArgs.push('-threads', '0', '-y', output);
+            ffmpegArgs.push('-threads', '0', '-y', output);
 
+            await new Promise((resolve, reject) => {
                 const proc = spawn('ffmpeg', ffmpegArgs);
                 proc.stderr.on('data', (data) => logFFmpegProgress(label, data, totalFrames));
                 proc.on('close', async (code) => {
                     process.stdout.write('\n\n');
-                    if (code === 0) {
-                        if (isDw4) {
-                            const fileSizeMB = fs.statSync(output).size / 1024 / 1024;
-                            if (fileSizeMB > 60) {
-                                // ⚡ Recompresión ultra-rápida si excede 60MB
-                                exec(`ffmpeg -i "${output}" -c:v libx264 -crf 32 -preset superfast -c:a aac -b:a 64k -y "${output}_opt.mp4"`, async () => {
-                                    const finalFile    = fs.existsSync(`${output}_opt.mp4`) ? `${output}_opt.mp4` : output;
-                                    const mediaOptions = asDocument
-                                        ? { document: fs.readFileSync(finalFile), fileName: 'Video_360p_HD.mp4', mimetype: 'video/mp4' }
-                                        : { video: fs.readFileSync(finalFile) };
-                                    await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                                    [input, output, `${output}_opt.mp4`].forEach(f => { if (fs.existsSync(f)) fs.unlinkSync(f); });
-                                });
-                                return;
-                            }
+                    if (code !== 0) { reject(new Error(`FFmpeg salió con código ${code}`)); return; }
+
+                    if (isDw4) {
+                        const fileSizeMB = fs.statSync(output).size / 1024 / 1024;
+                        if (fileSizeMB > 60) {
+                            const optOut = `${output}_opt.mp4`;
+                            // ✅ pix_fmt yuv420p también en recompresión de emergencia
+                            exec(`ffmpeg -i "${output}" -c:v libx264 -crf 32 -preset superfast -pix_fmt yuv420p -c:a aac -b:a 64k -y "${optOut}"`, async () => {
+                                const finalFile    = fs.existsSync(optOut) ? optOut : output;
+                                const mediaOptions = asDocument
+                                    ? { document: fs.readFileSync(finalFile), fileName: 'Video_360p_HD.mp4', mimetype: 'video/mp4' }
+                                    : { video: fs.readFileSync(finalFile) };
+                                await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
+                                [input, output, optOut].forEach(f => { if (fs.existsSync(f)) fs.unlinkSync(f); });
+                                resolve();
+                            });
+                            return;
                         }
-                        const mediaOptions = asDocument
-                            ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
-                            : { video: fs.readFileSync(output) };
-                        await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
-                    } else {
-                        reply('❌ Error en FFmpeg.');
                     }
-                    if (fs.existsSync(input))  fs.unlinkSync(input);
-                    if (fs.existsSync(output)) fs.unlinkSync(output);
+
+                    const mediaOptions = asDocument
+                        ? { document: fs.readFileSync(output), fileName: `Video_${res}p.mp4`, mimetype: 'video/mp4' }
+                        : { video: fs.readFileSync(output) };
+                    await conn.sendMessage(m.chat, mediaOptions, { quoted: m });
+                    resolve();
                 });
             });
         } catch (e) {
-            reply('❌ Error de proceso.');
+            reply(`❌ Error de proceso:\n\`${e.message}\``);
             console.error(e);
+        } finally {
+            if (fs.existsSync(input))  fs.unlinkSync(input);
+            if (fs.existsSync(output)) fs.unlinkSync(output);
         }
     }
 };
 
 handler.command = /^(dw|dw2|dw3|dw4|mi)$/i;
 export default handler;
-                                  
+                                           
