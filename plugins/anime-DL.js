@@ -1,4 +1,4 @@
-// plugins/anime.js
+// plugins/anime-DL.js
 // Comando: .animedl <url> | .animedl <nombre> <episodio>
 // Soporta: AnimeFLV, TioAnime, JKanime
 //
@@ -6,7 +6,6 @@
 //  - AnyDownload  → detección dinámica + intercepción de red para capturar m3u8/mp4 directo
 //  - pupflare     → puppeteer-extra-plugin-stealth para bypass Cloudflare
 //  - cloudflare-scrape → headers anti-bot realistas
-//  - web-scraping → patrones robustos de scraping con fallback
 
 import { exec } from 'child_process'
 import { promisify } from 'util'
@@ -17,7 +16,6 @@ import * as cheerio from 'cheerio'
 import puppeteerExtra from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 
-// Activar stealth (igual que pupflare)
 puppeteerExtra.use(StealthPlugin())
 
 const execAsync = promisify(exec)
@@ -28,13 +26,11 @@ const CONFIG = {
   maxFileSize: '200m',
   downloadTimeout: 150_000,
   puppeteerTimeout: 30_000,
-  // User-agents rotativos (técnica de cloudflare-scrape)
   userAgents: [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/123.0.0.0 Safari/537.36',
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36',
   ],
-  // Headers anti-bot realistas (de cloudflare-scrape)
   baseHeaders: {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
     'Accept-Language': 'es-419,es;q=0.9,en;q=0.8',
@@ -53,13 +49,8 @@ const CONFIG = {
   videoExtensions: /\.(mp4|mkv|webm|m3u8|ts)(\?|$)/i,
 }
 
-function randomUA() {
-  return CONFIG.userAgents[Math.floor(Math.random() * CONFIG.userAgents.length)]
-}
-
-function buildHeaders(extra = {}) {
-  return { ...CONFIG.baseHeaders, 'User-Agent': randomUA(), ...extra }
-}
+const randomUA = () => CONFIG.userAgents[Math.floor(Math.random() * CONFIG.userAgents.length)]
+const buildHeaders = (extra = {}) => ({ ...CONFIG.baseHeaders, 'User-Agent': randomUA(), ...extra })
 
 // ─── Detección ────────────────────────────────────────────────────────────────
 
@@ -77,17 +68,7 @@ function detectarServidor(url) {
   return 'generico'
 }
 
-function elegirMejorServidor(servidores) {
-  for (const preferido of CONFIG.servidoresPreferidos) {
-    const match = servidores.find(s =>
-      s.nombre?.includes(preferido) || s.url?.includes(preferido)
-    )
-    if (match) return match
-  }
-  return servidores[0] || null
-}
-
-// ─── Fetch estático → dinámico (patrón AnyDownload) ──────────────────────────
+// ─── Fetch estático → dinámico ────────────────────────────────────────────────
 
 async function fetchHtml(url) {
   try {
@@ -96,30 +77,21 @@ async function fetchHtml(url) {
       timeout: 15000,
     })
     const html = await res.text()
-
-    // AnyDownload: detectar si la página necesita renderizado JS
     const necesitaDinamico =
       html.length < 5000 ||
       /<div id="app"|ng-app|window\.__INITIAL_STATE__|_next\/static/.test(html) ||
       html.includes('challenge-platform') ||
       html.includes('cf-browser-verification') ||
       html.includes('Just a moment')
-
-    if (necesitaDinamico) {
-      console.log('[anime] Página dinámica/protegida → Puppeteer stealth')
-      return await fetchHtmlConPuppeteer(url)
-    }
+    if (necesitaDinamico) return await fetchHtmlConPuppeteer(url)
     return html
   } catch (_) {
     return await fetchHtmlConPuppeteer(url)
   }
 }
 
-// ─── Puppeteer stealth con intercepción de red (pupflare + AnyDownload) ──────
-
 async function fetchHtmlConPuppeteer(url) {
   let capturedVideoUrl = null
-
   const browser = await puppeteerExtra.launch({
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
@@ -127,20 +99,12 @@ async function fetchHtmlConPuppeteer(url) {
   const page = await browser.newPage()
   await page.setUserAgent(randomUA())
   await page.setExtraHTTPHeaders(CONFIG.baseHeaders)
-
-  // Interceptar responses para capturar URLs de video directas (AnyDownload)
   page.on('response', (response) => {
     const resUrl = response.url()
-    if (CONFIG.videoExtensions.test(resUrl) && !capturedVideoUrl) {
-      console.log('[anime] 🎯 Video capturado en red:', resUrl)
-      capturedVideoUrl = resUrl
-    }
+    if (CONFIG.videoExtensions.test(resUrl) && !capturedVideoUrl) capturedVideoUrl = resUrl
   })
-
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: CONFIG.puppeteerTimeout })
-
-    // Esperar resolución de Cloudflare challenge (pupflare)
     let tries = 0
     let bodyText = await page.evaluate(() => document.body?.innerText || '')
     while (
@@ -151,17 +115,10 @@ async function fetchHtmlConPuppeteer(url) {
       bodyText = await page.evaluate(() => document.body?.innerText || '')
       tries++
     }
-
-    // Esperar que el reproductor JS cargue sus servidores
     await new Promise(r => setTimeout(r, 3000))
-
     const html = await page.content()
     await browser.close()
-
-    // Adjuntar URL interceptada como comentario para que el scraper la encuentre
-    if (capturedVideoUrl) {
-      return html + `\n`
-    }
+    if (capturedVideoUrl) return html + `\n`
     return html
   } catch (err) {
     await browser.close()
@@ -169,7 +126,7 @@ async function fetchHtmlConPuppeteer(url) {
   }
 }
 
-// ─── Extracción de URLs de video en scripts inline ────────────────────────────
+// ─── Scraping ─────────────────────────────────────────────────────────────────
 
 function extraerUrlsDeScripts($, html, servidores) {
   $('script:not([src])').each((_, el) => {
@@ -178,25 +135,18 @@ function extraerUrlsDeScripts($, html, servidores) {
     let match
     while ((match = re.exec(code)) !== null) {
       const u = match[1]
-      if (!servidores.find(s => s.url === u)) {
+      if (!servidores.find(s => s.url === u))
         servidores.push({ nombre: detectarServidor(u), url: u, directo: true })
-      }
     }
   })
 }
-
-// ─── Scrapers por sitio ───────────────────────────────────────────────────────
 
 async function scrapeAnimeFLV(url) {
   const html = await fetchHtml(url)
   const $ = cheerio.load(html)
   const servidores = []
-
-  // URL capturada por Puppeteer (máxima prioridad)
   const intercepted = html.match(/INTERCEPTED_VIDEO:(https?:\/\/[^\s"<>\n]+)/)
   if (intercepted) servidores.push({ nombre: detectarServidor(intercepted[1]), url: intercepted[1], directo: true })
-
-  // var videos = { SUB: [...] } — patrón AnimeFLV
   $('script').each((_, el) => {
     const code = $(el).html() || ''
     const match = code.match(/var videos\s*=\s*(\{[\s\S]*?\});/)
@@ -211,7 +161,6 @@ async function scrapeAnimeFLV(url) {
       } catch (_) {}
     }
   })
-
   extraerUrlsDeScripts($, html, servidores)
   return servidores
 }
@@ -221,17 +170,57 @@ async function scrapeTioAnime(url) {
   const $ = cheerio.load(html)
   const servidores = []
 
+  // URL capturada por Puppeteer (máxima prioridad)
   const intercepted = html.match(/INTERCEPTED_VIDEO:(https?:\/\/[^\s"<>\n]+)/)
   if (intercepted) servidores.push({ nombre: detectarServidor(intercepted[1]), url: intercepted[1], directo: true })
 
-  // data-player en base64
-  $('[data-player]').each((_, el) => {
-    try {
-      const decoded = Buffer.from($(el).attr('data-player'), 'base64').toString('utf-8')
-      const nombre = $(el).text().trim().toLowerCase() || detectarServidor(decoded)
-      if (decoded.startsWith('http')) servidores.push({ nombre, url: decoded })
-    } catch (_) {}
+  // Estructura ACTUAL TioAnime: var videos = [["Servidor", "url"], ...]
+  $('script').each((_, el) => {
+    const code = $(el).html() || ''
+
+    // Array de arrays [nombre, url]
+    const matchArr = code.match(/var\s+videos\s*=\s*(\[[\s\S]*?\]);/)
+    if (matchArr) {
+      try {
+        const lista = JSON.parse(matchArr[1])
+        for (const item of lista) {
+          if (Array.isArray(item) && typeof item[1] === 'string' && item[1].startsWith('http')) {
+            servidores.push({ nombre: String(item[0]).toLowerCase() || detectarServidor(item[1]), url: item[1] })
+          } else if (item?.file?.startsWith('http')) {
+            // Variante objeto {file, label}
+            servidores.push({ nombre: item.label?.toLowerCase() || detectarServidor(item.file), url: item.file })
+          }
+        }
+      } catch (_) {}
+    }
+
+    // Fallback: objeto {SUB:[...], LAT:[...]} (estructura antigua)
+    if (servidores.length === 0) {
+      const matchObj = code.match(/var\s+videos\s*=\s*(\{[\s\S]*?\});/)
+      if (matchObj) {
+        try {
+          const data = JSON.parse(matchObj[1])
+          const lista = data.SUB || data.LAT || data.ESP || []
+          for (const s of lista) {
+            const videoUrl = s.url || s.code || s.file
+            if (videoUrl) servidores.push({ nombre: s.title?.toLowerCase() || detectarServidor(videoUrl), url: videoUrl })
+          }
+        } catch (_) {}
+      }
+    }
   })
+
+  // Fallback: [data-player] base64 (estructura antigua)
+  if (servidores.length === 0) {
+    $('[data-player]').each((_, el) => {
+      try {
+        const raw = $(el).attr('data-player') || ''
+        const decoded = Buffer.from(raw, 'base64').toString('utf-8')
+        const nombre = $(el).text().trim().toLowerCase() || detectarServidor(decoded)
+        if (decoded.startsWith('http')) servidores.push({ nombre, url: decoded })
+      } catch (_) {}
+    })
+  }
 
   $('iframe[src]').each((_, el) => {
     const src = $(el).attr('src')
@@ -247,20 +236,43 @@ async function scrapeJKanime(url) {
   const $ = cheerio.load(html)
   const servidores = []
 
+  // URL capturada por Puppeteer
   const intercepted = html.match(/INTERCEPTED_VIDEO:(https?:\/\/[^\s"<>\n]+)/)
   if (intercepted) servidores.push({ nombre: detectarServidor(intercepted[1]), url: intercepted[1], directo: true })
 
-  // data-url — puede ser base64 o directo
-  $('span[data-url], a[data-url], div[data-url]').each((_, el) => {
-    const raw = $(el).attr('data-url') || ''
-    const nombre = $(el).text().trim().toLowerCase()
-    let finalUrl = raw
-    try {
-      const decoded = Buffer.from(raw, 'base64').toString('utf-8')
-      if (decoded.startsWith('http')) finalUrl = decoded
-    } catch (_) {}
-    if (finalUrl.startsWith('http')) servidores.push({ nombre: nombre || detectarServidor(finalUrl), url: finalUrl })
-  })
+  // Estructura ACTUAL JKanime: API AJAX /ajax/episode/2/?id=SLUG&cap=N&server=S
+  // Extraer slug y número de episodio de la URL: /SLUG/EP/
+  const jkMatch = url.match(/jkanime\.net\/([^/]+)\/(\d+)/)
+  if (jkMatch) {
+    const slug = jkMatch[1]
+    const cap  = jkMatch[2]
+    const serversJK = ['jkvideo', 'okru', 'streamtape', 'mp4upload', 'filemoon']
+    for (const srv of serversJK) {
+      try {
+        const apiUrl = `https://jkanime.net/ajax/episode/2/?id=${slug}&cap=${cap}&server=${srv}`
+        const res = await fetch(apiUrl, { headers: buildHeaders({ Referer: url }), timeout: 10000 })
+        if (res.ok) {
+          const json = await res.json()
+          const embedUrl = json?.source?.[0]?.file || json?.iframe || json?.url
+          if (embedUrl) servidores.push({ nombre: srv, url: embedUrl })
+        }
+      } catch (_) {}
+    }
+  }
+
+  // Fallback: selectores HTML (estructura anterior con data-url base64)
+  if (servidores.length === 0) {
+    $('span[data-url], a[data-url], div[data-url], li[data-url]').each((_, el) => {
+      const raw = $(el).attr('data-url') || ''
+      const nombre = $(el).text().trim().toLowerCase()
+      let finalUrl = raw
+      try {
+        const decoded = Buffer.from(raw, 'base64').toString('utf-8')
+        if (decoded.startsWith('http')) finalUrl = decoded
+      } catch (_) {}
+      if (finalUrl.startsWith('http')) servidores.push({ nombre: nombre || detectarServidor(finalUrl), url: finalUrl })
+    })
+  }
 
   $('iframe[src]').each((_, el) => {
     const src = $(el).attr('src')
@@ -277,13 +289,10 @@ async function buscarEnAnimeFLV(nombre, episodio) {
   const query = encodeURIComponent(nombre)
   const html = await fetchHtml(`https://www3.animeflv.net/browse?q=${query}`)
   const $ = cheerio.load(html)
-
   const primerLink =
     $('ul.ListAnimes li a').first().attr('href') ||
     $('article.Anime a').first().attr('href')
-
   if (!primerLink) return null
-
   const slug = primerLink.replace('/anime/', '').replace(/\/$/, '')
   return `https://www3.animeflv.net/ver/${slug}-${episodio}`
 }
@@ -293,7 +302,6 @@ async function buscarEnAnimeFLV(nombre, episodio) {
 async function descargarConYtDlp(videoUrl, outputDir) {
   const outputTemplate = path.join(outputDir, '%(title)s.%(ext)s')
   const esHLS = videoUrl.includes('.m3u8')
-
   const cmd = [
     'yt-dlp',
     '--no-check-certificate',
@@ -313,28 +321,28 @@ async function descargarConYtDlp(videoUrl, outputDir) {
   const archivos = fs.readdirSync(outputDir).filter(f => /\.(mp4|mkv|webm)$/i.test(f))
   if (archivos.length === 0) throw new Error('yt-dlp no generó ningún archivo')
 
-  const masReciente = archivos
-    .map(f => ({ f, t: fs.statSync(path.join(outputDir, f)).mtimeMs }))
-    .sort((a, b) => b.t - a.t)[0].f
-
-  return path.join(outputDir, masReciente)
+  return path.join(
+    outputDir,
+    archivos.map(f => ({ f, t: fs.statSync(path.join(outputDir, f)).mtimeMs }))
+           .sort((a, b) => b.t - a.t)[0].f
+  )
 }
 
-// ─── Handler principal ────────────────────────────────────────────────────────
+// ─── Handler principal (formato KanaArima-MD) ─────────────────────────────────
 
-export async function animeHandler(sock, msg, args) {
-  const from = msg.key.remoteJid
-
-  if (!args || args.length === 0) {
-    return sock.sendMessage(from, {
-      text: `*🎌 Descargador de Anime*\n\n` +
-            `• *.animedl <url>* — URL directa del episodio\n` +
-            `• *.animedl <nombre> <episodio>* — Busca en AnimeFLV\n\n` +
-            `*Sitios:* AnimeFLV · TioAnime · JKanime\n` +
-            `_Bypass de Cloudflare incluido_ ☁️`
-    }, { quoted: msg })
+const handler = async (m, { conn, text, usedPrefix, command }) => {
+  // Sin argumentos → mostrar ayuda
+  if (!text || !text.trim()) {
+    return m.reply(
+      `*🎌 Descargador de Anime*\n\n` +
+      `• *${usedPrefix + command} <url>* — URL directa del episodio\n` +
+      `• *${usedPrefix + command} <nombre> <episodio>* — Busca en AnimeFLV\n\n` +
+      `*Sitios soportados:* AnimeFLV · TioAnime · JKanime\n` +
+      `_Bypass de Cloudflare incluido_ ☁️`
+    )
   }
 
+  const args = text.trim().split(/\s+/)
   let episodeUrl = null
 
   if (args[0].startsWith('http')) {
@@ -344,55 +352,43 @@ export async function animeHandler(sock, msg, args) {
     const nombre = args.slice(0, -1).join(' ')
 
     if (!nombre || isNaN(episodio)) {
-      return sock.sendMessage(from, {
-        text: '❌ Formato: `.animedl one piece 1100`'
-      }, { quoted: msg })
+      return m.reply(`❌ Formato correcto: *${usedPrefix + command} one piece 1100*`)
     }
 
-    await sock.sendMessage(from, { text: `🔎 Buscando *${nombre}* episodio *${episodio}*...` }, { quoted: msg })
-
+    await m.reply(`🔎 Buscando *${nombre}* episodio *${episodio}*...`)
     episodeUrl = await buscarEnAnimeFLV(nombre, episodio)
+
     if (!episodeUrl) {
-      return sock.sendMessage(from, {
-        text: '❌ No encontré ese anime.\nPrueba con la URL directa del episodio.'
-      }, { quoted: msg })
+      return m.reply('❌ No encontré ese anime.\nPrueba con la URL directa del episodio.')
     }
-    await sock.sendMessage(from, { text: `✅ ${episodeUrl}` }, { quoted: msg })
+    await m.reply(`✅ ${episodeUrl}`)
   }
 
   const sitio = detectarSitio(episodeUrl)
-  await sock.sendMessage(from, {
-    text: `📡 Extrayendo servidores de *${sitio || 'sitio desconocido'}*...`
-  }, { quoted: msg })
+  await m.reply(`📡 Extrayendo servidores de *${sitio || 'sitio desconocido'}*...`)
 
   let servidores = []
   try {
-    if (sitio === 'animeflv') servidores = await scrapeAnimeFLV(episodeUrl)
+    if (sitio === 'animeflv')     servidores = await scrapeAnimeFLV(episodeUrl)
     else if (sitio === 'tioanime') servidores = await scrapeTioAnime(episodeUrl)
     else if (sitio === 'jkanime') servidores = await scrapeJKanime(episodeUrl)
-    else servidores = [{ nombre: 'directo', url: episodeUrl, directo: true }]
+    else                           servidores = [{ nombre: 'directo', url: episodeUrl, directo: true }]
   } catch (err) {
-    return sock.sendMessage(from, { text: `❌ Error al analizar la página:\n\`${err.message}\`` }, { quoted: msg })
+    return m.reply(`❌ Error al analizar la página:\n\`${err.message}\``)
   }
 
   if (servidores.length === 0) {
-    return sock.sendMessage(from, {
-      text: '❌ No encontré servidores. El sitio pudo haber cambiado su estructura.'
-    }, { quoted: msg })
+    return m.reply('❌ No encontré servidores. El sitio pudo haber cambiado su estructura.')
   }
 
-  // Prioridad: URLs directas de video (mp4/m3u8) capturadas por Puppeteer
   const directas = servidores.filter(s => s.directo && CONFIG.videoExtensions.test(s.url))
   const listaIntentos = directas.length > 0
     ? [...directas, ...servidores.filter(s => !s.directo)]
     : servidores
 
-  const primerServidor = listaIntentos[0]
-  await sock.sendMessage(from, {
-    text: `⬇️ Descargando desde *${primerServidor.nombre}*...\n_Puede tardar hasta 2 min_`
-  }, { quoted: msg })
+  await m.reply(`⬇️ Descargando desde *${listaIntentos[0].nombre}*...\n_Puede tardar hasta 2 min_`)
 
-  const tmpDir = `/tmp/anime_${Date.now()}`
+  const tmpDir = path.join(process.env.TMPDIR || '/tmp', `anime_${Date.now()}`)
   fs.mkdirSync(tmpDir, { recursive: true })
 
   let archivoPath = null
@@ -401,9 +397,7 @@ export async function animeHandler(sock, msg, args) {
       archivoPath = await descargarConYtDlp(srv.url, tmpDir)
       break
     } catch (_) {
-      await sock.sendMessage(from, {
-        text: `⚠️ *${srv.nombre}* falló → probando siguiente...`
-      }, { quoted: msg })
+      await m.reply(`⚠️ *${srv.nombre}* falló → probando siguiente...`)
       fs.readdirSync(tmpDir).forEach(f => {
         try { fs.unlinkSync(path.join(tmpDir, f)) } catch (_) {}
       })
@@ -412,9 +406,9 @@ export async function animeHandler(sock, msg, args) {
 
   if (!archivoPath) {
     fs.rmSync(tmpDir, { recursive: true, force: true })
-    return sock.sendMessage(from, {
-      text: `❌ Todos los servidores fallaron.\n*Intentados:* ${listaIntentos.slice(0, 4).map(s => s.nombre).join(', ')}`
-    }, { quoted: msg })
+    return m.reply(
+      `❌ Todos los servidores fallaron.\n*Intentados:* ${listaIntentos.slice(0, 4).map(s => s.nombre).join(', ')}`
+    )
   }
 
   try {
@@ -422,18 +416,22 @@ export async function animeHandler(sock, msg, args) {
     const fileName = path.basename(archivoPath)
     const sizeMB = (videoBuffer.length / 1024 / 1024).toFixed(1)
 
-    await sock.sendMessage(from, {
+    await conn.sendMessage(m.chat, {
       video: videoBuffer,
       caption: `🎌 *${fileName.replace(/\.[^.]+$/, '')}*\n📦 ${sizeMB} MB · KanaArima-MD`,
       mimetype: 'video/mp4',
       fileName,
-    }, { quoted: msg })
+    }, { quoted: m })
   } catch (err) {
-    await sock.sendMessage(from, {
-      text: `❌ Descargado pero falló el envío:\n${err.message}`
-    }, { quoted: msg })
+    await m.reply(`❌ Descargado pero falló el envío:\n${err.message}`)
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true })
   }
-        }
-                       
+}
+
+handler.help = ['animedl <url|nombre episodio>']
+handler.tags = ['descargas']
+handler.command = /^animedl$/i
+
+export default handler
+    
