@@ -23,7 +23,7 @@ const execAsync = promisify(exec)
 // ─── Configuración ────────────────────────────────────────────────────────────
 
 const CONFIG = {
-  maxFileSize: '200m',
+  maxFileSize: '95m',
   downloadTimeout: 150_000,
   puppeteerTimeout: 30_000,
   userAgents: [
@@ -412,18 +412,50 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 
   try {
-    const videoBuffer = fs.readFileSync(archivoPath)
-    const fileName = path.basename(archivoPath)
-    const sizeMB = (videoBuffer.length / 1024 / 1024).toFixed(1)
+    let finalPath = archivoPath
+    let sizeMB = fs.statSync(archivoPath).size / 1024 / 1024
 
-    await conn.sendMessage(m.chat, {
-      video: videoBuffer,
-      caption: `🎌 *${fileName.replace(/\.[^.]+$/, '')}*\n📦 ${sizeMB} MB · KanaArima-MD`,
-      mimetype: 'video/mp4',
-      fileName,
-    }, { quoted: m })
+    // Comprimir con ffmpeg si supera 50 MB
+    if (sizeMB > 50) {
+      await m.reply(`⚙️ Archivo grande (${sizeMB.toFixed(1)} MB) → comprimiendo...`)
+      const compPath = archivoPath.replace(/\.[^.]+$/, '_c.mp4')
+      try {
+        await execAsync(
+          `ffmpeg -i "${archivoPath}" -vf "scale='min(1280,iw)':-2" -c:v libx264 -crf 28 -preset fast -c:a aac -b:a 96k -movflags +faststart "${compPath}"`,
+          { timeout: 180_000 }
+        )
+        if (fs.existsSync(compPath)) {
+          finalPath = compPath
+          sizeMB = fs.statSync(compPath).size / 1024 / 1024
+        }
+      } catch (_) {}
+    }
+
+    const fileName = path.basename(finalPath).replace(/_c\.mp4$/, '.mp4')
+    const caption  = `🎌 *${fileName.replace(/\.[^.]+$/, '')}*\n📦 ${sizeMB.toFixed(1)} MB · KanaArima-MD`
+
+    // Usar { url: path } en vez de readFileSync — Baileys sube en stream
+    const fileRef = { url: finalPath }
+
+    try {
+      await conn.sendMessage(m.chat, {
+        video: fileRef,
+        caption,
+        mimetype: 'video/mp4',
+        fileName,
+      }, { quoted: m })
+    } catch (_videoErr) {
+      // Fallback: documento (igual stream, sin límite de preview)
+      await m.reply('⚠️ Reintentando como documento...')
+      await conn.sendMessage(m.chat, {
+        document: fileRef,
+        caption,
+        mimetype: 'video/mp4',
+        fileName,
+      }, { quoted: m })
+    }
   } catch (err) {
-    await m.reply(`❌ Descargado pero falló el envío:\n${err.message}`)
+    await m.reply(`❌ Falló el envío:\n${err.message}`)
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true })
   }
@@ -434,4 +466,4 @@ handler.tags = ['descargas']
 handler.command = /^animedl$/i
 
 export default handler
-                                         
+      
