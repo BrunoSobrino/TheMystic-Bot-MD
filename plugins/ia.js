@@ -1,8 +1,10 @@
 // plugins/ia.js
 // Kana Arima — IA con ejecución de comandos por lenguaje natural
-// v5: Mapa de comandos extraído directamente de los plugins reales
+// v6: Gestión de archivos, plugins, config y base de datos (solo owner)
 
 import fetch from 'node-fetch'
+import fs from 'fs'
+import path from 'path'
 
 const APICAUSAS_BASE  = 'https://rest.apicausas.xyz/api/v1/ai'
 const API_KEY         = 'causa-db9690e010e31139'
@@ -256,6 +258,211 @@ async function callKana(userText, quotedText, owner = false) {
   return reply.trim()
 }
 
+
+// ── BASE PATH del bot ─────────────────────────────────────
+const BOT_PATH = '/data/data/com.termux/files/home/KanaArima-MD'
+const PLUGINS_PATH = path.join(BOT_PATH, 'plugins')
+
+// ── Prompt de gestión de archivos (solo owner) ────────────
+const FILE_MGMT_PROMPT = `Eres un asistente de gestión de archivos para un bot de WhatsApp.
+Analiza el mensaje y responde SOLO con JSON válido sin markdown:
+{
+  "es_archivo": true o false,
+  "operacion": "crear_plugin | editar_plugin | eliminar_plugin | listar_plugins | editar_config | ver_config | ver_db | editar_db | crear_archivo | editar_archivo | eliminar_archivo | leer_archivo",
+  "nombre": "nombre del archivo o plugin (sin ruta)",
+  "contenido": "contenido completo del archivo si aplica, null si no",
+  "clave": "clave de config o db si aplica, null si no",
+  "valor": "nuevo valor si aplica, null si no",
+  "confianza": "alta, media o baja"
+}
+
+Operaciones disponibles:
+- crear_plugin: crear un nuevo plugin en /plugins/
+- editar_plugin: modificar un plugin existente
+- eliminar_plugin: borrar un plugin
+- listar_plugins: listar plugins disponibles
+- editar_config: cambiar una variable en config.js
+- ver_config: leer config.js
+- ver_db: ver datos de la base de datos (users, chats, settings)
+- editar_db: modificar datos en la base de datos
+- crear_archivo: crear cualquier archivo en el bot
+- editar_archivo: editar cualquier archivo existente
+- eliminar_archivo: borrar un archivo
+- leer_archivo: leer contenido de un archivo
+
+Si el mensaje no es una operación de archivos, responde con es_archivo: false.`
+
+// ── Ejecutor de operaciones de archivos ───────────────────
+async function ejecutarArchivoOp(intent, m) {
+  const op = intent.operacion
+
+  // ── Listar plugins ──────────────────────────────────────
+  if (op === 'listar_plugins') {
+    const files = fs.readdirSync(PLUGINS_PATH).filter(f => f.endsWith('.js') && f !== 'ia.js')
+    const lista = files.map((f, i) => `${i + 1}. ${f}`).join('\n')
+    return `...Aquí tienes la lista. No me pidas que los recuerde todos.\n\n${lista}`
+  }
+
+  // ── Crear plugin ────────────────────────────────────────
+  if (op === 'crear_plugin') {
+    if (!intent.nombre || !intent.contenido) return '...Necesito el nombre y el contenido del plugin.'
+    const nombre = intent.nombre.endsWith('.js') ? intent.nombre : intent.nombre + '.js'
+    const filePath = path.join(PLUGINS_PATH, nombre)
+    if (fs.existsSync(filePath)) return `...Ese plugin ya existe (${nombre}). ¿Quieres editarlo?`
+    fs.writeFileSync(filePath, intent.contenido, 'utf8')
+    return `Plugin *${nombre}* creado. ...No me agradezcas.`
+  }
+
+  // ── Editar plugin ───────────────────────────────────────
+  if (op === 'editar_plugin') {
+    if (!intent.nombre) return '...¿Qué plugin quieres editar? Dime el nombre.'
+    const nombre = intent.nombre.endsWith('.js') ? intent.nombre : intent.nombre + '.js'
+    const filePath = path.join(PLUGINS_PATH, nombre)
+    if (!fs.existsSync(filePath)) return `...No existe ningún plugin llamado *${nombre}*.`
+    if (!intent.contenido) {
+      const actual = fs.readFileSync(filePath, 'utf8')
+      return `Contenido actual de *${nombre}*:\n\n\`\`\`\n${actual.slice(0, 2000)}\n\`\`\``
+    }
+    fs.writeFileSync(filePath, intent.contenido, 'utf8')
+    return `Plugin *${nombre}* actualizado. Ya era hora de arreglarlo.`
+  }
+
+  // ── Eliminar plugin ─────────────────────────────────────
+  if (op === 'eliminar_plugin') {
+    if (!intent.nombre) return '...¿Cuál plugin quieres eliminar?'
+    const nombre = intent.nombre.endsWith('.js') ? intent.nombre : intent.nombre + '.js'
+    const filePath = path.join(PLUGINS_PATH, nombre)
+    if (!fs.existsSync(filePath)) return `...No encuentro el plugin *${nombre}*.`
+    fs.unlinkSync(filePath)
+    return `Plugin *${nombre}* eliminado. Desaparecido. Para siempre.`
+  }
+
+  // ── Ver config ──────────────────────────────────────────
+  if (op === 'ver_config') {
+    const configPath = path.join(BOT_PATH, 'config.js')
+    const content = fs.readFileSync(configPath, 'utf8')
+    // Solo mostrar las variables globales, no el código interno
+    const lines = content.split('\n').filter(l => l.startsWith('global.') || l.startsWith('// '))
+    return `Variables de config:\n\n\`\`\`\n${lines.join('\n').slice(0, 3000)}\n\`\`\``
+  }
+
+  // ── Editar config ───────────────────────────────────────
+  if (op === 'editar_config') {
+    if (!intent.clave || intent.valor === null) return '...Dime qué variable y qué valor quieres cambiar.'
+    const configPath = path.join(BOT_PATH, 'config.js')
+    let content = fs.readFileSync(configPath, 'utf8')
+    const clave = intent.clave.startsWith('global.') ? intent.clave : `global.${intent.clave}`
+    // Reemplazar la línea que contiene la variable
+    const regex = new RegExp(`^(${clave.replace('.', '\\.')}\\s*=\\s*).*$`, 'm')
+    const valor = typeof intent.valor === 'string' && !intent.valor.startsWith('[') && !intent.valor.startsWith('{')
+      ? `'${intent.valor}'`
+      : intent.valor
+    if (!regex.test(content)) return `...No encuentro la variable *${clave}* en config.js.`
+    content = content.replace(regex, `${clave} = ${valor};`)
+    fs.writeFileSync(configPath, content, 'utf8')
+    return `*${clave}* actualizado a \`${valor}\`. Reinicia el bot para que tome efecto.`
+  }
+
+  // ── Ver base de datos ───────────────────────────────────
+  if (op === 'ver_db') {
+    if (!global.db?.data) return '...La base de datos no está cargada aún.'
+    const clave = intent.clave || 'settings'
+    const data = global.db.data[clave]
+    if (!data) return `...No existe la sección *${clave}* en la base de datos.`
+    const json = JSON.stringify(data, null, 2).slice(0, 3000)
+    return `Sección *${clave}* de la DB:\n\n\`\`\`json\n${json}\n\`\`\``
+  }
+
+  // ── Editar base de datos ────────────────────────────────
+  if (op === 'editar_db') {
+    if (!intent.clave || intent.valor === null) return '...Necesito la clave y el nuevo valor.'
+    if (!global.db?.data) return '...La base de datos no está disponible.'
+    // Formato esperado: "users.51925092348.exp" → 9999
+    const keys = intent.clave.split('.')
+    let obj = global.db.data
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (!obj[keys[i]]) obj[keys[i]] = {}
+      obj = obj[keys[i]]
+    }
+    try {
+      obj[keys[keys.length - 1]] = JSON.parse(intent.valor)
+    } catch {
+      obj[keys[keys.length - 1]] = intent.valor
+    }
+    global.db.data = global.db.data // Trigger save
+    return `Base de datos actualizada: *${intent.clave}* = \`${intent.valor}\``
+  }
+
+  // ── Leer archivo genérico ───────────────────────────────
+  if (op === 'leer_archivo') {
+    if (!intent.nombre) return '...¿Qué archivo quieres leer?'
+    const filePath = path.isAbsolute(intent.nombre)
+      ? intent.nombre
+      : path.join(BOT_PATH, intent.nombre)
+    if (!fs.existsSync(filePath)) return `...No existe el archivo *${intent.nombre}*.`
+    const content = fs.readFileSync(filePath, 'utf8').slice(0, 3000)
+    return `Contenido de *${intent.nombre}*:\n\n\`\`\`\n${content}\n\`\`\``
+  }
+
+  // ── Crear archivo genérico ──────────────────────────────
+  if (op === 'crear_archivo') {
+    if (!intent.nombre) return '...¿Cómo se llama el archivo?'
+    const filePath = path.isAbsolute(intent.nombre)
+      ? intent.nombre
+      : path.join(BOT_PATH, intent.nombre)
+    if (fs.existsSync(filePath)) return `...Ese archivo ya existe. ¿Quieres editarlo?`
+    fs.mkdirSync(path.dirname(filePath), { recursive: true })
+    fs.writeFileSync(filePath, intent.contenido || '', 'utf8')
+    return `Archivo *${intent.nombre}* creado.`
+  }
+
+  // ── Editar archivo genérico ─────────────────────────────
+  if (op === 'editar_archivo') {
+    if (!intent.nombre) return '...¿Qué archivo quieres editar?'
+    const filePath = path.isAbsolute(intent.nombre)
+      ? intent.nombre
+      : path.join(BOT_PATH, intent.nombre)
+    if (!fs.existsSync(filePath)) return `...No existe el archivo *${intent.nombre}*.`
+    if (!intent.contenido) {
+      const content = fs.readFileSync(filePath, 'utf8').slice(0, 3000)
+      return `Contenido actual de *${intent.nombre}*:\n\n\`\`\`\n${content}\n\`\`\``
+    }
+    fs.writeFileSync(filePath, intent.contenido, 'utf8')
+    return `Archivo *${intent.nombre}* actualizado.`
+  }
+
+  // ── Eliminar archivo genérico ───────────────────────────
+  if (op === 'eliminar_archivo') {
+    if (!intent.nombre) return '...¿Qué archivo quieres eliminar?'
+    const filePath = path.isAbsolute(intent.nombre)
+      ? intent.nombre
+      : path.join(BOT_PATH, intent.nombre)
+    if (!fs.existsSync(filePath)) return `...No existe el archivo *${intent.nombre}*.`
+    fs.unlinkSync(filePath)
+    return `Archivo *${intent.nombre}* eliminado. Sin rastro.`
+  }
+
+  return '...No entendí qué operación quieres hacer con los archivos.'
+}
+
+// ── Detecta intención de archivo ─────────────────────────
+async function detectFileIntent(userText) {
+  const params = new URLSearchParams({
+    apikey: API_KEY,
+    model: APICAUSAS_MODEL,
+    q: `${FILE_MGMT_PROMPT}\n\nMensaje: "${userText}"`
+  })
+  const res = await fetch(`${APICAUSAS_BASE}?${params.toString()}`, {
+    method: 'GET',
+    signal: AbortSignal.timeout(15_000),
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const data = await res.json()
+  const raw = data?.reply || data?.result || data?.response || data?.text || data?.message || ''
+  const clean = raw.replace(/```json|```/gi, '').trim()
+  return JSON.parse(clean)
+}
+
 // ── Handler principal ─────────────────────────────────────
 const handler = (m) => m
 
@@ -271,6 +478,34 @@ handler.before = async (m) => {
   await m.conn.sendMessage(m.chat, { react: { text: '💭', key: m.key } })
 
   try {
+    const ownerSender = isOwnerSender(m)
+
+    // 0. Si es el owner → verificar si es operación de archivos primero
+    if (ownerSender) {
+      let fileIntent = null
+      try {
+        fileIntent = await detectFileIntent(userText)
+        console.log(`[kana/ia] 📁 FileIntent:`, JSON.stringify(fileIntent))
+      } catch (e) {
+        console.warn(`[kana/ia] ⚠️ Falló detección de archivo:`, e.message)
+      }
+
+      if (fileIntent?.es_archivo && fileIntent?.operacion && fileIntent?.confianza !== 'baja') {
+        console.log(`[kana/ia] 📁 Operación: ${fileIntent.operacion}`)
+        await m.conn.sendMessage(m.chat, { react: { text: '⚙️', key: m.key } })
+        try {
+          const resultado = await ejecutarArchivoOp(fileIntent, m)
+          await m.conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+          await m.conn.sendMessage(m.chat, { text: resultado }, { quoted: m })
+        } catch (e) {
+          console.error('[kana/ia] Error archivo →', e.message)
+          await m.conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+          await m.conn.sendMessage(m.chat, { text: `...Algo salió mal: ${e.message}` }, { quoted: m })
+        }
+        return true
+      }
+    }
+
     // 1. Clasificar intención del mensaje
     let intent = null
     try {
@@ -290,7 +525,7 @@ handler.before = async (m) => {
       console.log(`[kana/ia] 🚀 Ejecutando: "${cmdText}"`)
 
       // Kana confirma con frase — más cálida si es el dueño
-      const ownerMsg = isOwnerSender(m)
+      const ownerMsg = ownerSender
       const confirmFn = ownerMsg
         ? [
             (cmd) => `Ya, ya... ejecutando *${cmd}* para ti. No me lo hagas repetir 🙄`,
@@ -312,7 +547,7 @@ handler.before = async (m) => {
 
     // 3. Si no es comando → respuesta normal de Kana
     const quotedText = (m.quoted.text || '').trim()
-    const owner = isOwnerSender(m)
+    const owner = ownerSender
     const reply = await callKana(userText, quotedText, owner)
 
     await m.conn.sendMessage(m.chat, { react: { text: '', key: m.key } })
@@ -329,4 +564,3 @@ handler.before = async (m) => {
 }
 
 export default handler
-                               
