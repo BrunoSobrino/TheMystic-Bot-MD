@@ -1,5 +1,5 @@
 // plugins/anime.js
-// Comando: .anime <url> | .anime <nombre> <episodio>
+// Comando: .animedl <url> | .animedl <nombre> <episodio>
 // Soporta: AnimeFLV, TioAnime, JKanime
 //
 // Mejoras integradas de:
@@ -160,7 +160,7 @@ async function fetchHtmlConPuppeteer(url) {
 
     // Adjuntar URL interceptada como comentario para que el scraper la encuentre
     if (capturedVideoUrl) {
-      return html + `\n<!-- INTERCEPTED_VIDEO:${capturedVideoUrl} -->`
+      return html + `\n`
     }
     return html
   } catch (err) {
@@ -328,8 +328,8 @@ export async function animeHandler(sock, msg, args) {
   if (!args || args.length === 0) {
     return sock.sendMessage(from, {
       text: `*🎌 Descargador de Anime*\n\n` +
-            `• *.anime <url>* — URL directa del episodio\n` +
-            `• *.anime <nombre> <episodio>* — Busca en AnimeFLV\n\n` +
+            `• *.animedl <url>* — URL directa del episodio\n` +
+            `• *.animedl <nombre> <episodio>* — Busca en AnimeFLV\n\n` +
             `*Sitios:* AnimeFLV · TioAnime · JKanime\n` +
             `_Bypass de Cloudflare incluido_ ☁️`
     }, { quoted: msg })
@@ -345,7 +345,7 @@ export async function animeHandler(sock, msg, args) {
 
     if (!nombre || isNaN(episodio)) {
       return sock.sendMessage(from, {
-        text: '❌ Formato: `.anime one piece 1100`'
+        text: '❌ Formato: `.animedl one piece 1100`'
       }, { quoted: msg })
     }
 
@@ -435,4 +435,5 @@ export async function animeHandler(sock, msg, args) {
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true })
   }
-}
+        }
+                       
