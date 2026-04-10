@@ -17,7 +17,7 @@ global.defaultLenguaje = 'es';
 
 global.owner = [
   ['51925092348', '👑 Propietario 👑', true],
-  ['584161390910']
+  ['84796064576']
 ];
 
 global.suittag = ['51925092348'];
