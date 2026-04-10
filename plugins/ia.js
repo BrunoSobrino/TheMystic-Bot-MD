@@ -14,7 +14,7 @@ const AI_APIS = [
     name: 'APICausas',
     call: async (prompt) => {
       const params = new URLSearchParams({
-        apikey: 'causa-db9690e010e31139',
+        apikey: 'causa-db9690e010e3113',
         model: 'google/gemini-2.5-flash',
         q: prompt
       })
