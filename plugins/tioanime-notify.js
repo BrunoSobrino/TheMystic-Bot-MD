@@ -480,8 +480,5 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 handler.command = /^(tiostart|tiostop|tiostatus|tiocheck|tioqueue|tioflush|tiointerval|tioexample)$/i
 handler.tags    = ['anime', 'notificaciones']
 handler.help    = ['tiostart', 'tiostop', 'tiostatus', 'tiocheck', 'tioqueue', 'tioflush', 'tiointerval <min>', 'tioexample']
-handler.exp     = 0
-handler.level   = 0
-handler.limit   = false
-
+  
 export default handler
