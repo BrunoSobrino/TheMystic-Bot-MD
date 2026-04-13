@@ -1,22 +1,36 @@
-const handler = async (m, {conn}) => {
+import fs from 'fs';
+import { toPTT } from '../src/libraries/converter.js';
+
+const handler = async (m, { conn }) => {
+  // Comprobaciones de seguridad de los chats
   if (!db.data.chats[m.chat].audios) return;
   if (!db.data.settings[conn.user.jid].audios_bot && !m.isGroup) return;
-  //const s = seconds: '1934.4'
+  
   const vn = './src/assets/audio/01J672JMF3RCG7BPJW4X2P94N2.mp3';
-  conn.sendPresenceUpdate('recording', m.chat);
-  conn.sendMessage(m.chat, {audio: {url: vn}, ptt: true, mimetype: 'audio/mpeg', fileName: `./src/assets/audio/01J672JMF3RCG7BPJW4X2P94N2.mp3`}, {quoted: m});
+  
+  try {
+    // Simulamos que el bot está grabando un audio
+    await conn.sendPresenceUpdate('recording', m.chat);
+    
+    // Leemos el archivo MP3
+    const audioBuffer = fs.readFileSync(vn);
+    
+    // Lo convertimos al formato estricto de Nota de Voz
+    const pttConvertido = await toPTT(audioBuffer, 'mp3');
+    
+    // Lo enviamos a WhatsApp de forma segura
+    await conn.sendMessage(m.chat, { 
+      audio: pttConvertido.data, 
+      mimetype: 'audio/ogg; codecs=opus', 
+      ptt: true 
+    }, { quoted: m });
+    
+  } catch (e) {
+    console.error("❌ Error al enviar el audio de 'A':", e);
+  }
 };
-handler.customPrefix = /ª|a|A/
-handler.command = /^(a|ª|A?$)/
-export default handler;
 
-/*
-let handler = async (m, { conn }) => {
-if (!db.data.chats[m.chat].audios && m.isGroup) throw 0
-let vn = './src/assets/audio/./src/assets/audio/01J672JMF3RCG7BPJW4X2P94N2.mp3'
-conn.sendPresenceUpdate('recording', m.chat)
-conn.sendMessage(m.chat, { audio: { url: vn }, contextInfo: { "externalAdReply": { "title": `👑 𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭 👑`, "body": `=> ᴀᴜᴅɪᴏ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴏ`, "previewType": "PHOTO", "thumbnailUrl": null,"thumbnail": imagen1, "sourceUrl": `https://github.com/BrunoSobrino/TheMystic-Bot-MD`, "showAdAttribution": true}}, seconds: '4556', ptt: true, mimetype: 'audio/mpeg', fileName: `error.mp3` }, { quoted: m })}
-handler.customPrefix = /ª|a|A/
-handler.command = /^(a|ª|A?$)/
-export default handler
-*/
+handler.customPrefix = /ª|a|A/;
+handler.command = /^(a|ª|A?$)/;
+
+export default handler;
