@@ -1,6 +1,6 @@
-import {promises} from 'fs';
-import {join} from 'path';
-import {spawn} from 'child_process';
+import { promises } from 'fs';
+import { join } from 'path';
+import { spawn } from 'child_process';
 
 function ffmpeg(buffer, args = [], ext = '', ext2 = '') {
   return new Promise(async (resolve, reject) => {
@@ -14,22 +14,22 @@ function ffmpeg(buffer, args = [], ext = '', ext2 = '') {
         ...args,
         out,
       ])
-          .on('error', reject)
-          .on('close', async (code) => {
-            try {
-              await promises.unlink(tmp);
-              if (code !== 0) return reject(code);
-              resolve({
-                data: await promises.readFile(out),
-                filename: out,
-                delete() {
-                  return promises.unlink(out);
-                },
-              });
-            } catch (e) {
-              reject(e);
-            }
-          });
+        .on('error', reject)
+        .on('close', async (code) => {
+          try {
+            await promises.unlink(tmp);
+            if (code !== 0) return reject(code);
+            resolve({
+              data: await promises.readFile(out),
+              filename: out,
+              delete() {
+                return promises.unlink(out);
+              },
+            });
+          } catch (e) {
+            reject(e);
+          }
+        });
     } catch (e) {
       reject(e);
     }
@@ -37,7 +37,7 @@ function ffmpeg(buffer, args = [], ext = '', ext2 = '') {
 }
 
 /**
- * Convert Audio to Playable WhatsApp Audio
+ * Convert Audio to Playable WhatsApp Audio (Voice Note format)
  * @param {Buffer} buffer Audio Buffer
  * @param {String} ext File Extension
  * @return {Promise<{data: Buffer, filename: String, delete: Function}>}
@@ -52,7 +52,7 @@ function toPTT(buffer, ext) {
 }
 
 /**
- * Convert Audio to Playable WhatsApp PTT
+ * Convert Audio to Playable WhatsApp Audio (Standard Opus)
  * @param {Buffer} buffer Audio Buffer
  * @param {String} ext File Extension
  * @return {Promise<{data: Buffer, filename: String, delete: Function}>}
@@ -68,7 +68,7 @@ function toAudio(buffer, ext) {
 }
 
 /**
- * Convert Audio to Playable WhatsApp Video
+ * Convert Video to Playable WhatsApp Video
  * @param {Buffer} buffer Video Buffer
  * @param {String} ext File Extension
  * @return {Promise<{data: Buffer, filename: String, delete: Function}>}
@@ -84,9 +84,24 @@ function toVideo(buffer, ext) {
   ], ext, 'mp4');
 }
 
+/**
+ * Convert Audio/Video to Real MP3 Format
+ * @param {Buffer} buffer Audio/Video Buffer
+ * @param {String} ext File Extension
+ * @return {Promise<{data: Buffer, filename: String, delete: Function}>}
+ */
+function toMP3(buffer, ext) {
+  return ffmpeg(buffer, [
+    '-vn',
+    '-c:a', 'libmp3lame',
+    '-b:a', '128k',
+  ], ext, 'mp3');
+}
+
 export {
   toAudio,
   toPTT,
   toVideo,
+  toMP3,
   ffmpeg,
 };
