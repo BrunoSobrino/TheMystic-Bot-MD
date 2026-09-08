@@ -43,6 +43,8 @@
 <p align="center">¡Ayuda a mantener nuestro proyecto activo con tu <a href="https://www.paypal.me/BrunoSob">donación</a> y contribuye la mejora de las funciones del bot para todos!</p>
 
 # Despliegue, Soporte y Comunidad
+- [Instalación y Ejecución Local](#instalación-y-ejecución-local)
+- [Contribuir](#contribuir)
 - [Opciones de Despliegue](#opciones-de-despliegue)
   - [Despliegue en Cafirexos](#despliegue-en-cafirexos)
   - [Despliegue en BoxMineWorld](#despliegue-en-boxmineworld)
@@ -63,6 +65,62 @@
 > [!IMPORTANT]\
 > se asegura que este **proyecto no funcione de manera correcta** debido a cuestiones de tiempo personales de [Bruno Sobrino](https://github.com/BrunoSobrino), por lo cual **este proyecto está en desarrollo por parte de los colaboradores** y usuarios que deseen aportar **actualizaciones**.
 
+
+# Instalación y Ejecución Local
+
+### Requisitos previos
+
+- **Node.js** 18 o superior (con npm incluido).
+- **ffmpeg** instalado en el sistema (necesario para conversiones de audio y vídeo). En Windows se instala con `winget install ffmpeg`; en Linux/Debian con `sudo apt install ffmpeg`; en Android/Termux con `pkg install ffmpeg`.
+
+### Paso a paso
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone https://github.com/BrunoSobrino/TheMystic-Bot-MD.git
+   cd TheMystic-Bot-MD
+   ```
+
+2. Instala las dependencias:
+
+   ```bash
+   npm install
+   ```
+
+   > Si aparecen errores relacionados con `puppeteer` puedes ignorarlos: es una dependencia opcional.
+
+3. Configura el bot editando el archivo `config.js` (owner, packname, API keys, etc.).
+
+4. Inicia el bot para generar el código QR de sesión:
+
+   ```bash
+   npm start
+   ```
+
+   Escanea el QR con WhatsApp > Dispositivos vinculados. Para reconectar en el futuro, basta con volver a ejecutar `npm start`.
+
+   Métodos de conexión alternativos:
+
+   | Comando | Descripción |
+   | --- | --- |
+   | `npm start` | Conexión por código QR |
+   | `npm run qr` | Fuerza la conexión por código QR |
+   | `npm run code` | Conexión por código de 8 dígitos |
+
+5. ¡Listo! Envía `.menu` al número del bot para ver los comandos disponibles.
+
+> [!TIP]\
+> Si tu bot se cae al reiniciar o por inactividad, revisa los issues abiertos o consulta las [comunidades de asistencia](#comunidades-de-asistencia): muchos problemas de sesión ya tienen solución documentada.
+
+# Contribuir
+
+¿Quieres aportar al proyecto? Revisa la [Guía de Contribución](CONTRIBUTING.md) donde encontrarás:
+
+- Cómo reportar bugs y solicitar características.
+- El flujo completo de pull requests (fork, ramas, commits convencionales).
+- La estructura del proyecto y cómo crear plugins correctamente.
+- El checklist para que tu PR sea aceptada.
 
 # Opciones de despliegue
 
