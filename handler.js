@@ -14,7 +14,7 @@ let mconn;
 /**
  * @type {import("baileys")}
  */
-const { proto } = (await import("baileys")).default;
+const { proto } = await import("baileys");
 const isNumber = (x) => typeof x === 'number' && !isNaN(x);
 const delay = (ms) => isNumber(ms) && new Promise((resolve) => setTimeout(function () {
   clearTimeout(this);
@@ -25,6 +25,23 @@ const delay = (ms) => isNumber(ms) && new Promise((resolve) => setTimeout(functi
  * Handle messages upsert
  * @param {import("baileys").BaileysEventMap<unknown>['messages.upsert']} groupsUpdate
  */
+// Baileys 7 / LID: un mismo usuario puede llegar como PN (...@s.whatsapp.net)
+// o como LID (...@lid). Estas ayudas comparan ambas formas normalizadas.
+const participantMatches = (u, jid) => {
+  const target = jidNormalizedUser(jid || '');
+  return [u?.id, u?.phoneNumber, u?.lid].filter(Boolean)
+    .some((x) => jidNormalizedUser(x) === target);
+};
+const botIdentities = (conn) => [conn?.user?.id, conn?.user?.lid, conn?.user?.jid]
+  .filter(Boolean).map((j) => jidNormalizedUser(j));
+const botIs = (conn, jid) => {
+  const target = jidNormalizedUser(jid || '');
+  if (botIdentities(conn).includes(target)) return true;
+  const resolved = conn?.resolveUser?.(target) || {};
+  return [resolved.jid, resolved.lid].filter(Boolean)
+    .some((x) => botIdentities(conn).includes(jidNormalizedUser(x)));
+};
+
 export async function handler(chatUpdate) {
   this.msgqueque = this.msgqueque || [];
   this.uptime = this.uptime || Date.now();
@@ -104,8 +121,8 @@ export async function handler(chatUpdate) {
           }
         }
       }
-      const settings = global.db.data.settings[this.user.jid];
-      if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {};
+      const settings = global.db.data.settings[this.user?.id];
+      if (typeof settings !== 'object') global.db.data.settings[this.user?.id] = {};
       if (settings) {
        
         for (const setting in settings) {
@@ -140,9 +157,17 @@ export async function handler(chatUpdate) {
     if (typeof m.text !== 'string') {
       m.text = '';
     }
-    const isROwner = [...global.owner.map(([number]) => number)].map((v) => this.resolveUser(v + '@s.whatsapp.net').lid).includes(m.sender);
+    // LID: el remitente puede venir como PN o como LID; se comparan ambas
+    // formas resueltas del número del owner/mod contra m.sender.
+    const resolvedIdentity = (number) => this.resolveUser(number + '@s.whatsapp.net') || {};
+    const identityMatches = (jid, resolved) =>
+      [resolved.jid, resolved.lid].filter(Boolean)
+        .some((x) => jidNormalizedUser(x) === jidNormalizedUser(jid));
+    const isROwner = global.owner.map(([number]) => number)
+      .some((num) => identityMatches(m.sender, resolvedIdentity(num))) || m.fromMe;
     const isOwner = isROwner || m.fromMe;
-    const isMods = isOwner || global.mods.map((v) => this.resolveUser(v + '@s.whatsapp.net').lid).includes(m.sender);
+    const isMods = isOwner || global.mods
+      .some((num) => identityMatches(m.sender, resolvedIdentity(num)));
     const isPrems = isROwner || isOwner || isMods || global.db.data.users[m.sender].premiumTime > 0; // || global.db.data.users[m.sender].premium = 'true'.replace(/[^0-9]/g, '').replace(/[^0-9]/g, '')
 
     if (opts['queque'] && m.text && !(isMods || isPrems)) {
@@ -167,8 +192,8 @@ export async function handler(chatUpdate) {
     const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch((_) => null)) : {}) || {};
     //const participants = ((m.isGroup ? groupMetadata.participants : []) || []).map(participant => ({ id: participant.jid, jid: participant.jid, lid: participant.lid, admin: participant.admin }));
     const participants = (m.isGroup ? groupMetadata.participants : []) || [];
-    const user = (m.isGroup ? participants.find((u) => conn.decodeJid(u.id) === m.sender) : {}) || {}; // User Data
-    const bot = (m.isGroup ? participants.find((u) => conn.decodeJid(u.id) == jidNormalizedUser(this.user.lid)) : {}) || {}; // Your Data
+    const user = (m.isGroup ? participants.find((u) => participantMatches(u, m.sender)) : {}) || {}; // User Data
+    const bot = (m.isGroup ? participants.find((u) => participantMatches(u, this.user?.id || this.user?.lid || '')) : {}) || {}; // Your Data
     const isRAdmin = user?.admin == 'superadmin' || false;
     const isAdmin = isRAdmin || user?.admin == 'admin' || false; // Is User Admin?
     const isBotAdmin = bot?.admin || false; // Are you Admin?
@@ -280,7 +305,7 @@ export async function handler(chatUpdate) {
         if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
           const chat = global.db.data.chats[m.chat];
           const user = global.db.data.users[m.sender];
-          const botSpam = global.db.data.settings[mconn.conn.user.jid];
+          const botSpam = global.db.data.settings[mconn.conn.user?.id] || {};
 
           if (!['owner-unbanchat.js', 'info-creator.js'].includes(name) && chat && chat?.isBanned && !isROwner) return; // Except this
           if (name != 'owner-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && chat?.isBanned && !isROwner) return; // Except this
@@ -388,19 +413,18 @@ ${tradutor.texto1[1]} ${messageNumber}/3
         const normalizeJid = (jid) => jid?.replace(/[^0-9]/g, '');
         const isActiveBot = (jid) => {
           const normalizedJid = normalizeJid(jid) + '@s.whatsapp.net';
-          return normalizedJid === global.conn.user.jid || 
-         global.conns.some(bot => bot.user.jid === normalizedJid);
+          return botIs(global.conn, normalizedJid) ||
+            (global.conns || []).some((bot) => botIs(bot, normalizedJid));
         };
         if (chatPrim.setPrimaryBot) {
             const primaryNumber = normalizeJid(chatPrim.setPrimaryBot) + '@s.whatsapp.net';
-            const currentBotNumber = normalizeJid(mconn.conn.user.jid) + '@s.whatsapp.net';
             if (!isActiveBot(chatPrim.setPrimaryBot)) {
               console.log(`⚠ Bot primario ${primaryNumber} no está activo - Liberando chat`);
               delete chatPrim.setPrimaryBot;
               global.db.data.chats[m.chat] = chatPrim
             }
-            else if (primaryNumber && currentBotNumber !== primaryNumber) {
-            return; 
+            else if (primaryNumber && !botIs(mconn.conn, primaryNumber)) {
+            return;
           }
         }
         const properPluginsHandler = Object.assign(properPluginsBefore, {
@@ -515,7 +539,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
     } catch (e) {
       console.log(m, m.quoted, e);
     }
-    const settingsREAD = global.db.data.settings[mconn.conn.user.jid] || {};
+    const settingsREAD = global.db.data.settings[mconn.conn.user?.id] || {};
     if (opts['autoread']) await mconn.conn.readMessages([m.key]);
     if (settingsREAD.autoread2) await mconn.conn.readMessages([m.key]);
   }
@@ -534,13 +558,13 @@ export async function participantsUpdate({ id, participants, action }) {
   if (opts['self']) return;
   if (global.db.data == null) await loadDatabase();
   const chat = global.db.data.chats[id] || {};
-  const botTt = global.db.data.settings[mconn?.conn?.user?.jid] || {};
+  const botTt = global.db.data.settings[mconn?.conn?.user?.id] || {};
   let text = '';
   switch (action) {
     case 'add':
     case 'remove':
       if (chat.welcome && !chat?.isBanned) {
-        if (action === 'remove' && participants.includes(m?.conn?.user?.jid)) return;
+        if (action === 'remove' && participants.some((p) => botIs(m?.conn, p))) return;
         const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
         for (const user of participants) {
           try {
@@ -548,7 +572,7 @@ export async function participantsUpdate({ id, participants, action }) {
            const apii = await mconn?.conn?.getFile(pp);
            const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
            const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
-           const botTt2 = groupMetadata?.participants?.find((u) => m?.conn?.decodeJid(u.id) == m?.conn?.user?.jid) || {};
+           const botTt2 = groupMetadata?.participants?.find((u) => participantMatches(u, m?.conn?.user?.id || m?.conn?.user?.lid || '')) || {};
            const isBotAdminNn = botTt2?.admin === 'admin' || false;
            text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m?.conn?.getName(id)).replace('@desc', groupMetadata?.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*').replace('@user', '@' + user.split('@')[0]) :
             (chat.sBye || tradutor.texto2 || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0]);
@@ -615,7 +639,7 @@ export async function groupsUpdate(groupsUpdate) {
 }
 
 export async function callUpdate(callUpdate) {
-  const isAnticall = global?.db?.data?.settings[mconn?.conn?.user?.jid].antiCall;
+  const isAnticall = global?.db?.data?.settings[mconn?.conn?.user?.id]?.antiCall;
   if (!isAnticall) return;
   for (const nk of callUpdate) {
     if (nk.isGroup == false) {
@@ -680,26 +704,25 @@ global.dfail = (type, m, conn) => {
     unreg: tradutor.texto9,
     restrict: tradutor.texto10,
   }[type];
-  const aa = { quoted: m, userJid: conn.user.jid };
+  const aa = { quoted: m, userJid: conn.user?.id || conn.user?.jid };
   const prep = generateWAMessageFromContent(m.chat, { extendedTextMessage: { text: msg, contextInfo: { externalAdReply: { title: tradutor.texto11[0], body: tradutor.texto11[1], thumbnail: imagen1, sourceUrl: tradutor.texto11[2] } } } }, aa);
 
   const chatPrim2 = global.db.data.chats[m.chat] || {};
   const normalizeJid2 = (jid) => jid?.replace(/[^0-9]/g, '');
   const isActiveBot2 = (jid) => {
     const normalizedJid2 = normalizeJid2(jid) + '@s.whatsapp.net';
-    return normalizedJid2 === global.conn.user.jid || 
-      global.conns.some(bot => bot.user.jid === normalizedJid2);
+    return botIs(global.conn, normalizedJid2) ||
+      (global.conns || []).some((bot) => botIs(bot, normalizedJid2));
   };
   if (chatPrim2.setPrimaryBot) {
     const primaryNumber2 = normalizeJid2(chatPrim2.setPrimaryBot) + '@s.whatsapp.net';
-    const currentBotNumber2 = normalizeJid2(mconn.conn.user.jid) + '@s.whatsapp.net';
     if (!isActiveBot2(chatPrim2.setPrimaryBot)) {
       delete chatPrim2.setPrimaryBot;
       global.db.data.chats[m.chat] = chatPrim2
     }
-    else if (primaryNumber2 && currentBotNumber2 !== primaryNumber2) {
-      return; 
-    } 
+    else if (primaryNumber2 && !botIs(mconn.conn, primaryNumber2)) {
+      return;
+    }
   } else if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
 };
 
