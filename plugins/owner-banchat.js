@@ -5,7 +5,7 @@ const handler = async (m, { conn }) => {
   const tradutor = _translate.plugins.owner_banchat;
 
   const normalizeJid = (jid) => jid.split('@')[0];
-  const thisBot = conn.user.jid;
+  const thisBot = conn.user.id;
 
   const testi = await await m.mentionedJid
   if (testi && testi.length > 0) {
