@@ -178,7 +178,7 @@ ${tradutor.texto26[3]}`.trim();
   const isEnable = /true|enable|(turn)?on|1/i.test(command);
   const chat = global.db.data.chats[m.chat];
   const user = global.db.data.users[m.sender];
-  const bot = global.db.data.settings[conn.user.jid] || {};
+  const bot = global.db.data.settings[conn.user.id] || {};
   const type = (args[0] || '').toLowerCase();
   let isAll = false; const isUser = false;
   switch (type) {
