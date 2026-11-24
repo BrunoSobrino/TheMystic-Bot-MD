@@ -281,12 +281,12 @@ const handler = async (m, {usedPrefix, conn}) => {
     if (new Date() - user.lastadventure <= cooldown) {
       return conn.reply(
           m.chat,
-          `${htki} ${tardutor.texto2[0]} ${htka}\n\n${tardutor.texto2[1]} ${timers.toTimeString()} ${tardutor.texto2[2]}`,
+          `${htki} ${tradutor.texto2[0]} ${htka}\n\n${tradutor.texto2[1]} ${timers.toTimeString()} ${tradutor.texto2[2]}`,
           m,
       );
     }
     const rewards = reward(user);
-    let text = `${tardutor.texto2[3]}  *» ${kt[1][0].name}*
+    let text = `${tradutor.texto2[3]}  *» ${kt[1][0].name}*
 
 ${cmenut}
 ${cmenub} ${tradutor.texto3[0]} ${kt[1][0].id}
