@@ -13,9 +13,9 @@ try {
     const [jid, chat] = groups[i];
     const groupMetadata = ((conn.chats[jid] || {}).metadata || (await conn.groupMetadata(jid).catch((_) => null))) || {};
     const participants = groupMetadata.participants || [];
-    const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.jid) || {};
+    const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.id) || {};
     const isBotAdmin = bot?.admin || false;
-    const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.jid);
+    const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.id);
     const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;
     txt += `${tradutor.texto2[0]} ${i + 1}
@@ -34,9 +34,9 @@ try {
     const [jid, chat] = groups[i];
     const groupMetadata = ((conn.chats[jid] || {}).metadata || (await conn.groupMetadata(jid).catch((_) => null))) || {};
     const participants = groupMetadata.participants || [];
-    const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.jid) || {};
+    const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.id) || {};
     const isBotAdmin = bot?.admin || false;
-    const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.jid);
+    const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.id);
     const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;    
     txt += `${tradutor.texto2[0]} ${i + 1}
