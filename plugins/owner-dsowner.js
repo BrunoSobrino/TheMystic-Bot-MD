@@ -9,7 +9,7 @@ const handler = async (m, { conn, usedPrefix }) => {
   const _translate = JSON.parse(readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.fix_owner_esperando_mensajes
 
-  if (global.conn.user.jid !== conn.user.jid) {
+  if (global.conn.user.id !== conn.user.id) {
     return conn.sendMessage(m.chat, {text: tradutor.texto1}, {quoted: m});
   }
   await conn.sendMessage(m.chat, {text: tradutor.texto2}, {quoted: m});
