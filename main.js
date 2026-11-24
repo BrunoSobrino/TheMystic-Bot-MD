@@ -5,7 +5,7 @@ import { createRequire } from 'module';
 import path, { join } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { platform } from 'process';
-import fs, { readdirSync, statSync, unlinkSync, existsSync, readFileSync, watch } from 'fs';
+import fs, { readdirSync, unlinkSync, existsSync, readFileSync, watch } from 'fs';
 import yargs from 'yargs';
 import { spawn } from 'child_process';
 import lodash from 'lodash';
@@ -20,7 +20,7 @@ import { initializeSubBots } from './src/libraries/subBotManager.js';
 import { Low, JSONFile } from 'lowdb';
 import store from './src/libraries/store.js';
 
-import { purgeOldFiles, clearTmp, deleteCoreFiles, shouldLogError, clockString } from './src/libraries/functions.js';
+import { clearTmp, deleteCoreFiles, shouldLogError, clockString } from './src/libraries/functions.js';
 const { DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC } = await import("baileys");
 import readline from 'readline';
 import NodeCache from 'node-cache';
