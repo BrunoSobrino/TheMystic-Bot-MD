@@ -12,11 +12,16 @@ jobs:
   pr-comment:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions: write-all
+    permissions:
+      pull-requests: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: thomasbnt/hello-to-news-contributions@v1.0
-      - uses: mshick/add-pr-comment@v2
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
         with:
-          repo-token: ${{ secrets.PERSONAL_TOKEN}}
-          pr-message: "gracias por tu pull request!"
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'gracias por tu pull request!'
+            });
