@@ -20,7 +20,7 @@ export async function before(m, { conn, isAdmin, isBotAdmin, usedPrefix }) {
   }
   if (!m.isGroup) return !1;
   const chat = global.db.data.chats[m.chat];
-  const bot = global.db.data.settings[this.user.jid] || {};
+  const bot = global.db.data.settings[this.user.id] || {};
   const delet = m.key.participant;
   const bang = m.key.id;
   const name = await conn.getName(m.sender);
