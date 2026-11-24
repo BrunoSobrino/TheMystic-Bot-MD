@@ -9,7 +9,7 @@ import { spawn } from 'child_process';
 import { load } from 'cheerio';
 import { tmpdir } from 'os';
 import { join } from 'path';
-const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
+const { generateWAMessageFromContent, prepareWAMessageMedia } = await import("baileys");
 
 const AUDIO_SIZE_LIMIT = 50 * 1024 * 1024;
 const VIDEO_SIZE_LIMIT = 100 * 1024 * 1024;
@@ -282,7 +282,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
 handler.help = ['test <query>', 'test2 <query>'];
 handler.tags = ['downloader'];
-handler.command = /^(test|test2|play|play2|ytmp3|ytmp4)$/i;
+handler.command = /^(test|test2|ytmp3|ytmp4)$/i;
 export default handler;
 
 const yt = {
