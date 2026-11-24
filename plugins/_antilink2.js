@@ -17,7 +17,7 @@ export async function before(m, {conn, isAdmin, isBotAdmin, text}) {
   const chat = global.db.data.chats[m.chat];
   const delet = m.key.participant;
   const bang = m.key.id;
-  const bot = global.db.data.settings[this.user.jid] || {};
+  const bot = global.db.data.settings[this.user.id] || {};
   const user = `@${m.sender.split`@`[0]}`;
   const isGroupLink = linkRegex.exec(m.text);
   if (chat.antiLink2 && isGroupLink && !isAdmin) {
