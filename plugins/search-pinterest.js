@@ -12,7 +12,7 @@
 /////////////////////////////////
 */
 
-const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys")).default;
+const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys"));
 import axios from 'axios';
 
 const handler = async (m, { conn, usedPrefix, command, text }) => {
