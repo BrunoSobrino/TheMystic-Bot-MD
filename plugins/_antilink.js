@@ -13,7 +13,7 @@ export async function before(m, {conn, isAdmin, isBotAdmin}) {
   const tradutor = _translate.plugins._antilink
   const delet = m.key.participant;
   const bang = m.key.id;
-  const bot = global.db.data.settings[this.user.jid] || {};
+  const bot = global.db.data.settings[this.user.id] || {};
   const user = `@${m.sender.split`@`[0]}`;
   const isGroupLink = linkRegex.exec(m.text);
   const grupo = `https://chat.whatsapp.com`;
