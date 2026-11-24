@@ -21,7 +21,7 @@ handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwn
   }*/
   if (!m.isGroup) return !1;
   const chat = global.db.data.chats[m.chat];
-  const bot = global.db.data.settings[conn.user.jid] || {};
+  const bot = global.db.data.settings[conn.user.id] || {};
   if (isBotAdmin && chat.antiArab2 && !isAdmin && !isOwner && !isROwner && bot.restrict) {
     if (m.sender.startsWith('212' || '212')) {
       m.reply(tradutor.texto1);
