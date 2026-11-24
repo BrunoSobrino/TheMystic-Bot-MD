@@ -26,7 +26,7 @@ const handler = async (m, {conn, args, command, usedPrefix}) => {
               throw `${tradutor.texto4} ${matchingItem.urls.length}*`;
             }
           } else {
-            throw `${texto5} (${usedPrefix + command} ${tradutor.texto5_1} ${usedPrefix}xnxxsearch <texto>*`;
+            throw `${tradutor.texto5} (${usedPrefix + command} ${tradutor.texto5_1} ${usedPrefix}xnxxsearch <texto>*`;
           }
         } else {
           throw `${tradutor.texto6} (${usedPrefix + command} ${tradutor.texto6_1} ${usedPrefix}xnxxsearch <texto>*`;
