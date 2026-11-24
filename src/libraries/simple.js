@@ -26,7 +26,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 const {
     default: _makeWaSocket,
-    makeWALegacySocket,
     proto,
     downloadContentFromMessage,
     jidDecode,
@@ -47,9 +46,10 @@ export function makeWASocket(connectionOptions, options = {}) {
     /**
      * @type {import("baileys").WASocket | import("baileys").WALegacySocket}
      */
-    const conn = (global.opts["legacy"] ? makeWALegacySocket : _makeWaSocket)(
-        connectionOptions,
-    );
+    if (global.opts["legacy"]) {
+        throw new Error('La opción --legacy ya no existe en Baileys 7 (makeWALegacySocket fue eliminado). Arranca sin --legacy.');
+    }
+    const conn = _makeWaSocket(connectionOptions);
 
     const sock = Object.defineProperties(conn, {
         chats: {
@@ -65,20 +65,21 @@ export function makeWASocket(connectionOptions, options = {}) {
      * @returns {{jid: String|null, lid: String|null, id: String, pn: String|null, type: 'jid'|'lid'|'unknown'}}
     */
    value(id) {
-    const cache = conn.signalRepository.lidMapping.mappingCache
-    if (!id) return id
-    const [value, domain] = id.split('@')
+    if (!id || typeof id !== 'string') {
+      return { jid: null, lid: null, id: null, pn: null, type: 'unknown' };
+    }
+    const [value, domain] = id.split('@');
+    const mapping = conn.signalRepository?.lidMapping;
+    const fromCache = (key) => mapping?.mappingCache?.get?.(key) ?? null;
     if (domain === 's.whatsapp.net') {
-        const pLid = cache.get(`pn:${value}`)
-        return { jid: id, lid: pLid ? pLid+lid : null, id: value, pn: value, type: 'jid'}
+      const lid = mapping?.getLIDForPN?.(id) ?? fromCache(`pn:${value}`);
+      return { jid: id, lid: lid ? `${lid}@lid` : null, id: value, pn: value, type: 'jid' };
     }
-
     if (domain === 'lid') {
-        const pn = cache.get(`lid:${value}`)
-        return { jid: pn ? pn+userID : null, lid: id, id: value, pn: pn || null, type: 'lid' }
+      const pn = mapping?.getPNForLID?.(id) ?? fromCache(`lid:${value}`);
+      return { jid: pn ? `${pn}@s.whatsapp.net` : null, lid: id, id: value, pn: pn || null, type: 'lid' };
     }
-
-    return { jid: id, lid: null, id: null, pn: null, type: 'unknown' }
+    return { jid: id, lid: null, id: value, pn: null, type: 'unknown' };
         },
     },
         decodeJid: {
