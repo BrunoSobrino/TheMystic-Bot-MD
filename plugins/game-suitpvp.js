@@ -13,7 +13,7 @@ const handler = async (m, { conn, usedPrefix, text }) => {
   conn.suit = conn.suit ? conn.suit : {};
   if (Object.values(conn.suit).find((room) => room.id.startsWith('suit') && [room.p, room.p2].includes(m.sender))) throw tradutor.texto1;
   const textquien = `${tradutor.texto2}\n${usedPrefix}suit @${global.suittag}`;
-  const testi = await m.mentionedJid[0]
+  const testi = (await m.mentionedJid)[0];
   if (!testi) return m.reply(textquien, m.chat, { mentions: conn.parseMention(textquien) });
   if (Object.values(conn.suit).find((room) => room.id.startsWith('suit') && [room.p, room.p2].includes(testi))) throw tradutor.texto4;
   const id = 'suit_' + new Date() * 1;
