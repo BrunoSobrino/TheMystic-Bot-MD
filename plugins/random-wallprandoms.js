@@ -1,6 +1,10 @@
 import axios from 'axios';
+import fs from 'fs';
 import cheerio from 'cheerio';
 const handler = async (m, {command, conn}) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.random_wallprandoms
   const apikey = global.keysxxx;
   const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.id : m.sender;
   const name = await conn.getName[who];
@@ -11,7 +15,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'pubg') {
@@ -21,7 +25,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'wpgaming') {
@@ -31,7 +35,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'wpaesthetic') {
@@ -39,19 +43,19 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'wprandom') {
     const res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/wprandom.json`)).data;
     const res2 = await res[Math.floor(res.length * Math.random())];
-    conn.sendMessage(m.chat, {image: {url: res2}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: res2}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'coffee') {
     const haha = await conn.getFile(`https://coffee.alexflipnote.dev/random`);
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'pentol') {
@@ -59,7 +63,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'caricatura') {
@@ -67,7 +71,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'ciberespacio') {
@@ -75,7 +79,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'technology') {
@@ -83,7 +87,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'doraemon') {
@@ -91,7 +95,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'hacker') {
@@ -99,7 +103,7 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'planeta') {
@@ -107,37 +111,47 @@ const handler = async (m, {command, conn}) => {
     const result = anu[Math.floor(Math.random() * anu.length)];
     const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'randomprofile') {
-    const haha = await conn.getFile(`https://api.zahwazein.xyz/randomimage/profil?apikey=${apikey}`);
+    const anu = await wallpaper('profile');
+    const result = anu[Math.floor(Math.random() * anu.length)];
+    const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'wpaesthetic2') {
-    const haha = await conn.getFile(`https://api.zahwazein.xyz/randomimage/aesthetic?apikey=${apikey}`);
+    const anu = await wallpaper('aesthetic');
+    const result = anu[Math.floor(Math.random() * anu.length)];
+    const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'wpvehiculo') {
-    const haha = await conn.getFile(`https://api.zahwazein.xyz/randomimage/mobil?apikey=${apikey}`);
+    const anu = await wallpaper('car');
+    const result = anu[Math.floor(Math.random() * anu.length)];
+    const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'wallhp') {
-    const haha = await conn.getFile(`https://api.zahwazein.xyz/randomimage/wallhp?apikey=${apikey}`);
+    const anu = await wallpaper('wallpaper');
+    const result = anu[Math.floor(Math.random() * anu.length)];
+    const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 
   if (command == 'wpmoto') {
-    const haha = await conn.getFile(`https://api.zahwazein.xyz/randomimage/motor?apikey=${apikey}`);
+    const anu = await wallpaper('motorcycle');
+    const result = anu[Math.floor(Math.random() * anu.length)];
+    const haha = result.image[0];
     await conn.reply(m.chat, global.wait, m);
-    conn.sendMessage(m.chat, {image: {url: haha.data}, caption: `_${command}_`.trim()}, {quoted: m});
+    conn.sendMessage(m.chat, {image: {url: haha}, caption: `${tradutor.texto1[0]}${command}${tradutor.texto1[1]}`}, {quoted: m});
   }
 };
 handler.command = ['wpmontaña', 'pubg', 'wpgaming', 'wpaesthetic', 'wprandom', 'coffee', 'pentol', 'caricatura', 'ciberespacio', 'technology', 'doraemon', 'hacker', 'planeta', 'randomprofile', 'wpaesthetic2', 'wpvehiculo', 'wallhp', 'wpmoto'];
