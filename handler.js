@@ -487,7 +487,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
           // m.reply(util.format(_user))
           if (typeof plugin.after === 'function') {
             try {
-              await plugin.after.call(this, m, extra);
+              await plugin.after.call(this, m, properPluginsHandler);
             } catch (e) {
               console.error(e);
             }
