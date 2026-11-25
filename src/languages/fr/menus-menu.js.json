@@ -1,0 +1,47 @@
+{
+    "plugins": {
+        "menu": {
+            "menu_header": "╭═══〘 ✯✯✯✯✯✯✯✯✯ 〙══╮\n║ ◉— *𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭* —◉\n║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║\n║➤ *Bonjour,* @username\n║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║\n║➤ *Propriétaire :* @author\n║➤ *Numéro :* wa.me/@owner\n║➤ *PayPal :* paypal.me/BrunoSob\n║➤ *Date :* @week, @date\n║➤ *Temps actif :* @uptime\n║➤ *Utilisateurs :* @rtotal\n║➤ *Enregistrés :* @rtotalreg\n╰═══╡✯✯✯✯✯✯✯✯✯╞═══╯",
+            "user_info": "┏━━━━━━━━━━━━━━━━┓\n┃ *< INFOS DE L'UTILISATEUR />*\n┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃\n┣ ✯ *Niveau :* @level\n┣ ✯ *Expérience :* @exp\n┣ ✯ *Rang :* @role\n┣ ✯ *Diamants :* @limit\n┣ ✯ *MysticCoins :* @money\n┣ ✯ *Tokens :* @joincount\n┣ ✯ *Premium :* @premium\n┗━━━━━━━━━━━━━━━━┛\n",
+            "section_header": "┏━━━━━━━━━━━━━━━━┓\n┃ @category\n┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃",
+            "command_item": "┣ ඬ⃟  □ @cmd @islimit",
+            "section_footer": "┗━━━━━━━━━━━━━━━━┛\n",
+            "error_message": "[ ❌ ] Une erreur est survenue lors de la génération du menu :",
+            "premium": {
+                "yes": "✅",
+                "no": "❌"
+            },
+            "tags": {
+                "info": "<INFORMATIONS>",
+                "jadibot": "<SUBBOTS>",
+                "xp": "<XP>",
+                "tools": "<OUTILS>",
+                "search": "<RECHERCHES>",
+                "downloader": "<TÉLÉCHARGEMENTS>",
+                "converter": "<CONVERTISSEURS>",
+                "effects": "<EFFETS>",
+                "game": "<JEUX>",
+                "group": "<GROUPES>",
+                "nsfw": "<ADULTES>",
+                "owner": "<PROPRIÉTAIRES>",
+                "sticker": "<AUTOCOLLANTS>",
+                "img": "<IMAGES>",
+                "ai": "<INTELLIGENCE ARTIFICIELLE>",
+                "music": "<MUSIQUE>",
+                "internet": "<INTERNET>",
+                "download": "<TÉLÉCHARGEMENT>",
+                "tyc": "<TERMES ET CONDITIONS>",
+                "maker": "<CRÉATEUR>",
+                "nulis": "<ÉCRIRE>",
+                "emoji": "<EMOJI>",
+                "database": "<BASE DE DONNÉES>",
+                "premium": "<PREMIUM>",
+                "random": "<ALÉATOIRE>",
+                "anime": "<ANIME>",
+                "fun": "<DIVERTISSEMENT>",
+                "general": "<GÉNÉRAL>",
+                "herramientas": "<OUTILS>"
+            }
+        }
+    }
+}

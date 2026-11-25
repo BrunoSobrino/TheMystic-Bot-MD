@@ -27,10 +27,19 @@ const delay = (ms) => isNumber(ms) && new Promise((resolve) => setTimeout(functi
  */
 // Baileys 7 / LID: un mismo usuario puede llegar como PN (...@s.whatsapp.net)
 // o como LID (...@lid). Estas ayudas comparan ambas formas normalizadas.
-const participantMatches = (u, jid) => {
+const participantMatches = (u, jid, conn) => {
   const target = jidNormalizedUser(jid || '');
-  return [u?.id, u?.phoneNumber, u?.lid].filter(Boolean)
-    .some((x) => jidNormalizedUser(x) === target);
+  if (!target) return false;
+  const ids = [u?.id, u?.phoneNumber, u?.lid].filter(Boolean)
+    .map((x) => jidNormalizedUser(x));
+  if (ids.includes(target)) return true;
+  // El metadata a veces trae solo el LID (sin phoneNumber) y el
+  // remitente ya llega como PN (o al revés): resolver por el mapeo
+  // LID<->PN de la conexión, que es lo único que une ambas formas.
+  const resolved = conn?.resolveUser?.(target) || {};
+  const alt = [resolved.jid, resolved.lid, resolved.id, resolved.pn]
+    .filter(Boolean).map((x) => jidNormalizedUser(x));
+  return alt.some((x) => ids.includes(x));
 };
 const botIdentities = (conn) => [conn?.user?.id, conn?.user?.lid, conn?.user?.jid]
   .filter(Boolean).map((j) => jidNormalizedUser(j));
@@ -215,8 +224,8 @@ export async function handler(chatUpdate) {
     const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch((_) => null)) : {}) || {};
     //const participants = ((m.isGroup ? groupMetadata.participants : []) || []).map(participant => ({ id: participant.jid, jid: participant.jid, lid: participant.lid, admin: participant.admin }));
     const participants = (m.isGroup ? groupMetadata.participants : []) || [];
-    const user = (m.isGroup ? participants.find((u) => participantMatches(u, m.sender)) : {}) || {}; // User Data
-    const bot = (m.isGroup ? participants.find((u) => participantMatches(u, this.user?.id || this.user?.lid || '')) : {}) || {}; // Your Data
+    const user = (m.isGroup ? participants.find((u) => participantMatches(u, m.sender, this)) : {}) || {}; // User Data
+    const bot = (m.isGroup ? participants.find((u) => participantMatches(u, this.user?.id || this.user?.lid || '', this)) : {}) || {}; // Your Data
     const isRAdmin = user?.admin == 'superadmin' || false;
     const isAdmin = isRAdmin || user?.admin == 'admin' || false; // Is User Admin?
     const isBotAdmin = bot?.admin || false; // Are you Admin?
@@ -578,6 +587,10 @@ export async function participantsUpdate({ id, participants, action }) {
   const tradutor = _translate.handler.participantsUpdate
 
   const m = mconn
+  // Baileys 7: en grupos con LID los participantes llegan como
+  // objetos { id, phoneNumber, admin } y no como JIDs. Normalizar
+  // a JID (se prefiere el número real para menciones y perfil).
+  const who = (participants || []).map((p) => (typeof p === 'string' ? p : (p?.phoneNumber || p?.id || ''))).filter(Boolean);
   if (opts['self']) return;
   if (global.db.data == null) await loadDatabase();
   const chat = global.db.data.chats[id] || {};
@@ -587,15 +600,15 @@ export async function participantsUpdate({ id, participants, action }) {
     case 'add':
     case 'remove':
       if (chat.welcome && !chat?.isBanned) {
-        if (action === 'remove' && participants.some((p) => botIs(m?.conn, p))) return;
+        if (action === 'remove' && who.some((p) => botIs(m?.conn, p))) return;
         const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
-        for (const user of participants) {
+        for (const user of who) {
           try {
           let pp = await m?.conn?.profilePictureUrl(user, 'image').catch(_ => 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60');
            const apii = await mconn?.conn?.getFile(pp);
            const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
            const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
-           const botTt2 = groupMetadata?.participants?.find((u) => participantMatches(u, m?.conn?.user?.id || m?.conn?.user?.lid || '')) || {};
+           const botTt2 = groupMetadata?.participants?.find((u) => participantMatches(u, m?.conn?.user?.id || m?.conn?.user?.lid || '', m?.conn)) || {};
            const isBotAdminNn = botTt2?.admin === 'admin' || false;
            text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m?.conn?.getName(id)).replace('@desc', groupMetadata?.desc?.toString() || tradutor.texto10).replace('@user', '@' + user.split('@')[0]) :
             (chat.sBye || tradutor.texto2 || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0]);
@@ -623,7 +636,7 @@ export async function participantsUpdate({ id, participants, action }) {
       if (!text) {
         text = (chat?.sDemote || tradutor.texto4 || conn?.sdemote || '@user ```is no longer Admin```');
       }
-      text = text.replace('@user', '@' + participants[0].split('@')[0]);
+      text = text.replace('@user', '@' + (who[0] || '').split('@')[0]);
       if (chat.detect && !chat?.isBanned) {
         mconn?.conn?.sendMessage(id, { text, mentions: mconn?.conn?.parseMention(text) });
       }

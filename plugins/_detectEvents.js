@@ -37,7 +37,13 @@ export async function before(m, { conn, participants }) {
     const realSender = await resolveLidFromCache(m?.sender, conn);
     
     const idioma = global.db?.data?.users[realSender]?.language || global.defaultLenguaje;
-    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/_detectEvents.js.json`));
+    let _translate;
+    try {
+        _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/_detectEvents.js.json`));
+    } catch {
+        // El archivo por idioma no existe en todos los idiomas: usar el de español.
+        _translate = JSON.parse(fs.readFileSync(`./src/languages/es/_detectEvents.js.json`));
+    }
     const tradutor = _translate._detectevents;
 
     let groupName = "el grupo";

@@ -1,0 +1,26 @@
+{
+    "_testting": {
+        "errors": {
+            "no_query": "*[❗] Exemplo: @command Beggin You*",
+            "no_results": "*[❗] Nenhum resultado encontrado.*",
+            "generic": "*[❗] Erro: @error*",
+            "large_audio": "*[❗] Arquivo de áudio grande detectado.*\n*Tamanho:* @size MB\n*Enviando como documento (>50 MB)*\n\n⏳ *Pode demorar um momento...*",
+            "large_video": "*[❗] Arquivo de vídeo grande detectado.*\n*Tamanho:* @size MB\n*Enviando como documento (>100 MB)*\n\n⏳ *Pode demorar um momento...*"
+        },
+        "video_info": {
+            "header": "_*< DOWNLOADS - PLAY />*_",
+            "title": "▢ *Título:* @title",
+            "author": "▢ *Canal:* @author",
+            "duration": "▢ *Duração:* @duration",
+            "views": "▢ *Visualizações:* @views",
+            "published": "▢ *Publicado:* @published",
+            "id": "▢ *ID:* @id",
+            "link": "▢ *Link:* @link",
+            "processing": "*[ ℹ️ ] Processando @type...*"
+        },
+        "success": {
+            "audio": "*[ 🔊 ] ÁUDIO BAIXADO*",
+            "video": "*[ 🎥 ] VÍDEO BAIXADO*"
+        }
+    }
+}
