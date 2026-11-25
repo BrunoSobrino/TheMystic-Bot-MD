@@ -14,9 +14,13 @@
 
 const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys"));
 import axios from 'axios';
+import fs from 'fs';
 
 const handler = async (m, { conn, usedPrefix, command, text }) => {
- if (!text) return conn.sendMessage(m.chat, { text: `*_< BUSQUEDAS - PINTEREST />_*\n\n[ ❗️ ] Ingresa un texto para buscar resultados\nEjemplo: ${usedPrefix + command} Gato` }, { quoted: m });
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.search_pinterest
+ if (!text) return conn.sendMessage(m.chat, { text: `${tradutor.texto1[0]}${usedPrefix + command}${tradutor.texto1[1]}` }, { quoted: m });
  try {
  let { data } = await axios.get(`${global.APIs.stellar}/search/pinterest?query=${text}&apikey=${global.APIKeys[global.APIs.stellar]}`);
  let images = data.data;
@@ -24,10 +28,10 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  for (let i = 0; i < images.length; i++) {
  let image = images[i];
  push.push({ 
- body: proto.Message.InteractiveMessage.Body.fromObject({ text: `\n□ Número de resultado: ${i + 1}\n` }), 
+ body: proto.Message.InteractiveMessage.Body.fromObject({ text: `${tradutor.texto2}${i + 1}\n` }), 
  footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: global.pickbot }), 
  header: proto.Message.InteractiveMessage.Header.fromObject({ 
- title: '*_< BUSQUEDAS - PINTEREST />_*', 
+ title: tradutor.texto4, 
  hasMediaAttachment: true, 
  imageMessage: await generateWAMessageContent({ image: { url: image.mini } }, { upload: conn.waUploadToServer }).then(res => res.imageMessage) 
  }), 
@@ -35,7 +39,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  buttons: [ 
  { 
  "name": "cta_url", 
- "buttonParamsJson": `{"display_text":"Ver en alta calidad","url":"${image.hd}","merchant_url":"${image.hd}"}` 
+ "buttonParamsJson": `{"display_text":"${tradutor.texto3}","url":"${image.hd}","merchant_url":"${image.hd}"}` 
     } 
    ] 
   }) 
@@ -47,8 +51,8 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  message: { 
  messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 }, 
  interactiveMessage: proto.Message.InteractiveMessage.fromObject({ 
- body: proto.Message.InteractiveMessage.Body.create({ text: "*_< BUSQUEDAS - PINTEREST />_*" }), 
- footer: proto.Message.InteractiveMessage.Footer.create({ text: `□ *Busqueda:* ${text}\n□ *Solicitante:* ${global.db.data.users[m.sender].name}` }), 
+ body: proto.Message.InteractiveMessage.Body.create({ text: tradutor.texto4 }), 
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: `${tradutor.texto5[0]}${text}${tradutor.texto5[1]}${global.db.data.users[m.sender].name}` }), 
  header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }), 
  carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: [ ...push ] }) 
   }) 
@@ -58,7 +62,7 @@ const handler = async (m, { conn, usedPrefix, command, text }) => {
  await conn.relayMessage(m.chat, bot.message, { messageId: bot.key.id });
  } catch (error) {
  console.error(error);
- conn.sendMessage(m.chat, { text: "*_< BUSQUEDAS - PINTEREST />_*\n\n[❗] 𝙾𝙲𝚄𝚁𝚁𝙸𝙾 𝚄𝙽 𝙴𝚁𝚁𝙾𝚁 𝙰𝙻 𝙿𝚁𝙾𝙲𝙴𝚂𝙰𝚁 𝚂𝚄 𝚂𝙾𝙻𝙸𝙲𝙸𝚃𝚄𝙳" }, { quoted: m });
+ conn.sendMessage(m.chat, { text: tradutor.texto6 }, { quoted: m });
  }
 };
 
