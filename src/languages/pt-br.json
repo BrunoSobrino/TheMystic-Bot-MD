@@ -596,6 +596,29 @@
       "texto5": "_*< DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] Baixe seu vídeo em:*",
       "texto6": "_*< DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
     },
+    "downloader_ytplay": {
+      "texto1": [
+        "_*< DOWNLOADS - YTPLAY />*_\n\n*[ ℹ️ ] Digite o nome da música ou o link do YouTube.*\n\n*[ 💡 ] Exemplo:*",
+        "Beggin - Måneskin_"
+      ],
+      "texto2": [
+        "_*< DOWNLOADS - YTPLAY />*_\n\n▢ *Título:*",
+        "▢ *Publicado:*",
+        "▢ *Duração:*",
+        "▢ *Visualizações:*",
+        "▢ *Autor:*",
+        "▢ *ID:*",
+        "▢ *Tipo:*",
+        "▢ *Link:*",
+        "▢ *Canal:*",
+        "*[ ℹ️ ] Toque em um botão para baixar:*",
+        "🎵 Áudio ou 🎬 Vídeo.*"
+      ],
+      "texto3": "Áudio",
+      "texto4": "Vídeo",
+      "texto5": "TheMystic-Bot-MD",
+      "texto6": "_*< DOWNLOADS - YTPLAY />*_\n\n*[ ℹ️ ] Ocorreu um erro. Por favor, tente novamente mais tarde.*"
+    },
     "descargas_spotify": {
       "texto1": "_*< DOWNLOADS - SPOTIFY />*_\n\n*[ ℹ️ ] Falta o título da música do Spotify.*\n\n*[ 💡 ] Exemplo:*",
       "texto2": [
