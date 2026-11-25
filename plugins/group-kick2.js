@@ -6,13 +6,13 @@ const handler = async (m, {conn, participants, usedPrefix, command}) => {
 
   if (!global.db.data.settings[conn.user.jid].restrict) throw`${tradutor.texto1[0]} (𝚎𝚗𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝 / 𝚍𝚒𝚜𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝) ${tradutor.texto1[1]}`;
   const kicktext = `${tradutor.texto2} \n*${usedPrefix + command} @${global.suittag}*`;
-  const testi = m.mentionedJid[0]
+  const testi = (await m.mentionedJid)[0];
 
   console.log(testi)
   
   if (!testi && !m.quoted) return m.reply(kicktext, m.chat, {mentions: conn.parseMention(kicktext)});
-  if (testi.includes(conn.user.jid)) return;
-  const user = await m.mentionedJid[0] ? await m.mentionedJid[0] : await m.quoted?.sender;
+  if (testi && testi.includes(conn.user.jid)) return;
+  const user = testi || await m.quoted?.sender;
   const owr = m.chat.split`-`[0];
   await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
 };
