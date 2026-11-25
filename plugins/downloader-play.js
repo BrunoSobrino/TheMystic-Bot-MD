@@ -1,8 +1,6 @@
 import fs from 'fs'
 import fetch from 'node-fetch'
-import yts from 'yt-search'
-import ytmp33 from '../src/libraries/ytmp33.js'
-import ytmp44 from '../src/libraries/ytmp44.js'
+import { searchMusic, getAudioBuffer, getVideoBuffer } from '../src/libraries/ytmusic.js'
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   const datas = global;
@@ -10,7 +8,7 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
   const tradutor = _translate.plugins.descargas_play
 
-  if (!text) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]}`;      
+  if (!text) throw `${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]}`;
   let additionalText = '';
   if (['play'].includes(command)) {
     additionalText = 'audio';
@@ -19,7 +17,7 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   }
 
   const regex = "https://youtube.com/watch?v="
-  const result = await search(args.join(' '))
+  const result = await searchMusic(args.join(' '), command === 'play2' ? 'videos' : 'songs')
   if (!result) return conn.reply(m.chat, tradutor.texto6, m);
   const body = `${tradutor.texto2[0]} ${result.title}\n${tradutor.texto2[1]} ${result.ago || '?'}\n${tradutor.texto2[2]} ${result.duration?.timestamp || '?'}\n${tradutor.texto2[3]} ${formatNumber(result.views || 0)}\n${tradutor.texto2[4]} ${result.author?.name || '?'}\n${tradutor.texto2[5]} ${result.videoId}\n${tradutor.texto2[6]} ${result.type}\n${tradutor.texto2[7]} ${result.url}\n${tradutor.texto2[8]} ${result.author?.url || ''}\n\n${tradutor.texto2[9]} ${additionalText}, ${tradutor.texto2[10]}`.trim();
   if (result.thumbnail) {
@@ -30,12 +28,10 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 
   if (command === 'play') {
     try {
-      const audiodlp = await ytmp33(regex + result.videoId);
-      if (!audiodlp.status || !audiodlp.resultados?.descargar) throw new Error(audiodlp.error || 'ytmp33 sin enlace de descarga');
-      const downloader = audiodlp.resultados.descargar;
-      await conn.sendMessage(m.chat, { audio: { url: downloader }, mimetype: "audio/mpeg" }, { quoted: m });
+      const { buffer, mimeType } = await getAudioBuffer(result.videoId);
+      await conn.sendMessage(m.chat, { audio: buffer, mimetype: mimeType }, { quoted: m });
     } catch (error) {
-      console.log('❌ Error en ytmp33, intentando Ruby-core fallback...', error);
+      console.log('❌ Error en YouTube Music audio, intentando Ruby-core fallback...', error);
       try {
         const ruby = await (
           await fetch(
@@ -61,12 +57,10 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 
   if (command === 'play2') {
     try {
-      const videodlp = await ytmp44(regex + result.videoId);
-      if (!videodlp.status || !videodlp.resultados?.descargar) throw new Error(videodlp.error || 'ytmp44 sin enlace de descarga');
-      const downloader = videodlp.resultados.descargar;
-      await conn.sendMessage(m.chat, { video: { url: downloader }, mimetype: "video/mp4" }, { quoted: m });
+      const { buffer, mimeType } = await getVideoBuffer(result.videoId);
+      await conn.sendMessage(m.chat, { video: buffer, mimetype: mimeType, fileName: `${result.title}.mp4` }, { quoted: m });
     } catch (error) {
-      console.log('❌ Error en ytmp44, intentando Ruby-core fallback...', error);
+      console.log('❌ Error en YouTube Music video, intentando Ruby-core fallback...', error);
       try {
         const ruby = await (
           await fetch(
@@ -96,11 +90,6 @@ handler.tags = ['downloader'];
 handler.command = /^(play|play2)$/i;
 
 export default handler;
-
-async function search(query, options = {}) {
-  const searchRes = await yts.search({ query, hl: 'es', gl: 'ES', ...options });
-  return searchRes.videos[0];
-}
 
 function formatNumber(num) {
   return num.toLocaleString();

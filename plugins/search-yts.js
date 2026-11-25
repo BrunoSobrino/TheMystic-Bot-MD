@@ -10,7 +10,7 @@
 
 */
 import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from "baileys"
-import yts from 'yt-search';
+import { searchMusicList } from '../src/libraries/ytmusic.js';
 import fs from 'fs';
 
 const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
@@ -19,21 +19,20 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
     const traductor = _translate.plugins.buscador_yts;
     const device = await getDevice(m.key.id);
-    
+
   if (!text) throw `⚠️ *${traductor.texto1}*`;
-    
-  if (device !== 'desktop' || device !== 'web') {      
-    
-  const results = await yts(text);
-  if (!results || !results?.videos) return m.reply('> *[❗] Error: Videos not founds.*')    
-  const videos = results.videos.slice(0, 20);
+
+  if (device !== 'desktop' || device !== 'web') {
+
+  const videos = await searchMusicList(text, 'videos', 20);
+  if (!videos || !videos.length) return m.reply('> *[❗] Error: Videos not founds.*')
   const randomIndex = Math.floor(Math.random() * videos.length);
   const randomVideo = videos[randomIndex];
-      
+
   var messa = await prepareWAMessageMedia({ image: {url: randomVideo.thumbnail}}, { upload: conn.waUploadToServer })
   const interactiveMessage = {
-    body: { text: `*—◉ Resultados obtenidos:* ${results.videos.length}\n*—◉ Video aleatorio:*\n*-› Title:* ${randomVideo.title}\n*-› Author:* ${randomVideo.author.name}\n*-› Views:* ${randomVideo.views}\n*-› ${traductor.texto2[0]}:* ${randomVideo.url}\n*-› Imagen:* ${randomVideo.thumbnail}`.trim() },
-    footer: { text: `${global.wm}`.trim() },  
+    body: { text: `*—◉ Resultados obtenidos:* ${videos.length}\n*—◉ Video aleatorio:*\n*-› Title:* ${randomVideo.title}\n*-› Author:* ${randomVideo.author.name}\n*-› Views:* ${randomVideo.views}\n*-› ${traductor.texto2[0]}:* ${randomVideo.url}\n*-› Imagen:* ${randomVideo.thumbnail}`.trim() },
+    footer: { text: `${global.wm}`.trim() },
       header: {
           title: `*< YouTube Search />*\n`,
           hasMediaAttachment: true,
@@ -67,8 +66,8 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
       ],
       messageParamsJson: ''
     }
-  };        
-            
+  };
+
         let msg = generateWAMessageFromContent(m.chat, {
             viewOnceMessage: {
                 message: {
@@ -82,10 +81,9 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
   const datas = global;
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`));
-  const traductor = _translate.plugins.buscador_yts;      
-  const results = await yts(text);
-  const tes = results.all;
-  const teks = results.all.map((v) => {
+  const traductor = _translate.plugins.buscador_yts;
+  const tes = await searchMusicList(text, 'videos', 20);
+  const teks = tes.map((v) => {
     switch (v.type) {
       case 'video': return `
 ° *_${v.title}_*
@@ -95,8 +93,8 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
 ↳ 👁 *_${traductor.texto2[3]}_* ${v.views}`;
     }
   }).filter((v) => v).join('\n\n◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦◦\n\n');
-  conn.sendFile(m.chat, tes[0].thumbnail, 'error.jpg', teks.trim(), m);      
-  }    
+  conn.sendFile(m.chat, tes[0].thumbnail, 'error.jpg', teks.trim(), m);
+  }
 };
 handler.help = ['ytsearch <texto>'];
 handler.tags = ['search'];

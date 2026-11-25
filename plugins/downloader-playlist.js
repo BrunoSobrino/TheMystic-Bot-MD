@@ -1,4 +1,4 @@
-import yts from 'yt-search';
+import { searchMusicList } from '../src/libraries/ytmusic.js';
 import fs from 'fs';
 
 
@@ -22,10 +22,10 @@ const handler = async (m, {conn, text, usedPrefix, command}) => {
     if (global.videoList[0]?.from == m.sender) {
       global.videoList.splice(0, global.videoList.length);
     }
-    const results = await yts(text);
+    const results = { all: await searchMusicList(text, 'videos', 20) };
     const textoInfo = `${tradutor.texto2[0]}
 ◉ ${usedPrefix}audio <numero>
-◉ ${usedPrefix}video <numero> 
+◉ ${usedPrefix}video <numero>
 
 ${tradutor.texto2[1]}
 *◉ ${usedPrefix}audio 5*
