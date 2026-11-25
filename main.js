@@ -234,7 +234,7 @@ if (!opts['test']) {
       if (global.db.data) await global.db.write();
       if (opts['autocleartmp'] && (global.support || {}).find) {
         const tmp = ['tmp', 'jadibts'];//os.tmpdir(), 
-        tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
+        tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
       }
     }, 30 * 1000);
   }
