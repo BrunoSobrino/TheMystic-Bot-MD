@@ -1,4 +1,4 @@
-import { generateWAMessageFromContent, jidNormalizedUser } from "baileys";
+import { jidNormalizedUser } from "baileys";
 import { smsg } from './src/libraries/simple.js';
 import { format } from 'util';
 import { fileURLToPath } from 'url';
@@ -240,7 +240,7 @@ export async function handler(chatUpdate) {
               await m.reply(`*[ ⚠️ 𝚁𝙴𝙿𝙾𝚁𝚃𝙴 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙲𝙾𝙽 𝙵𝙰𝙻𝙻𝙾𝚂 ⚠️ ]*\n\n*—◉ 𝙿𝙻𝚄𝙶𝙸𝙽:* ${name}\n*—◉ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾:* ${m.sender}\n*—◉ 𝙲𝙾𝙼𝙰𝙽𝙳𝙾:* ${m.text}\n\n*—◉ 𝙴𝚁𝚁𝙾𝚁:*\n\`\`\`${format(e)}\`\`\`\n\n*[❗] 𝚁𝙴𝙿𝙾𝚁𝚃𝙴𝙻𝙾 𝙰𝙻 𝙲𝚁𝙴𝙰𝙳𝙾𝚁 𝙳𝙴𝙻 𝙱𝙾𝚃 𝙿𝙰𝚁𝙰 𝙳𝙰𝚁𝙻𝙴 𝚄𝙽𝙰 𝚂𝙾𝙻𝚄𝙲𝙸𝙾𝙽, 𝙿𝚄𝙴𝙳𝙴 𝚄𝚂𝙰𝚁 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 #reporte*`.trim(), data.jid);
             }
           }*/
-          const md5c = fs.readFileSync('./plugins/' + m.plugin);
+          const md5c = m.plugin ? fs.readFileSync('./plugins/' + m.plugin) : null;
           /*fetch('https://themysticbot.cloud:2083/error', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -470,7 +470,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
                   await m.reply(`*[ ⚠️ 𝚁𝙴𝙿𝙾𝚁𝚃𝙴 𝙳𝙴 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 𝙲𝙾𝙽 𝙵𝙰𝙻𝙻𝙾𝚂 ⚠️ ]*\n\n*—◉ 𝙿𝙻𝚄𝙶𝙸𝙽:* ${m.plugin}\n*—◉ 𝚄𝚂𝚄𝙰𝚁𝙸𝙾:* ${m.sender}\n*—◉ 𝙲𝙾𝙼𝙰𝙽𝙳𝙾:* ${usedPrefix}${command} ${args.join(' ')}\n\n\`\`\`${text}\`\`\`\n\n*[❗] 𝚁𝙴𝙿𝙾𝚁𝚃𝙴𝙻𝙾 𝙰𝙻 𝙲𝚁𝙴𝙰𝙳𝙾𝚁 𝙳𝙴𝙻 𝙱𝙾𝚃 𝙿𝙰𝚁𝙰 𝙳𝙰𝚁𝙻𝙴 𝚄𝙽𝙰 𝚂𝙾𝙻𝚄𝙲𝙸𝙾𝙽, 𝙿𝚄𝙴𝙳𝙴 𝚄𝚂𝙰𝚁 𝙴𝙻 𝙲𝙾𝙼𝙰𝙽𝙳𝙾 #reporte*`.trim(), data.jid);
                 }
               }*/
-              const md5c = fs.readFileSync('./plugins/' + m.plugin);
+              const md5c = m.plugin ? fs.readFileSync('./plugins/' + m.plugin) : null;
               /*fetch('https://themysticbot.cloud:2083/error', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -719,8 +719,9 @@ global.dfail = (type, m, conn) => {
     unreg: tradutor.texto9,
     restrict: tradutor.texto10,
   }[type];
-  const aa = { quoted: m, userJid: conn.user?.id || conn.user?.jid };
-  const prep = generateWAMessageFromContent(m.chat, { extendedTextMessage: { text: msg, contextInfo: { externalAdReply: { title: tradutor.texto11[0], body: tradutor.texto11[1], thumbnail: imagen1, sourceUrl: tradutor.texto11[2] } } } }, aa);
+  // Se envía como texto normal: el aviso armado a mano y reenviado con
+  // tarjeta externa se veía como enviado en el chat del bot pero no
+  // llegaba al destinatario.
 
   const chatPrim2 = global.db.data.chats[m.chat] || {};
   const normalizeJid2 = (jid) => jid?.replace(/[^0-9]/g, '');
@@ -738,7 +739,8 @@ global.dfail = (type, m, conn) => {
     else if (primaryNumber2 && !botIs(mconn.conn, primaryNumber2)) {
       return;
     }
-  } else if (msg) return conn.relayMessage(m.chat, prep.message, { messageId: prep.key.id });
+  }
+  if (msg) return conn.sendMessage(m.chat, { text: msg }, { quoted: m });
 };
 
 const file = global.__filename(import.meta.url, true);

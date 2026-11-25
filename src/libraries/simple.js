@@ -39,7 +39,6 @@ const {
     getAggregateVotesInPollMessage,
     prepareWAMessageMedia,
     WA_DEFAULT_EPHEMERAL,
-    PHONENUMBER_MCC,
 } = await import("baileys");
 
 export function makeWASocket(connectionOptions, options = {}) {
@@ -50,6 +49,72 @@ export function makeWASocket(connectionOptions, options = {}) {
         throw new Error('La opción --legacy ya no existe en Baileys 7 (makeWALegacySocket fue eliminado). Arranca sin --legacy.');
     }
     const conn = _makeWaSocket(connectionOptions);
+
+    // Audio general: las notas de voz (ptt) en MP3 llegan pero no se
+    // reproducen en WhatsApp (solo Opus/OGG). Como muchos plugins mandan
+    // audio con sendMessage directo, se convierte aquí, una sola vez, todo
+    // audio ptt que no sea Opus; si la conversión falla, se manda como
+    // audio normal (el MP3 sí se reproduce así). Los audios ya Opus y los
+    // que no son ptt no se tocan. Las conversiones de archivos locales se
+    // guardan en caché para no convertir el mismo audio cada vez.
+    const _sendMessage = conn.sendMessage.bind(conn);
+    const _pttCache = new Map();
+    const _toPTTAudio = async (audio) => {
+        let buffer = null;
+        let cacheKey = null;
+        const readLocalFile = (filePath) => {
+            const st = fs.statSync(filePath);
+            cacheKey = `${filePath}:${st.size}:${st.mtimeMs}`;
+            if (_pttCache.has(cacheKey)) return _pttCache.get(cacheKey);
+            buffer = fs.readFileSync(filePath);
+            return null;
+        };
+        try {
+            if (Buffer.isBuffer(audio)) {
+                buffer = audio;
+            } else if (typeof audio === 'string') {
+                if (/^https?:\/\//i.test(audio)) return null;
+                const cached = readLocalFile(audio);
+                if (cached) return cached;
+            } else if (audio && typeof audio.url === 'string') {
+                if (/^https?:\/\//i.test(audio.url)) return null;
+                const cached = readLocalFile(audio.url);
+                if (cached) return cached;
+            } else {
+                return null;
+            }
+            const converted = await toAudio(buffer, 'mp3');
+            const data = converted.data;
+            await converted.delete().catch(() => {});
+            if (cacheKey) {
+                if (_pttCache.size >= 100) _pttCache.clear();
+                _pttCache.set(cacheKey, data);
+            }
+            return data;
+        } catch {
+            return null;
+        }
+    };
+    conn.sendMessage = async (jid, content, options) => {
+        try {
+            if (content && typeof content === 'object' && content.audio && content.ptt) {
+                const mime = String(content.mimetype || '');
+                const url = typeof content.audio === 'string' ? content.audio : content.audio?.url;
+                const isOpus = /opus|ogg/i.test(mime) || (typeof url === 'string' && /\.(opus|ogg)$/i.test(url));
+                if (!isOpus) {
+                    const opus = await _toPTTAudio(content.audio);
+                    if (opus) {
+                        content = { ...content, audio: opus, mimetype: 'audio/ogg; codecs=opus' };
+                    } else {
+                        content = { ...content, ptt: false };
+                    }
+                }
+            }
+        } catch {
+            try { content = { ...content, ptt: false }; } catch {}
+        }
+        return _sendMessage(jid, content, options);
+    };
 
     const sock = Object.defineProperties(conn, {
         chats: {
