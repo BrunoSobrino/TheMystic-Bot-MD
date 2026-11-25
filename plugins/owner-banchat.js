@@ -16,22 +16,22 @@ const handler = async (m, { conn }) => {
     if (normalizeJid(mentionedBot) !== normalizeJid(thisBot)) return;
 
     if (global.db.data.chats[m.chat].isBanned) {
-      m.reply('⚠️ Este chat ya está baneado.');
+      m.reply(tradutor.texto2);
       return;
     }
 
     global.db.data.chats[m.chat].isBanned = true;
-    m.reply(`✅ Bot ${conn.user.name || 'actual'} baneado específicamente de este chat.`);
+    m.reply(`${tradutor.texto3[0]}${conn.user.name || 'actual'}${tradutor.texto3[1]}`);
     return;
   }
 
   if (global.db.data.chats[m.chat].isBanned) {
-    m.reply('⚠️ Este chat ya está baneado.');
+    m.reply(tradutor.texto2);
     return;
   }
 
   global.db.data.chats[m.chat].isBanned = true;
-  m.reply(tradutor.texto1 || '✅ Chat baneado exitosamente.');
+  m.reply(tradutor.texto1);
 };
 
 handler.help = ['banchat', 'banchat @bot'];
