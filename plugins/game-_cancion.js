@@ -12,10 +12,13 @@ const handler = {
 
     const id = m.chat;
     
-    if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !/ADIVINA EL TITULO DE LA CANCION/i.test(m.quoted.text)) return !0;
+    // El caption ya sale traducido, así que se reconoce por el título en el idioma
+    // del que responde (tradutor.texto3) o en español como alternativa.
+    const songTitle = (tradutor.texto3 || 'ADIVINA EL TITULO DE LA CANCION').toUpperCase();
+    if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !m.quoted.text || (!m.quoted.text.toUpperCase().includes(songTitle) && !m.quoted.text.toUpperCase().includes('ADIVINA EL TITULO DE LA CANCION'))) return !0;
     
     this.tebaklagu = this.tebaklagu ? this.tebaklagu : {};
-    if (!(id in this.tebaklagu)) return m.reply(tradutor.texto1 || "No hay juego activo en este chat.");
+    if (!(id in this.tebaklagu)) return m.reply(tradutor.texto1 || tradutor.texto4);
     
     if (m.quoted.id == this.tebaklagu[id][0].id) {
       const json = JSON.parse(JSON.stringify(this.tebaklagu[id][1]));
@@ -29,15 +32,15 @@ const handler = {
       
       if (userAnswer === correctAnswer) {
         global.db.data.users[m.sender].exp += this.tebaklagu[id][2];
-        m.reply(`🎉 ¡Correcto!\n\n🎵 *${json.jawaban}* de *${json.artist}*\n💰 +${this.tebaklagu[id][2]} XP`);
+        m.reply(`${tradutor.texto6[0]}\n\n🎵 *${json.jawaban}* ${tradutor.texto6[1]} *${json.artist}*\n💰 +${this.tebaklagu[id][2]} XP`);
         clearTimeout(this.tebaklagu[id][3]);
         delete this.tebaklagu[id];
       } else if (similarity(userAnswer, correctAnswer) >= threshold) {
         // Respuesta muy similar
-        m.reply(`🎯 ¡Casi! Estás muy cerca...`);
+        m.reply(tradutor.texto7);
       } else {
         // Respuesta incorrecta
-        m.reply(tradutor.texto2 || "❌ Incorrecto. ¡Sigue intentando!");
+        m.reply(tradutor.texto2 || tradutor.texto5);
       }
     }
     return !0;
