@@ -2,6 +2,9 @@ import {generateWAMessageFromContent} from "baileys";
 import * as fs from 'fs';
 
 const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
+    const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+    const tradutor = _translate.plugins.group_hidetag
     const users = participants.map((u) => conn.decodeJid(u.id));
     const isDocumentMessage = m.message.documentMessage || (m.quoted && m.quoted.mtype === 'documentMessage');
     
@@ -25,7 +28,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
         } else if (m.message.videoMessage?.caption) {
             htextos = m.message.videoMessage.caption.replace(/^\.\w+\s*/, '');
         } else {
-            htextos = '*Hola :D*';
+            htextos = tradutor.texto1;
         }
     }
     if (m.message.imageMessage) {
@@ -47,7 +50,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
         const quoted = m.quoted;
         const mime = (quoted.msg || quoted).mimetype || '';
         const isMedia = /image|video|sticker|audio|document/.test(mime);
-        if (!htextos || htextos === '*Hola :D*') {
+        if (!htextos || htextos === tradutor.texto1) {
             if (quoted.text) {
                 htextos = quoted.text;
             } else if (quoted.caption) {
@@ -55,7 +58,7 @@ const handler = async (m, {conn, text, participants, isOwner, isAdmin}) => {
             } else if (quoted.msg?.caption) {
                 htextos = quoted.msg.caption;
             } else {
-                htextos = '*Hola :D*';
+                htextos = tradutor.texto1;
             }
         }
         if ((isMedia && quoted.mtype === 'imageMessage')) {
