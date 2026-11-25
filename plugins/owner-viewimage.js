@@ -12,7 +12,7 @@ let handler = async (m, { text }) => {
   if (!fs.existsSync(path)) throw tradutor.texto2;
   let media = await fs.readFileSync(path);
   let mimeType = `image/${ext}`;
-  m.reply(media, null, { thumbnail: await (await fetch(`data:${mimeType};base64,${media.toString('base64')}`)).buffer() });
+  m.reply(media, null, { thumbnail: await Buffer.from(await (await fetch(`data:${mimeType};base64,${media.toString('base64')}`)).arrayBuffer()) });
 };
 
 handler.help = ['viewimage <nome>'];
