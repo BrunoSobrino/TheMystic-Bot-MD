@@ -50,7 +50,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
         if (isAudio) {
             const audioBuffer = downloadResult.buffer;
-            const thumbnailBuffer = await fetch(video.thumbnail).then(res => res.buffer());
+            const thumbnailBuffer = await fetch(video.thumbnail).then(res => res.arrayBuffer()).then(ab => Buffer.from(ab));
 
             // Las etiquetas ID3 y la letra solo aplican a MP3. Los streams de
             // YouTube Music suelen ser AAC (.m4a) u Opus, que se mandan tal cual
@@ -214,7 +214,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
             let videoBuffer = null;
             try {
                 videoBuffer = downloadResult.buffer;
-                const thumbnailBuffer = await fetch(video.thumbnail).then(res => res.buffer());
+                const thumbnailBuffer = await fetch(video.thumbnail).then(res => res.arrayBuffer()).then(ab => Buffer.from(ab));
 
                 const videoSize = videoBuffer.length;
                 const shouldSendAsDocument = videoSize > VIDEO_SIZE_LIMIT;

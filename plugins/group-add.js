@@ -17,7 +17,7 @@ const handler = async (m, {conn, text, participants, args}) => {
             .map(async (v) => [v, await conn.onWhatsApp(v + '@s.whatsapp.net')]))).filter((v) => v[1][0]?.exists).map((v) => v[0] + '@c.us');
     const response = await conn.query({tag: 'iq', attrs: {type: 'set', xmlns: 'w:g2', to: m.chat}, content: users.map((jid) => ({tag: 'add', attrs: {}, content: [{tag: 'participant', attrs: {jid}}]}))});
     const pp = await conn.profilePictureUrl(m.chat).catch((_) => null);
-    const jpegThumbnail = pp ? await (await fetch(pp)).buffer() : Buffer.alloc(0);
+    const jpegThumbnail = pp ? Buffer.from(await (await fetch(pp)).arrayBuffer()) : Buffer.alloc(0);
     const add = getBinaryNodeChild(response, 'add');
     const participant = getBinaryNodeChildren(add, 'participant');
     for (const user of participant.filter((item) => item.attrs.error == 403)) {

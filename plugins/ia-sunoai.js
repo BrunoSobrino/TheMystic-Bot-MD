@@ -33,8 +33,8 @@ const handler = async (m, { conn, args }) => {
         if (!song) throw tradutor.texto4;
         
         const [audioBuffer, thumbnailBuffer] = await Promise.all([
-            fetch(song.audio_url).then(res => res.buffer()),
-            fetch(song.image_url).then(res => res.buffer())
+            fetch(song.audio_url).then(res => res.arrayBuffer()).then(ab => Buffer.from(ab)),
+            fetch(song.image_url).then(res => res.arrayBuffer()).then(ab => Buffer.from(ab))
         ]);
                
         const tags = {

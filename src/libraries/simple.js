@@ -268,7 +268,7 @@ export function makeWASocket(connectionOptions, options = {}) {
                     /^data:.*?\/.*?;base64,/i.test(PATH) ?
                     Buffer.from(PATH.split`,` [1], "base64") :
                     /^https?:\/\//.test(PATH) ?
-                    await (res = await fetch(PATH)).buffer() :
+                    Buffer.from(await (res = await fetch(PATH)).arrayBuffer()) :
                     fs.existsSync(PATH) ?
                     ((filename = PATH), fs.readFileSync(PATH)) :
                     typeof PATH === "string" ?
