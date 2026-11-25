@@ -594,6 +594,29 @@
       "texto5": "*_ < DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] Download your video at:*",
       "texto6": "_*< DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*"
     },
+    "downloader_ytplay": {
+      "texto1": [
+        "_*< DOWNLOADS - YTPLAY />*_\n\n*[ ℹ️ ] Type the song name or the YouTube link.*\n\n*[ 💡 ] Example:*",
+        "Beggin - Måneskin_"
+      ],
+      "texto2": [
+        "_*< DOWNLOADS - YTPLAY />*_\n\n▢ *Title:*",
+        "▢ *Published:*",
+        "▢ *Duration:*",
+        "▢ *Views:*",
+        "▢ *Author:*",
+        "▢ *ID:*",
+        "▢ *Type:*",
+        "▢ *Link:*",
+        "▢ *Channel:*",
+        "*[ ℹ️ ] Tap a button to download:*",
+        "🎵 Audio or 🎬 Video.*"
+      ],
+      "texto3": "Audio",
+      "texto4": "Video",
+      "texto5": "TheMystic-Bot-MD",
+      "texto6": "_*< DOWNLOADS - YTPLAY />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*"
+    },
     "descargas_spotify": {
       "texto1": "_*< DOWNLOADS - SPOTIFY />*_\n\n*[ ℹ️ ] The Spotify song title is missing.*\n\n*[ 💡 ] Example:*",
       "texto2": [
