@@ -1,4 +1,9 @@
+import fs from 'fs';
+
 let handler = async (m, { conn, text, command, usedPrefix }) => {    
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_lidhelp
   if (command === 'testlid') {
     try {
       const info = {
@@ -14,7 +19,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
           cacheSize: conn.lid?.getStats ? conn.lid.getStats().total : 0,
           jidMappingSize: conn.lid?.getStats ? conn.lid.getStats().jidMappings : 0,
           isDirty: conn.lid?.getStats ? conn.lid.getStats().isDirty : false,
-          cacheFile: conn.lid?.getStats ? conn.lid.getStats().cacheFile : 'No definido'
+          cacheFile: conn.lid?.getStats ? conn.lid.getStats().cacheFile : tradutor.texto18
         }
       };
 
@@ -31,30 +36,30 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
         mentionedJids: m.message?.[Object.keys(m.message)[0]]?.contextInfo?.mentionedJid || []
       };
 
-      let response = `🔍 *Test LID Resolver*\n\n`;
-      response += `📋 *Estado del Resolver:*\n`;
-      response += `• Existe: ${info.lidResolverStatus.resolverExists ? '✅' : '❌'}\n`;
-      response += `• Caché LID: ${info.lidResolverStatus.cacheSize} entradas\n`;
-      response += `• Mapeo JID: ${info.lidResolverStatus.jidMappingSize} entradas\n`;
-      response += `• Cambios pendientes: ${info.lidResolverStatus.isDirty ? '⏳' : '✅'}\n`;
-      response += `• Archivo: ${info.lidResolverStatus.cacheFile.split('/').pop()}\n\n`;
+      let response = tradutor.texto1;
+      response += tradutor.texto2;
+      response += `${tradutor.texto3}${info.lidResolverStatus.resolverExists ? '✅' : '❌'}\n`;
+      response += `${tradutor.texto4}${info.lidResolverStatus.cacheSize}${tradutor.texto4_1}\n`;
+      response += `${tradutor.texto5}${info.lidResolverStatus.jidMappingSize}${tradutor.texto4_1}\n`;
+      response += `${tradutor.texto6}${info.lidResolverStatus.isDirty ? '⏳' : '✅'}\n`;
+      response += `${tradutor.texto7}${info.lidResolverStatus.cacheFile.split('/').pop()}\n\n`;
       
-      response += `📨 *Mensaje actual:*\n`;
-      response += `• Chat: ${info.messageInfo.chat}\n`;
-      response += `• Es grupo: ${info.messageInfo.isGroup ? '✅' : '❌'}\n`;
-      response += `• Sender: ${info.messageInfo.sender}\n`;
-      response += `• LIDs detectados: ${info.lidsInMessage}\n\n`;
+      response += tradutor.texto8;
+      response += `${tradutor.texto9}${info.messageInfo.chat}\n`;
+      response += `${tradutor.texto10}${info.messageInfo.isGroup ? '✅' : '❌'}\n`;
+      response += `${tradutor.texto11}${info.messageInfo.sender}\n`;
+      response += `${tradutor.texto12}${info.lidsInMessage}\n\n`;
       
-      response += `🔄 *Procesamiento:*\n`;
-      response += `• Participant con @lid: ${info.messageProcessed.participantEndsWithLid ? '❌' : '✅'}\n`;
-      response += `• Key.participant con @lid: ${info.messageProcessed.keyParticipantEndsWithLid ? '❌' : '✅'}\n`;
-      response += `• Menciones: ${info.messageProcessed.mentionedJids.length}\n`;
+      response += tradutor.texto13;
+      response += `${tradutor.texto14}${info.messageProcessed.participantEndsWithLid ? '❌' : '✅'}\n`;
+      response += `${tradutor.texto15}${info.messageProcessed.keyParticipantEndsWithLid ? '❌' : '✅'}\n`;
+      response += `${tradutor.texto16}${info.messageProcessed.mentionedJids.length}\n`;
 
       await conn.reply(m.chat, response, m);
       
     } catch (error) {
       console.error('[TEST-LID] Error en testlid:', error);
-      await conn.reply(m.chat, `❌ Error en test: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto17}${error.message}`, m);
     }
   }
   
@@ -64,46 +69,46 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   if (command === 'lidcache') {
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const stats = conn.lid.getStats();
       
-      let response = `💾 *Caché LID Resolver*\n\n`;
-      response += `📊 *Estadísticas:*\n`;
-      response += `• Total entradas: ${stats.total}\n`;
-      response += `• Entradas válidas: ${stats.valid}\n`;
-      response += `• No encontrados: ${stats.notFound}\n`;
-      response += `• Errores: ${stats.errors}\n`;
-      response += `• Mapeos JID: ${stats.jidMappings}\n`;
-      response += `• Archivo existe: ${stats.fileExists ? '✅' : '❌'}\n`;
-      response += `• Cambios pendientes: ${stats.isDirty ? '⏳' : '✅'}\n\n`;
+      let response = tradutor.texto20;
+      response += tradutor.texto21;
+      response += `${tradutor.texto22}${stats.total}\n`;
+      response += `${tradutor.texto23}${stats.valid}\n`;
+      response += `${tradutor.texto24}${stats.notFound}\n`;
+      response += `${tradutor.texto25}${stats.errors}\n`;
+      response += `${tradutor.texto26}${stats.jidMappings}\n`;
+      response += `${tradutor.texto27}${stats.fileExists ? '✅' : '❌'}\n`;
+      response += `${tradutor.texto6}${stats.isDirty ? '⏳' : '✅'}\n\n`;
       
-      response += `💽 *Almacenamiento:*\n`;
-      response += `• Archivo: ${stats.cacheFile.split('/').pop()}\n`;
-      response += `• Ubicación: ./src/\n`;
+      response += tradutor.texto28;
+      response += `${tradutor.texto7}${stats.cacheFile.split('/').pop()}\n`;
+      response += tradutor.texto29;
       
       if (stats.total > 0) {
-        response += `\n🗂️ *Muestra de entradas:*\n`;
+        response += tradutor.texto30;
         const users = conn.lid.getAllUsers().slice(0, 5);
         users.forEach((user, index) => {
           const lidShort = user.lid.split('@')[0].slice(-4);
           const jidShort = user.jid.split('@')[0].slice(-4);
           const nameShort = user.name.length > 15 ? user.name.substring(0, 15) + '...' : user.name;
-          response += `${index + 1}. ...${lidShort} → ...${jidShort} (${nameShort})\n`;
+          response += `${index + 1}${tradutor.texto31}${lidShort}${tradutor.texto31_1}${jidShort}${tradutor.texto31_2}${nameShort})\n`;
         });
         
         if (stats.total > 5) {
-          response += `... y ${stats.total - 5} más\n`;
+          response += `${tradutor.texto32}${stats.total - 5}${tradutor.texto32_1}\n`;
         }
       } else {
-        response += `\n📝 *Caché vacío*\n`;
+        response += tradutor.texto33;
       }
       
       await conn.reply(m.chat, response, m);
     } catch (error) {
       console.error('[TEST-LID] Error en lidcache:', error);
-      await conn.reply(m.chat, `❌ Error: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto34}${error.message}`, m);
     }
   }
   
@@ -113,7 +118,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   if (command === 'clearcache') {
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const oldStats = conn.lid.getStats();
@@ -125,18 +130,18 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
         // Esto requiere modificación en la implementación
       }
       
-      let response = `🧹 *Caché LID Limpiado*\n\n`;
-      response += `• Entradas eliminadas: ${oldStats.total}\n`;
-      response += `• Válidas: ${oldStats.valid}\n`;
-      response += `• No encontrados: ${oldStats.notFound}\n`;
-      response += `• Errores: ${oldStats.errors}\n`;
-      response += `• Mapeos JID eliminados: ${oldStats.jidMappings}\n`;
-      response += `• Archivo actualizado: ✅\n`;
+      let response = tradutor.texto35;
+      response += `${tradutor.texto36}${oldStats.total}\n`;
+      response += `${tradutor.texto37}${oldStats.valid}\n`;
+      response += `${tradutor.texto24}${oldStats.notFound}\n`;
+      response += `${tradutor.texto25}${oldStats.errors}\n`;
+      response += `${tradutor.texto38}${oldStats.jidMappings}\n`;
+      response += tradutor.texto39;
       
-      await conn.reply(m.chat, 'ℹ️ Para limpiar el caché completamente, usa el comando desde el main.js o reinicia el bot', m);
+      await conn.reply(m.chat, tradutor.texto40, m);
     } catch (error) {
       console.error('[TEST-LID] Error en clearcache:', error);
-      await conn.reply(m.chat, `❌ Error: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto34}${error.message}`, m);
     }
   }
   
@@ -146,7 +151,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   if (command === 'lidstats') {
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const stats = conn.lid.getStats();
@@ -162,30 +167,30 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
         fileSize = 0;
       }
       
-      let response = `📈 *Estadísticas Detalladas LID*\n\n`;
-      response += `🗄️ *Archivo:*\n`;
-      response += `• Ruta: ${stats.cacheFile}\n`;
-      response += `• Existe: ${stats.fileExists ? '✅' : '❌'}\n`;
-      response += `• Tamaño: ${(fileSize / 1024).toFixed(2)} KB\n`;
-      response += `• Guardado pendiente: ${stats.isDirty ? '⏳' : '✅'}\n\n`;
+      let response = tradutor.texto41;
+      response += tradutor.texto42;
+      response += `${tradutor.texto43}${stats.cacheFile}\n`;
+      response += `${tradutor.texto3}${stats.fileExists ? '✅' : '❌'}\n`;
+      response += `${tradutor.texto44}${(fileSize / 1024).toFixed(2)}${tradutor.texto44_1}\n`;
+      response += `${tradutor.texto45}${stats.isDirty ? '⏳' : '✅'}\n\n`;
       
-      response += `📊 *Caché en Memoria:*\n`;
-      response += `• Total: ${stats.total} entradas\n`;
-      response += `• Válidas: ${stats.valid}\n`;
-      response += `• No encontrados: ${stats.notFound}\n`;
-      response += `• Errores: ${stats.errors}\n`;
-      response += `• Mapeos JID: ${stats.jidMappings}\n\n`;
+      response += tradutor.texto46;
+      response += `${tradutor.texto47}${stats.total}${tradutor.texto4_1}\n`;
+      response += `${tradutor.texto37}${stats.valid}\n`;
+      response += `${tradutor.texto24}${stats.notFound}\n`;
+      response += `${tradutor.texto25}${stats.errors}\n`;
+      response += `${tradutor.texto26}${stats.jidMappings}\n\n`;
       
       const efficiency = stats.total > 0 ? ((stats.valid / stats.total) * 100).toFixed(1) : 0;
-      response += `⚡ *Eficiencia:* ${efficiency}%\n`;
+      response += `${tradutor.texto48}${efficiency}${tradutor.texto48_1}\n`;
       
       const memoryEstimate = stats.total * 200; // ~200 bytes por entrada
-      response += `💾 *Memoria estimada:* ${(memoryEstimate / 1024).toFixed(2)} KB\n`;
+      response += `${tradutor.texto49}${(memoryEstimate / 1024).toFixed(2)}${tradutor.texto44_1}\n`;
       
       await conn.reply(m.chat, response, m);
     } catch (error) {
       console.error('[TEST-LID] Error en lidstats:', error);
-      await conn.reply(m.chat, `❌ Error: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto34}${error.message}`, m);
     }
   }
   
@@ -195,28 +200,28 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   if (command === 'forcesave') {
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const beforeStats = conn.lid.getStats();
       
       if (!beforeStats.isDirty) {
-        return await conn.reply(m.chat, '💾 No hay cambios pendientes para guardar', m);
+        return await conn.reply(m.chat, tradutor.texto50, m);
       }
       
       const saveResult = conn.lid.forceSave();
       
-      let response = `💾 *Guardado Forzado Completado*\n\n`;
-      response += `• Entradas guardadas: ${beforeStats.total}\n`;
-      response += `• Válidas: ${beforeStats.valid}\n`;
-      response += `• Mapeos JID: ${beforeStats.jidMappings}\n`;
-      response += `• Archivo: src/lidsresolve.json\n`;
-      response += `• Estado: ${saveResult ? '✅ Guardado' : '❌ Error'}\n`;
+      let response = tradutor.texto51;
+      response += `${tradutor.texto52}${beforeStats.total}\n`;
+      response += `${tradutor.texto37}${beforeStats.valid}\n`;
+      response += `${tradutor.texto26}${beforeStats.jidMappings}\n`;
+      response += tradutor.texto53;
+      response += `${tradutor.texto54}${saveResult ? tradutor.texto54_1 : tradutor.texto54_2}\n`;
       
       await conn.reply(m.chat, response, m);
     } catch (error) {
       console.error('[TEST-LID] Error en forcesave:', error);
-      await conn.reply(m.chat, `❌ Error guardando: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto55}${error.message}`, m);
     }
   }
   
@@ -225,7 +230,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'lidtest') {
     if (!m.isGroup) {
-      return await conn.reply(m.chat, '❌ Este test solo funciona en grupos', m);
+      return await conn.reply(m.chat, tradutor.texto56, m);
     }
     
     try {
@@ -233,9 +238,9 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       const metadata = await conn.groupMetadata(m.chat);
       const participants = metadata.participants;
       
-      let response = `🧪 *Test Manual LID Resolver*\n\n`;
-      response += `👥 *Grupo:* ${metadata.subject}\n`;
-      response += `📊 *Participantes:* ${participants.length}\n\n`;
+      let response = tradutor.texto57;
+      response += `${tradutor.texto58}${metadata.subject}\n`;
+      response += `${tradutor.texto59}${participants.length}\n\n`;
       
       // Verificar algunos participantes para testing
       const testCount = Math.min(3, participants.length);
@@ -248,11 +253,11 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
           const contactInfo = await conn.onWhatsApp(participant.jid || participant.id);
           const lid = contactInfo[0]?.lid;
           
-          response += `👤 *Participante ${i + 1}:*\n`;
-          response += `• JID: ...${(participant.jid || participant.id).split('@')[0].slice(-6)}\n`;
+          response += `${tradutor.texto60}${i + 1}${tradutor.texto60_1}\n`;
+          response += `${tradutor.texto61}${(participant.jid || participant.id).split('@')[0].slice(-6)}\n`;
           
           if (lid) {
-            response += `• LID: ...${lid.split('@')[0].slice(-6)}\n`;
+            response += `${tradutor.texto62}${lid.split('@')[0].slice(-6)}\n`;
             
             // Test resolver usando conn.lid
             const startTime = Date.now();
@@ -260,31 +265,31 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
             const resolveTime = Date.now() - startTime;
             
             const success = resolved === (participant.jid || participant.id);
-            response += `• Resolución: ${success ? '✅' : '❌'} (${resolveTime}ms)\n`;
+            response += `${tradutor.texto63}${success ? '✅' : '❌'}${tradutor.texto63_1}${resolveTime}${tradutor.texto63_2}\n`;
             
             if (success) resolvedCount++;
           } else {
-            response += `• LID: No disponible\n`;
-            response += `• Resolución: ⭕ Omitido\n`;
+            response += tradutor.texto64;
+            response += tradutor.texto65;
           }
           response += `\n`;
           
         } catch (error) {
-          response += `❌ Error con participante ${i + 1}: ${error.message}\n\n`;
+          response += `${tradutor.texto66}${i + 1}${tradutor.texto66_1}${error.message}\n\n`;
           errorCount++;
         }
       }
       
-      response += `📈 *Resumen del Test:*\n`;
-      response += `• Exitosos: ${resolvedCount}/${testCount}\n`;
-      response += `• Errores: ${errorCount}\n`;
-      response += `• Caché actual: ${conn.lid.getStats().total} entradas\n`;
+      response += tradutor.texto67;
+      response += `${tradutor.texto68}${resolvedCount}${tradutor.texto68_1}${testCount}\n`;
+      response += `${tradutor.texto25}${errorCount}\n`;
+      response += `${tradutor.texto69}${conn.lid.getStats().total}${tradutor.texto4_1}\n`;
       
       await conn.reply(m.chat, response, m);
       
     } catch (error) {
       console.error('[TEST-LID] Error en lidtest:', error);
-      await conn.reply(m.chat, `❌ Error en test manual: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto70}${error.message}`, m);
     }
   }
   
@@ -293,59 +298,59 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'lidinfo') {
     if (!text) {
-      return await conn.reply(m.chat, `❓ *Uso:* ${usedPrefix}lidinfo <número>\n\n*Ejemplo:* ${usedPrefix}lidinfo 1234567890`, m);
+      return await conn.reply(m.chat, `${tradutor.texto71}${usedPrefix}${tradutor.texto71_1}${usedPrefix}${tradutor.texto71_2}`, m);
     }
     
     if (!m.isGroup) {
-      return await conn.reply(m.chat, '❌ Este comando solo funciona en grupos', m);
+      return await conn.reply(m.chat, tradutor.texto72, m);
     }
     
     try {
       const numberToSearch = text.replace(/[^0-9]/g, '');
       if (!numberToSearch) {
-        return await conn.reply(m.chat, '❌ Ingresa un número válido', m);
+        return await conn.reply(m.chat, tradutor.texto73, m);
       }
       
       const lidJid = `${numberToSearch}@lid`;
       
-      let response = `🔍 *Información de LID*\n\n`;
-      response += `📱 *Número:* ${numberToSearch}\n`;
-      response += `🆔 *LID:* ${lidJid}\n`;
-      response += `👥 *Grupo:* ${m.chat}\n\n`;
+      let response = tradutor.texto74;
+      response += `${tradutor.texto75}${numberToSearch}\n`;
+      response += `${tradutor.texto76}${lidJid}\n`;
+      response += `${tradutor.texto77}${m.chat}\n\n`;
       
       // Verificar en caché usando conn.lid
       const userInfo = conn.lid.getUserInfo(numberToSearch);
       if (userInfo) {
-        response += `💾 *En Caché:* ✅\n`;
-        response += `📞 *Resuelto a:* ${userInfo.jid}\n`;
-        response += `👤 *Nombre:* ${userInfo.name}\n`;
-        response += `⏰ *Guardado:* ${new Date(userInfo.timestamp).toLocaleString()}\n`;
+        response += tradutor.texto78;
+        response += `${tradutor.texto79}${userInfo.jid}\n`;
+        response += `${tradutor.texto80}${userInfo.name}\n`;
+        response += `${tradutor.texto81}${new Date(userInfo.timestamp).toLocaleString()}\n`;
         
         if (userInfo.notFound) {
-          response += `⚠️ *Estado:* No encontrado previamente\n`;
+          response += tradutor.texto82;
         } else if (userInfo.error) {
-          response += `❌ *Estado:* Error en resolución previa\n`;
+          response += tradutor.texto83;
         } else {
-          response += `✅ *Estado:* Resuelto correctamente\n`;
+          response += tradutor.texto84;
         }
       } else {
-        response += `💾 *En Caché:* ❌\n`;
+        response += tradutor.texto85;
         
         // Intentar resolver
-        response += `🔄 *Intentando resolver...*\n`;
+        response += tradutor.texto86;
         
         const startTime = Date.now();
         const resolved = await conn.lid.resolveLid(lidJid, m.chat);
         const resolveTime = Date.now() - startTime;
         
-        response += `⏱️ *Tiempo de resolución:* ${resolveTime}ms\n`;
-        response += `📞 *Resultado:* ${resolved}\n`;
-        response += `✅ *Resuelto:* ${resolved !== lidJid ? 'Sí' : 'No'}\n`;
+        response += `${tradutor.texto87}${resolveTime}${tradutor.texto87_1}\n`;
+        response += `${tradutor.texto88}${resolved}\n`;
+        response += `${tradutor.texto89}${resolved !== lidJid ? tradutor.texto89_1 : tradutor.texto89_2}\n`;
         
         // Mostrar información actualizada del caché
         const updatedInfo = conn.lid.getUserInfo(numberToSearch);
         if (updatedInfo) {
-          response += `👤 *Nombre obtenido:* ${updatedInfo.name}\n`;
+          response += `${tradutor.texto90}${updatedInfo.name}\n`;
         }
       }
       
@@ -353,7 +358,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       
     } catch (error) {
       console.error('[TEST-LID] Error en lidinfo:', error);
-      await conn.reply(m.chat, `❌ Error obteniendo información: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto91}${error.message}`, m);
     }
   }
   
@@ -363,16 +368,16 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   if (command === 'listallusers') {
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const users = conn.lid.getAllUsers();
       
       if (users.length === 0) {
-        return await conn.reply(m.chat, '📝 No hay usuarios en el caché', m);
+        return await conn.reply(m.chat, tradutor.texto92, m);
       }
       
-      let response = `👥 *Usuarios en Caché LID* (${users.length})\n\n`;
+      let response = `${tradutor.texto93}${users.length}${tradutor.texto93_1}`;
       
       const maxShow = 20; // Mostrar máximo 20 usuarios
       const usersToShow = users.slice(0, maxShow);
@@ -381,21 +386,21 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
         const lidShort = user.lid.split('@')[0].slice(-6);
         const jidShort = user.jid.split('@')[0].slice(-6);
         const nameShort = user.name.length > 20 ? user.name.substring(0, 20) + '...' : user.name;
-        response += `${index + 1}. *${nameShort}*\n`;
-        response += `   📱 ...${lidShort} → ...${jidShort}\n`;
-        response += `   ⏰ ${user.timestamp}\n\n`;
+        response += `${index + 1}${tradutor.texto94}${nameShort}${tradutor.texto94_1}\n`;
+        response += `${tradutor.texto95}${lidShort}${tradutor.texto95_1}${jidShort}\n`;
+        response += `${tradutor.texto96}${user.timestamp}\n\n`;
       });
       
       if (users.length > maxShow) {
-        response += `... y ${users.length - maxShow} usuarios más\n\n`;
-        response += `💡 *Tip:* Usa \`${usedPrefix}lidinfo <número>\` para información específica`;
+        response += `${tradutor.texto32}${users.length - maxShow}${tradutor.texto97}\n\n`;
+        response += `${tradutor.texto98}${usedPrefix}${tradutor.texto98_1}`;
       }
       
       await conn.reply(m.chat, response, m);
       
     } catch (error) {
       console.error('[TEST-LID] Error en listallusers:', error);
-      await conn.reply(m.chat, `❌ Error listando usuarios: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto99}${error.message}`, m);
     }
   }
   
@@ -404,12 +409,12 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'searchuser') {
     if (!text) {
-      return await conn.reply(m.chat, `❓ *Uso:* ${usedPrefix}searchuser <nombre>\n\n*Ejemplo:* ${usedPrefix}searchuser Juan`, m);
+      return await conn.reply(m.chat, `${tradutor.texto71}${usedPrefix}${tradutor.texto100}${usedPrefix}${tradutor.texto100_1}`, m);
     }
     
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const searchTerm = text.toLowerCase();
@@ -422,10 +427,10 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       );
       
       if (matches.length === 0) {
-        return await conn.reply(m.chat, `❌ No se encontraron usuarios que coincidan con "${text}"`, m);
+        return await conn.reply(m.chat, `${tradutor.texto101}${text}${tradutor.texto101_1}`, m);
       }
       
-      let response = `🔍 *Búsqueda: "${text}"* (${matches.length} resultados)\n\n`;
+      let response = `${tradutor.texto102}${text}${tradutor.texto102_1}${matches.length}${tradutor.texto102_2}`;
       
       const maxShow = 10;
       const matchesToShow = matches.slice(0, maxShow);
@@ -433,20 +438,20 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       matchesToShow.forEach((user, index) => {
         const lidShort = user.lid.split('@')[0].slice(-6);
         const jidShort = user.jid.split('@')[0].slice(-6);
-        response += `${index + 1}. *${user.name}*\n`;
-        response += `   📱 ...${lidShort} → ...${jidShort}\n`;
-        response += `   ⏰ ${user.timestamp}\n\n`;
+        response += `${index + 1}${tradutor.texto94}${user.name}${tradutor.texto94_1}\n`;
+        response += `${tradutor.texto95}${lidShort}${tradutor.texto95_1}${jidShort}\n`;
+        response += `${tradutor.texto96}${user.timestamp}\n\n`;
       });
       
       if (matches.length > maxShow) {
-        response += `... y ${matches.length - maxShow} resultados más`;
+        response += `${tradutor.texto32}${matches.length - maxShow}${tradutor.texto103}`;
       }
       
       await conn.reply(m.chat, response, m);
       
     } catch (error) {
       console.error('[TEST-LID] Error en searchuser:', error);
-      await conn.reply(m.chat, `❌ Error en búsqueda: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto104}${error.message}`, m);
     }
   }
   
@@ -455,33 +460,33 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // ========================================
   if (command === 'phonevalidation') {
     if (!text) {
-      return await conn.reply(m.chat, `❓ *Uso:* ${usedPrefix}phonevalidation <número>\n\n*Ejemplo:* ${usedPrefix}phonevalidation +5219991234567`, m);
+      return await conn.reply(m.chat, `${tradutor.texto71}${usedPrefix}${tradutor.texto105}${usedPrefix}${tradutor.texto105_1}`, m);
     }
     
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const phoneNumber = text.trim();
       const isValid = conn.lid.validatePhoneNumber(phoneNumber);
       const detection = conn.lid.detectPhoneInLid(phoneNumber.replace(/[^0-9]/g, ''));
       
-      let response = `📞 *Validación de Número Telefónico*\n\n`;
-      response += `📱 *Número:* ${phoneNumber}\n`;
-      response += `✅ *Válido:* ${isValid ? 'Sí' : 'No'}\n`;
-      response += `🔍 *Es teléfono en LID:* ${detection.isPhone ? 'Sí' : 'No'}\n`;
+      let response = tradutor.texto106;
+      response += `${tradutor.texto75}${phoneNumber}\n`;
+      response += `${tradutor.texto107}${isValid ? tradutor.texto89_1 : tradutor.texto89_2}\n`;
+      response += `${tradutor.texto108}${detection.isPhone ? tradutor.texto89_1 : tradutor.texto89_2}\n`;
       
       if (detection.isPhone) {
-        response += `📞 *Número detectado:* ${detection.phoneNumber}\n`;
-        response += `🆔 *JID correcto:* ${detection.jid}\n`;
+        response += `${tradutor.texto109}${detection.phoneNumber}\n`;
+        response += `${tradutor.texto110}${detection.jid}\n`;
       }
       
       await conn.reply(m.chat, response, m);
       
     } catch (error) {
       console.error('[TEST-LID] Error en phonevalidation:', error);
-      await conn.reply(m.chat, `❌ Error validando número: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto111}${error.message}`, m);
     }
   }
   
@@ -491,7 +496,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   if (command === 'phonecorrection') {
     try {
       if (!conn.lid) {
-        return await conn.reply(m.chat, '❌ LidResolver no está disponible', m);
+        return await conn.reply(m.chat, tradutor.texto19, m);
       }
       
       const result = conn.lid.forcePhoneCorrection();
@@ -499,7 +504,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       
     } catch (error) {
       console.error('[TEST-LID] Error en phonecorrection:', error);
-      await conn.reply(m.chat, `❌ Error en corrección: ${error.message}`, m);
+      await conn.reply(m.chat, `${tradutor.texto112}${error.message}`, m);
     }
   }
   
@@ -507,32 +512,32 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   // COMANDO: lidhelp - Ayuda completa
   // ========================================
   if (command === 'lidhelp') {
-    let response = `📚 *Ayuda - LID Resolver*\n\n`;
+    let response = tradutor.texto113;
     
-    response += `🔍 *Comandos de Información:*\n`;
-    response += `• \`${usedPrefix}testlid\` - Estado general\n`;
-    response += `• \`${usedPrefix}lidcache\` - Estadísticas del caché\n`;
-    response += `• \`${usedPrefix}lidstats\` - Estadísticas detalladas\n`;
-    response += `• \`${usedPrefix}lidinfo <número>\` - Info de LID específico\n`;
-    response += `• \`${usedPrefix}listallusers\` - Listar usuarios en caché\n`;
-    response += `• \`${usedPrefix}searchuser <nombre>\` - Buscar usuario\n\n`;
+    response += tradutor.texto114;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto115_1}\n`;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto116_1}\n`;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto117_1}\n`;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto118_1}\n`;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto119_1}\n`;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto120_1}\n\n`;
     
-    response += `🧹 *Comandos de Mantenimiento:*\n`;
-    response += `• \`${usedPrefix}forcesave\` - Forzar guardado\n`;
-    response += `• \`${usedPrefix}phonecorrection\` - Corregir números telefónicos\n\n`;
+    response += tradutor.texto121;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto122_1}\n`;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto123_1}\n\n`;
     
-    response += `📞 *Comandos de Validación:*\n`;
-    response += `• \`${usedPrefix}phonevalidation <número>\` - Validar teléfono\n\n`;
+    response += tradutor.texto124;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto125_1}\n\n`;
     
-    response += `🧪 *Comandos de Testing:*\n`;
-    response += `• \`${usedPrefix}lidtest\` - Test con participantes\n\n`;
+    response += tradutor.texto126;
+    response += `${tradutor.texto115}${usedPrefix}${tradutor.texto127_1}\n\n`;
     
-    response += `📋 *Notas Importantes:*\n`;
-    response += `• Solo administradores y owner\n`;
-    response += `• El caché se guarda en \`src/lidsresolve.json\`\n`;
-    response += `• Los LIDs son únicos globalmente\n`;
-    response += `• Auto-guardado cada 30 segundos\n`;
-    response += `• Validación automática de números telefónicos\n`;
+    response += tradutor.texto128;
+    response += tradutor.texto129;
+    response += tradutor.texto130;
+    response += tradutor.texto131;
+    response += tradutor.texto132;
+    response += tradutor.texto133;
     
     await conn.reply(m.chat, response, m);
   }
