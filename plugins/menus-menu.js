@@ -357,7 +357,7 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
             '%': '%',
             p: usedPrefix,
             taguser: '@' + m.sender.split("@s.whatsapp.net")[0],
-            me: conn.getName(conn.user.jid),
+            me: await conn.getName(conn.user.jid),
             name: await conn.getName(m.sender)
         };
         
