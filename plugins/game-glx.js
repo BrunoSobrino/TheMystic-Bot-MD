@@ -2,7 +2,6 @@
 // By https://github.com/jeffersonalionco
 
 import fs from 'fs-extra'
-import simpleGit from 'simple-git'
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
   const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
@@ -10,7 +9,6 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   const tradutor = _translate.plugins.game_glx
 
     createDataBase() // crea un archivo database por si este no existe 
-    atualizarRepositorio() // Verificar si necesita actualizar, consultando la api en https://github.com/jeffersonalionco/database-galaxia/blob/master/database.json
 
     let infoDataHora = new Date()
     let horasEminutosAtual = `${infoDataHora.getHours()}:${infoDataHora.getMinutes()}`
@@ -1193,53 +1191,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         }
     }
 
-    // Função para Atualizar O repositorio
-    async function atualizarRepositorio() {
-        let database = await database_galaxia()
-        let db1 = JSON.parse(fs.readFileSync(`./src/assets/glx/db/database.json`))
 
-
-        if (!db1.repositorio.atualizado.includes(database.repositorio.atualizar)) {
-            // Caminho para o diretório do seu repositório local
-            fs.writeFileSync('./src/tmp/file', '')
-            const repoPath = '.';
-
-            // Instanciar o objeto simple-git com o caminho do seu repositório
-            const git = simpleGit(repoPath);
-
-            commitChanges() // Salvar os commits Locais
-            async function commitChanges() {
-                try {
-                    await git.add('.');
-                    await git.commit('Commit de las alteraciones locales');
-                    console.log('Cambio local guardado con éxito.');
-                } catch (err) {
-                    console.error('Se produjo un error al realizar cambios locales.:', err);
-                }
-            }
-
-            // Atualizar o repositório
-            setTimeout(() => {
-                git.pull((err, update) => {
-                    if (err) {
-                        console.error('Se produjo un error al actualizar el repositorio.:', err);
-                    } else {
-                        if (update && update.summary.changes) {
-                            console.log('Repositorio actualizado exitosamente!');
-                            console.log('Resumen de cambios:', update.summary);
-                        } else {
-                            console.log('El repositorio ya está actualizado..');
-                        }
-                    }
-                });
-            }, 2000)
-
-            // Salvando o id da atualização como ja executado.
-            db1.repositorio.atualizado.push(database.repositorio.atualizar)
-            fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db1))
-
-        }
-    }
 };
 handler.command = /^(gameglx|glx)$/i;
 export default handler;
