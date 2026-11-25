@@ -72,9 +72,8 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 
 // Al tocar un botón llega un buttonsResponseMessage con selectedButtonId.
 // Se atiende aquí (handler.before) y se descarga directo con el videoId,
-// sin volver a buscar. Los comandos .ytmp3/.ytmp4 no existen en este bot:
-// el audio y el video usan la misma cadena de .play/.play2 (denzy,
-// ab-downloader, scraper VISIONOS) de src/libraries/ytmusic.js.
+// sin volver a buscar. El audio y el video usan la misma cadena de
+// .play/.play2 (ab-downloader) de src/libraries/ytmusic.js.
 handler.before = async function (m, { conn }) {
   const selectedId = m?.msg?.selectedButtonId
   if (!selectedId || (!selectedId.startsWith('ytplay_audio_') && !selectedId.startsWith('ytplay_video_'))) return false
