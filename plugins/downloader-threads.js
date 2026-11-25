@@ -1,7 +1,12 @@
+import fs from 'fs';
 import axios from "axios";
 
 const handler = async (m, { conn, args, command, usedPrefix }) => {
-  if (!args[0]) throw `*Ingresa un enlace de Threads*`;
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_threads
+
+  if (!args[0]) throw tradutor.texto1;
   try {
     const res = await axios.get(
       global.BASE_API_DELIRIUS + "/download/threads",
@@ -12,13 +17,7 @@ const handler = async (m, { conn, args, command, usedPrefix }) => {
       },
     );
     if (res.data.status && res.data.data.media.length > 0) {
-      const txtresthreads = `亗 T H R E A D S\n
-*Usuario :* ${res.data.data.username || "-"}
-*Descripción :* ${res.data.data.description || "-"}
-*Likes :* ${res.data.data.likes || "-"}
-*Verificado :* ${res.data.data.is_verified ? "√" : "×"}
-*Archivos :* ${res.data.data.media.length || "-"}
-*Enlace :* ${args[0].trim()}`;
+      const txtresthreads = `${tradutor.texto2[0]}${res.data.data.username || "-"}${tradutor.texto2[1]}${res.data.data.description || "-"}${tradutor.texto2[2]}${res.data.data.likes || "-"}${tradutor.texto2[3]}${res.data.data.is_verified ? "√" : "×"}${tradutor.texto2[4]}${res.data.data.media.length || "-"}${tradutor.texto2[5]}${args[0].trim()}${tradutor.texto2[6]}`;
       await conn.sendMessage(m.chat, { text: txtresthreads }, { quoted: m });
       const media = res.data.data.media;
       for (const item of media) {
@@ -39,7 +38,7 @@ const handler = async (m, { conn, args, command, usedPrefix }) => {
     } else {
       await conn.sendMessage(
         m.chat,
-        { text: "*🍟 Sin resultados para :* " + args[0] },
+        { text: tradutor.texto3 + args[0] },
         { quoted: m },
       );
     }
