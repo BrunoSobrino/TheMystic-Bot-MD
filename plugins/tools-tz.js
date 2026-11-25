@@ -1,6 +1,10 @@
 import moment from 'moment-timezone';
+import fs from 'fs';
 
 const handler = async (m, {conn}) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.tools_tz
   const tzPE = moment().tz('America/Lima').format('DD/MM HH:mm');
   const tzMX = moment().tz('America/Mexico_City').format('DD/MM HH:mm');
   const tzBO = moment().tz('America/La_Paz').format('DD/MM HH:mm');
@@ -22,7 +26,7 @@ const handler = async (m, {conn}) => {
   const tzAS = moment().tz('Asia/Jakarta').format('DD/MM HH:mm');
   const tzAF = moment().tz('Africa/Malabo').format('DD/MM HH:mm');
   await conn.sendMessage(m.chat, {text: `\`\`\`
-< 𝙃𝙀𝙍𝙍𝘼𝙈𝙄𝙀𝙉𝙏𝘼𝙎 -𝙏𝙕 />
+${tradutor.texto1}
 
 ▢ Perú       : ${tzPE}
 ▢ México     : ${tzMX}
@@ -46,7 +50,7 @@ const handler = async (m, {conn}) => {
 ▢ África     : ${tzAF}
 \`\`\`
 ${String.fromCharCode(8206).repeat(850)}
-▢ TZ del servidor:\n • ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n • ${moment().tz(Intl.DateTimeFormat().resolvedOptions().timeZone).format('DD/MM HH:mm')}`}, {quoted: m});
+${tradutor.texto2}\n • ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n • ${moment().tz(Intl.DateTimeFormat().resolvedOptions().timeZone).format('DD/MM HH:mm')}`}, {quoted: m});
 };
 
 handler.command = /^(tz|hora|fecha|horario)$/i;
