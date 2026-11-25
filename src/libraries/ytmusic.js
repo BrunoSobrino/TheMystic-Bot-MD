@@ -6,7 +6,9 @@
 // Descarga: 1º ab-downloader (el de su web, MP3/MP4 listos en su
 // CDN, que se bajan con un GET normal) y 2º @distube/ytdl-core
 // (baja directo de YouTube). Si ab-downloader falla (su backend
-// ya dio 503), se usa ytdl-core. La búsqueda sigue por el scraper
+// ya dio 503), se usa ytdl-core (con las cookies de YouTube de
+// src/libraries/ytmusic.txt si existen, porque sin sesión YouTube
+// puede bloquear la IP del panel). La búsqueda sigue por el scraper
 // de YouTube Music (ayashiiiyo): searchMusic / searchMusicList y
 // getVideoInfo (para enlaces directos).
 //
@@ -21,12 +23,47 @@ import fs from 'fs';
 import os from 'node:os';
 import path from 'path';
 import { spawn } from 'child_process';
-import { search as ayaSearch, getTrack as ayaTrack } from './ytmusic-scraper.mjs';
+import { search as ayaSearch, getTrack as ayaTrack, parseCookies } from './ytmusic-scraper.mjs';
 import abDownloader from 'ab-downloader';
 import NodeID3 from 'node-id3';
 import { Ytdl, Quality, chooseFormat } from '@distube/ytdl-core';
 const { youtube: abYoutube } = abDownloader;
-const yt = new Ytdl();
+// Cookies de YouTube opcionales (mismo archivo que usa el scraper de
+// búsqueda: src/libraries/ytmusic.txt, con la sesión de YouTube del
+// dueño, en formato cabecera o exportación Netscape). Sin cookies,
+// YouTube puede marcar la IP del panel como bot y ytdl-core falla
+// (PLAYER_SOLVE_FAILED / visitor data request failed) aunque la
+// librería esté al día. Con la sesión puesta, YouTube lo trata como
+// un usuario real. El archivo NO se sube al repo (ver .gitignore).
+const YT_COOKIE = parseCookies() || '';
+// La sesión debe traer SAPISID o __Secure-3PAPISID; si la cookie
+// está incompleta, el constructor de Ytdl lanza y rompería todo el
+// módulo, así que se atrapa y se sigue sin sesión.
+let yt;
+try {
+    yt = new Ytdl(YT_COOKIE ? { cookie: YT_COOKIE } : {});
+} catch (e) {
+    console.log('⚠️ Cookies de YouTube inválidas en ytmusic.txt, ytdl-core sin sesión:', e.message);
+    yt = new Ytdl();
+}
+
+// Busca la info del video con reintento: 2 intentos con la sesión
+// (si hay) y, si la cookie está caducada, 1 último sin ella.
+async function lookupYtdlInfo(url) {
+    const attempts = YT_COOKIE ? [[yt, 2], [new Ytdl(), 1]] : [[yt, 2]];
+    let lastErr;
+    for (const [inst, n] of attempts) {
+        for (let i = 0; i < n; i++) {
+            try {
+                return { info: await inst.getInfo(url), yt: inst };
+            } catch (e) {
+                lastErr = e;
+                await new Promise((r) => setTimeout(r, 2000));
+            }
+        }
+    }
+    throw lastErr;
+}
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 const MAX_AUDIO_BYTES = 100 * 1024 * 1024;
@@ -184,19 +221,26 @@ async function muxVideoAudio(videoBuffer, audioBuffer, audioExt = 'm4a') {
 // sirve formatos combinados en la mayoría de videos).
 async function getMediaBufferViaYtdl(videoId, want) {
     const url = `https://www.youtube.com/watch?v=${videoId}`;
-    const info = await yt.getInfo(url);
+    const { info, yt: ytInst } = await lookupYtdlInfo(url);
     if (want === 'audio') {
         const format = chooseFormat(info.formats, { quality: Quality.HighestAudio, filter: { hasAudio: true, hasVideo: false } });
-        const buffer = await streamToBuffer(yt.download(info, { format }), MAX_AUDIO_BYTES, 'audio');
+        const buffer = await streamToBuffer(ytInst.download(info, { format }), MAX_AUDIO_BYTES, 'audio');
         const mimeType = (format.mimeType || '').split(';')[0].trim() || 'audio/mp4';
         const ext = format.container === 'webm' ? 'webm' : 'm4a';
         return { buffer, mimeType, ext };
     }
+    // Video: H.264 (avc1) es lo que WhatsApp reproduce seguro; ytdl
+    // ordena AV1 por encima a la misma altura, así que se pide H.264
+    // primero y solo si no hay se acepta otro códec MP4 o cualquiera.
     let videoFormat;
     try {
-        videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && f.container === 'mp4' && (f.height || 0) <= 720 });
+        videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && f.container === 'mp4' && (f.height || 0) <= 720 && (f.videoCodec || '').startsWith('avc1') });
     } catch {
-        videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && (f.height || 0) <= 720 });
+        try {
+            videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && f.container === 'mp4' && (f.height || 0) <= 720 });
+        } catch {
+            videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && (f.height || 0) <= 720 });
+        }
     }
     let audioFormat;
     try {
@@ -204,8 +248,8 @@ async function getMediaBufferViaYtdl(videoId, want) {
     } catch {
         audioFormat = chooseFormat(info.formats, { quality: Quality.HighestAudio, filter: { hasAudio: true, hasVideo: false } });
     }
-    const videoBuffer = await streamToBuffer(yt.download(info, { format: videoFormat }), MAX_VIDEO_BYTES, 'video');
-    const audioBuffer = await streamToBuffer(yt.download(info, { format: audioFormat }), MAX_AUDIO_BYTES, 'audio');
+    const videoBuffer = await streamToBuffer(ytInst.download(info, { format: videoFormat }), MAX_VIDEO_BYTES, 'video');
+    const audioBuffer = await streamToBuffer(ytInst.download(info, { format: audioFormat }), MAX_AUDIO_BYTES, 'audio');
     const audioExt = audioFormat.container === 'webm' ? 'webm' : 'm4a';
     const buffer = await muxVideoAudio(videoBuffer, audioBuffer, audioExt);
     return { buffer, mimeType: 'video/mp4' };
