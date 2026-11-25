@@ -2,10 +2,12 @@
 // downloader-play.js (play/play2), @testting.js (ytmp3/ytmp4),
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
-// Orden de descarga (audio y video):
-// 1º convertytmp3, 2º OmDown, 3º ytultra, 4º ab-downloader (el de su web),
-// 5º scraper de YouTube Music (ayashiiiyo, cliente VISIONOS para el player;
+// Orden de descarga (audio y video), solo opciones que funcionan:
+// 1º ab-downloader (el de su web, MP3/MP4 listos en su CDN),
+// 2º scraper de YouTube Music (ayashiiiyo, cliente VISIONOS para el player;
 // acepta cookies de YouTube opcionales en ytmusic.txt junto a la librería).
+// Se eliminaron convertytmp3, OmDown y ytultra: en el panel dan 403 o no
+// devuelven enlaces.
 //
 // Por qué existe este archivo:
 // - Los enlaces de googlevideo NO se pueden mandar directos a WhatsApp:
@@ -17,11 +19,10 @@
 // - El player solo da video SIN audio (formatos adaptativos), así que
 //   play2 une el video (MP4/H.264) con el audio (AAC) con ffmpeg.
 import fs from 'fs';
+import os from 'node:os';
 import path from 'path';
 import { spawn } from 'child_process';
 import { search as ayaSearch, getAudioStream as ayaAudio, getTrack as ayaTrack, getInnertubeConfig as ayaConfig } from './ytmusic-scraper.mjs';
-import { ytmp3 as convertYtmp3 } from './ytmp3.js';
-import { OmDownloader } from './omdown.js';
 import abDownloader from 'ab-downloader';
 const { youtube: abYoutube } = abDownloader;
 
@@ -241,109 +242,8 @@ export async function muxVideoAudio(videoUrl, videoLen, audioUrl, audioLen) {
     }
 }
 
-// OmDown (2ª opción): resuelve el video en omdown.site y baja el formato
-// elegido con las cookies de la MISMA sesión (los enlaces van bloqueados
-// a la sesión que los resolvió; con otra sesión dan 403).
-function pickOmdownFormat(formats, want) {
-    const hay = (f, re) => re.test(`${f.id || ''} ${f.label || ''} ${f.quality || ''} ${f.kind || ''} ${f.ext || ''}`);
-    const ext = (f) => (f.ext || '').toLowerCase().replace(/^\./, '');
-    if (want === 'audio') {
-        return formats.find(f => f.kind === 'audio' && ext(f) === 'mp3')
-            || formats.find(f => f.kind === 'audio')
-            || formats.find(f => hay(f, /audio/i) && !hay(f, /video/i) && ext(f) === 'mp3')
-            || formats.find(f => hay(f, /audio/i) && !hay(f, /video/i))
-            || formats.find(f => /^(mp3|m4a|ogg|opus)$/.test(ext(f)))
-            || formats[0];
-    }
-    return formats.find(f => hay(f, /audio_video|audio\+video/i) && ext(f) === 'mp4')
-        || formats.find(f => hay(f, /audio_video|audio\+video/i))
-        || formats.find(f => f.kind === 'video' && ext(f) === 'mp4' && hay(f, /720p|1080p|480p/i))
-        || formats.find(f => f.kind === 'video' && ext(f) === 'mp4')
-        || formats.find(f => f.kind === 'video')
-        || formats.find(f => ext(f) === 'mp4')
-        || formats[0];
-}
-
-function mimeForExt(ext, want) {
-    const e = (ext || '').toLowerCase().replace(/^\./, '');
-    if (want === 'audio') {
-        if (e === 'm4a') return { mimeType: 'audio/mp4', ext: 'm4a' };
-        if (e === 'ogg' || e === 'opus') return { mimeType: 'audio/ogg', ext: 'opus' };
-        return { mimeType: 'audio/mpeg', ext: 'mp3' };
-    }
-    if (e === 'webm') return { mimeType: 'video/webm', ext: 'webm' };
-    return { mimeType: 'video/mp4', ext: 'mp4' };
-}
-
-async function getMediaBufferViaOmdown(videoId, want) {
-    const om = new OmDownloader();
-    const url = `https://youtube.com/watch?v=${videoId}`;
-    let info = await om.resolve(url, { platform: 'YouTube' });
-    const usable = (inf) => (inf.formats || []).filter(f => typeof f.downloadUrl === 'string' && f.downloadUrl.startsWith('http'));
-    let formats = usable(info);
-    if (!formats.length) throw new Error('OmDown no devolvió formatos descargables');
-    let fmt = pickOmdownFormat(formats, want);
-    let buffer;
-    try {
-        buffer = await om.downloadBuffer(fmt.downloadUrl, { cookies: info.sessionCookies });
-    } catch (e) {
-        if (!/403/.test(e.message)) throw e;
-        // Sesión bloqueada: re-resolver con sesión nueva y reintentar una vez.
-        info = await om.resolve(url, { platform: 'YouTube' });
-        formats = usable(info);
-        fmt = formats.find(f => f.id === fmt.id) || formats[0];
-        if (!fmt) throw e;
-        buffer = await om.downloadBuffer(fmt.downloadUrl, { cookies: info.sessionCookies });
-    }
-    if (!buffer?.length) throw new Error('OmDown devolvió un archivo vacío');
-    if (buffer.length > MAX_VIDEO_BYTES) throw new Error('Archivo demasiado grande');
-    return { buffer, format: fmt };
-}
-
-// ytultra (3ª opción): API de ytultra.com que devuelve los enlaces de
-// audio/video de YouTube. El audio es AAC itag 140 (.m4a) y el video
-// 720p es MP4 sin audio (se une con ffmpeg); si hay itag 18 (360p con
-// audio) se baja directo, sin ffmpeg.
-const YTULTRA_URL = 'https://api.ytultra.com/ikool/youtube/download';
-async function getMediaBufferViaYtultra(videoId, want) {
-    const res = await fetch(YTULTRA_URL, {
-        method: 'POST',
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0',
-            Accept: '*/*',
-            'Content-Type': 'application/json',
-            Origin: 'https://www.ytultra.com',
-            Referer: 'https://www.ytultra.com/',
-        },
-        body: JSON.stringify({ url: `https://www.youtube.com/watch?v=${videoId}` }),
-        signal: AbortSignal.timeout(30000),
-    });
-    if (!res.ok) throw new Error(`ytultra HTTP ${res.status}`);
-    const data = await res.json().catch(() => null);
-    const medias = (data?.data?.medias || []).filter(m => m.url && !m.locked);
-    if (!medias.length) throw new Error('ytultra no devolvió enlaces');
-    if (want === 'audio') {
-        const audio = medias.find(m => (m.format || '').includes('.m4a'))
-            || medias.find(m => /audio/i.test(m.format || ''));
-        if (!audio?.url) throw new Error('ytultra no devolvió audio');
-        const buffer = await downloadMedia(audio.url, audio.fileSize || 0);
-        return { buffer, mimeType: 'audio/mp4', ext: 'm4a' };
-    }
-    const prog = medias.find(m => m.url.includes('itag=18'));
-    if (prog) {
-        const buffer = await downloadMedia(prog.url, prog.fileSize || 0);
-        return { buffer, mimeType: 'video/mp4' };
-    }
-    const video = medias.find(m => /720p/.test(m.quality || '') && (m.format || '').includes('.mp4'))
-        || medias.find(m => (m.format || '').includes('.mp4'));
-    const audio = medias.find(m => (m.format || '').includes('.m4a'));
-    if (!video?.url || !audio?.url) throw new Error('ytultra no devolvió video+audio');
-    const buffer = await muxVideoAudio(video.url, video.fileSize || 0, audio.url, audio.fileSize || 0);
-    return { buffer, mimeType: 'video/mp4' };
-}
-
-// Baja un archivo con un GET normal (para enlaces directos que no son
-// googlevideo: el conversor y ab-downloader sirven el archivo completo).
+// Baja un archivo con un GET normal (ab-downloader sirve el archivo
+// completo en su propio CDN, no es googlevideo).
 async function downloadDirectFile(url, maxBytes = MAX_VIDEO_BYTES) {
     const res = await fetch(url, {
         headers: { 'User-Agent': UA },
@@ -356,7 +256,7 @@ async function downloadDirectFile(url, maxBytes = MAX_VIDEO_BYTES) {
     return buffer;
 }
 
-// ab-downloader (4ª opción): el paquete que usa su web (Arq_Carlos_Sobrino).
+// ab-downloader (1ª opción): el paquete que usa su web (Arq_Carlos_Sobrino).
 // Su API devuelve los enlaces MP3/MP4 ya listos en su propio CDN.
 async function getMediaBufferViaAbDownloader(videoId, want) {
     const data = await abYoutube(`https://www.youtube.com/watch?v=${videoId}`);
@@ -371,17 +271,29 @@ async function getMediaBufferViaAbDownloader(videoId, want) {
     return { buffer, mimeType: 'video/mp4' };
 }
 
-// Baja el archivo que devuelve el conversor (enlace directo de su CDN).
-async function downloadConverterFile(url, maxBytes = MAX_VIDEO_BYTES) {
-    const res = await fetch(url, {
-        headers: { 'User-Agent': UA, Referer: 'https://convertytmp3.org/' },
-        signal: AbortSignal.timeout(600000),
-    });
-    if (!res.ok) throw new Error(`Descarga del conversor falló (HTTP ${res.status})`);
-    const buffer = Buffer.from(await res.arrayBuffer());
-    if (!buffer.length) throw new Error('Descarga del conversor vacía');
-    if (buffer.length > maxBytes) throw new Error(`Archivo demasiado grande (>${Math.round(maxBytes / 1048576)} MB)`);
-    return buffer;
+// Reempaqueta un MP4 fragmentado (fMP4: moof/mdat, como el que sirve
+// ytdownloader.tech) a MP4 normal con ffmpeg, sin re-codificar.
+// WhatsApp reproduce el fMP4 pero no puede buscar (adelantar/retroceder)
+// ni muestra la duración; con el índice (moov) reconstruido sí.
+// Si ffmpeg no está o falla, devuelve el buffer original.
+async function remuxMp4(buffer) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'remux-'));
+    const inFile = path.join(dir, 'in.mp4');
+    const outFile = path.join(dir, 'out.mp4');
+    try {
+        fs.writeFileSync(inFile, buffer);
+        await new Promise((resolve, reject) => {
+            const ff = spawn('ffmpeg', ['-y', '-i', inFile, '-c', 'copy', '-movflags', '+faststart', outFile], { stdio: 'ignore', timeout: 120000 });
+            ff.on('error', reject);
+            ff.on('close', (code) => (code === 0 ? resolve() : reject(new Error('ffmpeg ' + code))));
+        });
+        return fs.readFileSync(outFile);
+    } catch (e) {
+        console.log('❌ remux MP4 falló, se manda el original:', e.message);
+        return buffer;
+    } finally {
+        try { fs.rmSync(dir, { recursive: true, force: true }); } catch {}
+    }
 }
 
 function extOf(mimeType) {
@@ -441,32 +353,10 @@ async function getVisionOSFormats(videoId) {
     return { video, audio: audioFormat };
 }
 
-// Audio listo para mandar. 1º convertytmp3 (MP3 ya convertido), 2º OmDown,
-// 3º ytultra (AAC itag 140), 4º ab-downloader (MP3 de su CDN), 5º scraper
-// de YouTube Music (enlace AAC). Devuelve { buffer, mimeType, ext }.
+// Audio listo para mandar. 1º ab-downloader (MP3 de su CDN),
+// 2º scraper de YouTube Music (enlace AAC, cliente VISIONOS).
+// Devuelve { buffer, mimeType, ext }.
 export async function getAudioBuffer(videoId) {
-    try {
-        const info = await convertYtmp3(`https://youtube.com/watch?v=${videoId}`, 'mp3');
-        if (info?.download) {
-            const buffer = await downloadConverterFile(info.download, MAX_AUDIO_BYTES);
-            return { buffer, mimeType: 'audio/mpeg', ext: 'mp3' };
-        }
-    } catch (e) {
-        console.log('❌ Conversor mp3 falló, intentando OmDown...', e.message);
-    }
-    try {
-        const { buffer, format } = await getMediaBufferViaOmdown(videoId, 'audio');
-        const { mimeType, ext } = mimeForExt(format.ext, 'audio');
-        return { buffer, mimeType, ext };
-    } catch (e) {
-        console.log('❌ OmDown audio falló, intentando ytultra...', e.message);
-    }
-    try {
-        const { buffer, mimeType, ext } = await getMediaBufferViaYtultra(videoId, 'audio');
-        return { buffer, mimeType, ext };
-    } catch (e) {
-        console.log('❌ ytultra audio falló, intentando ab-downloader...', e.message);
-    }
     try {
         const { buffer, mimeType, ext } = await getMediaBufferViaAbDownloader(videoId, 'audio');
         return { buffer, mimeType, ext };
@@ -491,36 +381,13 @@ export async function getAudioBuffer(videoId) {
     throw lastError || new Error('Sin enlace de audio');
 }
 
-// Video listo para mandar. 1º convertytmp3 (MP4 ya unido), 2º OmDown,
-// 3º ytultra (itag 18 directo o 720p + audio con ffmpeg), 4º ab-downloader
-// (MP4 de su CDN), 5º scraper de YouTube Music (video + audio con ffmpeg).
-// Devuelve { buffer, mimeType }.
+// Video listo para mandar. 1º ab-downloader (MP4 de su CDN, reempaquetado
+// para que WhatsApp pueda buscar), 2º scraper de YouTube Music (video +
+// audio unidos con ffmpeg, cliente VISIONOS). Devuelve { buffer, mimeType }.
 export async function getVideoBuffer(videoId) {
     try {
-        const info = await convertYtmp3(`https://youtube.com/watch?v=${videoId}`, 'mp4');
-        if (info?.download) {
-            const buffer = await downloadConverterFile(info.download, MAX_VIDEO_BYTES);
-            return { buffer, mimeType: 'video/mp4' };
-        }
-    } catch (e) {
-        console.log('❌ Conversor mp4 falló, intentando OmDown...', e.message);
-    }
-    try {
-        const { buffer, format } = await getMediaBufferViaOmdown(videoId, 'video');
-        const { mimeType } = mimeForExt(format.ext, 'video');
-        return { buffer, mimeType };
-    } catch (e) {
-        console.log('❌ OmDown video falló, intentando ytultra...', e.message);
-    }
-    try {
-        const { buffer, mimeType } = await getMediaBufferViaYtultra(videoId, 'video');
-        return { buffer, mimeType };
-    } catch (e) {
-        console.log('❌ ytultra video falló, intentando ab-downloader...', e.message);
-    }
-    try {
-        const { buffer, mimeType } = await getMediaBufferViaAbDownloader(videoId, 'video');
-        return { buffer, mimeType };
+        const { buffer } = await getMediaBufferViaAbDownloader(videoId, 'video');
+        return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
     } catch (e) {
         console.log('❌ ab-downloader video falló, intentando YouTube Music...', e.message);
     }
