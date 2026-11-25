@@ -28,6 +28,18 @@ try {
  } else if (sigla === 'en') {
  global.db.data.users[m.sender].language = 'en'
  m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Idioma definido a Inglês 🇬🇧_*`)
+ } else if (sigla === 'pt-br') {
+ global.db.data.users[m.sender].language = 'pt-br'
+ m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Idioma definido a Português 🇧🇷_*`)
+ } else if (sigla === 'ru') {
+ global.db.data.users[m.sender].language = 'ru'
+ m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Язык изменён на русский 🇷🇺_*`)
+ } else if (sigla === 'fr') {
+ global.db.data.users[m.sender].language = 'fr'
+ m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_Langue définie sur Français 🇫🇷_*`)
+ } else if (sigla === 'ar') {
+ global.db.data.users[m.sender].language = 'ar'
+ m.reply(`*[ ✅ ] The Mystic - Bot*\n\n*—◉* *_تم تعيين اللغة إلى العربية 🇸🇦_*`)
  } else {
  m.reply(`${tradutor.texto1[2]}\n${tradutor.texto1[3]} *( ${data.db.data.users[m.sender].language} )*\n${tradutor.texto1[0]}\n*${usedPrefix}lang* es\n\n${tradutor.texto1[1]}`)
  }
@@ -50,6 +62,18 @@ try {
  } else if (sigla === 'en') {
  global.db.data.chats[m.chat].language = 'en';
  m.reply(`*[ ✅ ] Configuración del grupo*\n\n*—◉* *_Idioma definido a Inglês 🇬🇧_*`)
+ } else if (sigla === 'pt-br') {
+ global.db.data.chats[m.chat].language = 'pt-br';
+ m.reply(`*[ ✅ ] Configuración del grupo*\n\n*—◉* *_Idioma definido a Português 🇧🇷_*`)
+ } else if (sigla === 'ru') {
+ global.db.data.chats[m.chat].language = 'ru';
+ m.reply(`*[ ✅ ] Configuración del grupo*\n\n*—◉* *_Язык изменён на русский 🇷🇺_*`)
+ } else if (sigla === 'fr') {
+ global.db.data.chats[m.chat].language = 'fr';
+ m.reply(`*[ ✅ ] Configuración del grupo*\n\n*—◉* *_Langue définie sur Français 🇫🇷_*`)
+ } else if (sigla === 'ar') {
+ global.db.data.chats[m.chat].language = 'ar';
+ m.reply(`*[ ✅ ] Configuración del grupo*\n\n*—◉* *_تم تعيين اللغة إلى العربية 🇸🇦_*`)
  } else {
  m.reply(`${tradutor.texto2[0]}\n*${usedPrefix}langgroup* es\n\n${tradutor.texto2[1]}`)
  }
