@@ -3,7 +3,13 @@ import { join } from 'path';
 
 const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
         const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje || 'es';
-        const _translate = JSON.parse(await fs.readFile(`./src/languages/${idioma}/${m.plugin}.json`));
+        let _translate;
+        try {
+            _translate = JSON.parse(await fs.readFile(`./src/languages/${idioma}/${m.plugin}.json`));
+        } catch {
+            // El menú por idioma no existe en todos los idiomas: usar el de español.
+            _translate = JSON.parse(await fs.readFile(`./src/languages/es/${m.plugin}.json`));
+        }
         const tradutor = _translate.plugins.menu;
 
     try {
@@ -18,7 +24,10 @@ const handler = async (m, { conn, usedPrefix, __dirname, isPrems }) => {
         const localeMap = {
             'es': 'es-ES',
             'en': 'en-US',
-            'ar': 'ar-SA'
+            'ar': 'ar-SA',
+            'fr': 'fr-FR',
+            'pt-br': 'pt-BR',
+            'ru': 'ru-RU'
         };
         
         const locale = localeMap[idioma.toLowerCase()] || 'es-ES';
