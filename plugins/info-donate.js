@@ -1,26 +1,12 @@
+import fs from 'fs';
 /* ⚠ POR FAVOR NO MODIFIQUES NADA DE AQUÍ ⚠ */
 
 const handler = async (m, { conn, usedPrefix, command }) => {
- try {   
-   const donar = `╭─「 💖 *DONACIONES* 💖 」
-│
-│ ¡Hola *${m?.name}*! 👋
-│
-│ ¿Te gusta este proyecto? 🤖✨
-│ ¡Ayúdanos a mantenerlo!
-│
-├─「 💳 *Métodos de donación* 」
-│
-│ • PayPal: paypal.me/BrunoSob 💰
-│
-│ 💬 *Otras formas:*
-│ Contáctame: @5219996125657
-│ Numero: wa.me/5219996125657
-│
-│ 📝 *Nota:* Toda donación
-│ nos ayuda a crecer juntos 🌱
-│
-╰─「 *¡Gracias por tu apoyo!* 🙏 」`.trim();
+ try {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.info_donate
+   const donar = `${tradutor.texto1[0]}${m?.name}${tradutor.texto1[1]}`.trim();
 
    const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
    const document = doc[Math.floor(Math.random() * doc.length)];
@@ -28,7 +14,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
    const buttonMessage = {
      'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
      'mimetype': `application/${document}`,
-     'fileName': `💖 DONACIONES 💖`,
+     'fileName': tradutor.texto4,
      'fileLength': 99999999999999,
      'pageCount': 200,
      'contextInfo': {
@@ -39,7 +25,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
          'mediaUrl': 'https://github.com/BrunoSobrino/TheMystic-Bot-MD',
          'mediaType': 2,
          'previewType': 'pdf',
-         'title': '💖 DONACIONES - Apoya el proyecto',
+         'title': tradutor.texto3,
          'body': wm,
          'thumbnail': imagen1,
          'sourceUrl': 'https://www.youtube.com/channel/UCSTDMKjbm-EmEovkygX-lCA'}},
@@ -51,25 +37,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
    conn.sendMessage(m.chat, buttonMessage, {quoted: m});
    
  } catch {
-   const simpleMsg = `💖 *DONACIONES*
-
-¡Hola *${m?.name}*! 
-
-¿Te gusta este bot? ¡Ayúdanos a mantenerlo activo!
-
-🎯 *¿Por qué donar?*
-• Mantener servidor activo
-• Nuevas funciones  
-• Mejor velocidad
-• Soporte 24/7
-
-💳 *Métodos:*
-• PayPal: paypal.me/BrunoSob
-
-💬 *Otras formas:*
-Contáctame: @5219996125657
-
-¡Gracias por tu apoyo! 🙏`;
+   const simpleMsg = `${tradutor.texto2[0]}${m?.name}${tradutor.texto2[1]}`;
    
    m.reply(simpleMsg);
  }

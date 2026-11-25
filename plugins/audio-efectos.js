@@ -46,16 +46,16 @@ const handler = async (m, {conn, args, __dirname, usedPrefix, command}) => {
       let media;
       try {
         media = await q.download(true);
-        if (!media) throw new Error('No se pudo descargar el archivo de audio');
+        if (!media) throw new Error(tradutor.texto2);
         const command_ffmpeg = `ffmpeg -i "${media}" ${set} "${filename}"`;
         await execAsync(command_ffmpeg);
-        if (!existsSync(filename)) throw new Error('El archivo procesado no se generó correctamente');
+        if (!existsSync(filename)) throw new Error(tradutor.texto3);
         const buff = await readFileSync(filename);
-        if (!buff || buff.length === 0) throw new Error('El archivo procesado está vacío');
+        if (!buff || buff.length === 0) throw new Error(tradutor.texto4);
         await conn.sendMessage(m.chat, { audio: buff, mimetype: 'audio/mpeg', fileName: ran, ptt: false }, {quoted: m});
       } catch (error) {
         console.error('Error en el procesamiento:', error);
-        throw `_*Error al procesar el audio:*_ ${error.message}`;
+        throw `${tradutor.texto5} ${error.message}`;
       } finally {
         try {
           if (media && existsSync(media)) {

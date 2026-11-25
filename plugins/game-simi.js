@@ -10,7 +10,7 @@ const handler = async (m, {conn, text, command, args, usedPrefix}) => {
   
   if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Hola Bot*`;
   try {
-      const resSimi = await simitalk(text);
+      const resSimi = await simitalk(text, undefined, undefined, tradutor);
       conn.sendMessage(m.chat, { text: resSimi.resultado.simsimi }, { quoted: m });
   } catch {
       throw tradutor.texto2;
@@ -21,8 +21,8 @@ handler.tags = ['game'];
 handler.command = /^((sim)?simi|bot|alexa|cortana)$/i;
 export default handler;
 
-async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es") {
-    if (!ask) return { status: false, resultado: { msg: "Debes ingresar un texto para hablar con simsimi." }};
+async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es", tradutor) {
+    if (!ask) return { status: false, resultado: { msg: (tradutor || {}).texto4 }};
     try {
         const response11 = await chatsimsimi(ask, language);
         if (response11.message == 'indefinida' || response11.message == '' || !response11.message) response11 = XD // Se usa "XD" para causar error y usar otra opción.  
@@ -38,7 +38,7 @@ async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es")
             const response2 = await axios.get(`https://api.anbusec.xyz/api/v1/simitalk?apikey=${apikeyyy}&ask=${ask}&lc=${language}`);
             return { status: true, resultado: { simsimi: response2.data.message }};       
         } catch (error2) {
-            return { status: false, resultado: { msg: "Todas las API's fallarón. Inténtalo de nuevo más tarde.", error: error2.message }};
+            return { status: false, resultado: { msg: (tradutor || {}).texto5, error: error2.message }};
         }
     }
 }}

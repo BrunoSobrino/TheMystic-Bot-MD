@@ -13,7 +13,7 @@ let handler = async (m, { text }) => {
   /*o donde quieras guardar las imágenes*/
   const path = `src/${text}`;
   await fs.writeFileSync(path, media);
-  m.reply(`Imagen guardada como ${path}`);
+  m.reply(`${tradutor.texto3} ${path}`);
 };
 
 handler.help = ['saveimage <nome>'];

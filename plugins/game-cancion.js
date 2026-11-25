@@ -20,21 +20,21 @@ const handler = async (m, {conn, usedPrefix}) => {
   const json = res[Math.floor(Math.random() * res.length)];
   
   const caption = `
-🎵 *ADIVINA EL TITULO DE LA CANCION* 🎵
+${tradutor.texto4[0]}
 
-⏰ Tiempo: ${(timeout / 1000).toFixed(2)} segundos
-💡 Usa *${usedPrefix}pista* para obtener una pista
-🏆 Recompensa: ${poin} XP
+${tradutor.texto4[1]} ${(timeout / 1000).toFixed(2)} ${tradutor.texto4[2]}
+${tradutor.texto4[3]} *${usedPrefix}pista* ${tradutor.texto4[4]}
+${tradutor.texto4[5]} ${poin} ${tradutor.texto4[6]}
 
-> No olvides que tu respusta debe ser respondiendo a este mensaje para que sea detectada.
+${tradutor.texto4[7]}
 
-*¡Escucha la canción y adivina el título!*`.trim();
+${tradutor.texto4[8]}`.trim();
 
   conn.tebaklagu[id] = [
     await m.reply(caption),
     json, poin,
     setTimeout(() => {
-      if (conn.tebaklagu[id]) conn.reply(m.chat, `⏰ Se acabó el tiempo!\n\n🎵 La respuesta era: *${json.jawaban}*`, conn.tebaklagu[id][0]);
+      if (conn.tebaklagu[id]) conn.reply(m.chat, `${tradutor.texto5[0]}\n\n${tradutor.texto5[1]} *${json.jawaban}*`, conn.tebaklagu[id][0]);
       delete conn.tebaklagu[id];
     }, timeout),
   ];

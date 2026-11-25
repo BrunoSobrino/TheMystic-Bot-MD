@@ -32,7 +32,7 @@ const handler = async (m, { conn }) => {
     
     if (!recognise || !recognise?.track) {
       fs.unlinkSync(tempPath);
-      return m.reply('> *[❗] Error: Audio not found.*')
+      return m.reply(traductor.texto5)
     }
     
     const { title, subtitle, artists, genres, images } = recognise.track;

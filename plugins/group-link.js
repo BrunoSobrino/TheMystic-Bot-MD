@@ -35,7 +35,7 @@ const handler = async (m, {conn, args}) => {
                                     // URL Redirect 
                                     name: 'cta_copy',
                                     buttonParamsJson: JSON.stringify({
-                                        display_text: 'COPIAR LINK',
+                                        display_text: tradutor.texto2,
                                         copy_code: `https://chat.whatsapp.com/${linkcode}`,
                                         id: `https://chat.whatsapp.com/${linkcode}`
                                     })

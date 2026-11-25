@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const configPath = path.join(__dirname, '../config.js');
 const gitignorePath = path.join(__dirname, '../.gitignore');
 
-const ensureConfigIgnored = async () => {
+const ensureConfigIgnored = async (tradutor) => {
   try {
     let gitignoreContent = '';
 
@@ -23,11 +23,11 @@ const ensureConfigIgnored = async () => {
       console.log('✅ config.js añadido a .gitignore');
     }
   } catch (error) {
-    throw new Error(`❌ .gitignore ${error.message}`);
+    throw new Error(`${tradutor.texto1}${error.message}`);
   }
 };
 
-const updateConfigFile = async (variable, value) => {
+const updateConfigFile = async (variable, value, tradutor) => {
   try {
     let configContent = await fs.promises.readFile(configPath, 'utf-8');
 
@@ -45,24 +45,27 @@ const updateConfigFile = async (variable, value) => {
 
     await fs.promises.writeFile(configPath, configContent, 'utf-8');
   } catch (error) {
-    throw new Error(`❌ ${error.message}`);
+    throw new Error(`${tradutor.texto2}${error.message}`);
   }
 };
 
 const handler = async (m, { text }) => {
-  if (!text) return m.reply('❌ Ej .setvar global.groq = gsk');
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_setvar
+  if (!text) return m.reply(tradutor.texto3);
 
   const [variable, value] = text.split('=').map(item => item.trim());
 
-  if (!variable || !value) return m.reply('❌ Ej .setvar variable = valor');
+  if (!variable || !value) return m.reply(tradutor.texto4);
 
   try {
-    await ensureConfigIgnored(); 
-    await updateConfigFile(variable, value); 
-    m.reply(`✅ ${variable.replace(/^global\./, '')} actualizada a ${value}`);
+    await ensureConfigIgnored(tradutor); 
+    await updateConfigFile(variable, value, tradutor); 
+    m.reply(`${tradutor.texto5}${variable.replace(/^global\./, '')}${tradutor.texto5_1}${value}`);
   } catch (error) {
     console.error("❌ Error al actualizar config.js:", error);
-    m.reply(`❌ ${error.message}`);
+    m.reply(`${tradutor.texto2}${error.message}`);
   }
 };
 

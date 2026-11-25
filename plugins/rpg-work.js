@@ -14,8 +14,8 @@ const handler = async (m, { conn, isPrems }) => {
   enviando = true
   const hasil = Math.floor(Math.random() * 5000);
   const time = global.db.data.users[m.sender].lastwork + 600000;
-  if (new Date - global.db.data.users[m.sender].lastwork < 600000) throw `⚔️ *¡Espera un momento pequeño aventurero!* ⚔️\n\n*—◉ Regresa a la travesía en ${msToTime(time - new Date())} ⏳*`;
-  conn.sendMessage(m.chat, { text: `🏞️ *Te embarcas en una emocionante aventura:*\n\n🛠️ *${pickRandom(global.work)}*\n\n*¡Ganaste ${hasil} exp por tu valentía!*` }, { quoted: m });
+  if (new Date - global.db.data.users[m.sender].lastwork < 600000) throw `${tradutor.texto2[0]}${msToTime(time - new Date(), tradutor)}${tradutor.texto2[1]}`;
+  conn.sendMessage(m.chat, { text: `${tradutor.texto3[0]}${pickRandom(global.work)}${tradutor.texto3[1]}${hasil}${tradutor.texto3[2]}` }, { quoted: m });
   global.db.data.users[m.sender].exp += hasil;
   global.db.data.users[m.sender].lastwork = new Date() * 1;
   enviando = false
@@ -26,7 +26,7 @@ handler.command = /^(work|trabajar|chambear)$/i
 handler.fail = null;
 export default handler;
 
-function msToTime(duration) {
+function msToTime(duration, tradutor) {
   const milliseconds = parseInt((duration % 1000) / 100);
   let seconds = Math.floor((duration / 1000) % 60);
   let minutes = Math.floor((duration / (1000 * 60)) % 60);
@@ -34,7 +34,7 @@ function msToTime(duration) {
   hours = (hours < 10) ? '0' + hours : hours;
   minutes = (minutes < 10) ? '0' + minutes : minutes;
   seconds = (seconds < 10) ? '0' + seconds : seconds;
-  return minutes + ' minutos ' + seconds + ' segundos ';
+  return minutes + tradutor.texto4[0] + seconds + tradutor.texto4[1];
 }
 
 function pickRandom(list) {

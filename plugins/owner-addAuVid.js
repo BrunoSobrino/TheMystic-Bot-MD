@@ -17,7 +17,7 @@ const nvGlobalPath = path.join(__dirname, '../plugins/nv-global.js');
 
 const mediaDirPath = path.join(__dirname, '../src/assets/audio');
 
-const moveQuotedMedia = async (m, palabra, mediaType) => {
+const moveQuotedMedia = async (m, palabra, mediaType, tradutor) => {
   try {
     const mediaBuffer = await m.quoted.download(); 
     const fileExtension = mediaType === 'audio' ? 'mp3' : 'mp4'; 
@@ -33,7 +33,7 @@ const moveQuotedMedia = async (m, palabra, mediaType) => {
     return mediaFilePath; 
   } catch (error) {
     console.error(`❌ Error mv ${mediaType}: ${error.message}`);
-    throw new Error(`Error moviendo ${mediaType}.`);
+    throw new Error(`${tradutor.texto3}${mediaType}${tradutor.texto3_1}`);
   }
 };
 
@@ -76,8 +76,11 @@ export default handler;
 };
 
 const handler = async (m, { text }) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_addaudio
   if (!text) {
-    return m.reply('❌ Ej: .addaudio hola');
+    return m.reply(tradutor.texto1);
   }
 
   const keyword = text.trim();
@@ -90,16 +93,16 @@ const handler = async (m, { text }) => {
     } else if (m.quoted && m.quoted.mimetype && m.quoted.mimetype.startsWith('video')) {
       mediaType = 'video';
     } else {
-      throw new Error('❌ Audio/Video.');
+      throw new Error(tradutor.texto2);
     }
 
-    const mediaFilePath = await moveQuotedMedia(m, keyword, mediaType);
+    const mediaFilePath = await moveQuotedMedia(m, keyword, mediaType, tradutor);
 
     await addMediaHandler(keyword, mediaFilePath, mediaType);
 
-    m.reply(`✅ ${mediaType === 'audio' ? 'Audio' : 'Video'} "${keyword}" `);
+    m.reply(`${tradutor.texto4}${mediaType === 'audio' ? tradutor.texto4_1 : tradutor.texto4_2}${tradutor.texto4_3}${keyword}${tradutor.texto4_4}`);
   } catch (error) {
-    m.reply(`❌ Error: ${error.message}`);
+    m.reply(`${tradutor.texto5}${error.message}`);
   }
 };
 

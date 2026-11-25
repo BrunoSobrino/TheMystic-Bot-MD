@@ -1,4 +1,9 @@
+import fs from 'fs';
 const handler = async (m, {conn}) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.game_pista
+
   conn.tebaklagu = conn.tebaklagu ? conn.tebaklagu : {};
   const id = m.chat;
   if (!(id in conn.tebaklagu)) throw false;
@@ -9,17 +14,7 @@ const handler = async (m, {conn}) => {
   const wordCount = answer.split(/\s+/).length;
   const letterCount = answer.replace(/\s/g, '').length;
   
-  const hintMessage = `
-🎵 *PISTA ADIVINA LA CANCIÓN* 🎵
-
-${hint}
-
-🎤 *Artista:* ${artist}
-📝 *Palabras:* ${wordCount}
-📏 *Letras:* ${letterCount}
-
-💡 _Las vocales están visibles, adivina las consonantes_
-`.trim();
+  const hintMessage = `${tradutor.texto1[0]}${hint}${tradutor.texto1[1]}${artist}${tradutor.texto1[2]}${wordCount}${tradutor.texto1[3]}${letterCount}${tradutor.texto1[4]}`.trim();
 
   await conn.reply(m.chat, hintMessage, m);
 };

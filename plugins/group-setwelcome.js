@@ -7,7 +7,7 @@ const handler = async (m, {conn, text, isROwner, isOwner}) => {
   if (text) {
     global.db.data.chats[m.chat].sWelcome = text;
     m.reply(tradutor.texto1);
-  } else throw `${tradutor.texto2[0]}\n*- @user (mención)*\n*- @group (nombre de grupo)*\n*- @desc (description de grupo)*`;
+  } else throw `${tradutor.texto2[0]}\n${tradutor.texto3.join('\n')}`;
 };
 handler.help = ['setwelcome <text>'];
 handler.tags = ['group'];

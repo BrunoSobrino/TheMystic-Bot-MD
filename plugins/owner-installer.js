@@ -36,7 +36,7 @@ const writeGitignore = async (content) => {
   await fs.promises.writeFile(gitignorePath, content, 'utf-8');
 };
 
-const addToGitignore = async (pluginPath) => {
+const addToGitignore = async (pluginPath, tradutor) => {
   try {
     const relativePluginPath = path.relative(path.join(__dirname, '../'), pluginPath);
     let gitignoreContent = await readGitignore();
@@ -47,11 +47,11 @@ const addToGitignore = async (pluginPath) => {
       console.log(`✅ ${relativePluginPath} añadido a .gitignore`);
     }
   } catch (error) {
-    throw new Error(`Error al actualizar .gitignore: ${error.message}`);
+    throw new Error(`${tradutor.texto6}${error.message}`);
   }
 };
 
-const removeFromGitignore = async (pluginPath) => {
+const removeFromGitignore = async (pluginPath, tradutor) => {
   try {
     const relativePluginPath = path.relative(path.join(__dirname, '../'), pluginPath);
     let gitignoreContent = await readGitignore();
@@ -65,14 +65,14 @@ const removeFromGitignore = async (pluginPath) => {
       console.log(`✅ ${relativePluginPath} eliminado de .gitignore`);
     }
   } catch (error) {
-    throw new Error(`Error al actualizar .gitignore: ${error.message}`);
+    throw new Error(`${tradutor.texto6}${error.message}`);
   }
 };
 
-const downloadPlugin = async (url, pluginName) => {
+const downloadPlugin = async (url, pluginName, tradutor) => {
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`❌ Error al descargar el plugin: ${response.statusText}`);
+    if (!response.ok) throw new Error(`${tradutor.texto1}${response.statusText}`);
 
     const pluginPath = path.join(pluginsDir, pluginName);
     const fileStream = fs.createWriteStream(pluginPath);
@@ -86,28 +86,31 @@ const downloadPlugin = async (url, pluginName) => {
     console.log(`✅ Plugin descargado: ${pluginName}`);
     return pluginPath;
   } catch (error) {
-    throw new Error(`Error al descargar el plugin: ${error.message}`);
+    throw new Error(`${tradutor.texto2}${error.message}`);
   }
 };
 
-const deletePlugin = async (pluginName) => {
+const deletePlugin = async (pluginName, tradutor) => {
   const pluginPath = path.join(pluginsDir, pluginName);
   try {
     if (fs.existsSync(pluginPath)) {
-      await removeFromGitignore(pluginPath);
+      await removeFromGitignore(pluginPath, tradutor);
       fs.unlinkSync(pluginPath);
       console.log(`✅ Plugin ${pluginName} eliminado.`);
-      return `✅ 🗑️ ${pluginName} `;
+      return `${tradutor.texto3}${pluginName} `;
     } else {
-      return `❌ ${pluginName} no existe.`;
+      return `${tradutor.texto4}${pluginName}${tradutor.texto4_1}`;
     }
   } catch (error) {
-    throw new Error(`Error al eliminar el plugin: ${error.message}`);
+    throw new Error(`${tradutor.texto5}${error.message}`);
   }
 };
 
 const handler = async (m, { text }) => {
-  if (!text) return m.reply('❌ Ej .plg url .plg nombre');
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_installer
+  if (!text) return m.reply(tradutor.texto7);
 
   try {
     const input = text.trim();
@@ -115,18 +118,18 @@ const handler = async (m, { text }) => {
 
     if (isValidUrl(input)) {
       const pluginName = path.basename(input); 
-      const pluginPath = await downloadPlugin(input, pluginName); 
-      await addToGitignore(pluginPath); 
-      m.reply(`✅ ${pluginName} instalado`);
+      const pluginPath = await downloadPlugin(input, pluginName, tradutor); 
+      await addToGitignore(pluginPath, tradutor); 
+      m.reply(`${tradutor.texto8}${pluginName}${tradutor.texto8_1}`);
     } else {
-      const result = await deletePlugin(input); 
+      const result = await deletePlugin(input, tradutor); 
       m.reply(result);
     }
   } catch (error) {
     console.error("Error al procesar el comando:", error);
-    const errorMessage = error.message.includes('Error al eliminar el plugin') // complejo e ineccesario. Brr
+    const errorMessage = error.message.includes(tradutor.texto5) // complejo e ineccesario. Brr
       ? error.message.split('❌ ')[1]
-      : `❌ ${error.message}`;
+      : `${tradutor.texto9}${error.message}`;
     m.reply(errorMessage);
   }
 };

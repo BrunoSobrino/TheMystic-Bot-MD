@@ -5,6 +5,10 @@ import fs from 'fs-extra'
 import simpleGit from 'simple-git'
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.game_glx
+
     createDataBase() // crea un archivo database por si este no existe 
     atualizarRepositorio() // Verificar si necesita actualizar, consultando la api en https://github.com/jeffersonalionco/database-galaxia/blob/master/database.json
 
@@ -41,72 +45,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
 
 
-            const str = `*╔═ 🪐JUEGO DE GALAXIA🪐 ═╗*
-
- 👨‍🚀 Hola *${m.pushName}*, Es la hora de viajar por el espacio, mina asteroides, conversa con alienígenas y mucho más en el mundo galáctico!
-
-  *💰 Moneda:* ${data.perfil.carteira.currency}
-
-
-  *🌠 ${usedPrefix}glx _cadastrar_*
-  _Para registrarse en la GLX_
-  
-  *🌠 ${usedPrefix}glx _perfil_*
-  _Mira la evolución de tu perfil._
-
-  *🌠 ${usedPrefix}glx _vender_*
-  _vende tus objetos del cofre._
-  
-
-
-> 🧾 Ataques / Defensa / Viajar
-
-  *🌠 ${usedPrefix}glx _atacar list_*
-  _Enlista todos los jugadores del juego!_
-
-  *🌠 ${usedPrefix}glx _atacar <username_del_jugador>_*
-  _ataca a un usuario usando su username!_
-
-  *🌠 ${usedPrefix}glx _planeta_*
-  _Actualizar datos Planeta y Colonia_
-
-  *🌠 ${usedPrefix}glx _viajar_*
-  _¿Quieres visitar otro Planeta? Vamos!_
-
-> 🧾 Opciones de minería
-
-*🌠 ${usedPrefix}glx _miner_*
-_Quieres dinero? Vamos a minar._
-
-
-
-> 🧾 Tu información personal 
-
-  *🌠 ${usedPrefix}glx _carteira_*
-  _Accede a tu billetera financiera._
-
-  *🌠 ${usedPrefix}glx _loja_*
-  _Descubre nuestra tienda de la galaxia_
-
-  *🌠 ${usedPrefix}glx _bau_*
-  _Mira tus items guardados_
-
- 
-
-
-  *🌟 ${usedPrefix}glx _criador_*
-  _Información dem creador del juego.._
-
-  *🌟 ${usedPrefix}glx _sobre_*
-  _Sobre el juego._
-
-  _Noticias y Actualizaciónes automáticas_
-  _Si tiene alguna pregunta, póngase en contacto_
-
-  
-*╘═══════════════════╛*
-  🌞🌕🌠🌟⭐🌎🪐
-`
+            const str = `${tradutor.texto1[0]}${m.pushName}${tradutor.texto1[1]}${data.perfil.carteira.currency}${tradutor.texto1[2]}${usedPrefix}${tradutor.texto1[3]}${usedPrefix}${tradutor.texto1[4]}${usedPrefix}${tradutor.texto1[5]}${usedPrefix}${tradutor.texto1[6]}${usedPrefix}${tradutor.texto1[7]}${usedPrefix}${tradutor.texto1[8]}${usedPrefix}${tradutor.texto1[9]}${usedPrefix}${tradutor.texto1[10]}${usedPrefix}${tradutor.texto1[11]}${usedPrefix}${tradutor.texto1[12]}${usedPrefix}${tradutor.texto1[13]}${usedPrefix}${tradutor.texto1[14]}${usedPrefix}${tradutor.texto1[15]}`
             let glx_menu = fs.readFileSync('./src/assets/images/menu/main/galaxiaMenu.png')
             const selo1234 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
             const idmessage = await conn.sendMessage(m.chat, { image: glx_menu, caption: str.trim() }, { quoted: selo1234 });
@@ -166,9 +105,9 @@ _Quieres dinero? Vamos a minar._
                             fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db)) // Escreve os dados no arquivo
                         }
 
-                        let status = data.status === true ? 'Ativo' : 'Desativado'
-                        let nave = data.perfil.bolsa.naves.status === true ? 'Sim' : 'Não' // Se o usuario ja tem alguma nave ou não
-                        let username = data.perfil.username === null ? 'Sem username' : `@${data.perfil.username}` // se o usuario ja tem username
+                        let status = data.status === true ? tradutor.texto2 : tradutor.texto3
+                        let nave = data.perfil.bolsa.naves.status === true ? tradutor.texto4 : tradutor.texto5 // Se o usuario ja tem alguma nave ou não
+                        let username = data.perfil.username === null ? tradutor.texto6 : `@${data.perfil.username}` // se o usuario ja tem username
 
                         let maxX = db.planetas.terra.colonias.colonia1.localizacao.x + 150 // Define a area da colonia
                         let minX = db.planetas.terra.colonias.colonia1.localizacao.x - 1   // Define a area da colonia
@@ -179,45 +118,16 @@ _Quieres dinero? Vamos a minar._
                         conn.groupParticipantsUpdate(db.planetas.terra.id, [m.sender], "add") // Adiciona o usuario no grupo terra pela primeira vez
 
 
-                        enviar(`*_⚔️ AHORA ERES UN MIEMBRO ESTELAR🪐_*
-
-Tu información en la galaxia!
-                        
-*🧑Nombre: _${m.pushName}_*
-*🌐Username: _${username}_*
-*⏹️Estado: _${status}_* 
-*🚀Tiene nave: _${nave}_*
-
-\`\`\`🏠 Donde vives ahora?:\`\`\`
-*🪐Tu planeta: _${data.perfil.casa.planeta}_*
-*🏠Colonia: _${data.perfil.casa.colonia.nome}_*
-
-Comandos de Configuración:
-*${usedPrefix}glx set name* - nombre
-*${usedPrefix}glx set username* - username
-
-Comandos Glx en Grupos(planeta):
-*${usedPrefix}glx planeta act* - Actualiza datos de la colonia.
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸 JUEGO DE LA GALAXIA 🛸_*
-
-`)
+                        enviar(`${tradutor.texto7[0]}${m.pushName}${tradutor.texto7[1]}${username}${tradutor.texto7[2]}${status}${tradutor.texto7[3]}${nave}${tradutor.texto7[4]}${data.perfil.casa.planeta}${tradutor.texto7[5]}${data.perfil.casa.colonia.nome}${tradutor.texto7[6]}${usedPrefix}${tradutor.texto7[7]}${usedPrefix}${tradutor.texto7[8]}${usedPrefix}${tradutor.texto7[9]}${usedPrefix}${tradutor.texto7[10]}`)
                         /**
                          * APENAS USO DESENVOLVERDOR
                          */
-                        conn.sendMessage('529996125657@s.whatsapp.net', { text: `Nuevo user registrado: \n\nId: ${data.perfil.id} \n\nNombre: ${data.perfil.id}` })
-                        conn.sendMessage('554598306644@s.whatsapp.net', { text: `Nuevo user registrado: \n\nId: ${data.perfil.id} \n\nNombre: ${data.perfil.id}` })
+                        conn.sendMessage('529996125657@s.whatsapp.net', { text: `${tradutor.texto8[0]}${data.perfil.id}${tradutor.texto8[1]}${data.perfil.id}${tradutor.texto8[2]}` })
+                        conn.sendMessage('554598306644@s.whatsapp.net', { text: `${tradutor.texto8[0]}${data.perfil.id}${tradutor.texto8[1]}${data.perfil.id}${tradutor.texto8[2]}` })
                         break;
                     default:
 
-                        enviar10s(`_😢Necesitas registrarte en el juego_\n\n> Use *${usedPrefix}glx cadastrar* \n_Para registrarse._\n\n😁 *regístrate ahora, no pierdas tiempo.*`)
+                        enviar10s(`${tradutor.texto9[0]}${usedPrefix}${tradutor.texto9[1]}`)
                         break;
                 }
 
@@ -225,17 +135,17 @@ Use: ${usedPrefix}glx
                 notificacao() // Notificações de alterações no codigo.
                 switch (argumento.toLowerCase()) {
                     case 'cadastrar':
-                        enviar10s(`_😁 Hola *${m.pushName}*, Ya estás registrado._`)
+                        enviar10s(`${tradutor.texto10[0]}${m.pushName}${tradutor.texto10[1]}`)
                         break;
                      case 'bt':
                         await conn.sendMessage(m.sender, {
                             image: { url: '' },
-                            caption: 'Escolha uma opção:',
-                            footer: 'Powered by GLX',
+                            caption: tradutor.texto11,
+                            footer: tradutor.texto12,
                             buttons: [
-                                { buttonId: 'glx_help', buttonText: { displayText: 'Ajuda' }, type: 1 },
-                                { buttonId: 'glx_play', buttonText: { displayText: 'Jogar' }, type: 1 },
-                                { buttonId: 'glx_status', buttonText: { displayText: 'Status' }, type: 1 }
+                                { buttonId: 'glx_help', buttonText: { displayText: tradutor.texto13 }, type: 1 },
+                                { buttonId: 'glx_play', buttonText: { displayText: tradutor.texto14 }, type: 1 },
+                                { buttonId: 'glx_status', buttonText: { displayText: tradutor.texto15 }, type: 1 }
                             ],
                             headerType: 4 // Tipo de header com imagem
                         })
@@ -246,9 +156,9 @@ Use: ${usedPrefix}glx
                                 // Apenas verifica se o arugumento do nome não é null ou undefined se nao altera o nome do usuario
                                 if (argumento2 != undefined || argumento2 != null) {
                                     data.perfil.nome = argumento2;
-                                    enviarButton1(m.sender, `😁 Nome alterado para *${argumento2}*._ \nPara verificar envie *.glx* _perfil_`)
+                                    enviarButton1(m.sender, `${tradutor.texto16[0]}${argumento2}${tradutor.texto16[1]}`)
                                 } else {
-                                    enviarButton1(m.sender, `_😁 Informe qual será o novo nome:_ \n\n Ex: *.glx* _set nome_ *_nometeste_*`)
+                                    enviarButton1(m.sender, tradutor.texto17)
                                 }
 
 
@@ -265,7 +175,7 @@ Use: ${usedPrefix}glx
                                     // Passa em todos os usuarios do bot, verificando se alguem esta usando o mesmo username, se tiver altera a variavel para false, nao deixando aletarar o nome
                                     for (const id in global.db.data.users) {
                                         if (global.db.data.users[id]?.gameglx?.perfil?.username === `@${argumento2}`) {
-                                            enviarButton1(m.sender, `Este Username *(${argumento2})* ja existe para outro usuario!`)
+                                            enviarButton1(m.sender, `${tradutor.texto18[0]}${argumento2}${tradutor.texto18[1]}`)
                                             isLivre = false
                                         }
                                     }
@@ -274,72 +184,38 @@ Use: ${usedPrefix}glx
                                     if (isLivre === true) {
                                         data.perfil.username = `@${argumento2}`
 
-                                        enviarButton1(m.sender, `😁Seu username agora é *${argumento2}*\nPara verificar envie *.glx* _perfil_`)
+                                        enviarButton1(m.sender, `${tradutor.texto19[0]}${argumento2}${tradutor.texto19[1]}`)
 
                                     }
                                 } else {
-                                    enviarButton1(m.sender, `_😁 Informe qual será o novo username:_ \n\n Ex: *.glx* _set username_ *_nometeste_*`)
+                                    enviarButton1(m.sender, tradutor.texto20)
                                 }
                                 break;
                             default:
-                                enviar(`
-_:-) O que deseja alterar
-
-*name* - Alterar seu nome no game glx
-*username* - Alterar seu username no game glx
-                                    
-                                _`, null, m.sender)
+                                enviar(tradutor.texto21, null, m.sender)
                                 break;
 
                         }
                         break;
                     case "viajar":
-                        if (data.perfil.bolsa.naves.status === false) return enviarButton1(m.sender, `*( ❌ ) No tienes nave* \n\n Usa *${usedPrefix}glx comprar nave n1* - Para comprar tu primer nave!\n\n_O para ver otros modelos de naves🏪en la tienda Usa_: *${usedPrefix}glx loja*`)
+                        if (data.perfil.bolsa.naves.status === false) return enviarButton1(m.sender, `${tradutor.texto22[0]}${usedPrefix}${tradutor.texto22[1]}${usedPrefix}${tradutor.texto22[2]}`)
                         switch (argumento1) {
                             case "terra":
-                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`*${data.perfil.casa.planeta}* _⚠️Este planeta es tu casa y tú ya estás en ella_`)
+                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`${tradutor.texto23[0]}${data.perfil.casa.planeta}${tradutor.texto23[1]}`)
                                 entrarplaneta('terra') // Não troque o nome
                                 break;
                             case "megatron":
-                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`*${data.perfil.casa.planeta}* _⚠️ Este planeta es tu casa, ya estás en él_`);
+                                if (data.perfil.casa.id === db.planetas[argumento1].id) return enviar10s(`${tradutor.texto24[0]}${data.perfil.casa.planeta}${tradutor.texto24[1]}`);
                                 entrarplaneta(argumento1.toLowerCase())
                                 break;
                             case 'casa':
                                 data.perfil.localizacao.viajando = false;
                                 conn.groupParticipantsUpdate(data.perfil.casa.id, [m.sender], "add")
-                                enviar(` 😉 *Hola!!!* nuevamente ${m.pushName}`, null, data.perfil.casa.id)
-                                enviar(`${m.pushName} _Estás en la tierra nuevamente 😉!_ `, null, id)
+                                enviar(`${tradutor.texto25[0]}${m.pushName}${tradutor.texto25[1]}`, null, data.perfil.casa.id)
+                                enviar(`${tradutor.texto26[0]}${m.pushName}${tradutor.texto26[1]}`, null, id)
                                 break;
                             default: // Padrão ao enviar entrar 
-                                let str = `
-╔════════════════════╗
-
-*LUGARES PARA VIAJAR*
-
-> --- PLANETAS    
-*✈️ ${usedPrefix}glx viajar terra*
-_Un olaneta hermoso!_
-
-*✈️ ${usedPrefix}glx viajar megatron*
-_Un olaneta hostíl con características agresivas!_
-
-
-
-
-> --- COMANDOS UTILES
-*⚙️ ${usedPrefix}glx viajar casa*
-_Si tu nave se avería, usa este comando para regresar_
-
-
-
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-                            `
+                                let str = `${tradutor.texto27[0]}${usedPrefix}${tradutor.texto27[1]}${usedPrefix}${tradutor.texto27[2]}${usedPrefix}${tradutor.texto27[3]}${usedPrefix}${tradutor.texto27[4]}`
                                 enviarButton1(m.sender, str)
                                 break;
 
@@ -359,97 +235,23 @@ Use: ${usedPrefix}glx
                                         comprarnave(argumento2)
                                         break;
                                     default:
-                                        enviarButton1(m.sender, `*--- 🏪 TIENDA - MODELOS DE NAVES ---*
-\n_Modelos:_
- *➥ n1* - NAVE N1
- 💨 Velocidad: *${db.naves.n1.velocidade}*
- ⚡ Poder de Combate: *${db.naves.n1.poder}*
- 🎮(XP) de la Nave: *(${db.naves.n1.xp})*
- 💸Valor de la nave: *${valorFormatado(db.naves.n1.valor)}*
-
-
- *➥ n2* - NAVE N2
- 💨 Velocidad: *${db.naves.n2.velocidade}*
- ⚡ Poder de Combate: *${db.naves.n2.poder}*
- 🎮(XP) de la Nave: *(${db.naves.n2.xp})*
- 💸Valor de la nave: *${valorFormatado(db.naves.n2.valor)}*
-
-
- *➥ n3* - NAVE N3
- 💨 Velocidad: *${db.naves.n3.velocidade}*
- ⚡ Poder de Combate: *${db.naves.n3.poder}*
- 🎮(XP) de la Nave: *(${db.naves.n3.xp})*
- 💸Valor de la nave: *${valorFormatado(db.naves.n3.valor)}*
-
- Ejemplo de uso: *${usedPrefix}glx comprar nave n1*
-
-
-
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
- `)
+                                        enviarButton1(m.sender, `${tradutor.texto28[0]}${db.naves.n1.velocidade}${tradutor.texto28[1]}${db.naves.n1.poder}${tradutor.texto28[2]}${db.naves.n1.xp}${tradutor.texto28[3]}${valorFormatado(db.naves.n1.valor)}${tradutor.texto28[4]}${db.naves.n2.velocidade}${tradutor.texto28[5]}${db.naves.n2.poder}${tradutor.texto28[6]}${db.naves.n2.xp}${tradutor.texto28[7]}${valorFormatado(db.naves.n2.valor)}${tradutor.texto28[8]}${db.naves.n3.velocidade}${tradutor.texto28[9]}${db.naves.n3.poder}${tradutor.texto28[10]}${db.naves.n3.xp}${tradutor.texto28[11]}${valorFormatado(db.naves.n3.valor)}${tradutor.texto28[12]}${usedPrefix}${tradutor.texto28[13]}${usedPrefix}${tradutor.texto28[14]}`)
 
                                         break;
                                 }
                                 break;
 
                             default:
-                                enviarButton1(m.sender, `*--- 🏪 TIENDA DE LA GALAXIA---*
-                                
-_Categorias:_
-↳ nave
-
-
-Ex: Para ver las naves:
-*${usedPrefix}glx loja nave*
-
-Ex: Comprar una nave:
-*${usedPrefix}glx comprar nave n1*
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
-`)
+                                enviarButton1(m.sender, `${tradutor.texto29[0]}${usedPrefix}${tradutor.texto29[1]}${usedPrefix}${tradutor.texto29[2]}${usedPrefix}${tradutor.texto29[3]}`)
                                 break;
 
 
                         }
                         break;
                     case "carteira":
-                        if (m.isGroup === true) return enviar10s(`Este comando solo se puede usar en privado`)
+                        if (m.isGroup === true) return enviar10s(tradutor.texto30)
                         let img = './src/assets/glx/carteira.jpeg'
-                        let str = `*-- 💴 CARTERA FINANCIERA --* 
-                        
-_ℹ️ Su Información:_
-*🏧Saldo:* ${valorFormatado(data.perfil.carteira.saldo)}
-
-_Quieres ganar dinero?_
-Use ${usedPrefix}glx vender
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
-                        `
+                        let str = `${tradutor.texto31[0]}${valorFormatado(data.perfil.carteira.saldo)}${tradutor.texto31[1]}${usedPrefix}${tradutor.texto31[2]}${usedPrefix}${tradutor.texto31[3]}`
 
                        enviarButton2(m.sender, str, img)
 
@@ -466,32 +268,15 @@ Use: ${usedPrefix}glx
 
 
 
-                                let str = `*Datos del planeta ${data.perfil.casa.planeta}*
-
-*🏠Colonias en crecimiento:*
-${listarNomesColônias(data.perfil.casa.idpelonome)}
-
-${dadoscolonias1()}
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
-`
+                                let str = `${tradutor.texto32[0]}${data.perfil.casa.planeta}${tradutor.texto32[1]}${listarNomesColônias(data.perfil.casa.idpelonome)}${tradutor.texto32[2]}${dadoscolonias1()}${tradutor.texto32[3]}${usedPrefix}${tradutor.texto32[4]}`
 
                                 function dadoscolonias1() {
                                     for (let i = 0; i < Object.keys(colônias).length; i++) {
                                         const nomeColônia = colônias[Object.keys(colônias)[i]].nome;
                                         const habitantes = colônias[Object.keys(colônias)[i]].habitantes;
 
-                                        let Moradores = '*- Habitantes:*\n'
-                                        Moradores += `Total: ${habitantes.length}\n`
+                                        let Moradores = tradutor.texto33
+                                        Moradores += `${tradutor.texto34[0]}${habitantes.length}${tradutor.texto34[1]}`
 
                                         for (let j = 0; j < habitantes.length; j++) {
                                             let your = ' '
@@ -502,18 +287,15 @@ Use: ${usedPrefix}glx
                                             Moradores2.push(habitantes[j])
 
                                             if (habitantes[j] === m.sender) {
-                                                your = ` *Tú* `
+                                                your = tradutor.texto35
                                             }
-                                            Moradores += `➣ ${your}@${numberr}\n`
+                                            Moradores += `${tradutor.texto36[0]}${your}${tradutor.texto36[1]}${numberr}${tradutor.texto36[2]}`
                                             if (habitantes.length) {
 
                                             }
                                         }
 
-                                        dadoscolonias += `*${nomeColônia}*
-${Moradores}
-    
-`
+                                        dadoscolonias += `${tradutor.texto37[0]}${nomeColônia}${tradutor.texto37[1]}${Moradores}${tradutor.texto37[2]}`
                                     }
                                     return dadoscolonias
                                 }
@@ -528,18 +310,18 @@ ${Moradores}
 
                                 break;
                             case 'sair':
-                                if (!m.isGroup) return m.reply(` Solo puedes usar esto en grupos`)
+                                if (!m.isGroup) return m.reply(tradutor.texto38)
                                 if (id != data.perfil.casa.id) {
                                     data.perfil.localizacao.viajando = false;
                                     conn.groupParticipantsUpdate(id, [m.sender], "remove")
                                     conn.groupParticipantsUpdate(data.perfil.casa.id, [m.sender], "add")
-                                    conn.sendMessage(data.perfil.casa.id, { text: `_Bienvenido a tu casa!_` })
-                                    conn.sendMessage(m.sender, { text: `_Bienvenido a casa!_` })
+                                    conn.sendMessage(data.perfil.casa.id, { text: tradutor.texto39 })
+                                    conn.sendMessage(m.sender, { text: tradutor.texto40 })
                                 }
                                 break;
                             default: ''
                                 let strr = `Opciobes:\n\nACT\nSAIR `
-                                enviarButton1(m.sender, `Eso no existe en la colonia`)
+                                enviarButton1(m.sender, tradutor.texto41)
                                 break;
                         }
                         break;
@@ -551,22 +333,10 @@ ${Moradores}
                         let texto = ""
 
                         for (let i = 0; i < itens.length; i++) {
-                            listaItens += `*• _${itens[i]}_*  ➡︎ [ ${data.perfil.bolsa.itens[itens[i]]} ] \n`
+                            listaItens += `${tradutor.texto42[0]}${itens[i]}${tradutor.texto42[1]}${data.perfil.bolsa.itens[itens[i]]}${tradutor.texto42[2]}`
                         }
 
-                        texto = `╔═════════👜═════════╗\n\n*_📝 - TODOS LOS ITEMS_*\n\n> ⛏️ MINERALES:\n${listaItens}
- - Quieres vender tus items?
- Use *${usedPrefix}glx vender ouro 10*                    
-
-
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
-  ╚═════════👜═════════╝`
+                        texto = `${tradutor.texto43[0]}${listaItens}${tradutor.texto43[1]}${usedPrefix}${tradutor.texto43[2]}${usedPrefix}${tradutor.texto43[3]}`
                         enviarButton2(m.sender, texto, "./src/assets/glx/bau.jpg")
 
 
@@ -595,48 +365,7 @@ Use: ${usedPrefix}glx
                                 vender(argumento1, argumento2)
                                 break
                             default:
-                                let str = `* 🏪 TIENDA DE PEONES*
-
-_Consulta los artículos que se pueden vender._ 
-
-▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
-> ITENS DE MINERÍA ⤵
-
-🛠️ *${usedPrefix}glx vender madeira 1*
- - Valor Unitario: ${valorFormatado(db.itens.mineracao['madeira'].valorVenda)}
-                                
- 🛠️ *${usedPrefix}glx vender ferro 1*
-- Valor Unitario: ${valorFormatado(db.itens.mineracao['ferro'].valorVenda)}
-                                
-🛠️ *${usedPrefix}glx vender diamante 1*
-- Valor Unitario: ${valorFormatado(db.itens.mineracao['diamante'].valorVenda)}
-                                
-🛠️ *${usedPrefix}glx vender esmeralda 1*
-- Valor Unitario: ${valorFormatado(db.itens.mineracao['esmeralda'].valorVenda)} 
-
-🛠️ *${usedPrefix}glx vender carvao 1*
-- Valor Unitario: ${valorFormatado(db.itens.mineracao['carvao'].valorVenda)}
-                                
-🛠️ *${usedPrefix}glx vender ouro 1*
-- Valor Unitario: ${valorFormatado(db.itens.mineracao['ouro'].valorVenda)}
-                                
-🛠️ *${usedPrefix}glx vender quartzo 1*
-- Valor Unitario: ${valorFormatado(db.itens.mineracao['quartzo'].valorVenda)}
- 
-▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
-
-                                `
+                                let str = `${tradutor.texto44[0]}${usedPrefix}${tradutor.texto44[1]}${valorFormatado(db.itens.mineracao['madeira'].valorVenda)}${tradutor.texto44[2]}${usedPrefix}${tradutor.texto44[3]}${valorFormatado(db.itens.mineracao['ferro'].valorVenda)}${tradutor.texto44[4]}${usedPrefix}${tradutor.texto44[5]}${valorFormatado(db.itens.mineracao['diamante'].valorVenda)}${tradutor.texto44[6]}${usedPrefix}${tradutor.texto44[7]}${valorFormatado(db.itens.mineracao['esmeralda'].valorVenda)}${tradutor.texto44[8]}${usedPrefix}${tradutor.texto44[9]}${valorFormatado(db.itens.mineracao['carvao'].valorVenda)}${tradutor.texto44[10]}${usedPrefix}${tradutor.texto44[11]}${valorFormatado(db.itens.mineracao['ouro'].valorVenda)}${tradutor.texto44[12]}${usedPrefix}${tradutor.texto44[13]}${valorFormatado(db.itens.mineracao['quartzo'].valorVenda)}${tradutor.texto44[14]}${usedPrefix}${tradutor.texto44[15]}`
                                enviarButton2(m.sender, str, './src/assets/glx/transacao.jpg')
                                 break;
                         }
@@ -646,7 +375,7 @@ Use: ${usedPrefix}glx
                         switch (argumento1) {
                             case 'parar':
                                 data.perfil.minerando = false
-                                enviarButton1(m.sender, `*Minería cerrada*`)
+                                enviarButton1(m.sender, tradutor.texto45)
                                 break
                             case 'madeira':
                                 minerar(argumento1)
@@ -670,87 +399,18 @@ Use: ${usedPrefix}glx
                                 minerar(argumento1)
                                 break
                             default:
-                                let funcoes = `
-*🌳${usedPrefix}glx miner parar*
-_Usar sólo para detener la minería_
-                                `
-                                let itens = `
-*🌳${usedPrefix}glx miner madeira*
-_Uno de los principales Minerales, para vender o construir casas._ 
-
-*🔩${usedPrefix}glx miner ferro*
-_Mineral utilizado para vender y comprar barcos.._
-
-*💎${usedPrefix}glx miner diamante*
-_Mineral muy importante para ganar dinero.._
-
-*🟢${usedPrefix}glx miner esmeralda*
-_Mineral muy importante para ganar dinero.._
-
-*⚫${usedPrefix}glx miner carvao*
-_Ideal para venta, combustible o el fuego.._
-
-*🟡${usedPrefix}glx miner ouro*
-_Mineral de alto valor para el comercio_
-
- *⚪${usedPrefix}glx miner quartzo*
- _Mineral de alto valor para el comercio_
-                           `
-                                enviarButton2(m.sender, `⛏️ *OPCIONES PARA MINAR* ⚒️
-                                
-> ⚙️ *CONFIGURACIONES*
-${funcoes}
-
-> ⛏️ *minerales*${itens}
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
-`, "./src/assets/glx/miner.jpg")
+                                let funcoes = `${tradutor.texto46[0]}${usedPrefix}${tradutor.texto46[1]}`
+                                let itens = `${tradutor.texto47[0]}${usedPrefix}${tradutor.texto47[1]}${usedPrefix}${tradutor.texto47[2]}${usedPrefix}${tradutor.texto47[3]}${usedPrefix}${tradutor.texto47[4]}${usedPrefix}${tradutor.texto47[5]}${usedPrefix}${tradutor.texto47[6]}${usedPrefix}${tradutor.texto47[7]}`
+                                enviarButton2(m.sender, `${tradutor.texto48[0]}${funcoes}${tradutor.texto48[1]}${itens}${tradutor.texto48[2]}${usedPrefix}${tradutor.texto48[3]}`, "./src/assets/glx/miner.jpg")
                                 break;
                         }
                         break;
                     case 'mapa':
-                        enviar(`*Mapa* _fue deshabilitado en el juego, debido a un error en Debiam_`)
+                        enviar(tradutor.texto49)
                         break;
                     case 'perfil':
-                        let nave = data.perfil.nave.nome ? data.perfil.nave.nome : 'No tiene nave'
-                        let strr = `*_🤖 ${data.perfil.nome} Su Perfil!_*
-
-Esta es tu información en el juego. \`\`\`GALAXIA\`\`\`.
-
-_💡No olvides minar, *${usedPrefix}glx miner* Esto aumenta tu XP y fuerza.._
-
-*🆙 XP:* _${data.perfil.xp} XP_
-    *Próximo Nivel:* _${db.api.niveis[`nivel${data.perfil.nivel.proximoNivel}`].totalXp} XP_
-
-*📈 Nivel:* _${data.perfil.nivel.nome}_
-*💪 Poder [Fuerza]:* _${data.perfil.poder}_ P
-*⚔️ Poder Ataque:* _${data.perfil.ataque.forcaAtaque.ataque}_ P
-*🛡️ Poder Defesa:* _${data.perfil.defesa.forca}_ P
-*🌀 Username:* _${data.perfil.username}_
-
-*🗣️ Idioma:* _${data.perfil.idioma}_
-*💰 Moneda:* _${data.perfil.carteira.currency}_
-
-*🌏 Planeta:* _${data.perfil.casa.planeta}_
-*🏠 Colonia:* _${data.perfil.casa.colonia.nome}_
-
-*🛸 Su nave actual:* _${nave}_
-
-
-
-*_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-`
+                        let nave = data.perfil.nave.nome ? data.perfil.nave.nome : tradutor.texto50
+                        let strr = `${tradutor.texto51[0]}${data.perfil.nome}${tradutor.texto51[1]}${usedPrefix}${tradutor.texto51[2]}${data.perfil.xp}${tradutor.texto51[3]}${db.api.niveis[`nivel${data.perfil.nivel.proximoNivel}`].totalXp}${tradutor.texto51[4]}${data.perfil.nivel.nome}${tradutor.texto51[5]}${data.perfil.poder}${tradutor.texto51[6]}${data.perfil.ataque.forcaAtaque.ataque}${tradutor.texto51[7]}${data.perfil.defesa.forca}${tradutor.texto51[8]}${data.perfil.username}${tradutor.texto51[9]}${data.perfil.idioma}${tradutor.texto51[10]}${data.perfil.carteira.currency}${tradutor.texto51[11]}${data.perfil.casa.planeta}${tradutor.texto51[12]}${data.perfil.casa.colonia.nome}${tradutor.texto51[13]}${nave}${tradutor.texto51[14]}${usedPrefix}${tradutor.texto51[15]}`
 
 
                         // Função para gerar a imgem do perfil após 3s apaga automaticamente
@@ -760,19 +420,19 @@ Use: ${usedPrefix}glx
 
                         break;
                     case 'criador':
-                        let msgcriador = `🛈 *INFORMACIÓN SOBRE EL CREADOR:*\n\n👨 *_creador del juego galaxia:_*\nhttps://github.com/jeffersonalionco\n\n👨 *_Creador del BOT:_*\nhttps://github.com/BrunoSobrino`
+                        let msgcriador = tradutor.texto52
                         enviarButton1(m.sender, msgcriador)
                         break;
                     case 'atacar':
                         switch (argumento1) {
                             case 'list':
-                                let strr = `*_📚--- LISTA DE USUARIOS ---📚_*\n\n*Utilice:*\n${usedPrefix}glx atacar *<USERNAME>* - _Para atacar a un jugador!_\n\n`
+                                let strr = `${tradutor.texto53[0]}${usedPrefix}${tradutor.texto53[1]}`
                                 let mentionss = []
                                 for (let i = 0; i < db.user_cadastrado.username.length; i++) {
                                     let db1 = global.db.data.users[db.user_cadastrado.username[i].id].gameglx
                                     let number = db.user_cadastrado.username[i].id.replace(/\D/g, '')
 
-                                    strr += `👨‍🚀 *Nombre:* ${db1.perfil.nome} \n*🔎 Username:* ${db.user_cadastrado.username[i].username}\n*✍ Usuario:* @${number}\n______________________\n\n`
+                                    strr += `${tradutor.texto54[0]}${db1.perfil.nome}${tradutor.texto54[1]}${db.user_cadastrado.username[i].username}${tradutor.texto54[2]}${number}${tradutor.texto54[3]}`
                                     mentionss.push(db.user_cadastrado.username[i].id)
                                 }
                                 conn.sendMessage(data.perfil.id, { text: strr, mentions: mentionss })
@@ -787,31 +447,11 @@ Use: ${usedPrefix}glx
 
                         break
                     case 'sobre':
-                        let sobre = `
-_Bienvenido a la opción de ayuda_ *GALAXIA*
-
-*Objetivo del juego*
-El objetivo del juego es crear un mundo abierto donde los jugadores puedan extraer objetos y luego venderlos para ganar dinero. Con el dinero ganado, los jugadores pueden comprar elementos del juego para fortalecerse y luego atacar a otros jugadores.
-
-> *Pasos del juego*
-*Exploración:* Navega por el mundo abierto y encuentra ubicaciones mineras.
-*Minería:* Extrae varios objetos valiosos del suelo.
-*Venta de Items:* Venda sus items conseguidos en la minería para obtener dinero. 
-*Compra de Items:* Usa el dinero para comprar equipamiento e items que aumenten tu poder.
-*Combate:* Con elementos más fuertes, enfréntate y ataca a otros jugadores.
-
-> *Consejos*
-    - Explore diferentes áreas para encontrar los mejores lugares para minar.
-    - Invierta en equipos que aumenten su eficiencia minera.
-    - Equilibra tu dinero entre la compra de artículos de ataque y defensa..
-    - Forme alianzas con otros jugadores para obtener protección y mejores oportunidades comerciales..
-
-Diviértete minando, negociando e luchando para ser el más fuerte del mundo abierto!
-                        `
+                        let sobre = tradutor.texto55
                         enviarButton1(m.sender, sobre)
                         break
                     default:
-                        enviarButton1(m.sender, `*[!]* La Opción *${args[0]}* no existe!`)
+                        enviarButton1(m.sender, `${tradutor.texto56[0]}${args[0]}${tradutor.texto56[1]}`)
                         break
                 }
 
@@ -826,10 +466,10 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
         // Botao simples sem imagem
         async function enviarButton1(id, msg) {
             await conn.sendMessage(id, {
-                text: msg + `\n\nDeseja voltar ? `,
-                footer: 'Game GLX',
+                text: msg + tradutor.texto57,
+                footer: tradutor.texto58,
                 buttons: [
-                    { buttonId: 'glx_start_game', buttonText: { displayText: '🔍 Inicio' }, type: 1 }
+                    { buttonId: 'glx_start_game', buttonText: { displayText: tradutor.texto59 }, type: 1 }
                 ],
                 headerType: 1
             })
@@ -840,9 +480,9 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
             await conn.sendMessage(id, {
                             image: { url:  urlImage},
                             caption: msg,
-                            footer: 'Powered by GLX',
+                            footer: tradutor.texto12,
                             buttons: [
-                                { buttonId: 'glx_start_game', buttonText: { displayText: '🔍 Inicio' }, type: 1 }
+                                { buttonId: 'glx_start_game', buttonText: { displayText: tradutor.texto59 }, type: 1 }
                             ],
                             headerType: 4 // Tipo de header com imagem
                         })
@@ -850,7 +490,7 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
 
 
         async function entrarplaneta(nomeplaneta) {
-            if (data.perfil.localizacao.viajando === true) return m.reply(`_Eh, ya estás viajando, espera q el tiempo se acabe o escribe _ *${usedPrefix}glx viajar casa*`)
+            if (data.perfil.localizacao.viajando === true) return m.reply(`${tradutor.texto60[0]}${usedPrefix}${tradutor.texto60[1]}`)
 
             // Status para viajando
             data.perfil.localizacao.viajando = true;
@@ -866,7 +506,7 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
             data.perfil.localizacao.idpelonome = db.planetas[nomeplaneta].idpelonome;
             // Informando se é um visitante ou nao
             if (data.perfil.casa.planeta === nomeplaneta) {
-                m.reply(`*${nomeplaneta} já é sua casa!*`)
+                m.reply(`${tradutor.texto61[0]}${nomeplaneta}${tradutor.texto61[1]}`)
             } else {
                 db.planetas[nomeplaneta].colonias.colonia1.visitantes.push(id)
                 fs.writeFileSync(`./src/assets/glx/db/database.json`, JSON.stringify(db))
@@ -879,34 +519,19 @@ Diviértete minando, negociando e luchando para ser el más fuerte del mundo abi
             const messageId1 = await conn.sendMessage(
                 id, {
                 video: fs.readFileSync("./src/assets/glx/viajando.mp4"),
-                caption: `Viajando para el planeta ${nomeplaneta}!! Espere *${data.perfil.nave.velocidade}* segundos`,
+                caption: `${tradutor.texto62[0]}${nomeplaneta}${tradutor.texto62[1]}${data.perfil.nave.velocidade}${tradutor.texto62[2]}`,
                 gifPlayback: true
             }
             );
 
 
             setTimeout(() => {
-                let str = `*🌎 BIENVENIDO(A) ${nomeplaneta.toUpperCase()} 🌎*
-                
-_Has sido agregado al grupo planeta_
-                
-\`\`\`Si estás en privado, vete y vete al planeta tierra.\`\`\`
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-`
+                let str = `${tradutor.texto63[0]}${nomeplaneta.toUpperCase()}${tradutor.texto63[1]}${usedPrefix}${tradutor.texto63[2]}`
 
                 let img = "./src/assets/glx/base_terra.webp"
 
                 conn.sendMessage(db.planetas[nomeplaneta].id, { text: str });
-                conn.sendMessage(id, { text: `Haz entrado al planeta ${nomeplaneta}, sal de aventuras` });
+                conn.sendMessage(id, { text: `${tradutor.texto64[0]}${nomeplaneta}${tradutor.texto64[1]}` });
 
 
 
@@ -929,7 +554,7 @@ Use: ${usedPrefix}glx
 
 
 
-                    conn.reply(data.perfil.id, `*_El tiempo de tu nave en el planeta ${data.perfil.localizacao.nomeplaneta} acabó, tu nave volvió al espacio!_*`, m)
+                    conn.reply(data.perfil.id, `${tradutor.texto65[0]}${data.perfil.localizacao.nomeplaneta}${tradutor.texto65[1]}`, m)
 
                     data.perfil.localizacao.status = false;
                     data.perfil.localizacao.nomeplaneta = data.perfil.casa.planeta;
@@ -953,8 +578,8 @@ Use: ${usedPrefix}glx
 
         async function comprarnave(modelo) {
             // Conferir se o saldo da para comprar a nave escolhida
-            if (data.perfil.bolsa.naves.compradas.includes(modelo)) return m.reply(`_😊 Lol, ya tienes esa nave! Use *${usedPrefix}glx comprar nave* para ver otros modelos!_`)
-            if ((data.perfil.carteira.saldo - db.naves[modelo.toLowerCase()].valor) <= 0) return m.reply(`_😪 ${data.perfil.nome}! No tienes saldo._ \n\n*Su Saldo:* ${valorFormatado(data.perfil.carteira.saldo)}\n*Valor de la nave ${modelo}:* ${valorFormatado(db.naves[modelo].valor)}\n\nVende tus minerales para ganar dinero. Use Ex: *${usedPrefix}glx vender ouro 2*`)
+            if (data.perfil.bolsa.naves.compradas.includes(modelo)) return m.reply(`${tradutor.texto66[0]}${usedPrefix}${tradutor.texto66[1]}`)
+            if ((data.perfil.carteira.saldo - db.naves[modelo.toLowerCase()].valor) <= 0) return m.reply(`${tradutor.texto67[0]}${data.perfil.nome}${tradutor.texto67[1]}${valorFormatado(data.perfil.carteira.saldo)}${tradutor.texto67[2]}${modelo}${tradutor.texto67[3]}${valorFormatado(db.naves[modelo].valor)}${tradutor.texto67[4]}${usedPrefix}${tradutor.texto67[5]}`)
 
             let poderantigo = db.naves[modelo.toLowerCase()].poder // Variavel pegando o poder antes de ser alterado para a soma com o poder da nave
             let saldo = data.perfil.carteira.saldo - db.naves[modelo.toLowerCase()].valor // Descontando o valor da nave
@@ -976,28 +601,7 @@ Use: ${usedPrefix}glx
 
 
             let img = "./src/assets/glx/img_padrao.png"
-            let str = `
-_Compraste la nave_ *${data.perfil.nave.nome}*
-
-💨 Velocidad: *${db.naves[modelo.toLowerCase()].velocidade}*
-⚡ Poder de Combate: *${db.naves[modelo.toLowerCase()].poder}*
-💸Valor de la nave: *${db.naves[modelo.toLowerCase()].valor}*
-
-*⚡-👑 Su Poder aumentó:*
-_De_ *${poderantigo}* _a_ *${data.perfil.poder}*
-
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-
-_Eliminación automática en 20 segundos_
-`
+            let str = `${tradutor.texto68[0]}${data.perfil.nave.nome}${tradutor.texto68[1]}${db.naves[modelo.toLowerCase()].velocidade}${tradutor.texto68[2]}${db.naves[modelo.toLowerCase()].poder}${tradutor.texto68[3]}${db.naves[modelo.toLowerCase()].valor}${tradutor.texto68[4]}${poderantigo}${tradutor.texto68[5]}${data.perfil.poder}${tradutor.texto68[6]}${usedPrefix}${tradutor.texto68[7]}`
             const messageId = await enviarButton2(m.sender, str, img) // Enviando a mensagem se tudo estiver certo
 
             setTimeout(() => {
@@ -1009,7 +613,7 @@ _Eliminación automática en 20 segundos_
 
 
         async function enviar10s(texto) {
-            const messageId = await m.reply(texto + `\n\n_🔋 auto eliminación! 10s_`)
+            const messageId = await m.reply(texto + tradutor.texto69)
             setTimeout(() => {
                 conn.sendMessage(m.sender, { delete: messageId })
             }, 10000)
@@ -1031,20 +635,20 @@ _Eliminación automática en 20 segundos_
         }
 
         async function minerar(item) {
-            if (m.isGroup && id != data.perfil.casa.id) return m.reply(`\n> [ ! ] ERROR - AVISO \n\n_Solo puedes minar en el planeta_ *(${data.perfil.casa.planeta})*`)
-            if (data.perfil.minerando === true) return m.reply(`_¡Ya estás minando! Si quieres parar, usa *${usedPrefix}glx miner parar*_`)
+            if (m.isGroup && id != data.perfil.casa.id) return m.reply(`${tradutor.texto70[0]}${data.perfil.casa.planeta}${tradutor.texto70[1]}`)
+            if (data.perfil.minerando === true) return m.reply(`${tradutor.texto71[0]}${usedPrefix}${tradutor.texto71[1]}`)
 
             let tempoedit = db.itens.mineracao[item].tempoMineracao / 1000
             let cem = 0
-            let messageId = await m.reply(`*Minerando.. ⟲[0%]*`)
+            let messageId = await m.reply(tradutor.texto72)
             data.perfil.minerando = true // Muda para status minerando..
 
             function rep() {
                 cem += 10
                 if (cem < 100) {
-                    conn.sendMessage(id, { text: `*Minando..  [⟲ ${cem}%]*`, edit: messageId.key })
+                    conn.sendMessage(id, { text: `${tradutor.texto73[0]}${cem}${tradutor.texto73[1]}`, edit: messageId.key })
                 } else if (cem === 100) {
-                    conn.sendMessage(id, { text: `*Procesando... [${cem}%] ⟲ Espere* `, edit: messageId.key })
+                    conn.sendMessage(id, { text: `${tradutor.texto74[0]}${cem}${tradutor.texto74[1]}`, edit: messageId.key })
 
 
 
@@ -1063,16 +667,7 @@ _Eliminación automática en 20 segundos_
                 data.perfil.poder += db.itens.mineracao[item].poder // Bonus de poder por mineração
 
                 conn.sendMessage(id, {
-                    text: `*⚒️Minería Finalizada [${tempoedit} _Segundos_]*
-> Haz minado ${db.itens.mineracao[item].quantidadeMinerado} ${item} 
-
-_🥳Ganaste un bonus:_ *${numeroAleatorio} [XP]*
-_👑Su Poder:_ ${data.perfil.poder}
-_⚡Haz ganado:_  ${db.itens.mineracao[item].poder} Puntos(poder)
-
-*Total de ${item}:* [ ${data.perfil.bolsa.itens[item]} ]
-
-*_${usedPrefix}glx bau_* - Para ver sus items minados.`, edit: messageId.key
+                    text: `${tradutor.texto75[0]}${tempoedit}${tradutor.texto75[1]}${db.itens.mineracao[item].quantidadeMinerado}${tradutor.texto75[2]}${item}${tradutor.texto75[3]}${numeroAleatorio}${tradutor.texto75[4]}${data.perfil.poder}${tradutor.texto75[5]}${db.itens.mineracao[item].poder}${tradutor.texto75[6]}${item}${tradutor.texto75[7]}${data.perfil.bolsa.itens[item]}${tradutor.texto75[8]}${usedPrefix}${tradutor.texto75[9]}`, edit: messageId.key
                 })
 
 
@@ -1086,8 +681,8 @@ _⚡Haz ganado:_  ${db.itens.mineracao[item].poder} Puntos(poder)
 
         async function vender(argumento1, argumento2) {
             // Argumento 1 = Tipo de minerio que esta sendo vendido / argumento 2 a quantidade.
-            if (!isNaN(argumento2) === false) return m.reply(`Necesito que me informen la cantidad de ${argumento1} que quieres vender en números`)
-            if (argumento2 > data.perfil.bolsa.itens[argumento1]) return m.reply(`_no has guardado_ *[ ${argumento2} ${argumento1} ]* \n\n_Tu stock actual es:_ *[ ${data.perfil.bolsa.itens[argumento1]} ${argumento1} ]* \n\n Para minar más use:\n> ${usedPrefix}glx miner`)
+            if (!isNaN(argumento2) === false) return m.reply(`${tradutor.texto76[0]}${argumento1}${tradutor.texto76[1]}`)
+            if (argumento2 > data.perfil.bolsa.itens[argumento1]) return m.reply(`${tradutor.texto77[0]}${argumento2}${tradutor.texto77[1]}${argumento1}${tradutor.texto77[2]}${data.perfil.bolsa.itens[argumento1]}${tradutor.texto77[3]}${argumento1}${tradutor.texto77[4]}${usedPrefix}${tradutor.texto77[5]}`)
             let valorDeVenda = argumento2 * db.itens.mineracao[argumento1].valorVenda
 
             let valorDescontado = data.perfil.bolsa.itens[argumento1] - argumento2 // Diminuir a quantidade vendida de Minerios
@@ -1101,7 +696,7 @@ _⚡Haz ganado:_  ${db.itens.mineracao[item].poder} Puntos(poder)
             data.perfil.xp += numeroAleatorio
             data.perfil.poder += gerarPoder * argumento2
 
-            enviarButton2(m.sender, `*_🤝 Felicidades, Venta realizada con éxito!_*\n\n*haz vendido: ${argumento2} ${argumento1}*\n*Valor por Unidad: ${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}*\n*Recibiste: ${valorFormatado(valorDeVenda)}*\n\n*🎉XP Bonus: ${numeroAleatorio} XP*\n_👑 Si Poder:_ ${data.perfil.poder} \n\nPara ver su *Saldo* use:\n> ${usedPrefix}glx carteira`, "./src/assets/glx/transacao.jpg")
+            enviarButton2(m.sender, `${tradutor.texto78[0]}${argumento2}${tradutor.texto78[1]}${argumento1}${tradutor.texto78[2]}${valorFormatado(db.itens.mineracao[argumento1].valorVenda)}${tradutor.texto78[3]}${valorFormatado(valorDeVenda)}${tradutor.texto78[4]}${numeroAleatorio}${tradutor.texto78[5]}${data.perfil.poder}${tradutor.texto78[6]}${usedPrefix}${tradutor.texto78[7]}`, "./src/assets/glx/transacao.jpg")
         }
 
         async function verificacaoXp() {
@@ -1114,31 +709,7 @@ _⚡Haz ganado:_  ${db.itens.mineracao[item].poder} Puntos(poder)
              * 3) Envia uma mensagem Personalizado, chamando a função msg() e passando os 3 parametros necessarios. Nome nivel atual, XP Atual, e Nome do proximo nivel
              */
             function msg(nomeNivel, xpAtual, proximoNivel) {
-                let str = `
-_🚀🎉 Felicitaciones, capitán. ${data.perfil.nome}! 🎉🚀_
-
-Has alcanzado el límite de XP y has avanzado al siguiente nivel en nuestra aventura intergaláctica.!
-            
-*🌟 Nível Actual:*  ${nomeNivel}
-*🎮 XP Actual:*  ${xpAtual}
-*🎖️ Próximo Nível:* ${proximoNivel}
-
-💥 Recompensas:
-- Ganaste *${db.api.niveis[`nivel${data.perfil.nivel.id}`].defesa}* Puntos de *_Defensa_*.
-- Ganaste *${db.api.niveis[`nivel${data.perfil.nivel.id}`].ataque}* Puntos de *_Ataque_*.
-- Nuevas habilidades desbloqueadas
-- Acceso a áreas secretas del espacio 
-- Aliados intergalácticos
-
-╔════════════════════╗
-
- *_⚙️ TODOS LOS COMANDOS_*
-Use: ${usedPrefix}glx
-
-╚════════════════════╝
-
-*_🛸  JUEGO DE LA GALAXIA 🛸_*
-`
+                let str = `${tradutor.texto79[0]}${data.perfil.nome}${tradutor.texto79[1]}${nomeNivel}${tradutor.texto79[2]}${xpAtual}${tradutor.texto79[3]}${proximoNivel}${tradutor.texto79[4]}${db.api.niveis[`nivel${data.perfil.nivel.id}`].defesa}${tradutor.texto79[5]}${db.api.niveis[`nivel${data.perfil.nivel.id}`].ataque}${tradutor.texto79[6]}${usedPrefix}${tradutor.texto79[7]}`
                enviarButton2(m.sender, str, './src/assets/glx/parabens.jpg', data.perfil.id) // Envia para o particular do jogador
                 enviarButton2(m.sender, str, './src/assets/glx/parabens.jpg', data.perfil.casa.id) // Envia para o planeta casa do jogador
 
@@ -1245,7 +816,7 @@ Use: ${usedPrefix}glx
                 data.perfil.defesa.ataque += db.api.niveis.nivel10.ataque
                 data.perfil.ataque.forcaAtaque.ataque += data.perfil.defesa.ataque
                 data.perfil.nivel.nome = db.api.niveis.nivel10.nome
-                msg(db.api.niveis.nivel10.nome, data.perfil.xp, "REY DEL NIVEL")
+                msg(db.api.niveis.nivel10.nome, data.perfil.xp, tradutor.texto80)
 
 
             }
@@ -1302,7 +873,7 @@ Use: ${usedPrefix}glx
                     global.db.data.chats[group.id].welcome = false; // Desativando Welcome dos grupos
                     db.planetas[planetas[i]].id = group.id // Define o id do planeta como o id do grupo recem criado.
                     fs.writeFileSync('./src/assets/glx/db/database.json', JSON.stringify(db, null, 2)); // Use null, 2 para indentação
-                    conn.sendMessage(group.id, { text: `hello there ${group.id}` }) //  Envia uma mensagem ao grupoSS
+                    conn.sendMessage(group.id, { text: `${tradutor.texto81[0]}${group.id}${tradutor.texto81[1]}` }) //  Envia uma mensagem ao grupoSS
 
                     console.log(`Criado grupo para ${nomePlaneta} com ID: ${group.id}`);
 
@@ -1310,7 +881,7 @@ Use: ${usedPrefix}glx
 
                     if (erroAdmin === true) {
                         // Mensagem para o novo grupo, caso houver erro de admin nos grupos antigos
-                        conn.sendMessage(group.id, { text: `_Debido a que *[bot]* no es más administrador en el antiguo grupo, el juego continúa aquí!_` })
+                        conn.sendMessage(group.id, { text: tradutor.texto82 })
 
                     }
                     for (let i = 0; i < habitantesPlaneta.length; i++) {
@@ -1426,11 +997,11 @@ Use: ${usedPrefix}glx
             let isUsername = false  // Variavel usada para definir se o usuario esta cadastrado ou não
 
             for (let i = 0; i < db.user_cadastrado.username.length; i++) {
-                if (alvo === data.perfil.username) return m.reply(`🤯 _No te puedes atacar a tí mismo!_`)
+                if (alvo === data.perfil.username) return m.reply(tradutor.texto83)
 
                 if (data.perfil.ataque.data.contagem === 4 && (data.perfil.ataque.data.hora === date.getHours() || data.perfil.ataque.data.hora === date.getHours() + 1)) {
 
-                    return m.reply(`_📛 Acabaste tu límite ${data.perfil.ataque.data.contagem} ataques!_\n*Espera 2 horas para volver a atacar.*`)
+                    return m.reply(`${tradutor.texto84[0]}${data.perfil.ataque.data.contagem}${tradutor.texto84[1]}`)
                 } else {
                     if (data.perfil.ataque.data.hora != date.getHours()) {
                         data.perfil.ataque.data.contagem = 0
@@ -1455,8 +1026,8 @@ Use: ${usedPrefix}glx
                         data.perfil.ataque.data.contagem += 1
                         if (data.perfil.ataque.data.hora === 0) { data.perfil.ataque.data.hora = date.getHours() }
 
-                        conn.sendMessage(db1.perfil.id, { text: `_Prepare su defensa 🛡️, en 10 segundos, serás atacado por *@${number2}!*_`, mentions: [data.perfil.id] })
-                        m.reply(`_⚔️ Tu ataque está en marcha_ \n\n*_🏰 ¡Cuidadoso! Tu enemigo es Vigilante_*`)
+                        conn.sendMessage(db1.perfil.id, { text: `${tradutor.texto85[0]}${number2}${tradutor.texto85[1]}`, mentions: [data.perfil.id] })
+                        m.reply(tradutor.texto86)
 
                         setTimeout(() => {
                             // DANOS AO ATACADO
@@ -1468,25 +1039,10 @@ Use: ${usedPrefix}glx
                                 // Quando o atacante, faz seu ataque, ele tambem leva dano e aqui a gente faz o desconto do poder
                                 data.perfil.defesa.forca = data.perfil.defesa.forca - db1.perfil.defesa.ataque
                             }
-                            let stra = `
-*🛡️Su defensa perdió: ${db1.perfil.defesa.ataque} Puntos*\n\n *_Cuidado con su Casa!_*                            
-`
+                            let stra = `${tradutor.texto87[0]}${db1.perfil.defesa.ataque}${tradutor.texto87[1]}`
 
                             // Mensagem quando a defesa ainda esta defendendo
-                            let str = `_*🛡️ La defensa de @${number}, bloqueó su ataque!*_
-
-_La defensa de ese astronauta, es fuerte, ha conseguido lo imposible. Cuidado._
-
-👥 Daño a *tí*:
-  Perdiste: ${db1.perfil.ataque.forcaAtaque.ataque} Puntos
-_________________________
-😈 Daño a *@${number}*:
-Perdió: ${db1.perfil.defesa.ataque} Puntos
-
-
-  *💡 Consejo:* _Si su defensa esta perdiendo muchos puntos, compre más armas *(glx comprar)* o mine más minerales *(glx miner)* para aumentar su fuerza ._
-
-                        `
+                            let str = `${tradutor.texto88[0]}${number}${tradutor.texto88[1]}${db1.perfil.ataque.forcaAtaque.ataque}${tradutor.texto88[2]}${number}${tradutor.texto88[3]}${db1.perfil.defesa.ataque}${tradutor.texto88[4]}`
 
                             conn.sendMessage(db1.perfil.id, { text: stra })
                             conn.sendMessage(id, { text: str, mentions: [db.user_cadastrado.username[i].id, db.user_cadastrado.username[i].id] })
@@ -1498,7 +1054,7 @@ Perdió: ${db1.perfil.defesa.ataque} Puntos
 
 
                     // Quando a defesa não aguenta o ataque, esta mensage que sera definido.
-                    let str = `⚠️ *Atención @${number} !*\n\n_Estás siendo🔫 atacado por:_ \n\n*Nombre:* ${data.perfil.nome}\n*Username:* *${data.perfil.username}*`
+                    let str = `${tradutor.texto89[0]}${number}${tradutor.texto89[1]}${data.perfil.nome}${tradutor.texto89[2]}${data.perfil.username}${tradutor.texto89[3]}`
                     let xpAleatorio = await fNumeroAleatorio(40, 15) // Gera um numero aleatorio para o XP de bonus
                     conn.sendMessage(db.user_cadastrado.username[i].id, { text: str, mentions: [db.user_cadastrado.username[i].id] })
 
@@ -1519,25 +1075,16 @@ Perdió: ${db1.perfil.defesa.ataque} Puntos
 
                         // Mensagem que sera enviada, para quem fez o ataque, informando o que aconteceu na batalha
                         conn.sendMessage(id, {
-                            text: `> 🗡️ Ataque finalizado!
-                        
-😈 *@${number}* perdió ${data.perfil.ataque.forcaAtaque.ataque} Punttos
-
-Tu ganaste: 
-*🆙XP:* ${xpAleatorio}xp | *Total XP:* ${data.perfil.xp}xp
-*💸Dinero:* ${valorFormatado(valorDeDesconto)}
-
-
-`, mentions: [db.user_cadastrado.username[i].id]
+                            text: `${tradutor.texto90[0]}${number}${tradutor.texto90[1]}${data.perfil.ataque.forcaAtaque.ataque}${tradutor.texto90[2]}${xpAleatorio}${tradutor.texto90[3]}${data.perfil.xp}${tradutor.texto90[4]}${valorFormatado(valorDeDesconto)}${tradutor.texto90[5]}`, mentions: [db.user_cadastrado.username[i].id]
                         })
 
                         // Envia uma mensagem avisando quem sofreu o ataque de suas perdas.
-                        conn.sendMessage(db.user_cadastrado.username[i].id, { text: `@${number} que triste! 😭\n\n*⚔️ Tu defensa falló ⚔️* \n\n> _Hay daños en tus instalaciones._`, mentions: [db.user_cadastrado.username[i].id] })
+                        conn.sendMessage(db.user_cadastrado.username[i].id, { text: `${tradutor.texto91[0]}${number}${tradutor.texto91[1]}`, mentions: [db.user_cadastrado.username[i].id] })
                     }, 10000)
 
 
                     // Envia uma mensagem informando que que logo o usuario sera atacado.
-                    m.reply(`> 🔫 Viajando hasta *${alvo}*`)
+                    m.reply(`${tradutor.texto92[0]}${alvo}${tradutor.texto92[1]}`)
 
                     // Se o atacante enviar uma mensagem em um grupo! o bot avisa quem sera atacado no grupo tambem
                     if (m.isGroup) {
@@ -1548,10 +1095,10 @@ Tu ganaste:
             }
             if (isUsername === false || alvo === null || alvo === undefined) {
                 if (alvo === undefined || alvo === null) {
-                    m.reply(`_💡 Necesitas usar el *UserName* del jugador que vas a atacar!_ \n*Ex: ${usedPrefix}glx atacar userEjemplo* \n\n*consejo:* Use *${usedPrefix}glx atacar list* - _Para listar usuarios_\n\n`)
+                    m.reply(`${tradutor.texto93[0]}${usedPrefix}${tradutor.texto93[1]}${usedPrefix}${tradutor.texto93[2]}`)
                 } else {
                     //Envia uma mensagem se o username não existir na lista de cadastrados no game
-                    m.reply(`*${alvo}* _No hay registros con ese usuario!_\n\n _💡 necesitas informar el *UserName* del jugador que atacará!_ \n*Ex: ${usedPrefix}glx atacar userEjemplo* \n\n*Consejo:* Use *${usedPrefix}glx atacar list* - _Para listar los usuarios_\n\n`)
+                    m.reply(`${tradutor.texto94[0]}${alvo}${tradutor.texto94[1]}${usedPrefix}${tradutor.texto94[2]}${usedPrefix}${tradutor.texto94[3]}`)
                 }
 
             }
@@ -1610,7 +1157,7 @@ Tu ganaste:
         // Notificação automatica para cada usuario Jogador do Game GLX
         if (!data1.notificacao.recebidas.includes(api.notificacao.id)) {
             let number = data1.perfil.id.replace(/\D/g, '')
-            let str = `*🔔 - Notificación del juego*\n\n*[BOT]* _The Mystic Bot MD_ \n*_Para:_ @${number}*\n\n`
+            let str = `${tradutor.texto95[0]}${number}${tradutor.texto95[1]}`
 
             let msg = api.notificacao.msg // Mensagem de notificação na API 
 
@@ -1618,7 +1165,7 @@ Tu ganaste:
             for (let i = 0; i < msg.length; i++) {
                 str += api.notificacao.msg[i]
             }
-            str += `\n\n_Para Dudas use el comando,_ *glx criador!*\n`
+            str += tradutor.texto96
 
             // Enviar Notificação para o usuario
             conn.sendMessage(data1.perfil.id, { text: str, mentions: [data1.perfil.id] })

@@ -27,7 +27,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     let apislap = await fetch(`https://api.waifu.pics/sfw/slap`);
     let jkis = await apislap.json();
     let { url } = jkis;
-    let stiker = await sticker(null, url, `${name2} le dio una bofetada a ${name}`, null);
+    let stiker = await sticker(null, url, `${name2}${tradutor.texto3}${name}`, null);
     conn.sendFile(m.chat, stiker, null, {asSticker: true}, m, true, {contextInfo: {forwardingScore: 200, isForwarded: true}}, {quoted: m});
   } catch {
     throw tradutor.texto2;

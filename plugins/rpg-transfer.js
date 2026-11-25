@@ -32,7 +32,7 @@ ${tradutor.texto6[2]}*
 ${tradutor.texto6[3]}
 ${tradutor.texto6[4]}`.trim();
   await conn.sendMessage(m.chat, {text: confirm, mentions: [who]}, {quoted: m});
-  confirmation[m.sender] = { sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: '*[❗] Se acabó el tiempo, no se obtuvo respuesta. Transferencia cancelada.*', mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
+  confirmation[m.sender] = { sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: tradutor.texto10, mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
 }
 
 handler.before = async (m, { conn }) => {
@@ -48,12 +48,20 @@ handler.before = async (m, { conn }) => {
   if (m.id === message.id) return;
   const user = global.db.data.users[sender];
   const _user = global.db.data.users[to];
-  if (/^No|no$/i.test(m.text)) {
+  // La confirmación se muestra traducida ((sim), (oui), (да), (yes), (نعم)),
+  // así que se aceptan las palabras de sí/no del idioma del usuario.
+  // Se mantiene el español como alternativa para no romper a nadie.
+  const yesWords = { es: ['si', 'sí'], en: ['yes'], 'pt-br': ['sim'], fr: ['oui'], ru: ['да'], ar: ['نعم'] };
+  const noWords = { es: ['no'], en: ['no'], 'pt-br': ['não', 'nao'], fr: ['non'], ru: ['нет'], ar: ['لا'] };
+  const answer = (m.text || '').trim().toLowerCase();
+  const yes = [...(yesWords[idioma] || []), ...yesWords.es];
+  const no = [...(noWords[idioma] || []), ...noWords.es];
+  if (no.includes(answer)) {
     clearTimeout(timeout);
     delete confirmation[sender];
     return conn.sendMessage(m.chat, {text: tradutor.texto7, mentions: [m.sender]}, {quoted: m});
   }
-  if (/^Si|si$/i.test(m.text)) {
+  if (yes.includes(answer)) {
     const previous = user[type] * 1;
     const _previous = _user[type] * 1;
     user[type] -= count * 1;

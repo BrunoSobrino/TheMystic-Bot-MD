@@ -15,7 +15,7 @@ let handler = async (m, { conn, text, command }) => {
       if (!global.db.data.users[m.sender]) global.db.data.users[m.sender] = {};
       global.db.data.users[m.sender].chatHistory = [];
       if (typeof global.db.write === 'function') global.db.write();
-      return m.reply('🗑️ Memoria de conversación borrada exitosamente.\n\nYa no recordaré nuestras conversaciones anteriores.');
+      return m.reply(tradutor.texto5);
     }
       
     if (!text) return m.reply(tradutor.texto1[0]);
@@ -77,7 +77,7 @@ async function luminsesi(prompt, sender, contextLogic = '') {
     return result;
   } catch (err) {
     console.error('❌ API Error:', err.response?.data || err.message);
-    return '⚠️ Ocurrió un error al contactar con la API.';
+    return tradutor.texto6;
   }
 }
 

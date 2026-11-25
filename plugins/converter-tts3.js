@@ -1,18 +1,23 @@
+import fs from 'fs';
 import fetch from 'node-fetch';
 
 const handler = async (m, { conn, usedPrefix, command, text }) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.converter_tts3
+
  const match = text.match(/^(\w+)\s*\|\s*(.+)/i);
  if (!match) {
  const voices = await getVoices();
  const voiceNames = voices.voices.map(voice => voice.name).join('\n◉ ');
- return m.reply(`*[❗] Formato de uso erroneo, voz o texto faltante.*\n\n*—◉ Ejemplo:*\n◉ ${usedPrefix + command} nombre_voz | texto\n\n*—◉ Ejemplo de uso:*\n◉ ${usedPrefix + command} ${voices.voices[0].name} | este es un texto de ejemplo\n\n*—◉ Lista de voces disponibles:*\n◉ ${voiceNames}`);
+ return m.reply(`${tradutor.texto1[0]}${usedPrefix + command}${tradutor.texto1[1]}${usedPrefix + command}${tradutor.texto1[2]}${voices.voices[0].name}${tradutor.texto1[3]}${voiceNames}${tradutor.texto1[4]}`);
  }
  const [, voiceName, inputText] = match;
  const voices = await getVoices();
  const voice = voices.voices.find(voice => voice.name.toLowerCase() === voiceName.toLowerCase());
  if (!voice) {
  const voiceNames = voices.voices.map(voice => voice.name).join('\n◉ ');
- return m.reply(`[❗] No se encontró ninguna voz con el nombre "${voiceName}".\n\n—◉ Lista de voces disponibles:\n◉ ${voiceNames}`);
+ return m.reply(`${tradutor.texto2[0]}${voiceName}${tradutor.texto2[1]}${voiceNames}${tradutor.texto2[2]}`);
  }
  const audio = await convertTextToSpeech(inputText, voice.voice_id);
  if (audio) {

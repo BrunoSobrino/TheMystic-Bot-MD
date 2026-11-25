@@ -25,13 +25,13 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
   if (device !== 'desktop' || device !== 'web') {
 
   const videos = await searchMusicList(text, 'videos', 20);
-  if (!videos || !videos.length) return m.reply('> *[❗] Error: Videos not founds.*')
+  if (!videos || !videos.length) return m.reply(traductor.texto3)
   const randomIndex = Math.floor(Math.random() * videos.length);
   const randomVideo = videos[randomIndex];
 
   var messa = await prepareWAMessageMedia({ image: {url: randomVideo.thumbnail}}, { upload: conn.waUploadToServer })
   const interactiveMessage = {
-    body: { text: `*—◉ Resultados obtenidos:* ${videos.length}\n*—◉ Video aleatorio:*\n*-› Title:* ${randomVideo.title}\n*-› Author:* ${randomVideo.author.name}\n*-› Views:* ${randomVideo.views}\n*-› ${traductor.texto2[0]}:* ${randomVideo.url}\n*-› Imagen:* ${randomVideo.thumbnail}`.trim() },
+    body: { text: `${traductor.texto4[0]}${videos.length}${traductor.texto4[1]}${randomVideo.title}${traductor.texto4[2]}${randomVideo.author.name}${traductor.texto4[3]}${randomVideo.views}\n*-› ${traductor.texto2[0]}:* ${randomVideo.url}${traductor.texto4[4]}${randomVideo.thumbnail}`.trim() },
     footer: { text: `${global.wm}`.trim() },
       header: {
           title: `*< YouTube Search />*\n`,
@@ -43,20 +43,20 @@ const handler = async (m, { conn, text, usedPrefix: prefijo }) => {
         {
           name: 'single_select',
           buttonParamsJson: JSON.stringify({
-            title: 'OPCIONES DISPONIBLES',
+            title: traductor.texto5,
             sections: videos.map((video) => ({
               title: video.title,
               rows: [
                 {
                   header: video.title,
                   title: video.author.name,
-                  description: 'Descargar MP3',
+                  description: traductor.texto6[0],
                   id: `${prefijo}ytmp3 ${video.url}`
                 },
                 {
                   header: video.title,
                   title: video.author.name,
-                  description: 'Descargar MP4',
+                  description: traductor.texto6[1],
                   id: `${prefijo}ytmp4 ${video.url}`
                 }
               ]
