@@ -39,7 +39,7 @@ const handler = async (m, {conn}) => {
     }
   } catch (error) {
     console.error('Error en readviewonce:', error);
-    throw 'Error al procesar el archivo viewOnce';
+    throw tradutor.texto3;
   }
 };
 handler.help = ['readvo'];
