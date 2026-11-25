@@ -8,6 +8,7 @@
 import os from 'os';
 import { exec } from 'child_process';
 import fs from 'fs/promises';
+import fsSync from 'fs';
 import util from 'util';
 import path from 'path';
 
@@ -200,6 +201,9 @@ async function getSoftwareVersions() {
 }
 
 async function runSpeedtest(m, extra) {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fsSync.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.info_sys
   try {
     const speedtestPath = './src/libraries/ookla-speedtest.py';
     const { stdout, stderr } = await execAsync('python3 ' + speedtestPath + ' --secure --share');
@@ -215,11 +219,14 @@ async function runSpeedtest(m, extra) {
       await extra.conn.sendMessage(m.chat, {image: {url: urlImagen2}, caption: stderr.trim()});
     }
   } catch (error) {
-    await extra.conn.sendMessage(m.chat, { text: '❌ Error en speedtest: ' + error.message });
+    await extra.conn.sendMessage(m.chat, { text: tradutor.texto1 + error.message });
   }
 }
 
 async function systemInfoPlugin(m, extra) {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fsSync.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.info_sys
   try {
     const fastFetchPath = await new FastFetchDownloader().getFastFetchPath();
     const sysInfo = await safeExec(`"${fastFetchPath}" -l none -c all`);
@@ -237,7 +244,7 @@ async function systemInfoPlugin(m, extra) {
 
   } catch (error) {
     console.error('Falla Plugin sysinfo:', error);
-    await extra.conn.sendMessage(m.chat, { text: 'ERROR' });
+    await extra.conn.sendMessage(m.chat, { text: tradutor.texto2 });
   }
 }
 
