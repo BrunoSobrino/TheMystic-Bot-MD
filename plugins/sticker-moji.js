@@ -2,7 +2,7 @@ import { sticker } from "../src/libraries/sticker.js";
 import axios from "axios";
 const emj = /^[\p{Emoji}\u200d]+$/u;
 
-const handler = async (m, { text }) => {
+const handler = async (m, { text, conn }) => {
   if (!text) throw "*🌅 Ingresa un emoji.*";
   //if (!emj.test(text)) throw "*🍟 Ingresa un emoji valido.*"
   try {

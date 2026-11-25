@@ -2,7 +2,7 @@
 
 import fetch from 'node-fetch'
 
-let handler = async (m, { text }) => {
+let handler = async (m, { text, conn }) => {
 if (!text) return m.reply(`〔 ❀ 〕INGRESA EL *TITULO* DE UN *MODULO* O *COMPLEMENTO* DE LA PLATAFORMA *NPMJS*`)
 let res = await fetch(`http://registry.npmjs.com/-/v1/search?text=${text}`)
 let { objects } = await res.json()

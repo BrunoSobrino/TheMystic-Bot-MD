@@ -1333,7 +1333,7 @@ Use: ${usedPrefix}glx
                     console.log(conn)
                     const groupMetadata = ((conn.chats[idd] || {}).metadata || await this.groupMetadata(idd).catch((_) => null))
                     for (let i = 0; i < groupMetadata.participants.length; i++) {
-                        if (groupMetadata.participants[i].id === conn.user.jid) {
+                        if (groupMetadata.participants[i].id === conn.user.id) {
                             return groupMetadata.participants[i].admin
                         }
                     }

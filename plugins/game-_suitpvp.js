@@ -23,7 +23,7 @@ handler.before = async function(m) {
       room.status = 'play';
       room.asal = m.chat;
       clearTimeout(room.waktu);
-      const textplay = `${tradutor.texto2} @${room.p.split`@`[0]} 𝚈 @${room.p2.split`@`[0]}\n\n${tradutor.texto3} wa.me/${conn.user.jid.split`@`[0]}*`;
+      const textplay = `${tradutor.texto2} @${room.p.split`@`[0]} 𝚈 @${room.p2.split`@`[0]}\n\n${tradutor.texto3} wa.me/${conn.user.id.split`@`[0]}*`;
       m.reply(textplay, m.chat, {mentions: this.parseMention(textplay)});
       const comienzop = `${tradutor.texto4[0]}
 ${tradutor.texto4[1]}

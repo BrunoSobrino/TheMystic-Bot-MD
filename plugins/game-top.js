@@ -9,7 +9,7 @@ function handler(m, { groupMetadata, command, conn, text, usedPrefix }) {
   const tradutor = _translate.plugins.fun_top
 
   if (!text) throw `${tradutor.texto1}`;
-  const ps = groupMetadata.participants.map((v) => v.jid);
+  const ps = groupMetadata.participants.map((v) => v.id);
   const a = ps.getRandom();
   const b = ps.getRandom();
   const c = ps.getRandom();

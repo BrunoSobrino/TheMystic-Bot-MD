@@ -4,7 +4,7 @@
         "___Criador": "https://github.com/BrunoSobrino"
     },
     "plugins": {
-        "antiarab": {
+        "_antiarab": {
             "texto1": "_*< ANTI-ARABS />*_\n\n*[ ℹ️ ] In this group, numbers starting with +212 are not allowed. Therefore, you will be removed from the group.*",
             "texto2": "_*< ANTI-ARABS />*_\n\n*[ ℹ️ ] In this group, numbers starting with +265 are not allowed. Therefore, you will be removed from the group.*",
             "texto3": "_*< ANTI-ARABS />*_\n\n*[ ℹ️ ] In this group, numbers starting with +92 are not allowed. Therefore, you will be removed from the group.*"
@@ -13,12 +13,12 @@
             "texto1": "*< ANTI-LINK />*_\n\n*[ ℹ️ ] Antilink is enabled, but the participant who sent the link is an administrator.*",
             "texto2": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] Participant @user sent a link to a WhatsApp group, so they will be removed.*",
             "texto3": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] For antilink to work correctly, the bot must be an administrator of the group.*",
-            "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] This feature is disabled because the* _restrict_ *feature is enabled.*"
+            "texto4": "_*< ANTI-LINK />*_\n\n*[ ℹ️ ] This feature is disabled because the* _restrict_ *feature is disabled.*"
         },
         "_antilink2": {
             "texto1": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] Participant @user sent a link to a WhatsApp group, so they will be removed.*",
             "texto2": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] For antilink to work correctly, the bot must be an administrator of the group.*",
-            "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] This feature is disabled because the* _restrict_ *feature is enabled.*"
+            "texto3": "_*< ANTI-LINK 2 />*_\n\n*[ ℹ️ ] This feature is disabled because the* _restrict_ *feature is disabled.*"
         },
         "_antiprivado": {
             "texto1": "_*< ANTI-PRIVATE />*_\n\n*[ ℹ️ ] The antiprivate function is enabled, so you will be blocked.*"
@@ -71,6 +71,7 @@
             "texto5_2": "◦ Was removed: ",
             "texto5_3": "◦ Performed by: ",
             "texto5_4": "◦ Left: ",
+            "texto5_5": "◦ Left: ",
             "texto6": "Recently, group settings were modified.\n\n",
             "texto6_1": "◦ Group: ",
             "texto6_2": "◦ The group was: ",
@@ -836,7 +837,7 @@
             "texto2": "[❗] Enter a valid YouTube video link",
             "texto3": "[❗] File is only supported up to 999 MB"
         },
-        "fix_esperando_mensaje": {
+        "fix_esperando_mensage": {
             "texto1": "[❗] Use this command directly in the main Bot number",
             "texto2": "[❗] No file including the chat ID was found",
             "texto3": [
@@ -1861,7 +1862,7 @@
             "texto7": "*🔮 ALMOST THERE!, KEEP TRYING*\n*TOMORROW +10 XP*",
             "texto8": "*❌ YOU LOST*"
         },
-        "game_word_search": {
+        "game_sopa_de_letras": {
             "texto1": "REGISTERED IN THE GAME* ✅",
             "texto2": [
                 "ALGORITHMS",
@@ -3218,16 +3219,15 @@
             "texto1": "*[❗𝐈𝐍𝐅𝐎❗] THE CHAT IS SUCCESSFULLY UNBLOCKED*"
         },
         "owner_unbanuser": {
-            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] USER @tag HAS BEEN REMOVED FROM THE BAN*",
-            "texto2": "*[❗𝐈𝐍𝐅𝐎❗] USER @tag HAS BEEN REMOVED FROM THE BAN*",
-            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] THE USER TO BE UNBANNED MUST BE EXISTING*",
-            "texto4": "*[❗𝐈𝐍𝐅𝐎❗] THE USER CAN ALREADY USE THE BOT*"
+            "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙽𝚃𝙴𝚁 𝚃𝙷𝙴 @𝚝𝚊𝚐 𝙾𝙵 𝙰 𝚄𝚂𝙴𝚁*",
+            "texto2": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙽𝚃𝙴𝚁 𝚃𝙷𝙴 @𝚝𝚊𝚐 𝙾𝙵 𝙰 𝚄𝚂𝙴𝚁*",
+            "texto3": "*[❗𝐈𝐍𝐅𝐎❗] 𝚃𝙷𝙴 𝚄𝚂𝙴𝚁 𝚆𝙰𝚂 𝚄𝙽𝙱𝙰𝙽𝙽𝙴𝙳 𝚂𝚄𝙲𝙲𝙴𝚂𝚂𝙵𝚄𝙻𝙻𝚈*\n*—◉ 𝚃𝙷𝙴 𝚄𝚂𝙴𝚁 𝙲𝙰𝙽 𝙰𝙻𝚁𝙴𝙰𝙳𝚈 𝚄𝚂𝙴 𝚃𝙷𝙴 𝙱𝙾𝚃*"
         },
         "owner_viewimage": {
             "texto1": "Enter the name and folder of the image you want to view.",
             "texto2": "The image does not exist in the root folder."
         },
-        "owner_actualizar": {
+        "propietario_actualizar": {
  "texto1": "*_< OWNER - UPDATE />_*\n\n*[✅] There are no pending updates.*",
  "texto2": "*_< OWNER - UPDATE />_*\n\n*[ℹ️] Update completed successfully.*\n\n",
  "texto3": "*_< OWNER - UPDATE />_*\n\n*[ℹ️] local changes have been made in bot files that conflict with the updates of the repository. To update, reinstall the bot or perform the updates manually.*\n\n*conflict files:*",
@@ -3490,7 +3490,7 @@
             ],
             "texto2": "*[ 🎉 ] Congratulations, you mined*"
         },
-        "rpc_myns": {
+        "rpg_myns": {
             "texto1": " *SERIAL NUMBER:*"
         },
         "rpg_perfil": {
@@ -3755,6 +3755,17 @@
             ],
             "texto3": "[ ! ] This command can only be used in groups",
             "texto4": "[ ! ] This command can only be used by Administrators"
+        },
+        "fun_tops": {
+            "texto1": "*🌈TOP 10 GAYS/LESBIANS OF THE GROUP🌈*",
+            "texto2": "*🌸 TOP 10 OTAKUS OF THE GROUP 🌸*"
+        },
+        "info_tyc": {
+            "texto1": "*=> Ignorance of what is mentioned here does not exempt the owner of the Bot, Sub Bot or bot user from any sanctions that may arise❗*\n\n*⚠️ Privacy terms*\n_1.- The information the Bot receives is NOT shared with any third party or anyone_\n_2.- Images/videos/stickers/audios/etc are not shared with anyone_\n_3.- Your phone number is not shared with absolutely anyone_\n_4.- Card details, locations, addresses, etc. are deleted immediately and are not shared with absolutely anyone_\n_5.- All conversations are deleted after a certain time and no backup is made (no information/conversation is saved)_\n\n*⚠️ Terms of use*\n_1.- We are not responsible for any misuse that may be made of the Bot_\n_2.- We are not responsible for ignorance and/or lack of knowledge on the subject_\n_3.- The Bot is not active 24 hours a day unless the owner decides otherwise_\n_4.- The 'company' is not responsible for the use of a Sub Bot or unofficial Bot, as they are people (third parties) and we have no control over them_\n_5.- We are not responsible for numbers that may end up in support due to the use of the Bot; it is advisable to always use virtual numbers for Bot use_\n_6.- Audios/voice notes/images/videos or any other multimedia file owned by The Mystic - Bot belong solely and exclusively to this Bot; if another Bot is detected with any of the aforementioned multimedia files, action will be taken._\n\n*➤ Message from the Bot's number?*\n_- If at any time you receive a message from the Bot's number and it is not a command, it is possibly from the Bot owner or the owner of the number; this is a real person, so please do not disrespect them_\n\n*➤ Base used for this Bot:*\n*- https://github.com/BochilGaming/games-wabot-md*\n\n*➤ Thanks to:*\n*- Unx21*\n*- Narutomo*\n*- BochilGaming*\n*- Unxteam*\n*- Bochilteam*\n*- ConfuMods*\n*- Theh2so4*\n*- Hiro*\n*- The.sad.boy01*\n*- botstylee*\n*- Amel*\n*- FatihArridho*\n*- Adiwajshing*\n*- Darlyn*\n*- Etc.*\n\n*⁉️ Any questions?*\n_- If you still have any questions or complaints about what is mentioned here or about the Bot, contact me at my personal number, where I will respond as soon as possible to provide a solution and/or take responsibility for any claim_ \n\n> wa.me/5219992095479\n> Bruno Sobrino \n> Email: theshadowbrokers133@gmailcom\n\n*∆ THE MYSTIC - BOT - MD ∆*"
+        },
+        "owner_getmsg": {
+            "texto1": ["*[❗𝐈𝐍𝐅𝐎❗] 𝚄𝚂𝙴", "𝚃𝙾 𝚂𝙴𝙴 𝚃𝙷𝙴 𝙻𝙸𝚂𝚃*"],
+            "texto2": "𝙽𝙾𝚃 𝚁𝙴𝙶𝙸𝚂𝚃𝙴𝚁𝙴𝙳 𝙸𝙽 𝚃𝙷𝙴 𝙼𝙴𝚂𝚂𝙰𝙶𝙴 𝙻𝙸𝚂𝚃*"
         }
     },
     "handler": {

@@ -28,7 +28,7 @@ const handler = async (m, { conn, isOwner, usedPrefix, command, text }) => {
   eml[2],
  ];
  } catch (e) {
- await m.reply(eror);
+ await m.reply(String(e));
  }
 }
 
@@ -41,7 +41,7 @@ const handler = async (m, { conn, isOwner, usedPrefix, command, text }) => {
  }).filter((v) => v).join('\n\n________________________\n\n');
  await m.reply(teks || tradutor.texto5[0] + usedPrefix + command + tradutor.texto5[1]);
  } catch (e) {
- await m.reply(eror);
+ await m.reply(String(e));
  }
 }
  if (feature == 'delete') {
@@ -50,7 +50,7 @@ const handler = async (m, { conn, isOwner, usedPrefix, command, text }) => {
   delete conn.dropmail[id];
   await m.reply(tradutor.texto7);
  } catch (e) {
-  await m.reply(eror);
+  await m.reply(String(e));
    }
   }  
  }

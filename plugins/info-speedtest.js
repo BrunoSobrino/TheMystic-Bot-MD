@@ -2,7 +2,7 @@ import cp from 'child_process';
 import { promisify } from 'util';
 const exec = promisify(cp.exec).bind(cp);
 
-const handler = async (m) => {
+const handler = async (m, {conn}) => {
     let o;
     try {
         o = await exec('python3 ./src/libraries/ookla-speedtest.py --secure --share');

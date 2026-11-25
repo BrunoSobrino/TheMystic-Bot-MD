@@ -35,7 +35,7 @@ ${tradutor.texto6[4]}`.trim();
   confirmation[m.sender] = { sender: m.sender, to: who, message: m, type, count, timeout: setTimeout(() => (conn.sendMessage(m.chat, {text: '*[❗] Se acabó el tiempo, no se obtuvo respuesta. Transferencia cancelada.*', mentions: [m.sender]}, {quoted: m}), delete confirmation[m.sender]), 60 * 1000)};
 }
 
-handler.before = async (m) => {
+handler.before = async (m, { conn }) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))

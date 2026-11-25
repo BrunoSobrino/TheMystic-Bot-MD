@@ -5,7 +5,7 @@ import { createRequire } from 'module';
 import path, { join } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { platform } from 'process';
-import fs, { readdirSync, statSync, unlinkSync, existsSync, readFileSync, watch } from 'fs';
+import fs, { readdirSync, unlinkSync, existsSync, readFileSync, watch } from 'fs';
 import yargs from 'yargs';
 import { spawn } from 'child_process';
 import lodash from 'lodash';
@@ -20,7 +20,7 @@ import { initializeSubBots } from './src/libraries/subBotManager.js';
 import { Low, JSONFile } from 'lowdb';
 import store from './src/libraries/store.js';
 
-import { purgeOldFiles, clearTmp, deleteCoreFiles, shouldLogError, clockString } from './src/libraries/functions.js';
+import { clearTmp, deleteCoreFiles, shouldLogError, clockString } from './src/libraries/functions.js';
 const { DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC } = await import("baileys");
 import readline from 'readline';
 import NodeCache from 'node-cache';
@@ -75,13 +75,25 @@ global.loadDatabase = async function loadDatabase() {
 };
 loadDatabase();
 const { state, saveCreds } = await useMultiFileAuthState(global.authFile);
-const version22 = await fetchLatestBaileysVersion();
-console.log(version22)
-const version = version22?.version || [2, 3000, 1033893291];
+// Baileys 7: sin versión actual de WhatsApp Web no se puede conectar de forma
+// fiable; el fallback viejo ([2, 3000, 1033893291], de 2024) provoca 405/loggedOut.
+let version;
+for (let attempt = 1; attempt <= 3 && !version; attempt++) {
+  try {
+    const versionInfo = await fetchLatestBaileysVersion();
+    console.log(versionInfo);
+    version = versionInfo?.version;
+  } catch (e) {
+    console.error(`[ ⚠️ ] No se pudo obtener la versión de WhatsApp Web (intento ${attempt}/3):`, e?.message || e);
+    await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
+  }
+}
+if (!version) {
+  throw new Error('No se pudo obtener la versión actual de WhatsApp Web (fetchLatestBaileysVersion). Revisa tu conexión e inténtalo de nuevo; conectar con una versión vieja provoca 405/loggedOut.');
+}
 let phoneNumber = global.botnumber || process.argv.find(arg => arg.startsWith('--phone='))?.split('=')[1];
 const methodCodeQR = process.argv.includes('--method=qr');
 const methodCode = !!phoneNumber || process.argv.includes('--method=code');
-const MethodMobile = process.argv.includes("mobile");
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 const question = (texto) => new Promise((resolver) => rl.question(texto, resolver));
 
@@ -126,7 +138,6 @@ process.on('uncaughtException', (err) => {
 const connectionOptions = {
   logger: pino({ level: 'silent' }),
   printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
-  mobile: MethodMobile,
   browser: opcion === '1' ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : methodCodeQR ? ['TheMystic-Bot-MD', 'Safari', '2.0.0'] : ['Ubuntu', 'Chrome', '20.0.04'],
   auth: {
     creds: state.creds,
@@ -161,7 +172,6 @@ if (!fs.existsSync(`./${global.authFile}/creds.json`)) {
   if (opcion === '2' || methodCode) {
     opcion = '2';
     if (!conn.authState.creds.registered) {
-      if (MethodMobile) throw new Error('No se puede usar un código de emparejamiento con la API móvil');
 
       let numeroTelefono;
       if (!!phoneNumber) {

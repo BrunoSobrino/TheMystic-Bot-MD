@@ -4,13 +4,11 @@ import uploadFile from '../src/libraries/uploadFile.js';
 import uploadImage from '../src/libraries/uploadImage.js';
 import { webp2png } from '../src/libraries/webp2mp4.js';
 let Sticker;
-import('wa-sticker-formatter')
-  .then((module) => {
-    Sticker = module.Sticker;
-  })
-  .catch((error) => {
-    console.error('wa-sticker-formatter');
-  });
+try {
+  ({ Sticker } = await import('wa-sticker-formatter'));
+} catch (error) {
+  console.error('wa-sticker-formatter');
+}
 
 async function handler(m, { conn, args, usedPrefix, command }) {
   let stiker = false;

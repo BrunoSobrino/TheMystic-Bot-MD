@@ -1,12 +1,10 @@
 import fetch from "node-fetch";
 let Sticker;
-import("wa-sticker-formatter")
-  .then((module) => {
-    Sticker = module.Sticker;
-  })
-  .catch((error) => {
-    console.error("wa-sticker-formatter");
-  });
+try {
+  ({ Sticker } = await import('wa-sticker-formatter'));
+} catch (error) {
+  console.error('wa-sticker-formatter');
+}
 
 const handler = async (m, { conn, text, args, usedPrefix, command }) => {
   const datas = global;

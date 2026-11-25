@@ -7,12 +7,12 @@ const handler = async (m, { conn, participants, groupMetadata, args }) => {
  try {
  const pp = await conn.profilePictureUrl(m.chat, 'image').catch((_) => null) || './src/assets/images/menu/main/administracion.png';
  const groupAdmins = participants.filter((p) => p.admin);
- const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.jid.split('@')[0]}`).join('\n');
- const owner = groupMetadata.owner || groupAdmins.find((p) => p.admin === 'superadmin')?.jid || m.chat.split`-`[0] + '@s.whatsapp.net';
+ const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n');
+ const owner = groupMetadata.owner || groupAdmins.find((p) => p.admin === 'superadmin')?.id || m.chat.split`-`[0] + '@s.whatsapp.net';
  const message = args.join(` `);
  const headers = `${tradutor.texto1[3]} ${message}`;
  const body = `${tradutor.texto1[0]}\n\n${headers ? headers : '-'}\n\n${tradutor.texto1[1]}\n${listAdmin}\n\n${tradutor.texto1[2]}`.trim();
- conn.sendFile(m.chat, pp, 'error.jpg', body, m, false, { mentions: [...groupAdmins.map((v) => v.jid), owner] });
+ conn.sendFile(m.chat, pp, 'error.jpg', body, m, false, { mentions: [...groupAdmins.map((v) => v.id), owner] });
  } catch (error) {
  console.error(error);
  }

@@ -6,7 +6,7 @@ const {
   generateWAMessage,
   areJidsSameUser,
   decryptPollVote
-} = (await import("baileys")).default;
+} = await import("baileys");
 
 export async function all(m, chatUpdate) {
   /* if (m.message.pollUpdateMessage) {

@@ -42,7 +42,7 @@ const handler = async (m, {conn, usedPrefix, command, text}) => {
 
 ${tradutor.texto4} @${room.game.currentTurn.split('@')[0]}
 `.trim();
-    if (room.x !== room.o) await conn.sendMessage(room.x, {text: str, mentions: this.parseMention(str)}, {quoted: m});
+    if (room.x !== room.o) await conn.sendMessage(room.x, {text: str, mentions: conn.parseMention(str)}, {quoted: m});
     await conn.sendMessage(room.o, {text: str, mentions: conn.parseMention(str)}, {quoted: m});
   } else {
     room = {

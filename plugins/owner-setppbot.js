@@ -2,7 +2,7 @@ import Jimp from 'jimp';
 
 const handler = async (m, { conn, usedPrefix, command }) => {
   try {
-    const userJid = conn.user?.jid;
+    const userJid = conn.user?.id;
     const quoted = m.quoted ? m.quoted : m;
 
     if (!m.quoted || !quoted.mimetype?.includes('image')) throw `*[❗INFO❗] NO SE ENCONTRÓ LA IMAGEN. RESPONDE A UNA IMAGEN USANDO EL COMANDO ${usedPrefix + command}*`;

@@ -22,7 +22,7 @@ const chat = global.db.data.chats[m.chat];
     return !1;
   }
   const user = global.db.data.users[m.sender];
-  const bot = global.db.data.settings[mconn.conn.user.jid] || {};
+  const bot = global.db.data.settings[mconn.conn.user.id] || {};
   const isToxic = toxicRegex.exec(m.text);
 
   if (isToxic && chat.antiToxic && !isOwner && !isAdmin) {
