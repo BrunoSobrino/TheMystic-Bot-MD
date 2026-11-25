@@ -3,35 +3,28 @@
 // downloader-yta.js (ytmp3), downloader-ytv.js (ytmp4), @testting.js,
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
-// Orden de descarga (audio y video):
-// 1º @denzy-official/youtube_scraper (flvto, MP3/MP4),
-// 2º ab-downloader (el de su web, MP3/MP4 listos en su CDN),
-// 3º scraper de YouTube Music (ayashiiiyo, cliente VISIONOS para el player;
-// acepta cookies de YouTube opcionales en ytmusic.txt junto a la librería).
-// Se eliminaron convertytmp3, OmDown y ytultra: en el panel dan 403 o no
-// devuelven enlaces.
+// Descarga: SOLO ab-downloader (el de su web, MP3/MP4 listos en su
+// CDN, que se bajan con un GET normal). Se eliminaron denzy
+// (@denzy-official/youtube_scraper) y el scraper de YouTube Music
+// (VISIONOS) como opciones de descarga: la descarga ya solo pasa
+// por ab-downloader. La búsqueda sigue por el scraper de YouTube
+// Music (ayashiiiyo): searchMusic / searchMusicList y getVideoInfo
+// (para enlaces directos).
 //
-// Por qué existe este archivo:
-// - Los enlaces de googlevideo NO se pueden mandar directos a WhatsApp:
-//   sin Range devuelven 403, y Baileys los descarga sin Range. Hay que
-//   bajar el archivo en el bot y mandar el buffer.
-// - googlevideo solo sirve trozos de 1 MB por petición y rechaza el rango
-//   que cubre todo el archivo, así que la descarga es por trozos con
-//   verificación de tamaño (nunca se manda un archivo incompleto).
-// - El player solo da video SIN audio (formatos adaptativos), así que
-//   play2 une el video (MP4/H.264) con el audio (AAC) con ffmpeg.
+// El MP4 de ab-downloader es fragmentado (fMP4), así que se
+// reempaqueta con ffmpeg (+faststart) para que WhatsApp pueda
+// buscar (adelantar/retroceder) y muestre la duración.
+// Los audios MP3 llevan metadatos ID3 (tagAudioMp3).
 import fs from 'fs';
 import os from 'node:os';
 import path from 'path';
 import { spawn } from 'child_process';
-import { search as ayaSearch, getAudioStream as ayaAudio, getTrack as ayaTrack, getInnertubeConfig as ayaConfig } from './ytmusic-scraper.mjs';
+import { search as ayaSearch, getTrack as ayaTrack } from './ytmusic-scraper.mjs';
 import abDownloader from 'ab-downloader';
-import denzy from '@denzy-official/youtube_scraper';
 import NodeID3 from 'node-id3';
 const { youtube: abYoutube } = abDownloader;
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
-const CHUNK_SIZE = 1024 * 1024; // 1 MB: lo máximo que sirve googlevideo por petición
 const MAX_AUDIO_BYTES = 100 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
 
@@ -110,142 +103,6 @@ export async function searchMusicList(query, filter = 'videos', limit = 20) {
     return [];
 }
 
-// Audio: se prefiere AAC (audio/mp4, itag 140), que WhatsApp reproduce como
-// audio normal; si no hay, el mejor disponible (normalmente Opus).
-export function pickAudioFormat(item) {
-    const mp4 = (item?.audio ?? []).filter((f) => f.mimeType?.startsWith('audio/mp4')).sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
-    return mp4[0] || item?.best || null;
-}
-
-// Video: se prefiere MP4 con H.264 (avc1) de 720p o menos, que WhatsApp
-// reproduce; el mejor por bitrate suele ser AV1/WebM y no sirve. Son
-// formatos SIN audio: el audio se une después con ffmpeg.
-export function pickVideoFormat(item) {
-    const mp4 = (item?.video ?? []).filter((f) => f.mimeType?.startsWith('video/mp4'));
-    const avc = mp4.filter((f) => f.codecs?.includes('avc1'));
-    const byBitrateDesc = (a, b) => (b.bitrate || 0) - (a.bitrate || 0);
-    const hd = avc.filter((f) => (f.height || 0) <= 720).sort(byBitrateDesc);
-    if (hd[0]) return hd[0];
-    const anyAvc = avc.sort((a, b) => (a.bitrate || 0) - (b.bitrate || 0));
-    if (anyAvc[0]) return anyAvc[0];
-    const anyMp4 = mp4.sort(byBitrateDesc);
-    return anyMp4[0] || item?.bestVideo || null;
-}
-
-function chunkSize(total) {
-    if (!total || total <= 0) return CHUNK_SIZE;
-    if (total > CHUNK_SIZE) return CHUNK_SIZE;
-    // Un solo trozo nunca puede ser todo el archivo (googlevideo lo rechaza).
-    return Math.max(1, Math.ceil(total / 2));
-}
-
-// Descarga un enlace de googlevideo por trozos de 1 MB. Devuelve el Buffer
-// completo. Lanza error si algún trozo falla o el tamaño final no coincide
-// con el esperado: nunca se devuelve un archivo incompleto.
-export async function downloadMedia(url, contentLength, maxBytes = MAX_AUDIO_BYTES) {
-    const chunks = [];
-    let downloaded = 0;
-    let total = contentLength || 0;
-    let size = chunkSize(total);
-    let guard = 0;
-    while (true) {
-        if (++guard > 500) throw new Error('Descarga demasiado larga');
-        const end = total ? Math.min(downloaded + size - 1, total - 1) : downloaded + size - 1;
-        const res = await fetch(url, { headers: { Range: `bytes=${downloaded}-${end}`, 'User-Agent': UA } });
-        if (res.status !== 206) throw new Error(`Descarga falló en el byte ${downloaded} (HTTP ${res.status})`);
-        const range = res.headers.get('content-range') || '';
-        const m = range.match(/\/(\d+)\s*$/);
-        if (m) total = parseInt(m[1], 10);
-        const buf = Buffer.from(await res.arrayBuffer());
-        if (!buf.length) throw new Error('Descarga vacía');
-        chunks.push(buf);
-        downloaded += buf.length;
-        if (downloaded > maxBytes) throw new Error(`Archivo demasiado grande (>${Math.round(maxBytes / 1048576)} MB)`);
-        if (total && downloaded >= total) break;
-        if (!total) throw new Error('No se pudo determinar el tamaño del archivo');
-        size = CHUNK_SIZE;
-    }
-    const out = Buffer.concat(chunks);
-    if (total && out.length !== total) throw new Error(`Descarga incompleta: ${out.length}/${total} bytes`);
-    return out;
-}
-
-// Igual que downloadMedia, pero escribe los trozos en un archivo en vez de
-// juntarlos en memoria (para videos grandes antes de unirlos con ffmpeg).
-export async function downloadMediaToFile(url, contentLength, filePath, maxBytes = MAX_VIDEO_BYTES) {
-    const fd = fs.openSync(filePath, 'w');
-    try {
-        let downloaded = 0;
-        let total = contentLength || 0;
-        let size = chunkSize(total);
-        let guard = 0;
-        while (true) {
-            if (++guard > 500) throw new Error('Descarga demasiado larga');
-            const end = total ? Math.min(downloaded + size - 1, total - 1) : downloaded + size - 1;
-            const res = await fetch(url, { headers: { Range: `bytes=${downloaded}-${end}`, 'User-Agent': UA } });
-            if (res.status !== 206) throw new Error(`Descarga falló en el byte ${downloaded} (HTTP ${res.status})`);
-            const range = res.headers.get('content-range') || '';
-            const m = range.match(/\/(\d+)\s*$/);
-            if (m) total = parseInt(m[1], 10);
-            const buf = Buffer.from(await res.arrayBuffer());
-            if (!buf.length) throw new Error('Descarga vacía');
-            fs.writeSync(fd, buf);
-            downloaded += buf.length;
-            if (downloaded > maxBytes) throw new Error(`Archivo demasiado grande (>${Math.round(maxBytes / 1048576)} MB)`);
-            if (total && downloaded >= total) break;
-            if (!total) throw new Error('No se pudo determinar el tamaño del archivo');
-            size = CHUNK_SIZE;
-        }
-        if (total && downloaded !== total) throw new Error(`Descarga incompleta: ${downloaded}/${total} bytes`);
-    } finally {
-        fs.closeSync(fd);
-    }
-}
-
-function runFfmpeg(args, timeoutMs = 180000) {
-    return new Promise((resolve, reject) => {
-        let stderr = '';
-        let done = false;
-        const ff = spawn('ffmpeg', args);
-        const timer = setTimeout(() => {
-            if (!done) { done = true; try { ff.kill(); } catch {} reject(new Error('ffmpeg tardó demasiado')); }
-        }, timeoutMs);
-        ff.stderr.on('data', (d) => { stderr += d.toString(); });
-        ff.on('error', (err) => {
-            if (done) return;
-            done = true;
-            clearTimeout(timer);
-            reject(new Error(err.code === 'ENOENT' ? 'ffmpeg no disponible en el servidor' : `ffmpeg falló al arrancar: ${err.message}`));
-        });
-        ff.on('close', (code) => {
-            if (done) return;
-            done = true;
-            clearTimeout(timer);
-            if (code === 0) resolve();
-            else reject(new Error(`ffmpeg falló (código ${code}): ${stderr.slice(-500)}`));
-        });
-    });
-}
-
-// Une el video (sin audio) con el audio (AAC) en un solo MP4 con ffmpeg
-// (copia los streams, sin re-codificar). Devuelve el Buffer del video final.
-export async function muxVideoAudio(videoUrl, videoLen, audioUrl, audioLen) {
-    const dir = fs.mkdtempSync(path.join(process.cwd(), 'src', 'tmp', 'ytm-'));
-    const videoPath = path.join(dir, 'video.mp4');
-    const audioPath = path.join(dir, 'audio.m4a');
-    const outPath = path.join(dir, 'out.mp4');
-    try {
-        await downloadMediaToFile(videoUrl, videoLen, videoPath);
-        await downloadMediaToFile(audioUrl, audioLen, audioPath);
-        await runFfmpeg(['-y', '-i', videoPath, '-i', audioPath, '-c', 'copy', '-map', '0:v:0', '-map', '1:a:0', '-shortest', outPath]);
-        const out = fs.readFileSync(outPath);
-        if (!out.length) throw new Error('ffmpeg produjo un archivo vacío');
-        return out;
-    } finally {
-        try { fs.rmSync(dir, { recursive: true, force: true }); } catch {}
-    }
-}
-
 // Baja un archivo con un GET normal (ab-downloader sirve el archivo
 // completo en su propio CDN, no es googlevideo).
 async function downloadDirectFile(url, maxBytes = MAX_VIDEO_BYTES) {
@@ -260,8 +117,9 @@ async function downloadDirectFile(url, maxBytes = MAX_VIDEO_BYTES) {
     return buffer;
 }
 
-// ab-downloader (1ª opción): el paquete que usa su web (Arq_Carlos_Sobrino).
-// Su API devuelve los enlaces MP3/MP4 ya listos en su propio CDN.
+// ab-downloader (única opción de descarga): el paquete que usa su
+// web (Arq_Carlos_Sobrino). Su API devuelve los enlaces MP3/MP4 ya
+// listos en su propio CDN.
 async function getMediaBufferViaAbDownloader(videoId, want) {
     const data = await abYoutube(`https://www.youtube.com/watch?v=${videoId}`);
     if (!data || data.status === false) throw new Error(data?.message || 'ab-downloader sin resultado');
@@ -272,23 +130,6 @@ async function getMediaBufferViaAbDownloader(videoId, want) {
     }
     if (!data.mp4) throw new Error('ab-downloader sin enlace de video');
     const buffer = await downloadDirectFile(data.mp4, MAX_VIDEO_BYTES);
-    return { buffer, mimeType: 'video/mp4' };
-}
-
-// denzy (1ª opción): @denzy-official/youtube_scraper, conversor flvto.
-// ytmp3/ytmp4 devuelven { status, download: { url, filesize, ... } }.
-// El MP3 viene de su CDN y el MP4 de googlevideo.
-async function getMediaBufferViaDenzy(videoId, want) {
-    const url = `https://www.youtube.com/watch?v=${videoId}`;
-    if (want === 'audio') {
-        const res = await denzy.ytmp3(url);
-        if (!res?.status || !res.download?.url) throw new Error(res?.message || 'denzy sin enlace de audio');
-        const buffer = await downloadDirectFile(res.download.url, MAX_AUDIO_BYTES);
-        return { buffer, mimeType: 'audio/mpeg', ext: 'mp3' };
-    }
-    const res = await denzy.ytmp4(url);
-    if (!res?.status || !res.download?.url) throw new Error(res?.message || 'denzy sin enlace de video');
-    const buffer = await downloadMedia(res.download.url, res.download.filesize || 0, MAX_VIDEO_BYTES);
     return { buffer, mimeType: 'video/mp4' };
 }
 
@@ -317,13 +158,6 @@ async function remuxMp4(buffer) {
     }
 }
 
-function extOf(mimeType) {
-    const mime = (mimeType || '').split(';')[0].trim();
-    if (mime.includes('mp4')) return 'm4a';
-    if (mime.includes('opus') || mime.includes('ogg') || mime.includes('webm')) return 'opus';
-    return 'mp3';
-}
-
 // Info de un video por su ID (para enlaces directos de YouTube).
 export async function getVideoInfo(videoId) {
     const track = await ayaTrack(videoId);
@@ -340,108 +174,23 @@ export async function getVideoInfo(videoId) {
     };
 }
 
-// Formatos de video del player con el cliente VISIONOS (el mismo que usa
-// el scraper de ayashiiiyo para el audio). Devuelve { video, audio } con
-// los formatos elegidos para unir con ffmpeg.
-async function getVisionOSFormats(videoId) {
-    const cfg = await ayaConfig();
-    const res = await fetch('https://www.youtube.com/youtubei/v1/player?prettyPrint=false', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15',
-            ...(cfg.cookieHeader ? { Cookie: cfg.cookieHeader } : {}),
-        },
-        body: JSON.stringify({
-            context: { client: { clientName: 'VISIONOS', clientVersion: '1.02', deviceMake: 'Apple', deviceModel: 'RealityDevice17,1', osName: 'visionOS', osVersion: '26.5.23O471', visitorData: cfg.visitorData, hl: 'en', gl: 'US' } },
-            videoId,
-        }),
-    });
-    if (!res.ok) throw new Error(`YouTube Music player HTTP ${res.status}`);
-    const data = await res.json();
-    if (data.playabilityStatus?.status !== 'OK') throw new Error(`Video no reproducible: ${data.playabilityStatus?.status || '?'}`);
-    const formats = data.streamingData?.adaptiveFormats || [];
-    if (!formats.length) throw new Error('Sin formatos de video');
-    const item = {
-        video: formats.filter((f) => (f.mimeType || '').startsWith('video/')),
-        audio: formats.filter((f) => (f.mimeType || '').startsWith('audio/')),
-    };
-    item.best = item.audio.find((f) => f.itag === 140) || item.audio[0] || null;
-    const video = pickVideoFormat(item);
-    const audioFormat = pickAudioFormat(item);
-    if (!video?.url) throw new Error('Sin enlace de video');
-    if (!audioFormat?.url) throw new Error('Sin enlace de audio para el video');
-    return { video, audio: audioFormat };
-}
-
-// Audio listo para mandar. 1º denzy (MP3 del conversor flvto),
-// 2º ab-downloader (MP3 de su CDN), 3º scraper de YouTube Music
-// (enlace AAC, cliente VISIONOS). Devuelve { buffer, mimeType, ext }.
+// Audio listo para mandar. Solo ab-downloader (MP3 de su CDN).
+// Devuelve { buffer, mimeType, ext }.
 export async function getAudioBuffer(videoId) {
-    try {
-        const { buffer, mimeType, ext } = await getMediaBufferViaDenzy(videoId, 'audio');
-        return { buffer, mimeType, ext };
-    } catch (e) {
-        console.log('❌ denzy audio falló, intentando ab-downloader...', e.message);
-    }
-    try {
-        const { buffer, mimeType, ext } = await getMediaBufferViaAbDownloader(videoId, 'audio');
-        return { buffer, mimeType, ext };
-    } catch (e) {
-        console.log('❌ ab-downloader audio falló, intentando YouTube Music...', e.message);
-    }
-    let lastError = null;
-    for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-            const stream = await ayaAudio(videoId);
-            if (!stream?.url) throw new Error('Sin enlace de audio');
-            // El enlace trae &range=0-(total-1) (todo el archivo): googlevideo
-            // lo rechaza, así que se quita y se baja por trozos.
-            const cleanUrl = stream.url.replace(/&range=\d+-\d+/, '');
-            const mimeType = (stream.mimeType || 'audio/mpeg').split(';')[0].trim();
-            const buffer = await downloadMedia(cleanUrl, stream.contentLength, MAX_AUDIO_BYTES);
-            return { buffer, mimeType, ext: extOf(stream.mimeType) };
-        } catch (e) {
-            lastError = e;
-        }
-    }
-    throw lastError || new Error('Sin enlace de audio');
+    const { buffer, mimeType, ext } = await getMediaBufferViaAbDownloader(videoId, 'audio');
+    return { buffer, mimeType, ext };
 }
 
-// Video listo para mandar. 1º denzy (MP4 del conversor flvto),
-// 2º ab-downloader (MP4 de su CDN, reempaquetado para que WhatsApp pueda
-// buscar), 3º scraper de YouTube Music (video + audio unidos con ffmpeg,
-// cliente VISIONOS). Devuelve { buffer, mimeType }.
+// Video listo para mandar. Solo ab-downloader (MP4 de su CDN,
+// reempaquetado para que WhatsApp pueda buscar). Devuelve { buffer, mimeType }.
 export async function getVideoBuffer(videoId) {
-    try {
-        const { buffer } = await getMediaBufferViaDenzy(videoId, 'video');
-        return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
-    } catch (e) {
-        console.log('❌ denzy video falló, intentando ab-downloader...', e.message);
-    }
-    try {
-        const { buffer } = await getMediaBufferViaAbDownloader(videoId, 'video');
-        return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
-    } catch (e) {
-        console.log('❌ ab-downloader video falló, intentando YouTube Music...', e.message);
-    }
-    let lastError = null;
-    for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-            const { video, audio } = await getVisionOSFormats(videoId);
-            const buffer = await muxVideoAudio(video.url, video.contentLength, audio.url, audio.contentLength);
-            return { buffer, mimeType: 'video/mp4' };
-        } catch (e) {
-            lastError = e;
-        }
-    }
-    throw lastError || new Error('Sin enlace de video');
+    const { buffer } = await getMediaBufferViaAbDownloader(videoId, 'video');
+    return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
 }
 
 // Metadatos ID3 para el audio (título, artista, álbum, año, comentario y
-// portada). Solo el MP3 admite ID3: denzy y ab-downloader devuelven MP3,
-// pero el scraper VISIONOS puede dar Opus (webm) o AAC (mp4), que no lo
-// admiten. Si el buffer no es MP3, no hay título/artista o algo falla,
+// portada). Solo el MP3 admite ID3 (ab-downloader devuelve MP3).
+// Si el buffer no es MP3, no hay título/artista o algo falla,
 // devuelve el buffer original sin tocar: nunca rompe la descarga.
 export async function tagAudioMp3(buffer, mimeType, meta = {}) {
     try {
