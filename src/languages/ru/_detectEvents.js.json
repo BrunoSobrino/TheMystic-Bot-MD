@@ -1,0 +1,41 @@
+{
+    "_detectevents": {
+        "promote": {
+            "header": "*Участник недавно был повышен до администратора*",
+            "group": "*◦ Группа:* @group",
+            "new_admin": "*◦ Новый админ:* @user",
+            "executed_by": "*◦ Выполнил:* @user"
+        },
+        "demote": {
+            "header": "*Администратор недавно был понижен до участника*",
+            "group": "*◦ Группа:* @group",
+            "removed_admin": "*◦ Снят:* @user",
+            "executed_by": "*◦ Выполнил:* @user"
+        },
+        "member_add": {
+            "header": "*Новый участник недавно присоединился*",
+            "group": "*◦ Группа:* @group",
+            "added_user": "*◦ Добавлен:* @user",
+            "added_by": "*◦ Добавил:* @user",
+            "self_added": "*◦ Присоединился:* @user"
+        },
+        "member_remove": {
+            "header": "*Участник недавно был удалён из группы*",
+            "group": "*◦ Группа:* @group",
+            "removed_user": "*◦ Удалён:* @user",
+            "removed_by": "*◦ Удалил:* @user",
+            "self_removed": "*◦ Вышел:* @user"
+        },
+        "group_settings": {
+            "header": "*Настройки группы недавно были изменены*",
+            "group": "*◦ Группа:* @group",
+            "action": "*◦ Группа была:* @action",
+            "executed_by": "*◦ Выполнил:* @user"
+        },
+        "group_name": {
+            "header": "*Название группы недавно было изменено*",
+            "new_name": "*◦ Новое название:* @name",
+            "executed_by": "*◦ Выполнил:* @user"
+        }
+    }
+}
