@@ -17,7 +17,13 @@ const TMP_DIR = join(process.cwd(), './src/tmp');
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
     const idioma = global?.db?.data?.users[m.sender]?.language || global.defaultLenguaje;
-    const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
+    let _translate;
+    try {
+        _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/${m.plugin}.json`));
+    } catch {
+        // El archivo por idioma no existe en todos los idiomas: usar el de español.
+        _translate = JSON.parse(fs.readFileSync(`./src/languages/es/${m.plugin}.json`));
+    }
     const tradutor = _translate._testting;
 
     try {
