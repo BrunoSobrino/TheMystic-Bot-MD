@@ -1,3 +1,10 @@
+// Busca al participante en los metadatos del grupo aceptando JID, LID o número.
+const findParticipant = (participants, jid, conn) => {
+  const resolved = conn?.resolveUser?.(jid) || {};
+  const ids = [...new Set([jid, resolved.jid, resolved.lid, resolved.pn ? resolved.pn + '@s.whatsapp.net' : null].filter(Boolean))];
+  return (participants || []).find((p) => ids.includes(p.id) || ids.includes(p.phoneNumber) || ids.includes(p.lid));
+};
+
 const groupMetadataCache = new Map();
 const lidCache = new Map();
 
@@ -58,6 +65,12 @@ const handler = async (m, {conn, participants, command, usedPrefix, text}) => {
   const { user: mentionedUser, reason: kickReason } = await getMentionedUserAndReason();
   if (!mentionedUser) return m.reply(kicktext, m.chat, {mentions: conn.parseMention(kicktext)});
   if (conn.user.jid.includes(mentionedUser)) return m.reply(tradutor.texto4);
+  // Si la persona ya no está en el grupo, avisar y no intentar expulsarla de nuevo.
+  if (!findParticipant(participants, mentionedUser, conn)) {
+    const userTag = mentionedUser.split('@')[0];
+    const error2 = `${tradutor.texto7[0]} @${userTag} ${tradutor.texto7[1]}`;
+    return m.reply(error2, m.chat, {mentions: conn.parseMention(error2)});
+  }
   
   if (kickReason) {
     const userTag = mentionedUser.split('@')[0];
