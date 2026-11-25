@@ -1,9 +1,13 @@
 // Si robas doname o deja creditos, rata!
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import fs from 'fs';
 
 const handler = async (m, { conn, text, prefix: usedPrefix, command }) => {
-  if (!text) return m.reply(`🎬 *Proporciona un enlace de Cuevana3*\nEjemplo: ${usedPrefix + command} https://wwv.cuevana3.eu/ver-pelicula/cars`);
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.tools_cuevanainfo
+  if (!text) return m.reply(`${tradutor.texto1[0]}${usedPrefix + command}${tradutor.texto1[1]}`);
   
   try {
     const url = text;
@@ -12,34 +16,38 @@ const handler = async (m, { conn, text, prefix: usedPrefix, command }) => {
     let imageUrl = image;
     if (image && image.startsWith('/_next/image')) {
       const match = image.match(/url=(.*?)&/);
-      imageUrl = match ? decodeURIComponent(match[1]) : 'https://www.poresto.net/u/fotografias/m/2023/7/5/f1280x720-305066_436741_5050.png';
+      imageUrl = match ? decodeURIComponent(match[1]) : null;
     }
 
     let infoMsg = `🎬 *${title}*\n\n`;
-    infoMsg += `📋 *Información:*\n${info}\n\n`;
-    infoMsg += `📖 *Sinopsis:* ${sinopsis || 'No disponible'}\n\n`;
-    infoMsg += `🌐 *Ver online:* ${onlineLink}\n\n`;
+    infoMsg += `${tradutor.texto2}\n${info}\n\n`;
+    infoMsg += `${tradutor.texto3} ${sinopsis || tradutor.texto4}\n\n`;
+    infoMsg += `${tradutor.texto5} ${onlineLink}\n\n`;
     
     if (downloads.length > 0) {
-      infoMsg += `📥 *Enlaces de descarga:*\n`;
+      infoMsg += `${tradutor.texto6}\n`;
       downloads.forEach(d => {
-        infoMsg += `▸ *Servidor:* ${d.server}\n`;
-        infoMsg += `▸ *Idioma:* ${d.language}\n`;
-        infoMsg += `▸ *Calidad:* ${d.quality}\n`;
+        infoMsg += `${tradutor.texto8} ${d.server}\n`;
+        infoMsg += `${tradutor.texto9} ${d.language}\n`;
+        infoMsg += `${tradutor.texto10} ${d.quality}\n`;
         infoMsg += `🔗 ${d.link}\n\n`;
       });
     } else {
-      infoMsg += `⚠️ *No hay enlaces de descarga disponibles*`;
+      infoMsg += `${tradutor.texto7}`;
     }
 
-    await conn.sendMessage(m.chat, { 
-      image: { url: imageUrl },
-      caption: infoMsg
-    }, { quoted: m });
+    if (imageUrl) {
+      await conn.sendMessage(m.chat, {
+        image: { url: imageUrl },
+        caption: infoMsg
+      }, { quoted: m });
+    } else {
+      await conn.sendMessage(m.chat, { text: infoMsg }, { quoted: m });
+    }
 
   } catch (e) {
     console.error('Error en getInfoCuevana:', e);
-    m.reply('❌ *Error al obtener la información, verifica el enlace o intenta más tarde*');
+    m.reply(tradutor.texto11);
   }
 };
 handler.tags = ['tools']
