@@ -2,12 +2,15 @@ import fs from 'fs';
 import { img2img } from '../src/libraries/nanobanana.js';
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.ia_nanobanana
   
   const q = m.quoted ? m.quoted : m;
   const mime = (q.msg || q).mimetype || q.mediaType || '';
   
-  if (!/image/g.test(mime)) throw `*Debes responder a una imagen*`;
-  if (!text) throw `*Escribe un prompt/descripción para la edición*`;
+  if (!/image/g.test(mime)) throw tradutor.texto1;
+  if (!text) throw tradutor.texto2;
 
   const data = await q.download?.();
 
@@ -16,10 +19,10 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
     console.log(resultBuffer)
 
-    await conn.sendMessage(m.chat, { image: resultBuffer, caption: 'Aquí tienes tu imagen 🖼️' }, { quoted: m });
+    await conn.sendMessage(m.chat, { image: resultBuffer, caption: tradutor.texto3 }, { quoted: m });
   } catch (error) {
     console.error(error);
-    throw `*Error al procesar la imagen con NanoBanana*`;
+    throw tradutor.texto4;
   }
 };
 
