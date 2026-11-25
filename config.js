@@ -28,7 +28,7 @@ global.suittag = ['5219993404349'];
 global.prems = [];
 
 // Base Rest Api
-global.BASE_API_DELIRIUS = "https://delirius-apiofc.vercel.app";
+global.BASE_API_DELIRIUS = "https://api.delirius.online";
 
 global.packname = 'Sticker';
 global.author = 'BrunoSobrino';
