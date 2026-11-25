@@ -2949,7 +2949,7 @@ export function serialize() {
                 groupChatId,
                 conn,
                 maxRetries = 3,
-                retryDelay = 60000,
+                retryDelay = 2000,
             ) {
                 const inputJid = this.toString();
                 if (!inputJid.endsWith("@lid") || !groupChatId?.endsWith("@g.us")) {

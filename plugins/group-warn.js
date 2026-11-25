@@ -7,10 +7,11 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
   const testi = await m?.mentionedJid
   if (testi.includes(conn.user.jid)) return;
   const pp = './src/assets/images/menu/main/warn.jpg';
-  if (m.mentionedJid.length === 0 && args.length > 0) m.mentionedJid = conn.parseMention(text)
   let who;
   if (m.isGroup) {
-    who = conn.parseMention(text).length > 0 ?
+    who = testi.length > 0 ?
+      testi[0] :
+      conn.parseMention(text).length > 0 ?
       conn.parseMention(text)[0] :
       m.quoted ?
       await m?.quoted?.sender :
