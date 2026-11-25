@@ -24,6 +24,25 @@ import fs from 'fs';
 import os from 'node:os';
 import path from 'path';
 import { spawn } from 'child_process';
+import { Readable } from 'node:stream';
+
+// ytdl-core espera que fetch devuelva un Response con cuerpo web
+// (ReadableStream con .getReader()). En el proceso del bot el fetch
+// global es node-fetch (cuerpo Node sin getReader) y ytdl-core
+// revienta con "source.getReader is not a function" al resolver el
+// player (PLAYER_SOLVE_FAILED). Este adaptador convierte ese cuerpo
+// a web stream; con el fetch nativo pasa tal cual.
+const webStreamFetch = async (input, init) => {
+    const res = await fetch(input, init);
+    if (res.body && typeof res.body.getReader !== 'function') {
+        try {
+            return new Response(Readable.toWeb(res.body), { status: res.status, statusText: res.statusText, headers: res.headers });
+        } catch {
+            return res;
+        }
+    }
+    return res;
+};
 import yts from 'yt-search';
 import abDownloader from 'ab-downloader';
 import NodeID3 from 'node-id3';
@@ -74,35 +93,54 @@ function parseCookies(input = null) {
             }).join('; ');
     } catch { return ''; }
 }
-const YT_COOKIE = parseCookies() || '';
 const YT_COOKIE_PATH = new URL('ytmusic.txt', import.meta.url).pathname;
-// yt-dlp acepta las cookies como archivo Netscape (--cookies) o como
-// cabecera (--add-header). Se detecta el formato del archivo.
-const YT_COOKIE_IS_NETSCAPE = (() => {
+// Las cookies se leen EN CADA USO, no solo al arrancar: si el dueño
+// sube ytmusic.txt con el bot ya corriendo, la siguiente descarga ya
+// las usa, sin reiniciar. (Antes se leían una sola vez al cargar el
+// módulo, así que subir el archivo sin reiniciar no tenía efecto.)
+function currentCookie() {
+    return parseCookies() || '';
+}
+function cookieIsNetscape() {
     try {
         return fs.readFileSync(YT_COOKIE_PATH, 'utf8').split('\n').some((line) => line.split('\t').length >= 7);
     } catch { return false; }
-})();
+}
+// yt-dlp acepta las cookies como archivo Netscape (--cookies) o como
+// cabecera (--add-header). Se detecta el formato del archivo.
 function ytDlpCookieFlags() {
-    if (!YT_COOKIE) return {};
-    if (YT_COOKIE_IS_NETSCAPE) return { cookies: YT_COOKIE_PATH };
-    return { addHeader: [`Cookie: ${YT_COOKIE}`] };
+    const cookie = currentCookie();
+    if (!cookie) return {};
+    if (cookieIsNetscape()) return { cookies: YT_COOKIE_PATH };
+    return { addHeader: [`Cookie: ${cookie}`] };
 }
 // La sesión debe traer SAPISID o __Secure-3PAPISID; si la cookie
 // está incompleta, el constructor de Ytdl lanza y rompería todo el
 // módulo, así que se atrapa y se sigue sin sesión.
 let yt;
+let lastCookie = '';
 try {
-    yt = new Ytdl(YT_COOKIE ? { cookie: YT_COOKIE } : {});
+    const initialCookie = currentCookie();
+    yt = new Ytdl(initialCookie ? { cookie: initialCookie, fetch: webStreamFetch } : { fetch: webStreamFetch });
+    lastCookie = initialCookie;
 } catch (e) {
     console.log('⚠️ Cookies de YouTube inválidas en ytmusic.txt, ytdl-core sin sesión:', e.message);
-    yt = new Ytdl();
+    yt = new Ytdl({ fetch: webStreamFetch });
+    lastCookie = '';
 }
+if (lastCookie) console.log('✅ Cookies de YouTube cargadas desde src/libraries/ytmusic.txt');
+else console.log('ℹ️ Sin cookies de YouTube (src/libraries/ytmusic.txt no encontrado o vacío): las descargas pueden fallar si YouTube marca la IP como bot');
 
 // Busca la info del video con reintento: 2 intentos con la sesión
 // (si hay) y, si la cookie está caducada, 1 último sin ella.
 async function lookupYtdlInfo(url) {
-    const attempts = YT_COOKIE ? [[yt, 2], [new Ytdl(), 1]] : [[yt, 2]];
+    // Si el archivo de cookies cambió desde la última vez (se subió o
+    // se borró), aplicar la sesión actual a la instancia compartida.
+    const cookie = currentCookie();
+    if (cookie !== lastCookie) {
+        try { yt.setCookie(cookie || undefined); lastCookie = cookie; } catch (e) { console.log('⚠️ No se pudo aplicar la cookie de YouTube:', e.message); }
+    }
+    const attempts = cookie ? [[yt, 2], [new Ytdl({ fetch: webStreamFetch }), 1]] : [[yt, 2]];
     let lastErr;
     for (const [inst, n] of attempts) {
         for (let i = 0; i < n; i++) {
