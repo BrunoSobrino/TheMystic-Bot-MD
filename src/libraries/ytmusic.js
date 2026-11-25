@@ -3,16 +3,15 @@
 // downloader-yta.js (ytmp3), downloader-ytv.js (ytmp4), @testting.js,
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
+// Búsqueda e info del video: yt-search (título, duración, link,
+// autor, vistas, miniatura). Solo la DESCARGA cambia de opción.
 // Descarga: 1º ab-downloader (el de su web, MP3/MP4 listos en su
 // CDN, que se bajan con un GET normal), 2º youtube-dl-exec (yt-dlp,
 // baja directo de YouTube) y 3º @distube/ytdl-core (también directo
 // de YouTube, con las cookies de src/libraries/ytmusic.txt). Si una
 // opción falla, se pasa a la siguiente. Sin sesión, YouTube puede
 // bloquear la IP del panel y no devolver ni los formatos (por eso
-// yt-dlp y ytdl-core usan las cookies cuando existen). La búsqueda
-// sigue por el scraper
-// de YouTube Music (ayashiiiyo): searchMusic / searchMusicList y
-// getVideoInfo (para enlaces directos).
+// yt-dlp y ytdl-core usan las cookies cuando existen).
 //
 // El MP4 de ab-downloader es fragmentado (fMP4), así que se
 // reempaqueta con ffmpeg (+faststart) para que WhatsApp pueda
@@ -25,19 +24,56 @@ import fs from 'fs';
 import os from 'node:os';
 import path from 'path';
 import { spawn } from 'child_process';
-import { search as ayaSearch, getTrack as ayaTrack, parseCookies } from './ytmusic-scraper.mjs';
+import yts from 'yt-search';
 import abDownloader from 'ab-downloader';
 import NodeID3 from 'node-id3';
 import { Ytdl, Quality, chooseFormat } from '@distube/ytdl-core';
 import youtubedl from 'youtube-dl-exec';
 const { youtube: abYoutube } = abDownloader;
-// Cookies de YouTube opcionales (mismo archivo que usa el scraper de
-// búsqueda: src/libraries/ytmusic.txt, con la sesión de YouTube del
+// Cookies de YouTube opcionales (archivo src/libraries/ytmusic.txt,
+// con la sesión de YouTube del
 // dueño, en formato cabecera o exportación Netscape). Sin cookies,
 // YouTube puede marcar la IP del panel como bot y ytdl-core falla
 // (PLAYER_SOLVE_FAILED / visitor data request failed) aunque la
 // librería esté al día. Con la sesión puesta, YouTube lo trata como
 // un usuario real. El archivo NO se sube al repo (ver .gitignore).
+// Lee las cookies de YouTube opcionales: una cabecera tal cual, una
+// ruta de archivo, o el archivo ytmusic.txt/ytcook.txt junto a este
+// archivo (formato cabecera o exportación Netscape). Sin cookies
+// funciona igual, pero YouTube puede marcar la IP como bot.
+function parseCookies(input = null) {
+    if (input === false || input === '') return '';
+    if (input && typeof input === 'string' && input.includes('=')) return input.trim();
+    if (input && typeof input === 'string' && fs.existsSync(input)) {
+        try {
+            return fs.readFileSync(input, 'utf8')
+                .split('\n').map((line) => line.trim())
+                .filter((line) => line && (!line.startsWith('#') || line.startsWith('#HttpOnly_')))
+                .map((line) => {
+                    const clean = line.replace(/^#HttpOnly_/, '');
+                    const parts = clean.includes('\t') ? clean.split('\t') : clean.split(/\s+/);
+                    return parts.length >= 7 ? `${parts[5]}=${parts[6]}` : line;
+                }).join('; ');
+        } catch { return ''; }
+    }
+    const ytMusicPath = new URL('ytmusic.txt', import.meta.url).pathname;
+    const ytCookPath = new URL('ytcook.txt', import.meta.url).pathname;
+    const target = fs.existsSync(ytMusicPath) ? ytMusicPath
+        : fs.existsSync('ytmusic.txt') ? 'ytmusic.txt'
+        : fs.existsSync(ytCookPath) ? ytCookPath
+        : fs.existsSync('ytcook.txt') ? 'ytcook.txt' : '';
+    if (!target) return '';
+    try {
+        return fs.readFileSync(target, 'utf8')
+            .split('\n').map((line) => line.trim())
+            .filter((line) => line && (!line.startsWith('#') || line.startsWith('#HttpOnly_')))
+            .map((line) => {
+                const clean = line.replace(/^#HttpOnly_/, '');
+                const parts = clean.includes('\t') ? clean.split('\t') : clean.split(/\s+/);
+                return parts.length >= 7 ? `${parts[5]}=${parts[6]}` : line;
+            }).join('; ');
+    } catch { return ''; }
+}
 const YT_COOKIE = parseCookies() || '';
 const YT_COOKIE_PATH = new URL('ytmusic.txt', import.meta.url).pathname;
 // yt-dlp acepta las cookies como archivo Netscape (--cookies) o como
@@ -89,75 +125,65 @@ export function bestThumb(thumbs = []) {
     return (thumbs[thumbs.length - 1] || thumbs[0] || {}).url || null;
 }
 
-// "4:27" -> 267 segundos.
-function parseDuration(text) {
-    if (!text || typeof text !== 'string') return 0;
-    const parts = text.trim().split(':').map((n) => parseInt(n, 10));
-    if (parts.some((n) => Number.isNaN(n))) return 0;
-    return parts.reduce((acc, n) => acc * 60 + n, 0);
-}
-
-// "2.4B plays" / "1.2M views" / "345K" -> número.
-function parsePlays(text) {
-    if (!text || typeof text !== 'string') return 0;
-    const m = text.replace(/,/g, '').match(/([\d.]+)\s*([KMB])?/i);
-    if (!m) return 0;
-    const mult = { K: 1e3, M: 1e6, B: 1e9 }[(m[2] || '').toUpperCase()] || 1;
-    return Math.round(parseFloat(m[1]) * mult);
-}
-
-// Normaliza un resultado del scraper con todos los campos que usan los
+// Normaliza un resultado de yt-search con todos los campos que usan los
 // plugins (tarjeta de info, lista de playlist y búsqueda).
-export function normalizeVideo(pick) {
-    const artist = pick.artists?.[0];
-    const seconds = parseDuration(pick.duration);
+export function normalizeVideo(v) {
     return {
-        videoId: pick.videoId,
-        url: `https://music.youtube.com/watch?v=${pick.videoId}`,
-        title: pick.title || '',
-        type: pick.type || 'video',
+        videoId: v.videoId,
+        url: v.url || `https://www.youtube.com/watch?v=${v.videoId}`,
+        title: v.title || '',
+        type: 'video',
         author: {
-            name: artist?.name || 'YouTube Music',
-            url: artist?.id?.startsWith('UC') ? `https://music.youtube.com/channel/${artist.id}` : '',
+            name: v.author?.name || 'YouTube',
+            url: v.author?.url || '',
         },
-        duration: { seconds, timestamp: pick.duration || '0:00' },
-        timestamp: pick.duration || '0:00',
-        thumbnail: pick.thumbnail || bestThumb(pick.thumbnails),
-        views: parsePlays(pick.plays),
-        ago: '',
+        duration: { seconds: v.seconds || 0, timestamp: v.timestamp || '0:00' },
+        timestamp: v.timestamp || '0:00',
+        thumbnail: v.thumbnail || v.image || `https://img.youtube.com/vi/${v.videoId}/hqdefault.jpg`,
+        views: v.views || 0,
+        ago: v.ago || '',
     };
 }
 
-// Primer resultado de la búsqueda (canción para play, video para play2).
-// Si el filtro no da resultados, se reintenta sin filtro.
-export async function searchMusic(query, filter = 'songs') {
-    for (const f of [filter, 'all']) {
+// yt-search a veces devuelve 429 (límite de YouTube): reintentar.
+async function ytsWithRetry(args, tries = 3) {
+    let lastErr;
+    for (let i = 0; i < tries; i++) {
         try {
-            const res = await ayaSearch(query, { filter: f });
-            const items = Array.isArray(res) ? res : [res?.topResult, ...(res?.songs ?? []), ...(res?.videos ?? [])];
-            const pick = items.find((i) => i && (i.type === 'song' || i.type === 'video') && i.videoId) || null;
-            if (pick) return normalizeVideo(pick);
+            return await yts(args);
         } catch (e) {
-            console.log(`❌ Búsqueda YouTube Music (${f}) falló:`, e.message);
+            lastErr = e;
+            if (i < tries - 1) await new Promise((r) => setTimeout(r, 2000));
         }
+    }
+    throw lastErr;
+}
+
+// Primer resultado de la búsqueda (canción para play, video para play2).
+// yt-search no distingue canciones de videos: ambos usan la misma
+// lista de videos de YouTube.
+export async function searchMusic(query, filter = 'songs') {
+    try {
+        const res = await ytsWithRetry(query);
+        const pick = (res?.videos || []).find((v) => v && v.videoId) || null;
+        if (pick) return normalizeVideo(pick);
+    } catch (e) {
+        console.log(`❌ Búsqueda yt-search falló:`, e.message);
     }
     return null;
 }
 
 // Lista de resultados de la búsqueda (hasta `limit`).
 export async function searchMusicList(query, filter = 'videos', limit = 20) {
-    for (const f of [filter, 'all']) {
-        try {
-            const res = await ayaSearch(query, { filter: f });
-            const all = Array.isArray(res) ? res : [res?.topResult, ...(res?.songs ?? []), ...(res?.videos ?? [])];
-            const items = all.filter((i) => i && (i.type === 'song' || i.type === 'video') && i.videoId);
-            if (!items.length) continue;
-            return items.slice(0, limit).map(normalizeVideo);
-        } catch (e) {
-            console.log(`❌ Búsqueda YouTube Music (${f}) falló:`, e.message);
-        }
+    try {
+        const res = await ytsWithRetry(query);
+        const items = (res?.videos || []).filter((v) => v && v.videoId);
+        if (!items.length) return [];
+        return items.slice(0, limit).map(normalizeVideo);
+    } catch (e) {
+        console.log(`❌ Búsqueda yt-search falló:`, e.message);
+        return [];
     }
-    return [];
 }
 
 // Baja un archivo con un GET normal (ab-downloader sirve el archivo
@@ -298,17 +324,22 @@ async function remuxMp4(buffer) {
 
 // Info de un video por su ID (para enlaces directos de YouTube).
 export async function getVideoInfo(videoId) {
-    const track = await ayaTrack(videoId);
-    if (!track || !track.title) throw new Error('No se pudo obtener información del video');
+    let info;
+    try {
+        info = await ytsWithRetry({ videoId });
+    } catch (e) {
+        throw new Error('No se pudo obtener información del video');
+    }
+    if (!info || !info.title) throw new Error('No se pudo obtener información del video');
     return {
         videoId,
         url: `https://youtu.be/${videoId}`,
-        title: track.title,
-        author: { name: track.author || 'YouTube Music' },
-        duration: { seconds: track.durationSeconds || 0, timestamp: track.duration || '0:00' },
-        thumbnail: track.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-        views: 0,
-        ago: '',
+        title: info.title,
+        author: { name: info.author?.name || 'YouTube' },
+        duration: { seconds: info.seconds || 0, timestamp: info.timestamp || '0:00' },
+        thumbnail: info.thumbnail || info.image || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+        views: info.views || 0,
+        ago: info.ago || '',
     };
 }
 
