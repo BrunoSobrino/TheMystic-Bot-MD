@@ -1,3 +1,4 @@
+import fs from 'fs';
 import translate from '@vitalets/google-translate-api';
 import axios from 'axios';
 import fetch from 'node-fetch';
@@ -5,15 +6,18 @@ const handler = (m) => m;
 
 handler.before = async (m) => {
   const chat = global.db.data.chats[m.chat];
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins._simsimi
   if (chat.simi) {
     if (/^.*false|disnable|(turn)?off|0/i.test(m.text)) return;
     let textodem = m.text;
     if (m.text.includes('serbot') || m.text.includes('bots')|| m.text.includes('jadibot')|| m.text.includes('menu')|| m.text.includes('play')|| m.text.includes('play2') || m.text.includes('playdoc') || m.text.includes('tiktok') || m.text.includes('facebook') || m.text.includes('menu2') ||  m.text.includes('infobot') || m.text.includes('estado') ||  m.text.includes('ping') ||  m.text.includes('instalarbot') ||  m.text.includes('sc') ||  m.text.includes('sticker') ||  m.text.includes('s') || m.text.includes('wm') ||  m.text.includes('qc')) return
     try {
-      const ressimi = await simitalk(textodem);
+      const ressimi = await simitalk(textodem, undefined, undefined, tradutor);
       await m.conn.sendMessage(m.chat, { text: ressimi.resultado.simsimi }, { quoted: m });
     } catch {
-      throw '*[❗] La API de Simsimi presenta errores.*';
+      throw tradutor.texto1;
     }
     return !0;
   }
@@ -21,8 +25,8 @@ handler.before = async (m) => {
 };
 export default handler;
 
-async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es") {
-    if (!ask) return { status: false, resultado: { msg: "Debes ingresar un texto para hablar con simsimi." }};
+async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es", tradutor) {
+    if (!ask) return { status: false, resultado: { msg: tradutor.texto2 }};
     try {
         const response11 = await chatsimsimi(ask, language);
         if (response11.message == 'indefinida' || response11.message == '' || !response11.message) response11 = XD // Se usa "XD" para causar error y usar otra opción.  
@@ -38,7 +42,7 @@ async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es")
             const response2 = await axios.get(`https://api.anbusec.xyz/api/v1/simitalk?apikey=${apikeyyy}&ask=${ask}&lc=${language}`);
             return { status: true, resultado: { simsimi: response2.data.message }};       
         } catch (error2) {
-            return { status: false, resultado: { msg: "Todas las API's fallarón. Inténtalo de nuevo más tarde.", error: error2.message }};
+            return { status: false, resultado: { msg: tradutor.texto3, error: error2.message }};
         }
     }
 }}
