@@ -1,3 +1,4 @@
+import { sendAudioPTT } from '../src/libraries/sendAudioPTT.js';
 const handler = async (m, {conn, usedPrefix}) => {
  if (usedPrefix == 'a' || usedPrefix == 'A' || usedPrefix == '*' || usedPrefix == '#') return;
  if (!db.data.chats[m.chat].audios) return;
@@ -5,7 +6,7 @@ const handler = async (m, {conn, usedPrefix}) => {
  const vn = './src/assets/audio/01J6748ZEBTQ21HT69937WGM4D.mp3';
 
  conn.sendPresenceUpdate('recording', m.chat);
- conn.sendMessage(m.chat, {audio: {url: vn}, ptt: true, mimetype: 'audio/mpeg', fileName: `deja de llorar.mp3`}, {quoted: m});
+ await sendAudioPTT(conn, m.chat, vn, m);
 };
 
 handler.command = /^(:c|c)$/i;

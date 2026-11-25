@@ -20,15 +20,21 @@ export async function before(m, { conn, participants }) {
     }
   };
 
-  try {     
+  try {
     if (m.messageStubType === 'GROUP_PARTICIPANT_REMOVE') {
       m.messageStubType = 28;
     } else if (m.messageStubType === 'GROUP_PARTICIPANT_LEAVE') {
       m.messageStubType = 32;
     }
+
+    // Solo importan los eventos que este plugin anuncia; el resto (por
+    // ejemplo GROUP_CREATE al meter al bot a un grupo) no hace nada.
+    const HANDLED_STUBS = new Set([21, 26, 27, 28, 29, 30, 32]);
+    if (!HANDLED_STUBS.has(m.messageStubType)) return true;
+    if (!global?.db?.data?.chats[m.chat]?.detect2) return true;
     
     // Resolver el sender usando el sistema LID mejorado
-    const realSender = await resolveLidFromCache(m?.sender, m?.chat);
+    const realSender = await resolveLidFromCache(m?.sender, conn);
     
     const idioma = global.db?.data?.users[realSender]?.language || global.defaultLenguaje;
     const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}/_detectEvents.js.json`));
@@ -45,12 +51,12 @@ export async function before(m, { conn, participants }) {
         groupMetadataCache.set(m.chat, groupMetadata);
         groupName = groupMetadata.subject || "el grupo";
         pp = await safeOperation(() => conn.profilePictureUrl(m.chat, 'image').catch(() => pp), pp);
-        img = await safeOperation(() => fetch(pp).then(res => res.buffer()));
+        img = await safeOperation(() => fetch(pp).then(async (res) => Buffer.from(await res.arrayBuffer())));
       }
     } else {
       groupName = groupMetadata.subject || "el grupo";
       pp = await safeOperation(() => conn.profilePictureUrl(m.chat, 'image').catch(() => pp), pp);
-      img = await safeOperation(() => fetch(pp).then(res => res.buffer()));
+      img = await safeOperation(() => fetch(pp).then(async (res) => Buffer.from(await res.arrayBuffer())));
     }
 
     const chat = global?.db?.data?.chats[m.chat];
@@ -59,7 +65,7 @@ export async function before(m, { conn, participants }) {
     // Resolver todos los parámetros del stub usando el sistema LID
     const resolvedStubParameters = await Promise.all(
       (m.messageStubParameters || []).map(async (param) => {
-        return await resolveLidFromCache(param, m.chat);
+        return await resolveLidFromCache(param, conn);
       })
     );
     
@@ -149,243 +155,35 @@ export async function before(m, { conn, participants }) {
 }
 
 // ===============================
-// FUNCIÓN DE RESOLUCIÓN LID ADAPTADA A NUEVA ESTRUCTURA (conn.lid)
+// RESOLUCIÓN LID CON EL MECANISMO REAL DE BAILEYS 7 (conn.resolveUser)
 // ===============================
-async function resolveLidFromCache(jid, groupChatId, conn) {
-  if (!jid || !jid.toString().endsWith('@lid')) {
-    return jid?.includes('@') ? jid : `${jid}@s.whatsapp.net`;
-  }
-  
-  if (!conn?.lid) {
-    console.warn('[DETECT-EVENTS] conn.lid no disponible, devolviendo JID original');
-    return jid;
+async function resolveLidFromCache(jid, conn) {
+  if (!jid) return jid;
+  if (!jid.toString().endsWith('@lid')) {
+    return jid.includes('@') ? jid : `${jid}@s.whatsapp.net`;
   }
 
   try {
-    // Método principal: usar resolveLid de conn.lid
-    if (conn.lid.resolveLid) {
-      const resolved = await conn.lid.resolveLid(jid, groupChatId);
-      if (resolved && resolved !== jid) {
-        return resolved;
-      }
+    // resolveUser usa el lidMapping interno de Baileys (signalRepository) y
+    // devuelve { jid, lid }: el número real cuando el mapeo ya se conoce.
+    const resolved = conn?.resolveUser?.(jid) || {};
+    if (resolved.jid && !resolved.jid.endsWith('@lid')) {
+      return resolved.jid;
     }
-
-    // Método alternativo: buscar en caché por LID
-    const lidKey = jid.split('@')[0];
-    const userInfo = conn.lid.getUserInfo(lidKey);
-    if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) {
-      return userInfo.jid;
-    }
-
-    // Búsqueda en todos los usuarios del caché
-    const cachedUsers = conn.lid.getAllUsers();
-    for (const user of cachedUsers) {
-      if (user.lid === jid && user.jid && !user.jid.endsWith('@lid')) {
-        return user.jid;
-      }
-    }
-
-    console.warn(`[DETECT-EVENTS] No se pudo resolver LID: ${jid}`);
-    return jid;
-
   } catch (error) {
     console.error('[DETECT-EVENTS] Error resolviendo LID:', error);
-    return jid;
   }
+
+  // Sin mapeo conocido se devuelve el LID tal cual (no se inventa un número).
+  return jid;
 }
 
 // ===============================
-// FUNCIÓN PARA MOSTRAR NOMBRES DE USUARIO MEJORADA (conn.lid)
+// NOMBRE A MOSTRAR PARA MENCIONES
 // ===============================
-function getUserDisplayName(jid, conn) {
+function getUserDisplayName(jid) {
   if (!jid) {
     return '@undefined';
   }
-
-  // Si es un JID normal (no LID)
-  if (jid.includes('@') && !jid.includes('@lid')) {
-    return `@${jid.split('@')[0]}`;
-  }
-
-  // Si es un LID, intentar obtener información del caché
-  if (jid.includes('@lid')) {
-    try {
-      const lidKey = jid.split('@')[0];
-      
-      if (conn?.lid) {
-        const userInfo = conn.lid.getUserInfo(lidKey);
-        if (userInfo) {
-          // Priorizar nombre real si está disponible y es válido
-          if (userInfo.name && 
-              userInfo.name !== 'Nombre pendiente' && 
-              userInfo.name !== 'Usuario no encontrado' &&
-              userInfo.name !== 'Error al resolver') {
-            return userInfo.name;
-          }
-          
-          // Si no hay nombre válido, usar el JID resuelto
-          if (userInfo.jid && !userInfo.jid.endsWith('@lid')) {
-            return `@${userInfo.jid.split('@')[0]}`;
-          }
-        }
-      }
-      
-      // Fallback: mostrar el número LID
-      return `@${lidKey}`;
-
-    } catch (error) {
-      console.error('[DETECT-EVENTS] Error obteniendo nombre de usuario:', error);
-      return 'Usuario no identificado';
-    }
-  }
-
-  // Fallback para cualquier otro caso
-  return `@${jid}`;
-}
-
-// ===============================
-// FUNCIÓN DE RESOLUCIÓN SIMPLIFICADA (conn.lid)
-// ===============================
-async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
-  return await resolveLidFromCache(lid, groupChatId, conn);
-}
-
-// ===============================
-// FUNCIÓN AUXILIAR: VERIFICAR SI UN JID ES LID
-// ===============================
-function isLidJid(jid) {
-  return jid && typeof jid === 'string' && jid.endsWith('@lid');
-}
-
-// ===============================
-// FUNCIÓN AUXILIAR: OBTENER INFORMACIÓN COMPLETA DE USUARIO
-// ===============================
-function getUserCompleteInfo(jid, conn) {
-  if (!conn?.lid || !jid) {
-    return null;
-  }
-
-  try {
-    // Si es un LID, buscar por LID
-    if (isLidJid(jid)) {
-      const lidKey = jid.split('@')[0];
-      return conn.lid.getUserInfo(lidKey);
-    }
-    
-    // Si es un JID normal, buscar por JID
-    return conn.lid.getUserInfoByJid(jid);
-
-  } catch (error) {
-    console.error('[DETECT-EVENTS] Error obteniendo información completa:', error);
-    return null;
-  }
-}
-
-// ===============================
-// FUNCIÓN AUXILIAR: ENCONTRAR LID POR JID
-// ===============================
-function findLidByJid(jid, conn) {
-  if (!conn?.lid || !jid || isLidJid(jid)) {
-    return null;
-  }
-
-  try {
-    return conn.lid.findLidByJid(jid);
-  } catch (error) {
-    console.error('[DETECT-EVENTS] Error encontrando LID:', error);
-    return null;
-  }
-}
-
-// ===============================
-// FUNCIÓN DE PROCESAMIENTO BATCH PARA MÚLTIPLES LIDS
-// ===============================
-async function resolveMultipleLids(lids, conn, groupChatId) {
-  if (!Array.isArray(lids) || !conn?.lid) {
-    return lids;
-  }
-
-  const resolved = [];
-  
-  for (const lid of lids) {
-    try {
-      if (isLidJid(lid)) {
-        const resolvedJid = await resolveLidFromCache(lid, groupChatId, conn);
-        resolved.push(resolvedJid);
-      } else {
-        resolved.push(lid);
-      }
-    } catch (error) {
-      console.error(`[DETECT-EVENTS] Error resolviendo LID ${lid}:`, error);
-      resolved.push(lid); // Mantener original si falla
-    }
-  }
-
-  return resolved;
-}
-
-// ===============================
-// FUNCIÓN PARA FORMATEAR MENCIONES EN TEXTO
-// ===============================
-function formatMentionsInText(text, conn) {
-  if (!text || !conn?.lid) {
-    return text;
-  }
-
-  try {
-    // Buscar patrones de LID en el texto (@numeroLID)
-    const lidPattern = /@(\d{8,20})/g;
-    
-    return text.replace(lidPattern, (match, lidNumber) => {
-      const userInfo = conn.lid.getUserInfo(lidNumber);
-      
-      if (userInfo && userInfo.name && 
-          userInfo.name !== 'Nombre pendiente' && 
-          userInfo.name !== 'Usuario no encontrado') {
-        return `@${userInfo.name}`;
-      }
-      
-      // Si no hay nombre, intentar usar el JID resuelto
-      if (userInfo && userInfo.jid && !userInfo.jid.endsWith('@lid')) {
-        return `@${userInfo.jid.split('@')[0]}`;
-      }
-      
-      // Fallback: mantener el número original
-      return match;
-    });
-
-  } catch (error) {
-    console.error('[DETECT-EVENTS] Error formateando menciones:', error);
-    return text;
-  }
-}
-
-// ===============================
-// FUNCIÓN PARA VALIDAR ESTADO DEL CACHE LID
-// ===============================
-function validateLidCacheStatus(conn) {
-  if (!conn?.lid) {
-    return {
-      available: false,
-      message: 'conn.lid no está disponible'
-    };
-  }
-
-  try {
-    const stats = conn.lid.getStats();
-    
-    return {
-      available: true,
-      stats: stats,
-      healthy: stats.total > 0 && stats.fileExists,
-      message: `Caché disponible: ${stats.total} entradas`
-    };
-
-  } catch (error) {
-    return {
-      available: false,
-      error: error.message,
-      message: 'Error verificando estado del caché'
-    };
-  }
+  return `@${String(jid).split('@')[0]}`;
 }
