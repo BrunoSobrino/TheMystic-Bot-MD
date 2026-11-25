@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { join } from 'path';
 import { writeFileSync, existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
@@ -9,21 +10,27 @@ const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("b
 
 var uuidv4 = uuid.default.v4;
 
+let tradutorGlobal = null;
+
 const handler = async (m, { conn, args }) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.ia_sunoai
+        tradutorGlobal = tradutor;
     try {
-        if (!args[0]) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*\n\n*Uso:* /musicaia descripción | tags opcionales\n*Ejemplo:* /musicaia canción de amor | pop, romántico, acústico';
+        if (!args[0]) throw tradutor.texto1;
         
         const input = args.join(' ');
         const [prompt, customTags] = input.split('|').map(part => part.trim());
         
-        if (!prompt) throw '*[❗] Por favor, ingresa una descripción para generar la canción.*';
+        if (!prompt) throw tradutor.texto2;
         
-        m.reply("*[❗] Ey! Espera un poco, nuestra IA creativa está trabajando a todo ritmo para componer tu canción perfecta, esto puede demorar unos momentos, cuando esté lista se te enviará.*");
+        m.reply(tradutor.texto3);
         
         // Generar la canción con la API Sonu
         const song = await generateMusicWithSonu(prompt, customTags || 'pop, romántico');
         
-        if (!song) throw '❌ No se pudo generar la canción. Intenta con otro prompt.';
+        if (!song) throw tradutor.texto4;
         
         const [audioBuffer, thumbnailBuffer] = await Promise.all([
             fetch(song.audio_url).then(res => res.buffer()),
@@ -33,7 +40,7 @@ const handler = async (m, { conn, args }) => {
         const tags = {
             title: song.title,
             artist: 'IA Musical',
-            album: 'Generado por IA',
+            album: tradutor.texto8,
             APIC: {
                 mime: 'image/png',
                 type: {
@@ -47,14 +54,14 @@ const handler = async (m, { conn, args }) => {
             genre: song.tags,
             comment: {
                 language: 'spa',
-                text: `👑 By @BrunoSobrino 👑\n\nGénero: ${song.tags}\nDuración: ${song.duration}s`
+                text: `${tradutor.texto6[0]}${song.tags}${tradutor.texto6[1]}${song.duration}${tradutor.texto6[2]}`
             }
         };
         
         if (song.lyrics) {
             tags.unsynchronisedLyrics = {
                 language: 'spa',
-                text: `👑 By @BrunoSobrino 👑\n\nTítulo: ${song.title}\n\n${song.lyrics}`.substring(0, 5000)
+                text: `${tradutor.texto7[0]}${song.title}${tradutor.texto7[1]}${song.lyrics}`.substring(0, 5000)
             };
         }
         
@@ -95,7 +102,7 @@ const handler = async (m, { conn, args }) => {
         
     } catch (error) {
         console.error('Error en el handler:', error);
-        m.reply(`❌ Ocurrió un error al generar la canción: ${error.message || error}`);
+        m.reply(`${tradutor.texto5}${error.message || error}`);
     }
 };
 
@@ -171,21 +178,21 @@ const sonu = {
       return {
         success: false,
         code: 400,
-        result: { error: "El título no puede estar vacío" }
+        result: { error: tradutorGlobal?.texto9 || "El título no puede estar vacío" }
       };
     }
     if (!lyrics || lyrics.trim() === '') {
       return {
         success: false,
         code: 400,
-        result: { error: "Se requieren letras para generar la canción" }
+        result: { error: tradutorGlobal?.texto10 || "Se requieren letras para generar la canción" }
       };
     }
     if (lyrics.length > 1500) {
       return {
         success: false,
         code: 400,
-        result: { error: "Las letras no pueden exceder los 1500 caracteres"}
+        result: { error: tradutorGlobal?.texto11 || "Las letras no pueden exceder los 1500 caracteres"}
       };
     }
 
@@ -263,7 +270,7 @@ const sonu = {
           return {
             success: false,
             code: 404,
-            result: { error: "No se encontró la canción generada" }
+            result: { error: tradutorGlobal?.texto12 || "No se encontró la canción generada" }
           };
         }
 
@@ -303,7 +310,7 @@ async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
         if (!sonu.userId) {
             const registration = await sonu.register();
             if (!registration.success) {
-                throw new Error('No se pudo registrar en el servicio de música');
+                throw new Error(tradutorGlobal?.texto13 || 'No se pudo registrar en el servicio de música');
             }
         }
 
@@ -318,12 +325,12 @@ async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
         });
 
         if (!creation.success) {
-            throw new Error(creation.result.error || 'Error al crear la canción');
+            throw new Error(creation.result.error || tradutorGlobal?.texto15 || 'Error al crear la canción');
         }
 
         const taskResult = await sonu.task(creation.result.songId);
         if (!taskResult.success) {
-            throw new Error(taskResult.result.error || 'Error al generar la canción');
+            throw new Error(taskResult.result.error || tradutorGlobal?.texto14 || 'Error al generar la canción');
         }
 
         return {
@@ -336,7 +343,7 @@ async function generateMusicWithSonu(prompt, tags = 'pop, romántico') {
         };
     } catch (error) {
         console.error('Error en generateMusicWithSonu:', error);
-        throw new Error(error.message || 'Error al generar la canción');
+        throw new Error(error.message || tradutorGlobal?.texto14 || 'Error al generar la canción');
     }
 }
 
