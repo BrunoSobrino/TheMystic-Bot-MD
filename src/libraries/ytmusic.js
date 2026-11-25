@@ -1,5 +1,6 @@
 // Helpers compartidos para descargar de YouTube. Los usan
-// downloader-play.js (play/play2), @testting.js (ytmp3/ytmp4),
+// downloader-play.js (play/play2), downloader-ytplay.js (ytplay),
+// downloader-yta.js (ytmp3), downloader-ytv.js (ytmp4), @testting.js,
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
 // Orden de descarga (audio y video):
@@ -26,6 +27,7 @@ import { spawn } from 'child_process';
 import { search as ayaSearch, getAudioStream as ayaAudio, getTrack as ayaTrack, getInnertubeConfig as ayaConfig } from './ytmusic-scraper.mjs';
 import abDownloader from 'ab-downloader';
 import denzy from '@denzy-official/youtube_scraper';
+import NodeID3 from 'node-id3';
 const { youtube: abYoutube } = abDownloader;
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
@@ -434,4 +436,42 @@ export async function getVideoBuffer(videoId) {
         }
     }
     throw lastError || new Error('Sin enlace de video');
+}
+
+// Metadatos ID3 para el audio (título, artista, álbum, año, comentario y
+// portada). Solo el MP3 admite ID3: denzy y ab-downloader devuelven MP3,
+// pero el scraper VISIONOS puede dar Opus (webm) o AAC (mp4), que no lo
+// admiten. Si el buffer no es MP3, no hay título/artista o algo falla,
+// devuelve el buffer original sin tocar: nunca rompe la descarga.
+export async function tagAudioMp3(buffer, mimeType, meta = {}) {
+    try {
+        if (!Buffer.isBuffer(buffer) || !buffer.length) return buffer;
+        const isMp3 = (mimeType || '').includes('mpeg')
+            || buffer.subarray(0, 3).toString() === 'ID3'
+            || (buffer[0] === 0xFF && (buffer[1] & 0xE0) === 0xE0);
+        if (!isMp3) return buffer;
+        if (!meta.title && !meta.artist) return buffer;
+        let cover = null;
+        if (meta.thumbnail) {
+            try {
+                const res = await fetch(meta.thumbnail, { headers: { 'user-agent': 'Mozilla/5.0' } });
+                if (res.ok) cover = Buffer.from(await res.arrayBuffer());
+            } catch {}
+        }
+        const tags = {
+            title: meta.title || undefined,
+            artist: meta.artist || undefined,
+            album: meta.album || 'YouTube Audio',
+            year: String(new Date().getFullYear()),
+            comment: {
+                language: 'spa',
+                text: `Descarga de YouTube${meta.url ? ': ' + meta.url : ''}`,
+            },
+        };
+        if (cover) tags.APIC = cover;
+        const tagged = NodeID3.write(tags, buffer);
+        return tagged || buffer;
+    } catch {
+        return buffer;
+    }
 }

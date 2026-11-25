@@ -1,6 +1,6 @@
 import fs from 'fs'
 import yts from 'yt-search'
-import { searchMusic, getAudioBuffer } from '../src/libraries/ytmusic.js'
+import { searchMusic, getAudioBuffer, tagAudioMp3 } from '../src/libraries/ytmusic.js'
 
 let limit = 50
 
@@ -19,6 +19,7 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
 
   let videoId = ''
   let title = ''
+  let meta = null
   if (args[0].includes('you')) {
     videoId = extractVideoId(args[0])
   } else {
@@ -47,23 +48,26 @@ const handler = async (m, { text, conn, args, usedPrefix, command }) => {
     if (!result) throw tradutor.texto7
     videoId = result.videoId
     title = result.title
+    meta = { title: result.title, artist: result.author?.name, thumbnail: result.thumbnail, url: result.url }
   }
 
   const { key } = await conn.sendMessage(m.chat, { text: tradutor.texto4 }, { quoted: m })
 
   try {
     const { buffer, mimeType } = await getAudioBuffer(videoId)
-    const fileSizeInMB = buffer.byteLength / 1024 / 1024
-    const roundedFileSizeInMB = fileSizeInMB.toFixed(2)
-    if (!title) {
+    if (!meta) {
       const info = await yts({ videoId }).catch(() => null)
-      title = info?.title || videoId
+      meta = { title: info?.title || videoId, artist: info?.author?.name, thumbnail: info?.thumbnail, url: info?.url }
+      title = meta.title
     }
+    const tagged = await tagAudioMp3(buffer, mimeType, meta)
+    const fileSizeInMB = tagged.byteLength / 1024 / 1024
+    const roundedFileSizeInMB = fileSizeInMB.toFixed(2)
     if (fileSizeInMB > limit) {
-      await conn.sendMessage(m.chat, { document: buffer, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m })
+      await conn.sendMessage(m.chat, { document: tagged, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: 'audio/mpeg' }, { quoted: m })
       await conn.sendMessage(m.chat, { text: `${tradutor.texto5[2]} ${roundedFileSizeInMB}${tradutor.texto5[3]} ${title}`, edit: key }, { quoted: m })
     } else {
-      await conn.sendMessage(m.chat, { audio: buffer, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: mimeType || 'audio/mpeg' }, { quoted: m })
+      await conn.sendMessage(m.chat, { audio: tagged, caption: `${tradutor.texto5[0]} ${title}\n${tradutor.texto5[1]} ${roundedFileSizeInMB} MB`, fileName: title + '.mp3', mimetype: mimeType || 'audio/mpeg' }, { quoted: m })
       await conn.sendMessage(m.chat, { text: `${tradutor.texto5[4]}`, edit: key }, { quoted: m })
     }
   } catch (error) {

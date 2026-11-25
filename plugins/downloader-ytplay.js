@@ -1,5 +1,6 @@
 import fs from 'fs'
-import { searchMusic, getAudioBuffer, getVideoBuffer } from '../src/libraries/ytmusic.js'
+import yts from 'yt-search'
+import { searchMusic, getAudioBuffer, getVideoBuffer, tagAudioMp3 } from '../src/libraries/ytmusic.js'
 import { generateWAMessageFromContent } from 'baileys'
 
 // Miniatura del video (YouTube ya la sirve en JPEG): se baja y se pasa tal
@@ -33,6 +34,13 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   const result = await searchMusic(args.join(' '), 'videos')
   if (!result) return conn.reply(m.chat, tradutor.texto6, m)
   const body = `${tradutor.texto2[0]} ${result.title}\n${tradutor.texto2[1]} ${result.ago || '?'}\n${tradutor.texto2[2]} ${result.duration?.timestamp || '?'}\n${tradutor.texto2[3]} ${formatNumber(result.views || 0)}\n${tradutor.texto2[4]} ${result.author?.name || '?'}\n${tradutor.texto2[5]} ${result.videoId}\n${tradutor.texto2[6]} ${result.type}\n${tradutor.texto2[7]} ${result.url}\n${tradutor.texto2[8]} ${result.author?.url || ''}\n\n${tradutor.texto2[9]} ${tradutor.texto2[10]}`.trim()
+
+  // Se guardan los metadatos del video para etiquetar el audio cuando
+  // toquen el botón (el botón solo trae el videoId).
+  global.ytplayMeta = global.ytplayMeta || {};
+  global.ytplayMeta[result.videoId] = { title: result.title, artist: result.author?.name, thumbnail: result.thumbnail, url: result.url };
+  const _metaIds = Object.keys(global.ytplayMeta);
+  if (_metaIds.length > 50) delete global.ytplayMeta[_metaIds[0]];
 
   const thumb = await getThumb(result.thumbnail)
   const buttons = [
@@ -78,8 +86,14 @@ handler.before = async function (m, { conn }) {
   const tradutor = _translate.plugins.downloader_ytplay
   try {
     if (isAudio) {
-      const { buffer, mimeType } = await getAudioBuffer(videoId)
-      await conn.sendMessage(m.chat, { audio: buffer, mimetype: mimeType }, { quoted: m })
+      let meta = (global.ytplayMeta || {})[videoId];
+      if (!meta) {
+        const info = await yts({ videoId }).catch(() => null);
+        meta = info ? { title: info.title, artist: info.author?.name, thumbnail: info.thumbnail, url: info.url } : { title: videoId };
+      }
+      const { buffer, mimeType } = await getAudioBuffer(videoId);
+      const tagged = await tagAudioMp3(buffer, mimeType, meta);
+      await conn.sendMessage(m.chat, { audio: tagged, mimetype: mimeType }, { quoted: m });
     } else {
       const { buffer, mimeType } = await getVideoBuffer(videoId)
       await conn.sendMessage(m.chat, { video: buffer, mimetype: mimeType, fileName: `${videoId}.mp4` }, { quoted: m })
