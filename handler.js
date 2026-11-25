@@ -159,15 +159,30 @@ export async function handler(chatUpdate) {
     }
     // LID: el remitente puede venir como PN o como LID; se comparan ambas
     // formas resueltas del número del owner/mod contra m.sender.
+    // Además Baileys 7 trae el número real en la clave del mensaje
+    // (participantAlt en grupos, remoteJidAlt en privado) cuando el remitente
+    // viene enmascarado como LID: sin eso, un owner con el mapeo LID todavía
+    // frío no es reconocido y el bot le contesta que no es owner.
     const resolvedIdentity = (number) => this.resolveUser(number + '@s.whatsapp.net') || {};
-    const identityMatches = (jid, resolved) =>
+    const senderIds = new Set(
+      [m.sender, m.key?.participantAlt, m.key?.remoteJidAlt]
+        .filter(Boolean).map((j) => jidNormalizedUser(j)),
+    );
+    const senderResolved = this.resolveUser?.(m.sender) || {};
+    if (senderResolved.jid) senderIds.add(jidNormalizedUser(senderResolved.jid));
+    if (senderResolved.lid) senderIds.add(jidNormalizedUser(senderResolved.lid));
+    const identityMatches = (resolved) =>
       [resolved.jid, resolved.lid].filter(Boolean)
-        .some((x) => jidNormalizedUser(x) === jidNormalizedUser(jid));
+        .some((x) => senderIds.has(jidNormalizedUser(x)));
     const isROwner = global.owner.map(([number]) => number)
-      .some((num) => identityMatches(m.sender, resolvedIdentity(num))) || m.fromMe;
+      .some((num) => {
+        const resolved = resolvedIdentity(num);
+        return [num + '@s.whatsapp.net', resolved.jid, resolved.lid]
+          .filter(Boolean).some((x) => senderIds.has(jidNormalizedUser(x)));
+      }) || m.fromMe;
     const isOwner = isROwner || m.fromMe;
     const isMods = isOwner || global.mods
-      .some((num) => identityMatches(m.sender, resolvedIdentity(num)));
+      .some((num) => identityMatches(resolvedIdentity(num)));
     const isPrems = isROwner || isOwner || isMods || global.db.data.users[m.sender].premiumTime > 0; // || global.db.data.users[m.sender].premium = 'true'.replace(/[^0-9]/g, '').replace(/[^0-9]/g, '')
 
     if (opts['queque'] && m.text && !(isMods || isPrems)) {
