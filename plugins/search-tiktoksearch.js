@@ -1,17 +1,21 @@
 // Codigo hecho para The Mystic - Bot - MD por https://github.com/BrunoSobrino
 // By @BrunoSobrino
 import axios from 'axios';
+import fs from 'fs';
 const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import("baileys"));
 
 let handler = async (message, { conn, text }) => {
-    if (!text) return conn.sendMessage(message.chat, { text: '[❗] ¿Qué quieres buscar en TikTok?' }, { quoted: message });
+  const idioma = global.db.data.users[message.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.search_tiktoksearch
+    if (!text) return conn.sendMessage(message.chat, { text: tradutor.texto1 }, { quoted: message });
     
     try {
-        const processingMsg = await conn.sendMessage(message.chat, { text: '*[🔍] Buscando en TikTok, espere...*' }, { quoted: message });
-        let response = await tiktokSearch(text);
+        const processingMsg = await conn.sendMessage(message.chat, { text: tradutor.texto2 }, { quoted: message });
+        let response = await tiktokSearch(text, tradutor);
         if (!response.status) throw new Error(response.resultado);
         let searchResults = response.resultado;
-        if (searchResults.length === 0) throw new Error('*[❗] No se encontraron videos válidos de tiktok.*');
+        if (searchResults.length === 0) throw new Error(tradutor.texto3);
         let selectedResults = getRandomElements(searchResults, Math.min(searchResults.length, 10));
         
         const BATCH_SIZE = 2;
@@ -34,12 +38,12 @@ let handler = async (message, { conn, text }) => {
             }
         }
         const validVideos = videoMessages.filter(Boolean);
-        if (validVideos.length === 0) throw new Error('*[❗] No se pudieron cargar los videos.*');
+        if (validVideos.length === 0) throw new Error(tradutor.texto4);
         const results = validVideos.map((videoMessage, index) => ({
             body: proto.Message.InteractiveMessage.Body.fromObject({ text: '' }),
             footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `*❧ By ${global.wm}*`.trim() }),
             header: proto.Message.InteractiveMessage.Header.fromObject({
-                title: selectedResults[index].description || "Video de TikTok",
+                title: selectedResults[index].description || tradutor.texto6,
                 hasMediaAttachment: true,
                 videoMessage: videoMessage
             }),
@@ -55,7 +59,7 @@ let handler = async (message, { conn, text }) => {
                     },
                     interactiveMessage: proto.Message.InteractiveMessage.fromObject({
                         body: proto.Message.InteractiveMessage.Body.create({ 
-                            text: `*< TIKTOK SEARCH >*\n\n📌 *Texto buscado:* ${text}`
+                            text: `${tradutor.texto7}${text}`
                         }),
                         footer: proto.Message.InteractiveMessage.Footer.create({ text: '' }),
                         header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
@@ -72,7 +76,7 @@ let handler = async (message, { conn, text }) => {
         
     } catch (error) {
         await conn.sendMessage(message.chat, { 
-            text: `❌ Error: ${error.message}` 
+            text: `${tradutor.texto8}${error.message}` 
         }, { quoted: message });
     }
 };
@@ -82,7 +86,7 @@ handler.tags = ['search'];
 handler.command = /^(tiktoksearch|tiktoks)$/i;
 export default handler;
 
-async function tiktokSearch(query, maxRetries = 3) {
+async function tiktokSearch(query, tradutor, maxRetries = 3) {
     let retries = 0;
     let lastError = null;
     while (retries < maxRetries) {
@@ -104,14 +108,14 @@ async function tiktokSearch(query, maxRetries = 3) {
             const videos = response.data?.data?.videos || [];
             if (videos.length === 0) {
                 retries++;
-                lastError = "No se encontraron videos.";
+                lastError = tradutor.texto9;
                 await new Promise(resolve => setTimeout(resolve, 1000 * retries));
                 continue;
             }
             return {
                 status: true,
                 resultado: videos.map(v => ({
-                    description: v.title ? v.title.slice(0, 200) : "Sin descripción", 
+                    description: v.title ? v.title.slice(0, 200) : tradutor.texto5, 
                     videoUrl: v.play ? v.play : (v.wmplay || v.hdplay || "Sin URL")
                 })).filter(v => v.videoUrl !== "Sin URL") 
             };
@@ -121,7 +125,7 @@ async function tiktokSearch(query, maxRetries = 3) {
             await new Promise(resolve => setTimeout(resolve, 1000 * retries));
         }
     }
-    return { status: false, resultado: lastError || "Error después de varios intentos" };
+    return { status: false, resultado: lastError || tradutor.texto10 };
 }
 
 async function createVideoMessage(url, conn, timeout = 15000) {
