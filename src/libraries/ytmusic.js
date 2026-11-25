@@ -2,9 +2,10 @@
 // downloader-play.js (play/play2), @testting.js (ytmp3/ytmp4),
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
-// Orden de descarga (audio y video), solo opciones que funcionan:
-// 1º ab-downloader (el de su web, MP3/MP4 listos en su CDN),
-// 2º scraper de YouTube Music (ayashiiiyo, cliente VISIONOS para el player;
+// Orden de descarga (audio y video):
+// 1º @denzy-official/youtube_scraper (flvto, MP3/MP4),
+// 2º ab-downloader (el de su web, MP3/MP4 listos en su CDN),
+// 3º scraper de YouTube Music (ayashiiiyo, cliente VISIONOS para el player;
 // acepta cookies de YouTube opcionales en ytmusic.txt junto a la librería).
 // Se eliminaron convertytmp3, OmDown y ytultra: en el panel dan 403 o no
 // devuelven enlaces.
@@ -24,6 +25,7 @@ import path from 'path';
 import { spawn } from 'child_process';
 import { search as ayaSearch, getAudioStream as ayaAudio, getTrack as ayaTrack, getInnertubeConfig as ayaConfig } from './ytmusic-scraper.mjs';
 import abDownloader from 'ab-downloader';
+import denzy from '@denzy-official/youtube_scraper';
 const { youtube: abYoutube } = abDownloader;
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
@@ -271,6 +273,23 @@ async function getMediaBufferViaAbDownloader(videoId, want) {
     return { buffer, mimeType: 'video/mp4' };
 }
 
+// denzy (1ª opción): @denzy-official/youtube_scraper, conversor flvto.
+// ytmp3/ytmp4 devuelven { status, download: { url, filesize, ... } }.
+// El MP3 viene de su CDN y el MP4 de googlevideo.
+async function getMediaBufferViaDenzy(videoId, want) {
+    const url = `https://www.youtube.com/watch?v=${videoId}`;
+    if (want === 'audio') {
+        const res = await denzy.ytmp3(url);
+        if (!res?.status || !res.download?.url) throw new Error(res?.message || 'denzy sin enlace de audio');
+        const buffer = await downloadDirectFile(res.download.url, MAX_AUDIO_BYTES);
+        return { buffer, mimeType: 'audio/mpeg', ext: 'mp3' };
+    }
+    const res = await denzy.ytmp4(url);
+    if (!res?.status || !res.download?.url) throw new Error(res?.message || 'denzy sin enlace de video');
+    const buffer = await downloadMedia(res.download.url, res.download.filesize || 0, MAX_VIDEO_BYTES);
+    return { buffer, mimeType: 'video/mp4' };
+}
+
 // Reempaqueta un MP4 fragmentado (fMP4: moof/mdat, como el que sirve
 // ytdownloader.tech) a MP4 normal con ffmpeg, sin re-codificar.
 // WhatsApp reproduce el fMP4 pero no puede buscar (adelantar/retroceder)
@@ -353,10 +372,16 @@ async function getVisionOSFormats(videoId) {
     return { video, audio: audioFormat };
 }
 
-// Audio listo para mandar. 1º ab-downloader (MP3 de su CDN),
-// 2º scraper de YouTube Music (enlace AAC, cliente VISIONOS).
-// Devuelve { buffer, mimeType, ext }.
+// Audio listo para mandar. 1º denzy (MP3 del conversor flvto),
+// 2º ab-downloader (MP3 de su CDN), 3º scraper de YouTube Music
+// (enlace AAC, cliente VISIONOS). Devuelve { buffer, mimeType, ext }.
 export async function getAudioBuffer(videoId) {
+    try {
+        const { buffer, mimeType, ext } = await getMediaBufferViaDenzy(videoId, 'audio');
+        return { buffer, mimeType, ext };
+    } catch (e) {
+        console.log('❌ denzy audio falló, intentando ab-downloader...', e.message);
+    }
     try {
         const { buffer, mimeType, ext } = await getMediaBufferViaAbDownloader(videoId, 'audio');
         return { buffer, mimeType, ext };
@@ -381,10 +406,17 @@ export async function getAudioBuffer(videoId) {
     throw lastError || new Error('Sin enlace de audio');
 }
 
-// Video listo para mandar. 1º ab-downloader (MP4 de su CDN, reempaquetado
-// para que WhatsApp pueda buscar), 2º scraper de YouTube Music (video +
-// audio unidos con ffmpeg, cliente VISIONOS). Devuelve { buffer, mimeType }.
+// Video listo para mandar. 1º denzy (MP4 del conversor flvto),
+// 2º ab-downloader (MP4 de su CDN, reempaquetado para que WhatsApp pueda
+// buscar), 3º scraper de YouTube Music (video + audio unidos con ffmpeg,
+// cliente VISIONOS). Devuelve { buffer, mimeType }.
 export async function getVideoBuffer(videoId) {
+    try {
+        const { buffer } = await getMediaBufferViaDenzy(videoId, 'video');
+        return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
+    } catch (e) {
+        console.log('❌ denzy video falló, intentando ab-downloader...', e.message);
+    }
     try {
         const { buffer } = await getMediaBufferViaAbDownloader(videoId, 'video');
         return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
