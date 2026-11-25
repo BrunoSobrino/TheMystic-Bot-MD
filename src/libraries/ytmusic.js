@@ -19,6 +19,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { search as ytMusicSearch, audio as ytMusicAudio, stream as ytMusicStream } from './scrape-YoutubeMusik.js';
+import { ytmp3 as convertYtmp3 } from './ytmp3.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 const CHUNK_SIZE = 1024 * 1024; // 1 MB: lo máximo que sirve googlevideo por petición
@@ -226,6 +227,19 @@ export async function muxVideoAudio(videoUrl, videoLen, audioUrl, audioLen) {
     }
 }
 
+// Baja el archivo que devuelve el conversor (enlace directo de su CDN).
+async function downloadConverterFile(url, maxBytes = MAX_VIDEO_BYTES) {
+    const res = await fetch(url, {
+        headers: { 'User-Agent': UA, Referer: 'https://convertytmp3.org/' },
+        signal: AbortSignal.timeout(600000),
+    });
+    if (!res.ok) throw new Error(`Descarga del conversor falló (HTTP ${res.status})`);
+    const buffer = Buffer.from(await res.arrayBuffer());
+    if (!buffer.length) throw new Error('Descarga del conversor vacía');
+    if (buffer.length > maxBytes) throw new Error(`Archivo demasiado grande (>${Math.round(maxBytes / 1048576)} MB)`);
+    return buffer;
+}
+
 function extOf(mimeType) {
     const mime = (mimeType || '').split(';')[0].trim();
     if (mime.includes('mp4')) return 'm4a';
@@ -251,9 +265,19 @@ export async function getVideoInfo(videoId) {
     };
 }
 
-// Audio listo para mandar: descarga el mejor formato con reintento (la API
-// a veces falla de forma transitoria). Devuelve { buffer, mimeType, ext }.
+// Audio listo para mandar. Primero el conversor externo (convertytmp3):
+// devuelve un MP3 ya convertido. Si falla, el scraper de YouTube Music
+// (enlace directo AAC). Devuelve { buffer, mimeType, ext }.
 export async function getAudioBuffer(videoId) {
+    try {
+        const info = await convertYtmp3(`https://youtube.com/watch?v=${videoId}`, 'mp3');
+        if (info?.download) {
+            const buffer = await downloadConverterFile(info.download, MAX_AUDIO_BYTES);
+            return { buffer, mimeType: 'audio/mpeg', ext: 'mp3' };
+        }
+    } catch (e) {
+        console.log('❌ Conversor mp3 falló, intentando YouTube Music...', e.message);
+    }
     let lastError = null;
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
@@ -271,9 +295,19 @@ export async function getAudioBuffer(videoId) {
     throw lastError || new Error('Sin enlace de audio');
 }
 
-// Video listo para mandar: descarga video + audio y los une con ffmpeg.
-// Devuelve { buffer, mimeType }.
+// Video listo para mandar. Primero el conversor externo (convertytmp3):
+// devuelve un MP4 ya unido (sin ffmpeg). Si falla, el scraper de YouTube
+// Music (video + audio unidos con ffmpeg). Devuelve { buffer, mimeType }.
 export async function getVideoBuffer(videoId) {
+    try {
+        const info = await convertYtmp3(`https://youtube.com/watch?v=${videoId}`, 'mp4');
+        if (info?.download) {
+            const buffer = await downloadConverterFile(info.download, MAX_VIDEO_BYTES);
+            return { buffer, mimeType: 'video/mp4' };
+        }
+    } catch (e) {
+        console.log('❌ Conversor mp4 falló, intentando YouTube Music...', e.message);
+    }
     let lastError = null;
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
