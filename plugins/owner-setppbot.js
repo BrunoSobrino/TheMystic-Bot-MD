@@ -1,19 +1,23 @@
+import fs from 'fs';
 import { Jimp, JimpMime } from 'jimp';
 
 const handler = async (m, { conn, usedPrefix, command }) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.owner_setppbot
   try {
     const userJid = conn.user?.id;
     const quoted = m.quoted ? m.quoted : m;
 
-    if (!m.quoted || !quoted.mimetype?.includes('image')) throw `*[❗INFO❗] NO SE ENCONTRÓ LA IMAGEN. RESPONDE A UNA IMAGEN USANDO EL COMANDO ${usedPrefix + command}*`;
+    if (!m.quoted || !quoted.mimetype?.includes('image')) throw `${tradutor.texto1}${usedPrefix + command}${tradutor.texto1_1}`;
 
     const imgData = await quoted.download();
     const jpegBuffer = await processImage(imgData);
 
     await conn.updateProfilePicture(userJid, jpegBuffer);
-    await m.reply('*[ ✅ ] SE CAMBIÓ CON ÉXITO LA FOTO DE PERFIL DEL BOT.*');
+    await m.reply(tradutor.texto2);
   } catch (err) {
-    await m.reply(`*[❗ERROR❗] Ocurrió un error al intentar cambiar la foto de perfil:\n\n${err?.message || err}*`);
+    await m.reply(`${tradutor.texto3}${err?.message || err}${tradutor.texto3_1}`);
   }
 };
 
