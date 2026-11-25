@@ -1,4 +1,4 @@
-import Jimp from 'jimp';
+import { Jimp, JimpMime } from 'jimp';
 
 const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isROwner }) => {
   try {
@@ -10,9 +10,9 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, i
 
     if (!m.isGroup) throw '*❗ Este comando solo puede usarse en grupos.*';
 
-    const image = await Jimp.read(imageBuffer);
-    const resized = image.getWidth() > image.getHeight() ? image.resize(720, Jimp.AUTO) : image.resize(Jimp.AUTO, 720);
-    const jpegBuffer = await resized.getBufferAsync(Jimp.MIME_JPEG);
+    const image = await Jimp.fromBuffer(imageBuffer);
+    const resized = image.width > image.height ? image.resize({ w: 720 }) : image.resize({ h: 720 });
+    const jpegBuffer = await resized.getBuffer(JimpMime.jpeg);
 
     await conn.updateProfilePicture(m.chat, jpegBuffer);
 
