@@ -33,7 +33,7 @@ async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es",
         return { status: true, resultado: { simsimi: response11.message }};        
     } catch (error1) {  
     try {
-        const response1 = await axios.get(`https://delirius-apiofc.vercel.app/tools/simi?text=${encodeURIComponent(ask)}`);
+        const response1 = await axios.get(`${global.BASE_API_DELIRIUS}/tools/simi?text=${encodeURIComponent(ask)}`);
         const trad1 = await translate(`${response1.data.data.message}`, {to: language, autoCorrect: true});
         if (trad1.text == 'indefinida' || response1 == '' || !response1.data) trad1 = XD // Se usa "XD" para causar error y usar otra opción.  
         return { status: true, resultado: { simsimi: trad1.text }};        
