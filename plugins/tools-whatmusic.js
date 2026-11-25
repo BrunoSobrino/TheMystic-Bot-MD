@@ -52,7 +52,7 @@ const handler = async (m, { conn }) => {
     
     let imagen;
     try {
-      imagen = await (await fetch(images.coverart)).buffer();
+      imagen = Buffer.from(await (await fetch(images.coverart)).arrayBuffer());
     } catch (error) {
       imagen = null;
     }
