@@ -15,11 +15,9 @@ const handler = async (m, { conn, text, args, usedPrefix, command }) => {
   const tradutor = _translate.plugins.sticker_ttp_attp;
   if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Mystic-Bot*`;
   if (command == "attp") {
-    const a1 = await (
-      await fetch(
+    const a1 = Buffer.from(await (await fetch(
         `https://api.cafirexos.com/api/maker/attp?text=${decodeURI(text)}`,
-      )
-    ).buffer();
+      )).arrayBuffer());
     const a2 = await createSticker(a1, false, global.packname, global.author);
     conn.sendFile(m.chat, a2, "sticker.webp", "", m, { asSticker: true });
   }
