@@ -25,7 +25,10 @@ const handler = async (m, {conn, participants, command, usedPrefix, text}) => {
         }
       }
     } else if (m.quoted && m.quoted.sender) {
-      mentionedJid = m.quoted.sender;
+      // El remitente citado puede venir como LID y su getter devuelve
+      // una promesa: hay que esperarla, si no se intentaría expulsar
+      // a "[object Promise]@s.whatsapp.net".
+      mentionedJid = await m.quoted.sender;
       if (text && text.trim()) {
         reason = text.trim();
       }

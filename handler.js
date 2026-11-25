@@ -67,6 +67,14 @@ export async function handler(chatUpdate) {
     m.money = false;
     m.limit = false;
     try {
+      // LID (Baileys 7): si el usuario ya tenía registro con su LID
+      // (de antes de que el remitente se normalizara a su número
+      // real), moverlo a su número para no perder XP/límites/idioma.
+      const rawSender = m.key?.participant || m.key?.remoteJid || '';
+      if (rawSender.endsWith('@lid') && global.db.data.users[rawSender] && !global.db.data.users[m.sender]) {
+        global.db.data.users[m.sender] = global.db.data.users[rawSender];
+        delete global.db.data.users[rawSender];
+      }
       // TODO: use loop to insert data instead of this
       const user = global.db.data.users[m.sender]
       if (typeof user !== 'object') {

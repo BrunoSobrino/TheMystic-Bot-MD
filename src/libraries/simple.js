@@ -2309,7 +2309,18 @@ export function serialize() {
         },
         sender: {
             get() {
-                return this.conn?.decodeJid(this.key?.fromMe && this.conn?.user.id || this.participant || this.key.participant || this.chat || '');
+                // Baileys 7 / LID: en grupos el remitente puede venir como LID
+                // (...@lid). Se prefiere el número real de la clave del mensaje
+                // (participantAlt en grupos, remoteJidAlt en privado) y, si el
+                // mapeo LID lo conoce, se resuelve a su JID real, para que la
+                // base de datos y los plugins vean siempre el mismo remitente.
+                const raw = this.key?.fromMe && this.conn?.user.id || this.key?.participantAlt || this.key?.remoteJidAlt || this.participant || this.key.participant || this.chat || '';
+                const decoded = this.conn?.decodeJid(raw);
+                if (decoded && decoded.endsWith('@lid')) {
+                    const resolved = this.conn?.resolveUser?.(decoded)?.jid;
+                    if (resolved) return resolved;
+                }
+                return decoded;
             },
             enumerable: true,
         },
