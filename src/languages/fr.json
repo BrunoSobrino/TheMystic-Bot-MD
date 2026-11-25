@@ -596,6 +596,29 @@
       "texto5": "_*< TÉLÉCHARGEMENTS - PLAY />*_\n\n*[ ℹ️ ] Télécharge ta vidéo sur :*",
       "texto6": "_*< TÉLÉCHARGEMENTS - PLAY />*_\n\n*[ ℹ️ ] Une erreur est survenue. Réessaie plus tard.*"
     },
+    "downloader_ytplay": {
+      "texto1": [
+        "_*< TÉLÉCHARGEMENTS - YTPLAY />*_\n\n*[ ℹ️ ] Écris le nom de la chanson ou le lien YouTube.*\n\n*[ 💡 ] Exemple :*",
+        "Beggin - Måneskin_"
+      ],
+      "texto2": [
+        "_*< TÉLÉCHARGEMENTS - YTPLAY />*_\n\n▢ *Titre :*",
+        "▢ *Publié :*",
+        "▢ *Durée :*",
+        "▢ *Vues :*",
+        "▢ *Auteur :*",
+        "▢ *ID :*",
+        "▢ *Type :*",
+        "▢ *Lien :*",
+        "▢ *Chaîne :*",
+        "*[ ℹ️ ] Appuie sur un bouton pour télécharger :*",
+        "🎵 Audio ou 🎬 Vidéo.*"
+      ],
+      "texto3": "Audio",
+      "texto4": "Vidéo",
+      "texto5": "TheMystic-Bot-MD",
+      "texto6": "_*< TÉLÉCHARGEMENTS - YTPLAY />*_\n\n*[ ℹ️ ] Une erreur est survenue. Veuillez réessayer plus tard.*"
+    },
     "descargas_spotify": {
       "texto1": "_*< TÉLÉCHARGEMENTS - SPOTIFY />*_\n\n*[ ℹ️ ] Il manque le titre de la chanson Spotify.*\n\n*[ 💡 ] Exemple :*",
       "texto2": [
