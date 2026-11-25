@@ -25,7 +25,7 @@ function sticker2(img, url) {
       if (url) {
         const res = await fetch(url)
         if (res.status !== 200) throw await res.text()
-        img = await res.buffer()
+        img = Buffer.from(await res.arrayBuffer())
       }
       const inp = path.join(tmp, +new Date + '.jpeg')
       await fs.promises.writeFile(inp, img)
@@ -69,7 +69,7 @@ async function sticker3(img, url, packname, author) {
     packname,
     author
   })))
-  return await res.buffer()
+  return Buffer.from(await res.arrayBuffer())
 }
 
 /**
@@ -81,7 +81,7 @@ async function sticker4(img, url) {
   if (url) {
     const res = await fetch(url)
     if (res.status !== 200) throw await res.text()
-    img = await res.buffer()
+    img = Buffer.from(await res.arrayBuffer())
   }
   return await ffmpeg(img, [
     '-vf', 'scale=512:512:flags=lanczos:force_original_aspect_ratio=decrease,format=rgba,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=#00000000,setsar=1'
@@ -110,7 +110,7 @@ function sticker6(img, url) {
     if (url) {
       const res = await fetch(url)
       if (res.status !== 200) throw await res.text()
-      img = await res.buffer()
+      img = Buffer.from(await res.arrayBuffer())
     }
     const type = await fileTypeFromBuffer(img) || {
       mime: 'application/octet-stream',
