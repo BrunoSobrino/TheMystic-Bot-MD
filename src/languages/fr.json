@@ -150,7 +150,11 @@
       "texto7": "*[❗INFO❗] EN ATTENTE D'UN AUTRE UTILISATEUR POUR COMMENCER LE CHAT ANONYME*\n\n*TU VEUX QUITTER LE CHAT ANONYME ?*\nÉCRIS"
     },
     "audio_efectos": {
-      "texto1": "*[❗INFO❗] RÉPONDS À L'AUDIO OU À LA NOTE VOCALE À MODIFIER, EN UTILISANT LA COMMANDE "
+      "texto1": "*[❗INFO❗] RÉPONDS À L'AUDIO OU À LA NOTE VOCALE À MODIFIER, EN UTILISANT LA COMMANDE ",
+      "texto2": "Impossible de télécharger le fichier audio",
+      "texto3": "Le fichier traité n'a pas été généré correctement",
+      "texto4": "Le fichier traité est vide",
+      "texto5": "_*Erreur lors du traitement de l'audio :*_"
     },
     "buscador_animeinfo": {
       "texto1": "[❗INFO❗] ENTRE LE NOM D'UN ANIME À RECHERCHER",
@@ -253,6 +257,19 @@
         "Durée :",
         "Publié :",
         "Vues :"
+      ],
+      "texto3": "> *[❗] Erreur : vidéos introuvables.*",
+      "texto4": [
+        "*—◉ Résultats obtenus :* ",
+        "\n*—◉ Vidéo aléatoire :*\n*-› Titre :* ",
+        "\n*-› Auteur :* ",
+        "\n*-› Vues :* ",
+        "\n*-› Image :* "
+      ],
+      "texto5": "OPTIONS DISPONIBLES",
+      "texto6": [
+        "Télécharger MP3",
+        "Télécharger MP4"
       ]
     },
     "cmd_add": {
@@ -273,7 +290,12 @@
       "texto3": "[ ✔ ] LE TEXTE/LA COMMANDE ASSIGNÉ(E) AU STICKER/À L'IMAGE A ÉTÉ SUPPRIMÉ(E) DE LA BASE DE DONNÉES CORRECTEMENT"
     },
     "cmd_list": {
-      "texto1": "< LISTE DES COMMANDES / TEXTES ASSIGNÉS />"
+      "texto1": "< LISTE DES COMMANDES / TEXTES ASSIGNÉS />",
+      "texto2": [
+        "*CODE :*",
+        "*(bloqué)*",
+        "*COMMANDE/TEXTE*"
+      ]
     },
     "config_funciones": {
       "texto1": [
@@ -727,7 +749,17 @@
         "├‣💚 *𝚄𝚁𝙻 𝙳𝙸𝚁𝙴𝙲𝚃𝙴 :*",
         "*- 𝙴𝚗𝚟𝚘𝚒 𝚍𝚎 𝚕𝚊 𝚖𝚞𝚜𝚒𝚚𝚞𝚎...*"
       ],
-      "texto3": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙴𝚄𝚁, 𝙸𝙼𝙿𝙾𝚂𝚂𝙸𝙱𝙻𝙴 𝙳𝙴 𝚃𝚁𝙾𝚄𝚅𝙴𝚁 𝙻𝙰 𝙲𝙷𝙰𝙽𝚂𝙾𝙽 𝙾𝚄 𝙻𝙰 𝙿𝙰𝙶𝙴 𝙳'𝙰𝙸𝙳𝙴 𝙿𝙾𝚄𝚁 𝚁𝙴𝙲𝙷𝙴𝚁𝙲𝙷𝙴𝚁 𝙻𝙰 𝙲𝙷𝙰𝙽𝚂𝙾𝙽 𝙴𝚂𝚃 𝙷𝙾𝚁𝚂 𝚂𝙴𝚁𝚅𝙸𝙲𝙴, 𝚁𝙴𝙴𝚂𝚂𝙰𝙸𝙴 𝙿𝙻𝚄𝚂 𝚃𝙰𝚁𝙳*"
+      "texto3": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝚁𝚁𝙴𝚄𝚁, 𝙸𝙼𝙿𝙾𝚂𝚂𝙸𝙱𝙻𝙴 𝙳𝙴 𝚃𝚁𝙾𝚄𝚅𝙴𝚁 𝙻𝙰 𝙲𝙷𝙰𝙽𝚂𝙾𝙽 𝙾𝚄 𝙻𝙰 𝙿𝙰𝙶𝙴 𝙳'𝙰𝙸𝙳𝙴 𝙿𝙾𝚄𝚁 𝚁𝙴𝙲𝙷𝙴𝚁𝙲𝙷𝙴𝚁 𝙻𝙰 𝙲𝙷𝙰𝙽𝚂𝙾𝙽 𝙴𝚂𝚃 𝙷𝙾𝚁𝚂 𝚂𝙴𝚁𝚅𝙸𝙲𝙴, 𝚁𝙴𝙴𝚂𝚂𝙰𝙸𝙴 𝙿𝙻𝚄𝚂 𝚃𝙰𝚁𝙳*",
+      "texto4": [
+        "*亗 S O U N D C L O U D*",
+        "*› Titre :*",
+        "*› Artiste :*",
+        "*› Id :*",
+        "*› Abonnés :*",
+        "*› J'aime :*",
+        "*› Publié :*",
+        "*› Url :*"
+      ]
     },
     "downloader_stickerpack": {
       "texto1": "*[❗] 𝙴𝚇𝙴𝙼𝙿𝙻𝙴 𝙳'𝚄𝚃𝙸𝙻𝙸𝚂𝙰𝚃𝙸𝙾𝙽 𝙳𝙴 𝙻𝙰 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝙴",
@@ -1271,6 +1303,10 @@
         "Mentionne ton type de copine !",
         "Dis « Je suis amoureux de toi, tu veux être mon copain ou pas ? » au dernier sexe opposé avec qui tu as discuté sur WhatsApp, attends qu'il réponde",
         "Parle à ton ex sur WhatsApp et dis-lui « je t'aime, reviens s'il te plaît ». Envoie une capture d'écran comme preuve du défi accompli !"
+      ],
+      "texto2": [
+        "*┌────「 DÉFI 」─*",
+        "*└────「 MYSTIC 」─*"
       ]
     },
     "fun_ruletas": {
@@ -1293,7 +1329,9 @@
         "Salut",
         "Hello",
         ""
-      ]
+      ],
+      "texto4": "Tu dois saisir un texte pour parler à Simsimi.",
+      "texto5": "Toutes les API ont échoué. Réessaie plus tard."
     },
     "fun_top": {
       "texto1": "Exemple d'utilisation :\n.top *texte*"
@@ -1470,12 +1508,23 @@
         "Quelle star tu aimes",
         "Tu as commencé quelque chose avec XY (insérer le nom) ?",
         "Tu as déjà volé quelque chose ?"
+      ],
+      "texto4": [
+        "*┌────「 VÉRITÉ 」─*",
+        "*└────「 MYSTIC 」─*"
       ]
     },
     "game__cancion": {
       "texto1": "Le jeu est terminé",
       "texto2": "❌Incorrect !",
-      "texto3": "DEVINE LE TITRE DE LA CHANSON"
+      "texto3": "DEVINE LE TITRE DE LA CHANSON",
+      "texto4": "Il n'y a pas de jeu actif dans ce chat.",
+      "texto5": "❌ Faux. Continue d'essayer !",
+      "texto6": [
+        "🎉 Correct !",
+        "de"
+      ],
+      "texto7": "🎯 Presque ! Tu y es presque..."
     },
     "game__suitpvp": {
       "texto1": "𝙸𝙻 𝙰 𝚁𝙴𝙵𝚄𝚂𝙴́ 𝙻𝙴 𝙿𝚅𝙿, 𝙻𝙴 𝙹𝙴𝚄 𝙴𝚂𝚃 𝙰𝙽𝙽𝚄𝙻𝙴́*",
@@ -1790,7 +1839,22 @@
         "Prix :",
         "RÉPONDS À CE MESSAGE AVEC LES RÉPONSES !"
       ],
-      "texto3": "Temps écoulé !\nLa réponse est"
+      "texto3": "Temps écoulé !\nLa réponse est",
+      "texto4": [
+        "🎵 *DEVINE LE TITRE DE LA CHANSON* 🎵",
+        "⏰ Temps :",
+        "secondes",
+        "💡 Utilise",
+        "pour obtenir un indice",
+        "🏆 Récompense :",
+        "XP",
+        "> N'oublie pas que ta réponse doit être envoyée en répondant à ce message pour être détectée.",
+        "*Écoute la chanson et devine le titre !*"
+      ],
+      "texto5": [
+        "⏰ Temps écoulé !",
+        "🎵 La réponse était :"
+      ]
     },
     "game_delttt": {
       "texto1": "*[❗] 𝚃𝚄 𝙽'𝙴𝚂 𝙳𝙰𝙽𝚂 𝙰𝚄𝙲𝚄𝙽𝙴 𝙿𝙰𝚁𝚃𝙸𝙴 𝙳𝙴 𝙼𝙾𝚁𝙿𝙸𝙾𝙽*",
@@ -2282,7 +2346,8 @@
     "gc_link": {
       "texto1": [
         "𝙻𝙸𝙴𝙽 𝙳𝚄 𝙶𝚁𝙾𝚄𝙿𝙴"
-      ]
+      ],
+      "texto2": "COPIER LE LIEN"
     },
     "gc_listanum_kicknum": {
       "texto1": "*[❗] 𝙴𝙽𝚃𝚁𝙴 𝙻'𝙸𝙽𝙳𝙸𝙲𝙰𝚃𝙸𝙵 𝙳'𝚄𝙽 𝙿𝙰𝚈𝚂 𝙿𝙾𝚄𝚁 𝙲𝙷𝙴𝚁𝙲𝙷𝙴𝚁 𝙳𝙴𝚂 𝙽𝚄𝙼𝙴́𝚁𝙾𝚂 𝙳𝙴 𝙲𝙴 𝙿𝙰𝚈𝚂 𝙳𝙰𝙽𝚂 𝙲𝙴 𝙶𝚁𝙾𝚄𝙿𝙴, 𝙴𝚇𝙴𝙼𝙿𝙻𝙴 :",
@@ -2339,6 +2404,11 @@
       "texto2": [
         "*[❗] 𝙴𝙽𝚃𝚁𝙴 𝙻𝙴 𝙼𝙴𝚂𝚂𝙰𝙶𝙴 𝙳𝙴 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝚄𝙴 𝚀𝚄𝙴 𝚃𝚄 𝚅𝙴𝚄𝚇 𝙰𝙹𝙾𝚄𝚃𝙴𝚁, 𝚄𝚃𝙸𝙻𝙸𝚂𝙴 :*",
         "*- @group (nom du groupe)*\n*- @desc (description du groupe)*"
+      ],
+      "texto3": [
+        "*- @user (mention)*",
+        "*- @group (nom du groupe)*",
+        "*- @desc (description du groupe)*"
       ]
     },
     "gc_tagall": {
@@ -2418,7 +2488,9 @@
       ],
       "texto2": "Tu agiras comme un bot WhatsApp créé par BrunoSobrino, tu seras The Mystic - Bot.",
       "texto3": "Tu agiras comme un bot WhatsApp créé par BrunoSobrino, tu seras The Mystic - Bot.",
-      "texto4": "*[❗] 𝙴𝚁𝚁𝙴𝚄𝚁, 𝚁𝙴́𝙴𝚂𝚂𝙰𝙸𝙴*"
+      "texto4": "*[❗] 𝙴𝚁𝚁𝙴𝚄𝚁, 𝚁𝙴́𝙴𝚂𝚂𝙰𝙸𝙴*",
+      "texto5": "🗑️ Mémoire de conversation effacée avec succès.\n\nJe ne me souviendrai plus de nos conversations précédentes.",
+      "texto6": "⚠️ Une erreur est survenue lors du contact avec l'API."
     },
     "herramientas_clima": {
       "texto1": "*[❗𝐈𝐍𝐅𝐎❗] É𝙲𝚁𝙸𝚂 𝙻𝙴 𝙽𝙾𝙼 𝙳𝙴 𝚃𝙾𝙽 𝙿𝙰𝚈𝚂 𝙾𝚄 𝙳𝙴 𝚃𝙰 𝚅𝙸𝙻𝙻𝙴*",
@@ -2537,7 +2609,8 @@
     },
     "herramientas_readviewonce": {
       "texto1": "*[❗] 𝚁É𝙿𝙾𝙽𝙳𝚂 À 𝚄𝙽 𝙼𝙴𝚂𝚂𝙰𝙶𝙴 𝙴𝙽𝚅𝙾𝚈É 𝙴𝙽 𝚅𝙸𝙴𝚆𝙾𝙽𝙲𝙴 (𝚅𝙾𝙸𝚁 𝚄𝙽𝙴 𝚂𝙴𝚄𝙻𝙴 𝙵𝙾𝙸𝚂)*",
-      "texto2": "*[❗] 𝙻𝙴 𝙼𝙴𝚂𝚂𝙰𝙶𝙴 𝚂É𝙻𝙴𝙲𝚃𝙸𝙾𝙽𝙽É 𝙽'𝙴𝚂𝚃 𝙿𝙰𝚂 𝚄𝙽 𝚅𝙸𝙴𝚆𝙾𝙽𝙲𝙴 (𝚅𝙾𝙸𝚁 𝚄𝙽𝙴 𝚂𝙴𝚄𝙻𝙴 𝙵𝙾𝙸𝚂)*"
+      "texto2": "*[❗] 𝙻𝙴 𝙼𝙴𝚂𝚂𝙰𝙶𝙴 𝚂É𝙻𝙴𝙲𝚃𝙸𝙾𝙽𝙽É 𝙽'𝙴𝚂𝚃 𝙿𝙰𝚂 𝚄𝙽 𝚅𝙸𝙴𝚆𝙾𝙽𝙲𝙴 (𝚅𝙾𝙸𝚁 𝚄𝙽𝙴 𝚂𝙴𝚄𝙻𝙴 𝙵𝙾𝙸𝚂)*",
+      "texto3": "Erreur lors du traitement du fichier viewOnce"
     },
     "herramientas_spamwa": {
       "texto1": "*[ ⚠️ ] 𝙴𝙽𝚃𝚁𝙴 𝙻𝙴 𝙽𝚄𝙼É𝚁𝙾 𝙰𝚄𝚀𝚄𝙴𝙻 𝚃𝚄 𝚅𝙴𝚄𝚇 𝙴𝙽𝚅𝙾𝚈𝙴𝚁 𝙻𝙴 𝚂𝙿𝙰𝙼 𝙳𝙴 𝙼𝙴𝚂𝚂𝙰𝙶𝙴𝚂 !*\n*𝚄𝚃𝙸𝙻𝙸𝚂𝙰𝚃𝙸𝙾𝙽 𝙲𝙾𝚁𝚁𝙴𝙲𝚃𝙴 :*\n*—◉ #spamwa numéro|texte|quantité*\n*𝙴𝚇𝙴𝙼𝙿𝙻𝙴 :*\n*—◉ #spamwa 5219999999999|réponds :v|25*",
@@ -2554,7 +2627,8 @@
       "texto1": "*[ 🔎 ] Envoie la commande plus l'URL complète du site web.*"
     },
     "herramientas_topdf": {
-      "texto1": "*[❗] 𝚁É𝙿𝙾𝙽𝙳𝚂 / 𝙸𝙳𝙴𝙽𝚃𝙸𝙵𝙸𝙴 𝚄𝙽𝙴 𝙸𝙼𝙰𝙶𝙴*"
+      "texto1": "*[❗] 𝚁É𝙿𝙾𝙽𝙳𝚂 / 𝙸𝙳𝙴𝙽𝚃𝙸𝙵𝙸𝙴 𝚄𝙽𝙴 𝙸𝙼𝙰𝙶𝙴*",
+      "texto2": "document"
     },
     "herramientas__translate": {
       "texto1": [
@@ -2576,7 +2650,8 @@
         "• 🌐 𝙶𝙴𝙽𝚁𝙴:",
         "• 📆 𝙳𝙰𝚃𝙴 𝙳𝙴 𝚂𝙾𝚁𝚃𝙸𝙴:"
       ],
-      "texto4": "*[❗𝐈𝐍𝐅𝐎❗] 𝚁É𝙿𝙾𝙽𝙳𝚂 À 𝚄𝙽 𝙰𝚄𝙳𝙸𝙾*"
+      "texto4": "*[❗𝐈𝐍𝐅𝐎❗] 𝚁É𝙿𝙾𝙽𝙳𝚂 À 𝚄𝙽 𝙰𝚄𝙳𝙸𝙾*",
+      "texto5": "> *[❗] Erreur : audio introuvable.*"
     },
     "ia_bard": {
       "texto1": "_*< IA - BARD />*_\n\n*[ ℹ️ ] Donne un texte.*\n\n*[ 💡 ] Exemple :*",
@@ -2801,7 +2876,8 @@
       "texto1": "*𝚃𝙰 𝚁𝙴𝙻𝙸𝙶𝙸𝙾𝙽, 𝙲'𝙴𝚂𝚃 𝙳'Ê𝚃𝚁𝙴 𝚄𝙽 𝚂𝙸𝙼𝙿 !!*"
     },
     "maker_ytcomment": {
-      "texto1": "*𝙼𝙴𝚁𝙲𝙸 𝙳'𝙰𝚅𝙾𝙸𝚁 𝙲𝙾𝙼𝙼𝙴𝙽𝚃É !!*"
+      "texto1": "*𝙼𝙴𝚁𝙲𝙸 𝙳'𝙰𝚅𝙾𝙸𝚁 𝙲𝙾𝙼𝙼𝙴𝙽𝚃É !!*",
+      "texto2": "Pas de texte"
     },
     "maker_ephoto360": {
       "texto1": "*[❗] 𝙴𝙽𝚃𝚁𝙴 𝚄𝙽 𝚃𝙴𝚇𝚃𝙴*",
@@ -3034,7 +3110,12 @@
       "texto2": "*[❗] 𝙴𝚁𝚁𝙴𝚄𝚁, 𝙸𝙼𝙿𝙾𝚂𝚂𝙸𝙱𝙻𝙴 𝙳𝙴 𝚃𝙴 𝙽𝙾𝙼𝙼𝙴𝚁 𝙰𝙳𝙼𝙸𝙽𝙸𝚂𝚃𝚁𝙰𝚃𝙴𝚄𝚁*"
     },
     "owner_banchat": {
-      "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙲𝙴 𝙲𝙷𝙰𝚃 𝙰 𝙴́𝚃𝙴́ 𝙱𝙰𝙽𝙽𝙸 𝙰𝚅𝙴𝙲 𝚂𝚄𝙲𝙲𝙴̀𝚂*\n\n*—◉ 𝙻𝙴 𝙱𝙾𝚃 𝙽𝙴 𝚁𝙴́𝙰𝙶𝙸𝚁𝙰 𝙰̀ 𝙰𝚄𝙲𝚄𝙽𝙴 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝙴 𝚃𝙰𝙽𝚃 𝚀𝚄𝙴 𝙲𝙴 𝙲𝙷𝙰𝚃 𝙽'𝙰𝚄𝚁𝙰 𝙿𝙰𝚂 𝙴́𝚃𝙴́ 𝙳𝙴́𝙱𝙰𝙽𝙽𝙸*"
+      "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙲𝙴 𝙲𝙷𝙰𝚃 𝙰 𝙴́𝚃𝙴́ 𝙱𝙰𝙽𝙽𝙸 𝙰𝚅𝙴𝙲 𝚂𝚄𝙲𝙲𝙴̀𝚂*\n\n*—◉ 𝙻𝙴 𝙱𝙾𝚃 𝙽𝙴 𝚁𝙴́𝙰𝙶𝙸𝚁𝙰 𝙰̀ 𝙰𝚄𝙲𝚄𝙽𝙴 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝙴 𝚃𝙰𝙽𝚃 𝚀𝚄𝙴 𝙲𝙴 𝙲𝙷𝙰𝚃 𝙽'𝙰𝚄𝚁𝙰 𝙿𝙰𝚂 𝙴́𝚃𝙴́ 𝙳𝙴́𝙱𝙰𝙽𝙽𝙸*",
+      "texto2": "⚠️ Ce chat est déjà banni.",
+      "texto3": [
+        "✅ Bot ",
+        " banni spécifiquement de ce chat."
+      ]
     },
     "owner_banlist": {
       "texto1": "〔 𝐔𝐓𝐈𝐋𝐈𝐒𝐀𝐓𝐄𝐔𝐑𝐒 𝐁𝐀𝐍𝐍𝐈𝐒 〕",
@@ -3232,7 +3313,8 @@
     },
     "owner_saveimage": {
       "texto1": "Entre un nom pour ton fichier image et l'extension souhaitée (par exemple, nom.png, nom.jpg, etc.)",
-      "texto2": "Réponds à l'image que tu veux enregistrer.."
+      "texto2": "Réponds à l'image que tu veux enregistrer..",
+      "texto3": "Image enregistrée sous"
     },
     "owner_setprefix": {
       "texto1": "*[❗] Aucun préfixe trouvé, entre le préfixe que tu veux définir. Exemple :*",
@@ -3591,7 +3673,8 @@
       ],
       "texto7": "*[❗] Annulé, le transfert ne sera pas effectué.*",
       "texto8": "*[❗] Transférés avec succès",
-      "texto9": "*[❗] Erreur lors du transfert"
+      "texto9": "*[❗] Erreur lors du transfert",
+      "texto10": "*[❗] Temps écoulé, aucune réponse reçue. Transfert annulé.*"
     },
     "rpg_unreg": {
       "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙴𝙽𝚃𝚁𝙴 𝚃𝙾𝙽 𝙽𝚄𝙼𝙴𝚁𝙾 𝙳𝙴 𝚂𝙴𝚁𝙸𝙴, 𝚂𝙸 𝚃𝚄 𝙽𝙴 𝚃'𝙴𝙽 𝚂𝙾𝚄𝚅𝙸𝙴𝙽𝚂 𝙿𝙰𝚂 𝚃𝚄 𝙿𝙴𝚄𝚇 𝚄𝚃𝙸𝙻𝙸𝚂𝙴𝚁 𝙻𝙰 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝙴 #𝚖𝚢𝚗𝚜*",
@@ -3667,6 +3750,19 @@
         "Tu es un explorateur sous-marin, plongeant dans les profondeurs pour découvrir des trésors oubliés.",
         "Tu es un créateur de mode reconnu, créant des tendances et habillant les gens avec ton style unique.",
         "Tu es un leader révolutionnaire, luttant pour un monde meilleur et guidant les masses vers la liberté."
+      ],
+      "texto2": [
+        "⚔️ *Attends un moment, petit aventurier !* ⚔️\n\n*—◉ Reviens à l'aventure dans ",
+        " ⏳*"
+      ],
+      "texto3": [
+        "🏞️ *Tu te lances dans une aventure palpitante :*\n\n🛠️ *",
+        "*\n\n*Tu as gagné ",
+        " exp grâce à ta bravoure !*"
+      ],
+      "texto4": [
+        " minutes ",
+        " secondes "
       ]
     },
     "sticker_emojimix": {
@@ -3713,7 +3809,8 @@
     },
     "sticker_slap": {
       "texto1": "*[❗] 𝚃𝙰𝙶𝚄𝙴 𝙾𝚄 𝙼𝙴𝙽𝚃𝙸𝙾𝙽𝙽𝙴 𝚀𝚄𝙴𝙻𝚀𝚄'𝚄𝙽*\n\n*—◉ 𝙴𝚇𝙴𝙼𝙿𝙻𝙴:*",
-      "texto2": "*[❗] 𝙴𝚁𝚁𝙴𝚄𝚁, 𝚁𝙴𝙴𝚂𝚂𝙰𝙸𝙴*"
+      "texto2": "*[❗] 𝙴𝚁𝚁𝙴𝚄𝚁, 𝚁𝙴𝙴𝚂𝚂𝙰𝙸𝙴*",
+      "texto3": " a giflé "
     },
     "sticker_sremovebg": {
       "texto1": "*[❗𝐈𝐍𝐅𝐎❗] 𝙳𝙴𝚂𝙾𝙻𝙴, 𝚄𝙽𝙴 𝙴𝚁𝚁𝙴𝚄𝚁 𝙴𝚂𝚃 𝚂𝚄𝚁𝚅𝙴𝙽𝚄𝙴, 𝚁𝙴𝙴𝚂𝚂𝙰𝙸𝙴, 𝙽'𝙾𝚄𝙱𝙻𝙸𝙴 𝙿𝙰𝚂 𝙳𝙴 𝚁𝙴𝙿𝙾𝙽𝙳𝚁𝙴 𝙰 𝚄𝙽𝙴 𝙸𝙼𝙰𝙶𝙴 𝚀𝚄𝙸 𝚂𝙴𝚁𝙰 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝙴 𝙴𝙽 𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝚂𝙰𝙽𝚂 𝙵𝙾𝙽𝙳*"
@@ -3764,16 +3861,971 @@
     "_language": {
       "texto1": [
         "\n\n_Pour changer la langue, envoie la commande avec l'abréviation de la langue souhaitée\n\n👉Exemple :",
-        "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n🇸🇦 ar - Arabe\n\n_Les traductions sont en cours de développement, il peut y avoir quelques erreurs_",
+        "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n🇸🇦 ar - Arabe",
         "🗣 CONFIGURATION DE LA LANGUE DU BOT\n",
         "[!] Ta langue actuelle est :"
       ],
       "texto2": [
         "🗣 LANGUE DU GROUPE\n\n_Envoie la commande avec l'abréviation de la langue souhaitée_\n\n👉Exemple :",
-        "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n🇸🇦 ar - Arabe\n\n_Les traductions sont en cours de développement, il peut y avoir quelques erreurs_"
+        "Langues disponibles :\n🇪🇸 es - Espagnol\n🇧🇷 pt-br - Portugais\n🇬🇧 en - Anglais\n🇷🇺 ru - Russe\n🇫🇷 fr - Français\n🇸🇦 ar - Arabe"
       ],
       "texto3": "[ ! ] Cette commande ne peut être utilisée que dans les groupes",
-      "texto4": "[ ! ] Cette commande ne peut être utilisée que par les administrateurs"
+      "texto4": "[ ! ] Cette commande ne peut être utilisée que par les administrateurs",
+      "texto5": "*[ ✅ ] The Mystic - Bot*\\n\\n*—◉* *_Langue définie sur Français 🇫🇷_*",
+      "texto6": "*[ ✅ ] Configuration du groupe*\\n\\n*—◉* *_Langue définie sur Français 🇫🇷_*"
+    },
+    "_role": {
+      "texto1": "Guerrier V",
+      "texto2": "Guerrier IV",
+      "texto3": "Guerrier III",
+      "texto4": "Guerrier II",
+      "texto5": "Guerrier I",
+      "texto6": "Élite V",
+      "texto7": "Élite IV",
+      "texto8": "Élite III",
+      "texto9": "Élite II",
+      "texto10": "Élite I",
+      "texto11": "Maître V",
+      "texto12": "Maître IV",
+      "texto13": "Maître III",
+      "texto14": "Maître II",
+      "texto15": "Maître I",
+      "texto16": "Grand Maître V",
+      "texto17": "Grand Maître IV",
+      "texto18": "Grand Maître III",
+      "texto19": "Grand Maître II",
+      "texto20": "Grand Maître I",
+      "texto21": "Épique V",
+      "texto22": "Épique IV",
+      "texto23": "Épique III",
+      "texto24": "Épique II",
+      "texto25": "Épique I",
+      "texto26": "Légende V",
+      "texto27": "Légende IV",
+      "texto28": "Légende III",
+      "texto29": "Légende II",
+      "texto30": "Légende I",
+      "texto31": "Mythique V",
+      "texto32": "Mythique IV",
+      "texto33": "Mythique III",
+      "texto34": "Mythique II",
+      "texto35": "Mythique I",
+      "texto36": "Gloire mythique",
+      "texto37": "Émeraude V",
+      "texto38": "Émeraude VI",
+      "texto39": "Émeraude III",
+      "texto40": "Émeraude II",
+      "texto41": "Émeraude I",
+      "texto42": "Titan III",
+      "texto43": "Titan II",
+      "texto44": "Titan I",
+      "texto45": "Dragon roi étoile"
+    },
+    "_simsimi": {
+      "texto1": "*[❗] L'API de Simsimi rencontre des erreurs.*",
+      "texto2": "Tu dois écrire un texte pour parler avec Simsimi.",
+      "texto3": "Toutes les API ont échoué. Réessaie plus tard."
+    },
+    "converter_tts3": {
+      "texto1": [
+        "*[❗] Format d'utilisation incorrect, voix ou texte manquant.*\n\n*—◉ Exemple :*\n◉ ",
+        " nom_voix | texte\n\n*—◉ Exemple d'utilisation :*\n◉ ",
+        " ",
+        " | ceci est un exemple de texte\n\n*—◉ Liste des voix disponibles :*\n◉ ",
+        ""
+      ],
+      "texto2": [
+        "[❗] Aucune voix trouvée avec le nom \"",
+        "\".\n\n—◉ Liste des voix disponibles :\n◉ ",
+        ""
+      ]
+    },
+    "downloader_threads": {
+      "texto1": "*Entre un lien Threads*",
+      "texto2": [
+        "亗 T H R E A D S\n\n*Utilisateur :* ",
+        "\n*Description :* ",
+        "\n*Likes :* ",
+        "\n*Vérifié :* ",
+        "\n*Fichiers :* ",
+        "\n*Lien :* ",
+        ""
+      ],
+      "texto3": "*🍟 Aucun résultat pour :* "
+    },
+    "downloader_yt_dlp_dla": {
+      "texto1": [
+        "Téléchargement échoué : ",
+        ""
+      ],
+      "texto2": "yt-dlp mis à jour avec succès",
+      "texto3": [
+        "Erreur lors de la mise à jour : ",
+        ""
+      ],
+      "texto4": "Erreur lors du téléchargement du fichier de cookies",
+      "texto5": "Les cookies doivent être du texte ou un fichier. Voir le tutoriel ici : https://youtu.be/KUk9nEf00_U",
+      "texto6": [
+        "Cookies envoyés avec succès dans ",
+        ""
+      ],
+      "texto7": [
+        "Erreur lors de l'envoi des cookies : ",
+        ""
+      ],
+      "texto8": "Erreur inconnue",
+      "texto10": "Téléchargement !",
+      "texto11": [
+        "Erreur : ",
+        ""
+      ],
+      "texto9": "> 🎶Chercher et télécharger une chanson :\n`dla` <recherche>\n> 🎥Chercher et télécharger une vidéo :\n`dla vd` <recherche>\n> ⬇️Télécharger tout type de média : \n`dla` <url> _YT-DLP FLAGS_ \n> 🎵Télécharger tout l'audio d'une playlist : \n`dla mp3` <url> \n> 🍪Cookies : https://youtu.be/KUk9nEf00_U \n> 🌐Plus d'infos :\ngithub.com/yt-dlp/yt-dlp/blob/master/README.md#usage-and-options"
+    },
+    "game_glx": {
+      "texto1": [
+        "*╔═ 🪐JEU DE LA GALAXIE🪐 ═╗*\n\n 👨‍🚀 Salut *",
+        "*, C'est l'heure de voyager dans l'espace, de miner des astéroïdes, de discuter avec des aliens et bien plus dans le monde galactique !\n\n  *💰 Monnaie :* ",
+        "\n\n\n  *🌠 ",
+        "glx _cadastrar_*\n  _Pour t'inscrire à la GLX_\n  \n  *🌠 ",
+        "glx _perfil_*\n  _Vois l'évolution de ton profil._\n\n  *🌠 ",
+        "glx _vender_*\n  _vends tes objets du coffre._\n  \n\n\n> 🧾 Attaques / Défense / Voyage\n\n  *🌠 ",
+        "glx _atacar list_*\n  _Liste tous les joueurs du jeu !_\n\n  *🌠 ",
+        "glx _atacar <username_del_jugador>_*\n  _attaque un utilisateur avec son nom d'utilisateur !_\n\n  *🌠 ",
+        "glx _planeta_*\n  _Mettre à jour les données de la Planète et de la Colonie_\n\n  *🌠 ",
+        "glx _viajar_*\n  _Tu veux visiter une autre Planète ? Allons-y !_\n\n> 🧾 Options de minage\n\n*🌠 ",
+        "glx _miner_*\n_Tu veux de l'argent ? Allons miner._\n\n\n\n> 🧾 Tes infos personnelles \n\n  *🌠 ",
+        "glx _carteira_*\n  _Accède à ton portefeuille financier._\n\n  *🌠 ",
+        "glx _loja_*\n  _Découvre notre boutique de la galaxie_\n\n  *🌠 ",
+        "glx _bau_*\n  _Vois tes objets sauvegardés_\n\n \n\n\n  *🌟 ",
+        "glx _criador_*\n  _Infos sur le créateur du jeu.._\n\n  *🌟 ",
+        "glx _sobre_*\n  _À propos du jeu._\n\n  _Actualités et mises à jour automatiques_\n  _Si tu as une question, contacte-nous_\n\n  \n*╘═══════════════════╛*\n  🌞🌕🌠🌟⭐🌎🪐\n"
+      ],
+      "texto2": "Actif",
+      "texto3": "Désactivé",
+      "texto4": "Oui",
+      "texto5": "Non",
+      "texto6": "Pas de nom d'utilisateur",
+      "texto7": [
+        "*_⚔️ MAINTENANT TU ES UN MEMBRE STELLAIRE🪐_*\n\nTes informations dans la galaxie !\n                        \n*🧑Nom : _",
+        "_*\n*🌐Nom d'utilisateur : _",
+        "_*\n*⏹️Statut : _",
+        "_* \n*🚀A un vaisseau: _",
+        "_*\n\n```🏠 Où vis-tu maintenant ? :```\n*🪐Ta planète : _",
+        "_*\n*🏠Colonie : _",
+        "_*\n\nCommandes de configuration :\n*",
+        "glx set name* - nom\n*",
+        "glx set username* - nom d'utilisateur\n\nCommandes Glx dans les Groupes (planète) :\n*",
+        "glx planeta act* - Mettre à jour les données de la colonie.\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸 JEU DE LA GALAXIE 🛸_*\n\n"
+      ],
+      "texto8": [
+        "Nouvel utilisateur inscrit : \n\nId : ",
+        " \n\nNom: ",
+        ""
+      ],
+      "texto9": [
+        "_😢Tu dois t'inscrire au jeu_\n\n> Utilise *",
+        "glx cadastrar* \n_Pour t'inscrire._\n\n😁 *inscris-toi maintenant, ne perds pas de temps.*"
+      ],
+      "texto10": [
+        "_😁 Salut *",
+        "*, Tu es déjà inscrit._"
+      ],
+      "texto11": "Choisis une option :",
+      "texto12": "Powered by GLX",
+      "texto13": "Aide",
+      "texto14": "Jouer",
+      "texto15": "Statut",
+      "texto16": [
+        "😁 Nom changé en *",
+        "*._ \nPour vérifier envoie *.glx* _perfil_"
+      ],
+      "texto17": "_😁 Dis-moi quel sera le nouveau nom :_ \n\n Ex : *.glx* _set nome_ *_nometeste_*",
+      "texto18": [
+        "Ce Nom d'utilisateur *(",
+        ")* existe déjà pour un autre utilisateur!"
+      ],
+      "texto19": [
+        "😁Ton nom d'utilisateur est maintenant *",
+        "*\nPour vérifier envoie *.glx* _perfil_"
+      ],
+      "texto20": "_😁 Dis-moi quel sera le nouveau nom d'utilisateur :_ \n\n Ex : *.glx* _set username_ *_nometeste_*",
+      "texto21": "\n_:-) Qu'est-ce que tu veux changer ?\n\n*name* - Changer ton nom dans le jeu glx\n*username* - Changer ton nom d'utilisateur dans le jeu glx\n                                    \n                                _",
+      "texto22": [
+        "*( ❌ ) Tu n'as pas de vaisseau* \n\n Utilise *",
+        "glx comprar nave n1* - Pour acheter ton premier vaisseau !\n\n_Ou pour voir d'autres modèles de vaisseaux🏪dans la boutique, utilise_: *",
+        "glx loja*"
+      ],
+      "texto23": [
+        "*",
+        "* _⚠️Cette planète est ta maison et tu y es déjà_"
+      ],
+      "texto24": [
+        "*",
+        "* _⚠️ Cette planète est ta maison, tu y es déjà_"
+      ],
+      "texto25": [
+        " 😉 *Salut !!!* à nouveau ",
+        ""
+      ],
+      "texto26": [
+        "",
+        " _Tu es de retour sur Terre 😉 ! _ "
+      ],
+      "texto27": [
+        "\n╔════════════════════╗\n\n*LIEUX DE VOYAGE*\n\n> --- PLANÈTES \n*✈️ ",
+        "glx viajar terra*\n_Une belle planète!_\n\n*✈️ ",
+        "glx viajar megatron*\n_Une planète hostile aux caractéristiques agressives!_\n\n\n\n\n> --- COMMANDES UTILES\n*⚙️ ",
+        "glx viajar casa*\n_Si ton vaisseau tombe en panne, utilise cette commande pour revenir_\n\n\n\n\n  *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n                            "
+      ],
+      "texto28": [
+        "*--- 🏪 BOUTIQUE - MODÈLES DE VAISSEAUX ---*\n\n_Modèles :_\n *➥ n1* - VAISSEAU N1\n 💨 Vitesse : *",
+        "*\n ⚡ Puissance de Combat : *",
+        "*\n 🎮(XP) du Vaisseau : *(",
+        ")*\n 💸Prix du vaisseau: *",
+        "*\n\n\n *➥ n2* - VAISSEAU N2\n 💨 Vitesse: *",
+        "*\n ⚡ Puissance de Combat : *",
+        "*\n 🎮(XP) du Vaisseau : *(",
+        ")*\n 💸Prix du vaisseau: *",
+        "*\n\n\n *➥ n3* - VAISSEAU N3\n 💨 Vitesse: *",
+        "*\n ⚡ Puissance de Combat : *",
+        "*\n 🎮(XP) du Vaisseau : *(",
+        ")*\n 💸Prix du vaisseau: *",
+        "*\n\n Exemple d'utilisation : *",
+        "glx comprar nave n1*\n\n\n\n\n  *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸 JEU DE LA GALAXIE 🛸_*\n\n "
+      ],
+      "texto29": [
+        "*--- 🏪 BOUTIQUE DE LA GALAXIE---*\n                                \n_Catégories :_\n↳ vaisseau\n\n\nEx : Pour voir les vaisseaux :\n*",
+        "glx loja nave*\n\nEx : Acheter un vaisseau :\n*",
+        "glx comprar nave n1*\n\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n\n"
+      ],
+      "texto30": "Cette commande ne peut être utilisée qu'en privé",
+      "texto31": [
+        "*-- 💴 PORTEFEUILLE FINANCIER --* \n                        \n_ℹ️ Tes Informations :_\n*🏧Solde :* ",
+        "\n\n_Tu veux gagner de l'argent ?_\nUtilise ",
+        "glx vender\n\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n\n                        "
+      ],
+      "texto32": [
+        "*Données de la planète ",
+        "*\n\n*🏠Colonies en pleine croissance:*\n",
+        "\n\n",
+        "\n\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n\n"
+      ],
+      "texto33": "*- Habitants :*\n",
+      "texto34": [
+        "Total : ",
+        "\n"
+      ],
+      "texto35": " *Toi* ",
+      "texto36": [
+        "➣ ",
+        "@",
+        "\n"
+      ],
+      "texto37": [
+        "*",
+        "*\n",
+        "\n    \n"
+      ],
+      "texto38": " Tu peux utiliser ça uniquement dans les groupes",
+      "texto39": "_Bienvenue chez toi ! _",
+      "texto40": "_Bienvenue à la maison ! _",
+      "texto41": "Ça n'existe pas dans la colonie",
+      "texto42": [
+        "*• _",
+        "_*  ➡︎ [ ",
+        " ] \n"
+      ],
+      "texto43": [
+        "╔═════════👜═════════╗\n\n*_📝 - TOUS LES OBJETS_*\n\n> ⛏️ MINERAIS :\n",
+        "\n - Tu veux vendre tes objets ?\n Utilise *",
+        "glx vender ouro 10*                    \n\n\n\n  *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n\n*_🛸 JEU DE LA GALAXIE 🛸_*\n\n ╚═════════👜═════════╝"
+      ],
+      "texto44": [
+        "* 🏪 BOUTIQUE DE PRÊT SUR GAGE*\n\n_Consulte les articles que tu peux vendre._ \n\n▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅\n> OBJETS DE MINAGE ⤵\n\n🛠️ *",
+        "glx vender madeira 1*\n - Prix Unitaire : ",
+        "\n                                \n 🛠️ *",
+        "glx vender ferro 1*\n- Prix Unitaire : ",
+        "\n                                \n🛠️ *",
+        "glx vender diamante 1*\n- Prix Unitaire : ",
+        "\n                                \n🛠️ *",
+        "glx vender esmeralda 1*\n- Prix Unitaire : ",
+        " \n\n🛠️ *",
+        "glx vender carvao 1*\n- Prix Unitaire : ",
+        "\n                                \n🛠️ *",
+        "glx vender ouro 1*\n- Prix Unitaire : ",
+        "\n                                \n🛠️ *",
+        "glx vender quartzo 1*\n- Prix Unitaire : ",
+        "\n \n▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅\n\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n\n\n                                "
+      ],
+      "texto45": "*Minage arrêté*",
+      "texto46": [
+        "\n*🌳",
+        "glx miner parar*\n_À utiliser seulement pour arrêter le minage_\n                                "
+      ],
+      "texto47": [
+        "\n*🌳",
+        "glx miner madeira*\n_L'un des principaux minerais, pour vendre ou construire des maisons._ \n\n*🔩",
+        "glx miner ferro*\n_Un minerai utilisé pour vendre et acheter des bateaux.._\n\n*💎",
+        "glx miner diamante*\n_Un minerai très important pour gagner de l'argent.._\n\n*🟢",
+        "glx miner esmeralda*\n_Un minerai très important pour gagner de l'argent.._\n\n*⚫",
+        "glx miner carvao*\n_Idéal pour la vente, le carburant ou le feu.._\n\n*🟡",
+        "glx miner ouro*\n_Un minerai de grande valeur pour le commerce_\n\n *⚪",
+        "glx miner quartzo*\n _Un minerai de grande valeur pour le commerce_\n                           "
+      ],
+      "texto48": [
+        "⛏️ *OPTIONS POUR MINER* ⚒️\n                                \n> ⚙️ *RÉGLAGES*\n",
+        "\n\n> ⛏️ *minerais*",
+        "\n\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n\n"
+      ],
+      "texto49": "*Carte* _désactivée dans le jeu à cause d'un bug dans Debiam_",
+      "texto50": "Pas de vaisseau",
+      "texto51": [
+        "*_🤖 ",
+        " Ton Profil ! _*\n\nVoici tes infos dans le jeu. ```GALAXIA```.\n\n_💡N'oublie pas de miner, *",
+        "glx miner* Ça augmente ton XP et ta force.._\n\n*🆙 XP:* _",
+        " XP_\n    *Niveau suivant :* _",
+        " XP_\n\n*📈 Niveau:* _",
+        "_\n*💪 Puissance [Force] :* _",
+        "_ P\n*⚔️ Puissance d'Attaque :* _",
+        "_ P\n*🛡️ Puissance de Défense :* _",
+        "_ P\n*🌀 Nom d'utilisateur :* _",
+        "_\n\n*🗣️ Langue :* _",
+        "_\n*💰 Monnaie :* _",
+        "_\n\n*🌏 Planète :* _",
+        "_\n*🏠 Colonie :* _",
+        "_\n\n*🛸 Ton vaisseau actuel :* _",
+        "_\n\n\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n"
+      ],
+      "texto52": "🛈 *INFOS SUR LE CRÉATEUR :*\n\n👨 *_créateur du jeu galaxie :_*\nhttps://github.com/jeffersonalionco\n\n👨 *_Créateur du BOT :_*\nhttps://github.com/BrunoSobrino",
+      "texto53": [
+        "*_📚--- LISTE DES UTILISATEURS ---📚_*\n\n*Utilise :*\n",
+        "glx atacar *<USERNAME>* - _Pour attaquer un joueur !_\n\n"
+      ],
+      "texto54": [
+        "👨‍🚀 *Nom :* ",
+        " \n*🔎 Nom d'utilisateur:* ",
+        "\n*✍ Utilisateur :* @",
+        "\n______________________\n\n"
+      ],
+      "texto55": "\n_Bienvenue dans l'aide_ *GALAXIA*\n\n*Objectif du jeu*\nLe but du jeu est de créer un monde ouvert où les joueurs peuvent extraire des objets puis les vendre pour gagner de l'argent. Avec l'argent gagné, les joueurs peuvent acheter des objets du jeu pour devenir plus forts puis attaquer d'autres joueurs.\n\n> *Étapes du jeu*\n*Exploration :* Parcours le monde ouvert et trouve des lieux de minage.\n*Minage :* Extrais différents objets précieux du sol.\n*Vente d'objets :* Vends les objets obtenus en minant pour gagner de l'argent. \n*Achat d'objets :* Utilise l'argent pour acheter des équipements et des objets qui augmentent ta puissance.\n*Combat :* Avec des objets plus forts, affronte et attaque d'autres joueurs.\n\n> *Conseils*\n    - Explore différentes zones pour trouver les meilleurs endroits pour miner.\n    - Investis dans des équipements qui augmentent ton efficacité de minage.\n    - Équilibre ton argent entre l'achat d'objets d'attaque et de défense..\n    - Forme des alliances avec d'autres joueurs pour te protéger et avoir de meilleures opportunités commerciales..\n\nAmuse-toi à miner, négocier et combattre pour devenir le plus fort du monde ouvert !\n                        ",
+      "texto56": [
+        "*[!]* L'Option *",
+        "* n'existe pas !"
+      ],
+      "texto57": "\n\nTu veux revenir ? ",
+      "texto58": "Game GLX",
+      "texto59": "🔍 Accueil",
+      "texto60": [
+        "_Hé, tu voyages déjà, attends que le temps s'écoule ou écris _ *",
+        "glx viajar casa*"
+      ],
+      "texto61": [
+        "*",
+        " est déjà ta maison !*"
+      ],
+      "texto62": [
+        "En route vers la planète ",
+        "!! Attends *",
+        "* secondes"
+      ],
+      "texto63": [
+        "*🌎 BIENVENUE SUR ",
+        " 🌎*\n                \n_Tu as été ajouté au groupe de la planète_\n                \n```Si tu es en privé, pars et va sur la planète Terre.```\n\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n"
+      ],
+      "texto64": [
+        "Tu es entré sur la planète ",
+        ", pars à l'aventure"
+      ],
+      "texto65": [
+        "*_Le temps de ton vaisseau sur la planète ",
+        " est terminé, ton vaisseau est retourné dans l'espace !_*"
+      ],
+      "texto66": [
+        "_😊 Lol, tu as déjà ce vaisseau ! Utilise *",
+        "glx comprar nave* pour voir d'autres modèles ! _"
+      ],
+      "texto67": [
+        "_😪 ",
+        "! Tu n'as pas assez de solde._ \n\n*Ton Solde :* ",
+        "\n*Prix du vaisseau ",
+        ":* ",
+        "\n\nVends tes minerais pour gagner de l'argent. Par exemple : *",
+        "glx vender ouro 2*"
+      ],
+      "texto68": [
+        "\n_Tu as acheté le vaisseau_ *",
+        "*\n\n💨 Vitesse: *",
+        "*\n⚡ Puissance de Combat : *",
+        "*\n💸Prix du vaisseau : *",
+        "*\n\n*⚡-👑 Ta Puissance a augmenté:*\n_De_ *",
+        "* _à_ *",
+        "*\n\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n\n_Suppression automatique dans 20 secondes_\n"
+      ],
+      "texto69": "\n\n_🔋 suppression auto ! 10 s_",
+      "texto70": [
+        "\n> [ ! ] ERREUR - AVERTISSEMENT \n\n_Tu peux miner uniquement sur la planète_ *(",
+        ")*"
+      ],
+      "texto71": [
+        "_Tu mines déjà ! Si tu veux arrêter, utilise *",
+        "glx miner parar*_"
+      ],
+      "texto72": "*Minage en cours.. ⟲[0%]*",
+      "texto73": [
+        "*Minage en cours..  [⟲ ",
+        "%]*"
+      ],
+      "texto74": [
+        "*Traitement... [",
+        "%] ⟲ Attends* "
+      ],
+      "texto75": [
+        "*⚒️Minage terminé [",
+        " _Secondes_]*\n> Tu as miné ",
+        " ",
+        " \n\n_🥳Tu as gagné un bonus :_ *",
+        " [XP]*\n_👑Ta Puissance :_ ",
+        "\n_⚡Tu as gagné :_  ",
+        " Points (puissance)\n\n*Total de ",
+        ":* [ ",
+        " ]\n\n*_",
+        "glx bau_* - Pour voir tes objets minés."
+      ],
+      "texto76": [
+        "J'ai besoin que tu me dises la quantité de ",
+        " que tu veux vendre, en chiffres"
+      ],
+      "texto77": [
+        "_tu n'as pas gardé_ *[ ",
+        " ",
+        " ]* \n\n_Ton stock actuel est:_ *[ ",
+        " ",
+        " ]* \n\n Pour miner plus utilise:\n> ",
+        "glx miner"
+      ],
+      "texto78": [
+        "*_🤝 Félicitations, vente réalisée avec succès ! _*\n\n*tu as vendu : ",
+        " ",
+        "*\n*Prix par Unité : ",
+        "*\n*Tu as reçu : ",
+        "*\n\n*🎉Bonus XP: ",
+        " XP*\n_👑 Ta Puissance :_ ",
+        " \n\nPour voir ton *Solde* utilise :\n> ",
+        "glx carteira"
+      ],
+      "texto79": [
+        "\n_🚀🎉 Félicitations, capitaine. ",
+        "! 🎉🚀_\n\nTu as atteint la limite d'XP et tu es passé au niveau suivant dans notre aventure intergalactique !\n            \n*🌟 Niveau actuel :*  ",
+        "\n*🎮 XP actuel :*  ",
+        "\n*🎖️ Niveau suivant :* ",
+        "\n\n💥 Récompenses :\n- Tu as gagné *",
+        "* Points de *_Défense_*.\n- Tu as gagné *",
+        "* Points d'*_Attaque_*.\n- Nouvelles compétences débloquées\n- Accès aux zones secrètes de l'espace \n- Alliés intergalactiques\n\n╔════════════════════╗\n\n *_⚙️ TOUTES LES COMMANDES_*\nUtilise : ",
+        "glx\n\n╚════════════════════╝\n\n*_🛸  JEU DE LA GALAXIE 🛸_*\n"
+      ],
+      "texto80": "ROI DU NIVEAU",
+      "texto81": [
+        "salut ",
+        ""
+      ],
+      "texto82": "_Comme *[bot]* n'est plus admin dans l'ancien groupe, le jeu continue ici ! _",
+      "texto83": "🤯 _Tu ne peux pas t'attaquer toi-même ! _",
+      "texto84": [
+        "_📛 Tu as atteint ta limite de ",
+        " attaques !_\n*Attends 2 heures pour attaquer à nouveau.*"
+      ],
+      "texto85": [
+        "_Prépare ta défense 🛡️, dans 10 secondes tu seras attaqué par *@",
+        "!*_"
+      ],
+      "texto86": "_⚔️ Ton attaque est en cours_ \n\n*_🏰 Attention ! Ton ennemi est vigilant_*",
+      "texto87": [
+        "\n*🛡️Ta défense a perdu : ",
+        " Points*\n\n *_Attention à ta Maison !_*                            \n"
+      ],
+      "texto88": [
+        "_*🛡️ La défense de @",
+        ", a bloqué ton attaque !*_\n\n_La défense de cet astronaute est forte, il a réussi l'impossible. Fais attention._\n\n👥 Dégâts sur *toi* :\n  Tu as perdu : ",
+        " Points\n_________________________\n😈 Dégâts sur *@",
+        "*:\nPerdu: ",
+        " Points\n\n\n  *💡 Conseil :* _Si ta défense perd beaucoup de points, achète plus d'armes *(glx comprar)* ou mine plus de minerais *(glx miner)* pour augmenter ta force._\n\n                        "
+      ],
+      "texto89": [
+        "⚠️ *Attention @",
+        " !*\n\n_Tu es en train de te faire🔫 attaquer par :_ \n\n*Nom :* ",
+        "\n*Nom d'utilisateur :* *",
+        "*"
+      ],
+      "texto90": [
+        "> 🗡️ Attaque terminée !\n                        \n😈 *@",
+        "* a perdu ",
+        " Points\n\nTu as gagné : \n*🆙XP:* ",
+        "xp | *XP total :* ",
+        "xp\n*💸Argent :* ",
+        "\n\n\n"
+      ],
+      "texto91": [
+        "@",
+        " trop triste ! 😭\n\n*⚔️ Ta défense a échoué ⚔️* \n\n> _Tes installations sont endommagées._"
+      ],
+      "texto92": [
+        "> 🔫 En route vers *",
+        "*"
+      ],
+      "texto93": [
+        "_💡 Tu dois utiliser le *Nom d'utilisateur* du joueur que tu vas attaquer ! _ \n*Ex : ",
+        "glx atacar userEjemplo* \n\n*conseil :* Utilise *",
+        "glx atacar list* - _Pour lister les utilisateurs_\n\n"
+      ],
+      "texto94": [
+        "*",
+        "* _Il n'y a aucun enregistrement pour cet utilisateur !_\n\n _💡 tu dois indiquer le *Nom d'utilisateur* du joueur que tu vas attaquer ! _ \n*Ex : ",
+        "glx atacar userEjemplo* \n\n*Conseil :* Utilise *",
+        "glx atacar list* - _Pour lister les utilisateurs_\n\n"
+      ],
+      "texto95": [
+        "*🔔 - Notification du jeu*\n\n*[BOT]* _The Mystic Bot MD_ \n*_Pour :_ @",
+        "*\n\n"
+      ],
+      "texto96": "\n\n_Pour toute question, utilise la commande,_ *glx criador!*\n"
+    },
+    "game_glx_buttons": {
+      "texto1": [
+        "🛠️ *Nous travaillons à améliorer le jeu GLX !*\n\nMerci pour ta patience et ton soutien. 🚀\n\n\n*╔═ 🪐JEU DE LA GALAXIE🪐 ═╗*\n\n 👨‍🚀 Salut *",
+        "*, C'est l'heure de voyager dans l'espace, de miner des astéroïdes, de discuter avec des aliens et bien plus dans le monde galactique !\n\n  *💰 Monnaie :* ",
+        "\n\n\n  *🌠 ",
+        "glx _cadastrar_*\n  _Pour t'inscrire à la GLX_\n  \n  *🌠 ",
+        "glx _perfil_*\n  _Vois l'évolution de ton profil._\n\n  *🌠 ",
+        "glx _vender_*\n  _vends tes objets du coffre._\n\n  \n\n\n> 🧾 Attaques / Défense / Voyage\n\n  *🌠 ",
+        "glx _atacar list_*\n  _Liste tous les joueurs du jeu !_\n\n  *🌠 ",
+        "glx _atacar <username_del_jugador>_*\n  _attaque un utilisateur avec son nom d'utilisateur !_\n\n  *🌠 ",
+        "glx _planeta_*\n  _Mettre à jour les données de la Planète et de la Colonie_\n\n  *🌠 ",
+        "glx _viajar_*\n  _Tu veux visiter une autre Planète ? Allons-y !_\n\n> 🧾 Options de minage\n\n*🌠 ",
+        "glx _miner_*\n_Tu veux de l'argent ? Allons miner._\n\n\n\n> 🧾 Tes infos personnelles \n\n  *🌠 ",
+        "glx _carteira_*\n  _Accède à ton portefeuille financier._\n\n  *🌠 ",
+        "glx _loja_*\n  _Découvre notre boutique de la galaxie_\n\n  *🌠 ",
+        "glx _bau_*\n  _Vois tes objets sauvegardés_\n\n \n\n\n  *🌟 ",
+        "glx _criador_*\n  _Infos sur le créateur du jeu.._\n\n  *🌟 ",
+        "glx _sobre_*\n  _À propos du jeu._\n\n  _Actualités et mises à jour automatiques_\n  _Si tu as une question, contacte-nous_\n\n  \n*╘═══════════════════╛*\n  🌞🌕🌠🌟⭐🌎🪐\n"
+      ],
+      "texto2": "🔍 Accueil",
+      "texto3": "Game GLX"
+    },
+    "game_pista": {
+      "texto1": [
+        "\n🎵 *INDICE DEVINE LA CHANSON* 🎵\n\n",
+        "\n\n🎤 *Artiste :* ",
+        "\n📝 *Mots :* ",
+        "\n📏 *Lettres :* ",
+        "\n\n💡 _Les voyelles sont visibles, devine les consonnes_\n"
+      ]
+    },
+    "group_hidetag": {
+      "texto1": "*Salut :D*"
+    },
+    "group_setimagen": {
+      "texto1": "*⚠️️ Réponds à une image pour la définir comme photo du groupe.*",
+      "texto2": "*❗ Cette commande ne peut être utilisée que dans les groupes.*",
+      "texto3": "✅ *Photo du groupe mise à jour avec succès.*",
+      "texto4": "*❗ Une erreur est survenue lors du changement de la photo du groupe.*"
+    },
+    "group_setprimary": {
+      "texto1": "❗ Mentionne un bot pour modifier la configuration.",
+      "texto2": "❗ L'utilisateur mentionné n'est pas un Sub-Bot.",
+      "texto3": "✅ @",
+      "texto3_1": " est déjà le Bot principal du Groupe.",
+      "texto4": "[❕] @",
+      "texto4_1": " a été défini comme bot principal de ce groupe.",
+      "texto5": "❗ Une erreur est survenue lors de la définition du bot principal.",
+      "texto6": "❗ Aucun bot principal n'est défini dans ce groupe.",
+      "texto7": "▶️ @",
+      "texto7_1": " a été supprimé comme bot principal du groupe.",
+      "texto8": "❗ Une erreur est survenue lors de la suppression du bot principal."
+    },
+    "ia_dalle": {
+      "texto1": "*[❗] Écris une description de l'image que tu veux générer.*",
+      "texto2": "❌ Erreur : ",
+      "texto3": [
+        "🖼 Prompt : ",
+        "\n🎨 Style : "
+      ],
+      "texto4": "Prompt vide",
+      "texto5": "Pas de réponse de l'API",
+      "texto6": "Erreur lors de la génération"
+    },
+    "ia_nanobanana": {
+      "texto1": "*Tu dois répondre à une image*",
+      "texto2": "*Écris un prompt/une description pour la modification*",
+      "texto3": "Voici ton image 🖼️",
+      "texto4": "*Erreur lors du traitement de l'image avec NanoBanana*"
+    },
+    "ia_sunoai": {
+      "texto1": "*[❗] Écris une description pour générer la chanson.*\n\n*Utilisation :* /musicaia description | tags facultatifs\n*Exemple :* /musicaia chanson d'amour | pop, romantique, acoustique",
+      "texto2": "*[❗] Écris une description pour générer la chanson.*",
+      "texto3": "*[❗] Hé ! Attends un peu, notre IA créative travaille à fond pour composer ta chanson parfaite, ça peut prendre quelques instants, et elle te sera envoyée quand elle sera prête.*",
+      "texto4": "❌ La chanson n'a pas pu être générée. Essaie un autre prompt.",
+      "texto5": "❌ Une erreur est survenue lors de la génération de la chanson : ",
+      "texto6": [
+        "👑 By @BrunoSobrino 👑\n\nGenre : ",
+        "\nDurée : ",
+        " s"
+      ],
+      "texto7": [
+        "👑 By @BrunoSobrino 👑\n\nTitre : ",
+        "\n\n"
+      ],
+      "texto8": "Généré par IA",
+      "texto9": "Le titre ne peut pas être vide",
+      "texto10": "Il faut des paroles pour générer la chanson",
+      "texto11": "Les paroles ne peuvent pas dépasser 1500 caractères",
+      "texto12": "La chanson générée est introuvable",
+      "texto13": "Impossible de s'inscrire au service de musique",
+      "texto14": "Erreur lors de la génération de la chanson",
+      "texto15": "Erreur lors de la création de la chanson"
+    },
+    "info_sys": {
+      "texto1": "❌ Erreur du test de vitesse : ",
+      "texto2": "ERROR"
+    },
+    "info_bot": {
+      "texto1": "*Salut, comment puis-je t’aider ?*"
+    },
+    "info_donate": {
+      "texto1": [
+        "╭─「 💖 *DONS* 💖 」\n│\n│ Salut *",
+        "*! 👋\n│\n│ Tu aimes ce projet ? 🤖✨\n│ Aide-nous à le faire vivre !\n│\n├─「 💳 *Moyens de don* 」\n│\n│ • PayPal: paypal.me/BrunoSob 💰\n│\n│ 💬 *Autres moyens :*\n│ Contacte-moi : @5219996125657\n│ Numéro : wa.me/5219996125657\n│\n│ 📝 *Note :* Chaque don\n│ nous aide à grandir ensemble 🌱\n│\n╰─「 *Merci pour ton soutien !* 🙏 」"
+      ],
+      "texto2": [
+        "💖 *DONS*\n\nSalut *",
+        "*! \n\nTu aimes ce bot ? Aide-nous à le garder actif !\n\n🎯 *Pourquoi donner ?*\n• Garder le serveur actif\n• Nouvelles fonctions  \n• Meilleure vitesse\n• Support 24/7\n\n💳 *Moyens :*\n• PayPal: paypal.me/BrunoSob\n\n💬 *Autres moyens :*\nContacte-moi : @5219996125657\n\nMerci pour ton soutien ! 🙏"
+      ],
+      "texto3": "💖 DONS - Soutiens le projet",
+      "texto4": "💖 DONS 💖"
+    },
+    "owner_addaudio": {
+      "texto1": "❌ Ex : .addaudio salut",
+      "texto2": "❌ Audio/Vidéo.",
+      "texto3": "Erreur lors du déplacement de ",
+      "texto3_1": ".",
+      "texto4": "✅ ",
+      "texto4_1": "Audio",
+      "texto4_2": "Vidéo",
+      "texto4_3": " \"",
+      "texto4_4": "\" ",
+      "texto5": "❌ Erreur : "
+    },
+    "owner_installer": {
+      "texto1": "❌ Erreur lors du téléchargement du plugin : ",
+      "texto2": "Erreur lors du téléchargement du plugin : ",
+      "texto3": "✅ 🗑️ ",
+      "texto4": "❌ ",
+      "texto4_1": " n'existe pas.",
+      "texto5": "Erreur lors de la suppression du plugin : ",
+      "texto6": "Erreur lors de la mise à jour du .gitignore : ",
+      "texto7": "❌ Ex .plg url .plg nom",
+      "texto8": "✅ ",
+      "texto8_1": " installé",
+      "texto9": "❌ "
+    },
+    "owner_lidhelp": {
+      "texto1": "🔍 *Test du résolveur LID*\n\n",
+      "texto2": "📋 *État du résolveur :*\n",
+      "texto3": "• Existe : ",
+      "texto4": "• Cache LID : ",
+      "texto4_1": " entrées",
+      "texto5": "• Correspondance JID : ",
+      "texto6": "• Modifications en attente : ",
+      "texto7": "• Fichier : ",
+      "texto8": "📨 *Message actuel :*\n",
+      "texto9": "• Discussion : ",
+      "texto10": "• Est un groupe : ",
+      "texto11": "• Expéditeur : ",
+      "texto12": "• LIDs détectés : ",
+      "texto13": "🔄 *Traitement :*\n",
+      "texto14": "• Participant avec @lid : ",
+      "texto15": "• Key.participant avec @lid : ",
+      "texto16": "• Mentions : ",
+      "texto17": "❌ Erreur dans le test : ",
+      "texto18": "Non défini",
+      "texto19": "❌ Le résolveur LID n’est pas disponible",
+      "texto20": "💾 *Cache du résolveur LID*\n\n",
+      "texto21": "📊 *Statistiques :*\n",
+      "texto22": "• Total des entrées : ",
+      "texto23": "• Entrées valides : ",
+      "texto24": "• Non trouvés : ",
+      "texto25": "• Erreurs : ",
+      "texto26": "• Correspondances JID : ",
+      "texto27": "• Le fichier existe : ",
+      "texto28": "💽 *Stockage :*\n",
+      "texto29": "• Emplacement : ./src/\n",
+      "texto30": "\n🗂️ *Échantillon d’entrées :*\n",
+      "texto31": ". ...",
+      "texto31_1": " → ...",
+      "texto31_2": " (",
+      "texto32": "... et ",
+      "texto32_1": " de plus",
+      "texto33": "\n📝 *Cache vide*\n",
+      "texto34": "❌ Erreur : ",
+      "texto35": "🧹 *Cache LID nettoyé*\n\n",
+      "texto36": "• Entrées supprimées : ",
+      "texto37": "• Valides : ",
+      "texto38": "• Correspondances JID supprimées : ",
+      "texto39": "• Fichier mis à jour : ✅\n",
+      "texto40": "ℹ️ Pour vider complètement le cache, utilise la commande depuis main.js ou redémarre le bot",
+      "texto41": "📈 *Statistiques détaillées LID*\n\n",
+      "texto42": "🗄️ *Fichier :*\n",
+      "texto43": "• Chemin : ",
+      "texto44": "• Taille : ",
+      "texto44_1": " Ko",
+      "texto45": "• Sauvegarde en attente : ",
+      "texto46": "📊 *Cache en mémoire :*\n",
+      "texto47": "• Total : ",
+      "texto48": "⚡ *Efficacité :* ",
+      "texto48_1": "%",
+      "texto49": "💾 *Mémoire estimée :* ",
+      "texto50": "💾 Aucune modification en attente à sauvegarder",
+      "texto51": "💾 *Sauvegarde forcée terminée*\n\n",
+      "texto52": "• Entrées sauvegardées : ",
+      "texto53": "• Fichier : src/lidsresolve.json\n",
+      "texto54": "• État : ",
+      "texto54_1": "✅ Sauvegardé",
+      "texto54_2": "❌ Erreur",
+      "texto55": "❌ Erreur lors de la sauvegarde : ",
+      "texto56": "❌ Ce test ne fonctionne que dans les groupes",
+      "texto57": "🧪 *Test manuel du résolveur LID*\n\n",
+      "texto58": "👥 *Groupe :* ",
+      "texto59": "📊 *Participants :* ",
+      "texto60": "👤 *Participant ",
+      "texto60_1": ":*",
+      "texto61": "• JID : ...",
+      "texto62": "• LID : ...",
+      "texto63": "• Résolution : ",
+      "texto63_1": " (",
+      "texto63_2": "ms)",
+      "texto64": "• LID : Non disponible\n",
+      "texto65": "• Résolution : ⭕ Ignoré\n",
+      "texto66": "❌ Erreur avec le participant ",
+      "texto66_1": " : ",
+      "texto67": "📈 *Résumé du test :*\n",
+      "texto68": "• Réussites : ",
+      "texto68_1": "/",
+      "texto69": "• Cache actuel : ",
+      "texto70": "❌ Erreur dans le test manuel : ",
+      "texto71": "❓ *Utilisation :* ",
+      "texto71_1": "lidinfo <numéro>\n\n*Exemple :* ",
+      "texto71_2": "lidinfo 1234567890",
+      "texto72": "❌ Cette commande ne fonctionne que dans les groupes",
+      "texto73": "❌ Entre un numéro valide",
+      "texto74": "🔍 *Informations LID*\n\n",
+      "texto75": "📱 *Numéro :* ",
+      "texto76": "🆔 *LID :* ",
+      "texto77": "👥 *Groupe :* ",
+      "texto78": "💾 *En cache :* ✅\n",
+      "texto79": "📞 *Résolu en :* ",
+      "texto80": "👤 *Nom :* ",
+      "texto81": "⏰ *Enregistré :* ",
+      "texto82": "⚠️ *État :* Non trouvé précédemment\n",
+      "texto83": "❌ *État :* Erreur lors de la résolution précédente\n",
+      "texto84": "✅ *État :* Résolu correctement\n",
+      "texto85": "💾 *En cache :* ❌\n",
+      "texto86": "🔄 *Tentative de résolution...*\n",
+      "texto87": "⏱️ *Temps de résolution :* ",
+      "texto87_1": "ms",
+      "texto88": "📞 *Résultat :* ",
+      "texto89": "✅ *Résolu :* ",
+      "texto89_1": "Oui",
+      "texto89_2": "Non",
+      "texto90": "👤 *Nom obtenu :* ",
+      "texto91": "❌ Erreur lors de l’obtention des informations : ",
+      "texto92": "📝 Aucun utilisateur dans le cache",
+      "texto93": "👥 *Utilisateurs dans le cache LID* (",
+      "texto93_1": ")\n\n",
+      "texto94": ". *",
+      "texto94_1": "*",
+      "texto95": "   📱 ...",
+      "texto95_1": " → ...",
+      "texto96": "   ⏰ ",
+      "texto97": " utilisateurs de plus",
+      "texto98": "💡 *Astuce :* Utilise `",
+      "texto98_1": "lidinfo <numéro>` pour des informations précises",
+      "texto99": "❌ Erreur lors de la liste des utilisateurs : ",
+      "texto100": "searchuser <nom>\n\n*Exemple :* ",
+      "texto100_1": "searchuser Jean",
+      "texto101": "❌ Aucun utilisateur trouvé pour \"",
+      "texto101_1": "\"",
+      "texto102": "🔍 *Recherche : \"",
+      "texto102_1": "\"* (",
+      "texto102_2": " résultats)\n\n",
+      "texto103": " résultats de plus",
+      "texto104": "❌ Erreur lors de la recherche : ",
+      "texto105": "phonevalidation <numéro>\n\n*Exemple :* ",
+      "texto105_1": "phonevalidation +5219991234567",
+      "texto106": "📞 *Validation du numéro de téléphone*\n\n",
+      "texto107": "✅ *Valide :* ",
+      "texto108": "🔍 *Est un téléphone dans LID :* ",
+      "texto109": "📞 *Numéro détecté :* ",
+      "texto110": "🆔 *JID correct :* ",
+      "texto111": "❌ Erreur lors de la validation du numéro : ",
+      "texto112": "❌ Erreur lors de la correction : ",
+      "texto113": "📚 *Aide - Résolveur LID*\n\n",
+      "texto114": "🔍 *Commandes d’information :*\n",
+      "texto115": "• `",
+      "texto115_1": "testlid` - État général",
+      "texto116_1": "lidcache` - Statistiques du cache",
+      "texto117_1": "lidstats` - Statistiques détaillées",
+      "texto118_1": "lidinfo <numéro>` - Infos d’un LID précis",
+      "texto119_1": "listallusers` - Lister les utilisateurs en cache",
+      "texto120_1": "searchuser <nom>` - Chercher un utilisateur",
+      "texto121": "🧹 *Commandes de maintenance :*\n",
+      "texto122_1": "forcesave` - Forcer la sauvegarde",
+      "texto123_1": "phonecorrection` - Corriger les numéros de téléphone",
+      "texto124": "📞 *Commandes de validation :*\n",
+      "texto125_1": "phonevalidation <numéro>` - Valider un téléphone",
+      "texto126": "🧪 *Commandes de test :*\n",
+      "texto127_1": "lidtest` - Test avec les participants",
+      "texto128": "📋 *Notes importantes :*\n",
+      "texto129": "• Admins et propriétaire seulement\n",
+      "texto130": "• Le cache est enregistré dans `src/lidsresolve.json`\n",
+      "texto131": "• Les LIDs sont uniques globalement\n",
+      "texto132": "• Sauvegarde automatique toutes les 30 secondes\n",
+      "texto133": "• Validation automatique des numéros de téléphone\n"
+    },
+    "owner_setppbot": {
+      "texto1": "*[❗INFO❗] IMAGE INTROUVABLE. RÉPONDS À UNE IMAGE EN UTILISANT LA COMMANDE ",
+      "texto1_1": "*",
+      "texto2": "*[ ✅ ] LA PHOTO DE PROFIL DU BOT A ÉTÉ CHANGÉE AVEC SUCCÈS.*",
+      "texto3": "*[❗ERROR❗] Une erreur est survenue en essayant de changer la photo de profil :\n\n",
+      "texto3_1": "*"
+    },
+    "owner_setvar": {
+      "texto1": "❌ .gitignore ",
+      "texto2": "❌ ",
+      "texto3": "❌ Ex .setvar global.groq = gsk",
+      "texto4": "❌ Ex .setvar variable = valeur",
+      "texto5": "✅ ",
+      "texto5_1": " mise à jour : "
+    },
+    "random_c": {
+      "texto1": "*Siiiuuuuuu*"
+    },
+    "random_messi": {
+      "texto1": "*Messi*"
+    },
+    "random_anime": {
+      "texto1": [
+        "_",
+        "_"
+      ]
+    },
+    "random_cat": {
+      "texto1": "_©The Mystic - Bot_",
+      "texto2": "*Error!*"
+    },
+    "random_dog": {
+      "texto1": "_©The Mystic - Bot_",
+      "texto2": "*Error!*"
+    },
+    "random_itzy": {
+      "texto1": [
+        "_",
+        "_"
+      ]
+    },
+    "random_meme": {
+      "texto1": [
+        "_🤣 ",
+        " 🤣_"
+      ]
+    },
+    "random_wallprandoms": {
+      "texto1": [
+        "_",
+        "_"
+      ]
+    },
+    "search_npmjs": {
+      "texto1": "〔 ❀ 〕ENTRE LE *TITRE* D’UN *MODULE* OU D’UN *COMPLÉMENT* DE LA PLATEFORME *NPMJS*",
+      "texto2": "〔 ❀ 〕AUCUN *RÉSULTAT* TROUVÉ POUR TA *RECHERCHE* SUR LA PLATEFORME *NPMJS*",
+      "texto3": [
+        "❀ Titre : *",
+        "❀ Version : *",
+        "❀ Infos : *",
+        "❀ Lien : *",
+        "Pas d’infos"
+      ]
+    },
+    "search_pinterest": {
+      "texto1": [
+        "*_< RECHERCHE - PINTEREST />_*\n\n[ ❗️ ] Entre un texte pour chercher des résultats\nExemple : ",
+        " Chat"
+      ],
+      "texto2": "\n□ Numéro du résultat : ",
+      "texto3": "Voir en haute qualité",
+      "texto4": "*_< RECHERCHE - PINTEREST />_*",
+      "texto5": [
+        "□ *Recherche :* ",
+        "\n□ *Demandé par :* "
+      ],
+      "texto6": "*_< RECHERCHE - PINTEREST />_*\n\n[❗] 𝐔𝐍𝐄 𝐄𝐑𝐑𝐄𝐔𝐑 𝐒’𝐄𝐒𝐓 𝐏𝐑𝐎𝐃𝐔𝐈𝐓𝐄 𝐋𝐎𝐑𝐒 𝐃𝐔 𝐓𝐑𝐀𝐈𝐓𝐄𝐌𝐄𝐍𝐓 𝐃𝐄 𝐓𝐀 𝐃𝐄𝐌𝐀𝐍𝐃𝐄"
+    },
+    "search_tiktoksearch": {
+      "texto1": "[❗] Qu’est-ce que tu veux chercher sur TikTok ?",
+      "texto2": "*[🔍] Recherche sur TikTok, patiente...*",
+      "texto3": "*[❗] Aucune vidéo TikTok valide trouvée.*",
+      "texto4": "*[❗] Impossible de charger les vidéos.*",
+      "texto5": "Sans description",
+      "texto6": "Vidéo TikTok",
+      "texto7": "*< TIKTOK SEARCH >*\n\n📌 *Texte cherché :* ",
+      "texto8": "❌ Erreur : ",
+      "texto9": "Aucune vidéo trouvée.",
+      "texto10": "Erreur après plusieurs tentatives"
+    },
+    "sticker_moji": {
+      "texto1": "*🌅 Entre un emoji.*",
+      "texto2": "*🍟 Emoji non compatible.*"
+    },
+    "sticker_sticker_fix": {
+      "texto1": [
+        "[❗𝐈𝐍𝐅𝐎❗] 𝐑É𝐏𝐎𝐍𝐃𝐒 À 𝐔𝐍𝐄 𝐕𝐈𝐃É𝐎, 𝐔𝐍𝐄 𝐈𝐌𝐀𝐆𝐄 𝐎𝐔 𝐈𝐍𝐒È𝐑𝐄 𝐋𝐄 𝐋𝐈𝐄𝐍 𝐃’𝐔𝐍𝐄 𝐈𝐌𝐀𝐆𝐄 𝐒𝐄 𝐓𝐄𝐑𝐌𝐈𝐍𝐀𝐍𝐓 𝐏𝐀𝐑 .𝐣𝐩𝐠 𝐐𝐔𝐈 𝐒𝐄𝐑𝐀 𝐂𝐎𝐍𝐕𝐄𝐑𝐓𝐈𝐄 𝐄𝐍 𝐒𝐓𝐈𝐂𝐊𝐄𝐑, 𝐓𝐔 𝐃𝐎𝐈𝐒 𝐑É𝐏𝐎𝐍𝐃𝐑𝐄 𝐎𝐔 𝐔𝐓𝐈𝐋𝐈𝐒𝐄𝐑 𝐋𝐀 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐄 ",
+        "*"
+      ],
+      "texto2": [
+        "[❗𝐈𝐍𝐅𝐎❗] 𝐋𝐄 𝐋𝐈𝐄𝐍 / 𝐔𝐑𝐋 / 𝐋𝐈𝐍𝐊 𝐍’𝐄𝐒𝐓 𝐏𝐀𝐒 𝐕𝐀𝐋𝐈𝐃𝐄, 𝐋𝐀 𝐓𝐄𝐑𝐌𝐈𝐍𝐀𝐈𝐒𝐎𝐍 𝐃𝐔 𝐋𝐈𝐄𝐍 / 𝐔𝐑𝐋 / 𝐋𝐈𝐍𝐊 𝐃𝐎𝐈𝐓 Ê𝐓𝐑𝐄 .𝐣𝐩𝐠, 𝐄𝐗𝐄𝐌𝐏𝐋𝐄 : ",
+        "s https://telegra.ph/file/0dc687c61410765e98de2.jpg*"
+      ],
+      "texto3": "[❗𝐈𝐍𝐅𝐎❗] 𝐔𝐍𝐄 𝐄𝐑𝐑𝐄𝐔𝐑 𝐒’𝐄𝐒𝐓 𝐏𝐑𝐎𝐃𝐔𝐈𝐓𝐄, 𝐑É𝐄𝐒𝐒𝐀𝐈𝐄. 𝐑É𝐏𝐎𝐍𝐃𝐒 À 𝐔𝐍𝐄 𝐕𝐈𝐃É𝐎, 𝐔𝐍𝐄 𝐈𝐌𝐀𝐆𝐄 𝐎𝐔 𝐈𝐍𝐒È𝐑𝐄 𝐋𝐄 𝐋𝐈𝐄𝐍 𝐃’𝐔𝐍𝐄 𝐈𝐌𝐀𝐆𝐄 𝐒𝐄 𝐓𝐄𝐑𝐌𝐈𝐍𝐀𝐍𝐓 𝐏𝐀𝐑 .𝐣𝐩𝐠 𝐐𝐔𝐈 𝐒𝐄𝐑𝐀 𝐂𝐎𝐍𝐕𝐄𝐑𝐓𝐈𝐄 𝐄𝐍 𝐒𝐓𝐈𝐂𝐊𝐄𝐑"
+    },
+    "tools_cuevanainfo": {
+      "texto1": [
+        "🎬 *Envoie un lien Cuevana3*\nExemple : ",
+        " https://wwv.cuevana3.eu/ver-pelicula/cars"
+      ],
+      "texto2": "📋 *Informations :*",
+      "texto3": "📖 *Synopsis :*",
+      "texto4": "Non disponible",
+      "texto5": "🌐 *Regarder en ligne :*",
+      "texto6": "📥 *Liens de téléchargement :*",
+      "texto7": "⚠️ *Aucun lien de téléchargement disponible*",
+      "texto8": "▸ *Serveur :*",
+      "texto9": "▸ *Langue :*",
+      "texto10": "▸ *Qualité :*",
+      "texto11": "❌ *Erreur lors de la récupération des infos, vérifie le lien ou réessaie plus tard*"
+    },
+    "tools_tz": {
+      "texto1": "< 𝐎𝐔𝐓𝐈𝐋𝐒 -𝐓𝐙 />",
+      "texto2": "▢ TZ du serveur :"
     }
   },
   "handler": {
@@ -3795,7 +4847,12 @@
       "texto4": [
         "*[ ℹ️ ] Tu as utilisé",
         "diamant(s) (limites).*"
-      ]
+      ],
+      "texto5": [
+        "*[ ℹ️ ] Attends* _",
+        " secondes_ *avant d’utiliser une autre commande.*"
+      ],
+      "texto6": "Ngecit -_-"
     },
     "dfail": {
       "texto1": "*[ ℹ️ ] Cette commande ne peut être utilisée que par le propriétaire du bot.*",
@@ -3822,7 +4879,12 @@
       "texto5": "*[ ℹ️ ] La description du groupe a été modifiée.*",
       "texto6": "*[ ℹ️ ] Le nom du groupe a été modifié.*",
       "texto7": "*[ ℹ️ ] La photo de profil du groupe a été changée.*",
-      "texto8": "*[ ℹ️ ] Le lien d'invitation du groupe a été réinitialisé.*"
+      "texto8": "*[ ℹ️ ] Le lien d'invitation du groupe a été réinitialisé.*",
+      "texto9": [
+        "*[❗] @",
+        " les numéros arabes ou étranges ne sont pas autorisés dans ce groupe, tu vas donc être retiré du groupe*"
+      ],
+      "texto10": "*sᴀɴs ᴅᴇsᴄʀɪᴘᴛɪᴏɴ*"
     },
     "deleteUpdate": {
       "texto1": [
@@ -3833,6 +4895,16 @@
         "▢ *Envoi du message supprimé...*\n",
         "*[ ℹ️ ] Pour désactiver la fonction* _antidelete_*, envoie la commande suivante :* _/disable antidelete_"
       ]
+    },
+    "callUpdate": {
+      "texto1": [
+        "Salut *@",
+        "*, les ",
+        " ne sont pas autorisés, tu seras bloqué.\n-\nSi tu as appelé par accident, contacte mon créateur pour qu’il te débloque !"
+      ],
+      "texto2": "appels vidéo",
+      "texto3": "appels",
+      "texto4": "[❗] Contacte ce numéro pour les choses importantes."
     }
   },
   "BK9": {
