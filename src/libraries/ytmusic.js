@@ -1,24 +1,25 @@
-// Helpers compartidos para descargar de YouTube con el scraper de YouTube
-// Music (InnerTube) de src/libraries/scrape-YoutubeMusik.js. Los usan
+// Helpers compartidos para descargar de YouTube. Los usan
 // downloader-play.js (play/play2), @testting.js (ytmp3/ytmp4),
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
+// Orden de descarga (audio y video):
+// 1º convertytmp3, 2º OmDown, 3º ytultra, 4º scraper de YouTube Music
+// (ayashiiiyo, cliente VISIONOS para el player; acepta cookies de YouTube
+// opcionales en ytmusic.txt junto a la librería).
+//
 // Por qué existe este archivo:
-// - La búsqueda y los enlaces directos vienen del scraper (API InnerTube,
-//   cliente iOS), que es lo único que sigue funcionando: yt-search, notube
-//   (ytmp33/44), ssvid y Ruby-core están caídos.
 // - Los enlaces de googlevideo NO se pueden mandar directos a WhatsApp:
 //   sin Range devuelven 403, y Baileys los descarga sin Range. Hay que
 //   bajar el archivo en el bot y mandar el buffer.
 // - googlevideo solo sirve trozos de 1 MB por petición y rechaza el rango
 //   que cubre todo el archivo, así que la descarga es por trozos con
 //   verificación de tamaño (nunca se manda un archivo incompleto).
-// - El cliente iOS solo da video SIN audio (formatos adaptativos), así que
+// - El player solo da video SIN audio (formatos adaptativos), así que
 //   play2 une el video (MP4/H.264) con el audio (AAC) con ffmpeg.
 import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
-import { search as ytMusicSearch, audio as ytMusicAudio, stream as ytMusicStream } from './scrape-YoutubeMusik.js';
+import { search as ayaSearch, getAudioStream as ayaAudio, getTrack as ayaTrack, getInnertubeConfig as ayaConfig } from './ytmusic-scraper.mjs';
 import { ytmp3 as convertYtmp3 } from './ytmp3.js';
 import { OmDownloader } from './omdown.js';
 
@@ -31,30 +32,43 @@ export function bestThumb(thumbs = []) {
     return (thumbs[thumbs.length - 1] || thumbs[0] || {}).url || null;
 }
 
+// "4:27" -> 267 segundos.
+function parseDuration(text) {
+    if (!text || typeof text !== 'string') return 0;
+    const parts = text.trim().split(':').map((n) => parseInt(n, 10));
+    if (parts.some((n) => Number.isNaN(n))) return 0;
+    return parts.reduce((acc, n) => acc * 60 + n, 0);
+}
+
+// "2.4B plays" / "1.2M views" / "345K" -> número.
+function parsePlays(text) {
+    if (!text || typeof text !== 'string') return 0;
+    const m = text.replace(/,/g, '').match(/([\d.]+)\s*([KMB])?/i);
+    if (!m) return 0;
+    const mult = { K: 1e3, M: 1e6, B: 1e9 }[(m[2] || '').toUpperCase()] || 1;
+    return Math.round(parseFloat(m[1]) * mult);
+}
+
 // Normaliza un resultado del scraper con todos los campos que usan los
 // plugins (tarjeta de info, lista de playlist y búsqueda).
 export function normalizeVideo(pick) {
     const artist = pick.artists?.[0];
+    const seconds = parseDuration(pick.duration);
     return {
-        videoId: pick.id,
-        url: pick.url,
+        videoId: pick.videoId,
+        url: `https://music.youtube.com/watch?v=${pick.videoId}`,
         title: pick.title || '',
         type: pick.type || 'video',
         author: {
             name: artist?.name || 'YouTube Music',
             url: artist?.id?.startsWith('UC') ? `https://music.youtube.com/channel/${artist.id}` : '',
         },
-        duration: { seconds: pick.durationSeconds || 0, timestamp: pick.duration || '0:00' },
+        duration: { seconds, timestamp: pick.duration || '0:00' },
         timestamp: pick.duration || '0:00',
-        thumbnail: bestThumb(pick.thumbnails),
-        views: pick.plays || 0,
-        ago: pick.year ? String(pick.year) : '?',
+        thumbnail: pick.thumbnail || bestThumb(pick.thumbnails),
+        views: parsePlays(pick.plays),
+        ago: '',
     };
-}
-
-function pickCandidate(data) {
-    const candidates = [data?.topResult, ...(data?.results ?? [])];
-    return candidates.find((i) => i && (i.type === 'song' || i.type === 'video') && i.id) || null;
 }
 
 // Primer resultado de la búsqueda (canción para play, video para play2).
@@ -62,9 +76,9 @@ function pickCandidate(data) {
 export async function searchMusic(query, filter = 'songs') {
     for (const f of [filter, 'all']) {
         try {
-            const [meta, res] = await ytMusicSearch(query, f);
-            if (meta.status !== 200) continue;
-            const pick = pickCandidate(res?.data?.[0]);
+            const res = await ayaSearch(query, { filter: f });
+            const items = Array.isArray(res) ? res : [res?.topResult, ...(res?.songs ?? []), ...(res?.videos ?? [])];
+            const pick = items.find((i) => i && (i.type === 'song' || i.type === 'video') && i.videoId) || null;
             if (pick) return normalizeVideo(pick);
         } catch (e) {
             console.log(`❌ Búsqueda YouTube Music (${f}) falló:`, e.message);
@@ -77,12 +91,9 @@ export async function searchMusic(query, filter = 'songs') {
 export async function searchMusicList(query, filter = 'videos', limit = 20) {
     for (const f of [filter, 'all']) {
         try {
-            const [meta, res] = await ytMusicSearch(query, f);
-            if (meta.status !== 200) continue;
-            const data = res?.data?.[0];
-            const items = (data?.results ?? []).filter((i) => i && (i.type === 'song' || i.type === 'video') && i.id);
-            const top = data?.topResult;
-            if (top && (top.type === 'song' || top.type === 'video') && top.id) items.unshift(top);
+            const res = await ayaSearch(query, { filter: f });
+            const all = Array.isArray(res) ? res : [res?.topResult, ...(res?.songs ?? []), ...(res?.videos ?? [])];
+            const items = all.filter((i) => i && (i.type === 'song' || i.type === 'video') && i.videoId);
             if (!items.length) continue;
             return items.slice(0, limit).map(normalizeVideo);
         } catch (e) {
@@ -351,20 +362,52 @@ function extOf(mimeType) {
 
 // Info de un video por su ID (para enlaces directos de YouTube).
 export async function getVideoInfo(videoId) {
-    const [meta, res] = await ytMusicStream(videoId);
-    if (meta.status !== 200) throw new Error('No se pudo obtener información del video');
-    const info = res?.data?.[0];
-    if (!info || !info.title) throw new Error('No se pudo obtener información del video');
+    const track = await ayaTrack(videoId);
+    if (!track || !track.title) throw new Error('No se pudo obtener información del video');
     return {
         videoId,
         url: `https://youtu.be/${videoId}`,
-        title: info.title,
-        author: { name: info.author || 'YouTube Music' },
-        duration: { seconds: info.durationSeconds || 0, timestamp: info.duration || '0:00' },
-        thumbnail: bestThumb(info.thumbnails) || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-        views: info.views || 0,
+        title: track.title,
+        author: { name: track.author || 'YouTube Music' },
+        duration: { seconds: track.durationSeconds || 0, timestamp: track.duration || '0:00' },
+        thumbnail: track.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+        views: 0,
         ago: '',
     };
+}
+
+// Formatos de video del player con el cliente VISIONOS (el mismo que usa
+// el scraper de ayashiiiyo para el audio). Devuelve { video, audio } con
+// los formatos elegidos para unir con ffmpeg.
+async function getVisionOSFormats(videoId) {
+    const cfg = await ayaConfig();
+    const res = await fetch('https://www.youtube.com/youtubei/v1/player?prettyPrint=false', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15',
+            ...(cfg.cookieHeader ? { Cookie: cfg.cookieHeader } : {}),
+        },
+        body: JSON.stringify({
+            context: { client: { clientName: 'VISIONOS', clientVersion: '1.02', deviceMake: 'Apple', deviceModel: 'RealityDevice17,1', osName: 'visionOS', osVersion: '26.5.23O471', visitorData: cfg.visitorData, hl: 'en', gl: 'US' } },
+            videoId,
+        }),
+    });
+    if (!res.ok) throw new Error(`YouTube Music player HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.playabilityStatus?.status !== 'OK') throw new Error(`Video no reproducible: ${data.playabilityStatus?.status || '?'}`);
+    const formats = data.streamingData?.adaptiveFormats || [];
+    if (!formats.length) throw new Error('Sin formatos de video');
+    const item = {
+        video: formats.filter((f) => (f.mimeType || '').startsWith('video/')),
+        audio: formats.filter((f) => (f.mimeType || '').startsWith('audio/')),
+    };
+    item.best = item.audio.find((f) => f.itag === 140) || item.audio[0] || null;
+    const video = pickVideoFormat(item);
+    const audioFormat = pickAudioFormat(item);
+    if (!video?.url) throw new Error('Sin enlace de video');
+    if (!audioFormat?.url) throw new Error('Sin enlace de audio para el video');
+    return { video, audio: audioFormat };
 }
 
 // Audio listo para mandar. 1º conversor externo (convertytmp3, MP3 ya
@@ -396,13 +439,14 @@ export async function getAudioBuffer(videoId) {
     let lastError = null;
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
-            const [meta, res] = await ytMusicAudio(videoId);
-            if (meta.status !== 200) throw new Error(meta.error || `YouTube Music ${meta.status}`);
-            const format = pickAudioFormat(res?.data?.[0]);
-            if (!format?.url) throw new Error('Sin enlace de audio');
-            const mimeType = (format.mimeType || 'audio/mpeg').split(';')[0].trim();
-            const buffer = await downloadMedia(format.url, format.contentLength, MAX_AUDIO_BYTES);
-            return { buffer, mimeType, ext: extOf(format.mimeType) };
+            const stream = await ayaAudio(videoId);
+            if (!stream?.url) throw new Error('Sin enlace de audio');
+            // El enlace trae &range=0-(total-1) (todo el archivo): googlevideo
+            // lo rechaza, así que se quita y se baja por trozos.
+            const cleanUrl = stream.url.replace(/&range=\d+-\d+/, '');
+            const mimeType = (stream.mimeType || 'audio/mpeg').split(';')[0].trim();
+            const buffer = await downloadMedia(cleanUrl, stream.contentLength, MAX_AUDIO_BYTES);
+            return { buffer, mimeType, ext: extOf(stream.mimeType) };
         } catch (e) {
             lastError = e;
         }
@@ -440,14 +484,8 @@ export async function getVideoBuffer(videoId) {
     let lastError = null;
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
-            const [meta, res] = await ytMusicStream(videoId);
-            if (meta.status !== 200) throw new Error(meta.error || `YouTube Music ${meta.status}`);
-            const item = res?.data?.[0];
-            const video = pickVideoFormat(item);
-            const audioFormat = pickAudioFormat(item);
-            if (!video?.url) throw new Error('Sin enlace de video');
-            if (!audioFormat?.url) throw new Error('Sin enlace de audio para el video');
-            const buffer = await muxVideoAudio(video.url, video.contentLength, audioFormat.url, audioFormat.contentLength);
+            const { video, audio } = await getVisionOSFormats(videoId);
+            const buffer = await muxVideoAudio(video.url, video.contentLength, audio.url, audio.contentLength);
             return { buffer, mimeType: 'video/mp4' };
         } catch (e) {
             lastError = e;
