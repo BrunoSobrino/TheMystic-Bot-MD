@@ -6,7 +6,7 @@ const handler = async (m, {conn}) => {
 
   global.verdad = tradutor.texto3;
 
-  conn.reply(m.chat, `*┌────「 𝚅𝙴𝚁𝙳𝙰𝙳 」─*\n*“${pickRandom(global.verdad)}”*\n*└────「 𝙼𝚈𝚂𝚃𝙸𝙲 」─*`, m);
+  conn.reply(m.chat, `${tradutor.texto4[0]}\n*“${pickRandom(global.verdad)}”*\n${tradutor.texto4[1]}`, m);
 };
 handler.help = ['verdad'];
 handler.tags = ['game'];
