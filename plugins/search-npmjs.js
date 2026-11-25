@@ -1,18 +1,21 @@
 // - Código desarrollado por: GabrielVz <@glytglobal>
 
 import fetch from 'node-fetch'
+import fs from 'fs';
 
 let handler = async (m, { text, conn }) => {
-if (!text) return m.reply(`〔 ❀ 〕INGRESA EL *TITULO* DE UN *MODULO* O *COMPLEMENTO* DE LA PLATAFORMA *NPMJS*`)
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.search_npmjs
+if (!text) return m.reply(tradutor.texto1)
 let res = await fetch(`http://registry.npmjs.com/-/v1/search?text=${text}`)
 let { objects } = await res.json()
-if (!objects.length) return m.reply(`〔 ❀ 〕NO SE HAN ENCONTRADO *RESULTADOS* PARA SU *BUSQUEDA* EN LA PLATAFORMA DE *NPMJS*`)
-let npmpp = 'https://unitedcamps.in/Images/IMG_1742157594.jpg';
+if (!objects.length) return m.reply(tradutor.texto2)
 let npmtext = objects.map(({ package: pkg }) => {
-return `❀ Titulo: *${pkg.name}*\n❀ Versión: *${pkg.version || 'Sin Información'}*\n❀ Información: *${pkg.description || 'Sin Información'}*\n❀ Enlace: *${pkg.links.npm || 'Sin Información'}*\n\n─────────────────`
+return `${tradutor.texto3[0]}${pkg.name}*\n${tradutor.texto3[1]}${pkg.version || tradutor.texto3[4]}*\n${tradutor.texto3[2]}${pkg.description || tradutor.texto3[4]}*\n${tradutor.texto3[3]}${pkg.links.npm || tradutor.texto3[4]}*\n\n─────────────────`
 }).join`\n\n`
 
-conn.sendMessage(m.chat, { image: { url: npmpp }, caption: npmtext }, { quoted: m });
+conn.sendMessage(m.chat, { text: npmtext }, { quoted: m });
 }
 handler.help = ['npmjs']
 handler.tags = ['search']
