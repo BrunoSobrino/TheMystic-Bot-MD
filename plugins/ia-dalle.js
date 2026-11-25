@@ -1,6 +1,9 @@
 // Creditos a https://pastes.io/imagen-ai
 import axios from 'axios'
 import similarity from 'similarity'
+import fs from 'fs'
+
+let tradutorGlobal = null;
 
 const normalizeText = (text = '') => {
   return text.toLowerCase()
@@ -48,8 +51,12 @@ const removeNormalizedTokens = (original, tokensToRemoveNormalized) => {
 }
 
 let handler = async (m, { conn, command, args }) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.ia_dalle
+  tradutorGlobal = tradutor;
   const input = args.join(' ').trim()
-  if (!input) return m.reply('*[❗] Ingresa una descripción de la imagen que quieres generar.*')
+  if (!input) return m.reply(tradutor.texto1)
 
   const inputNormalizado = normalizeText(input)
   const tokens = inputNormalizado.split(/\s+/).filter(Boolean)
@@ -108,9 +115,9 @@ let handler = async (m, { conn, command, args }) => {
   const promptLimpio = removeNormalizedTokens(input, tokensToRemove)
 
   const res = await imagen.generate(promptLimpio || input, estiloDetectado, '', 'Max')
-  if (!res.success) return m.reply(`❌ Error: ${res.result.error}`)
+  if (!res.success) return m.reply(`${tradutor.texto2}${res.result.error}`)
 
-  await conn.sendMessage(m.chat, { image: { url: res.result.url }, caption: `🖼 Prompt: ${promptLimpio || input}\n🎨 Estilo: ${estiloDetectado}` }, { quoted: m })
+  await conn.sendMessage(m.chat, { image: { url: res.result.url }, caption: `${tradutor.texto3[0]}${promptLimpio || input}${tradutor.texto3[1]}${estiloDetectado}` }, { quoted: m })
 }
 
 handler.command = ['dalle', 'dall-e']
@@ -185,7 +192,7 @@ const imagen = {
 
   generate: async (prompt = '', type = 'No Style', negative = '', size = 'Max') => {
     if (!prompt?.trim()) {
-      return { success: false, code: 400, result: { error: 'Prompt vacío' } }
+      return { success: false, code: 400, result: { error: tradutorGlobal?.texto4 || 'Prompt vacío' } }
     }
 
     try {
@@ -200,12 +207,12 @@ const imagen = {
       })
 
       if (!data || data.length === 0) {
-        return { success: false, code: 404, result: { error: 'Sin respuesta de la API' } }
+        return { success: false, code: 404, result: { error: tradutorGlobal?.texto5 || 'Sin respuesta de la API' } }
       }
 
       return { success: true, code: 200, result: { prompt, type, negative: fullNegative, dimensions, url, created: new Date().toISOString() } }
     } catch (error) {
-      return { success: false, code: error?.response?.status || 500, result: { error: 'Error en la generación' } }
+      return { success: false, code: error?.response?.status || 500, result: { error: tradutorGlobal?.texto6 || 'Error en la generación' } }
     }
   }
 }
