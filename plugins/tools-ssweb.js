@@ -8,7 +8,7 @@ const handler = async (m, {conn, text, args}) => {
 
 if (!args[0]) return conn.reply(m.chat, tradutor.texto1, m);  
    try {
-     const ss = await (await fetch(`https://image.thum.io/get/fullpage/${args[0]}`)).buffer();
+     const ss = Buffer.from(await (await fetch(`https://image.thum.io/get/fullpage/${args[0]}`)).arrayBuffer());
         conn.sendFile(m.chat, ss, '', '', m);
    } catch { 
    try {  
