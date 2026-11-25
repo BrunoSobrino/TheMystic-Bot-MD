@@ -146,9 +146,9 @@ const handler = async (m, {command, conn}) => {
   }
 
   if (command == 'yaoi2') {
-    const res = await fetch(`https://purrbot.site/api/img/nsfw/yaoi/gif`);
+    const res = await fetch(`https://nekobot.xyz/api/image?type=yaoi`);
     const json = await res.json();
-    const url = json.link;
+    const url = json.message;
     conn.sendMessage(m.chat, {image: {url: url}, caption: `_${command}_`.trim()}, {quoted: m});
   }
 
@@ -159,11 +159,8 @@ const handler = async (m, {command, conn}) => {
   }
 
   if (command == 'yuri2') {
-    const resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri.json`)).data;
-    const res = await fetch(`https://purrbot.site/api/img/nsfw/yuri/gif`);
-    const json = await res.json();
-    let url = json.link;
-    if (url == '' || !url || url == null) url = await resError[Math.floor(resError.length * Math.random())];
+    const res = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/yuri.json`)).data;
+    const url = await res[Math.floor(res.length * Math.random())];
     conn.sendMessage(m.chat, {image: {url: url}, caption: `_${command}_`.trim()}, {quoted: m});
   }
 };
