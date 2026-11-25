@@ -22,7 +22,7 @@ const handler = async (m, {conn, text, usedPrefix, command, args}) => {
       const ext = new URL(v.t).pathname.split('.')[1];
       pages.push(`https://external-content.duckduckgo.com/iu/?u=https://i7.nhentai.net/galleries/${data.media_id}/${i + 1}.${ext}`);
     });
-    const buffer = await (await fetch(thumb)).buffer();
+    const buffer = Buffer.from(await (await fetch(thumb)).arrayBuffer());
     const jpegThumbnail = await extractImageThumb(buffer);
     const imagepdf = await toPDF(pages);
     await conn.sendMessage(m.chat, {document: imagepdf, jpegThumbnail, fileName: data.title.english + '.pdf', mimetype: 'application/pdf'}, {quoted: m});
