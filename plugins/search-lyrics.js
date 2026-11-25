@@ -79,27 +79,30 @@ async function searchLyrics(term) {
   try {
     if (!term) return "🟥 Provide the name of the song to search the lyrics";
     const geniusResponse = await axios.get(
-      `https://deliriussapi-oficial.vercel.app/search/genius?q=${term}`,
+      `${global.BASE_API_DELIRIUS}/search/genius?q=${encodeURIComponent(term)}`,
     );
-    const geniusData = geniusResponse.data;
+    // La API nueva envuelve genius en data y /search/lyrics ahora es por query (ya no acepta url)
+    const geniusData = geniusResponse.data.data || [];
     if (!geniusData.length) return `🟨 Couldn't find any lyrics for "${term}"`;
-    const lyricsUrl = geniusData[0].url;
+    const pick = geniusData[0];
+    const lyricsQuery = `${pick.artist?.name || ""} ${pick.title || term}`.trim();
     const lyricsResponse = await axios.get(
-      `https://deliriussapi-oficial.vercel.app/search/lyrics?url=${lyricsUrl}&parse=false`,
+      `${global.BASE_API_DELIRIUS}/search/lyrics?query=${encodeURIComponent(lyricsQuery)}`,
     );
+    const lyricsData = lyricsResponse.data.data || {};
     const result = {
       status: true,
       creador: "Sareth",
-      title: geniusData[0].title || "",
-      fullTitle: geniusData[0].fullTitle || "",
-      artist: geniusData[0].artist.name || "",
-      artistUrl: geniusData[0].artist.url || "",
-      id: geniusData[0].id || "",
-      enpoint: geniusData[0].endpoint || "",
-      instrumental: geniusData[0].instrumental,
-      image: geniusData[0].image || "",
-      url: geniusData[0].url || "",
-      lyrics: lyricsResponse.data.lyrics || "",
+      title: pick.title || "",
+      fullTitle: pick.fullTitle || pick.title || "",
+      artist: pick.artist?.name || "",
+      artistUrl: pick.artist?.url || "",
+      id: pick.id || "",
+      enpoint: pick.endpoint || "",
+      instrumental: pick.instrumental,
+      image: pick.image || "",
+      url: pick.url || "",
+      lyrics: lyricsData.lyrics || "",
     };
     return result;
   } catch (error) {
