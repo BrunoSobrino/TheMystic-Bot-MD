@@ -26,14 +26,14 @@ const handler = async (m, { conn, text }) => {
       },
     );
     const downloadres = downloadzd.data.data;
-    const soundcloudt = `*亗 S O U N D C L O U D*\n
-*› Titulo :* ${downloadres.title || "-"}
-*› Artista:* ${downloadres.author.username || "-"}
-*› Id :* ${downloadres.author.id || "-"}
-*› Followers :* ${downloadres.author.followers_count || "-"}
-*› Likes :* ${downloadres.author.likes_count || "-"}
-*› Publicado :* ${new Date(downloadres.author.created_at).toLocaleDateString() || "-"}
-*› Url :* ${shdata.link || "-"}`;
+    const soundcloudt = `${tradutor.texto4[0]}\n
+${tradutor.texto4[1]} ${downloadres.title || "-"}
+${tradutor.texto4[2]} ${downloadres.author.username || "-"}
+${tradutor.texto4[3]} ${downloadres.author.id || "-"}
+${tradutor.texto4[4]} ${downloadres.author.followers_count || "-"}
+${tradutor.texto4[5]} ${downloadres.author.likes_count || "-"}
+${tradutor.texto4[6]} ${new Date(downloadres.author.created_at).toLocaleDateString() || "-"}
+${tradutor.texto4[7]} ${shdata.link || "-"}`;
     const imgxd =
       downloadres.imageURL.replace("t500x500", "t1080x1080") ||
       downloadres.imageURL;
