@@ -1,4 +1,11 @@
-const handler = async (m, {conn, usedPrefix, text}) => {
+// Busca al participante en los metadatos del grupo aceptando JID, LID o número.
+const findParticipant = (participants, jid, conn) => {
+  const resolved = conn?.resolveUser?.(jid) || {};
+  const ids = [...new Set([jid, resolved.jid, resolved.lid, resolved.pn ? resolved.pn + '@s.whatsapp.net' : null].filter(Boolean))];
+  return (participants || []).find((p) => ids.includes(p.id) || ids.includes(p.phoneNumber) || ids.includes(p.lid));
+};
+
+const handler = async (m, {conn, usedPrefix, text, participants}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
@@ -24,10 +31,15 @@ const handler = async (m, {conn, usedPrefix, text}) => {
     } else if (await m?.quoted?.sender) {
       var user = await m?.quoted?.sender;
     }
-  } catch (e) {
-  } finally {
-    conn.groupParticipantsUpdate(m.chat, [user], 'demote');
+    if (!user) return;
+    // Si la persona no es admin, avisar y no intentar la degradación de nuevo.
+    if (!findParticipant(participants, user, conn)?.admin) {
+      const msg = tradutor.texto4.replace('@user', '@' + user.split('@')[0]);
+      return m.reply(msg, m.chat, { mentions: [user] });
+    }
+    await conn.groupParticipantsUpdate(m.chat, [user], 'demote');
     conn.reply(m.chat, tradutor.texto3, m);
+  } catch (e) {
   }
 };
 handler.help = ['demote'].map((v) => 'mention ' + v);

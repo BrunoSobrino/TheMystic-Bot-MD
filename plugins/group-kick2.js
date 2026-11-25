@@ -1,3 +1,10 @@
+// Busca al participante en los metadatos del grupo aceptando JID, LID o número.
+const findParticipant = (participants, jid, conn) => {
+  const resolved = conn?.resolveUser?.(jid) || {};
+  const ids = [...new Set([jid, resolved.jid, resolved.lid, resolved.pn ? resolved.pn + '@s.whatsapp.net' : null].filter(Boolean))];
+  return (participants || []).find((p) => ids.includes(p.id) || ids.includes(p.phoneNumber) || ids.includes(p.lid));
+};
+
 const handler = async (m, {conn, participants, usedPrefix, command}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -13,6 +20,11 @@ const handler = async (m, {conn, participants, usedPrefix, command}) => {
   if (!testi && !m.quoted) return m.reply(kicktext, m.chat, {mentions: conn.parseMention(kicktext)});
   if (testi && testi.includes(conn.user.jid)) return;
   const user = testi || await m.quoted?.sender;
+  // Si la persona ya no está en el grupo, avisar y no intentar expulsarla de nuevo.
+  if (!findParticipant(participants, user, conn)) {
+    const msg = tradutor.texto3.replace('@user', '@' + user.split('@')[0]);
+    return m.reply(msg, m.chat, { mentions: [user] });
+  }
   const owr = m.chat.split`-`[0];
   await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
 };
