@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { searchMusic, getAudioBuffer, getVideoBuffer } from '../src/libraries/ytmusic.js'
+import { searchMusic, getAudioBuffer, getVideoBuffer, tagAudioMp3 } from '../src/libraries/ytmusic.js'
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   const datas = global;
@@ -27,7 +27,8 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   if (command === 'play') {
     try {
       const { buffer, mimeType } = await getAudioBuffer(result.videoId);
-      await conn.sendMessage(m.chat, { audio: buffer, mimetype: mimeType }, { quoted: m });
+      const tagged = await tagAudioMp3(buffer, mimeType, { title: result.title, artist: result.author?.name, thumbnail: result.thumbnail, url: result.url });
+      await conn.sendMessage(m.chat, { audio: tagged, mimetype: mimeType }, { quoted: m });
     } catch (error) {
       console.log('❌ Error al descargar el audio:', error);
       conn.reply(m.chat, tradutor.texto6, m);
