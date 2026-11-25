@@ -1,0 +1,47 @@
+{
+    "plugins": {
+        "menu": {
+            "menu_header": "╭═══〘 ✯✯✯✯✯✯✯✯✯ 〙══╮\n║ ◉— *𝐓𝐡𝐞 𝐌𝐲𝐬𝐭𝐢𝐜 - 𝐁𝐨𝐭* —◉\n║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║\n║➤ *Olá,* @username\n║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║\n║➤ *Dono:* @author\n║➤ *Número:* wa.me/@owner\n║➤ *PayPal:* paypal.me/BrunoSob\n║➤ *Data:* @week, @date\n║➤ *Tempo ativo:* @uptime\n║➤ *Usuários:* @rtotal\n║➤ *Registrados:* @rtotalreg\n╰═══╡✯✯✯✯✯✯✯✯✯╞═══╯",
+            "user_info": "┏━━━━━━━━━━━━━━━━┓\n┃ *< INFORMAÇÕES DO USUÁRIO />*\n┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃\n┣ ✯ *Nível:* @level\n┣ ✯ *Experiência:* @exp\n┣ ✯ *Cargo:* @role\n┣ ✯ *Diamantes:* @limit\n┣ ✯ *MysticCoins:* @money\n┣ ✯ *Tokens:* @joincount\n┣ ✯ *Premium:* @premium\n┗━━━━━━━━━━━━━━━━┛\n",
+            "section_header": "┏━━━━━━━━━━━━━━━━┓\n┃ @category\n┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃",
+            "command_item": "┣ ඬ⃟  □ @cmd @islimit",
+            "section_footer": "┗━━━━━━━━━━━━━━━━┛\n",
+            "error_message": "[ ❌ ] Ocorreu um erro ao gerar o menu:",
+            "premium": {
+                "yes": "✅",
+                "no": "❌"
+            },
+            "tags": {
+                "info": "<INFORMAÇÕES>",
+                "jadibot": "<SUBBOTS>",
+                "xp": "<XP>",
+                "tools": "<FERRAMENTAS>",
+                "search": "<PESQUISAS>",
+                "downloader": "<DOWNLOADS>",
+                "converter": "<CONVERSORES>",
+                "effects": "<EFEITOS>",
+                "game": "<JOGOS>",
+                "group": "<GRUPOS>",
+                "nsfw": "<ADULTOS>",
+                "owner": "<PROPRIETÁRIOS>",
+                "sticker": "<FIGURINHAS>",
+                "img": "<IMAGENS>",
+                "ai": "<INTELIGÊNCIA ARTIFICIAL>",
+                "music": "<MÚSICA>",
+                "internet": "<INTERNET>",
+                "download": "<DOWNLOAD>",
+                "tyc": "<TERMOS E CONDIÇÕES>",
+                "maker": "<CRIADOR>",
+                "nulis": "<ESCREVER>",
+                "emoji": "<EMOJI>",
+                "database": "<BANCO DE DADOS>",
+                "premium": "<PREMIUM>",
+                "random": "<ALEATÓRIO>",
+                "anime": "<ANIME>",
+                "fun": "<DIVERSÃO>",
+                "general": "<GERAL>",
+                "herramientas": "<FERRAMENTAS>"
+            }
+        }
+    }
+}
