@@ -178,7 +178,7 @@ const downloadYtDlp = async (m) => {
     const { default: fetch } = await import('node-fetch');
     
     const response = await fetch(downloadUrl);
-    if (!response.ok) throw new Error(`Descarga fallida: ${response.statusText}`);
+    if (!response.ok) throw new Error(`${tradutor.texto1[0]}${response.statusText}${tradutor.texto1[1]}`);
 
     const buffer = Buffer.from(await response.arrayBuffer());
     await fs.promises.writeFile(filePath, buffer);
@@ -192,20 +192,24 @@ const downloadYtDlp = async (m) => {
 };
 
 const updateYtDlp = async (m, errorMsg = null) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_yt_dlp_dla
+
   try {
     const ytDlpPath = await detectYtDlpBinary(m);
     const updateCommand = `${ytDlpPath} --update-to master`; // nightly
     
     const result = await safeExecute(updateCommand);
     
-    const updateOutput = result.stdout || result.stderr || 'yt-dlp actualizado exitosamente';
+    const updateOutput = result.stdout || result.stderr || tradutor.texto2;
     const finalMsg = errorMsg ? `Stderr: ${errorMsg}\n\n${updateOutput}` : updateOutput;
     await m.reply(finalMsg);
     
     return true;
   } catch (error) {
     console.error(`PLUGIN DLA Update error: ${error.message}`);
-    const errorOutput = error.stdout || error.stderr || `Error al actualizar: ${error.message}`;
+    const errorOutput = error.stdout || error.stderr || `${tradutor.texto3[0]}${error.message}${tradutor.texto3[1]}`;
     const finalMsg = errorMsg ? `Stderr: ${errorMsg}\n\n${errorOutput}` : errorOutput;
     await m.reply(finalMsg);
     return false;
@@ -213,6 +217,10 @@ const updateYtDlp = async (m, errorMsg = null) => {
 };
 
 const uploadCookies = async (m, cookieText = null) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_yt_dlp_dla
+
   try {
     let cookieContent = null;
 
@@ -221,22 +229,22 @@ const uploadCookies = async (m, cookieText = null) => {
     } else if (m.quoted && m.quoted.fileSha256) {
       const media = await m.quoted.download();
       if (!media) {
-        await m.reply('Error al descargar el archivo de cookies');
+        await m.reply(tradutor.texto4);
         return;
       }
       cookieContent = media.toString();
     } else {
-      await m.reply('Las cookies deben ser texto o archivo. Ver el tutorial aqui: https://youtu.be/KUk9nEf00_U');
+      await m.reply(tradutor.texto5);
       return;
     }
 
     await ensureDirectories();
     await fs.promises.writeFile(config.cookiesFile, cookieContent);
     
-    await m.reply(`Cookies subidas exitosamente en ${config.cookiesFile}`);
+    await m.reply(`${tradutor.texto6[0]}${config.cookiesFile}${tradutor.texto6[1]}`);
   } catch (error) {
     console.error(`PLUGIN DLA Cookie upload error: ${error.message}`);
-    await m.reply(`Error subiendo cookies: ${error.message}`);
+    await m.reply(`${tradutor.texto7[0]}${error.message}${tradutor.texto7[1]}`);
   }
 };
 
@@ -258,6 +266,10 @@ const processDownloadedFile = async (m, filePath, originalFileName, isVideo = fa
 };
 
 const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = false, isVideo = false) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_yt_dlp_dla
+
   const ytDlpPath = await detectYtDlpBinary(m);
   const sessionId = `yt-dlp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const outputDir = path.join(config.tempDir, sessionId);
@@ -299,7 +311,7 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
           }
         }
       } catch (error) {
-        const errorMsg = error.stderr || error.message || 'Error desconocido';
+        const errorMsg = error.stderr || error.message || tradutor.texto8;
         await updateYtDlp(m, errorMsg);
       }
     }
@@ -311,6 +323,10 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
 };
 
 const searchAndDownload = async (m, searchQuery, isVideo = false) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_yt_dlp_dla
+
   const sessionId = `yt-dlp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const outputDir = path.join(config.tempDir, sessionId);
   const cookiesFlag = await buildCookiesFlag();
@@ -361,7 +377,7 @@ const searchAndDownload = async (m, searchQuery, isVideo = false) => {
           break;
         }
       } catch (error) {
-        const errorMsg = error.stderr || error.message || 'Error desconocido';
+        const errorMsg = error.stderr || error.message || tradutor.texto8;
         await updateYtDlp(m, errorMsg);
         
         await fs.promises.rm(outputDir, { recursive: true, force: true }).catch(() => {});
@@ -380,16 +396,15 @@ const searchAndDownload = async (m, searchQuery, isVideo = false) => {
 };
 
 const handleRequest = async (m) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_yt_dlp_dla
+
   const input = cleanCommand(m.text.trim());
   
   if (!input) {
     await m.reply(
-      '> 🎶Buscar y descargar cancion:\n`dla` <consulta>\n' +
-      '> 🎥Buscar y descargar video:\n`dla vd` <consulta>\n' +
-      '> ⬇️Descargar todo tipo de media: \n`dla` <url> _YT-DLP FLAGS_ \n' +
-      '> 🎵Descargar todo el audio de playlist: \n`dla mp3` <url> \n' +
-      '> 🍪Cookies: https://youtu.be/KUk9nEf00_U \n' +
-      '> 🌐Mas informacion:\ngithub.com/yt-dlp/yt-dlp/blob/master/README.md#usage-and-options'
+      tradutor.texto9
     );
     return;
   }
@@ -414,7 +429,7 @@ const handleRequest = async (m) => {
       return;
     }
     
-    await m.reply('Descargando!');
+    await m.reply(tradutor.texto10);
     
     if (!urls.length) {
       if (input.includes('://')) {
@@ -452,7 +467,7 @@ const handleRequest = async (m) => {
     }
   } catch (error) {
     console.error(`PLUGIN DLA Error en comando dla: ${error.message}`);
-    await m.reply(`Error: ${error.message}`);
+    await m.reply(`${tradutor.texto11[0]}${error.message}${tradutor.texto11[1]}`);
   }
 };
 
