@@ -145,3 +145,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+# Cookies de YouTube (sesión del dueño, no se suben al repo)
+src/libraries/ytmusic.txt
+src/libraries/ytcook.txt
