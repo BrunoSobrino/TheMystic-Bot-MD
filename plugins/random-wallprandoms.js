@@ -6,7 +6,8 @@ const handler = async (m, {command, conn}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.random_wallprandoms
   const apikey = global.keysxxx;
-  const who = await m.mentionedJid && await await m.mentionedJid[0] ? await await m.mentionedJid[0] : m.fromMe ? conn.user.id : m.sender;
+  const _mentioned = await m.mentionedJid;
+  const who = _mentioned[0] || (m.fromMe ? conn.user.id : m.sender);
   const name = await conn.getName[who];
   const fgif = m;
 
