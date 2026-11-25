@@ -1,4 +1,4 @@
-import Jimp from 'jimp';
+import { Jimp, JimpMime } from 'jimp';
 
 const handler = async (m, { conn, usedPrefix, command }) => {
   try {
@@ -22,9 +22,9 @@ handler.rowner = true;
 export default handler;
 
 async function processImage(imgBuffer) {
-  const image = await Jimp.read(imgBuffer);
-  const resized = image.getWidth() > image.getHeight() ? image.resize(720, Jimp.AUTO) : image.resize(Jimp.AUTO, 720);
-  const jpegBuffer = await resized.getBufferAsync(Jimp.MIME_JPEG);
+  const image = await Jimp.fromBuffer(imgBuffer);
+  const resized = image.width > image.height ? image.resize({ w: 720 }) : image.resize({ h: 720 });
+  const jpegBuffer = await resized.getBuffer(JimpMime.jpeg);
   return jpegBuffer;
 }
 
