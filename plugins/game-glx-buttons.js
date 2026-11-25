@@ -1,4 +1,9 @@
+import fs from 'fs';
 export async function before(m, { conn }) {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.game_glx_buttons
+
     const usedPrefix = '.'
     const msg = m.msg?.contextInfo?.quotedMessage?.buttonsMessage?.buttons[0].buttonId
 
@@ -13,81 +18,10 @@ export async function before(m, { conn }) {
     switch (selectedId) {
         case 'glx_start_game':
             await conn.sendMessage(m.sender, {
-                text: `🛠️ *Estamos trabalhando para melhorar o jogo GLX!*
-
-Agradecemos sua paciência e apoio. 🚀
-
-
-*╔═ 🪐JUEGO DE GALAXIA🪐 ═╗*
-
- 👨‍🚀 Hola *${m.pushName}*, Es la hora de viajar por el espacio, mina asteroides, conversa con alienígenas y mucho más en el mundo galáctico!
-
-  *💰 Moneda:* ${data.perfil.carteira.currency}
-
-
-  *🌠 ${usedPrefix}glx _cadastrar_*
-  _Para registrarse en la GLX_
-  
-  *🌠 ${usedPrefix}glx _perfil_*
-  _Mira la evolución de tu perfil._
-
-  *🌠 ${usedPrefix}glx _vender_*
-  _vende tus objetos del cofre._
-
-  
-
-
-> 🧾 Ataques / Defensa / Viajar
-
-  *🌠 ${usedPrefix}glx _atacar list_*
-  _Enlista todos los jugadores del juego!_
-
-  *🌠 ${usedPrefix}glx _atacar <username_del_jugador>_*
-  _ataca a un usuario usando su username!_
-
-  *🌠 ${usedPrefix}glx _planeta_*
-  _Actualizar datos Planeta y Colonia_
-
-  *🌠 ${usedPrefix}glx _viajar_*
-  _¿Quieres visitar otro Planeta? Vamos!_
-
-> 🧾 Opciones de minería
-
-*🌠 ${usedPrefix}glx _miner_*
-_Quieres dinero? Vamos a minar._
-
-
-
-> 🧾 Tu información personal 
-
-  *🌠 ${usedPrefix}glx _carteira_*
-  _Accede a tu billetera financiera._
-
-  *🌠 ${usedPrefix}glx _loja_*
-  _Descubre nuestra tienda de la galaxia_
-
-  *🌠 ${usedPrefix}glx _bau_*
-  _Mira tus items guardados_
-
- 
-
-
-  *🌟 ${usedPrefix}glx _criador_*
-  _Información dem creador del juego.._
-
-  *🌟 ${usedPrefix}glx _sobre_*
-  _Sobre el juego._
-
-  _Noticias y Actualizaciónes automáticas_
-  _Si tiene alguna pregunta, póngase en contacto_
-
-  
-*╘═══════════════════╛*
-  🌞🌕🌠🌟⭐🌎🪐
-`,
-                footer: 'Game GLX',
+                text: `${tradutor.texto1[0]}${m.pushName}${tradutor.texto1[1]}${data.perfil.carteira.currency}${tradutor.texto1[2]}${usedPrefix}${tradutor.texto1[3]}${usedPrefix}${tradutor.texto1[4]}${usedPrefix}${tradutor.texto1[5]}${usedPrefix}${tradutor.texto1[6]}${usedPrefix}${tradutor.texto1[7]}${usedPrefix}${tradutor.texto1[8]}${usedPrefix}${tradutor.texto1[9]}${usedPrefix}${tradutor.texto1[10]}${usedPrefix}${tradutor.texto1[11]}${usedPrefix}${tradutor.texto1[12]}${usedPrefix}${tradutor.texto1[13]}${usedPrefix}${tradutor.texto1[14]}${usedPrefix}${tradutor.texto1[15]}`,
+                footer: tradutor.texto3,
                 buttons: [
-                    { buttonId: 'glx_start_game', buttonText: { displayText: '🔍 Inicio' }, type: 1 }
+                    { buttonId: 'glx_start_game', buttonText: { displayText: tradutor.texto2 }, type: 1 }
                 ],
                 headerType: 1
             })
