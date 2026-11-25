@@ -62,7 +62,7 @@
     "hispamemes": "^1.0.7",
     "human-readable": "^0.2.1",
     "imagemaker.js": "^2.0.3",
-    "jimp": "^0.22.12",
+    "jimp": "^1.6.1",
     "jsdom": "^19.0.0",
     "libphonenumber-js": "*",
     "link-preview-js": "^3.0.0",
