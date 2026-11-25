@@ -165,6 +165,19 @@ export async function before(m, { conn, participants }) {
 // ===============================
 async function resolveLidFromCache(jid, conn) {
   if (!jid) return jid;
+  // Baileys 7: en grupos con LID el parámetro del stub puede venir
+  // como JSON ('{"id":"...@lid","phoneNumber":"...@s.whatsapp.net"}')
+  // o como objeto: sacar primero el número real.
+  if (typeof jid === 'string' && jid.trim().startsWith('{')) {
+    try {
+      const obj = JSON.parse(jid);
+      jid = obj?.phoneNumber || obj?.id || jid;
+    } catch {}
+  }
+  if (typeof jid === 'object') {
+    jid = jid?.phoneNumber || jid?.id || '';
+    if (!jid) return jid;
+  }
   if (!jid.toString().endsWith('@lid')) {
     return jid.includes('@') ? jid : `${jid}@s.whatsapp.net`;
   }
