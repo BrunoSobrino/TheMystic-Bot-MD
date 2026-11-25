@@ -4,11 +4,13 @@
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
 // Descarga: 1º ab-downloader (el de su web, MP3/MP4 listos en su
-// CDN, que se bajan con un GET normal) y 2º @distube/ytdl-core
-// (baja directo de YouTube). Si ab-downloader falla (su backend
-// ya dio 503), se usa ytdl-core (con las cookies de YouTube de
-// src/libraries/ytmusic.txt si existen, porque sin sesión YouTube
-// puede bloquear la IP del panel). La búsqueda sigue por el scraper
+// CDN, que se bajan con un GET normal), 2º youtube-dl-exec (yt-dlp,
+// baja directo de YouTube) y 3º @distube/ytdl-core (también directo
+// de YouTube, con las cookies de src/libraries/ytmusic.txt). Si una
+// opción falla, se pasa a la siguiente. Sin sesión, YouTube puede
+// bloquear la IP del panel y no devolver ni los formatos (por eso
+// yt-dlp y ytdl-core usan las cookies cuando existen). La búsqueda
+// sigue por el scraper
 // de YouTube Music (ayashiiiyo): searchMusic / searchMusicList y
 // getVideoInfo (para enlaces directos).
 //
@@ -27,6 +29,7 @@ import { search as ayaSearch, getTrack as ayaTrack, parseCookies } from './ytmus
 import abDownloader from 'ab-downloader';
 import NodeID3 from 'node-id3';
 import { Ytdl, Quality, chooseFormat } from '@distube/ytdl-core';
+import youtubedl from 'youtube-dl-exec';
 const { youtube: abYoutube } = abDownloader;
 // Cookies de YouTube opcionales (mismo archivo que usa el scraper de
 // búsqueda: src/libraries/ytmusic.txt, con la sesión de YouTube del
@@ -36,6 +39,19 @@ const { youtube: abYoutube } = abDownloader;
 // librería esté al día. Con la sesión puesta, YouTube lo trata como
 // un usuario real. El archivo NO se sube al repo (ver .gitignore).
 const YT_COOKIE = parseCookies() || '';
+const YT_COOKIE_PATH = new URL('ytmusic.txt', import.meta.url).pathname;
+// yt-dlp acepta las cookies como archivo Netscape (--cookies) o como
+// cabecera (--add-header). Se detecta el formato del archivo.
+const YT_COOKIE_IS_NETSCAPE = (() => {
+    try {
+        return fs.readFileSync(YT_COOKIE_PATH, 'utf8').split('\n').some((line) => line.split('\t').length >= 7);
+    } catch { return false; }
+})();
+function ytDlpCookieFlags() {
+    if (!YT_COOKIE) return {};
+    if (YT_COOKIE_IS_NETSCAPE) return { cookies: YT_COOKIE_PATH };
+    return { addHeader: [`Cookie: ${YT_COOKIE}`] };
+}
 // La sesión debe traer SAPISID o __Secure-3PAPISID; si la cookie
 // está incompleta, el constructor de Ytdl lanza y rompería todo el
 // módulo, así que se atrapa y se sigue sin sesión.
@@ -234,7 +250,7 @@ async function getMediaBufferViaYtdl(videoId, want) {
     // primero y solo si no hay se acepta otro códec MP4 o cualquiera.
     let videoFormat;
     try {
-        videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && f.container === 'mp4' && (f.height || 0) <= 720 && (f.videoCodec || '').startsWith('avc1') });
+        videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && f.container === 'mp4' && (f.height || 0) <= 720 && ((f.videoCodec || '') + (f.mimeType || '')).includes('avc1') });
     } catch {
         try {
             videoFormat = chooseFormat(info.formats, { quality: Quality.HighestVideo, filter: (f) => f.hasVideo && !f.hasAudio && f.container === 'mp4' && (f.height || 0) <= 720 });
@@ -296,36 +312,92 @@ export async function getVideoInfo(videoId) {
     };
 }
 
+// youtube-dl-exec (yt-dlp, 2ª opción): baja directo de YouTube.
+// Necesita python3 y el binario yt-dlp (lo descarga npm install);
+// si falta algo, lanza el error y la cadena pasa a ytdl-core.
+// Audio: el mejor solo-audio. Video: mejor video MP4 hasta 720p +
+// mejor audio MP4 unidos por yt-dlp (necesita ffmpeg); si no hay
+// formato combinado, se acepta el mejor combinado MP4 hasta 720p.
+async function getMediaBufferViaYtDlp(videoId, want) {
+    const url = `https://www.youtube.com/watch?v=${videoId}`;
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ytdlp-'));
+    try {
+        const cookieFlags = ytDlpCookieFlags();
+        const output = path.join(dir, `${want}.%(ext)s`);
+        if (want === 'audio') {
+            await youtubedl(url, {
+                format: 'bestaudio[ext=m4a]/bestaudio',
+                output,
+                noPlaylist: true, noWarnings: true, quiet: true,
+                ...cookieFlags,
+            }, { timeout: 180000, killSignal: 'SIGKILL' });
+        } else {
+            await youtubedl(url, {
+                format: 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best[height<=720]',
+                output,
+                noPlaylist: true, noWarnings: true, quiet: true,
+                ...cookieFlags,
+            }, { timeout: 180000, killSignal: 'SIGKILL' });
+        }
+        const file = fs.readdirSync(dir).map((f) => path.join(dir, f)).find((f) => fs.statSync(f).isFile());
+        if (!file) throw new Error('yt-dlp no dejó archivo');
+        const ext = path.extname(file).slice(1).toLowerCase();
+        const buffer = fs.readFileSync(file);
+        const maxBytes = want === 'audio' ? MAX_AUDIO_BYTES : MAX_VIDEO_BYTES;
+        if (!buffer.length) throw new Error('Descarga vacía (yt-dlp)');
+        if (buffer.length > maxBytes) throw new Error(`Archivo demasiado grande (>${Math.round(maxBytes / 1048576)} MB)`);
+        if (want === 'audio') {
+            const mimeType = ext === 'm4a' ? 'audio/mp4' : ext === 'webm' ? 'audio/webm' : ext === 'mp3' ? 'audio/mpeg' : `audio/${ext}`;
+            return { buffer, mimeType, ext };
+        }
+        if (ext !== 'mp4') throw new Error(`yt-dlp devolvió .${ext}, se esperaba mp4`);
+        return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
+    } finally {
+        try { fs.rmSync(dir, { recursive: true, force: true }); } catch {}
+    }
+}
+
 // Audio listo para mandar. 1º ab-downloader (MP3 de su CDN),
-// 2º ytdl-core (AAC/WebM directo de YouTube).
+// 2º yt-dlp y 3º ytdl-core (AAC/WebM directo de YouTube).
 // Devuelve { buffer, mimeType, ext }.
 export async function getAudioBuffer(videoId) {
     try {
         const { buffer, mimeType, ext } = await getMediaBufferViaAbDownloader(videoId, 'audio');
         return { buffer, mimeType, ext };
     } catch (e) {
-        console.log('❌ ab-downloader (audio) falló, 2ª opción ytdl-core:', e.message);
-        return getMediaBufferViaYtdl(videoId, 'audio');
+        console.log('❌ ab-downloader (audio) falló, 2ª opción yt-dlp:', e.message);
+        try {
+            return await getMediaBufferViaYtDlp(videoId, 'audio');
+        } catch (e2) {
+            console.log('❌ yt-dlp (audio) falló, 3ª opción ytdl-core:', e2.message);
+            return getMediaBufferViaYtdl(videoId, 'audio');
+        }
     }
 }
 
 // Video listo para mandar. 1º ab-downloader (MP4 de su CDN,
-// reempaquetado para que WhatsApp pueda buscar), 2º ytdl-core
-// (video + audio unidos con ffmpeg, ya con +faststart).
+// reempaquetado para que WhatsApp pueda buscar), 2º yt-dlp
+// (video + audio unidos por yt-dlp) y 3º ytdl-core (video + audio
+// unidos con ffmpeg, ya con +faststart).
 // Devuelve { buffer, mimeType }.
 export async function getVideoBuffer(videoId) {
     try {
         const { buffer } = await getMediaBufferViaAbDownloader(videoId, 'video');
         return { buffer: await remuxMp4(buffer), mimeType: 'video/mp4' };
     } catch (e) {
-        console.log('❌ ab-downloader (video) falló, 2ª opción ytdl-core:', e.message);
-        return getMediaBufferViaYtdl(videoId, 'video');
+        console.log('❌ ab-downloader (video) falló, 2ª opción yt-dlp:', e.message);
+        try {
+            return await getMediaBufferViaYtDlp(videoId, 'video');
+        } catch (e2) {
+            console.log('❌ yt-dlp (video) falló, 3ª opción ytdl-core:', e2.message);
+            return getMediaBufferViaYtdl(videoId, 'video');
+        }
     }
 }
 
 // Metadatos ID3 para el audio (título, artista, álbum, año, comentario y
 // portada). Solo el MP3 admite ID3 (ab-downloader devuelve MP3;
-// el audio de ytdl-core es AAC/WebM y se devuelve sin etiquetar).
+// el audio de yt-dlp/ytdl-core es AAC/WebM y se devuelve sin etiquetar).
 // Si el buffer no es MP3, no hay título/artista o algo falla,
 // devuelve el buffer original sin tocar: nunca rompe la descarga.
 export async function tagAudioMp3(buffer, mimeType, meta = {}) {
