@@ -137,11 +137,15 @@ export function makeWASocket(connectionOptions, options = {}) {
     const mapping = conn.signalRepository?.lidMapping;
     const fromCache = (key) => mapping?.mappingCache?.get?.(key) ?? null;
     if (domain === 's.whatsapp.net') {
-      const lid = mapping?.getLIDForPN?.(id) ?? fromCache(`pn:${value}`);
+      // getLIDForPN es ASYNC en Baileys 7 (devuelve una Promesa): usarla aquí
+      // convertía el resultado en "[object Promise]@lid". Solo la caché síncrona.
+      const lid = fromCache(`pn:${value}`);
       return { jid: id, lid: lid ? `${lid}@lid` : null, id: value, pn: value, type: 'jid' };
     }
     if (domain === 'lid') {
-      const pn = mapping?.getPNForLID?.(id) ?? fromCache(`lid:${value}`);
+      // getPNForLID es ASYNC en Baileys 7 (devuelve una Promesa): usarla aquí
+      // convertía el resultado en "[object Promise]@s.whatsapp.net". Solo la caché síncrona.
+      const pn = fromCache(`lid:${value}`);
       return { jid: pn ? `${pn}@s.whatsapp.net` : null, lid: id, id: value, pn: pn || null, type: 'lid' };
     }
     return { jid: id, lid: null, id: value, pn: null, type: 'unknown' };
