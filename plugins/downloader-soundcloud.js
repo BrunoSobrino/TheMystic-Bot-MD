@@ -26,22 +26,30 @@ const handler = async (m, { conn, text }) => {
       },
     );
     const downloadres = downloadzd.data.data;
+    // La API nueva devuelve el autor como texto y otros nombres de campos
+    const authorName = downloadres.author?.username || downloadres.author || "-";
+    const authorId = downloadres.author?.id || downloadres.id || "-";
+    const followers = downloadres.author?.followers_count ?? downloadres.followers ?? "-";
+    const likes = downloadres.author?.likes_count ?? downloadres.likes ?? "-";
+    const created = downloadres.author?.created_at || downloadres.created_at;
+    const imgUrl = downloadres.imageURL || downloadres.image || "";
+    const audioUrl = downloadres.url || downloadres.download;
     const soundcloudt = `${tradutor.texto4[0]}\n
 ${tradutor.texto4[1]} ${downloadres.title || "-"}
-${tradutor.texto4[2]} ${downloadres.author.username || "-"}
-${tradutor.texto4[3]} ${downloadres.author.id || "-"}
-${tradutor.texto4[4]} ${downloadres.author.followers_count || "-"}
-${tradutor.texto4[5]} ${downloadres.author.likes_count || "-"}
-${tradutor.texto4[6]} ${new Date(downloadres.author.created_at).toLocaleDateString() || "-"}
+${tradutor.texto4[2]} ${authorName}
+${tradutor.texto4[3]} ${authorId}
+${tradutor.texto4[4]} ${followers}
+${tradutor.texto4[5]} ${likes}
+${tradutor.texto4[6]} ${created ? new Date(created).toLocaleDateString() : "-"}
 ${tradutor.texto4[7]} ${shdata.link || "-"}`;
     const imgxd =
-      downloadres.imageURL.replace("t500x500", "t1080x1080") ||
-      downloadres.imageURL;
+      imgUrl.replace("t500x500", "t1080x1080") ||
+      imgUrl;
     await conn.sendFile(m.chat, imgxd, "", soundcloudt, m);
     await conn.sendMessage(
       m.chat,
       {
-        audio: { url: downloadres.url },
+        audio: { url: audioUrl },
         fileName: `${downloadres.title}.mp3`,
         mimetype: "audio/mpeg",
       },

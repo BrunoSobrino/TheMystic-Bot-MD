@@ -17,7 +17,8 @@ const handler = async (m, { conn, args, command, usedPrefix }) => {
       },
     );
     if (res.data.status && res.data.data.media.length > 0) {
-      const txtresthreads = `${tradutor.texto2[0]}${res.data.data.username || "-"}${tradutor.texto2[1]}${res.data.data.description || "-"}${tradutor.texto2[2]}${res.data.data.likes || "-"}${tradutor.texto2[3]}${res.data.data.is_verified ? "√" : "×"}${tradutor.texto2[4]}${res.data.data.media.length || "-"}${tradutor.texto2[5]}${args[0].trim()}${tradutor.texto2[6]}`;
+      const tdata = res.data.data;
+      const txtresthreads = `${tradutor.texto2[0]}${tdata.username || "-"}${tradutor.texto2[1]}${tdata.description || "-"}${tradutor.texto2[2]}${tdata.likes ?? tdata.like ?? "-"}${tradutor.texto2[3]}${(tdata.is_verified ?? tdata.verified) ? "√" : "×"}${tradutor.texto2[4]}${tdata.media.length || "-"}${tradutor.texto2[5]}${args[0].trim()}${tradutor.texto2[6]}`;
       await conn.sendMessage(m.chat, { text: txtresthreads }, { quoted: m });
       const media = res.data.data.media;
       for (const item of media) {

@@ -9,7 +9,7 @@ const handler = async (m, { conn, text }) => {
 
  if (!text) return conn.reply(m.chat, tradutor.texto1, m);  
  try {
- const response = await axios.get("https://delirius-apiofc.vercel.app/tools/tiktokstalk", {
+ const response = await axios.get(`${global.BASE_API_DELIRIUS}/tools/tiktokstalk`, {
   params: { q: text }
  });
 
@@ -17,7 +17,7 @@ const handler = async (m, { conn, text }) => {
  if (data.status && data.result) {
  const user = data.result.users;
  const stats = data.result.stats;
- const body = `${tradutor.texto2[0]} ${user.username || '-'}\n${tradutor.texto2[1]} ${user.nickname || '-'}\n${tradutor.texto2[2]} ${stats.followerCount || '-'}\n${tradutor.texto2[3]} ${stats.followingCount || '-'}\n${tradutor.texto2[4]} ${stats.likeCount || '-'}\n${tradutor.texto2[5]} ${stats.videoCount || '-'}\n${tradutor.texto2[6]} ${user.signature || '-'}`.trim();
+ const body = `${tradutor.texto2[0]} ${user.username || '-'}\n${tradutor.texto2[1]} ${user.nickname || '-'}\n${tradutor.texto2[2]} ${stats.followerCount || '-'}\n${tradutor.texto2[3]} ${stats.followingCount || '-'}\n${tradutor.texto2[4]} ${stats.likeCount || stats.heartCount || '-'}\n${tradutor.texto2[5]} ${stats.videoCount || '-'}\n${tradutor.texto2[6]} ${user.signature || '-'}`.trim();
  const imageUrl = user.avatarLarger;
  const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
  const imageBuffer = Buffer.from(imageResponse.data, "binary");
