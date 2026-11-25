@@ -127,8 +127,8 @@ const handler = async (m, { text }) => {
     }
   } catch (error) {
     console.error("Error al procesar el comando:", error);
-    const errorMessage = error.message.includes(tradutor.texto5) // complejo e ineccesario. Brr
-      ? error.message.split('❌ ')[1]
+    const errorMessage = error.message.includes(tradutor.texto5)
+      ? error.message
       : `${tradutor.texto9}${error.message}`;
     m.reply(errorMessage);
   }
