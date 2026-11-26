@@ -3,8 +3,10 @@
 // downloader-yta.js (ytmp3), downloader-ytv.js (ytmp4), @testting.js,
 // search-yts.js (ytsearch) y downloader-playlist.js (playlist).
 //
-// Búsqueda e info del video: yt-search (título, duración, link,
-// autor, vistas, miniatura). Solo la DESCARGA cambia de opción.
+// Búsqueda e info del video: 1º yt-search (título, duración, link,
+// autor, vistas, miniatura) y, si YouTube lo limita (429) o devuelve
+// vacío, 2º yt-dlp (ytsearch, con las cookies cuando existen). Solo
+// la DESCARGA cambia de opción.
 // Descarga: 1º ab-downloader (el de su web, MP3/MP4 listos en su
 // CDN, que se bajan con un GET normal), 2º youtube-dl-exec (yt-dlp,
 // baja directo de YouTube) y 3º @distube/ytdl-core (también directo
@@ -197,6 +199,48 @@ async function ytsWithRetry(args, tries = 3) {
     throw lastErr;
 }
 
+// Respaldo de búsqueda: yt-dlp (ytsearch) con las cookies cuando
+// existen. yt-search falla a veces desde la IP del panel (429 de
+// YouTube o lista vacía) y entonces .play/.play2 contestaban el error
+// genérico sin tarjeta y sin dejar rastro en consola. yt-dlp busca
+// por otro camino y con sesión, así que no cae por el mismo límite.
+// Devuelve la misma forma que normalizeVideo.
+function fmtDuration(sec) {
+    const s = Math.max(0, Math.floor(sec || 0));
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const r = s % 60;
+    return h ? `${h}:${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}` : `${m}:${String(r).padStart(2, '0')}`;
+}
+
+function normalizeYtDlpEntry(e) {
+    const videoId = e.id;
+    const thumbs = (e.thumbnails || []).filter((t) => t?.url);
+    const thumb = thumbs[thumbs.length - 1]?.url || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    const seconds = e.duration || 0;
+    return {
+        videoId,
+        url: e.url || `https://youtube.com/watch?v=${videoId}`,
+        title: e.title || '',
+        type: 'video',
+        author: { name: e.uploader || e.channel || 'YouTube', url: e.uploader_url || e.channel_url || '' },
+        duration: { seconds, timestamp: fmtDuration(seconds) },
+        timestamp: fmtDuration(seconds),
+        thumbnail: thumb,
+        views: e.view_count || 0,
+        ago: '',
+    };
+}
+
+async function searchViaYtDlp(query, limit = 1) {
+    const out = await youtubedl(`ytsearch${limit}:${query}`, {
+        dumpSingleJson: true, flatPlaylist: true, noWarnings: true, quiet: true,
+        ...ytDlpCookieFlags(),
+    }, { timeout: 60000, killSignal: 'SIGKILL' });
+    const entries = (out?.entries || []).filter((e) => e?.id);
+    return entries.map(normalizeYtDlpEntry);
+}
+
 // Primer resultado de la búsqueda (canción para play, video para play2).
 // yt-search no distingue canciones de videos: ambos usan la misma
 // lista de videos de YouTube.
@@ -205,8 +249,19 @@ export async function searchMusic(query, filter = 'songs') {
         const res = await ytsWithRetry(query);
         const pick = (res?.videos || []).find((v) => v && v.videoId) || null;
         if (pick) return normalizeVideo(pick);
+        console.log('❌ Búsqueda yt-search sin resultados para:', query);
     } catch (e) {
         console.log(`❌ Búsqueda yt-search falló:`, e.message);
+    }
+    try {
+        const [first] = await searchViaYtDlp(query, 1);
+        if (first) {
+            console.log('✅ Búsqueda por yt-dlp (respaldo):', first.title);
+            return first;
+        }
+        console.log('❌ Búsqueda yt-dlp (respaldo) sin resultados para:', query);
+    } catch (e) {
+        console.log('❌ Búsqueda yt-dlp (respaldo) falló:', e.message);
     }
     return null;
 }
@@ -216,12 +271,22 @@ export async function searchMusicList(query, filter = 'videos', limit = 20) {
     try {
         const res = await ytsWithRetry(query);
         const items = (res?.videos || []).filter((v) => v && v.videoId);
-        if (!items.length) return [];
-        return items.slice(0, limit).map(normalizeVideo);
+        if (items.length) return items.slice(0, limit).map(normalizeVideo);
+        console.log('❌ Búsqueda yt-search sin resultados para:', query);
     } catch (e) {
         console.log(`❌ Búsqueda yt-search falló:`, e.message);
-        return [];
     }
+    try {
+        const items = await searchViaYtDlp(query, limit);
+        if (items.length) {
+            console.log(`✅ Búsqueda por yt-dlp (respaldo): ${items.length} resultados`);
+            return items;
+        }
+        console.log('❌ Búsqueda yt-dlp (respaldo) sin resultados para:', query);
+    } catch (e) {
+        console.log('❌ Búsqueda yt-dlp (respaldo) falló:', e.message);
+    }
+    return [];
 }
 
 // Baja un archivo con un GET normal (ab-downloader sirve el archivo
@@ -366,19 +431,44 @@ export async function getVideoInfo(videoId) {
     try {
         info = await ytsWithRetry({ videoId });
     } catch (e) {
-        throw new Error('No se pudo obtener información del video');
+        console.log(`❌ Info del video por yt-search falló:`, e.message);
     }
-    if (!info || !info.title) throw new Error('No se pudo obtener información del video');
-    return {
-        videoId,
-        url: `https://youtu.be/${videoId}`,
-        title: info.title,
-        author: { name: info.author?.name || 'YouTube' },
-        duration: { seconds: info.seconds || 0, timestamp: info.timestamp || '0:00' },
-        thumbnail: info.thumbnail || info.image || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-        views: info.views || 0,
-        ago: info.ago || '',
-    };
+    if (info?.title) {
+        return {
+            videoId,
+            url: `https://youtu.be/${videoId}`,
+            title: info.title,
+            author: { name: info.author?.name || 'YouTube' },
+            duration: { seconds: info.seconds || 0, timestamp: info.timestamp || '0:00' },
+            thumbnail: info.thumbnail || info.image || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+            views: info.views || 0,
+            ago: info.ago || '',
+        };
+    }
+    // Respaldo: info completa por yt-dlp (con las cookies cuando existen).
+    try {
+        const out = await youtubedl(`https://www.youtube.com/watch?v=${videoId}`, {
+            dumpSingleJson: true, noWarnings: true, quiet: true,
+            ...ytDlpCookieFlags(),
+        }, { timeout: 60000, killSignal: 'SIGKILL' });
+        if (out?.title) {
+            const seconds = out.duration || 0;
+            const thumbs = (out.thumbnails || []).filter((t) => t?.url);
+            return {
+                videoId,
+                url: `https://youtu.be/${videoId}`,
+                title: out.title,
+                author: { name: out.uploader || out.channel || 'YouTube' },
+                duration: { seconds, timestamp: fmtDuration(seconds) },
+                thumbnail: thumbs[thumbs.length - 1]?.url || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+                views: out.view_count || 0,
+                ago: '',
+            };
+        }
+    } catch (e) {
+        console.log('❌ Info del video por yt-dlp (respaldo) falló:', e.message);
+    }
+    throw new Error('No se pudo obtener información del video');
 }
 
 // youtube-dl-exec (yt-dlp, 2ª opción): baja directo de YouTube.
