@@ -18,7 +18,12 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
       text;
   } else who = m.chat;
   const user = global.db.data.users[who];
-  const bot = global.db.data.settings[conn.user.jid] || {};
+  // Los ajustes del bot viven bajo conn.user.id (así los crean handler.js y
+  // #enable restrict); conn.user.jid es ese id decodificado y difiere
+  // cuando trae sufijo de dispositivo (:N@). Combinar ambas claves
+  // (gana la de conn.user.id, que es donde escribe #enable restrict)
+  // para que el restrict no se lea siempre apagado.
+  const bot = { ...(global.db.data.settings[conn.user.jid] || {}), ...(global.db.data.settings[conn.user.id] || {}) };
   const dReason = 'Sin motivo';
   const msgtext = text || dReason;
   const sdms = msgtext.replace(/@\d+-?\d* /g, '');
