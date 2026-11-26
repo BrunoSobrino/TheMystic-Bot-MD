@@ -6,7 +6,12 @@ const handler = async (m, {conn, text, participants, args}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_add
 
-  if (!global.db.data.settings[conn.user.jid].restrict) throw tradutor.texto1;
+  // Los ajustes del bot viven bajo conn.user.id (así los crean handler.js y
+  // #enable restrict); conn.user.jid es ese id decodificado y difiere
+  // cuando trae sufijo de dispositivo (:N@). Leer de ambas claves para
+  // no reventar con "Cannot read properties of undefined (reading 'restrict')".
+  const restrict = global.db.data.settings[conn.user.jid]?.restrict || global.db.data.settings[conn.user.id]?.restrict;
+  if (!restrict) throw tradutor.texto1;
   if (!args[0]) throw tradutor.texto2;
   try {
     // Identificadores conocidos de los miembros (JID, número y LID): en grupos

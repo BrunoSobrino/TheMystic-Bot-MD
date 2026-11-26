@@ -11,7 +11,12 @@ const handler = async (m, {conn, participants, usedPrefix, command}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_kick2
 
-  if (!global.db.data.settings[conn.user.jid].restrict) throw`${tradutor.texto1[0]} (𝚎𝚗𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝 / 𝚍𝚒𝚜𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝) ${tradutor.texto1[1]}`;
+  // Los ajustes del bot viven bajo conn.user.id (así los crean handler.js y
+  // #enable restrict); conn.user.jid es ese id decodificado y difiere
+  // cuando trae sufijo de dispositivo (:N@). Leer de ambas claves para
+  // no reventar con "Cannot read properties of undefined (reading 'restrict')".
+  const restrict = global.db.data.settings[conn.user.jid]?.restrict || global.db.data.settings[conn.user.id]?.restrict;
+  if (!restrict) throw`${tradutor.texto1[0]} (𝚎𝚗𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝 / 𝚍𝚒𝚜𝚊𝚋𝚕𝚎 𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝) ${tradutor.texto1[1]}`;
   const kicktext = `${tradutor.texto2} \n*${usedPrefix + command} @${global.suittag}*`;
   const testi = (await m.mentionedJid)[0];
 
