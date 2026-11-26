@@ -833,8 +833,15 @@ var effects = [
   },
 ];
 
-async function maker(url, text) {
+async function maker(url, text, tries = 3) {
    if (/https?:\/\/(ephoto360|photooxy|textpro)\/\.(com|me)/i.test(url)) throw new Error("URL Invalid")
+   // textpro.me a veces falla un intento (límite por IP, error
+   // transitorio o página de verificación sin el formulario): reintentar
+   // la generación completa antes de rendirse. Cada fallo deja su
+   // motivo real en consola (antes el error se tragaba y solo salía
+   // el texto3 genérico).
+   let lastErr;
+   for (let i = 0; i < tries; i++) {
    try {
       let a = await axios.get(url, {
          headers: {
@@ -882,8 +889,8 @@ async function maker(url, text) {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "Origin": (new URL(url)).origin,
             "Referer": url,
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188", 
-            "Cookie": a.headers.get("set-cookie").join("; "),
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+            "Cookie": (a.headers.get("set-cookie") || []).join("; "),
             ...form.getHeaders()
          }
       })
@@ -896,11 +903,15 @@ async function maker(url, text) {
             "Origin": (new URL(url)).origin,
             "Referer": url,
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
-            "Cookie": a.headers.get("set-cookie").join("; ")
+            "Cookie": (a.headers.get("set-cookie") || []).join("; ")
          }
       })
       return {status: c.data?.success, image: server + (c.data?.fullsize_image || c.data?.image || ""), session: c.data?.session_id}
    } catch (e) {
-      throw e
+      lastErr = e;
+      console.error(`[logos] intento ${i + 1}/${tries} falló:`, e.message);
+      if (i < tries - 1) await new Promise((r) => setTimeout(r, 2000));
    }
+   }
+   throw lastErr;
 }
