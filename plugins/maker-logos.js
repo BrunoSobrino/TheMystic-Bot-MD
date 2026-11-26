@@ -21,7 +21,21 @@ const handler = async (m, {conn, args: [effect], text: txt, usedPrefix, command,
   const effectoSelect = effects.find((effectz) => new RegExp(effectz?.title, 'i').test(effect));
   const res = await maker(effectoSelect?.url, [...text]).catch(_ => { throw tradutor.texto3 })
    if (typeof res == 'number') throw res == -1 ? `${tradutor.texto4[0]} ${effect} ${tradutor.texto4[1]}` : `${tradutor.texto4[2]} ${usedPrefix + command} ${effect} ${new Array(res).fill('texto').map((v, i) => v + (i ? i + 1 : '')).join('|')}*`;
-  await conn.sendMessage(m.chat, {image: {url: res.image}, caption: `${tradutor.texto5} ${effect}*`}, {quoted: m});  
+  // textpro.me devuelve 403 a peticiones sin User-Agent de navegador
+  // (así pide Baileys la URL con {image: {url}} y revienta con
+  // "Failed to fetch stream"). La imagen sí existe: se baja aquí con
+  // axios y UA de navegador y se manda el buffer, sin que Baileys
+  // tenga que pedir la URL.
+  const img = await axios.get(res.image, {
+    responseType: 'arraybuffer',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+      'Referer': effectoSelect?.url || 'https://textpro.me/',
+      'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+    },
+  }).catch(() => null);
+  if (!img?.data?.byteLength) throw tradutor.texto3;
+  await conn.sendMessage(m.chat, {image: Buffer.from(img.data), caption: `${tradutor.texto5} ${effect}*`}, {quoted: m});
 };
 handler.help = ['logos'];
 handler.tags = ['maker'];
