@@ -9,7 +9,7 @@ let handler = async (m, { conn, args, usedPrefix, command, text }) => {
         const tradutor = _translate.plugins.herramientas_chatgpt;
     
     try {
-        if (!text) return m.reply(tradutor.texto1[0]);
+        if (!text) return m.reply(Array.isArray(tradutor.texto1) ? tradutor.texto1.join('\n') : tradutor.texto1);
         
         let mediax = null;
         let userID = m.sender;
