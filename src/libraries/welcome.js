@@ -5,6 +5,7 @@ import {readFileSync} from 'fs';
 import {join} from 'path';
 import {spawn} from 'child_process';
 
+const __dirname = global.__dirname(import.meta.url);
 const src = join(__dirname, '..', 'src');
 const _svg = readFileSync(join(src, 'welcome.svg'), 'utf-8');
 const barcode = (data) => {
@@ -86,7 +87,7 @@ const render = async ({
   name = '',
   title = '',
   text = '',
-  background = toBase64(readFileSync(join(src, 'Aesthetic', '../src/assets/images/backgrounds/bakground-1.jpeg')), 'image/jpeg'),
+  background = toBase64(readFileSync(join(src, 'assets/images/backgrounds/background-1.jpeg')), 'image/jpeg'),
 } = {}, format = 'png') => {
   const svg = await genSVG({
     wid, pp, name, text, background, title,
@@ -94,21 +95,4 @@ const render = async ({
   return await toImg(svg, format);
 };
 
-if (require.main === module) {
-  render({
-    wid: '1234567890',
-    // pp: '',
-    name: 'John Doe',
-    text: 'Lorem ipsum\ndot sit color',
-    title: 'grup testing',
-    // background: ''
-  }, 'jpg').then((result) => {
-    // console.log(result)
-    process.stdout.write(result);
-  });
-  // toImg(barcode('test')).then(result => {
-  //     // console.log(result)
-  //     process.stdout.write(result)
-
-  // })
-} else module.exports = render;
+export default render;
