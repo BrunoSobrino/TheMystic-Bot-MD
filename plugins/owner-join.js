@@ -20,9 +20,8 @@ const handler = async (m, {conn, text, isMods, isOwner, isPrems}) => {
       enviando = false 
     } else {
       conn.sendMessage(m.chat, {text: tradutor.texto3}, {quoted: m});
-      const data = global.owner.filter(([id]) => id)[0];
-      const dataArray = Array.isArray(data) ? data : [data];
-      for (const entry of dataArray) await conn.sendMessage(entry + '@s.whatsapp.net', {text: tradutor.texto4 + '@' + m.sender.split('@')[0] + '\n*—◉ Link del grupo:* ' + link, mentions: [m.sender], contextInfo: {forwardingScore: 9999999, isForwarded: true, mentionedJid: [m.sender], "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": imagen6, "mediaUrl": `${link}`, "sourceUrl": `${link}`}}}, {quoted: m});
+      const ownerIds = global.owner.map(([id]) => id).filter(Boolean);
+      for (const entry of ownerIds) await conn.sendMessage(entry + '@s.whatsapp.net', {text: tradutor.texto4 + '@' + m.sender.split('@')[0] + '\n*—◉ Link del grupo:* ' + link, mentions: [m.sender], contextInfo: {forwardingScore: 9999999, isForwarded: true, mentionedJid: [m.sender], "externalAdReply": {"showAdAttribution": true, "containsAutoReply": true, "renderLargerThumbnail": true, "title": global.titulowm2, "containsAutoReply": true, "mediaType": 1, "thumbnail": global.imagen1, "mediaUrl": `${link}`, "sourceUrl": `${link}`}}}, {quoted: m});
       enviando = false 
     }
   } catch {
