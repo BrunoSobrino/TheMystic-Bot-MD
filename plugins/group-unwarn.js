@@ -9,7 +9,7 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   if (m.isGroup) who = conn.parseMention(text).length > 0 ? await conn.parseMention(text)[0] : m.quoted ? await m?.quoted?.sender : text;
   else who = m.chat;
   const user = global.db.data.users[who];
-  const bot = global.db.data.settings[conn.user.jid] || {};
+  // (Se eliminó `const bot = settings[conn.user.jid]`: no se usaba en el resto del archivo.)
   const warntext = `${tradutor.texto1}\n*${usedPrefix + command} @${global.suittag}*`;
   if (!who) throw m.reply(warntext, m.chat, {mentions: conn.parseMention(warntext)});
   if (conn.parseMention(text).includes(conn.user.jid)) return;
