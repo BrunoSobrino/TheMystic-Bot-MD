@@ -67,9 +67,11 @@ const handler = async (m, { conn, usedPrefix }) => {
       forwardingScore: 200,
       isForwarded: true,
       externalAdReply: {
-        mediaUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
-        mediaType: 2,
-        previewType: "pdf",
+        // La tarjeta decía ser un video (mediaType 2) con vista previa de PDF
+        // y una miniatura que es una imagen fija: en el lado del receptor el
+        // mensaje no se veía (el bot sí lo veía enviado). Ahora es una vista
+        // previa de enlace normal: imagen + título + enlace.
+        mediaType: 1,
         title: "The Mystic - Bot",
         body: tradutor.texto2,
         thumbnail: imagen1,

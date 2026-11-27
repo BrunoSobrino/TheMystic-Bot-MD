@@ -19,9 +19,11 @@ const handler = async (m, { conn, usedPrefix, command }) => {
        'isForwarded': true,
        'mentionedJid': conn.parseMention(donar),
        'externalAdReply': {
-         'mediaUrl': 'https://github.com/BrunoSobrino/TheMystic-Bot-MD',
-         'mediaType': 2,
-         'previewType': 'pdf',
+         // La tarjeta decía ser un video (mediaType 2) con vista previa de PDF
+         // y una miniatura que es una imagen fija: en el lado del receptor el
+         // mensaje no se veía (el bot sí lo veía enviado). Ahora es una vista
+         // previa de enlace normal: imagen + título + enlace.
+         'mediaType': 1,
          'title': tradutor.texto3,
          'body': wm,
          'thumbnail': imagen1,
