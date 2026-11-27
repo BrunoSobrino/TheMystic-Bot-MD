@@ -9,7 +9,7 @@ const handler = async (m, {usedPrefix}) => {
   let who;
   if (m.isGroup) who = (await m.mentionedJid)[0] || m.sender;
   else who = m.sender;
-  const name = conn.getName(who);
+  const name = await conn.getName(who);
   m.reply(`
 ${tradutor.texto1[0]}
 ${tradutor.texto1[1]} ${name}
