@@ -6,8 +6,6 @@ const handler = async (m, {conn, usedPrefix}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.info_host
 
-  const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
-  const document = doc[Math.floor(Math.random() * doc.length)];
   const text = `${tradutor.texto1[0]}
   
 ${tradutor.texto1[1]}
@@ -35,12 +33,13 @@ ${tradutor.texto1[14]}
 ${tradutor.texto1[15]}
 ${tradutor.texto1[16]}
 `.trim();
-  const buttonMessage= {
-    'document': {url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD`},
-    'mimetype': `application/${document}`,
-    'fileName': `「  𝑯𝒆𝒍𝒍𝒐 𝑾𝒐𝒓𝒍𝒅 」`,
-    'fileLength': 99999999999999,
-    'pageCount': 200,
+  // Antes se mandaba como documento falso (una URL de GitHub como
+  // "documento", con mimetype aleatorio y fileLength inventado): en varios
+  // dispositivos no se veía nada. Ahora es un mensaje de texto normal con
+  // la misma tarjeta de vista previa (externalAdReply), que sí se ve en
+  // todos los dispositivos.
+  const buttonMessage = {
+    'text': text,
     'contextInfo': {
       'forwardingScore': 200,
       'isForwarded': true,
@@ -51,13 +50,7 @@ ${tradutor.texto1[16]}
         'title': tradutor.texto2,
         'body': wm,
         'thumbnail': imagen1,
-        'sourceUrl': 'https://whatsapp.com/channel/0029VaFVSkRCMY0KFmCMDX2q'}},
-    'caption': text,
-    'footer': wm,
-    // 'buttons':[
-    // {buttonId: `${usedPrefix}menu`, buttonText: {displayText: '𝙼𝙴𝙽𝚄'}, type: 1},
-    // {buttonId: `${usedPrefix}donar`, buttonText: {displayText: '𝙳𝙾𝙽𝙰𝚁'}, type: 1}],
-    'headerType': 6};
+        'sourceUrl': 'https://whatsapp.com/channel/0029VaFVSkRCMY0KFmCMDX2q'}}};
   conn.sendMessage(m.chat, buttonMessage, {quoted: m});
 }; 
 handler.command = ['host', 'cafirexos'];

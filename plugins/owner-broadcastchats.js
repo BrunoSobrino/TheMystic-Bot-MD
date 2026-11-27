@@ -14,19 +14,10 @@ const handler = async (m, { conn, text }) => {
   const teks = text ? text : cc.text;
   for (const i of chats) {
     await delay(500);
-    conn.relayMessage(i,
-      {
-        liveLocationMessage: {
-          degreesLatitude: 35.685506276233525,
-          degreesLongitude: 139.75270667105852,
-          accuracyInMeters: 0,
-          degreesClockwiseFromMagneticNorth: 2,
-          caption: tradutor.texto2[0] + teks + tradutor.texto2[1],
-          sequenceNumber: 2,
-          timeOffset: 3,
-          contextInfo: m,
-        }
-      }, {}).catch((_) => _);
+    // Antes el aviso se mandaba como ubicación en vivo falsa (coordenadas
+    // de Tokio) por relayMessage: en varios dispositivos no se veía el
+    // texto. Ahora es un mensaje de texto normal.
+    await conn.sendMessage(i, { text: tradutor.texto2[0] + teks + tradutor.texto2[1] }).catch((_) => _);
   }
   m.reply(`${tradutor.texto3[0]} ${chats.length} ${tradutor.texto3[1]}`);
 };

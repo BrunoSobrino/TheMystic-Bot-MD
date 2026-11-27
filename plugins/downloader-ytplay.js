@@ -1,7 +1,7 @@
 import fs from 'fs'
 import yts from 'yt-search'
 import { searchMusic, getAudioBuffer, getVideoBuffer, tagAudioMp3 } from '../src/libraries/ytmusic.js'
-import { generateWAMessageFromContent } from 'baileys'
+import { generateWAMessageFromContent, prepareWAMessageMedia } from 'baileys'
 
 // Miniatura del video (YouTube ya la sirve en JPEG): se baja y se pasa tal
 // cual como jpegThumbnail. Sin sharp (no está instalado en el bot) y sin
@@ -43,25 +43,29 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
   if (_metaIds.length > 50) delete global.ytplayMeta[_metaIds[0]];
 
   const thumb = await getThumb(result.thumbnail)
-  const buttons = [
-    { buttonId: `ytplay_audio_${result.videoId}`, buttonText: { displayText: `🎵 ${tradutor.texto3}` }, type: 1 },
-    { buttonId: `ytplay_video_${result.videoId}`, buttonText: { displayText: `🎬 ${tradutor.texto4}` }, type: 1 }
-  ]
+  // buttonsMessage está descontinuado y en varios dispositivos los botones
+  // ya no se ven. Se usa interactiveMessage con botones quick_reply, el
+  // mismo patrón que ya usan search-yts y group-link. La tarjeta se ve
+  // igual: miniatura + texto + pie + 2 botones.
+  const thumbMedia = thumb ? await prepareWAMessageMedia({ image: thumb }, { upload: conn.waUploadToServer }).catch(() => null) : null
   const msg = generateWAMessageFromContent(m.chat, {
     viewOnceMessage: {
       message: {
-        buttonsMessage: {
-          locationMessage: {
-            degreesLatitude: 0,
-            degreesLongitude: 0,
-            name: result.title.slice(0, 60),
-            address: `${result.author?.name || ''} • ${result.duration?.timestamp || ''}`,
-            jpegThumbnail: thumb || undefined
+        interactiveMessage: {
+          body: { text: body },
+          footer: { text: tradutor.texto5 },
+          header: {
+            title: result.title.slice(0, 60),
+            hasMediaAttachment: !!thumbMedia,
+            imageMessage: thumbMedia?.imageMessage,
           },
-          contentText: body,
-          footerText: tradutor.texto5,
-          buttons,
-          headerType: 6,
+          nativeFlowMessage: {
+            buttons: [
+              { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: `🎵 ${tradutor.texto3}`, id: `ytplay_audio_${result.videoId}` }) },
+              { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: `🎬 ${tradutor.texto4}`, id: `ytplay_video_${result.videoId}` }) },
+            ],
+            messageParamsJson: ''
+          },
           contextInfo: { mentionedJid: [m.sender] }
         }
       }
@@ -75,7 +79,14 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 // sin volver a buscar. El audio y el video usan la misma cadena de
 // .play/.play2 (ab-downloader) de src/libraries/ytmusic.js.
 handler.before = async function (m, { conn }) {
-  const selectedId = m?.msg?.selectedButtonId
+  // El toque llega como buttonsResponseMessage (botones viejos) o como
+  // interactiveResponseMessage (botones quick_reply nuevos).
+  let selectedId = m?.msg?.selectedButtonId
+  if (!selectedId) {
+    try {
+      selectedId = JSON.parse(m?.msg?.nativeFlowResponseMessage?.paramsJson || '{}')?.id
+    } catch {}
+  }
   if (!selectedId || (!selectedId.startsWith('ytplay_audio_') && !selectedId.startsWith('ytplay_video_'))) return false
   const videoId = selectedId.replace(/^ytplay_(audio|video)_/, '')
   const isAudio = selectedId.startsWith('ytplay_audio_')
