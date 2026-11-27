@@ -19,7 +19,7 @@ while [ $timeout -gt 0 ]; do
         echo -e "\n${RED}Inicio Automatico Cancelado.${NC}"
         
         echo -e "${GREEN}Puedes Utilizar Termux Normalmente.${NC}"
-        echo -e "El bot esta en un Contenedor, Utiliza el Comando ${YELLOW}proot-distro login debian${NC} para Ingresar."
+        echo -e "El bot esta en un Contenedor, Utiliza el Comando ${YELLOW}proot-distro login archlinux${NC} para Ingresar."
         echo -e "${GREEN}Comandos Utiles:${NC}"
         echo -e "${YELLOW}ls${NC} Visor de Archivos. ${YELLOW}cd${NC} NAvegador de Archivos. ${YELLOW}nano${NC} Creador y Editor de Texto. ${YELLOW}mkdir${NC} Creador de Carpetas/Directorios ${YELLOW}rm${NC} Borrar Archivos. Cada uno de estos Comandos se puede usar junto con ${YELLOW}--help para ver sus Funciones"
         echo -e "${GREEN}Ejemplo:${NC}"

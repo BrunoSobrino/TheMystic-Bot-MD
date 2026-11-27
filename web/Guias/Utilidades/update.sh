@@ -26,4 +26,5 @@ fi
 cd "$HOME" || { echo -e "${RED}######### Error en cd Home.${NC}"; exit 1; }
 
 echo -e "${YELLOW}######### Ejecutando Mystic...${NC}"
-nice -n -10 ./alive.sh || { echo -e "${RED}######### Error al Iniciar Alives Script.${NC}"; exit 1; }
+# `nice -n -10` exige root (o CAP_SYS_NICE) y fallaba sin él: se ejecuta directo.
+./alive.sh || { echo -e "${RED}######### Error al Iniciar Alives Script.${NC}"; exit 1; }

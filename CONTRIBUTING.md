@@ -80,7 +80,7 @@ git commit -m "feat(downloader): add support for new platform"
 │   ├── languages/    # Traducciones (es, en, pt-br, ...)
 │   ├── docs/         # Documentación secundaria
 │   └── assets/       # Recursos estáticos
-├── lib/              # Librerías internas y herramientas
+├── src/libraries/    # Librerías internas y herramientas
 ├── config.js         # Configuración principal del bot (owner, packname, API keys)
 ├── handler.js        # Dispatcher de mensajes y comandos
 ├── main.js           # Punto de entrada
