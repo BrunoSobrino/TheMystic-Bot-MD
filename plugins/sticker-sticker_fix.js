@@ -16,6 +16,9 @@ async function handler(m, { conn, args, usedPrefix, command }) {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.sticker_sticker_fix
   let stiker = false;
+  // Sin la dependencia instalada (ver package.json) Sticker es
+  // undefined y createSticker reventaba con TypeError.
+  if (!Sticker) return m.reply(tradutor.texto3);
 
   try {
     let [packname, ...author] = args.join(' ').split(' ');
