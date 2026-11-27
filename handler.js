@@ -85,10 +85,12 @@ export async function handler(chatUpdate) {
         delete global.db.data.users[rawSender];
       }
       // TODO: use loop to insert data instead of this
-      const user = global.db.data.users[m.sender]
-      if (typeof user !== 'object') {
+      // El registro se lee DESPUÉS de crearlo: antes `user` quedaba
+      // undefined en el primer mensaje y el bucle de defaults no corría.
+      if (typeof global.db.data.users[m.sender] !== 'object' || global.db.data.users[m.sender] === null) {
         global.db.data.users[m.sender] = {};
       }
+      const user = global.db.data.users[m.sender];
       if (user) {
         // im gona cook this
         // why the fuck nobody put the code like this in 3 years??????
@@ -100,10 +102,10 @@ export async function handler(chatUpdate) {
           user[dicks] = dick[dicks] // god pls forgive me
         }
       }}
-      const akinator = global.db.data.users[m.sender].akinator;
-      if (typeof akinator !== 'object') {
+      if (typeof global.db.data.users[m.sender].akinator !== 'object' || global.db.data.users[m.sender].akinator === null) {
         global.db.data.users[m.sender].akinator = {};
       }
+      const akinator = global.db.data.users[m.sender].akinator;
       if (akinator) {
                 for (const aki in akiSettings) {
           if (akinator[aki] === undefined || !akinator.hasOwnProperty(aki)) {
@@ -111,10 +113,10 @@ export async function handler(chatUpdate) {
           }
         }
       }
-      let gameglx = global.db.data.users[m.sender].gameglx
-      if (typeof gameglx !== 'object') {
+      if (typeof global.db.data.users[m.sender].gameglx !== 'object' || global.db.data.users[m.sender].gameglx === null) {
         global.db.data.users[m.sender].gameglx = {}
       }
+      let gameglx = global.db.data.users[m.sender].gameglx
       if (gameglx) {
         
         for (const game in gameGalaxy) {
@@ -125,10 +127,10 @@ export async function handler(chatUpdate) {
       }
 
 
-      const chat = global.db.data.chats[m.chat];
-      if (typeof chat !== 'object') {
+      if (typeof global.db.data.chats[m.chat] !== 'object' || global.db.data.chats[m.chat] === null) {
         global.db.data.chats[m.chat] = {};
       }
+      const chat = global.db.data.chats[m.chat];
       if (chat) {
         
       
@@ -138,11 +140,14 @@ export async function handler(chatUpdate) {
           }
         }
       }
+      if (typeof global.db.data.settings[this.user?.id] !== 'object' || global.db.data.settings[this.user?.id] === null) global.db.data.settings[this.user?.id] = {};
       const settings = global.db.data.settings[this.user?.id];
-      if (typeof settings !== 'object') global.db.data.settings[this.user?.id] = {};
       if (settings) {
        
-        for (const setting in settings) {
+        // Se itera sobre los defaults (setttings), no sobre el objeto del
+        // usuario: antes se recorría `settings` (vacío al crear) y los
+        // valores por defecto nunca se aplicaban.
+        for (const setting in setttings) {
           if (settings[setting] === undefined || !settings.hasOwnProperty(setting)) {
             settings[setting] = setttings[setting] ?? {} // ctrl + v moment
           }
@@ -285,7 +290,7 @@ export async function handler(chatUpdate) {
           typeof _prefix === 'string' ? // String?
             [[new RegExp(str2Regex(_prefix)).exec(m.text), new RegExp(str2Regex(_prefix))]] :
             [[[], new RegExp]]
-      ).find((p) => p[1]);
+      ).find((p) => p[0]) || [[], new RegExp];
       const properPluginsBefore = Object.assign(properPluginsAll, {
           match,
           conn: this,
@@ -337,7 +342,7 @@ export async function handler(chatUpdate) {
         if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
           const chat = global.db.data.chats[m.chat];
           const user = global.db.data.users[m.sender];
-          const botSpam = global.db.data.settings[mconn.conn.user?.id] || {};
+          const botSpam = global.db.data.settings[this.user?.id] || {};
 
           if (!['owner-unbanchat.js', 'info-creator.js'].includes(name) && chat && chat?.isBanned && !isROwner) return; // Except this
           if (name != 'owner-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && chat?.isBanned && !isROwner) return; // Except this
@@ -434,11 +439,11 @@ ${tradutor.texto1[1]} ${messageNumber}/3
           m.exp += xp;
         }
         if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-          mconn.conn.reply(m.chat, `${tradutor.texto2} _${usedPrefix}buyall_`, m);
+          m.reply(`${tradutor.texto2} _${usedPrefix}buyall_`);
           continue;
         }
         if (plugin.level > _user.level) {
-          mconn.conn.reply(m.chat, `${tradutor.texto3[0]} ${plugin.level} ${tradutor.texto3[1]} ${_user.level}, ${tradutor.texto3[2]} ${usedPrefix}lvl ${tradutor.texto3[3]}`, m);
+          m.reply(`${tradutor.texto3[0]} ${plugin.level} ${tradutor.texto3[1]} ${_user.level}, ${tradutor.texto3[2]} ${usedPrefix}lvl ${tradutor.texto3[3]}`);
           continue;
         }
         const chatPrim = global.db.data.chats[m.chat] || {};
@@ -455,7 +460,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
               delete chatPrim.setPrimaryBot;
               global.db.data.chats[m.chat] = chatPrim
             }
-            else if (primaryNumber && !botIs(mconn.conn, primaryNumber)) {
+            else if (primaryNumber && !botIs(this, primaryNumber)) {
             return;
           }
         }
@@ -478,7 +483,7 @@ ${tradutor.texto1[1]} ${messageNumber}/3
           if (e) {
             let text = format(e);
             for (const key of Object.values(global.APIKeys)) {
-              text = text.replace(new RegExp(key, 'g'), '#HIDDEN#');
+              text = text.replace(new RegExp(str2Regex(key), 'g'), '#HIDDEN#');
             }
             if (e.name) {
               /* for (const [jid] of global.reportes_solicitudes.filter(([number]) => number)) {
@@ -571,9 +576,9 @@ ${tradutor.texto1[1]} ${messageNumber}/3
     } catch (e) {
       console.log(m, m.quoted, e);
     }
-    const settingsREAD = global.db.data.settings[mconn.conn.user?.id] || {};
-    if (opts['autoread']) await mconn.conn.readMessages([m.key]);
-    if (settingsREAD.autoread2) await mconn.conn.readMessages([m.key]);
+    const settingsREAD = global.db.data.settings[this.user?.id] || {};
+    if (opts['autoread']) await this.readMessages([m.key]);
+    if (settingsREAD.autoread2) await this.readMessages([m.key]);
   }
 }
 
@@ -586,7 +591,10 @@ export async function participantsUpdate({ id, participants, action }) {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
 
-  const m = mconn
+  // La conexión es `this` (se enlaza a global.conn en main.js); antes se
+  // usaba el mensaje global `mconn`, que no existe antes del primer mensaje
+  // y que además se comparte con los sub-bots.
+  const conn = this || mconn?.conn || global.conn;
   // Baileys 7: en grupos con LID los participantes llegan como
   // objetos { id, phoneNumber, admin } y no como JIDs. Normalizar
   // a JID (se prefiere el número real para menciones y perfil).
@@ -594,32 +602,32 @@ export async function participantsUpdate({ id, participants, action }) {
   if (opts['self']) return;
   if (global.db.data == null) await loadDatabase();
   const chat = global.db.data.chats[id] || {};
-  const botTt = global.db.data.settings[mconn?.conn?.user?.id] || {};
+  const botTt = global.db.data.settings[conn?.user?.id] || {};
   let text = '';
   switch (action) {
     case 'add':
     case 'remove':
       if (chat.welcome && !chat?.isBanned) {
-        if (action === 'remove' && who.some((p) => botIs(m?.conn, p))) return;
-        const groupMetadata = await m?.conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
+        if (action === 'remove' && who.some((p) => botIs(conn, p))) return;
+        const groupMetadata = await conn?.groupMetadata(id) || (conn?.chats[id] || {}).metadata;
         for (const user of who) {
           try {
-          let pp = await m?.conn?.profilePictureUrl(user, 'image').catch(_ => 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60');
-           const apii = await mconn?.conn?.getFile(pp);
+          let pp = await conn?.profilePictureUrl(user, 'image').catch(_ => 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60');
+           const apii = await conn?.getFile(pp);
            const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
            const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
-           const botTt2 = groupMetadata?.participants?.find((u) => participantMatches(u, m?.conn?.user?.id || m?.conn?.user?.lid || '', m?.conn)) || {};
+           const botTt2 = groupMetadata?.participants?.find((u) => participantMatches(u, conn?.user?.id || conn?.user?.lid || '', conn)) || {};
            const isBotAdminNn = botTt2?.admin === 'admin' || false;
-           text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await m?.conn?.getName(id)).replace('@desc', groupMetadata?.desc?.toString() || tradutor.texto10).replace('@user', '@' + user.split('@')[0]) :
+           text = (action === 'add' ? (chat.sWelcome || tradutor.texto1 || conn.welcome || 'Welcome, @user!').replace('@subject', await conn?.getName(id)).replace('@desc', groupMetadata?.desc?.toString() || tradutor.texto10).replace('@user', '@' + user.split('@')[0]) :
             (chat.sBye || tradutor.texto2 || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0]);
             if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn && action === 'add') {
-           const responseb = await m.conn.groupParticipantsUpdate(id, [user], 'remove');
+           const responseb = await conn.groupParticipantsUpdate(id, [user], 'remove');
             if (responseb[0].status === '404') return;
            const fkontak2 = { 'key': { 'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo' }, 'message': { 'contactMessage': { 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${user.split('@')[0]}:${user.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, 'participant': '0@s.whatsapp.net' };
-           await m?.conn?.sendMessage(id, { text: `${tradutor.texto9[0]}${user.split('@')[0]}${tradutor.texto9[1]}`, mentions: [user] }, { quoted: fkontak2 });
+           await conn?.sendMessage(id, { text: `${tradutor.texto9[0]}${user.split('@')[0]}${tradutor.texto9[1]}`, mentions: [user] }, { quoted: fkontak2 });
            return;
             }
-            await m?.conn?.sendFile(id, apii.data, 'pp.jpg', text, null, false, { mentions: [user] });
+            await conn?.sendFile(id, apii.data, 'pp.jpg', text, null, false, { mentions: [user] });
           } catch (e) {
           console.log(e);
           }
@@ -638,7 +646,7 @@ export async function participantsUpdate({ id, participants, action }) {
       }
       text = text.replace('@user', '@' + (who[0] || '').split('@')[0]);
       if (chat.detect && !chat?.isBanned) {
-        mconn?.conn?.sendMessage(id, { text, mentions: mconn?.conn?.parseMention(text) });
+        conn?.sendMessage(id, { text, mentions: conn?.parseMention(text) });
       }
       break;
   }
@@ -650,7 +658,9 @@ export async function participantsUpdate({ id, participants, action }) {
  */
 
 export async function groupsUpdate(groupsUpdate) {
-  const idioma = global.db.data.chats[groupsUpdate[0].id]?.language || global.defaultLenguaje;
+  // Como en participantsUpdate: `this` es la conexión (enlazada en main.js).
+  const conn = this || mconn?.conn || global.conn;
+  const idioma = global.db.data.chats[groupsUpdate?.[0]?.id]?.language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.participantsUpdate
 
@@ -670,12 +680,14 @@ export async function groupsUpdate(groupsUpdate) {
     if (groupUpdate?.icon) text = (chats?.sIcon || tradutor.texto7 || conn?.sIcon || '```Icon has been changed to```').replace('@icon', groupUpdate.icon);
     if (groupUpdate?.revoke) text = (chats?.sRevoke || tradutor.texto8 || conn?.sRevoke || '```Group link has been changed to```\n@revoke').replace('@revoke', groupUpdate.revoke);
     if (!text) continue;
-    await mconn?.conn?.sendMessage(id, { text, mentions: mconn?.conn?.parseMention(text) });
+    await conn?.sendMessage(id, { text, mentions: conn?.parseMention(text) });
   }
 }
 
 export async function callUpdate(callUpdate) {
-  const isAnticall = global?.db?.data?.settings[mconn?.conn?.user?.id]?.antiCall;
+  const conn = this || mconn?.conn || global.conn;
+  if (!conn) return;
+  const isAnticall = global?.db?.data?.settings[conn?.user?.id]?.antiCall;
   if (!isAnticall) return;
   for (const nk of callUpdate) {
     if (nk.isGroup == false) {
@@ -683,31 +695,34 @@ export async function callUpdate(callUpdate) {
         const idiomaCall = global?.db?.data?.users[nk.from]?.language || global.defaultLenguaje;
         const _translateCall = JSON.parse(fs.readFileSync(`./src/languages/${idiomaCall}.json`));
         const tradutorCall = _translateCall.handler.callUpdate;
-        const callmsg = await mconn?.conn?.reply(nk.from, `${tradutorCall.texto1[0]}${nk.from.split('@')[0]}${tradutorCall.texto1[1]}${nk.isVideo ? tradutorCall.texto2 : tradutorCall.texto3}${tradutorCall.texto1[2]}`, false, { mentions: [nk.from] });
+        const callmsg = await conn?.reply(nk.from, `${tradutorCall.texto1[0]}${nk.from.split('@')[0]}${tradutorCall.texto1[1]}${nk.isVideo ? tradutorCall.texto2 : tradutorCall.texto3}${tradutorCall.texto1[2]}`, false, { mentions: [nk.from] });
         // let data = global.owner.filter(([id, isCreator]) => id && isCreator)
         // await this.sendContact(nk.from, data.map(([id, name]) => [id, name]), false, { quoted: callmsg })
         const vcard = `BEGIN:VCARD\nVERSION:3.0\nN:;𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑;;;\nFN:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nORG:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nTITLE:\nitem1.TEL;waid=5219992095479:+521 999 209 5479\nitem1.X-ABLabel:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nX-WA-BIZ-DESCRIPTION:${tradutorCall.texto4}\nX-WA-BIZ-NAME:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nEND:VCARD`;
-        await mconn.conn.sendMessage(nk.from, { contacts: { displayName: '𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑', contacts: [{ vcard }] } }, { quoted: callmsg });
-        await mconn.conn.updateBlockStatus(nk.from, 'block');
+        await conn.sendMessage(nk.from, { contacts: { displayName: '𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑', contacts: [{ vcard }] } }, { quoted: callmsg });
+        await conn.updateBlockStatus(nk.from, 'block');
       }
     }
   }
 }
 
 export async function deleteUpdate(message) {
+  // Como en el resto de eventos: `this` es la conexión (enlazada en main.js).
+  const conn = this || mconn?.conn || global.conn;
+  if (!conn) return;
   const datas = global
   const id = message?.participant 
   const idioma = datas.db.data.users[id]?.language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.handler.deleteUpdate
 
-  let d = new Date(new Date + 3600000)
+  let d = new Date(Date.now() + 3600000)
   let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })
   let time = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
   try {
     const { fromMe, id, participant } = message
     if (fromMe) return
-    let msg = mconn.conn.serializeM(mconn.conn.loadMessage(id))
+    let msg = conn.serializeM(conn.loadMessage(id))
     let chat = global.db.data.chats[msg?.chat] || {}
     if (!chat?.antidelete) return
     if (!msg) return
@@ -718,8 +733,8 @@ ${tradutor.texto1[2]} ${time}
 ${tradutor.texto1[3]} ${date}\n
 ${tradutor.texto1[4]}
 ${tradutor.texto1[5]}`.trim();
-    await mconn.conn.sendMessage(msg.chat, { text: antideleteMessage, mentions: [participant] }, { quoted: msg })
-    mconn.conn.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
+    await conn.sendMessage(msg.chat, { text: antideleteMessage, mentions: [participant] }, { quoted: msg })
+    conn.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
   } catch (e) {
     console.error(e)
   }
@@ -760,7 +775,7 @@ global.dfail = (type, m, conn) => {
       delete chatPrim2.setPrimaryBot;
       global.db.data.chats[m.chat] = chatPrim2
     }
-    else if (primaryNumber2 && !botIs(mconn.conn, primaryNumber2)) {
+    else if (primaryNumber2 && !botIs(conn, primaryNumber2)) {
       return;
     }
   }

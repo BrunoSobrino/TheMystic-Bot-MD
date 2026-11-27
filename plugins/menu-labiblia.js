@@ -10,7 +10,7 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `${tradutor.texto1[0]} 
   try {
     const pp = imagen5;
     const vn = './src/assets/audio/01J673V13NHPW7FA028ZPYC18Q.mp3';
-    const d = new Date(new Date + 3600000);
+    const d = new Date(Date.now() + 3600000);
     const locale = 'es';
     const week = d.toLocaleDateString(locale, {weekday: 'long'});
     const date = d.toLocaleDateString(locale, {day: 'numeric', month: 'long', year: 'numeric'});

@@ -47,7 +47,7 @@ global.imagen5 = fs.readFileSync('./src/assets/images/menu/languages/ru/menu.png
 global.mods = [];
 
 //* *******Tiempo***************
-global.d = new Date(new Date + 3600000);
+global.d = new Date(Date.now() + 3600000);
 global.locale = 'es';
 global.dia = d.toLocaleDateString(locale, {weekday: 'long'});
 global.fecha = d.toLocaleDateString('es', {day: 'numeric', month: 'numeric', year: 'numeric'});
