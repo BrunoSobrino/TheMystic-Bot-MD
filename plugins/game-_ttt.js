@@ -27,7 +27,7 @@ export async function before(m) {
       }
     }
     if (debugMode) {
-      m.reply('[DEBUG]\n' + require('util').format({
+      m.reply('[DEBUG]\n' + format({
         isSurrender,
         text: m.text}));
     }
@@ -86,11 +86,12 @@ ${isWin ? `@${(isSurrender ? room.game.currentTurn : room.game.winner).split('@'
     }
     await this.sendMessage(room.o, {text: str, mentions: this.parseMention(str)}, {quoted: m});
     if (isTie || isWin) {
-      users[room.game.playerX].exp += playScore;
-      users[room.game.playerO].exp += playScore;
-      if (isWin) {
-        users[winner].exp += winScore - playScore;
-      }
+      // El registro del jugador puede no existir (p. ej. se borró la
+      // DB a mitad de partida): sin guarda reventaba al terminar.
+      const addExp = (jid, amount) => { if (users[jid]) users[jid].exp = (users[jid].exp || 0) + amount; };
+      addExp(room.game.playerX, playScore);
+      addExp(room.game.playerO, playScore);
+      if (isWin) addExp(winner, winScore - playScore);
       if (debugMode) {
         m.reply('[DEBUG]\n' + format(room));
       }
