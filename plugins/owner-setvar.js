@@ -32,10 +32,11 @@ const updateConfigFile = async (variable, value, tradutor) => {
     let configContent = await fs.promises.readFile(configPath, 'utf-8');
 
     const cleanVariable = variable.replace(/^global\./, '');
+    const safeVariable = cleanVariable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    const variablePattern = new RegExp(`(^|\\n)global\\.${cleanVariable}\\s*=\\s*['"\`].*?['"\`];?`, 'm');
+    const variablePattern = new RegExp(`(^|\\n)global\\.${safeVariable}\\s*=\\s*['"\`].*?['"\`];?`, 'm');
 
-    const formattedValue = /^['"`].*['"]$/.test(value) ? value : `'${value}'`;
+    const formattedValue = /^['"`].*['"]$/.test(value) ? value : `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 
     if (variablePattern.test(configContent)) {
       configContent = configContent.replace(variablePattern, `global.${cleanVariable} = ${formattedValue};`);
@@ -72,6 +73,6 @@ const handler = async (m, { text }) => {
 handler.command = /^setvar$/i; 
 handler.help = ['setvar'];
 handler.tags = ['tools'];
-handler.owner = true; 
+handler.rowner = true; 
 
 export default handler;

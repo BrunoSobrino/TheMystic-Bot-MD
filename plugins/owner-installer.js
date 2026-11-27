@@ -92,6 +92,10 @@ const downloadPlugin = async (url, pluginName, tradutor) => {
 
 const deletePlugin = async (pluginName, tradutor) => {
   const pluginPath = path.join(pluginsDir, pluginName);
+  // No salir de la carpeta de plugins (path traversal con ../).
+  if (path.relative(pluginsDir, pluginPath).startsWith('..')) {
+    throw new Error(`Ruta no permitida: ${pluginName}`);
+  }
   try {
     if (fs.existsSync(pluginPath)) {
       await removeFromGitignore(pluginPath, tradutor);
@@ -137,6 +141,6 @@ const handler = async (m, { text }) => {
 handler.command = /^plg$/i;
 handler.help = ['Instalador Plugins plg <url o nombre>'];
 handler.tags = ['tools'];
-handler.owner = true; // Solo el propietario puede usar este comando
+handler.rowner = true; // Solo el propietario real puede usar este comando
 
 export default handler;

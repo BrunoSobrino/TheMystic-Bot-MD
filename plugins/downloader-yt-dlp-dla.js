@@ -8,11 +8,11 @@
 
 import fs from "fs";
 import path, { join, basename } from "path";
-import { exec } from "child_process";
+import { execFile } from "child_process";
 import { promisify } from "util";
 import os from "os";
 
-const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 const __dirname = path.resolve();
 
 const config = {
@@ -34,22 +34,94 @@ const ytDlpBinaries = new Map([
   ['default', 'yt-dlp'],
 ]);
 
-// Aqui se elige las banderas, Calidad de video etc. Ver documentacion yt-dlp 
+// Las banderas como arreglos argv (sin shell): cada elemento es UN argumento.
+// Antes eran strings que se concatenaban en un comando de shell y el texto
+// del usuario se interpolaba dentro, lo que permitía inyección de comandos.
 const formats = {
-  video: '-f "sd/18/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=aac]/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=mp4a]/bestvideo[height<=720][vcodec*=h264]+bestaudio/bestvideo[height<=720]+bestaudio/bestvideo[vcodec*=h264]+bestaudio/bestvideo+bestaudio/best" --sponsorblock-mark all', 
-  audio: '-f "ba/best" -x --audio-format mp3 --audio-quality 0',
-  playlist: '--yes-playlist',
-  noPlaylist: '--no-playlist'
+  video: ['-f', 'sd/18/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=aac]/bestvideo[height<=720][vcodec*=h264]+bestaudio[acodec*=mp4a]/bestvideo[height<=720][vcodec*=h264]+bestaudio/bestvideo[height<=720]+bestaudio/bestvideo[vcodec*=h264]+bestaudio/bestvideo+bestaudio/best', '--sponsorblock-mark', 'all'],
+  audio: ['-f', 'ba/best', '-x', '--audio-format', 'mp3', '--audio-quality', '0'],
+  playlist: ['--yes-playlist'],
+  noPlaylist: ['--no-playlist']
 };
 
 const commonFlags = [
   '--restrict-filenames',
-  '--extractor-retries 3',
-  '--fragment-retries 3',
-  '--compat-options no-youtube-unavailable-videos',
+  '--extractor-retries', '3',
+  '--fragment-retries', '3',
+  '--compat-options', 'no-youtube-unavailable-videos',
   '--ignore-errors',
   '--no-abort-on-error'
-].join(' ');
+];
+
+// Solo el propietario real puede subir cookies (antes cualquier usuario).
+const isOwner = (m) => {
+  const sender = m?.sender || '';
+  return (global.owner || []).some(([number]) => String(number).replace(/[^0-9]/g, '') + '@s.whatsapp.net' === sender);
+};
+
+const isSafeUrl = (string) => {
+  try {
+    const u = new URL(string);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+    const host = u.hostname.toLowerCase();
+    // Nada de destinos locales o de red privada (SSRF).
+    if (host === 'localhost' || host === '[::1]' || host.endsWith('.local')) return false;
+    if (/^(0\.|127\.|10\.|192\.168\.|169\.254\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(host)) return false;
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// Banderas que el usuario puede pasar a yt-dlp (las demás se rechazan).
+// Fuera quedan, entre otras: --exec*, --config, --batch-file, -o/--output,
+// --paths, --cookies*, --postprocessor-args, --ffmpeg-location,
+// --download-archive, --cache-dir y --proxy.
+const ALLOWED_USER_FLAGS = new Map([
+  ['-f', true], ['--format', true],
+  ['--format-sort', true],
+  ['--no-playlist', false], ['--yes-playlist', false],
+  ['--playlist-items', true],
+  ['--max-filesize', true],
+  ['--audio-format', true], ['--audio-quality', true],
+  ['--remux-video', true], ['--recode-video', true], ['--video-format', true],
+  ['--sponsorblock-mark', true], ['--sponsorblock-remove', true], ['--sponsorblock-chapter', true],
+  ['--embed-thumbnail', false], ['--embed-subs', false], ['--write-subs', false],
+  ['--sub-langs', true],
+  ['--concurrent-fragments', true],
+  ['--extractor-retries', true], ['--fragment-retries', true],
+  ['--ignore-errors', false], ['--no-abort-on-error', false],
+  ['--restrict-filenames', false],
+]);
+
+const parseUserOptions = (str) => {
+  const tokens = str.match(/[^\s"]+|"([^"]*)"/g)?.map((arg) =>
+    arg.startsWith('"') && arg.endsWith('"') ? arg.slice(1, -1) : arg
+  ) || [];
+  const out = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i];
+    if (!tok || !tok.startsWith('-')) throw new Error(`Opción no permitida: ${tok}`);
+    const eq = tok.indexOf('=');
+    const flag = eq === -1 ? tok : tok.slice(0, eq);
+    const inlineValue = eq === -1 ? null : tok.slice(eq + 1);
+    if (!ALLOWED_USER_FLAGS.has(flag)) throw new Error(`Opción no permitida: ${flag}`);
+    if (ALLOWED_USER_FLAGS.get(flag)) {
+      // Bandera con valor: --flag valor o --flag=valor.
+      let value = inlineValue;
+      if (value === null) {
+        value = tokens[++i];
+        if (value === undefined || value.startsWith('-')) throw new Error(`Falta el valor de ${flag}`);
+      }
+      if (/[\0\n\r]/.test(value)) throw new Error(`Valor no permitido para ${flag}`);
+      out.push(flag, value);
+    } else {
+      if (inlineValue !== null) throw new Error(`La opción ${flag} no lleva valor`);
+      out.push(flag);
+    }
+  }
+  return out;
+};
 
 class DownloadQueue {
   constructor(maxConcurrent = 5) {
@@ -97,22 +169,21 @@ const isUrl = (string) => {
   }
 };
 
-const buildCookiesFlag = async () => {
+const buildCookiesArgs = async () => {
   try {
     await fs.promises.access(config.cookiesFile);
-    return `--cookies "${config.cookiesFile}"`;
+    return ['--cookies', config.cookiesFile];
   } catch {
-    return '';
+    return [];
   }
 };
 
-const safeExecute = async (command, silentError = false) => {
+const safeExecFile = async (file, args, silentError = false) => {
   try {
-    const result = await execPromise(command);
-    return result;
+    return await execFilePromise(file, args);
   } catch (error) {
     if (!silentError) {
-      console.error(`PLUGIN DLA Command: ${command}`);
+      console.error(`PLUGIN DLA Command: ${file} ${args.join(' ')}`);
       console.error(`PLUGIN DLA Error: ${error.message}`);
       if (error.stdout) console.error(`Stdout: ${error.stdout}`);
       if (error.stderr) console.error(`Stderr: ${error.stderr}`);
@@ -123,7 +194,7 @@ const safeExecute = async (command, silentError = false) => {
 
 const isYtDlpAvailable = async () => {
   try {
-    await execPromise('yt-dlp --version');
+    await execFilePromise('yt-dlp', ['--version']);
     return true;
   } catch {
     return false;
@@ -161,13 +232,17 @@ const detectYtDlpBinary = async (m) => {
 };
 
 const downloadYtDlp = async (m) => {
+  const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins.downloader_yt_dlp_dla
+
   await ensureDirectories();
   const fileName = detectYtDlpBinaryName();
   const downloadUrl = `https://github.com/yt-dlp/yt-dlp/releases/latest/download/${fileName}`;
   const filePath = path.join(config.ytDlpPath, fileName);
 
   try {
-    await safeExecute(`curl -L -o "${filePath}" "${downloadUrl}"`);
+    await safeExecFile('curl', ['-L', '-o', filePath, downloadUrl]);
     
     if (os.platform() !== 'win32') {
       await fs.promises.chmod(filePath, '755');
@@ -198,9 +273,8 @@ const updateYtDlp = async (m, errorMsg = null) => {
 
   try {
     const ytDlpPath = await detectYtDlpBinary(m);
-    const updateCommand = `${ytDlpPath} --update-to master`; // nightly
     
-    const result = await safeExecute(updateCommand);
+    const result = await safeExecFile(ytDlpPath, ['--update-to', 'master']);
     
     const updateOutput = result.stdout || result.stderr || tradutor.texto2;
     const finalMsg = errorMsg ? `Stderr: ${errorMsg}\n\n${updateOutput}` : updateOutput;
@@ -265,7 +339,7 @@ const processDownloadedFile = async (m, filePath, originalFileName, isVideo = fa
   }
 };
 
-const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = false, isVideo = false) => {
+const downloadWithYtDlp = async (m, urls, customOptions = [], enablePlaylist = false, isVideo = false) => {
   const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.downloader_yt_dlp_dla
@@ -273,31 +347,29 @@ const downloadWithYtDlp = async (m, urls, customOptions = '', enablePlaylist = f
   const ytDlpPath = await detectYtDlpBinary(m);
   const sessionId = `yt-dlp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const outputDir = path.join(config.tempDir, sessionId);
-  const cookiesFlag = await buildCookiesFlag();
+  const cookiesArgs = await buildCookiesArgs();
 
   await ensureDirectories();
   await fs.promises.mkdir(outputDir, { recursive: true });
 
   try {
     for (const url of urls) {
+      if (!isSafeUrl(url)) throw new Error(`URL no permitida: ${url}`);
       const outputTemplate = path.join(outputDir, '%(title).20s.%(ext)s');
-      const playlistFlag = enablePlaylist ? formats.playlist : formats.noPlaylist;
-      const playlistItemsFlag = enablePlaylist ? `--playlist-items 1:${config.playlistLimit}` : '';
-      
-      const command = [
-        ytDlpPath,
-        `--max-filesize ${config.maxFileSize}`,
-        commonFlags,
-        playlistFlag,
-        playlistItemsFlag,
-        cookiesFlag,
-        customOptions,
-        `-o "${outputTemplate}"`,
-        `"${url}"`
-      ].filter(Boolean).join(' ');
+      const playlistArgs = enablePlaylist ? [...formats.playlist, '--playlist-items', `1:${config.playlistLimit}`] : [...formats.noPlaylist];
+
+      const args = [
+        '--max-filesize', String(config.maxFileSize),
+        ...commonFlags,
+        ...playlistArgs,
+        ...cookiesArgs,
+        ...customOptions,
+        '-o', outputTemplate,
+        url
+      ];
 
       try {
-        await safeExecute(command);
+        await safeExecFile(ytDlpPath, args);
         
         const files = await fs.promises.readdir(outputDir);
         
@@ -329,7 +401,7 @@ const searchAndDownload = async (m, searchQuery, isVideo = false) => {
 
   const sessionId = `yt-dlp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const outputDir = path.join(config.tempDir, sessionId);
-  const cookiesFlag = await buildCookiesFlag();
+  const cookiesArgs = await buildCookiesArgs();
   
   await ensureDirectories();
   await fs.promises.mkdir(outputDir, { recursive: true });
@@ -354,18 +426,17 @@ const searchAndDownload = async (m, searchQuery, isVideo = false) => {
       if (success) break;
 
       try {
-        const command = [
-          ytDlpPath,
-          `--max-filesize ${config.maxFileSize}`,
-          commonFlags,
-          '--playlist-items 1',
-          formatOptions,
-          cookiesFlag,
-          `-o "${outputTemplate}"`,
-          `"${source}10:${searchQuery}"`
-        ].filter(Boolean).join(' ');
+        const args = [
+          '--max-filesize', String(config.maxFileSize),
+          ...commonFlags,
+          '--playlist-items', '1',
+          ...formatOptions,
+          ...cookiesArgs,
+          '-o', outputTemplate,
+          `${source}10:${searchQuery}`
+        ];
         
-        await safeExecute(command);
+        await safeExecFile(ytDlpPath, args);
 
         const files = await fs.promises.readdir(outputDir);
         
@@ -419,6 +490,8 @@ const handleRequest = async (m) => {
     const urls = remainingArgs.filter(arg => isUrl(arg));
 
     if (command === 'cookies') {
+      // Subir cookies solo lo puede hacer el propietario real.
+      if (!isOwner(m)) throw new Error('Solo el propietario puede subir cookies');
       const cookiesIndex = input.toLowerCase().indexOf('cookies');
       if (cookiesIndex !== -1) {
         const cookieText = input.substring(cookiesIndex + 'cookies'.length).trim();
@@ -435,8 +508,9 @@ const handleRequest = async (m) => {
       if (input.includes('://')) {
         const inputUrl = input.match(/(https?:\/\/[^\s]+)/)?.[1];
         if (inputUrl) {
+          if (!isSafeUrl(inputUrl)) throw new Error(`URL no permitida: ${inputUrl}`);
           const options = input.replace(inputUrl, '').trim();
-          await downloadWithYtDlp(m, [inputUrl], `${formats.video} ${options}`, false, true);
+          await downloadWithYtDlp(m, [inputUrl], [...formats.video, ...parseUserOptions(options)], false, true);
           return;
         }
       }
@@ -451,18 +525,18 @@ const handleRequest = async (m) => {
     switch (command) {
       case 'mp3':
         if (urls.length) {
-          const options = remainingArgs
+          const userOptions = parseUserOptions(remainingArgs
             .filter(arg => !isUrl(arg))
-            .join(' ');
-          await downloadWithYtDlp(m, urls, `${formats.audio} ${options}`, true, false);
+            .join(' '));
+          await downloadWithYtDlp(m, urls, [...formats.audio, ...userOptions], true, false);
         }
         break;
 
       default:
-        const options = remainingArgs
+        const userOptions = parseUserOptions(remainingArgs
           .filter(arg => !isUrl(arg))
-          .join(' ');
-        await downloadWithYtDlp(m, urls, `${formats.video} ${options}`, false, true);
+          .join(' '));
+        await downloadWithYtDlp(m, urls, [...formats.video, ...userOptions], false, true);
         break;
     }
   } catch (error) {

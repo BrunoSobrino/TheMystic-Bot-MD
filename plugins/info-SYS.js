@@ -6,13 +6,21 @@
 // Licencia completa: https://www.gnu.org/licenses/agpl-3.0.html
 
 import os from 'os';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import fs from 'fs/promises';
 import fsSync from 'fs';
 import util from 'util';
 import path from 'path';
 
-const execAsync = util.promisify(exec);
+const execFileAsync = util.promisify(execFile);
+
+// Solo el propietario real puede instalar o descargar binarios en el
+// servidor. Antes cualquier usuario que corría .sysinfo/.host disparaba
+// la instalación de paquetes (apt/pkg) y la descarga de binarios.
+const isOwner = (m) => {
+  const sender = m?.sender || '';
+  return (global.owner || []).some(([number]) => String(number).replace(/[^0-9]/g, '') + '@s.whatsapp.net' === sender);
+};
 
 class FastFetchDownloader {
   constructor() {
@@ -57,10 +65,12 @@ class FastFetchDownloader {
     
     try {
       if (platform === 'android') {
-        await execAsync('pkg update -y && pkg install fastfetch -y');
+        await execFileAsync('pkg', ['update', '-y']);
+        await execFileAsync('pkg', ['install', 'fastfetch', '-y']);
         return true;
       } else if (platform === 'linux') {
-        await execAsync('sudo apt update && sudo apt install fastfetch -y');
+        await execFileAsync('sudo', ['apt', 'update']);
+        await execFileAsync('sudo', ['apt', 'install', 'fastfetch', '-y']);
         return true;
       }
     } catch (error) {
@@ -84,12 +94,12 @@ class FastFetchDownloader {
     const extractPath = this.config.binPath;
 
     try {
-      await execAsync(`curl -fsSL -o "${downloadPath}" "${downloadUrl}"`);
+      await execFileAsync('curl', ['-fsSL', '-o', downloadPath, downloadUrl]);
       
       if (platform === 'win32') {
-        await execAsync(`powershell -Command "Expand-Archive -Path '${downloadPath}' -DestinationPath '${extractPath}' -Force"`);
+        await execFileAsync('powershell', ['-Command', `Expand-Archive -Path '${downloadPath}' -DestinationPath '${extractPath}' -Force`]);
       } else {
-        await execAsync(`tar xf "${downloadPath}" -C "${extractPath}"`);
+        await execFileAsync('tar', ['xf', downloadPath, '-C', extractPath]);
       }
 
       const binaryPath = path.join(this.config.binPath, binary.relativePath);
@@ -110,9 +120,9 @@ class FastFetchDownloader {
         await fs.writeFile(downloadPath, buffer);
 
         if (platform === 'win32') {
-          await execAsync(`powershell -Command "Expand-Archive -Path '${downloadPath}' -DestinationPath '${extractPath}' -Force"`);
+          await execFileAsync('powershell', ['-Command', `Expand-Archive -Path '${downloadPath}' -DestinationPath '${extractPath}' -Force`]);
         } else {
-          await execAsync(`tar xf "${downloadPath}" -C "${extractPath}"`);
+          await execFileAsync('tar', ['xf', downloadPath, '-C', extractPath]);
         }
 
         const binaryPath = path.join(this.config.binPath, binary.relativePath);
@@ -128,11 +138,16 @@ class FastFetchDownloader {
     }
   }
 
-  async getFastFetchPath() {
+  async getFastFetchPath(m) {
     try {
-      const { stdout } = await execAsync('which fastfetch');
+      const { stdout } = await execFileAsync('which', ['fastfetch']);
       if (stdout.trim()) return 'fastfetch';
     } catch {}
+
+    // Si no hay fastfetch instalado, solo el owner puede instalarlo o
+    // descargarlo. Para los demás se devuelve null y el comando sigue
+    // mostrando el resto de la información sin instalar nada.
+    if (!isOwner(m)) return null;
 
     if (await this.tryInstallFromPackageManager()) {
       return 'fastfetch';
@@ -152,14 +167,14 @@ class FastFetchDownloader {
   }
 }
 
-async function safeExec(command, fallbackCommand = null) {
+async function safeExecFile(file, args, fallback = null) {
   try {
-    const { stdout } = await execAsync(command);
+    const { stdout } = await execFileAsync(file, args);
     return stdout.trim();
   } catch (error) {
-    if (fallbackCommand) {
+    if (fallback) {
       try {
-        const { stdout } = await execAsync(fallbackCommand);
+        const { stdout } = await execFileAsync(fallback[0], fallback[1]);
         return stdout.trim();
       } catch (err) {
         return null;
@@ -172,18 +187,18 @@ async function safeExec(command, fallbackCommand = null) {
 async function getSoftwareVersions() {
   const versions = [];
   
-  const sudoCheck = await safeExec('which sudo');
+  const sudoCheck = await safeExecFile('which', ['sudo']);
   versions.push(`*Sudo* ${sudoCheck ? '✅' : '✖'}`);
   
   const checks = [
-    { name: 'Node.js', command: 'node -v', emoji: '🟢' },
-    { name: 'NPM', command: 'npm -v', emoji: '📦' },
-    { name: 'Python', command: 'python3 --version', fallback: 'python --version', emoji: '🐍' },
-    { name: 'Chocolatey', command: 'choco --version', emoji: '🍫' },
-    { name: 'FFmpeg', command: 'ffmpeg -version', emoji: '🎬', process: (out) => out.split('\n')[0] }
+    { name: 'Node.js', file: 'node', args: ['-v'], emoji: '🟢' },
+    { name: 'NPM', file: 'npm', args: ['-v'], emoji: '📦' },
+    { name: 'Python', file: 'python3', args: ['--version'], fallback: ['python', ['--version']], emoji: '🐍' },
+    { name: 'Chocolatey', file: 'choco', args: ['--version'], emoji: '🍫' },
+    { name: 'FFmpeg', file: 'ffmpeg', args: ['-version'], emoji: '🎬', process: (out) => out.split('\n')[0] }
   ];
   
-  const pipOutput = await safeExec('pip3 --version', 'pip --version');
+  const pipOutput = await safeExecFile('pip3', ['--version'], ['pip', ['--version']]);
   let pipVersion = '✖';
   if (pipOutput) {
     const pipMatch = pipOutput.match(/pip\s+(\d+\.\d+\.\d+)/);
@@ -192,7 +207,7 @@ async function getSoftwareVersions() {
   versions.push(`📊 *PIP:* ${pipVersion}`);
 
   for (const check of checks) {
-    const output = await safeExec(check.command, check.fallback);
+    const output = await safeExecFile(check.file, check.args, check.fallback);
     let value = output ? (check.process ? check.process(output) : output) : '✖';
     versions.push(`${check.emoji} *${check.name}:* ${value}`);
   }
@@ -206,7 +221,7 @@ async function runSpeedtest(m, extra) {
   const tradutor = _translate.plugins.info_sys
   try {
     const speedtestPath = './src/libraries/ookla-speedtest.py';
-    const { stdout, stderr } = await execAsync('python3 ' + speedtestPath + ' --secure --share');
+    const { stdout, stderr } = await execFileAsync('python3', [speedtestPath, '--secure', '--share']);
     
     if (stdout.trim()) {
       const match = stdout.match(/http[^"]+\.png/);
@@ -228,13 +243,15 @@ async function systemInfoPlugin(m, extra) {
   const _translate = JSON.parse(fsSync.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.info_sys
   try {
-    const fastFetchPath = await new FastFetchDownloader().getFastFetchPath();
-    const sysInfo = await safeExec(`"${fastFetchPath}" -l none -c all`);
-    
-    if (sysInfo) {
-      await extra.conn.sendMessage(m.chat, { text: sysInfo });
-    } else {
-      throw new Error('No se pudo obtener información del sistema');
+    const fastFetchPath = await new FastFetchDownloader().getFastFetchPath(m);
+    if (fastFetchPath) {
+      const sysInfo = await safeExecFile(fastFetchPath, ['-l', 'none', '-c', 'all']);
+      
+      if (sysInfo) {
+        await extra.conn.sendMessage(m.chat, { text: sysInfo });
+      } else {
+        throw new Error('No se pudo obtener información del sistema');
+      }
     }
 
     const softwareVersions = await getSoftwareVersions();
