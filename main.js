@@ -466,6 +466,11 @@ Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
 await global.reloadHandler();
 
+// src/tmp no viene en git (carpeta vacía + gitignore): sin ella el
+// autocleartmp reventaba con ENOENT y las descargas que escriben ahí
+// (.spotify, .whatmusic, efectos de audio) fallaban. Se crea al arrancar.
+fs.mkdirSync(join(__dirname, './src/tmp'), { recursive: true });
+
 setInterval(async () => {
   if (stopped === 'close' || !conn || !conn?.user) return;
   const tmp = [join(__dirname, './src/tmp')];

@@ -37,7 +37,12 @@ export function clockString(ms) {
 
 export function clearTmp(tmp) {
   const filename = [];
-  tmp.forEach((dirname) => readdirSync(dirname).forEach((file) => filename.push(join(dirname, file))));
+  // src/tmp no viene en git (carpeta vacía + gitignore): si no existe no hay
+  // nada que limpiar; antes readdirSync reventaba con ENOENT en cada ciclo.
+  tmp.forEach((dirname) => {
+    if (!existsSync(dirname)) return;
+    readdirSync(dirname).forEach((file) => filename.push(join(dirname, file)));
+  });
   return filename.map((file) => {
     const stats = statSync(file);
     if (stats.isFile() && (Date.now() - stats.mtimeMs >= 1000 * 60 * 3)) return unlinkSync(file);
