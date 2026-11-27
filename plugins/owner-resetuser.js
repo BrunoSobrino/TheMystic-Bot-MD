@@ -14,7 +14,12 @@ const handler = async (m, { conn, text }) => {
         const number = numberMatches.join('');
         user = number + '@s.whatsapp.net';
     } else if (m.quoted && await m?.quoted?.sender) {
-        const quotedNumberMatches = await m?.quoted?.sender.match(numberPattern);
+        // m.quoted.sender es una promesa cuando el remitente es @lid: hay que
+        // esperarla ANTES de usar .match (antes se llamaba .match sobre la
+        // promesa y reventaba con TypeError). Si es LID se resuelve a PN.
+        let quotedSender = await m?.quoted?.sender;
+        if (quotedSender?.endsWith('@lid')) quotedSender = conn.resolveUser?.(quotedSender)?.jid || quotedSender;
+        const quotedNumberMatches = quotedSender?.match(numberPattern);
         if (quotedNumberMatches) {
             const number = quotedNumberMatches.join('');
             user = number + '@s.whatsapp.net';
@@ -26,7 +31,8 @@ const handler = async (m, { conn, text }) => {
     }
     const groupMetadata = m.isGroup ? await conn.groupMetadata(m.chat) : {};
     const participants = m.isGroup ? groupMetadata.participants : [];
-    const users = m.isGroup ? participants.find(u => u.jid == user) : {};
+    // Baileys 7: los participantes no tienen `.jid`; se compara por id/phoneNumber/lid.
+    const users = m.isGroup ? participants.find(u => u.id == user || u.phoneNumber == user || u.lid == user) : {};
     const userNumber = user.split('@')[0];
     if (!global.global.db.data.users[user] || global.global.db.data.users[user] == '') {
         return conn.sendMessage(m.chat, { text: `${tradutor.texto3[0]} @${userNumber} ${tradutor.texto3[1]}`, mentions: [user] }, { quoted: m });
