@@ -2,6 +2,7 @@
 // By https://github.com/jeffersonalionco
 
 import fs from 'fs'
+import { generateWAMessageFromContent, prepareWAMessageMedia } from 'baileys'
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
   const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
@@ -136,17 +137,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
                         enviar10s(`${tradutor.texto10[0]}${m.pushName}${tradutor.texto10[1]}`)
                         break;
                      case 'bt':
-                        await conn.sendMessage(m.sender, {
-                            image: { url: '' },
-                            caption: tradutor.texto11,
-                            footer: tradutor.texto12,
-                            buttons: [
-                                { buttonId: 'glx_help', buttonText: { displayText: tradutor.texto13 }, type: 1 },
-                                { buttonId: 'glx_play', buttonText: { displayText: tradutor.texto14 }, type: 1 },
-                                { buttonId: 'glx_status', buttonText: { displayText: tradutor.texto15 }, type: 1 }
-                            ],
-                            headerType: 4 // Tipo de header com imagem
-                        })
+                        await enviarInteractivo(m.sender, tradutor.texto11, tradutor.texto12, null, [[tradutor.texto13, 'glx_help'], [tradutor.texto14, 'glx_play'], [tradutor.texto15, 'glx_status']])
                         break;
                     case 'set':
                         switch (argumento1) {
@@ -461,29 +452,50 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         // --------------------------- FUNÇÕES PARA O GAME GALÁXIA --------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------
 
+        // Botones con interactiveMessage (quick_reply): buttonsMessage está
+        // descontinuado y en varios dispositivos los botones ya no se ven.
+        // Mismo patrón que search-yts / group-link. Si la imagen no existe
+        // o no carga, se manda sin imagen en vez de reventar.
+        async function enviarInteractivo(id, texto, footer, imagePath, botones) {
+            let media = null;
+            if (imagePath) {
+                try {
+                    const buf = fs.readFileSync(imagePath);
+                    media = await prepareWAMessageMedia({ image: buf }, { upload: conn.waUploadToServer });
+                } catch { media = null; }
+            }
+            const msg = generateWAMessageFromContent(id, {
+                viewOnceMessage: {
+                    message: {
+                        interactiveMessage: {
+                            body: { text: texto },
+                            footer: { text: footer },
+                            header: {
+                                hasMediaAttachment: !!media,
+                                imageMessage: media?.imageMessage,
+                            },
+                            nativeFlowMessage: {
+                                buttons: botones.map(([displayText, buttonId]) => ({
+                                    name: 'quick_reply',
+                                    buttonParamsJson: JSON.stringify({ display_text: displayText, id: buttonId }),
+                                })),
+                                messageParamsJson: '',
+                            },
+                        },
+                    },
+                },
+            }, { userJid: conn.user.id });
+            await conn.relayMessage(id, msg.message, { messageId: msg.key.id });
+        }
+
         // Botao simples sem imagem
         async function enviarButton1(id, msg) {
-            await conn.sendMessage(id, {
-                text: msg + tradutor.texto57,
-                footer: tradutor.texto58,
-                buttons: [
-                    { buttonId: 'glx_start_game', buttonText: { displayText: tradutor.texto59 }, type: 1 }
-                ],
-                headerType: 1
-            })
+            await enviarInteractivo(id, msg + tradutor.texto57, tradutor.texto58, null, [[tradutor.texto59, 'glx_start_game']]);
         }
 
         //Botão padrao com imagem
         async function enviarButton2(id, msg, urlImage) {
-            await conn.sendMessage(id, {
-                            image: { url:  urlImage},
-                            caption: msg,
-                            footer: tradutor.texto12,
-                            buttons: [
-                                { buttonId: 'glx_start_game', buttonText: { displayText: tradutor.texto59 }, type: 1 }
-                            ],
-                            headerType: 4 // Tipo de header com imagem
-                        })
+            await enviarInteractivo(id, msg, tradutor.texto12, urlImage, [[tradutor.texto59, 'glx_start_game']]);
         }
 
 
