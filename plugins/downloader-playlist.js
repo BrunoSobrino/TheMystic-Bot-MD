@@ -47,5 +47,5 @@ ${tradutor.texto2[1]}
 };
 handler.help = ['playlist *<texto>*'];
 handler.tags = ['search'];
-handler.command = /^playlist|playlist2$/i;
+handler.command = /^(playlist|playlist2)$/i;
 export default handler;
