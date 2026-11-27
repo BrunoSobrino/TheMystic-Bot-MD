@@ -6,6 +6,10 @@ const handler = async (m, { conn }) => {
   const tradutor = _translate.plugins.owner_grouplist
 
   let txt = '';
+  // En grupos con LID la entrada del bot tiene id=@lid y decodeJid no lo
+  // resuelve: se comparan todas las formas conocidas de su id.
+  const botIds = [conn.user.id, conn.decodeJid(conn.user.id), conn.user.jid, conn.user.lid].filter(Boolean);
+  const isBot = (u) => botIds.includes(conn.decodeJid(u.id)) || botIds.includes(u.id);
 try {    
   const groups = Object.entries(conn.chats).filter(([jid, chat]) => jid.endsWith('@g.us') && chat.isChats);
   const totalGroups = groups.length;
@@ -13,9 +17,9 @@ try {
     const [jid, chat] = groups[i];
     const groupMetadata = ((conn.chats[jid] || {}).metadata || (await conn.groupMetadata(jid).catch((_) => null))) || {};
     const participants = groupMetadata.participants || [];
-    const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.id) || {};
+    const bot = participants.find(isBot) || {};
     const isBotAdmin = bot?.admin || false;
-    const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.id);
+    const isParticipant = participants.some(isBot);
     const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;
     txt += `${tradutor.texto2[0]} ${i + 1}
@@ -34,9 +38,9 @@ try {
     const [jid, chat] = groups[i];
     const groupMetadata = ((conn.chats[jid] || {}).metadata || (await conn.groupMetadata(jid).catch((_) => null))) || {};
     const participants = groupMetadata.participants || [];
-    const bot = participants.find((u) => conn.decodeJid(u.id) === conn.user.id) || {};
+    const bot = participants.find(isBot) || {};
     const isBotAdmin = bot?.admin || false;
-    const isParticipant = participants.some((u) => conn.decodeJid(u.id) === conn.user.id);
+    const isParticipant = participants.some(isBot);
     const participantStatus = isParticipant ? tradutor.texto1[0] : tradutor.texto1[1];
     const totalParticipants = participants.length;    
     txt += `${tradutor.texto2[0]} ${i + 1}

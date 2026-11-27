@@ -111,13 +111,14 @@ export default async function(m, conn = { user: {} }) {
 
   if (m.messageStubParameters) {
     console.log(
-      m.messageStubParameters
-        .map((jid) => {
+      (await Promise.all(
+        m.messageStubParameters.map(async (jid) => {
           try {
             if (!jid || typeof jid !== 'string') return '';
             const decodedJid = conn.decodeJid(jid);
             if (!decodedJid) return '';
-            const name = conn.getName(decodedJid) || '';
+            // getName es asíncrono: sin await imprimía [object Promise].
+            const name = (await conn.getName(decodedJid)) || '';
             const phoneNumber = decodedJid.replace('@s.whatsapp.net', '');
             let formattedNumber = '';
             try {
@@ -131,6 +132,7 @@ export default async function(m, conn = { user: {} }) {
             return '';
           }
         })
+      ))
         .filter(Boolean)
         .join(', ')
     );

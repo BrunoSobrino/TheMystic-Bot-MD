@@ -7,7 +7,7 @@ const handler = async (m, {text}) => {
  const user = global.db.data.users[m.sender];
  user.afk = + new Date;
  user.afkReason = text;
- m.reply(`${tradutor.texto1[0]} ${conn.getName(m.sender)} ${tradutor.texto1[1]} ${text ? ': ' + text : ''}*
+ m.reply(`${tradutor.texto1[0]} ${await conn.getName(m.sender)} ${tradutor.texto1[1]} ${text ? ': ' + text : ''}*
 `);
 };
 handler.help = ['afk'];

@@ -8,7 +8,7 @@ const handler = async (m, { conn }) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.rpg_levelup
 
-  const name = conn.getName(m.sender);
+  const name = await conn.getName(m.sender);
   const usertag = '@' + m.sender.split('@')[0];
   const user = global.db.data.users[m.sender];
   if (!canLevelUp(user.level, user.exp, global.multiplier)) {

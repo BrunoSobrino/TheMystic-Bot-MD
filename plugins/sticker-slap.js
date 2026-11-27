@@ -21,9 +21,9 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     if (who === m.chat) {
       name = "𝚃𝚑𝚎 𝙼𝚢𝚜𝚝𝚒𝚌 - 𝙱𝚘𝚝";
     } else {
-      name = conn.getName(who);
+      name = await conn.getName(who);
     }
-    let name2 = conn.getName(m.sender);
+    let name2 = await conn.getName(m.sender);
     let apislap = await fetch(`https://api.waifu.pics/sfw/slap`);
     let jkis = await apislap.json();
     let { url } = jkis;
