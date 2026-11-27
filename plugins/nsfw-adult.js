@@ -33,7 +33,8 @@ const handler = async (m, {command, conn}) => {
   }
 
   if (command == 'nsfwcum') {
-    const res = `${global.MyApiRestBaseUrl}/api/nsfw/nsfwcum&apikey=${global.MyApiRestApikey}`;
+    // Antes la URL usaba `&apikey=` sin `?` y el servidor la rechazaba.
+    const res = `${global.MyApiRestBaseUrl}/api/nsfw/nsfwcum?apikey=${global.MyApiRestApikey}`;
     conn.sendMessage(m.chat, {image: {url: res}, caption: `_${command}_`.trim()}, {quoted: m});
   }
 
@@ -69,16 +70,31 @@ const handler = async (m, {command, conn}) => {
 
   if (command == 'tetas') {
     const resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/tetas.json`)).data;
-    let res = await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/boobs?apikey=fg-dylux`).data;
-    if (res == '' || !res || res == null) res = await resError[Math.floor(resError.length * Math.random())];
-    conn.sendMessage(m.chat, {image: {url: res}, caption: `_${command}_`.trim()}, {quoted: m});
+    // Antes: `await conn.getFile(url).data` — la precedencia hace que
+    // .data se evalúe sobre la promesa (siempre undefined) y nunca se
+    // usaba el resultado de la API, cayendo siempre al JSON.
+    let res = null;
+    try {
+      res = (await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/boobs?apikey=fg-dylux`)).data;
+    } catch (e) {
+      res = null;
+    }
+    if (!res) res = resError[Math.floor(resError.length * Math.random())];
+    const image = Buffer.isBuffer(res) ? res : {url: res};
+    conn.sendMessage(m.chat, {image: image, caption: `_${command}_`.trim()}, {quoted: m});
   }
 
   if (command == 'booty') {
     const resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/booty.json`)).data;
-    let res = await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/ass?apikey=fg-dylux`).data;
-    if (res == '' || !res || res == null) res = await resError[Math.floor(resError.length * Math.random())];
-    conn.sendMessage(m.chat, {image: {url: res}, caption: `_${command}_`.trim()}, {quoted: m});
+    let res = null;
+    try {
+      res = (await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/ass?apikey=fg-dylux`)).data;
+    } catch (e) {
+      res = null;
+    }
+    if (!res) res = resError[Math.floor(resError.length * Math.random())];
+    const image = Buffer.isBuffer(res) ? res : {url: res};
+    conn.sendMessage(m.chat, {image: image, caption: `_${command}_`.trim()}, {quoted: m});
   }
 
   if (command == 'ecchi') {
@@ -102,9 +118,15 @@ const handler = async (m, {command, conn}) => {
 
   if (command == 'imagenlesbians') {
     const resError = (await axios.get(`https://raw.githubusercontent.com/BrunoSobrino/TheMystic-Bot-MD/master/src/JSON/imagenlesbians.json`)).data;
-    let res = await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/lesbian?apikey=fg-dylux`).data;
-    if (res == '' || !res || res == null) res = await resError[Math.floor(resError.length * Math.random())];
-    conn.sendMessage(m.chat, {image: {url: res}, caption: `_${command}_`.trim()}, {quoted: m});
+    let res = null;
+    try {
+      res = (await conn.getFile(`https://api-fgmods.ddns.net/api/nsfw/lesbian?apikey=fg-dylux`)).data;
+    } catch (e) {
+      res = null;
+    }
+    if (!res) res = resError[Math.floor(resError.length * Math.random())];
+    const image = Buffer.isBuffer(res) ? res : {url: res};
+    conn.sendMessage(m.chat, {image: image, caption: `_${command}_`.trim()}, {quoted: m});
   }
 
   if (command == 'panties') {
