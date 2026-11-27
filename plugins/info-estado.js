@@ -22,8 +22,13 @@ const handler = async (m, { conn, usedPrefix }) => {
   const groupsIn = chats.filter(([id]) => id.endsWith("@g.us"));
   const groups = chats.filter(([id]) => id.endsWith("@g.us"));
   const used = process.memoryUsage();
-  const { restrict, antiCall, antiprivado, modejadibot } =
-    global.db.data.settings[conn.user.jid] || {};
+  // Los ajustes se guardan bajo la id cruda del bot (#420): se fusionan
+  // ambas claves (gana la cruda) y se lee `antiPrivate` (así se llama la
+  // clave en constants.js; `antiprivado` no existía y siempre salía off).
+  const { restrict, antiCall, antiPrivate, modejadibot } = {
+    ...(global.db.data.settings[conn.user.jid] || {}),
+    ...(global.db.data.settings[conn.user.id] || {}),
+  };
   const { autoread, gconly, pconly, self } = global.opts || {};
   const old = performance.now();
   const neww = performance.now();
@@ -51,7 +56,7 @@ const handler = async (m, { conn, usedPrefix }) => {
   ${tradutor.texto1[15]} ${restrict ? "activo" : "desactivado"}
   ${tradutor.texto1[16]} ${pconly ? "activado" : "desactivado"}
   ${tradutor.texto1[17]} ${gconly ? "activado" : "desactivado"}
-  ${tradutor.texto1[18]} ${antiprivado ? "activado" : "desactivado"}
+  ${tradutor.texto1[18]} ${antiPrivate ? "activado" : "desactivado"}
   ${tradutor.texto1[19]} ${antiCall ? "activado" : "desactivado"}
   ${tradutor.texto1[20]} ${modejadibot ? "activado" : "desactivado"}`.trim();
   const doc = [
