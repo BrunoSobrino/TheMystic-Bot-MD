@@ -56,7 +56,7 @@ const handler = async (m, {conn}) => {
   const ar11 = `${['🪚', '⛏️', '🧨', '💣', '🔫', '🔪', '🗡️', '🏹', '🦾', '🥊', '🧹', '🔨', '🛻'].getRandom()}`;
   const ar12 = `${['🪚', '⛏️', '🧨', '💣', '🔫', '🔪', '🗡️', '🏹', '🦾', '🥊', '🧹', '🔨', '🛻'].getRandom()}`;
   const hsl = `
-*✧ Resultados de la caza ${conn.getName(m.sender)} ✧*
+*✧ Resultados de la caza ${await conn.getName(m.sender)} ✧*
 
  *🐂 ${ar1} ${anti1}*			 *🐃 ${ar7} ${anti7}*
  *🐅 ${ar2} ${anti2}*			 *🐮 ${ar8} ${anti8}*
