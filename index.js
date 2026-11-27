@@ -76,21 +76,47 @@ async function start(file) {
     return;
   }
 
-  const opcion = await question(chalk.yellowBright.bold('—◉ㅤSeleccione una opción (solo el numero):\n') + chalk.white.bold('1. Con código QR\n2. Con código de texto de 8 dígitos\n—> '));
+  // Los scripts `npm run qr` / `npm run code` pasan el método como argumento
+  // (`node index.js qr` / `node index.js code`). Antes se ignoraba y siempre
+  // se preguntaba de forma interactiva; ahora el flag manda y solo se pregunta
+  // el número cuando hace falta. También se acepta --method=qr|code y --phone=.
+  const argv = process.argv.slice(2);
+  const flagMethod = argv.includes('code') || argv.includes('--method=code') ? 'code'
+    : argv.includes('qr') || argv.includes('--method=qr') ? 'qr' : null;
+  const hasMethodFlag = argv.some((a) => a.startsWith('--method='));
+  const hasPhoneFlag = argv.some((a) => a.startsWith('--phone='));
 
-  if (opcion === '2') {
-    const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤEscriba su número de WhatsApp:\n') + chalk.white.bold('◉ㅤEjemplo: +5219992095479\n—> '));
-    const numeroTelefono = formatearNumeroTelefono(phoneNumber);
-    
-    if (!esNumeroValido(numeroTelefono)) {
-      console.log(chalk.bgRed(chalk.white.bold('[ ERROR ] Número inválido. Asegúrese de haber escrito su numero en formato internacional y haber comenzado con el código de país.\n—◉ㅤEjemplo:\n◉ +5219992095479\n')));
-      process.exit(0);
+  if (flagMethod === 'qr') {
+    if (!hasMethodFlag) process.argv.push('--method=qr');
+  } else if (flagMethod === 'code') {
+    let numeroTelefono = formatearNumeroTelefono((argv.find((a) => a.startsWith('--phone=')) || '').slice('--phone='.length));
+    if (!hasPhoneFlag || !esNumeroValido(numeroTelefono)) {
+      const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤEscriba su número de WhatsApp:\n') + chalk.white.bold('◉ㅤEjemplo: +5219992095479\n—> '));
+      numeroTelefono = formatearNumeroTelefono(phoneNumber);
+      if (!esNumeroValido(numeroTelefono)) {
+        console.log(chalk.bgRed(chalk.white.bold('[ ERROR ] Número inválido. Asegúrese de haber escrito su numero en formato internacional y haber comenzado con el código de país.\n—◉ㅤEjemplo:\n◉ +5219992095479\n')));
+        process.exit(0);
+      }
+      process.argv.push('--phone=' + numeroTelefono);
     }
-    
-    process.argv.push('--phone=' + numeroTelefono);
-    process.argv.push('--method=code');
-  } else if (opcion === '1') {
-    process.argv.push('--method=qr');
+    if (!hasMethodFlag) process.argv.push('--method=code');
+  } else {
+    const opcion = await question(chalk.yellowBright.bold('—◉ㅤSeleccione una opción (solo el numero):\n') + chalk.white.bold('1. Con código QR\n2. Con código de texto de 8 dígitos\n—> '));
+
+    if (opcion === '2') {
+      const phoneNumber = await question(chalk.yellowBright.bold('\n—◉ㅤEscriba su número de WhatsApp:\n') + chalk.white.bold('◉ㅤEjemplo: +5219992095479\n—> '));
+      const numeroTelefono = formatearNumeroTelefono(phoneNumber);
+
+      if (!esNumeroValido(numeroTelefono)) {
+        console.log(chalk.bgRed(chalk.white.bold('[ ERROR ] Número inválido. Asegúrese de haber escrito su numero en formato internacional y haber comenzado con el código de país.\n—◉ㅤEjemplo:\n◉ +5219992095479\n')));
+        process.exit(0);
+      }
+
+      process.argv.push('--phone=' + numeroTelefono);
+      process.argv.push('--method=code');
+    } else if (opcion === '1') {
+      process.argv.push('--method=qr');
+    }
   }
   
   const args = [join(__dirname, file), ...process.argv.slice(2)];
@@ -130,6 +156,10 @@ function forkProcess(file) {
 
   const opts = yargs(process.argv.slice(2)).argv;
   if (!opts.test) {
+    // forkProcess se vuelve a ejecutar en cada reinicio y cada vez se
+    // registraba otro listener en 'line' sin quitar el anterior: los
+    // mensajes de consola se emitían duplicados (uno por reinicio).
+    rl.removeAllListeners('line');
     rl.on('line', (line) => {
       childProcess.emit('message', line.trim());
     });
