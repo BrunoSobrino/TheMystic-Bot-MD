@@ -5,10 +5,12 @@ import { tmpdir } from 'os';
 import axios from 'axios';
 import fetch from 'node-fetch';
 import NodeID3 from 'node-id3';
-import * as uuid from 'uuid';
-const { generateWAMessageFromContent, prepareWAMessageMedia } = (await import("baileys")).default;
-
-var uuidv4 = uuid.default.v4;
+import { randomUUID } from 'crypto';
+const uuidv4 = () => randomUUID();
+// Baileys 7 es ESM y no tiene export default: `(await
+// import("baileys")).default` era undefined y reventaba al cargar
+// el plugin. Se desestructura del namespace directamente.
+const { generateWAMessageFromContent, prepareWAMessageMedia } = await import("baileys");
 
 let tradutorGlobal = null;
 
