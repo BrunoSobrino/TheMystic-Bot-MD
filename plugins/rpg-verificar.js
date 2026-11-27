@@ -8,7 +8,7 @@ const handler = async function(m, {conn, text, usedPrefix, command}) {
   const tradutor = _translate.plugins.rpg_verificar
 
   const user = global.db.data.users[m.sender];
-  const name2 = conn.getName(m.sender);
+  const name2 = await conn.getName(m.sender);
   const pp = await conn.profilePictureUrl(m.sender, 'image').catch((_) => global.imagen1);
   if (user.registered === true) throw `${tradutor.texto1[0]}\n*${usedPrefix}unreg* ${tradutor.texto1[1]}`;
   if (!Reg.test(text)) throw `${tradutor.texto2[0]} : ${usedPrefix + command} ${tradutor.texto2[1]} ${usedPrefix + command} Shadow.18*`;
