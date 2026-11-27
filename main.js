@@ -72,7 +72,11 @@ global.videoListXXX = [];
 const __dirname = global.__dirname(import.meta.url);
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse());
 global.prefix = new RegExp('^[#!/.]')
-global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile(`${opts._[0] ? opts._[0] + '_' : ''}database.json`));
+// cloudDBAdapter no existe en lowdb ni en el repo: la rama remota reventaba
+// con ReferenceError al arrancar si se pasaba --db con URL. Sin adaptador
+// remoto disponible se usa el JSON local y se avisa.
+if (/https?:\/\//.test(opts['db'] || '')) console.warn('[ ⚠️ ] Base de datos remota no soportada (falta cloudDBAdapter); se usará database.json local.');
+global.db = new Low(new JSONFile(`${opts._[0] ? opts._[0] + '_' : ''}database.json`));
 
 global.loadDatabase = async function loadDatabase() {
   if (global.db.READ) {
@@ -98,7 +102,7 @@ global.loadDatabase = async function loadDatabase() {
   };
   global.db.chain = chain(global.db.data);
 };
-loadDatabase();
+await loadDatabase();
 const { state, saveCreds } = await useMultiFileAuthState(global.authFile);
 // Baileys 7: sin versión actual de WhatsApp Web no se puede conectar de forma
 // fiable; el fallback viejo ([2, 3000, 1033893291], de 2024) provoca 405/loggedOut.
