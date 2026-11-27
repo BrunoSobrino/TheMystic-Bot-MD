@@ -7,13 +7,23 @@ import {createRequire} from 'module';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const require = createRequire(__dirname);
+// Se revisan la raíz y las carpetas de package.json.directories de forma
+// RECURSIVA. Antes solo se leía el primer nivel de cada carpeta y
+// src/libraries/ (y cualquier subcarpeta de plugins/) quedaba fuera.
 const folders = ['.', ...Object.keys(require(path.join(__dirname, './package.json')).directories)];
-const files = [];
-for (const folder of folders) {
-  for (const file of fs.readdirSync(folder).filter((v) => v.endsWith('.js'))) {
-    files.push(path.resolve(path.join(folder, file)));
+const files = new Set();
+function collect(folder) {
+  for (const entry of fs.readdirSync(folder, {withFileTypes: true})) {
+    const full = path.join(folder, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name === 'node_modules' || entry.name === '.git') continue;
+      collect(full);
+    } else if (entry.name.endsWith('.js')) {
+      files.add(path.resolve(full));
+    }
   }
 }
+for (const folder of folders) collect(folder);
 for (const file of files) {
   if (file == __filename) continue;
   console.error('Checking', file);

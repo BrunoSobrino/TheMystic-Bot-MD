@@ -15,11 +15,13 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      # El trabajo solo publica un comentario: no necesita el código y el
+      # checkout es innecesario (con pull_request_target, además, haría
+      # checkout del código base, no del PR).
       - uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
