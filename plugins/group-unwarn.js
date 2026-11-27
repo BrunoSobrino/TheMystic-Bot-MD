@@ -4,7 +4,7 @@ const handler = async (m, {conn, text, command, usedPrefix}) => {
   const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
   const tradutor = _translate.plugins.gc_unwarn
 
-  const pp = './src/assets/images/menu/main/warn.jpg';
+  const pp = './src/assets/images/menu/main/warn.png';
   let who;
   if (m.isGroup) who = conn.parseMention(text).length > 0 ? await conn.parseMention(text)[0] : m.quoted ? await m?.quoted?.sender : text;
   else who = m.chat;
