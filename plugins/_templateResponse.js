@@ -79,7 +79,7 @@ export async function all(m, chatUpdate) {
         typeof _prefix === 'string' ?
           [[new RegExp(str2Regex(_prefix)).exec(id), new RegExp(str2Regex(_prefix))]] :
           [[[], new RegExp]]
-    ).find((p) => p[1]);
+    ).find((p) => p[0]) || [[], new RegExp];
     if ((usedPrefix = (match[0] || '')[0])) {
       const noPrefix = id.replace(usedPrefix, '');
       let [command] = noPrefix.trim().split` `.filter((v) => v);
@@ -171,7 +171,7 @@ export async function all(m, chatUpdate) {
                 typeof _prefix === 'string' ? // String?
                     [[new RegExp(str2Regex(_prefix)).exec(id), new RegExp(str2Regex(_prefix))]] :
                     [[[], new RegExp]]
-    ).find((p) => p[1]);
+    ).find((p) => p[0]) || [[], new RegExp];
     if ((usedPrefix = (match[0] || '')[0])) {
       const noPrefix = id.replace(usedPrefix, '');
       let [command] = noPrefix.trim().split` `.filter((v) => v);
