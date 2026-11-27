@@ -22,7 +22,7 @@ const chat = global.db.data.chats[m.chat];
     return !1;
   }
   const user = global.db.data.users[m.sender];
-  const bot = global.db.data.settings[mconn.conn.user.id] || {};
+  const bot = global.db.data.settings[m.conn.user.id] || {};
   const isToxic = toxicRegex.exec(m.text);
 
   if (isToxic && chat.antiToxic && !isOwner && !isAdmin) {
@@ -34,7 +34,7 @@ const chat = global.db.data.chats[m.chat];
     user.warn = 0;
     await m.reply(`${tradutor.texto2} @${m.sender.split('@')[0]}, ${tradutor.texto2_1}`, false, {mentions: [m.sender]});
     user.banned = true;
-    await mconn.conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+    await m.conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
     // await this.updateBlockStatus(m.sender, 'block')
   }
   return !1;
