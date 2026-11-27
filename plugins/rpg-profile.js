@@ -13,7 +13,7 @@ const handler = async (m, {conn, usedPrefix, participants, isPrems}) => {
  try {
  const pp = await conn.profilePictureUrl(who, 'image').catch(_ => 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60');
  const {name, limit, lastclaim, registered, regTime, age, premiumTime} = global.db.data.users[who];
- const username = conn.getName(who);
+ const username = await conn.getName(who);
  const prem = global.prems.includes(who.split `@` [0]);
  const sn = createHash('md5').update(who).digest('hex');
  const str = `—◉ ${tradutor.texto2[0]} ${username} ${registered ? '(' + name + ') ': ''}
