@@ -1,7 +1,7 @@
 // GALAXIA GAME UNDER DEVELOPMENT -- Launching soon...
 // By https://github.com/jeffersonalionco
 
-import fs from 'fs-extra'
+import fs from 'fs'
 
 const handler = async (m, { conn, args, usedPrefix, command }) => {
   const idioma = global.db.data.users[m.sender]?.language || global.defaultLenguaje;
@@ -31,10 +31,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
         let data = global.db.data.users[m.sender].gameglx
         let db = JSON.parse(fs.readFileSync(`./src/assets/glx/db/database.json`))
 
-        setInterval(() => {
-            verificacaoXp() // Comprueba el xp del jugador
-
-        }, 5000)
+        // Antes se creaba un setInterval de 5 s en CADA uso de .glx
+        // (sin limpiar nunca): con 10 usos ya había 10 temporizadores
+        // revisando el xp para siempre. Una sola llamada basta.
+        verificacaoXp() // Comprueba el xp del jugador
 
 
 
@@ -585,7 +585,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
             data.perfil.bolsa.naves.status = true // Definindo se tem nave
             data.perfil.bolsa.naves.compradas.push(modelo) // Adicionando a nave como comprados.
-            fs.writeFileSync('./database.json', JSON.stringify(data))
+            // Antes escribía el objeto del jugador en ./database.json:
+            // ese archivo ES la base de datos del bot (LowDB) y se
+            // sobrescribía/corrompía. El perfil ya vive en global.db
+            // y se guarda por el mecanismo normal del bot.
 
             data.perfil.nave.id = db.naves[modelo.toLowerCase()].id
             data.perfil.nave.nome = db.naves[modelo.toLowerCase()].nome
@@ -899,8 +902,10 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
                 let result = await checkAdmin(idgrupo, conn)
                 let resultado
                 async function checkAdmin(idd, conn) {
-                    console.log(conn)
-                    const groupMetadata = ((conn.chats[idd] || {}).metadata || await this.groupMetadata(idd).catch((_) => null))
+                    // Antes: `this.groupMetadata` — `this` es undefined
+                    // en una función anidada en ESM y reventaba.
+                    const groupMetadata = ((conn.chats[idd] || {}).metadata || await conn.groupMetadata(idd).catch((_) => null))
+                    if (!groupMetadata) return null
                     for (let i = 0; i < groupMetadata.participants.length; i++) {
                         if (groupMetadata.participants[i].id === conn.user.id) {
                             return groupMetadata.participants[i].admin
@@ -1170,7 +1175,8 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
             // Configuração de mensagem ja vista para este usuario
             data1.notificacao.recebidas.push(api.notificacao.id)
-            fs.writeFileSync(`./database.json`, JSON.stringify(data1))
+            // (Eliminada la escritura en ./database.json: ver arriba,
+            // es la base de datos del bot, no la del juego.)
 
         }
     }
