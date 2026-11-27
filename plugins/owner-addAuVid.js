@@ -59,8 +59,8 @@ export default handler;
     if (!db.data.chats[m.chat].audios) return;
     if (!db.data.settings[this.user.id].audios_bot && !m.isGroup) return;
     const vn = './src/assets/audio/${keyword}.${mediaType === 'audio' ? 'mp3' : 'mp4'}'; 
-    mconn.conn.sendPresenceUpdate('recording', m.chat);
-    mconn.conn.sendMessage(m.chat, {${mediaType === 'audio' ? 'audio' : 'video'}: {url: vn}, fileName: '${keyword}.${mediaType === 'audio' ? 'mp3' : 'mp4'}', mimetype: '${mediaType === 'audio' ? 'audio/mpeg' : 'video/mp4'}', ${mediaType === 'audio' ? 'ptt: true' : 'ptv: true'}}, {quoted: m});
+    m.conn.sendPresenceUpdate('recording', m.chat);
+    m.conn.sendMessage(m.chat, {${mediaType === 'audio' ? 'audio' : 'video'}: {url: vn}, fileName: '${keyword}.${mediaType === 'audio' ? 'mp3' : 'mp4'}', mimetype: '${mediaType === 'audio' ? 'audio/mpeg' : 'video/mp4'}', ${mediaType === 'audio' ? 'ptt: true' : 'ptv: true'}}, {quoted: m});
   }
 `;
 
