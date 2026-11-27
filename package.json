@@ -94,11 +94,11 @@
     "yargs": "^17.3.1",
     "youtube-dl-exec": "^3.1.20",
     "yt-search": "^2.10.3",
-    "axios-cookiejar-support": "*"
+    "axios-cookiejar-support": "*",
+    "wa-sticker-formatter": "^4.3.2"
   },
   "optionalDependencies": {
-    "puppeteer": "*",
-    "wa-sticker-formatter": "^4.3.2"
+    "puppeteer": "*"
   },
   "devDependencies": {
     "eslint": "^9.37.0"

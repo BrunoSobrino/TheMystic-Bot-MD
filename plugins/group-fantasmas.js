@@ -5,16 +5,18 @@ const handler = async (m, {conn, text, participants}) => {
   const tradutor = _translate.plugins.gc_fantasmas
 
   const member = participants.map((u) => u.id);
-  if (!text) {
-    var sum = member.length;
-  } else {
-    var sum = text;
-  }
+  // El número pedido se limita a los miembros del grupo: antes un
+  // número mayor (o no numérico) recorría índices inexistentes y
+  // reventaba al leer las propiedades del participante undefined.
+  const sum = !text ? member.length : Math.min(parseInt(text) || 0, member.length);
   let total = 0;
   const sider = [];
   for (let i = 0; i < sum; i++) {
-    const users = m.isGroup ? participants.find((u) => u.id == member[i]) : {};
-    if ((typeof global.db.data.users[member[i]] == 'undefined' || global.db.data.users[member[i]].chat == 0) && !users.isAdmin && !users.isSuperAdmin) {
+    const users = m.isGroup ? participants.find((u) => u.id == member[i]) || {} : {};
+    // En Baileys 7 el participante trae `admin` ('admin' /
+    // 'superadmin' / null), no .isAdmin/.isSuperAdmin (siempre
+    // undefined, así que hasta el creador salía como fantasma).
+    if ((typeof global.db.data.users[member[i]] == 'undefined' || global.db.data.users[member[i]].chat == 0) && !users.admin) {
       if (typeof global.db.data.users[member[i]] !== 'undefined') {
         if (global.db.data.users[member[i]].whitelist == false) {
           total++;

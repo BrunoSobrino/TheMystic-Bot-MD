@@ -12,6 +12,7 @@ const handler = async (m, {conn, participants, usedPrefix, command}) => {
   if (m.isGroup) who = (await m.mentionedJid)[0] || await m?.quoted?.sender;
   else who = m.chat;
   const users = global.db.data.users;
+  if (!users[who]) users[who] = {};
   users[who].banned = true;
   m.reply(tradutor.texto2);
 };

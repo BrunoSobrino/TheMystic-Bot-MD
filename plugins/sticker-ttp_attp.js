@@ -14,6 +14,9 @@ const handler = async (m, { conn, text, args, usedPrefix, command }) => {
   );
   const tradutor = _translate.plugins.sticker_ttp_attp;
   if (!text) throw `${tradutor.texto1} ${usedPrefix + command} Mystic-Bot*`;
+  // Sin la dependencia instalada (ver package.json) Sticker es
+  // undefined y createSticker reventaba con TypeError.
+  if (!Sticker) throw new Error('wa-sticker-formatter no disponible: ejecuta npm install');
   if (command == "attp") {
     const a1 = Buffer.from(await (await fetch(
         `https://api.cafirexos.com/api/maker/attp?text=${decodeURI(text)}`,

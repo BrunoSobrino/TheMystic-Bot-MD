@@ -1,5 +1,6 @@
 import {spawn} from 'child_process';
 import {join} from 'path';
+import {existsSync} from 'fs';
 
 const __dirname = global.__dirname(import.meta.url);
 /**
@@ -14,7 +15,12 @@ export function levelup(teks, level) {
     const font = join(__dirname, '../src/assets/fonts');
     const fontLevel = join(font, '../src/assets/fonts/level_c.otf');
     const fontTexts = join(font, '../src/assets/fonts/texts.otf');
-    const xtsx = join(__dirname, '../src/lvlup_template.jpg');
+    // La plantilla original (src/lvlup_template.jpg) no existe en el
+    // repo: se usa el fondo que sí existe; si tampoco está, fallar
+    // con un mensaje claro en vez de lanzar convert sobre un archivo
+    // inexistente.
+    const xtsx = join(__dirname, '../src/assets/images/backgrounds/background-1.jpeg');
+    if (!existsSync(xtsx)) return reject('Plantilla de levelup no encontrada: ' + xtsx);
     let anotations = '+1385+260'; // gapake else if kadang error
     if (level > 2) anotations = '+1370+260';
     if (level > 10) anotations = '+1330+260';

@@ -53,7 +53,7 @@ function formatNumber(num) {
 
   let numString = num.toLocaleString().replace(/,/g, '#');
   let result = '';
-  for (let i = 0; i < numeroString.length; i++) {
+  for (let i = 0; i < numString.length; i++) {
     if (numString[i] === '#') {
       result += ',';
     } else {

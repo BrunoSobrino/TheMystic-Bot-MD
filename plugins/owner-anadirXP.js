@@ -1,6 +1,3 @@
-import MessageType from "baileys";
-
-const pajak = 0;
 const handler = async (m, {conn, text}) => {
   const datas = global
   const idioma = datas.db.data.users[m.sender].language || global.defaultLenguaje
@@ -20,6 +17,8 @@ const handler = async (m, {conn, text}) => {
   exp += pjk;
   if (exp < 1) throw tradutor.texto4;
   const users = global.db.data.users;
+  if (!users[who]) users[who] = {};
+  if (typeof users[who].exp !== 'number') users[who].exp = 0;
   users[who].exp += xp;
   m.reply(`≡ ${tradutor.texto5[0]}
 ┌──────────────
