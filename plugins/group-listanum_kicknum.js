@@ -12,8 +12,14 @@ const handler = async (m, {conn, args, groupMetadata, participants, usedPrefix, 
   if (!args[0]) return m.reply(`${tradutor.texto1} ${usedPrefix + command} 52*`);
   if (isNaN(args[0])) return m.reply(`${tradutor.texto2} ${usedPrefix + command} 52*`);
   const lol = args[0].replace(/[+]/g, '');
-  const ps = participants.map((u) => u.id).filter((v) => v !== conn.user.jid && v.startsWith(lol || lol));
-  const bot = global.db.data.settings[conn.user.jid] || {};
+  // En grupos con LID la entrada del bot tiene id=@lid: se excluye por
+  // todas las formas conocidas de su id, no solo por conn.user.jid.
+  const botIds = [conn.user.id, conn.decodeJid(conn.user.id), conn.user.jid, conn.user.lid].filter(Boolean);
+  const isBotId = (v) => botIds.includes(conn.decodeJid(v)) || botIds.includes(v);
+  const ps = participants.map((u) => u.id).filter((v) => !isBotId(v) && v.startsWith(lol || lol));
+  // Los ajustes se guardan bajo la id cruda del bot (#420): se fusionan
+  // ambas claves (gana la cruda), si no restrict siempre se leía apagado.
+  const bot = { ...(global.db.data.settings[conn.user.jid] || {}), ...(global.db.data.settings[conn.user.id] || {}) };
   if (ps == '') return m.reply(`${tradutor.texto3} +${lol}*`);
   const numeros = ps.map((v)=> '⭔ @' + v.replace(/@.+/, ''));
   const delay = (time) => new Promise((res)=>setTimeout(res, time));
@@ -26,10 +32,10 @@ const handler = async (m, {conn, args, groupMetadata, participants, usedPrefix, 
       if (!isBotAdmin) return m.reply(tradutor.texto6);
       conn.reply(m.chat, `${tradutor.texto7[0]} +${lol}, ${tradutor.texto7[1]}`, m);
       const ownerGroup = m.chat.split`-`[0] + '@s.whatsapp.net';
-      const users = participants.map((u) => u.id).filter((v) => v !== conn.user.jid && v.startsWith(lol || lol));
+      const users = participants.map((u) => u.id).filter((v) => !isBotId(v) && v.startsWith(lol || lol));
       for (const user of users) {
         const error = `@${user.split('@')[0]} ${tradutor.texto8}`;
-        if (user !== ownerGroup + '@s.whatsapp.net' && user !== global.conn.user.jid && user !== global.owner + '@s.whatsapp.net' && user.startsWith(lol || lol) && user !== isSuperAdmin && isBotAdmin && bot.restrict) {
+        if (user !== ownerGroup + '@s.whatsapp.net' && !isBotId(user) && user !== global.owner + '@s.whatsapp.net' && user.startsWith(lol || lol) && user !== isSuperAdmin && isBotAdmin && bot.restrict) {
           await delay(2000);
           const responseb = await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
           if (responseb[0].status === '404') m.reply(error, m.chat, {mentions: conn.parseMention(error)});
