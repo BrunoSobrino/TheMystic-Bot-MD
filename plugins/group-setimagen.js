@@ -27,7 +27,7 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, i
   }
 };
 
-handler.command = /^setimagen|setpp(gc|grup|group)$/i;
+handler.command = /^(setimagen|setpp(gc|grup|group))$/i;
 handler.help = ['setppgroup'];
 handler.tags = ['group'];
 handler.group = true;

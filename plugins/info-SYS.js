@@ -265,6 +265,6 @@ async function systemInfoPlugin(m, extra) {
   }
 }
 
-systemInfoPlugin.command = ['sysinfo', 'host']; 
+systemInfoPlugin.command = ['sysinfo'];
 
 export default systemInfoPlugin;

@@ -85,7 +85,7 @@ const handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, is
       conn.sendMessage(m.chat, {image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net')}, {quoted: fkontak2});
     }
   } catch {
-    conn.reply(m.chat, tradutor.texto1[3], m);
+    conn.reply(m.chat, tradutor.texto1[2], m);
   }
 };
 handler.command = /^(animes|menuanimes)$/i;

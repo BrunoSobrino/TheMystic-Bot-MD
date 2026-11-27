@@ -16,5 +16,5 @@ ${Object.keys(msgs).map((v) => '*👉🏻 ' + v).join('*\n*')}*
 };
 handler.help = ['vn', 'msg', 'video', 'audio', 'img', 'sticker'].map((v) => 'list' + v);
 handler.tags = ['database'];
-handler.command = /^lista(vn|msg|video|audio|img|sticker)$/;
+handler.command = /^list(vn|msg|video|audio|img|sticker)$/;
 export default handler;

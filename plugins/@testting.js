@@ -42,11 +42,9 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
         const videoInfoMsg = `${tradutor.video_info.header}\n\n${tradutor.video_info.title.replace('@title', video.title)}\n${tradutor.video_info.author.replace('@author', video.author.name)}\n${tradutor.video_info.duration.replace('@duration', video.duration?.timestamp || '00:00')}\n${tradutor.video_info.views.replace('@views', (video.views || 0).toLocaleString())}\n${tradutor.video_info.published.replace('@published', video.ago || 'Desconocido')}\n${tradutor.video_info.id.replace('@id', video.videoId)}\n${tradutor.video_info.link.replace('@link', video.url)}`.trim();
 
-        if (command !== 'ytmp3' && command !== 'ytmp4') {
-            conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m });
-        }
+        conn.sendMessage(m.chat, { image: { url: video.thumbnail }, caption: videoInfoMsg }, { quoted: m });
 
-        const isAudio = command === 'test' || command === 'play' || command === 'ytmp3';
+        const isAudio = command === 'test';
         const format = isAudio ? 'mp3' : '720p';
 
         const downloadResult = await ytDownload(video.videoId, format);
@@ -294,7 +292,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
 handler.help = ['test <query>', 'test2 <query>'];
 handler.tags = ['downloader'];
-handler.command = /^(test|test2|ytmp3|ytmp4)$/i;
+handler.command = /^(test|test2)$/i;
 export default handler;
 
 // Descarga con el scraper de YouTube Music (InnerTube). Reemplaza al

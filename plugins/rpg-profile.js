@@ -32,7 +32,7 @@ ${sn}`;
 
 handler.help = ['profile'];
 handler.tags = ['xp'];
-handler.command = /^perfil|profile?$/i;
+handler.command = /^(perfil|profile?)$/i;
 
 export default handler;
 

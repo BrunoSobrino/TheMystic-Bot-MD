@@ -587,7 +587,9 @@
     "▢ *ID:*",
     "▢ *Type:*",
     "▢ *Link:*",
-    "*[ ℹ️ ] The file is being sent, please wait...*"
+    "▢ *Channel:*",
+    "*[ ℹ️ ] The file is being sent,",
+    "please wait...*"
    ],
    "texto3": "*[ ℹ️ ] Download your audio at:*",
    "texto4": "_*< DOWNLOADS - PLAY />*_\n\n*[ ℹ️ ] An error occurred. Please try again later.*",
@@ -733,7 +735,8 @@
     "❏ 🆔 *ID:*",
     "❏ 🪬 *Type:*",
     "❏ 🔗 *Link:*",
-    "❏ *_Sending, please wait..._*"
+    "❏ *_Sending,",
+    "please wait..._*"
    ],
    "texto3": "*[❗️] ERROR COULD NOT DOWNLOAD AUDIO*",
    "texto4": [
@@ -819,8 +822,7 @@
    "texto1": "[❗] Enter the command followed by a YouTube video link",
    "texto2": "⏳Your audio is being processed...⏳\n\n◉ If your audio is not sent, try using the command #playdoc or #play.2 or #ytmp4doc ◉",
    "texto3": [
-    "◉—⌈📥 YOUTUBE DOWNLOAD 📥⌋—◉",
-    "❏ TITLE:",
+    "◉—⌈📥 YOUTUBE DOWNLOAD 📥⌋—◉\n❏ TITLE:",
     "❏ SIZE:"
    ],
    "texto4": "[❗] ERROR COULD NOT DOWNLOAD AUDIO"
@@ -855,9 +857,8 @@
    "texto1": "[❗𝐈𝐍𝐅𝐎❗] Enter the command followed by the YouTube video link*",
    "texto2": "⏳Processing your video...⏳\n\n◉ If your video is not sent, try using the command #playdoc or #play.2 or #ytmp4doc ◉",
    "texto3": [
-    "◉—⌈📥 YOUTUBE DOWNLOAD 📥⌋—◉",
-    "❏ Title:",
-    "❏ Size: "
+    "◉—⌈📥 YOUTUBE DOWNLOAD 📥⌋—◉\n❏ TITLE:",
+    "❏ SIZE: "
    ],
    "texto4": "[❗] ERROR COULD NOT DOWNLOAD VIDEO"
   },
@@ -944,6 +945,7 @@
     "With you, the future is a path full of promises and dreams.",
     "You are the lighthouse that guides my heart in the darkness.",
     "The magic of love is in every gesture we share.",
+    "Our love is an eternal dance of passion and tenderness.",
     "In your arms, the whole world disappears and only you and I exist.",
     "Love is the language in which our hearts converse.",
     "You are the piece that was missing to complete my soul.",
@@ -1215,6 +1217,7 @@
    "texto4": [
     "❥ In the love universe",
     "and",
+    "of",
     "of a 100%"
    ],
    "texto5": "💞 Calculating Percentage! 💞"
@@ -1347,7 +1350,8 @@
    "texto2": "*[❗] ERROR, TRY AGAIN*",
    "texto3": [
     "Hello",
-    "Hello"
+    "Hello",
+    ""
    ],
    "texto4": "You must enter a text to talk to Simsimi.",
    "texto5": "All APIs failed. Try again later."
@@ -1441,6 +1445,7 @@
     "What would you do first if you woke up as the opposite sex?",
     "Have you ever let someone else take the blame for something you did?",
     "What is the most embarrassing thing you have ever done in life?",
+    " What is the most ridiculous reason you have broken up with someone?",
     "What is your worst habit?",
     "Which do you think is your best feature? And which is the worst?",
     "What is the bravest thing you have ever done?",
@@ -2187,6 +2192,7 @@
     "AIRBRUSHES",
     "BAROQUES",
     "STILL LIFE",
+    "CHARCOALS",
     "CARDBOARD",
     "ART COURSES",
     "DRAUGHTSMEN",
@@ -2204,6 +2210,7 @@
     "*YOU HAVE 3 MINUTES TO FIND THE CORRECT ANSWER!!*",
     "*WRITE THE NUMBER OF THE ROW AND COLUMN OF THE BEGINNING OF THE FIRST LETTER",
     "OF THE WORD",
+    "HAVE",
     "ATTEMPTS!!*",
     "*EXAMPLE:*",
     "ROW 2",
@@ -2352,8 +2359,8 @@
   },
   "gc_kick2": {
    "texto1": [
-    "*[ ⚠️ ] THE TARGET MEMBER HAS BEEN REMOVED",
-    " FROM THE GROUP BY AN ADMINISTRATOR*"
+    "*[ ⚠️ ] THE OWNER HAS RESTRICTED",
+    " THE USE OF THIS COMMAND*"
    ],
    "texto2": "*[❗] THE TARGET MEMBER HAS BEEN SUCCESSFULLY REMOVED FROM THE GROUP. PLEASE DELETE ALL MENTIONS OF THE TARGET MEMBER TO AVOID GROUP MANAGEMENT ERRORS.*\n\n*—◉ EXAMPLE:*",
    "texto3": "*[ ⚠️ ] @user is not in this group*"
@@ -2373,7 +2380,8 @@
     "THAT ARE IN THIS GROUP:"
    ],
    "texto5": [
-    "*[❗ INFORMATION ❗] THE BOT PROFILE IS NOT ALLOWED, YOU CANNOT DELETE THE LAST PERSON*"
+    "*[❗ INFORMATION ❗] THE BOT OWNER HAS NOT ENABLED THE RESTRICTIONS",
+    "CONTACT THE OWNER SO THEY ENABLE IT*"
    ],
    "texto6": "*[❗ INFORMATION ❗] THE BOT IS NOT AN ADMINISTRATOR, IT CANNOT EXECUTE THE PERMISSIONS*",
    "texto7": [
@@ -2497,7 +2505,9 @@
   },
   "herramientas_chatgpt": {
    "texto1": [
-    "*[❗] You are in a conversation or order to use the chatbot function*\n\n*—◉ Examples of Petitions and Orders*\n*◉ Reflection on the Netflix series Merlin 2022*\n*◉ JS code for a card game*"
+    "*[❗] You are in a conversation or order to use the chatbot function*\n\n*—◉ Examples of Petitions and Orders*\n*◉",
+    "Reflection on the Netflix series Merlin 2022*\n*◉",
+    "JS code for a card game*"
    ],
    "texto2": "You will act as a WhatsApp Bot created by BrunoSobrino, you will be The Mystic - Bot.",
    "texto3": "You will act as a WhatsApp Bot created by BrunoSobrino, you will be The Mystic - Bot.",
@@ -2594,6 +2604,7 @@
    "texto2": [
     "⫹⫺ ID:",
     "⫹⫺ Name:",
+    "⫹⫺ Creation date:",
     "⫹⫺ Creator:",
     "⫹⫺ Description:"
    ]
@@ -2631,8 +2642,9 @@
    "texto3": "[ ⚠️ ] THE QUANTITY SHOULD BE LESS!\nHOW TO USE:\n*—◉ #spamwa number|text|quantity*\nEXAMPLE:\n*—◉ #spamwa 5219999999999|reply :v|25*",
    "texto4": "[ ⚠️ ] MESSAGES SHOULD BE LESS THAN 50 MESSAGES️",
    "texto5": [
-    "[❗] MESSAGE SPAM IS ABOVE LIMIT\nPLEASE CONSULT THE ADMIN\nEMERGENCY CONTACT:\n*—◉",
-    "with you!"
+    "*[❗] MESSAGE SPAM TO THE NUMBER",
+    "WAS SUCCESSFULLY COMPLETED*\n*QUANTITY SENT:*\n*—◉",
+    "times!*"
    ]
   },
   "herramientas_ssweb": {
@@ -3159,6 +3171,7 @@
    "texto1": "*[❗] WRONG USER, EXAMPLE:* \n*—◉",
    "texto2": [
     "*[❗] IF USING WRONG COMMAND THE COMMAND FOR THE USER*",
+    "",
     ""
    ]
   },
@@ -3168,10 +3181,7 @@
   },
   "owner_broadcast": {
    "texto1": "*[❗] IMPORTANT NOTICE: PLEASE READ:*\\n*—◉",
-   "texto2": [
-    "*[❗] NOTICE SENT TO ALL CHATS*\\n\\n*NOTE: THIS IS A MESSAGE TO MANAGE CHATS AND IS NOT SENT TO CHATS, AVAILABLE ONLY FOR THE MOMENT*",
-    "*[❗] NOTICE SENT TO ALL GROUP CHATS*\\n\\n*NOTE: THIS IS A MESSAGE TO MANAGE CHATS AND IS NOT SENT TO CHATS, AVAILABLE ONLY FOR THE MOMENT*"
-   ],
+   "texto2": "*[❗] NOTICE SENT TO ALL CHATS*\\n\\n*NOTE: THIS IS A MESSAGE TO MANAGE CHATS AND IS NOT SENT TO CHATS, AVAILABLE ONLY FOR THE MOMENT*",
    "texto3": [
     "*╔══❰ NOTICE ❱══╗*\\n\\n",
     "*╔══❰ NOTICE ❱══╗*\\n\\n"
@@ -3381,6 +3391,7 @@
    "texto2": [
     "RESTING",
     "YOU HAVE ALREADY EMBARKED ON AN ADVENTURE, PLEASE WAIT UNTIL REST TIME ENDS\n\n⏱️",
+    "RESTING",
     "🛫 YOU ARE ADVENTURING IN "
    ],
    "texto3": [
@@ -3643,13 +3654,7 @@
     "└──────────────"
    ],
    "texto2": "❎ Sorry, you don't have enough XP to buy",
-   "texto3": [
-    "Diamonds💎",
-    "*—◉ You have 60 seconds to confirm*",
-    "*—◉ Write:*",
-    "*◉ yes = to confirm*",
-    "*◉ no = to cancel*"
-   ]
+   "texto3": "Diamonds💎"
   },
   "rpg_transfer": {
    "texto1": "*[❗] There are still funds in transfer, please wait a moment.*",
@@ -3713,8 +3718,9 @@
     " years",
     "┃ *SERIAL NUMBER:*",
     "┣┅ ━━━━━━━━━━━━ ┅ ━",
-    "┃ You ARE NOT REGISTERED. IF YOU WISH, ",
-    "┃ PARTICIPATE IN THE BOT!",
+    "┃ Your serial number will be useful to you",
+    "┃ if you wish to delete ",
+    "┃ your registration in the bot!",
     "┗┅ ━━━━━━━━━━━━ ┅ ━"
    ]
   },

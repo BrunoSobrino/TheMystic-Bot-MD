@@ -19,7 +19,7 @@ const handler = async (m, {conn}) => {
   await conn.reply(m.chat, hintMessage, m);
 };
 
-handler.command = /^hint|pista$/i;
+handler.command = /^(hint|pista)$/i;
 export default handler;
 
 function createHint(text) {

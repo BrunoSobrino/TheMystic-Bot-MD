@@ -44,7 +44,7 @@ conn.sendHydrated(m.chat, mat, author, null, null, null, null, null, [
 
 handler.help = ['math'];
 handler.tags = ['game'];
-handler.command = /^math|mates|matemáticas/i;
+handler.command = /^(math|mates|matemáticas)$/i;
 export default handler;
 
 const modes = {

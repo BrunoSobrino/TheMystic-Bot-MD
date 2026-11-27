@@ -39,7 +39,7 @@ if (!db.data.chats[m.chat].modohorny && m.isGroup) throw `${tradutor.texto1} ${u
 };
 handler.help = ['xnxxsearch'].map((v) => v + ' <query>');
 handler.tags = ['nsfw'];
-handler.command = /^xnxxsearch|xnxxs$/i;
+handler.command = /^(xnxxsearch|xnxxs)$/i;
 export default handler;
 
 async function xnxxsearch(query) {

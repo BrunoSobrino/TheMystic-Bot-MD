@@ -45,7 +45,7 @@ ${tradutor.texto4[8]}`.trim();
 
 handler.help = ['tebaklagu'];
 handler.tags = ['game'];
-handler.command = /^cancion|canción$/i;
+handler.command = /^(cancion|canción)$/i;
 export default handler;
 
 async function fetchJson(url, options) {
