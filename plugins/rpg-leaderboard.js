@@ -11,9 +11,11 @@ const handler = async (m, { conn, args, participants }) => {
      limit: Number(value.limit) || 0,
      level: Number(value.level) || 0
    }))
+   // Se incluyen los registros @lid: antes se excluían y los usuarios de
+   // grupos con LID no aparecían en el ranking.
    .filter(user =>
      user.jid &&
-     user.jid.endsWith("@s.whatsapp.net")
+     (user.jid.endsWith("@s.whatsapp.net") || user.jid.endsWith("@lid"))
    );
 
  const sortedExp = [...users].sort((a, b) => b.exp - a.exp); // Usar copia para no mutar 'users'
@@ -25,25 +27,31 @@ const handler = async (m, { conn, args, participants }) => {
  const adventurePhrases = tradutor.texto1;
  const randomPhrase = adventurePhrases[Math.floor(Math.random() * adventurePhrases.length)];
 
+ // Para la posición del propio usuario: un registro @lid y m.sender (PN)
+ // son el mismo usuario aunque la clave difiera.
+ const isMe = (u) => u.jid === m.sender || (u.jid?.endsWith('@lid') && conn.resolveUser?.(u.jid)?.jid === m.sender);
+
  const getText = (list, prop, unit) =>
    list.slice(0, len)
      .map(({ jid, [prop]: val }, i) => {
-      const phoneNumber = jid?.split('@')[0] || 'Desconocido';
+      // Los registros @lid muestran el número real cuando se conoce el mapeo.
+      const displayJid = jid?.endsWith('@lid') ? (conn.resolveUser?.(jid)?.jid || jid) : jid;
+      const phoneNumber = displayJid?.split('@')[0] || 'Desconocido';
       return `□ ${i + 1}. @${phoneNumber}\n□ wa.me/${phoneNumber}\n□ *${val} ${unit}`;
      })
      .join('\n\n');
 
  const body = `${tradutor.texto2[0]}\n□ ⚔️ ${randomPhrase} ⚔️\n\n` +
    `${tradutor.texto2[1]} ${len} ${tradutor.texto2[7]}\n` +
-   `${tradutor.texto2[2]} ${sortedExp.findIndex(u => u.jid === m.sender) + 1} ${tradutor.texto2[3]} ${users.length}\n\n` +
+   `${tradutor.texto2[2]} ${sortedExp.findIndex(isMe) + 1} ${tradutor.texto2[3]} ${users.length}\n\n` +
    `${getText(sortedExp, 'exp', tradutor.texto2[4])}\n\n` +
 
    `${tradutor.texto2[1]} ${len} ${tradutor.texto2[8]}\n` +
-   `${tradutor.texto2[2]} ${sortedLim.findIndex(u => u.jid === m.sender) + 1} ${tradutor.texto2[3]} ${users.length}\n\n` +
+   `${tradutor.texto2[2]} ${sortedLim.findIndex(isMe) + 1} ${tradutor.texto2[3]} ${users.length}\n\n` +
    `${getText(sortedLim, 'limit', tradutor.texto2[5])}\n\n` +
 
    `${tradutor.texto2[1]} ${len} ${tradutor.texto2[9]}\n` +
-   `${tradutor.texto2[2]} ${sortedLevel.findIndex(u => u.jid === m.sender) + 1} ${tradutor.texto2[3]} ${users.length}\n\n` +
+   `${tradutor.texto2[2]} ${sortedLevel.findIndex(isMe) + 1} ${tradutor.texto2[3]} ${users.length}\n\n` +
    `${getText(sortedLevel, 'level', tradutor.texto2[6])}`.trim();
 
  await conn.sendMessage(m.chat, { text: body, mentions: conn.parseMention(body) }, { quoted: m });
