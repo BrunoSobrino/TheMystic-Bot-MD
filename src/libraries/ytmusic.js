@@ -25,6 +25,7 @@
 import fs from 'fs';
 import os from 'node:os';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 import { spawn } from 'child_process';
 import { Readable } from 'node:stream';
 
@@ -77,8 +78,11 @@ function parseCookies(input = null) {
                 }).join('; ');
         } catch { return ''; }
     }
-    const ytMusicPath = new URL('ytmusic.txt', import.meta.url).pathname;
-    const ytCookPath = new URL('ytcook.txt', import.meta.url).pathname;
+    // En Windows new URL(...).pathname devuelve '/C:/...' (ruta
+    // inválida) y las cookies nunca se encontraban: fileURLToPath
+    // convierte la URL a la ruta real del sistema.
+    const ytMusicPath = fileURLToPath(new URL('ytmusic.txt', import.meta.url));
+    const ytCookPath = fileURLToPath(new URL('ytcook.txt', import.meta.url));
     const target = fs.existsSync(ytMusicPath) ? ytMusicPath
         : fs.existsSync('ytmusic.txt') ? 'ytmusic.txt'
         : fs.existsSync(ytCookPath) ? ytCookPath
@@ -95,7 +99,7 @@ function parseCookies(input = null) {
             }).join('; ');
     } catch { return ''; }
 }
-const YT_COOKIE_PATH = new URL('ytmusic.txt', import.meta.url).pathname;
+const YT_COOKIE_PATH = fileURLToPath(new URL('ytmusic.txt', import.meta.url));
 // Las cookies se leen EN CADA USO, no solo al arrancar: si el dueño
 // sube ytmusic.txt con el bot ya corriendo, la siguiente descarga ya
 // las usa, sin reiniciar. (Antes se leían una sola vez al cargar el
