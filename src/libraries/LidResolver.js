@@ -282,38 +282,46 @@ class LidResolver {
 
           for (const participant of metadata.participants) {
             try {
-              if (!participant?.jid) continue;
-              
-              const contactDetails = await this.conn?.onWhatsApp(participant.jid);
+              // Baileys 7: los participantes son { id, phoneNumber, lid, admin };
+              // NO existe `.jid`. Se usa phoneNumber (o id si ya es @s.whatsapp.net).
+              const participantJid = participant?.phoneNumber || (participant?.id?.endsWith('@s.whatsapp.net') ? participant.id : null);
+              const participantLid = (participant?.lid || participant?.id || '').split('@')[0];
+              // Coincidencia directa por lid (evita una llamada onWhatsApp por
+              // participante) o, si no, verificación por onWhatsApp.
+              let contactDetails = null;
+              if (participantLid === lidKey && participantJid) {
+                contactDetails = [{ lid: lidJid }];
+              } else if (participantJid) {
+                contactDetails = await this.conn?.onWhatsApp(participantJid);
+              }
               if (!contactDetails?.[0]?.lid) continue;
               
-              const participantLid = contactDetails[0].lid.split('@')[0];
-              if (participantLid === lidKey) {
+              if (contactDetails[0].lid.split('@')[0] === lidKey) {
                 // Verificar duplicados antes de guardar
-                if (this.isDuplicate(lidKey, participant.jid)) {
+                if (this.isDuplicate(lidKey, participantJid)) {
                   this.processingQueue.delete(lidKey);
-                  return this.cache.get(lidKey)?.jid || participant.jid;
+                  return this.cache.get(lidKey)?.jid || participantJid;
                 }
                 
                 // Obtener nombre del usuario
-                const userName = await this.getUserName(participant.jid);
+                const userName = await this.getUserName(participantJid);
                 
                 // Guardar en caché global
                 const cacheEntry = {
-                  jid: participant.jid,
+                  jid: participantJid,
                   lid: lidJid,
                   name: userName,
                   timestamp: Date.now()
                 };
                 
                 this.cache.set(lidKey, cacheEntry);
-                this.jidToLidMap.set(participant.jid, lidJid);
+                this.jidToLidMap.set(participantJid, lidJid);
                 this.markDirty(); // Guardado inmediato
                 
                 // Limpiar cola de procesamiento
                 this.processingQueue.delete(lidKey);
                 
-                return participant.jid;
+                return participantJid;
               }
             } catch (e) {
               continue;
