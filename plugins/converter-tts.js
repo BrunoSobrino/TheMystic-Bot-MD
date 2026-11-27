@@ -1,6 +1,4 @@
-import * as googleTTS from '@sefinek/google-tts-api'
-import {readFileSync, unlinkSync} from 'fs';
-import {join} from 'path';
+import * as googleTTS from '@sefinek/google-tts-api';
 const defaultLang = 'es';
 
 const handler = async (m, {conn, args, usedPrefix, command}) => {
@@ -16,19 +14,22 @@ const handler = async (m, {conn, args, usedPrefix, command}) => {
    text = args.join(' ');
  }
  if (!text && m.quoted?.text) text = m.quoted.text;
+ if (!text) throw `*${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]}*`;
  let res;
  try {
    res = googleTTS.getAudioUrl(text, { lang: lang || 'es', slow: false, host: 'https://translate.google.com' });
  } catch (e) {
- m.reply(e + '');
-   text = args.join(' ');
- if (!text) throw `*${tradutor.texto1[0]} ${usedPrefix + command} ${tradutor.texto1[1]}*`;
- res = await tts(text, defaultLang);
- } finally {
+   // Si el idioma pedido falla, reintentar con el idioma por defecto
+   // (antes el respaldo llamaba a gtts(), que nunca se importó).
+   try {
+     res = googleTTS.getAudioUrl(text, { lang: defaultLang, slow: false, host: 'https://translate.google.com' });
+   } catch (e2) {
+     return m.reply(e2 + '');
+   }
+ }
  if (res) {
   conn.sendPresenceUpdate('recording', m.chat);
   conn.sendMessage(m.chat, { audio: { url: res }, fileName: 'tts.mp3', mimetype: 'audio/mpeg', ptt: true }, { quoted: m });
-  }
  }
 };
 
@@ -37,18 +38,3 @@ handler.tags = ['converter'];
 handler.command = ['tts'];
 
 export default handler;
-
-function tts(text, lang = 'es') {
-  return new Promise((resolve, reject) => {
-    try {
-      const tts = gtts(lang);
-      const filePath = join(global.__dirname(import.meta.url), '../src/tmp', (1 * new Date) + '.wav');
-      tts.save(filePath, text, () => {
-        resolve(readFileSync(filePath));
-        unlinkSync(filePath);
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
-}
