@@ -1,6 +1,3 @@
-import MessageType from "baileys";
-
-const pajak = 0;
 const handler = async (m, {conn, text}) => {
 
   const datas = global
@@ -21,6 +18,8 @@ const handler = async (m, {conn, text}) => {
   limit += pjk;
   if (limit < 1) throw tradutor.texto4;
   const users = global.db.data.users;
+  if (!users[who]) users[who] = {};
+  if (typeof users[who].limit !== 'number') users[who].limit = 0;
   users[who].limit += dmt;
   m.reply(`≡ ${tradutor.texto5[0]}
 ┌──────────────
