@@ -2982,13 +2982,21 @@ export function serialize() {
                             throw new Error("No se obtuvieron participantes");
                         for (const participant of metadata.participants) {
                             try {
-                                if (!participant?.jid) continue;
-                                const contactDetails = await conn?.onWhatsApp(participant.jid);
+                                // Baileys 7: los participantes son { id, phoneNumber, lid, admin };
+                                // NO existe `.jid`. Se usa phoneNumber (o id si ya es @s.whatsapp.net).
+                                const participantJid = participant?.phoneNumber || (participant?.id?.endsWith('@s.whatsapp.net') ? participant.id : null);
+                                const participantLid = (participant?.lid || participant?.id || '').split('@')[0];
+                                if (participantLid === lidToFind && participantJid) {
+                                    lidCache.set(inputJid, participantJid);
+                                    return participantJid;
+                                }
+                                if (!participantJid) continue;
+                                const contactDetails = await conn?.onWhatsApp(participantJid);
                                 if (!contactDetails?.[0]?.lid) continue;
                                 const possibleLid = contactDetails[0].lid.split("@")[0];
                                 if (possibleLid === lidToFind) {
-                                    lidCache.set(inputJid, participant.jid);
-                                    return participant.jid;
+                                    lidCache.set(inputJid, participantJid);
+                                    return participantJid;
                                 }
                             } catch (e) {
                                 continue;
