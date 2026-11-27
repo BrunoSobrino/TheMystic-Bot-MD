@@ -1,8 +1,6 @@
-import { generateWAMessageFromContent } from "baileys";
 import os from "os";
 import util from "util";
 import sizeFormatter from "human-readable";
-import MessageType from "baileys";
 import fs from "fs";
 import { performance } from "perf_hooks";
 
@@ -59,20 +57,12 @@ const handler = async (m, { conn, usedPrefix }) => {
   ${tradutor.texto1[18]} ${antiPrivate ? "activado" : "desactivado"}
   ${tradutor.texto1[19]} ${antiCall ? "activado" : "desactivado"}
   ${tradutor.texto1[20]} ${modejadibot ? "activado" : "desactivado"}`.trim();
-  const doc = [
-    "pdf",
-    "zip",
-    "vnd.openxmlformats-officedocument.presentationml.presentation",
-    "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ];
-  const document = doc[Math.floor(Math.random() * doc.length)];
+  // Antes se mandaba como documento falso (una URL de GitHub como
+  // "documento", con mimetype aleatorio y fileLength inventado): en varios
+  // dispositivos no se veía nada. Ahora es un mensaje de texto normal con
+  // la misma tarjeta de vista previa (externalAdReply).
   const Message = {
-    document: { url: `https://github.com/BrunoSobrino/TheMystic-Bot-MD` },
-    mimetype: `application/${document}`,
-    fileName: `Documento`,
-    fileLength: 99999999999999,
-    pageCount: 200,
+    text: info,
     contextInfo: {
       forwardingScore: 200,
       isForwarded: true,
@@ -86,9 +76,6 @@ const handler = async (m, { conn, usedPrefix }) => {
         sourceUrl: "https://github.com/BrunoSobrino/TheMystic-Bot-MD",
       },
     },
-    caption: info,
-    footer: wm,
-    headerType: 6,
   };
   conn.sendMessage(m.chat, Message, { quoted: m });
 };
