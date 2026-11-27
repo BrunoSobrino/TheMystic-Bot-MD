@@ -23,7 +23,7 @@ let handler = async (m, { conn, text, command }) => {
     const model = await axios.get("https://raw.githubusercontent.com/Skidy89/chat-gpt-jailbreak/refs/heads/main/Text.txt");
     const context = `${model.data}`.trim();
     
-    const result = await luminsesi(text, m.sender, context);
+    const result = await luminsesi(text, m.sender, context, tradutor.texto6);
     m.reply(result);
   } catch (error) {
     console.error('[❌ ERROR GENERAL]', error);
@@ -62,7 +62,7 @@ function saveUserMessage(sender, role, content) {
   if (typeof global.db.write === 'function') global.db.write();
 }
 
-async function luminsesi(prompt, sender, contextLogic = '') {
+async function luminsesi(prompt, sender, contextLogic = '', fallbackError = '⚠️ Ocurrió un error al contactar con la API.') {
   saveUserMessage(sender, 'user', prompt);
   const messages = getUserHistory(sender);
   const logic = contextLogic || 'Tú eres un bot llamado Youru, siempre educado y útil.';
@@ -77,7 +77,9 @@ async function luminsesi(prompt, sender, contextLogic = '') {
     return result;
   } catch (err) {
     console.error('❌ API Error:', err.response?.data || err.message);
-    return tradutor.texto6;
+    // Antes usaba tradutor.texto6 aquí, pero tradutor no existe en el
+    // ámbito de esta función y reventaba con ReferenceError.
+    return fallbackError;
   }
 }
 
