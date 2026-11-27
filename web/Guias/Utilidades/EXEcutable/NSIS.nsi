@@ -2,14 +2,14 @@
 !include FileFunc.nsh
 
 OutFile "TheMystic.exe"
-Icon "F:\Documentos\LinuxMint\ICO\Mystic.ico" #Aqui el logo
+Icon "Mystic.ico" # El logo debe estar junto a este script al compilar
 RequestExecutionLevel highest
 Name "Instalador MysticBot"
 
 Section "MainSection" SEC01
 
     SetOutPath $TEMP
-    File /oname=$TEMP\UpMystic.bat "F:\Escritorio\UpMystic.bat" #El Script de Instalacion
+    File /oname=$TEMP\UpMystic.bat "UpMystic.bat" # El script debe estar junto a este .nsi al compilar
 
     ${If} ${RunningX64}
         ExecWait '"$WINDIR\SysNative\cmd.exe" /c "$TEMP\UpMystic.bat"' #Variables para ejecucion nativa en 64Bits
