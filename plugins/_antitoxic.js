@@ -22,11 +22,11 @@ const chat = global.db.data.chats[m.chat];
     return !1;
   }
   const user = global.db.data.users[m.sender];
-  const bot = global.db.data.settings[m.conn.user.id] || {};
+  if (!user) return !1;
   const isToxic = toxicRegex.exec(m.text);
 
   if (isToxic && chat.antiToxic && !isOwner && !isAdmin) {
-    user.warn += 1;
+    user.warn = (user.warn || 0) + 1;
     if (!(user.warn >= 5)) await m.reply(`${tradutor.texto1}` + `${user.warn == 1 ? `@${m.sender.split`@`[0]}` : `@${m.sender.split`@`[0]}`}, ${tradutor.texto1_1}"${isToxic}" ${tradutor.texto1_2} ${user.warn}/5` + '*', false, {mentions: [m.sender]});
   }
 
