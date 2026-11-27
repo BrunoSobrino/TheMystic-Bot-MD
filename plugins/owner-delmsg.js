@@ -9,7 +9,7 @@ const handler = async (m, {command, usedPrefix, text}) => {
   const which = command.replace(/eliminar/i, '');
   if (!text) throw `${tradutor.texto1[0]} ${usedPrefix}list${which} ${tradutor.texto1[1]}`;
   const msgs = global.db.data.msgs;
-  if (!text in msgs) throw `${tradutor.texto2[0]} '${text}' ${tradutor.texto2[1]}`;
+  if (!(text in msgs)) throw `${tradutor.texto2[0]} '${text}' ${tradutor.texto2[1]}`;
   delete msgs[text];
   m.reply(`${ tradutor.texto3} '${text}'*`);
 };
