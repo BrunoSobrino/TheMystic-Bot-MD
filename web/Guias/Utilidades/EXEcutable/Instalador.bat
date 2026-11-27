@@ -19,7 +19,7 @@ choco -v >nul 2>&1
 if %errorlevel% neq 0 (
     echo ######### Instalando Recursos Necesarios. Esto Tomara Tiempo, Relajate :)
 
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { [System.Net.ServicePointManager]::Expect100Continue = $false; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) } -NoNewWindow -Wait"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
     
     if %errorlevel% neq 0 (
         echo ######### Error en la instalacion de Chocolatey. Verifica tu Internet o Contacta con Soporte.
@@ -47,13 +47,10 @@ IF NOT EXIST "%botpath%" (
     
     cd "%botpath%"
     npm install >nul 2>&1
-	cd "%botpath%" && npm start 
-	
 )
 
 echo ######### Verificando Actualizaciones...
 
-choco upgrade all -y --allow-downgrade --ignore-dependencies --force-dependencies >nul 2>&1
 choco install %dependencias% >nul 2>&1
 if %errorlevel% neq 0 (
     echo ######### Error al actualizar dependencias. Continuando igualmente...
