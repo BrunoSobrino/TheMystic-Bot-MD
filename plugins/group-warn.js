@@ -6,7 +6,7 @@ const handler = async (m, {conn, args, text, command, usedPrefix}) => {
 
   const testi = await m?.mentionedJid
   if (testi.includes(conn.user.jid)) return;
-  const pp = './src/assets/images/menu/main/warn.jpg';
+  const pp = './src/assets/images/menu/main/warn.png';
   let who;
   if (m.isGroup) {
     who = testi.length > 0 ?
