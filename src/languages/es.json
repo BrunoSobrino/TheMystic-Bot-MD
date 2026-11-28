@@ -4854,6 +4854,36 @@
   "tools_tz": {
    "texto1": "< 𝙃𝙀𝙍𝙍𝘼𝙈𝙄𝙀𝙉𝙏𝘼𝙎 -𝙏𝙕 />",
    "texto2": "▢ TZ del servidor:"
+  },
+  "downloader_jd": {
+   "texto1": [
+    "_*< DESCARGAS - JD />*_\n\n*[ ℹ️ ] Escribe el nombre del archivo o el enlace directo.*\n\n*[ 💡 ] Ejemplo:*",
+    "https://www.mediafire.com/file/ejemplo/archivo.zip"
+   ],
+   "texto2": [
+    "El servidor de JDownloader no responde. Revisa que JD2 esté corriendo en tu servidor y que JD_API_URL esté bien."
+   ],
+   "texto3": [
+    "Buscando formatos en el servidor, espera..."
+   ],
+   "texto4": [
+    "No pude pedirle formatos al servidor: "
+   ],
+   "texto5": [
+    "El servidor no encontró formatos para eso. Si pusiste un nombre, prueba pegando el enlace directo del archivo."
+   ],
+   "texto6": [
+    "Encontré estos archivos. Responde con el número del que quieres:"
+   ],
+   "texto7": [
+    "Descargando"
+   ],
+   "texto8": [
+    "La descarga terminó pero no encontré el archivo en el servidor."
+   ],
+   "texto9": [
+    "No se pudo descargar: "
+   ]
   }
  },
  "handler": {
