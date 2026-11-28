@@ -4854,6 +4854,36 @@
   "tools_tz": {
    "texto1": "< 𝐓𝐎𝐎𝐋𝐒 -𝐓𝐙 />",
    "texto2": "▢ Server TZ:"
+  },
+  "downloader_jd": {
+   "texto1": [
+    "_*< DOWNLOADS - JD />*_\n\n*[ ℹ️ ] Type the file name or the direct link.*\n\n*[ 💡 ] Example:*",
+    "https://www.mediafire.com/file/example/file.zip"
+   ],
+   "texto2": [
+    "The JDownloader server is not responding. Check that JD2 is running on your server and that JD_API_URL is correct."
+   ],
+   "texto3": [
+    "Looking for formats on the server, please wait..."
+   ],
+   "texto4": [
+    "I couldn't ask the server for formats: "
+   ],
+   "texto5": [
+    "The server found no formats for that. If you typed a name, try pasting the direct link to the file."
+   ],
+   "texto6": [
+    "I found these files. Reply with the number of the one you want:"
+   ],
+   "texto7": [
+    "Downloading"
+   ],
+   "texto8": [
+    "The download finished but I couldn't find the file on the server."
+   ],
+   "texto9": [
+    "Download failed: "
+   ]
   }
  },
  "handler": {
